@@ -20,3 +20,7 @@
 [2014-04-18 23:06:18,089][INFO ][org.eclipse.jetty.server.AbstractConnector] [Rocket Raccoon] Started SelectChannelConnector@0.0.0.0:9200
 [2014-04-18 23:06:18,090][INFO ][http                     ] [Rocket Raccoon] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/192.168.60.21:9200]}
 [2014-04-18 23:06:18,092][INFO ][node                     ] [Rocket Raccoon] started
+[2014-04-18 23:15:15,388][INFO ][node                     ] [Rocket Raccoon] stopping ...
+[2014-04-18 23:15:15,506][INFO ][node                     ] [Rocket Raccoon] stopped
+[2014-04-18 23:15:15,507][INFO ][node                     ] [Rocket Raccoon] closing ...
+[2014-04-18 23:15:15,515][INFO ][node                     ] [Rocket Raccoon] closed

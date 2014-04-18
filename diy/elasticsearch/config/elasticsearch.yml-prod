@@ -1,7 +1,0 @@
-network.host: ${OPENSHIFT_DIY_IP}
-transport.tcp.port: 3306
-http.port: ${OPENSHIFT_DIY_PORT}
-discovery.zen.ping.multicast.enabled: false
-discovery.zen.ping.unicast.hosts: []
-path.data: $OPENSHIFT_DATA_DIR
-http.type: com.sonian.elasticsearch.http.jetty.JettyHttpServerTransportModule
