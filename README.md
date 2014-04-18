@@ -1,3 +1,2 @@
-The OpenShift `diy` cartridge documentation can be found at:
-
-https://github.com/openshift/origin-server/tree/master/cartridges/openshift-origin-cartridge-diy/README.md
+QaoBee Hive : 
+https://qaobee.backlogtool.com/wiki/C14_01/Qaobee-hive
