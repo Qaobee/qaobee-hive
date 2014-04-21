@@ -1,6 +1,6 @@
 #!/bin/sh
 ARGS=
-PROD_ARGS=-d
+PROD_ARGS2=-d
 
 if [ "x$1" = "x" ]; then
 	echo 'You must declare environnement arg (PROD/DEV)' 
