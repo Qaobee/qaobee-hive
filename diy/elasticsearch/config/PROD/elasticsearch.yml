@@ -5,3 +5,6 @@ discovery.zen.ping.multicast.enabled: false
 discovery.zen.ping.unicast.hosts: []
 path.data: ${OPENSHIFT_DATA_DIR}
 http.type: com.sonian.elasticsearch.http.jetty.JettyHttpServerTransportModule
+sonian.elasticsearch.http.jetty: 
+	config: jetty.xml,jetty-hash-auth.xml,jetty-restrict-all.xml
+	publish_host: ${OPENSHIFT_DIY_PORT}
