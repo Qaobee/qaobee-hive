@@ -1,26 +1,22 @@
-[2014-04-18 23:01:43,181][INFO ][node                     ] [Abomination] version[1.1.1], pid[6423], build[f1585f0/2014-04-16T14:27:12Z]
-[2014-04-18 23:01:43,182][INFO ][node                     ] [Abomination] initializing ...
-[2014-04-18 23:01:43,246][INFO ][plugins                  ] [Abomination] loaded [jetty], sites []
-[2014-04-18 23:02:02,239][INFO ][node                     ] [Captain Atlas] version[1.1.1], pid[6446], build[f1585f0/2014-04-16T14:27:12Z]
-[2014-04-18 23:02:02,240][INFO ][node                     ] [Captain Atlas] initializing ...
-[2014-04-18 23:02:02,281][INFO ][plugins                  ] [Captain Atlas] loaded [jetty], sites []
-[2014-04-18 23:05:42,096][INFO ][node                     ] [Taurus] version[1.1.1], pid[6535], build[f1585f0/2014-04-16T14:27:12Z]
-[2014-04-18 23:05:42,097][INFO ][node                     ] [Taurus] initializing ...
-[2014-04-18 23:05:42,150][INFO ][plugins                  ] [Taurus] loaded [jetty], sites []
-[2014-04-18 23:06:11,237][INFO ][node                     ] [Rocket Raccoon] version[1.1.1], pid[6567], build[f1585f0/2014-04-16T14:27:12Z]
-[2014-04-18 23:06:11,237][INFO ][node                     ] [Rocket Raccoon] initializing ...
-[2014-04-18 23:06:11,282][INFO ][plugins                  ] [Rocket Raccoon] loaded [jetty], sites []
-[2014-04-18 23:06:14,310][INFO ][node                     ] [Rocket Raccoon] initialized
-[2014-04-18 23:06:14,311][INFO ][node                     ] [Rocket Raccoon] starting ...
-[2014-04-18 23:06:14,473][INFO ][transport                ] [Rocket Raccoon] bound_address {inet[/0:0:0:0:0:0:0:0:9300]}, publish_address {inet[/192.168.60.21:9300]}
-[2014-04-18 23:06:17,541][INFO ][cluster.service          ] [Rocket Raccoon] new_master [Rocket Raccoon][x7JzTrj_TZe4goLmOtx5QQ][Idefix][inet[/192.168.60.21:9300]], reason: zen-disco-join (elected_as_master)
-[2014-04-18 23:06:17,579][INFO ][discovery                ] [Rocket Raccoon] elasticsearch/x7JzTrj_TZe4goLmOtx5QQ
-[2014-04-18 23:06:17,713][INFO ][gateway                  ] [Rocket Raccoon] recovered [0] indices into cluster_state
-[2014-04-18 23:06:18,045][INFO ][org.eclipse.jetty.server.Server] [Rocket Raccoon] jetty-8.1.14.v20131031
-[2014-04-18 23:06:18,089][INFO ][org.eclipse.jetty.server.AbstractConnector] [Rocket Raccoon] Started SelectChannelConnector@0.0.0.0:9200
-[2014-04-18 23:06:18,090][INFO ][http                     ] [Rocket Raccoon] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/192.168.60.21:9200]}
-[2014-04-18 23:06:18,092][INFO ][node                     ] [Rocket Raccoon] started
-[2014-04-18 23:15:15,388][INFO ][node                     ] [Rocket Raccoon] stopping ...
-[2014-04-18 23:15:15,506][INFO ][node                     ] [Rocket Raccoon] stopped
-[2014-04-18 23:15:15,507][INFO ][node                     ] [Rocket Raccoon] closing ...
-[2014-04-18 23:15:15,515][INFO ][node                     ] [Rocket Raccoon] closed
+[2014-04-21 08:53:52,925][INFO ][node                     ] [Virako] version[1.1.1], pid[14185], build[f1585f0/2014-04-16T14:27:12Z]
+[2014-04-21 08:53:52,926][INFO ][node                     ] [Virako] initializing ...
+[2014-04-21 08:53:52,956][INFO ][plugins                  ] [Virako] loaded [jetty], sites []
+[2014-04-21 08:53:54,782][INFO ][node                     ] [Virako] initialized
+[2014-04-21 08:53:54,783][INFO ][node                     ] [Virako] starting ...
+[2014-04-21 08:53:54,852][INFO ][node                     ] [Virako] stopping ...
+[2014-04-21 08:53:54,854][INFO ][node                     ] [Virako] stopped
+[2014-04-21 08:53:54,854][INFO ][node                     ] [Virako] closing ...
+[2014-04-21 08:53:54,859][INFO ][node                     ] [Virako] closed
+[2014-04-21 09:26:56,173][INFO ][node                     ] [Obituary] version[1.1.1], pid[15021], build[f1585f0/2014-04-16T14:27:12Z]
+[2014-04-21 09:26:56,173][INFO ][node                     ] [Obituary] initializing ...
+[2014-04-21 09:26:56,194][INFO ][plugins                  ] [Obituary] loaded [jetty], sites []
+[2014-04-21 09:26:58,020][INFO ][node                     ] [Obituary] initialized
+[2014-04-21 09:26:58,020][INFO ][node                     ] [Obituary] starting ...
+[2014-04-21 09:26:58,091][INFO ][transport                ] [Obituary] bound_address {inet[/127.0.0.1:3307]}, publish_address {inet[/127.0.0.1:3307]}
+[2014-04-21 09:27:01,111][INFO ][cluster.service          ] [Obituary] new_master [Obituary][aFh_y9DASp6fNkLy8-xeTg][Obelix][inet[/127.0.0.1:3307]], reason: zen-disco-join (elected_as_master)
+[2014-04-21 09:27:01,135][INFO ][discovery                ] [Obituary] elasticsearch/aFh_y9DASp6fNkLy8-xeTg
+[2014-04-21 09:27:01,195][INFO ][gateway                  ] [Obituary] recovered [0] indices into cluster_state
+[2014-04-21 09:27:01,254][INFO ][org.eclipse.jetty.server.Server] [Obituary] jetty-8.1.14.v20131031
+[2014-04-21 09:27:01,277][INFO ][org.eclipse.jetty.server.AbstractConnector] [Obituary] Started SelectChannelConnector@0.0.0.0:8080
+[2014-04-21 09:27:01,277][INFO ][http                     ] [Obituary] bound_address {inet[/0:0:0:0:0:0:0:0:8080]}, publish_address {inet[/127.0.0.1:8080]}
+[2014-04-21 09:27:01,279][INFO ][node                     ] [Obituary] started

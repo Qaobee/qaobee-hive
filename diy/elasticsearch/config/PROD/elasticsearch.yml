@@ -1,7 +1,7 @@
-network.host: 127.0.0.1
-transport.tcp.port: 3307
-http.port: 8080
+network.host: ${OPENSHIFT_DIY_IP}
+transport.tcp.port: 3306
+http.port: ${OPENSHIFT_DIY_PORT}
 discovery.zen.ping.multicast.enabled: false
 discovery.zen.ping.unicast.hosts: []
-path.data: /home/xavier/workspaceQaobee/qaobee-hive/diy/elasticsearch/data
+path.data: ${OPENSHIFT_DATA_DIR}
 http.type: com.sonian.elasticsearch.http.jetty.JettyHttpServerTransportModule
