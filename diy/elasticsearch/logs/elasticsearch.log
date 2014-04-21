@@ -20,3 +20,58 @@
 [2014-04-21 09:27:01,277][INFO ][org.eclipse.jetty.server.AbstractConnector] [Obituary] Started SelectChannelConnector@0.0.0.0:8080
 [2014-04-21 09:27:01,277][INFO ][http                     ] [Obituary] bound_address {inet[/0:0:0:0:0:0:0:0:8080]}, publish_address {inet[/127.0.0.1:8080]}
 [2014-04-21 09:27:01,279][INFO ][node                     ] [Obituary] started
+[2014-04-21 09:28:58,888][INFO ][node                     ] [Obituary] stopping ...
+[2014-04-21 09:28:58,980][INFO ][node                     ] [Obituary] stopped
+[2014-04-21 09:28:58,985][INFO ][node                     ] [Obituary] closing ...
+[2014-04-21 09:28:58,993][INFO ][node                     ] [Obituary] closed
+[2014-04-21 09:41:56,411][INFO ][node                     ] [Grandmaster] version[1.1.1], pid[15400], build[f1585f0/2014-04-16T14:27:12Z]
+[2014-04-21 09:41:56,412][INFO ][node                     ] [Grandmaster] initializing ...
+[2014-04-21 09:41:56,432][INFO ][plugins                  ] [Grandmaster] loaded [jetty], sites []
+[2014-04-21 09:41:58,247][INFO ][node                     ] [Grandmaster] initialized
+[2014-04-21 09:41:58,247][INFO ][node                     ] [Grandmaster] starting ...
+[2014-04-21 09:41:58,322][INFO ][transport                ] [Grandmaster] bound_address {inet[/127.0.0.1:3307]}, publish_address {inet[/127.0.0.1:3307]}
+[2014-04-21 09:42:01,343][INFO ][cluster.service          ] [Grandmaster] new_master [Grandmaster][1hSZQ39wRRqsiSGeQNUoqA][Obelix][inet[/127.0.0.1:3307]], reason: zen-disco-join (elected_as_master)
+[2014-04-21 09:42:01,370][INFO ][discovery                ] [Grandmaster] elasticsearch/1hSZQ39wRRqsiSGeQNUoqA
+[2014-04-21 09:42:01,436][INFO ][gateway                  ] [Grandmaster] recovered [0] indices into cluster_state
+[2014-04-21 09:42:01,507][INFO ][org.eclipse.jetty.server.Server] [Grandmaster] jetty-8.1.14.v20131031
+[2014-04-21 09:42:01,536][INFO ][org.eclipse.jetty.server.AbstractConnector] [Grandmaster] Started SelectChannelConnector@0.0.0.0:8080
+[2014-04-21 09:42:01,536][INFO ][http                     ] [Grandmaster] bound_address {inet[/0:0:0:0:0:0:0:0:8080]}, publish_address {inet[/127.0.0.1:8080]}
+[2014-04-21 09:42:01,537][INFO ][node                     ] [Grandmaster] started
+[2014-04-21 09:58:06,614][INFO ][node                     ] [Grandmaster] stopping ...
+[2014-04-21 09:58:06,705][INFO ][node                     ] [Grandmaster] stopped
+[2014-04-21 09:58:06,706][INFO ][node                     ] [Grandmaster] closing ...
+[2014-04-21 09:58:06,712][INFO ][node                     ] [Grandmaster] closed
+[2014-04-21 09:58:07,958][INFO ][node                     ] [Makkari] version[1.1.1], pid[16193], build[f1585f0/2014-04-16T14:27:12Z]
+[2014-04-21 09:58:07,959][INFO ][node                     ] [Makkari] initializing ...
+[2014-04-21 09:58:07,979][INFO ][plugins                  ] [Makkari] loaded [jetty], sites []
+[2014-04-21 09:58:09,760][INFO ][node                     ] [Makkari] initialized
+[2014-04-21 09:58:09,761][INFO ][node                     ] [Makkari] starting ...
+[2014-04-21 09:58:09,833][INFO ][transport                ] [Makkari] bound_address {inet[/127.0.0.1:3307]}, publish_address {inet[/127.0.0.1:3307]}
+[2014-04-21 09:58:12,853][INFO ][cluster.service          ] [Makkari] new_master [Makkari][XBSc-VDJQy-tKcDPB1NqWg][Obelix][inet[/127.0.0.1:3307]], reason: zen-disco-join (elected_as_master)
+[2014-04-21 09:58:12,878][INFO ][discovery                ] [Makkari] elasticsearch/XBSc-VDJQy-tKcDPB1NqWg
+[2014-04-21 09:58:12,938][INFO ][gateway                  ] [Makkari] recovered [0] indices into cluster_state
+[2014-04-21 09:58:13,020][INFO ][org.eclipse.jetty.server.Server] [Makkari] jetty-8.1.14.v20131031
+[2014-04-21 09:58:13,050][INFO ][org.eclipse.jetty.server.AbstractConnector] [Makkari] Started SelectChannelConnector@0.0.0.0:8080
+[2014-04-21 09:58:13,050][INFO ][http                     ] [Makkari] bound_address {inet[/0:0:0:0:0:0:0:0:8080]}, publish_address {inet[/127.0.0.1:8080]}
+[2014-04-21 09:58:13,052][INFO ][node                     ] [Makkari] started
+[2014-04-21 09:59:24,158][INFO ][node                     ] [Makkari] stopping ...
+[2014-04-21 09:59:24,251][INFO ][node                     ] [Makkari] stopped
+[2014-04-21 09:59:24,251][INFO ][node                     ] [Makkari] closing ...
+[2014-04-21 09:59:24,258][INFO ][node                     ] [Makkari] closed
+[2014-04-21 09:59:25,072][INFO ][node                     ] [Machine Teen] version[1.1.1], pid[16270], build[f1585f0/2014-04-16T14:27:12Z]
+[2014-04-21 09:59:25,072][INFO ][node                     ] [Machine Teen] initializing ...
+[2014-04-21 09:59:25,093][INFO ][plugins                  ] [Machine Teen] loaded [jetty], sites []
+[2014-04-21 09:59:26,877][INFO ][node                     ] [Machine Teen] initialized
+[2014-04-21 09:59:26,877][INFO ][node                     ] [Machine Teen] starting ...
+[2014-04-21 09:59:26,947][INFO ][transport                ] [Machine Teen] bound_address {inet[/127.0.0.1:3307]}, publish_address {inet[/127.0.0.1:3307]}
+[2014-04-21 09:59:29,968][INFO ][cluster.service          ] [Machine Teen] new_master [Machine Teen][WLLpQVy5QieRZCa1PQdhgA][Obelix][inet[/127.0.0.1:3307]], reason: zen-disco-join (elected_as_master)
+[2014-04-21 09:59:29,996][INFO ][discovery                ] [Machine Teen] elasticsearch/WLLpQVy5QieRZCa1PQdhgA
+[2014-04-21 09:59:30,066][INFO ][gateway                  ] [Machine Teen] recovered [0] indices into cluster_state
+[2014-04-21 09:59:30,137][INFO ][org.eclipse.jetty.server.Server] [Machine Teen] jetty-8.1.14.v20131031
+[2014-04-21 09:59:30,180][INFO ][org.eclipse.jetty.server.AbstractConnector] [Machine Teen] Started SelectChannelConnector@0.0.0.0:8080
+[2014-04-21 09:59:30,180][INFO ][http                     ] [Machine Teen] bound_address {inet[/0:0:0:0:0:0:0:0:8080]}, publish_address {inet[/127.0.0.1:8080]}
+[2014-04-21 09:59:30,182][INFO ][node                     ] [Machine Teen] started
+[2014-04-21 10:01:55,661][INFO ][node                     ] [Machine Teen] stopping ...
+[2014-04-21 10:01:55,756][INFO ][node                     ] [Machine Teen] stopped
+[2014-04-21 10:01:55,756][INFO ][node                     ] [Machine Teen] closing ...
+[2014-04-21 10:01:55,764][INFO ][node                     ] [Machine Teen] closed
