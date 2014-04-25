@@ -1,6 +1,7 @@
 network.host: 127.0.0.1
 transport.tcp.port: 3307
 http.port: 8080
+http.host : localhost
 discovery.zen.ping.multicast.enabled: false
 discovery.zen.ping.unicast.hosts: []
 path.data: /home/xavier/workspaceQaobee/qaobee-hive/diy/elasticsearch/data
