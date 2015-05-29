@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/elasticsearch-1.1.1.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/jna-3.3.0.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/jts-1.13.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-analyzers-common-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-codecs-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-core-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-grouping-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-highlighter-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-join-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-memory-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-misc-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-queries-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-queryparser-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-sandbox-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-spatial-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/lucene-suggest-4.7.2.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/sigar/sigar-1.6.4.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/lib/spatial4j-0.4.1.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/plugins/jetty-1.1.1-beta/elasticsearch-jetty-1.1.1-beta.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/plugins/jetty-1.1.1-beta/javax.servlet-3.0.0.v201112011016.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/plugins/jetty-1.1.1-beta/jetty-continuation-8.1.14.v20131031.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/plugins/jetty-1.1.1-beta/jetty-http-8.1.14.v20131031.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/plugins/jetty-1.1.1-beta/jetty-io-8.1.14.v20131031.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/plugins/jetty-1.1.1-beta/jetty-security-8.1.14.v20131031.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/plugins/jetty-1.1.1-beta/jetty-server-8.1.14.v20131031.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/plugins/jetty-1.1.1-beta/jetty-util-8.1.14.v20131031.jar"/>
-	<classpathentry kind="lib" path="diy/elasticsearch/plugins/jetty-1.1.1-beta/jetty-xml-8.1.14.v20131031.jar"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
