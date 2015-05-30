@@ -1,0 +1,42 @@
+{
+  "cors": {
+    "enabled": true
+  },
+  "pdf": {
+    "css": [
+      "web/css/flatty.css",
+      "web/css/qaobee.css"
+    ]
+  },
+  "payplug": {
+    "baseUrl": "https://www.payplug.fr/p/e5be598c32da11e4b61b12314307c912",
+    "privateKey": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAv6GyGOHxj3/3dE9Js6JdT8VxT7aUgyWKriQOSXmeA6pFBuS9\nVznByx5eTqZr+VySbx5zyBum549GndQ4zRcUOPdzXyfdM8PAGCklHiD+/LWcrmyS\njZzC7/G8KVKYMKsYaTb0/vQP+t77p03htMHdmyiENCEj3MDYOpHgVeuy5RtuKH+v\nvLsaFBH5bI3aRRcl2lUKXL1YehotGtvsGkxblb4gbEO+AVvmNUlJsiIOOh8aTVc0\nzAsQiSP+k7A4lZOarHHLPV4bvIO1pHeU73t0jrAEkTsvtfyF7XExVUgHR4Gx1sfY\n8XkuTN2bcq16+5I7VJGMwlUh87WldZKB61NxJQIDAQABAoIBAQC6kHWPfAltJ6yG\nc9rRJDWsQBE9Bgg4VghZ2Yh/SAPqlY52U6NylCxzz7EI6UUdlF6MCB24qBMqRXb+\nmWpjYSCzBVYxQeI9T0ppO0WDu6QD69wKhHF5pTCz4ajKojrAxxIQ/QwwWvRjzUs7\narte+48AS8XJ6qm7dZQOEY9SlxGnsghYcz9KdP1ZzeWvnog91kTfJPepUrsmj3uO\nwLb3SnB11QWmL3Zj9BK0eqSbegJpHw7e+LH/c5ETyK1Z28TqA3ZomxrbJn4aHA1P\nM1LheueMvuIpG1nE0V0biAnwld19OaCt45AMNBQERhk+yfUypmyCxCyTBnVNxN8u\nfL8wYNQBAoGBAM0usHDoK7YtMJEUIj8ygOcFDTSPU33246uLgrc1TZgKyTGnX75e\nLMn7QEedFHHGB4DXmxkzwOCD7/dGOH8pJEKhDzkcUZIr6B+tWLyz88jawP2N21tr\niqDd7/rbGJGQ6pH1ls2gMFr3DT6j1eyL583Dh2UCfhGEk6R0Mv85pdllAoGBAO8X\n1tJY5nlEpIToI7z7pICUsQKSAYg9StDZjwM00WjxusXMflMs9MLMcjjVXBFgAkEN\nk9pGNUoaUR7/PVepOkSHR0X7nfAJSen8UWAFa84lT6npfz3xEhb0Kx6HigA0e8DK\nViyWncXWImpuHfKxWz6upclZ+uJzz3myknGc/ZzBAoGAbxFbCYNkRhVoOOCBOVyJ\nUoT1hQIg3AsNawr2E16TRj5wcqR7u30XGa8cOKfbLUtZPHF5z8aoHeDNwTkN1Cfd\nLQQqTWv66/lAigU4B84RpSRlW9uyZmZsgHAjO9PmFMYxdBlRLLYN9u/NB5+Aaa/C\nJyw02oTi4XC2y0rrYCVAldECgYBfBXxs8MP4Ih24bIH3k5MXPwDyYpCVUravNieu\nQImRSbDO96yk5dMIsDQc/j6u8Rc0P28paom3P6pJxWrdsfXkUlczKwLj6O0lPxAg\nN0dXEGEOyCu3tF1aHgQdCAUCe9lLD58b7WgavjXDUqw4TeBTkxl0YnxhD2G/ngax\nfJEWgQKBgF9LJUbFppvR4k62XjdobJgQgOzFs1Gp75N+sOi3DA+BSUBwb7D6tFs5\n6rC3WVvF9N0AkO3y2n2PqN9wkwfr9OVt2N1pdtm9bv0pPFluiFUUNomsyl5xgvWD\nKkHpWHWLdMp0KE91yBQ2ByEqGoYaO6cx8hi/DvffJI/eLpr3K63x\n-----END RSA PRIVATE KEY-----",
+    "ipn_url": "http://flufy.hd.free.fr/rest/payment/ipn",
+    "return_url": "http://flufy.hd.free.fr/qaobee.html#/signup/coach/end",
+    "cancel_url": "http://flufy.hd.free.fr/qaobee.html#/signup/coach/cancel"
+  },
+  "metrix.mod": {
+    "address": "metrix"
+  },
+  "mongo.persistor": {
+    "host": "localhost",
+    "port": 27017,
+    "pool_size": 2,
+    "db_name": "hive",
+    "read_preference": "nearest"
+  },
+  "mailer.mod": {
+    "test": true,
+    "address": "mailer.mod",
+    "host": "ssl0.ovh.net",
+    "port": 465,
+    "ssl": true,
+    "auth": true,
+    "username": "contact@qaobee.com",
+    "password": "qaobee29",
+    "content_type": "text/html",
+    "sendTimeout": 5000,
+    "debug": true,
+    "debugAddress": "logger"
+  }
+}

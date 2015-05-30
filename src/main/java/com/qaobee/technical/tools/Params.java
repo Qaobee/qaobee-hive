@@ -1,0 +1,67 @@
+/*************************************************************************
+ * 
+ * Qaobee
+ * __________________
+ * 
+ * [2014] Qaobee
+ * All Rights Reserved.
+ * 
+ * NOTICE:  All information contained here is, and remains
+ * the property of Qaobee and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * here are proprietary to Qaobee and its suppliers and may 
+ * be covered by U.S. and Foreign Patents, patents in process,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Qaobee.
+ */
+package com.qaobee.technical.tools;
+
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+/**
+ * The Class Params.
+ */
+public final class Params {
+
+	/** The Constant BUNDLE_NAME. */
+	private static final String BUNDLE_NAME = "params"; //$NON-NLS-1$
+
+	/** The Constant RESOURCE_BUNDLE. */
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+
+	/**
+	 * Instantiates a new params.
+	 */
+	private Params() {
+		// vide
+	}
+
+	/**
+	 * Gets the string.
+	 *
+	 * @param key
+	 *            the key
+	 * @return the string
+	 */
+	public static String getString(final String key) {
+		try {
+			return RESOURCE_BUNDLE.getString(key);
+		} catch (final MissingResourceException e) {
+			return '!' + key + '!';
+		}
+	}
+
+	/**
+	 * Contains key.
+	 *
+	 * @param key
+	 *            the key
+	 * @return if found
+	 */
+	public static boolean containsKey(final String key) {
+		return RESOURCE_BUNDLE.containsKey(key);
+	}
+}

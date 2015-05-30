@@ -16,7 +16,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package main.com.qaobee.api.v1.commons.users;
+package com.qaobee.api.v1.commons.users;
 
 public class Users {
 

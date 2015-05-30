@@ -1,0 +1,34 @@
+{
+  "cors": {
+    "enabled": true
+  },
+  "pdf": {
+    "css": [
+      "web/css/flatty.css",
+      "web/css/qaobee.css"
+    ]
+  },
+  "metrix.mod": {
+    "address": "metrix"
+  },
+  "mongo.persistor": {
+    "address": "mongo.db",
+    "pool_size": 10,
+    "db_name": "swarn",
+    "read_preference": "nearest"
+  },
+  "mailer.mod": {
+    "test": true,
+    "address": "mailer.mod",
+    "host": "ssl0.ovh.net",
+    "port": 465,
+    "ssl": true,
+    "auth": true,
+    "username": "contact@qaobee.com",
+    "password": "qaobee29",
+    "content_type": "text/html",
+    "sendTimeout": 5000,
+    "debug": true,
+    "debugAddress": "logger"
+  }
+}

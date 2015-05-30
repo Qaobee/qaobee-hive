@@ -1,0 +1,17 @@
+{
+	"main": "com.qaobee.swarn.verticles.Main",
+	"description":"Qaobee Swarn",
+	"licenses":[
+		"The Apache Software License Version 2.0"
+	],
+	"author":"Xavier MARIN",
+	"developers":[
+		"Other Dev 1",
+		"Other Dev 2"
+	],
+	"keywords":[
+		"QaoBee" 
+	],
+	"homepage":"http://www.qaobee.com",
+	"auto-redeploy": true
+}  
