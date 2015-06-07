@@ -7,8 +7,8 @@ import javax.inject.Inject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
-import com.qaobee.swarn.technical.mongo.MongoDB;
-import com.qaobee.swarn.verticles.utils.guice.services.Files;
+import com.qaobee.technical.mongo.MongoDB;
+import com.qaobee.technical.vertx.utils.guice.services.Files;
 
 /**
  * Created by xavier on 09/11/14.

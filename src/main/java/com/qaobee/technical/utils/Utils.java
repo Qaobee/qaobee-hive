@@ -10,8 +10,8 @@ import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import com.qaobee.swarn.technical.exceptions.ExceptionCodes;
-import com.qaobee.swarn.technical.exceptions.QaobeeException;
+import com.qaobee.technical.exceptions.ExceptionCodes;
+import com.qaobee.technical.exceptions.QaobeeException;
 
 /**
  * Created by xavier on 09/11/14.

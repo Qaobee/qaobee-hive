@@ -31,7 +31,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.reflections.Reflections;
-import org.reflections.util.Utils;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Future;
 import org.vertx.java.core.Handler;
@@ -55,6 +54,7 @@ import com.qaobee.technical.annotations.DeployableVerticle;
 import com.qaobee.technical.constantes.Constantes;
 import com.qaobee.technical.mongo.MongoDB;
 import com.qaobee.technical.tools.Params;
+import com.qaobee.technical.utils.Utils;
 import com.qaobee.technical.vertx.utils.AssetVerticle;
 import com.qaobee.technical.vertx.utils.guice.AbstractGuiceVerticle;
 

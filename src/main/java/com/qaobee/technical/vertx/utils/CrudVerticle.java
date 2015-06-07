@@ -36,13 +36,13 @@ import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
-import com.qaobee.swarn.technical.constantes.Constantes;
-import com.qaobee.swarn.technical.exceptions.ExceptionCodes;
-import com.qaobee.swarn.technical.exceptions.QaobeeException;
-import com.qaobee.swarn.technical.mongo.MongoDB;
-import com.qaobee.swarn.technical.utils.Utils;
-import com.qaobee.swarn.technical.vertx.RequestWrapper;
-import com.qaobee.swarn.verticles.utils.guice.AbstractGuiceVerticle;
+import com.qaobee.technical.constantes.Constantes;
+import com.qaobee.technical.exceptions.ExceptionCodes;
+import com.qaobee.technical.exceptions.QaobeeException;
+import com.qaobee.technical.mongo.MongoDB;
+import com.qaobee.technical.utils.Utils;
+import com.qaobee.technical.vertx.RequestWrapper;
+import com.qaobee.technical.vertx.utils.guice.AbstractGuiceVerticle;
 
 /**
  * The Class CrudVerticle.

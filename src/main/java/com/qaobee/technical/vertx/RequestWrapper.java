@@ -24,6 +24,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.SerializationUtils;
 
+import com.qaobee.business.model.sandbox.effective.Person;
+
 /**
  * The Class RequestWrapper.
  *

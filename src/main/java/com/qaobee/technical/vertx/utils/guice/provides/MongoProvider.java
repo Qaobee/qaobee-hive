@@ -9,8 +9,8 @@ import org.vertx.java.core.json.JsonObject;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.qaobee.swarn.technical.mongo.MongoDB;
-import com.qaobee.swarn.technical.mongo.impl.MongoDBImpl;
+import com.qaobee.technical.mongo.MongoDB;
+import com.qaobee.technical.mongo.impl.MongoDBImpl;
 
 /**
  * Created by xavier on 09/11/14.

@@ -26,6 +26,8 @@ import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.qaobee.business.model.commons.users.User;
+import com.qaobee.business.model.sandbox.effective.Person;
 import com.qaobee.technical.tools.PasswordEncryptionService;
 import com.qaobee.technical.utils.PersonUtils;
 
@@ -41,8 +43,8 @@ public final class PersonUtilsImpl implements PersonUtils {
 	/**
 	 * Prepare upsert.
 	 *
-	 * @param p
-	 *            a person
+	 * @param user
+	 *            a user
 	 * @return a prepared person for upsert
 	 * @throws NoSuchAlgorithmException
 	 *             password encoding problem
@@ -50,21 +52,21 @@ public final class PersonUtilsImpl implements PersonUtils {
 	 *             password encoding problem
 	 */
 	@Override
-	public Person prepareUpsert(final Person p) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		if (StringUtils.isNotBlank(p.getAccount().getPasswd())) {
+	public User prepareUpsert(final User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
 			final byte[] salt = passwordEncryptionService.generateSalt();
-			p.getAccount().setSalt(salt);
-			p.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(p.getAccount().getPasswd(), salt));
-			p.getAccount().setPasswd(null);
+			user.getAccount().setSalt(salt);
+			user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
+			user.getAccount().setPasswd(null);
 		}
-		if (StringUtils.isBlank(p.getAccount().getActivationCode())) {
+		if (StringUtils.isBlank(user.getAccount().getActivationCode())) {
 			final String activationcode = UUID.randomUUID().toString().replaceAll("-", "");
-			p.getAccount().setActivationCode(activationcode);
-			p.getAccount().setActive(false);
-			p.getAccount().setFirstConnexion(true);
-			p.setTimestamp(System.currentTimeMillis());
-			p.set_id(null);
+			user.getAccount().setActivationCode(activationcode);
+			user.getAccount().setActive(false);
+			user.getAccount().setFirstConnexion(true);
+			user.setTimestamp(System.currentTimeMillis());
+			user.set_id(null);
 		}
-		return p;
+		return user;
 	}
 }

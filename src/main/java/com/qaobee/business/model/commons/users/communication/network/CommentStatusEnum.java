@@ -16,36 +16,42 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.technical.utils.impl;
-
-import com.qaobee.technical.utils.HabilitUtils;
+package com.qaobee.business.model.commons.users.communication.network;
 
 /**
- * The Class HabilitUtils.
- *
- * @author Xavier MARIN
+ * The Enum CommentStatusEnum.
  */
-public final class HabilitUtilsImpl implements HabilitUtils {
+public enum CommentStatusEnum {
 
+	/** Public scope. */
+	PUBLIC("transverse.networks.comment.status.public"),
+
+	/** Blocked scope. */
+	BOCKED("transverse.networks.comment.status.blocked"),
+
+	/** Deleted status. */
+	DELETED("transverse.networks.comment.status.deleted");
+
+	/** status. */
+	private String status;
 
 	/**
-	 * Checks for habilitation.
+	 * Constructor.
 	 *
-	 * @param u
-	 *            The person
-	 * @param key
-	 *            Habilitation key
-	 * @return true si le user la possède
+	 * @param status
+	 *            (String) : status in i18n
 	 */
-	@Override
-	public boolean hasHabilitation(final Person u, final String key) {
-		if (u.getAccount().getHabilitations() != null) {
-			for (final Habilitation h : u.getAccount().getHabilitations()) {
-				if (key.equals(h.getKey())) {
-					return true;
-				}
-			}
-		}
-		return false;
+	CommentStatusEnum(final String status) {
+		this.status = status;
 	}
+
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
 }

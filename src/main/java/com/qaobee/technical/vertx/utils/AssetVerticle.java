@@ -17,14 +17,14 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
-import com.qaobee.swarn.business.model.tranversal.person.Person;
-import com.qaobee.swarn.technical.annotations.DeployableVerticle;
-import com.qaobee.swarn.technical.exceptions.ExceptionCodes;
-import com.qaobee.swarn.technical.mongo.CriteriaBuilder;
-import com.qaobee.swarn.technical.mongo.MongoDB;
-import com.qaobee.swarn.technical.tools.Messages;
-import com.qaobee.swarn.technical.utils.Utils;
-import com.qaobee.swarn.verticles.utils.guice.AbstractGuiceVerticle;
+import com.qaobee.business.model.sandbox.effective.Person;
+import com.qaobee.technical.annotations.DeployableVerticle;
+import com.qaobee.technical.exceptions.ExceptionCodes;
+import com.qaobee.technical.mongo.CriteriaBuilder;
+import com.qaobee.technical.mongo.MongoDB;
+import com.qaobee.technical.tools.Messages;
+import com.qaobee.technical.utils.Utils;
+import com.qaobee.technical.vertx.utils.guice.AbstractGuiceVerticle;
 
 /**
  * Created by xavier on 25/01/15.
