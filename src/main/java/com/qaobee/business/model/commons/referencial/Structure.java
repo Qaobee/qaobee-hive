@@ -18,6 +18,7 @@
  */
 package com.qaobee.business.model.commons.referencial;
 
+import com.qaobee.business.model.commons.settings.Activity;
 import com.qaobee.business.model.commons.settings.Country;
 import com.qaobee.business.model.transversal.Address;
 import com.qaobee.business.model.transversal.Contact;
@@ -49,22 +50,17 @@ public class Structure {
     /**
      * activity code of the structure.
      */
-    private String codeActivity;
+    private Activity activity;
 
     /**
      * The address.
      */
-    private Address addressStr;
+    private Address address;
 
     /**
      * The contact.
      */
-    private Contact contactStr;
-
-    /**
-     * The correspondent of the structure (personId).
-     */
-    private String correspondent;
+    private Contact contact;
 
     /**
      * The avatar.
@@ -133,60 +129,7 @@ public class Structure {
         this.acronym = acronym;
     }
 
-    /**
-     * Gets the address str.
-     *
-     * @return the addressStr
-     */
-    public final Address getAddressStr() {
-        return addressStr;
-    }
-
-    /**
-     * Sets the address str.
-     *
-     * @param addressStr the addressStr to set
-     */
-    public final void setAddressStr(final Address addressStr) {
-        this.addressStr = addressStr;
-    }
-
-    /**
-     * Gets the contact str.
-     *
-     * @return the contactStr
-     */
-    public final Contact getContactStr() {
-        return contactStr;
-    }
-
-    /**
-     * Sets the contact str.
-     *
-     * @param contactStr the contactStr to set
-     */
-    public final void setContactStr(final Contact contactStr) {
-        this.contactStr = contactStr;
-    }
-
-    /**
-     * Gets the correspondent.
-     *
-     * @return the correspondent
-     */
-    public final String getCorrespondent() {
-        return correspondent;
-    }
-
-    /**
-     * Sets the correspondent.
-     *
-     * @param correspondent the correspondent to set
-     */
-    public final void setCorrespondent(final String correspondent) {
-        this.correspondent = correspondent;
-    }
-
+    
     /**
      * Gets the avatar.
      *
@@ -205,23 +148,6 @@ public class Structure {
         this.avatar = avatar;
     }
 
-    /**
-     * Gets the code activity.
-     *
-     * @return the codeActivity
-     */
-    public final String getCodeActivity() {
-        return codeActivity;
-    }
-
-    /**
-     * Sets the code activity.
-     *
-     * @param codeActivity the codeActivity to set
-     */
-    public final void setCodeActivity(final String codeActivity) {
-        this.codeActivity = codeActivity;
-    }
 
     /**
      * @return the country
@@ -236,5 +162,47 @@ public class Structure {
     public final void setCountry(Country country) {
         this.country = country;
     }
+
+	/**
+	 * @return the activity
+	 */
+	public Activity getActivity() {
+		return activity;
+	}
+
+	/**
+	 * @param activity the activity to set
+	 */
+	public void setActivity(Activity activity) {
+		this.activity = activity;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public Address getAddress() {
+		return address;
+	}
+
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	/**
+	 * @return the contact
+	 */
+	public Contact getContact() {
+		return contact;
+	}
+
+	/**
+	 * @param contact the contact to set
+	 */
+	public void setContact(Contact contact) {
+		this.contact = contact;
+	}
 
 }
