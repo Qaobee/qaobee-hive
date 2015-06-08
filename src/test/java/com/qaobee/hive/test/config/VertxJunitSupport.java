@@ -72,7 +72,7 @@ import com.qaobee.hive.technical.vertx.utils.guice.GuiceModule;
 
 @RunWith(VertxJUnit4ClassRunner.class)
 @VertxConfiguration(modsDir = "target/mods", injectResources = true)
-@TestModule(name = "com.qaobee~swarn~0.1", jsonConfig = "file:config.json")
+@TestModule(name = "com.qaobee~hive~0.1", jsonConfig = "file:config.json")
 @Ignore
 public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest {
 
