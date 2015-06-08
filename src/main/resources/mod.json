@@ -1,5 +1,5 @@
 {
-	"main": "com.qaobee.swarn.verticles.Main",
+	"main": "com.qaobee.hive.technical.vertx.Main",
 	"description":"Qaobee Swarn",
 	"licenses":[
 		"The Apache Software License Version 2.0"
