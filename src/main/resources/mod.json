@@ -1,6 +1,6 @@
 {
-	"main": "com.qaobee.hive.technical.vertx.Main",
-	"description":"Qaobee Swarn",
+	"main": "com.qaobee.hive.api.Main",
+	"description":"Qaobee Hive",
 	"licenses":[
 		"The Apache Software License Version 2.0"
 	],

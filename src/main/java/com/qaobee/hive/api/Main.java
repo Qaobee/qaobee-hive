@@ -16,7 +16,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.technical.vertx;
+package com.qaobee.hive.api;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,6 +55,7 @@ import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.technical.vertx.utils.AssetVerticle;
 import com.qaobee.hive.technical.vertx.utils.guice.AbstractGuiceVerticle;
 
@@ -330,7 +331,7 @@ public class Main extends AbstractGuiceVerticle {
 		// promises.add(whenContainer.deployWorkerVerticle(org.vertx.mods.Mailer.class.getCanonicalName(), config.getObject("mailer.mod"), 1, true));
 		promises.add(whenContainer.deployWorkerVerticle(com.bloidonia.vertx.metrics.MetricsModule.class.getCanonicalName(), config.getObject("metrix.mod"), 1, true));
 		// Chargement des Verticles
-		final Reflections reflections = new Reflections("com.qaobee.swarn.verticles");
+		final Reflections reflections = new Reflections("com.qaobee.hive.api");
 		final Set<Class<?>> restModules = reflections.getTypesAnnotatedWith(DeployableVerticle.class);
 		for (final Class<?> restMod : restModules) {
 			promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), config, 1, true));

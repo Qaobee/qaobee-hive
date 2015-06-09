@@ -6,7 +6,7 @@
     <artifactId>hive</artifactId>
     <packaging>jar</packaging>
     <version>0.1</version>
-    <name>qaobee - hove</name>
+    <name>qaobee - hive</name>
     <url>http://www.qaobee.com</url>
     <prerequisites>
         <maven>3.0.5</maven>

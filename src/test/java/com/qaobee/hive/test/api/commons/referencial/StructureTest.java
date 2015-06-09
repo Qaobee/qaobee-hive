@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
 
 import com.qaobee.hive.api.v1.commons.referencial.StructureVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -57,6 +57,10 @@ public class StructureTest extends VertxJunitSupport {
 		req.setParams(params);
 
 		final String reply = sendonBus(StructureVerticle.GET, req);
-		Assert.assertEquals(1, new JsonArray(reply).size());
+		JsonObject result = new JsonObject(reply);
+		
+		String label = result.getString("label");
+		
+		Assert.assertEquals("Dunkerque Handball", label);
 	}
 }
