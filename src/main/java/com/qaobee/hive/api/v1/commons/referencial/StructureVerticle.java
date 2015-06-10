@@ -154,6 +154,8 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
 					Map<String, List<String>> params = req.getParams();
 					
+					utils.testMandatoryParams(params, PARAM_ID);
+					
 					// Tests mandatory parameters
 					utils.testMandatoryParams(params, PARAM_ID);
 					if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
@@ -210,6 +212,9 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 				} catch (final NoSuchMethodException e) {
 					container.logger().error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final IllegalArgumentException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
 				} catch (final EncodeException e) {
 					container.logger().error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());

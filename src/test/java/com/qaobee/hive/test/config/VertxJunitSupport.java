@@ -58,7 +58,10 @@ import org.vertx.java.test.utils.QueueReplyHandler;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.mongodb.MongoException;
+import com.qaobee.hive.api.v1.commons.referencial.ActivityVerticle;
+import com.qaobee.hive.api.v1.commons.referencial.CountryVerticle;
 import com.qaobee.hive.business.model.sandbox.effective.Person;
+import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -339,5 +342,50 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 			}
 		}
 
+	}
+	
+	/**
+	 * Commons function for return a country JsonObject
+	 * @param id
+	 * @return
+	 */
+	protected  JsonObject getActivity(String id) {
+		
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
+
+		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		
+		/* Retreive object */
+		params.put(ActivityVerticle.PARAM_ID, Arrays.asList(id));
+		req.setParams(params);
+
+		final String reply = sendonBus(ActivityVerticle.GET, req);
+		JsonObject json = new JsonObject(reply);
+		
+		return json;
+	}
+	
+	/**
+	 * Commons function for return a country JsonObject
+	 * @param id
+	 * @return
+	 */
+	protected  JsonObject getCountry(String id) {
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
+
+		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		
+		/* Retreive object */
+		params.put(CountryVerticle.PARAM_ID, Arrays.asList(id));
+		req.setParams(params);
+
+		final String reply = sendonBus(CountryVerticle.GET, req);
+		JsonObject json = new JsonObject(reply);
+		
+		return json;
 	}
 }
