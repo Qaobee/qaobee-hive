@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
@@ -49,10 +50,17 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 	// Declaration des variables finals
 	/** The Constant GET. */
 	public static final String GET = "resthandler.api.v1.commons.referencial.country.get";
+	/** The Constant ADD. */
+	public static final String ADD = "resthandler.api.v1.commons.referencial.country.add";
+	/** The Constant UPDATE. */
+	public static final String UPDATE = "resthandler.api.v1.commons.referencial.country.update";
 	
 	/* List of parameters */
 	/** Id of the structure */
 	public static final String PARAM_ID = "_id";
+	
+	/** Label of the structure */
+	public static final String PARAM_LABEL = "label";
 	
 	/* Injections */
 	@Inject
@@ -66,7 +74,50 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 		super.start();
 		container.logger().debug(this.getClass().getName() + " started");
 
-		
+		/**
+		 * @apiDescription Add country to the collection country in referencial module 
+		 * @api {post} /rest/api/v1/commons/referencial/country/add resthandler.api.v1.commons.referencial.country.add
+		 * @apiName addHandler
+		 * @apiGroup countryVerticle
+		 * @apiSuccess {country} the object added
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+		final Handler<Message<String>> addHandler = new Handler<Message<String>>() {
+			
+			@Override
+			public void handle(final Message<String> message) {
+				container.logger().info("addHandler() - country");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.POST, req.getMethod());
+					final JsonObject params = new JsonObject(req.getBody());
+					utils.testMandatoryParams(params.toMap(), PARAM_LABEL);
+					
+					// Insert a country
+					final String id = mongo.save(params, Country.class);
+					
+					container.logger().info("country added : " + params.toString());
+					
+					params.putString("_id", id);
+					message.reply(params.encode());
+					
+				} catch (final NoSuchMethodException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final IllegalArgumentException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+				} catch (final EncodeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+				} catch (final QaobeeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+				}
+			}
+		};
 
 		/**
 		 * @apiDescription get a country to the collection country in referencial module 
@@ -115,12 +166,56 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 			}
 		};
 
-		
+		/**
+		 * @apiDescription Update a country to the collection country in referencial module 
+		 * @api {post} /rest/api/v1/commons/referencial/country/update resthandler.api.v1.commons.referencial.country.update
+		 * @apiName updateHandler
+		 * @apiGroup countryVerticle
+		 * @apiSuccess {country} the object updated
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+		final Handler<Message<String>> updateHandler = new Handler<Message<String>>() {
+			
+			@Override
+			public void handle(final Message<String> message) {
+				container.logger().info("in updatecountryHandler()");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.POST, req.getMethod());
+					final JsonObject params = new JsonObject(req.getBody());
+					utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ID);
+					
+					// Update a country
+					mongo.save(params, Country.class);
+					
+					container.logger().info("country updated : " + params.toString());
+					
+					message.reply(params.encode());
+					
+				} catch (final NoSuchMethodException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final IllegalArgumentException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+				} catch (final EncodeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+				} catch (final QaobeeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+				}
+			}
+		};
 
 		/*
 		 * Handlers registration
 		 */
 		vertx.eventBus().registerHandler(GET, getHandler);
+		vertx.eventBus().registerHandler(ADD, addHandler);
+		vertx.eventBus().registerHandler(UPDATE, updateHandler);
 	}
 
 }
