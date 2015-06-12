@@ -16,7 +16,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.api.v1.commons.referencial;
+package com.qaobee.hive.api.v1.commons.settings;
 
 import java.util.List;
 import java.util.Map;

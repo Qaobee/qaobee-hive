@@ -16,7 +16,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.test.api.commons.referencial;
+package com.qaobee.hive.test.api.commons.settings;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 
-import com.qaobee.hive.api.v1.commons.referencial.StructureVerticle;
+import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -35,15 +35,15 @@ import com.qaobee.hive.test.config.VertxJunitSupport;
  * @author cke
  *
  */
-public class StructureTest extends VertxJunitSupport {
+public class CountryTest extends VertxJunitSupport {
 	
 	/**
-	 * Tests getHandler for StructureVerticle
+	 * Tests getHandler for CountryVerticle
 	 */
 	@Test
 	public void getObjectByIdOk() {
 
-		populate(POPULATE_ONLY, SETTINGS_STRUCTURE);
+		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 
 		/* test based on script mongo */
 		final RequestWrapper req = new RequestWrapper();
@@ -53,52 +53,49 @@ public class StructureTest extends VertxJunitSupport {
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
 		
 		// id
-		params.put(StructureVerticle.PARAM_ID, Arrays.asList("541168295971d35c1f2d1b5e"));
+		params.put(CountryVerticle.PARAM_ID, Arrays.asList("CNTR-250-FR-FRA"));
 		req.setParams(params);
 
-		final String reply = sendonBus(StructureVerticle.GET, req);
+		final String reply = sendonBus(CountryVerticle.GET, req);
 		JsonObject result = new JsonObject(reply);
 		
 		String label = result.getString("label");
 		
-		Assert.assertEquals("Dunkerque Handball", label);
+		Assert.assertEquals("settings.Country.FR.name", label);
 	}
 	
 	/**
-	 * Tests getHandler for StructureVerticle
+	 * Tests getHandler for CountryVerticle
 	 * with missing mandatory fields
 	 */
 	@Test
 	public void getObjectByIdKo() {
 
-		populate(POPULATE_ONLY, SETTINGS_STRUCTURE);
-
-		/* test based on script mongo */
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
 		req.setMethod(Constantes.GET);
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
 		
-		JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req));
+		JsonObject resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 		
 		// id
-		params.put(StructureVerticle.PARAM_ID, Arrays.asList(""));
+		params.put(CountryVerticle.PARAM_ID, Arrays.asList(""));
 		req.setParams(params);
 		
-		resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req));
+		resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
 		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("_id is mandatory"));
 
 	}
 	
 	/**
-	 * Tests updateHandler for StructureVerticle
+	 * Tests updateHandler for CountryVerticle
 	 */
 	@Test
 	public void getUpdateOk() {
 
-		populate(POPULATE_ONLY, SETTINGS_STRUCTURE);
+		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 
 		/* test based on script mongo */
 		final RequestWrapper req = new RequestWrapper();
@@ -107,15 +104,16 @@ public class StructureTest extends VertxJunitSupport {
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
 		
-		/* Retreive object */
-		params.put(StructureVerticle.PARAM_ID, Arrays.asList("541168295971d35c1f2d1b5e"));
+		// id
+		params.put(CountryVerticle.PARAM_ID, Arrays.asList("CNTR-250-FR-FRA"));
 		req.setParams(params);
 
-		final String reply = sendonBus(StructureVerticle.GET, req);
+		final String reply = sendonBus(CountryVerticle.GET, req);
 		JsonObject result = new JsonObject(reply);
 		
 		String label = result.getString("label");
-		Assert.assertEquals("Dunkerque Handball", label);
+		
+		Assert.assertEquals("settings.Country.FR.name", label);
 		
 		/* Update object */
 		req.setMethod(Constantes.POST);
@@ -123,7 +121,7 @@ public class StructureTest extends VertxJunitSupport {
 		result.putString("label", "newValue");
 		req.setBody(result.encode());
 
-		final String reply2 = sendonBus(StructureVerticle.UPDATE, req);
+		final String reply2 = sendonBus(CountryVerticle.UPDATE, req);
 		JsonObject result2 = new JsonObject(reply2);
 		label = result2.getString("label");
 		Assert.assertEquals("newValue", label);
@@ -131,13 +129,13 @@ public class StructureTest extends VertxJunitSupport {
 	}
 	
 	/**
-	 * Tests updateHandler for StructureVerticle
+	 * Tests updateHandler for CountryVerticle
 	 * with missing mandatory fields
 	 */
 	@Test
 	public void getUpdateKo() {
 
-		populate(POPULATE_ONLY, SETTINGS_STRUCTURE);
+		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 
 		/* test based on script mongo */
 		final RequestWrapper req = new RequestWrapper();
@@ -146,36 +144,33 @@ public class StructureTest extends VertxJunitSupport {
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
 		
-		/* Retreive object */
-		params.put(StructureVerticle.PARAM_ID, Arrays.asList("541168295971d35c1f2d1b5e"));
+		// id
+		params.put(CountryVerticle.PARAM_ID, Arrays.asList("CNTR-250-FR-FRA"));
 		req.setParams(params);
 
-		final String reply = sendonBus(StructureVerticle.GET, req);
+		final String reply = sendonBus(CountryVerticle.GET, req);
 		JsonObject result = new JsonObject(reply);
 		
 		String label = result.getString("label");
-		Assert.assertEquals("Dunkerque Handball", label);
+		
+		Assert.assertEquals("settings.Country.FR.name", label);
 		
 		/* Update object */
 		req.setMethod(Constantes.POST);
 		
-		result.putString("label", "newValue");
-		result.putObject("country", null);
+		result.putObject("label", null);
 		req.setBody(result.encode());
 
-		final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.UPDATE, req));
-		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
+		final JsonObject resultUpdate = new JsonObject(sendonBus(CountryVerticle.UPDATE, req));
+		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [label]"));
 	}
 	
 	/**
-	 * Tests addHandler for StructureVerticle
+	 * Tests addHandler for CountryVerticle
 	 */
 	@Test
 	public void getAddOk() {
-		
-		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-		
+
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
 		req.setMethod(Constantes.POST);
@@ -183,19 +178,19 @@ public class StructureTest extends VertxJunitSupport {
 		/* Generate a simple Structure Object */
 		final JsonObject params = new JsonObject();
 		params.putString("label", "labelValue");
-		params.putString("acronym", "acronymValue");
-		params.putObject(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
-		params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND"));
+		params.putNumber("codeOSCE", 333);
+		params.putString("alpha2", "alpha2");
+		params.putString("alpha3", "alpha3");
 		
 		req.setBody(params.encode());
 
-		final JsonObject result = new JsonObject(sendonBus(StructureVerticle.ADD, req));
+		final JsonObject result = new JsonObject(sendonBus(CountryVerticle.ADD, req));
 		String id = result.getString("_id");
 		Assert.assertNotNull(id);
 	}
 	
 	/**
-	 * Tests addHandler for StructureVerticle
+	 * Tests addHandler for CountryVerticle
 	 * with missing mandatory fields
 	 */
 	@Test
@@ -209,15 +204,14 @@ public class StructureTest extends VertxJunitSupport {
 
 		/* Generate a simple Structure Object */
 		final JsonObject params = new JsonObject();
-		params.putString("label", "labelValue");
-		params.putString("acronym", "acronymValue");
-		params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND"));
-
+		params.putNumber("codeOSCE", 333);
+		params.putString("alpha2", "alpha2");
+		params.putString("alpha3", "alpha3");
+		
 		req.setBody(params.encode());
 
-		final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.ADD, req));
-		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
+		final JsonObject result = new JsonObject(sendonBus(CountryVerticle.ADD, req));
+		Assert.assertTrue("Missing mandatory parameters", result.getString("message").contains("Missing mandatory parameters : [label]"));
 	}
 
-	
 }

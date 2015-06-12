@@ -16,7 +16,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.api.v1.commons.referencial;
+package com.qaobee.hive.api.v1.commons.settings;
 
 import java.util.List;
 import java.util.Map;
@@ -180,7 +180,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("in updatecountryHandler()");
+				container.logger().info("in updateHandler() - Country");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());

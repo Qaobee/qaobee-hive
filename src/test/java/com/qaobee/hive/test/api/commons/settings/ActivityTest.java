@@ -16,7 +16,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.test.api.commons.referencial;
+package com.qaobee.hive.test.api.commons.settings;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,7 +26,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 
-import com.qaobee.hive.api.v1.commons.referencial.CountryVerticle;
+import com.qaobee.hive.api.v1.commons.referencial.StructureVerticle;
+import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -35,15 +36,15 @@ import com.qaobee.hive.test.config.VertxJunitSupport;
  * @author cke
  *
  */
-public class CountryTest extends VertxJunitSupport {
+public class ActivityTest extends VertxJunitSupport {
 	
 	/**
-	 * Tests getHandler for CountryVerticle
+	 * Tests getHandler for ActivityVerticle
 	 */
 	@Test
 	public void getObjectByIdOk() {
 
-		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 
 		/* test based on script mongo */
 		final RequestWrapper req = new RequestWrapper();
@@ -53,19 +54,19 @@ public class CountryTest extends VertxJunitSupport {
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
 		
 		// id
-		params.put(CountryVerticle.PARAM_ID, Arrays.asList("CNTR-250-FR-FRA"));
+		params.put(ActivityVerticle.PARAM_ID, Arrays.asList("ACT-HAND"));
 		req.setParams(params);
 
-		final String reply = sendonBus(CountryVerticle.GET, req);
+		final String reply = sendonBus(ActivityVerticle.GET, req);
 		JsonObject result = new JsonObject(reply);
 		
 		String label = result.getString("label");
 		
-		Assert.assertEquals("settings.Country.FR.name", label);
+		Assert.assertEquals("admin.settings.activity.handball.label", label);
 	}
 	
 	/**
-	 * Tests getHandler for CountryVerticle
+	 * Tests getHandler for ActivityVerticle
 	 * with missing mandatory fields
 	 */
 	@Test
@@ -77,16 +78,15 @@ public class CountryTest extends VertxJunitSupport {
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
 		
-		JsonObject resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
+		JsonObject resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 		
 		// id
-		params.put(CountryVerticle.PARAM_ID, Arrays.asList(""));
+		params.put(ActivityVerticle.PARAM_ID, Arrays.asList(""));
 		req.setParams(params);
 		
-		resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
+		resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req));
 		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("_id is mandatory"));
 
 	}
-
 }
