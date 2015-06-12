@@ -58,11 +58,11 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
 	// Declaration des variables finals
 	/** The Constant ADD. */
-	public static final String ADD = "resthandler.api.v1.commons.referencial.structure.add";
+	public static final String ADD = "resthandler.api.v1.commons.referencial.commons.structure.add";
 	/** The Constant GET. */
-	public static final String GET = "resthandler.api.v1.commons.referencial.structure.get";
+	public static final String GET = "resthandler.api.v1.commons.referencial.commons.structure.get";
 	/** The Constant UPDATE. */
-	public static final String UPDATE = "resthandler.api.v1.commons.referencial.structure.update";
+	public static final String UPDATE = "resthandler.api.v1.commons.referencial.commons.structure.update";
 	
 	/* List of parameters */
 	/** Id of the structure */

@@ -48,7 +48,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
 	// Declaration des variables finals
 	/** The Constant GET. */
-	public static final String GET = "resthandler.api.v1.commons.referencial.activity.get";
+	public static final String GET = "resthandler.api.v1.commons.settings.activity.get";
 	
 	/* List of parameters */
 	/** Id of the structure */
@@ -69,8 +69,8 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 		
 
 		/**
-		 * @apiDescription get a activity to the collection activity in referencial module 
-		 * @api {post} /rest/api/v1/commons/referencial/activity/get resthandler.api.v1.commons.referencial.activity.get
+		 * @apiDescription get a activity to the collection activity in settings module 
+		 * @api {post} /rest/api/v1/commons/settings/activity/get resthandler.api.v1.commons.settings.activity.get
 		 * @apiName getHandler
 		 * @apiGroup ActivityVerticle
 		 * @apiSuccess {Activity} the object found

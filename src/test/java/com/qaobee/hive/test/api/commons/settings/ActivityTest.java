@@ -26,7 +26,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 
-import com.qaobee.hive.api.v1.commons.referencial.StructureVerticle;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
