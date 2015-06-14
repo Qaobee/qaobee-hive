@@ -90,20 +90,33 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 		container.logger().debug(this.getClass().getName() + " started");
 
 		/**
+		 * @api {add} /rest/api/v1/commons/referencial/structure/add
+		 * @apiVersion 0.1.0
+		 * @apiName add
+		 * @apiGroup Structure API
+		 * @apiPermission all
+		 *
 		 * @apiDescription Add structure to the collection structure in referencial module 
-		 * @api {post} /rest/api/v1/commons/referencial/structure/add resthandler.api.v1.commons.referencial.structure.add
-		 * @apiName addHandler
-		 * @apiGroup StructureVerticle
-		 * @apiSuccess {Structure} the object added
+		 * 
+		 * @apiParam {String} label Mandatory The Structure label.
+		 * @apiParam {Activity} activity Mandatory The Structure activity.
+		 * @apiParam {Country} country Mandatory The Structure country
+		 * @apiParam {acronym} acronym Optional The Structure acronym.
+		 * @apiParam {Address} address Optional The Structure-ID.
+		 * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
+		 * @apiParam {String} avatar Optional The Structure logo.
+		 *
+		 * @apiSuccess {Structure}   structure            The Structure added with the id.
+		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
 		 * @apiError INVALID_PARAMETER Parameters not found
 		 */
-		final Handler<Message<String>> addHandler = new Handler<Message<String>>() {
+		final Handler<Message<String>> add = new Handler<Message<String>>() {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("addHandler() - Structure");
+				container.logger().info("add() - Structure");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -134,21 +147,29 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 			}
 		};
 
+		
 		/**
+		 * @api {get} /rest/api/v1/commons/referencial/structure/get Read data of a Structure
+		 * @apiVersion 0.1.0
+		 * @apiName get
+		 * @apiGroup Structure API
+		 * @apiPermission all
+		 *
 		 * @apiDescription get a structure to the collection structure in referencial module 
-		 * @api {post} /rest/api/v1/commons/referencial/structure/get resthandler.api.v1.commons.referencial.structure.get
-		 * @apiName getHandler
-		 * @apiGroup StructureVerticle
-		 * @apiSuccess {Structure} the object found
+		 *
+		 * @apiParam {String} id The Structure-ID.
+		 * 
+		 * @apiSuccess {Structure}   structure            The Structure found.
+		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
 		 * @apiError INVALID_PARAMETER Parameters not found
 		 */
-		final Handler<Message<String>> getHandler = new Handler<Message<String>>() {
+		final Handler<Message<String>> get = new Handler<Message<String>>() {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("getHandler() - Structure");
+				container.logger().info("get() - Structure");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -182,20 +203,34 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 		};
 
 		/**
+		 * @api {update} /rest/api/v1/commons/referencial/structure/update
+		 * @apiVersion 0.1.0
+		 * @apiName update
+		 * @apiGroup Structure API
+		 * @apiPermission all
+		 *
 		 * @apiDescription Update a structure to the collection structure in referencial module 
-		 * @api {post} /rest/api/v1/commons/referencial/structure/update resthandler.api.v1.commons.referencial.structure.update
-		 * @apiName updateHandler
-		 * @apiGroup StructureVerticle
-		 * @apiSuccess {Structure} the object updated
+		 *
+		 * @apiParam {String} _id Mandatory The Structure ID.
+		 * @apiParam {String} label Mandatory The Structure label.
+		 * @apiParam {Activity} activity Mandatory The Structure activity.
+		 * @apiParam {Country} country Mandatory The Structure country
+		 * @apiParam {acronym} acronym Optional The Structure acronym.
+		 * @apiParam {Address} address Optional The Structure-ID.
+		 * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
+		 * @apiParam {String} avatar Optional The Structure logo.
+		 * 
+		 * @apiSuccess {Structure}   structure            The Structure updated.
+		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
 		 * @apiError INVALID_PARAMETER Parameters not found
 		 */
-		final Handler<Message<String>> updateHandler = new Handler<Message<String>>() {
+		final Handler<Message<String>> update = new Handler<Message<String>>() {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("in updateStructureHandler()");
+				container.logger().info("update() - Structure");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -228,8 +263,8 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 		/*
 		 * Handlers registration
 		 */
-		vertx.eventBus().registerHandler(ADD, addHandler);
-		vertx.eventBus().registerHandler(GET, getHandler);
-		vertx.eventBus().registerHandler(UPDATE, updateHandler);
+		vertx.eventBus().registerHandler(ADD, add);
+		vertx.eventBus().registerHandler(GET, get);
+		vertx.eventBus().registerHandler(UPDATE, update);
 	}
 }

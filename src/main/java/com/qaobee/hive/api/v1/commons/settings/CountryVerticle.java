@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
@@ -54,10 +53,6 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 	public static final String GET = "resthandler.api.v1.commons.settings.country.get";
 	/** The Constant GET. */
 	public static final String GET_LIST = "resthandler.api.v1.commons.settings.country.getList";
-	/** The Constant ADD. */
-	public static final String ADD = "resthandler.api.v1.commons.settings.country.add";
-	/** The Constant UPDATE. */
-	public static final String UPDATE = "resthandler.api.v1.commons.settings.country.update";
 	
 	/* List of parameters */
 	/** Id of the structure */
@@ -79,109 +74,27 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 		container.logger().debug(this.getClass().getName() + " started");
 
 		/**
-		 * @apiDescription Add country to the collection country in settings module 
-		 * @api {post} /rest/api/v1/commons/settings/country/add resthandler.api.v1.commons.settings.country.add
-		 * @apiName addHandler
-		 * @apiGroup countryVerticle
-		 * @apiSuccess {country} the object added
+		 * @api {get} /rest/api/v1/commons/settings/country/get Read data of an Country
+		 * @apiVersion 0.1.0
+		 * @apiName get
+		 * @apiGroup Country API
+		 * @apiPermission all
+		 *
+		 * @apiDescription get a country to the collection country in settings module  
+		 *
+		 * @apiParam {String} id Mandatory The Country-ID.
+		 * 
+		 * @apiSuccess {Country}   country            The Country found.
+		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
 		 * @apiError INVALID_PARAMETER Parameters not found
 		 */
-		final Handler<Message<String>> addHandler = new Handler<Message<String>>() {
+		final Handler<Message<String>> get = new Handler<Message<String>>() {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("addHandler() - country");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.POST, req.getMethod());
-					final JsonObject params = new JsonObject(req.getBody());
-					utils.testMandatoryParams(params.toMap(), PARAM_LABEL);
-					
-					// Insert a country
-					final String id = mongo.save(params, Country.class);
-					
-					container.logger().info("country added : " + params.toString());
-					
-					params.putString("_id", id);
-					message.reply(params.encode());
-					
-				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (final EncodeException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-				} catch (final QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
-				}
-			}
-		};
-
-		/**
-		 * @apiDescription Update a country to the collection country in settings module 
-		 * @api {post} /rest/api/v1/commons/settings/country/update resthandler.api.v1.commons.settings.country.update
-		 * @apiName updateHandler
-		 * @apiGroup countryVerticle
-		 * @apiSuccess {country} the object updated
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> updateHandler = new Handler<Message<String>>() {
-			
-			@Override
-			public void handle(final Message<String> message) {
-				container.logger().info("in updateHandler() - Country");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.POST, req.getMethod());
-					final JsonObject params = new JsonObject(req.getBody());
-					utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ID);
-					
-					// Update a country
-					mongo.save(params, Country.class);
-					
-					container.logger().info("country updated : " + params.toString());
-					
-					message.reply(params.encode());
-					
-				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (final EncodeException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-				} catch (final QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
-				}
-			}
-		};
-		
-		/**
-		 * @apiDescription get a country to the collection country in settings module 
-		 * @api {post} /rest/api/v1/commons/settings/country/get resthandler.api.v1.commons.settings.country.get
-		 * @apiName getHandler
-		 * @apiGroup CountryVerticle
-		 * @apiSuccess {Country} the object found
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> getHandler = new Handler<Message<String>>() {
-			
-			@Override
-			public void handle(final Message<String> message) {
-				container.logger().info("getHandler() - Country");
+				container.logger().info("get - Country");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -215,20 +128,27 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 		};
 		
 		/**
-		 * @apiDescription get a country to the collection country in settings module 
-		 * @api {post} /rest/api/v1/commons/settings/country/get resthandler.api.v1.commons.settings.country.get
-		 * @apiName getHandler
-		 * @apiGroup CountryVerticle
-		 * @apiSuccess {Country} the object found
+		 * @api {getList} /rest/api/v1/commons/settings/country/getList Read data of an Country
+		 * @apiVersion 0.1.0
+		 * @apiName getList
+		 * @apiGroup Country API
+		 * @apiPermission all
+		 *
+		 * @apiDescription get a list of countries to the collection Country in settings module  
+		 *
+		 * @apiParam {String} label Optional The Country label.
+		 * 
+		 * @apiSuccess {List}   countries            The list of countries found.
+		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
 		 * @apiError INVALID_PARAMETER Parameters not found
 		 */
-		final Handler<Message<String>> getListHandler = new Handler<Message<String>>() {
+		final Handler<Message<String>> getList = new Handler<Message<String>>() {
 
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("getListHandler() - Country");
+				container.logger().info("getList() - Country");
 				final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 				try {
 					// Tests on method and parameters
@@ -263,10 +183,8 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 		/*
 		 * Handlers registration
 		 */
-		vertx.eventBus().registerHandler(ADD, addHandler);
-		vertx.eventBus().registerHandler(UPDATE, updateHandler);
-		vertx.eventBus().registerHandler(GET, getHandler);
-		vertx.eventBus().registerHandler(GET_LIST, getListHandler);
+		vertx.eventBus().registerHandler(GET, get);
+		vertx.eventBus().registerHandler(GET_LIST, getList);
 	}
 
 }

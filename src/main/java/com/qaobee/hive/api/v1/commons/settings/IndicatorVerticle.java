@@ -82,20 +82,27 @@ public class IndicatorVerticle  extends AbstractGuiceVerticle {
 		container.logger().debug(this.getClass().getName() + " started");
 
 		/**
-		 * @apiDescription get a indicator to the collection indicator in settings module 
-		 * @api {post} /rest/api/v1/commons/settings/indicator/get resthandler.api.v1.commons.settings.indicator.get
-		 * @apiName getHandler
-		 * @apiGroup IndicatorVerticle
-		 * @apiSuccess {Indicator} the object found
+		 * @api {get} /rest/api/v1/commons/settings/indicator/get Read data of an indicator
+		 * @apiVersion 0.1.0
+		 * @apiName get
+		 * @apiGroup Indicator API
+		 * @apiPermission all
+		 *
+		 * @apiDescription get a indicator to the collection indicator in settings module
+		 *
+		 * @apiParam {String} id Mandatory The Indicator-ID.
+		 * 
+		 * @apiSuccess {Indicator}   indicator            The Indicator found.
+		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
 		 * @apiError INVALID_PARAMETER Parameters not found
 		 */
-		final Handler<Message<String>> getHandler = new Handler<Message<String>>() {
+		final Handler<Message<String>> get = new Handler<Message<String>>() {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("getHandler() - Indicator");
+				container.logger().info("get() - Indicator");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -129,11 +136,20 @@ public class IndicatorVerticle  extends AbstractGuiceVerticle {
 		};
 		
 		/**
-		 * @apiDescription get a list indicator to the collection indicator in settings module for one activity and one country
-		 * @api {post} /rest/api/v1/commons/settings/indicator/getList resthandler.api.v1.commons.settings.indicator.getList
+		 * @api {getList} /rest/api/v1/commons/settings/indicator/getList
+		 * @apiVersion 0.1.0
 		 * @apiName getList
-		 * @apiGroup IndicatorVerticle
-		 * @apiSuccess {Indicator} the object found
+		 * @apiGroup Indicator API
+		 * @apiPermission all
+		 *
+		 * @apiDescription get a list of indicators to the collection indicator in settings module  
+		 *
+		 * @apiParam {String} activityId Mandatory The activity Id.
+		 * @apiParam {String} countryId Mandatory The country Id.
+		 * @apiParam {List<String>} screen Mandatory The list of screen name.
+		 * 
+		 * @apiSuccess {List}   indicators            The list of indicators found.
+		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
 		 * @apiError INVALID_PARAMETER Parameters not found
@@ -213,7 +229,7 @@ public class IndicatorVerticle  extends AbstractGuiceVerticle {
 		/*
 		 * Handlers registration
 		 */
-		vertx.eventBus().registerHandler(GET, getHandler);
+		vertx.eventBus().registerHandler(GET, get);
 		vertx.eventBus().registerHandler(GET_LIST, getList);
 	}
 

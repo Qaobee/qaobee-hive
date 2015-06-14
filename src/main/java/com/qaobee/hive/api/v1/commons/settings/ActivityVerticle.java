@@ -66,23 +66,28 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 		super.start();
 		container.logger().debug(this.getClass().getName() + " started");
 
-		
-
 		/**
-		 * @apiDescription get a activity to the collection activity in settings module 
-		 * @api {post} /rest/api/v1/commons/settings/activity/get resthandler.api.v1.commons.settings.activity.get
-		 * @apiName getHandler
-		 * @apiGroup ActivityVerticle
-		 * @apiSuccess {Activity} the object found
+		 * @api {get} /rest/api/v1/commons/settings/activity/get Read data of an Activity
+		 * @apiVersion 0.1.0
+		 * @apiName get
+		 * @apiGroup Activity API
+		 * @apiPermission all
+		 *
+		 * @apiDescription get a activity to the collection activity in settings module  
+		 *
+		 * @apiParam {String} id The Activity-ID.
+		 * 
+		 * @apiSuccess {Activity}   activity            The Activity found.
+		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
 		 * @apiError INVALID_PARAMETER Parameters not found
 		 */
-		final Handler<Message<String>> getHandler = new Handler<Message<String>>() {
+		final Handler<Message<String>> get = new Handler<Message<String>>() {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("getHandler() - Activity");
+				container.logger().info("get() - Activity");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -120,7 +125,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 		/*
 		 * Handlers registration
 		 */
-		vertx.eventBus().registerHandler(GET, getHandler);
+		vertx.eventBus().registerHandler(GET, get);
 	}
 
 }
