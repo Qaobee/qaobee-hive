@@ -1,6 +1,27 @@
-package com.qaobee.hive.technical.vertx.utils.guice;
+/*
+ *  __________________
+ *  Qaobee
+ *  __________________
+ *
+ *  Copyright (c) 2015.  Qaobee
+ *  All Rights Reserved.
+ *
+ *  NOTICE: All information contained here is, and remains
+ *  the property of Qaobee and its suppliers,
+ *  if any. The intellectual and technical concepts contained
+ *  here are proprietary to Qaobee and its suppliers and may
+ *  be covered by U.S. and Foreign Patents, patents in process,
+ *  and are protected by trade secret or copyright law.
+ *  Dissemination of this information or reproduction of this material
+ *  is strictly forbidden unless prior written permission is obtained
+ *  from Qaobee.
+ */
+
+package com.qaobee.hive.technical.utils.guice;
 
 
+import com.qaobee.hive.technical.utils.MailUtils;
+import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
 import org.vertx.java.core.json.JsonObject;
 
 import com.google.inject.AbstractModule;
@@ -13,9 +34,9 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.impl.PersonUtilsImpl;
 import com.qaobee.hive.technical.utils.impl.UtilsImpl;
-import com.qaobee.hive.technical.vertx.utils.guice.provides.MongoProvider;
-import com.qaobee.hive.technical.vertx.utils.guice.services.Files;
-import com.qaobee.hive.technical.vertx.utils.guice.services.impl.FIlesImpl;
+import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
+import com.qaobee.hive.technical.utils.guice.services.Files;
+import com.qaobee.hive.technical.utils.guice.services.impl.FIlesImpl;
 
 /**
  * Created by xavier on 09/11/14.
@@ -39,7 +60,7 @@ public class GuiceModule extends AbstractModule {
                 .toInstance(mongoConfig);
 
         bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);
-//        bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
+        bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
 //        bind(AuthCheck.class).to(AuthCheckImpl.class).in(Singleton.class);
 //        bind(SeasonCheck.class).to(SeasonCheckImpl.class).in(Singleton.class);
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);

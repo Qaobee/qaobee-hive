@@ -1,33 +1,22 @@
-/*************************************************************************
- * 
- * Qaobee
- * __________________
- * 
- * [2015] Qaobee
- * All Rights Reserved.
- * 
- * NOTICE:  All information contained here is, and remains
- * the property of Qaobee and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may 
- * be covered by U.S. and Foreign Patents, patents in process,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Qaobee.
+/*
+ *  __________________
+ *  Qaobee
+ *  __________________
+ *
+ *  Copyright (c) 2015.  Qaobee
+ *  All Rights Reserved.
+ *
+ *  NOTICE: All information contained here is, and remains
+ *  the property of Qaobee and its suppliers,
+ *  if any. The intellectual and technical concepts contained
+ *  here are proprietary to Qaobee and its suppliers and may
+ *  be covered by U.S. and Foreign Patents, patents in process,
+ *  and are protected by trade secret or copyright law.
+ *  Dissemination of this information or reproduction of this material
+ *  is strictly forbidden unless prior written permission is obtained
+ *  from Qaobee.
  */
 package com.qaobee.hive.api.v1.commons.settings;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang.StringUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -37,7 +26,16 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.technical.vertx.utils.guice.AbstractGuiceVerticle;
+import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import org.apache.commons.lang.StringUtils;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author cke
