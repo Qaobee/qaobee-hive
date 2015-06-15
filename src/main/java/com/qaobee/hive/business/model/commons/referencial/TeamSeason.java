@@ -16,11 +16,10 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.business.model.sandbox.config;
+package com.qaobee.hive.business.model.commons.referencial;
 
 import java.util.List;
 
-import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.business.model.transversal.Member;
 
@@ -28,30 +27,29 @@ import com.qaobee.hive.business.model.transversal.Member;
  * @author cke
  *
  */
-public class SandBoxCfg {
+public class TeamSeason {
 	
-	private String _id;
-	
-	private Structure structure;
-	
-	private SandBox sandBox;
-	
+	/** Internal identifier. */
+	private ChampionShip championShip;
+
+	/** label. */
 	private Season season;
 	
-	private List<Member> members;
+	/** Staff Members. */
+	private List<Member> staffMembers;
 
 	/**
-	 * @return the _id
+	 * @return the championShip
 	 */
-	public String get_id() {
-		return _id;
+	public ChampionShip getChampionShip() {
+		return championShip;
 	}
 
 	/**
-	 * @param _id the _id to set
+	 * @param championShip the championShip to set
 	 */
-	public void set_id(String _id) {
-		this._id = _id;
+	public void setChampionShip(ChampionShip championShip) {
+		this.championShip = championShip;
 	}
 
 	/**
@@ -69,47 +67,17 @@ public class SandBoxCfg {
 	}
 
 	/**
-	 * @return the sandBox
+	 * @return the staffMembers
 	 */
-	public SandBox getSandBox() {
-		return sandBox;
+	public List<Member> getStaffMembers() {
+		return staffMembers;
 	}
 
 	/**
-	 * @param sandBox the sandBox to set
+	 * @param staffMembers the staffMembers to set
 	 */
-	public void setSandBox(SandBox sandBox) {
-		this.sandBox = sandBox;
+	public void setStaffMembers(List<Member> staffMembers) {
+		this.staffMembers = staffMembers;
 	}
-
-	/**
-	 * @return the structure
-	 */
-	public Structure getStructure() {
-		return structure;
-	}
-
-	/**
-	 * @param structure the structure to set
-	 */
-	public void setStructure(Structure structure) {
-		this.structure = structure;
-	}
-
-	/**
-	 * @return the members
-	 */
-	public List<Member> getMembers() {
-		return members;
-	}
-
-	/**
-	 * @param members the members to set
-	 */
-	public void setMembers(List<Member> members) {
-		this.members = members;
-	}
-
-	
 
 }

@@ -24,6 +24,8 @@ import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.communication.network.Comment;
 import com.qaobee.hive.business.model.commons.users.communication.network.Sharing;
+import com.qaobee.hive.business.model.transversal.Audit;
+import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
  * The Class TrainingAbstract.
@@ -59,6 +61,14 @@ public class TrainingAbstract {
 
 	/** History. */
 	private List<History> historyList;
+	
+	/**
+     * The list of tags for object.
+     */
+    private List<Tag> tags;
+	
+	/** audit CRUD object */
+	private Audit audit;
 
 	/**
 	 * Instantiates a new education abstract.
@@ -240,6 +250,34 @@ public class TrainingAbstract {
 	 */
 	public void setAuthor(User author) {
 		this.author = author;
+	}
+
+	/**
+	 * @return the audit
+	 */
+	public Audit getAudit() {
+		return audit;
+	}
+
+	/**
+	 * @param audit the audit to set
+	 */
+	public void setAudit(Audit audit) {
+		this.audit = audit;
+	}
+
+	/**
+	 * @return the tags
+	 */
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	/**
+	 * @param tags the tags to set
+	 */
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
 	}
 
 }

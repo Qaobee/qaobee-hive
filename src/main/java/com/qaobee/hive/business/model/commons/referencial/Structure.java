@@ -21,6 +21,7 @@ package com.qaobee.hive.business.model.commons.referencial;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.transversal.Address;
+import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Contact;
 
 /**
@@ -66,6 +67,9 @@ public class Structure {
      * The avatar.
      */
     private String avatar;
+    
+    /** audit CRUD object */
+	private Audit audit;
 
 
     /**
@@ -203,6 +207,20 @@ public class Structure {
 	 */
 	public void setContact(Contact contact) {
 		this.contact = contact;
+	}
+
+	/**
+	 * @return the audit
+	 */
+	public Audit getAudit() {
+		return audit;
+	}
+
+	/**
+	 * @param audit the audit to set
+	 */
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
 
 }

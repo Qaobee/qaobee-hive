@@ -21,6 +21,7 @@ package com.qaobee.hive.business.model.commons.settings;
 import java.util.Calendar;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.qaobee.hive.business.model.transversal.Audit;
 
 /**
  * Class that defines a season.
@@ -49,6 +50,9 @@ public class Season {
 
 	/** Internal id of an country. */
 	private String countryId;
+	
+	/** audit CRUD object */
+	private Audit audit;
 
 	/**
 	 * Constructor.
@@ -201,6 +205,20 @@ public class Season {
 	 */
 	public final void setLabel(String label) {
 		this.label = label;
+	}
+
+	/**
+	 * @return the audit
+	 */
+	public Audit getAudit() {
+		return audit;
+	}
+
+	/**
+	 * @param audit the audit to set
+	 */
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
 
 }

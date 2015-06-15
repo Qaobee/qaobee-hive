@@ -16,29 +16,39 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.business.model.sandbox.config;
+package com.qaobee.hive.business.model.commons.referencial;
 
-import java.util.List;
-
-import com.qaobee.hive.business.model.commons.referencial.Structure;
-import com.qaobee.hive.business.model.commons.settings.Season;
-import com.qaobee.hive.business.model.transversal.Member;
+import com.qaobee.hive.business.model.transversal.Address;
+import com.qaobee.hive.business.model.transversal.Audit;
 
 /**
  * @author cke
  *
  */
-public class SandBoxCfg {
-	
-	private String _id;
-	
-	private Structure structure;
-	
-	private SandBox sandBox;
-	
-	private Season season;
-	
-	private List<Member> members;
+public class InfraStructure {
+
+	/**
+     * The _id.
+     */
+    private String _id;
+
+    /**
+     * The label.
+     */
+    private String label;
+
+    /**
+     * Address code of the Infrastructure.
+     */
+    private Address address;
+    
+    /**
+     * Structure of the Infrastructure
+     */
+    private Structure structure;
+    
+    /** audit CRUD object */
+	private Audit audit;
 
 	/**
 	 * @return the _id
@@ -55,31 +65,31 @@ public class SandBoxCfg {
 	}
 
 	/**
-	 * @return the season
+	 * @return the label
 	 */
-	public Season getSeason() {
-		return season;
+	public String getLabel() {
+		return label;
 	}
 
 	/**
-	 * @param season the season to set
+	 * @param label the label to set
 	 */
-	public void setSeason(Season season) {
-		this.season = season;
+	public void setLabel(String label) {
+		this.label = label;
 	}
 
 	/**
-	 * @return the sandBox
+	 * @return the address
 	 */
-	public SandBox getSandBox() {
-		return sandBox;
+	public Address getAddress() {
+		return address;
 	}
 
 	/**
-	 * @param sandBox the sandBox to set
+	 * @param address the address to set
 	 */
-	public void setSandBox(SandBox sandBox) {
-		this.sandBox = sandBox;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	/**
@@ -97,19 +107,18 @@ public class SandBoxCfg {
 	}
 
 	/**
-	 * @return the members
+	 * @return the audit
 	 */
-	public List<Member> getMembers() {
-		return members;
+	public Audit getAudit() {
+		return audit;
 	}
 
 	/**
-	 * @param members the members to set
+	 * @param audit the audit to set
 	 */
-	public void setMembers(List<Member> members) {
-		this.members = members;
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
-
-	
-
+    
+    
 }

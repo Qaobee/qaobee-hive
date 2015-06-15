@@ -16,24 +16,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.business.model.sandbox.config;
-
-import java.util.List;
-
-import com.qaobee.hive.business.model.transversal.Member;
+package com.qaobee.hive.business.model.commons.referencial;
 
 /**
  * @author cke
  *
  */
-public class SandBox {
-	
-	private String owner;
-	
-	private List<Member> members;
-	
-	private String activityId;
-	
-	private String structureId;
+public class ChampionShipJourney {
 
 }

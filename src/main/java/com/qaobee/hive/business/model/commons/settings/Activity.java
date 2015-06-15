@@ -18,6 +18,8 @@
  */
 package com.qaobee.hive.business.model.commons.settings;
 
+import com.qaobee.hive.business.model.transversal.Audit;
+
 /**
  * Class that represents an Activity.
  *
@@ -39,6 +41,9 @@ public class Activity {
 
 	/** Type of activity. */
 	private ActivityTypeEnum activityType;
+	
+	/** audit CRUD object */
+	private Audit audit;
 
 	/**
 	 * Constructor.
@@ -139,6 +144,20 @@ public class Activity {
 	 */
 	public final void setActivated(boolean activated) {
 		this.activated = activated;
+	}
+
+	/**
+	 * @return the audit
+	 */
+	public Audit getAudit() {
+		return audit;
+	}
+
+	/**
+	 * @param audit the audit to set
+	 */
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
 
 }
