@@ -13,18 +13,101 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry including="**/*.java" kind="src" path="src/main/resources"/>
-	<classpathentry kind="lib" path="lib/payplug.jar"/>
-	<classpathentry kind="lib" path="lib/vertx-junit-annotations-2.1RC2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-all/2.3.7/feb6df9c6936c797159091a451ed8590d67101dc/groovy-all-2.3.7.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy-all/2.3.7/430d925914612a724c2cda9ddd6d3df58723abe6/groovy-all-2.3.7-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/io.vertx/lang-groovy/2.1.1-final/2aadd68a7d2b5e6d5a04a29729c74d0fe0ced57a/lang-groovy-2.1.1-final.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/io.vertx/lang-groovy/2.1.1-final/90fc26f36a4c73eed6ad471d0aa273e700450281/lang-groovy-2.1.1-final-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/org.mongodb/mongo-java-driver/3.0.2/7d3880dec6c8a2f07c1f544776c326834b513712/mongo-java-driver-3.0.2.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/org.mongodb/mongo-java-driver/3.0.2/74e06a35f7949be5a0339588b41c87614dfe419d/mongo-java-driver-3.0.2-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/commons/commons-email/1.3.2/commons-email-1.3.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/11fb3d88ae7e3b757d70237064210ceb954a5a04/commons-codec-1.10-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/englishtown/vertx-mod-when/1.2.0-final/vertx-mod-when-1.2.0-final.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/bloidonia/mod-metrics/1.0.1/mod-metrics-1.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/google/inject/guice/3.0/guice-3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.0/5871fb60dc68d67da54a663c3fd636a10a532948/jsr305-3.0.0.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.0/936f4430478909ed7b138d42f9ad73c919a87b26/jsr305-3.0.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.10/c7f4ea230aedc757ca1499ebcfb2953c81cf8b67/reflections-0.9.10.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.10/606b8587dab0bf1776b896003f2a2fa0470bb105/reflections-0.9.10-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/imgscalr/imgscalr-lib/4.2/imgscalr-lib-4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/xhtmlrenderer/flying-saucer-pdf/9.0.6/flying-saucer-pdf-9.0.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/google/api-client/google-api-client/1.18.0-rc/google-api-client-1.18.0-rc.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/freemarker/freemarker/2.3.20/freemarker-2.3.20.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/net/tanesha/recaptcha4j/recaptcha4j/0.0.7/recaptcha4j-0.0.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/commons-beanutils/commons-beanutils/1.9.2/commons-beanutils-1.9.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/io/vertx/mod-mailer/2.0.0-final/mod-mailer-2.0.0-final.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.12/8e20852d05222dc286bf1c71d78d0531e177c317/slf4j-api-1.7.12.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.12/58697792617f38bf86d8e26bc004aac505e516a9/slf4j-api-1.7.12-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/io.vertx/vertx-core/2.1.5/925da3e945a0432b169ad5c4a37bb7da0ffbf793/vertx-core-2.1.5.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/io.vertx/vertx-core/2.1.5/b4ac925e7283a477c2f7341b3833c6cef3c5c054/vertx-core-2.1.5-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/io.vertx/vertx-platform/2.1.5/913339256fb39ee9efdf327bbafca5eee62b018d/vertx-platform-2.1.5.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/io.vertx/vertx-platform/2.1.5/c480ece6f7318b87825526b6b10dad8ffdfd3cda/vertx-platform-2.1.5-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/io.vertx/vertx-hazelcast/2.1.5/9af3595087c7952b135168f2296dfc9376b47a9a/vertx-hazelcast-2.1.5.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/io.vertx/vertx-hazelcast/2.1.5/cd141a8f1ccc842ae9992e2c2f22a1c957f1e67/vertx-hazelcast-2.1.5-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/io/vertx/testtools/2.0.3-final/testtools-2.0.3-final.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/de.flapdoodle.embed/de.flapdoodle.embed.mongo/1.46.4/adbec581ee32cb563ecfc6d6f311aac102f1d3f9/de.flapdoodle.embed.mongo-1.46.4.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/de.flapdoodle.embed/de.flapdoodle.embed.mongo/1.46.4/8f79c09519293cd91f2acd2b3233feec33bf2355/de.flapdoodle.embed.mongo-1.46.4-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/Documents/dev/qaobee-hive/lib/vertx-junit-annotations-2.1RC2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/javax/mail/mail/1.4.5/mail-1.4.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/javax/activation/activation/1.1.1/activation-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/englishtown/when.java/1.0.0/when.java-1.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/codahale/metrics/metrics-core/3.0.1/metrics-core-3.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/org.sonatype.sisu.inject/cglib/2.2.1-v20090111/7ce5e983fd0e6c78346f4c9cbfa39d83049dda2/cglib-2.2.1-v20090111.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/org.sonatype.sisu.inject/cglib/2.2.1-v20090111/65030c30094de36e3fddbc22442d47cbf547741f/cglib-2.2.1-v20090111-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/cce0823396aa693798f8882e64213b1772032b09/guava-18.0.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/ad97fe8faaf01a3d3faacecd58e8fa6e78a973ca/guava-18.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.18.2-GA/1180a90fbad732b60fb728a6bbe8fcb3151423d7/javassist-3.18.2-GA.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.18.2-GA/7163084913aa7399e4ce2cbc3ee5c00ac2b1f35f/javassist-3.18.2-GA-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/annotations/2.0.1/9ef6656259841cebfb9fb0697bb122ada4485498/annotations-2.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/lowagie/itext/2.1.7/itext-2.1.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/xhtmlrenderer/flying-saucer-core/9.0.6/flying-saucer-core-9.0.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/google/oauth-client/google-oauth-client/1.18.0-rc/google-oauth-client-1.18.0-rc.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.2.2/jackson-databind-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.2.2/jackson-core-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.0.21.Final/bfe7b70b68b772b9dd263cf110adbf25131d7f7c/netty-all-4.0.21.Final.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/io.netty/netty-all/4.0.21.Final/4749a56a7a29a5ed1b6bc81ab683db4672ef4b1c/netty-all-4.0.21.Final-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/log4j/log4j/1.2.16/log4j-1.2.16.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/com.hazelcast/hazelcast/3.2.3/8ad027a41e8afacea2b35eefb6c82c9c0921e262/hazelcast-3.2.3.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/com.hazelcast/hazelcast/3.2.3/fe3a1c669706843a107644586a6ee170d6b1c336/hazelcast-3.2.3-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/server/apacheds-protocol-dns/1.5.7/apacheds-protocol-dns-1.5.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/de.flapdoodle.embed/de.flapdoodle.embed.process/1.40.1/d2952d7cd100f0c72d5349fff8c6b4dcdcaa864a/de.flapdoodle.embed.process-1.40.1.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/de.flapdoodle.embed/de.flapdoodle.embed.process/1.40.1/8006b37c3911af52867b7727c7b7df412f4f24cc/de.flapdoodle.embed.process-1.40.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/asm/asm/3.1/c157def142714c544bdea2e6144645702adf7097/asm-3.1.jar" sourcepath="/Users/cke/.gradle/caches/modules-2/files-2.1/asm/asm/3.1/2eaa4de56203f433f287a6df5885ef9ad3c5bcae/asm-3.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/bouncycastle/bcmail-jdk14/138/bcmail-jdk14-138.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/bouncycastle/bcprov-jdk14/138/bcprov-jdk14-138.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/google/http-client/google-http-client/1.18.0-rc/google-http-client-1.18.0-rc.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.gradle/caches/modules-2/files-2.1/net.sourceforge.findbugs/annotations/1.3.2/d77bc83e0408680034a29481a89de0dba9802a97/annotations-1.3.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/server/apacheds-i18n/1.5.7/apacheds-i18n-1.5.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/server/apacheds-core-jndi/1.5.7/apacheds-core-jndi-1.5.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/server/apacheds-protocol-shared/1.5.7/apacheds-protocol-shared-1.5.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-ldap/0.9.19/shared-ldap-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-ldap-schema/0.9.19/shared-ldap-schema-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-ldap-schema-loader/0.9.19/shared-ldap-schema-loader-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-ldap-schema-manager/0.9.19/shared-ldap-schema-manager-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-cursor/0.9.19/shared-cursor-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-ldap-jndi/0.9.19/shared-ldap-jndi-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-asn1-codec/0.9.19/shared-asn1-codec-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-asn1/0.9.19/shared-asn1-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-ldap-constants/0.9.19/shared-ldap-constants-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-ldap-converter/0.9.19/shared-ldap-converter-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-ldap-schema-dao/0.9.19/shared-ldap-schema-dao-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-ldif/0.9.19/shared-ldif-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-dsml-parser/0.9.19/shared-dsml-parser-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/net/java/dev/jna/jna/4.0.0/jna-4.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/net/java/dev/jna/jna-platform/4.0.0/jna-platform-4.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/commons/commons-compress/1.3/commons-compress-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/bouncycastle/bctsp-jdk14/1.38/bctsp-jdk14-1.38.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/httpcomponents/httpclient/4.0.1/httpclient-4.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/server/apacheds-core/1.5.7/apacheds-core-1.5.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/mina/mina-core/2.0.0-RC1/mina-core-2.0.0-RC1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/shared/shared-i18n/0.9.19/shared-i18n-0.9.19.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/antlr/antlr/2.7.7/antlr-2.7.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/xpp3/xpp3/1.1.4c/xpp3-1.1.4c.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/bouncycastle/bcprov-jdk14/1.38/bcprov-jdk14-1.38.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/bouncycastle/bcmail-jdk14/1.38/bcmail-jdk14-1.38.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/httpcomponents/httpcore/4.0.1/httpcore-4.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/server/apacheds-core-api/1.5.7/apacheds-core-api-1.5.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/server/apacheds-utils/1.5.7/apacheds-utils-1.5.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/bouncycastle/bcprov-jdk15/140/bcprov-jdk15-140.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/server/apacheds-core-entry/1.5.7/apacheds-core-entry-1.5.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/apache/directory/server/apacheds-core-constants/1.5.7/apacheds-core-constants-1.5.7.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/junit/junit/4.11/junit-4.11.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.2.2/jackson-annotations-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/.m2/repository/commons-io/commons-io/2.4/commons-io-2.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/cke/Documents/dev/qaobee-hive/lib/payplug.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
