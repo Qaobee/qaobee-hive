@@ -18,6 +18,7 @@
  */
 package com.qaobee.hive.api.v1.commons.settings;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
@@ -49,6 +51,10 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 	// Declaration des variables finals
 	/** The Constant GET. */
 	public static final String GET = "resthandler.api.v1.commons.settings.activity.get";
+	/** The Constant GET_LIST. */
+	public static final String GET_LIST = "resthandler.api.v1.commons.settings.activity.getList";
+	/** The Constant GET_LIST_ENABLE. */
+	public static final String GET_LIST_ENABLE = "resthandler.api.v1.commons.settings.activity.getListEnable";
 	
 	/* List of parameters */
 	/** Id of the structure */
@@ -119,13 +125,93 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 				}
 			}
 		};
-
 		
+		/**
+		 * @api {getList} /rest/api/v1/commons/settings/activity/getList
+		 * @apiVersion 0.1.0
+		 * @apiName getList
+		 * @apiGroup Activity API
+		 * @apiPermission all
+		 *
+		 * @apiDescription get all activity
+		 * 
+		 * @apiSuccess {List}   activities            List all activity
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+		final Handler<Message<String>> getList = new Handler<Message<String>>() {
+			
+			@Override
+			public void handle(final Message<String> message) {
+				container.logger().info("getList() - Activity");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.GET, req.getMethod());
+					
+					Map<String, Object> criterias = new HashMap<String, Object>();
+										
+					JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
+					
+					container.logger().info("Activities found : " + resultJson.toString());
+					
+					message.reply(resultJson.encode());
+					
+				} catch (final NoSuchMethodException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} 
+			}
+		};
+
+
+		/**
+		 * @api {getListEnable} /rest/api/v1/commons/settings/activity/getListEnable
+		 * @apiVersion 0.1.0
+		 * @apiName getListEnable
+		 * @apiGroup Activity API
+		 * @apiPermission all
+		 *
+		 * @apiDescription get all activity enable  
+		 * 
+		 * @apiSuccess {List}   activities            List of activity enable
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+		final Handler<Message<String>> getListEnable = new Handler<Message<String>>() {
+			
+			@Override
+			public void handle(final Message<String> message) {
+				container.logger().info("getListEnable() - Activity");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.GET, req.getMethod());
+					
+					Map<String, Object> criterias = new HashMap<String, Object>();
+					criterias.put("enable", true);
+					
+					JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
+					
+					container.logger().info("Activities found : " + resultJson.toString());
+					
+					message.reply(resultJson.encode());
+					
+				} catch (final NoSuchMethodException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} 
+			}
+		};
 
 		/*
 		 * Handlers registration
 		 */
 		vertx.eventBus().registerHandler(GET, get);
+		vertx.eventBus().registerHandler(GET_LIST, getList);
+		vertx.eventBus().registerHandler(GET_LIST_ENABLE, getListEnable);
 	}
 
 }
