@@ -18,13 +18,12 @@
  */
 package com.qaobee.hive.technical.vertx;
 
+import com.qaobee.hive.business.model.commons.users.User;
+import org.apache.commons.lang.SerializationUtils;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.SerializationUtils;
-
-import com.qaobee.hive.business.model.sandbox.effective.Person;
 
 /**
  * The Class RequestWrapper.
@@ -33,181 +32,192 @@ import com.qaobee.hive.business.model.sandbox.effective.Person;
  */
 public class RequestWrapper implements Serializable {
 
-	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = 3895794648152512848L;
+    /**
+     * The Constant serialVersionUID.
+     */
+    private static final long serialVersionUID = 3895794648152512848L;
 
-	/** The path. */
-	private List<String> path;
+    /**
+     * The path.
+     */
+    private List<String> path;
 
-	/** The headers. */
-	private Map<String, List<String>> headers;
+    /**
+     * The headers.
+     */
+    private Map<String, List<String>> headers;
 
-	/** The params. */
-	private Map<String, List<String>> params;
+    /**
+     * The params.
+     */
+    private Map<String, List<String>> params;
 
-	/** The body. */
-	private String body;
+    /**
+     * The body.
+     */
+    private String body;
 
-	/** The method. */
-	private String method;
+    /**
+     * The method.
+     */
+    private String method;
 
-	/** The locale. */
-	private String locale;
+    /**
+     * The locale.
+     */
+    private String locale;
 
-	/** the current person *. */
-	private Person person;
+    /**
+     * the current person *.
+     */
+    private User user;
 
-	/**
-	 * Gets the body.
-	 *
-	 * @return the body
-	 */
-	public String getBody() {
-		return body;
-	}
+    /**
+     * Gets the body.
+     *
+     * @return the body
+     */
+    public String getBody() {
+        return body;
+    }
 
-	/**
-	 * Gets the headers.
-	 *
-	 * @return the headers
-	 */
-	public Map<String, List<String>> getHeaders() {
-		return headers;
-	}
+    /**
+     * Gets the headers.
+     *
+     * @return the headers
+     */
+    public Map<String, List<String>> getHeaders() {
+        return headers;
+    }
 
-	/**
-	 * Gets the locale.
-	 *
-	 * @return the locale
-	 */
-	public String getLocale() {
-		return locale;
-	}
+    /**
+     * Gets the locale.
+     *
+     * @return the locale
+     */
+    public String getLocale() {
+        return locale;
+    }
 
-	/**
-	 * Gets the method.
-	 *
-	 * @return the method
-	 */
-	public String getMethod() {
-		return method;
-	}
+    /**
+     * Gets the method.
+     *
+     * @return the method
+     */
+    public String getMethod() {
+        return method;
+    }
 
-	/**
-	 * Gets the params.
-	 *
-	 * @return the params
-	 */
-	public Map<String, List<String>> getParams() {
-		return params;
-	}
+    /**
+     * Gets the params.
+     *
+     * @return the params
+     */
+    public Map<String, List<String>> getParams() {
+        return params;
+    }
 
-	/**
-	 * Gets the path.
-	 *
-	 * @return the path
-	 */
-	public List<String> getPath() {
-		return path;
-	}
+    /**
+     * Gets the path.
+     *
+     * @return the path
+     */
+    public List<String> getPath() {
+        return path;
+    }
 
-	/**
-	 * Sets the body.
-	 *
-	 * @param body
-	 *            the new body
-	 */
-	public void setBody(final String body) {
-		this.body = body;
-	}
+    /**
+     * Sets the body.
+     *
+     * @param body the new body
+     */
+    public void setBody(final String body) {
+        this.body = body;
+    }
 
-	/**
-	 * Sets the headers.
-	 *
-	 * @param headers
-	 *            the new headers
-	 */
-	public void setHeaders(final Map<String, List<String>> headers) {
-		this.headers = headers;
-	}
+    /**
+     * Sets the headers.
+     *
+     * @param headers the new headers
+     */
+    public void setHeaders(final Map<String, List<String>> headers) {
+        this.headers = headers;
+    }
 
-	/**
-	 * Sets the locale.
-	 *
-	 * @param locale
-	 *            the new locale
-	 */
-	public void setLocale(final String locale) {
-		this.locale = locale;
-	}
+    /**
+     * Sets the locale.
+     *
+     * @param locale the new locale
+     */
+    public void setLocale(final String locale) {
+        this.locale = locale;
+    }
 
-	/**
-	 * Sets the method.
-	 *
-	 * @param method
-	 *            the new method
-	 */
-	public void setMethod(final String method) {
-		this.method = method;
-	}
+    /**
+     * Sets the method.
+     *
+     * @param method the new method
+     */
+    public void setMethod(final String method) {
+        this.method = method;
+    }
 
-	/**
-	 * Sets the params.
-	 *
-	 * @param params
-	 *            the new params
-	 */
-	public void setParams(final Map<String, List<String>> params) {
-		this.params = params;
-	}
+    /**
+     * Sets the params.
+     *
+     * @param params the new params
+     */
+    public void setParams(final Map<String, List<String>> params) {
+        this.params = params;
+    }
 
-	/**
-	 * Sets the path.
-	 *
-	 * @param path
-	 *            the new path
-	 */
-	public void setPath(final List<String> path) {
-		this.path = path;
-	}
+    /**
+     * Sets the path.
+     *
+     * @param path the new path
+     */
+    public void setPath(final List<String> path) {
+        this.path = path;
+    }
 
-	/**
-	 * Gets the current Person *.
-	 *
-	 * @return the current Person
-	 */
-	public Person getPerson() {
-		return person;
-	}
+    /**
+     * Gets the current user *.
+     *
+     * @return the current user
+     */
+    public User getUser() {
+        return user;
+    }
 
-	/**
-	 * Sets the current Person *.
-	 *
-	 * @param person
-	 *            the new person
-	 */
-	public void setPerson(final Person person) {
-		this.person = person;
-	}
+    /**
+     * Sets the current user *.
+     *
+     * @param user the new user
+     */
+    public void setUser(final User user) {
+        this.user = user;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#clone()
-	 */
-	@Override
-	public RequestWrapper clone() throws CloneNotSupportedException {
-		return (RequestWrapper) SerializationUtils.clone(this);
-	}
+    /**
+     * Clone request wrapper.
+     *
+     * @return the request wrapper
+     * @throws CloneNotSupportedException the clone not supported exception
+     */
+    @Override
+    public RequestWrapper clone() throws CloneNotSupportedException {
+        super.clone();
+        return (RequestWrapper) SerializationUtils.clone(this);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "RequestWrapper [path=" + path + ", headers=" + headers + ", params=" + params + ", body=" + body + ", method=" + method + ", locale=" + locale + ", person=" + person + "]";
-	}
+    /**
+     * To string.
+     *
+     * @return the string
+     */
+    @Override
+    public String toString() {
+        return "RequestWrapper [path=" + path + ", headers=" + headers + ", params=" + params + ", body=" + body + ", method=" + method + ", locale=" + locale + ", user=" + user + "]";
+    }
 
 }

@@ -18,18 +18,28 @@
  */
 package com.qaobee.hive.technical.utils.impl;
 
+import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaBuilder;
+import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.tools.Messages;
+import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang.StringUtils;
 import org.imgscalr.Scalr;
 import org.imgscalr.Scalr.Mode;
 import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +52,16 @@ import java.util.*;
  * @author Xavier MARIN
  */
 public class UtilsImpl implements Utils {
+    /**
+     * The Mongo.
+     */
+    @Inject
+    private MongoDB mongo;
+    /**
+     * The Habilit utils.
+     */
+    @Inject
+    private HabilitUtils habilitUtils;
 
     /**
      * Send error.
@@ -240,4 +260,71 @@ public class UtilsImpl implements Utils {
         testMandatoryParams(new JsonObject(body).toMap(), fields);
     }
 
+    /**
+     * Is user logged.
+     *
+     * @param request the request
+     * @return the User
+     * @throws QaobeeException the qaobee exception
+     */
+    @Override
+    public User isUserLogged(RequestWrapper request) throws QaobeeException {
+        String token = "";
+        if (request.getHeaders() != null && request.getHeaders().containsKey("token")) {
+            token = request.getHeaders().get("token").get(0);
+        }
+        if (request.getParams() != null && request.getParams().containsKey("token")) {
+            token = request.getParams().get("token").get(0);
+        }
+        if (StringUtils.isBlank(token)) {
+            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", request.getLocale()));
+        }
+        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, User.class);
+        if (res.size() != 1) {
+            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", request.getLocale()));
+        } else {
+            // we take the first one (should be only one)
+            final JsonObject jsonUser = res.get(0);
+            JsonObject userToSave = new JsonObject();
+            final User user = Json.decodeValue(jsonUser.encode(), User.class);
+            userToSave.putString("_id", user.get_id());
+
+            if (Constantes.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
+                userToSave.putString("account.token", null);
+                user.getAccount().setToken(null);
+                userToSave.putNumber("account.tokenRenewDate", 0l);
+                user.getAccount().setTokenRenewDate(0l);
+            } else {
+                long connectionTime = System.currentTimeMillis();
+                userToSave.putNumber("account.tokenRenewDate", connectionTime);
+                user.getAccount().setTokenRenewDate(connectionTime);
+            }
+
+            try {
+                mongo.update(userToSave, User.class);
+                if (user.getAccount().getTokenRenewDate() == 0) {
+                    throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", request.getLocale()));
+                }
+                return user;
+            } catch (final EncodeException e) {
+                throw new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Is logged and admin.
+     *
+     * @param request the request
+     * @return the user
+     * @throws QaobeeException the qaobee exception
+     */
+    @Override
+    public User isLoggedAndAdmin(RequestWrapper request) throws QaobeeException {
+        User user = isUserLogged(request);
+        if (!habilitUtils.hasHabilitation(user, Constantes.ADMIN_HABILIT)) { // are we admin ?
+            throw new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", request.getLocale()));
+        }
+        return user;
+    }
 }
