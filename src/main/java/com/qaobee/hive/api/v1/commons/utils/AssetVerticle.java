@@ -43,8 +43,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
+
 /**
- * Created by xavier on 25/01/15.
+ * The type Asset verticle.
  */
 @DeployableVerticle
 public class AssetVerticle extends AbstractGuiceVerticle {
@@ -52,17 +53,23 @@ public class AssetVerticle extends AbstractGuiceVerticle {
      * The Constant ADD.
      */
     public static final String ADD = "asset.add";
+    /**
+     * The constant GET.
+     */
     public static final String GET = "asset.get";
-    // MongoDB driver
+    /**
+     * The Mongo.
+     */
     @Inject
     private MongoDB mongo;
+    /**
+     * The Utils.
+     */
     @Inject
     private Utils utils;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.vertx.java.platform.Verticle#start()
+    /**
+     * Start void.
      */
     @Override
     public void start() {
