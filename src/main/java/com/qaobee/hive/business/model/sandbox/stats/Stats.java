@@ -22,187 +22,238 @@ import java.util.List;
 
 /**
  * The Class Stats.
- * 
- * @author cke
- * @updated by Jerome
+ *
+ * @author cke | Jerome
  */
 public class Stats {
 
-	/** The id. */
-	private String _id;
+    /**
+     * The id.
+     */
+    private String _id;
 
-	/** The code. */
-	private String code;
-	
-	/** sharding key */
-	private String chrono;
+    /**
+     * The code.
+     */
+    private String code;
 
-	/** Timer. */
-	private long timer;
+    /**
+     * sharding key
+     */
+    private String chrono;
 
-	/** owner */
-	private String owner;
+    /**
+     * Timer.
+     */
+    private long timer;
 
-	/** producter */
-	private List<String> producter;
+    /**
+     * owner
+     */
+    private String owner;
 
-	/** sandbox ID */
-	private String sandBoxId;
+    /**
+     * producter
+     */
+    private List<String> producter;
 
-	/** activity ID */
-	private String activityId;
+    /**
+     * sandbox ID
+     */
+    private String sandBoxId;
 
-	/** event identifier */
-	private String eventId;
+    /**
+     * activity ID
+     */
+    private String activityId;
 
-	/** value */
-	private String value;
+    /**
+     * event identifier
+     */
+    private String eventId;
 
-	/**
-	 * @return the _id
-	 */
-	public final String get_id() {
-		return _id;
-	}
+    /**
+     * value
+     */
+    private String value;
 
-	/**
-	 * @param _id
-	 *            the _id to set
-	 */
-	public final void set_id(String _id) {
-		this._id = _id;
-	}
+    /**
+     * Gets _ id.
+     *
+     * @return the _id
+     */
+    public final String get_id() {
+        return _id;
+    }
 
-	/**
-	 * @return the code
-	 */
-	public final String getCode() {
-		return code;
-	}
+    /**
+     * Sets _ id.
+     *
+     * @param _id the _id to set
+     */
+    public final void set_id(String _id) {
+        this._id = _id;
+    }
 
-	/**
-	 * @param code
-	 *            the code to set
-	 */
-	public final void setCode(String code) {
-		this.code = code;
-	}
-	
-	/**
-	 * @return the chrono
-	 */
-	public String getChrono() {
-		return chrono;
-	}
+    /**
+     * Gets code.
+     *
+     * @return the code
+     */
+    public final String getCode() {
+        return code;
+    }
 
-	/**
-	 * @param chrono the chrono to set
-	 */
-	public void setChrono(String chrono) {
-		this.chrono = chrono;
-	}
+    /**
+     * Sets code.
+     *
+     * @param code the code to set
+     */
+    public final void setCode(String code) {
+        this.code = code;
+    }
 
-	/**
-	 * @return the timer
-	 */
-	public final long getTimer() {
-		return timer;
-	}
+    /**
+     * Gets chrono.
+     *
+     * @return the chrono
+     */
+    public String getChrono() {
+        return chrono;
+    }
 
-	/**
-	 * @param timer
-	 *            the timer to set
-	 */
-	public final void setTimer(long timer) {
-		this.timer = timer;
-	}
+    /**
+     * Sets chrono.
+     *
+     * @param chrono the chrono to set
+     */
+    public void setChrono(String chrono) {
+        this.chrono = chrono;
+    }
 
-	/**
-	 * @return the owner
-	 */
-	public final String getOwner() {
-		return owner;
-	}
+    /**
+     * Gets timer.
+     *
+     * @return the timer
+     */
+    public final long getTimer() {
+        return timer;
+    }
 
-	/**
-	 * @param owner
-	 *            the owner to set
-	 */
-	public final void setOwner(String owner) {
-		this.owner = owner;
-	}
+    /**
+     * Sets timer.
+     *
+     * @param timer the timer to set
+     */
+    public final void setTimer(long timer) {
+        this.timer = timer;
+    }
 
-	/**
-	 * @return the sandBoxId
-	 */
-	public String getSandBoxId() {
-		return sandBoxId;
-	}
+    /**
+     * Gets owner.
+     *
+     * @return the owner
+     */
+    public final String getOwner() {
+        return owner;
+    }
 
-	/**
-	 * @param sandBoxId the sandBoxId to set
-	 */
-	public void setSandBoxId(String sandBoxId) {
-		this.sandBoxId = sandBoxId;
-	}
+    /**
+     * Sets owner.
+     *
+     * @param owner the owner to set
+     */
+    public final void setOwner(String owner) {
+        this.owner = owner;
+    }
 
-	/**
-	 * @return the activityId
-	 */
-	public final String getActivityId() {
-		return activityId;
-	}
+    /**
+     * Gets sand box id.
+     *
+     * @return the sandBoxId
+     */
+    public String getSandBoxId() {
+        return sandBoxId;
+    }
 
-	/**
-	 * @param activityId
-	 *            the activityId to set
-	 */
-	public final void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+    /**
+     * Sets sand box id.
+     *
+     * @param sandBoxId the sandBoxId to set
+     */
+    public void setSandBoxId(String sandBoxId) {
+        this.sandBoxId = sandBoxId;
+    }
 
-	/**
-	 * @return the value
-	 */
-	public final String getValue() {
-		return value;
-	}
+    /**
+     * Gets activity id.
+     *
+     * @return the activityId
+     */
+    public final String getActivityId() {
+        return activityId;
+    }
 
-	/**
-	 * @param value
-	 *            the value to set
-	 */
-	public final void setValue(String value) {
-		this.value = value;
-	}
+    /**
+     * Sets activity id.
+     *
+     * @param activityId the activityId to set
+     */
+    public final void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
 
-	/**
-	 * @return the eventId
-	 */
-	public final String getEventId() {
-		return eventId;
-	}
+    /**
+     * Gets value.
+     *
+     * @return the value
+     */
+    public final String getValue() {
+        return value;
+    }
 
-	/**
-	 * @param eventId
-	 *            the eventId to set
-	 */
-	public final void setEventId(String eventId) {
-		this.eventId = eventId;
-	}
+    /**
+     * Sets value.
+     *
+     * @param value the value to set
+     */
+    public final void setValue(String value) {
+        this.value = value;
+    }
 
-	/**
-	 * @return the producter
-	 */
-	public final List<String> getProducter() {
-		return producter;
-	}
+    /**
+     * Gets event id.
+     *
+     * @return the eventId
+     */
+    public final String getEventId() {
+        return eventId;
+    }
 
-	/**
-	 * @param producter
-	 *            the producter to set
-	 */
-	public final void setProducter(List<String> producter) {
-		this.producter = producter;
-	}
+    /**
+     * Sets event id.
+     *
+     * @param eventId the eventId to set
+     */
+    public final void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    /**
+     * Gets producter.
+     *
+     * @return the producter
+     */
+    public final List<String> getProducter() {
+        return producter;
+    }
+
+    /**
+     * Sets producter.
+     *
+     * @param producter the producter to set
+     */
+    public final void setProducter(List<String> producter) {
+        this.producter = producter;
+    }
 }
