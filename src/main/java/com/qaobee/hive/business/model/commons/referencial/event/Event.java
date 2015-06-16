@@ -1,7 +1,29 @@
+/*
+ *  __________________
+ *  Qaobee
+ *  __________________
+ *
+ *  Copyright (c) 2015.  Qaobee
+ *  All Rights Reserved.
+ *
+ *  NOTICE: All information contained here is, and remains
+ *  the property of Qaobee and its suppliers,
+ *  if any. The intellectual and technical concepts contained
+ *  here are proprietary to Qaobee and its suppliers and may
+ *  be covered by U.S. and Foreign Patents, patents in process,
+ *  and are protected by trade secret or copyright law.
+ *  Dissemination of this information or reproduction of this material
+ *  is strictly forbidden unless prior written permission is obtained
+ *  from Qaobee.
+ */
+
 package com.qaobee.hive.business.model.commons.referencial.event;
 
 import java.util.List;
 
+import com.qaobee.hive.business.model.commons.settings.Activity;
+import com.qaobee.hive.business.model.commons.settings.CategoryAge;
+import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.business.model.transversal.Address;
 
 /**
@@ -15,11 +37,21 @@ public class Event {
 	 * The Event id.
 	 */
 	private String _id;
+	
+	/**
+	 * categoryAge
+	 */
+	private CategoryAge categoryAge;
 
 	/**
 	 * the season code
 	 */
-	private String seasonCode;
+	private Season season;
+	
+	/**
+	 * the activity code
+	 */
+	private Activity activity;
 
 	/**
 	 * Label Event
@@ -32,9 +64,9 @@ public class Event {
 	private String eventType;
 
 	/**
-	 * the event owner
+	 * List of owner event.
 	 */
-	private EventOwner eventOwner;
+	private List<String> owner;
 
 	/**
 	 * Start date.
@@ -55,140 +87,179 @@ public class Event {
 	 * The event address
 	 */
 	private Address address;
+	
+	/**
+	 * Event Link
+	 */
+	private EventLink eventLink;
 
 	/**
 	 * @return the _id
 	 */
-	public final String get_id() {
+	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * @param _id
-	 *            the _id to set
+	 * @param _id the _id to set
 	 */
-	public final void set_id(String _id) {
+	public void set_id(String _id) {
 		this._id = _id;
+	}
+
+	/**
+	 * @return the categoryAge
+	 */
+	public CategoryAge getCategoryAge() {
+		return categoryAge;
+	}
+
+	/**
+	 * @param categoryAge the categoryAge to set
+	 */
+	public void setCategoryAge(CategoryAge categoryAge) {
+		this.categoryAge = categoryAge;
+	}
+
+	/**
+	 * @return the season
+	 */
+	public Season getSeason() {
+		return season;
+	}
+
+	/**
+	 * @param season the season to set
+	 */
+	public void setSeason(Season season) {
+		this.season = season;
+	}
+
+	/**
+	 * @return the activity
+	 */
+	public Activity getActivity() {
+		return activity;
+	}
+
+	/**
+	 * @param activity the activity to set
+	 */
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 
 	/**
 	 * @return the label
 	 */
-	public final String getLabel() {
+	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * @param label
-	 *            the label to set
+	 * @param label the label to set
 	 */
-	public final void setLabel(String label) {
+	public void setLabel(String label) {
 		this.label = label;
 	}
 
 	/**
 	 * @return the eventType
 	 */
-	public final String getEventType() {
+	public String getEventType() {
 		return eventType;
 	}
 
 	/**
-	 * @param eventType
-	 *            the eventType to set
+	 * @param eventType the eventType to set
 	 */
-	public final void setEventType(String eventType) {
+	public void setEventType(String eventType) {
 		this.eventType = eventType;
 	}
 
 	/**
-	 * @return the eventOwner
+	 * @return the owner
 	 */
-	public final EventOwner getEventOwner() {
-		return eventOwner;
+	public List<String> getOwner() {
+		return owner;
 	}
 
 	/**
-	 * @param eventOwner
-	 *            the eventOwner to set
+	 * @param owner the owner to set
 	 */
-	public final void setEventOwner(EventOwner eventOwner) {
-		this.eventOwner = eventOwner;
+	public void setOwner(List<String> owner) {
+		this.owner = owner;
 	}
 
 	/**
 	 * @return the startDate
 	 */
-	public final Long getStartDate() {
+	public Long getStartDate() {
 		return startDate;
 	}
 
 	/**
-	 * @param startDate
-	 *            the startDate to set
+	 * @param startDate the startDate to set
 	 */
-	public final void setStartDate(Long startDate) {
+	public void setStartDate(Long startDate) {
 		this.startDate = startDate;
 	}
 
 	/**
 	 * @return the endDate
 	 */
-	public final Long getEndDate() {
+	public Long getEndDate() {
 		return endDate;
 	}
 
 	/**
-	 * @param endDate
-	 *            the endDate to set
+	 * @param endDate the endDate to set
 	 */
-	public final void setEndDate(Long endDate) {
+	public void setEndDate(Long endDate) {
 		this.endDate = endDate;
 	}
 
 	/**
 	 * @return the participants
 	 */
-	public final List<Participant> getParticipants() {
+	public List<Participant> getParticipants() {
 		return participants;
 	}
 
 	/**
-	 * @param participants
-	 *            the participants to set
+	 * @param participants the participants to set
 	 */
-	public final void setParticipants(List<Participant> participants) {
+	public void setParticipants(List<Participant> participants) {
 		this.participants = participants;
 	}
 
 	/**
 	 * @return the address
 	 */
-	public final Address getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
 	/**
-	 * @param address
-	 *            the address to set
+	 * @param address the address to set
 	 */
-	public final void setAddress(Address address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 
 	/**
-	 * @return the seasonCode
+	 * @return the eventLink
 	 */
-	public final String getSeasonCode() {
-		return seasonCode;
+	public EventLink getEventLink() {
+		return eventLink;
 	}
 
 	/**
-	 * @param seasonCode
-	 *            the seasonCode to set
+	 * @param eventLink the eventLink to set
 	 */
-	public final void setSeasonCode(String seasonCode) {
-		this.seasonCode = seasonCode;
+	public void setEventLink(EventLink eventLink) {
+		this.eventLink = eventLink;
 	}
 
+	
 }

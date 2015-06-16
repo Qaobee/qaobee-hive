@@ -1,26 +1,27 @@
-/*************************************************************************
- * 
- * Qaobee
- * __________________
- * 
- * [2014] Qaobee
- * All Rights Reserved.
- * 
- * NOTICE: All information contained here is, and remains
- * the property of Qaobee and its suppliers,
- * if any. The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may
- * be covered by U.S. and Foreign Patents, patents in process,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Qaobee.
+/*
+ *  __________________
+ *  Qaobee
+ *  __________________
+ *
+ *  Copyright (c) 2015.  Qaobee
+ *  All Rights Reserved.
+ *
+ *  NOTICE: All information contained here is, and remains
+ *  the property of Qaobee and its suppliers,
+ *  if any. The intellectual and technical concepts contained
+ *  here are proprietary to Qaobee and its suppliers and may
+ *  be covered by U.S. and Foreign Patents, patents in process,
+ *  and are protected by trade secret or copyright law.
+ *  Dissemination of this information or reproduction of this material
+ *  is strictly forbidden unless prior written permission is obtained
+ *  from Qaobee.
  */
 package com.qaobee.hive.business.model.commons.settings;
 
 import java.util.Calendar;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.qaobee.hive.business.model.transversal.Audit;
 
 /**
  * Class that defines a season.
@@ -49,6 +50,9 @@ public class Season {
 
 	/** Internal id of an country. */
 	private String countryId;
+	
+	/** audit CRUD object */
+	private Audit audit;
 
 	/**
 	 * Constructor.
@@ -201,6 +205,20 @@ public class Season {
 	 */
 	public final void setLabel(String label) {
 		this.label = label;
+	}
+
+	/**
+	 * @return the audit
+	 */
+	public Audit getAudit() {
+		return audit;
+	}
+
+	/**
+	 * @param audit the audit to set
+	 */
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
 
 }

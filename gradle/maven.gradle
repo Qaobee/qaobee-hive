@@ -1,0 +1,71 @@
+/*
+ *  __________________
+ *  Qaobee
+ *  __________________
+ *
+ *  Copyright (c) 2015.  Qaobee
+ *  All Rights Reserved.
+ *
+ *  NOTICE: All information contained here is, and remains
+ *  the property of Qaobee and its suppliers,
+ *  if any. The intellectual and technical concepts contained
+ *  here are proprietary to Qaobee and its suppliers and may
+ *  be covered by U.S. and Foreign Patents, patents in process,
+ *  and are protected by trade secret or copyright law.
+ *  Dissemination of this information or reproduction of this material
+ *  is strictly forbidden unless prior written permission is obtained
+ *  from Qaobee.
+ */
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+if (!hasProperty('sonatypeUsername')) {
+	ext.sonatypeUsername = ''
+}
+if (!hasProperty('sonatypePassword')) {
+	ext.sonatypePassword = ''
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// maven task configuration
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+signing {
+	required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+	sign configurations.archives
+}
+
+uploadArchives {
+	group 'build'
+	description = "Does a maven deploy of archives artifacts"
+
+	repositories {
+		mavenDeployer {
+      // setUniqueVersion(false)
+
+			configuration = configurations.archives
+
+			repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+
+			snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+				authentication(userName: sonatypeUsername, password: sonatypePassword)
+			}
+
+			if (isReleaseVersion) {
+				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+			}
+
+			configurePom(pom)
+		}
+	}
+}
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// configuration methods
+
+
+

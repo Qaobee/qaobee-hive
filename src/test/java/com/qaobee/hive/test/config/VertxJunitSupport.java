@@ -1,47 +1,36 @@
-/*************************************************************************
- * 
- * Qaobee
- * __________________
- * 
- * [2014] Qaobee
- * All Rights Reserved.
- * 
- * NOTICE: All information contained here is, and remains
- * the property of Qaobee and its suppliers,
- * if any. The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may
- * be covered by U.S. and Foreign Patents, patents in process,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Qaobee.
+/*
+ *  __________________
+ *  Qaobee
+ *  __________________
+ *
+ *  Copyright (c) 2015.  Qaobee
+ *  All Rights Reserved.
+ *
+ *  NOTICE: All information contained here is, and remains
+ *  the property of Qaobee and its suppliers,
+ *  if any. The intellectual and technical concepts contained
+ *  here are proprietary to Qaobee and its suppliers and may
+ *  be covered by U.S. and Foreign Patents, patents in process,
+ *  and are protected by trade secret or copyright law.
+ *  Dissemination of this information or reproduction of this material
+ *  is strictly forbidden unless prior written permission is obtained
+ *  from Qaobee.
  */
 package com.qaobee.hive.test.config;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.inject.Inject;
-
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.mongodb.MongoException;
+import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
+import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
+import com.qaobee.hive.business.model.sandbox.effective.Person;
+import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.utils.guice.GuiceModule;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.ArrayUtils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
+import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.vertx.java.core.eventbus.ReplyException;
@@ -55,21 +44,18 @@ import org.vertx.java.test.junit.VertxJUnit4ClassRunner;
 import org.vertx.java.test.utils.DeploymentUtils;
 import org.vertx.java.test.utils.QueueReplyHandler;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.mongodb.MongoException;
-import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
-import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
-import com.qaobee.hive.business.model.sandbox.effective.Person;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.technical.vertx.utils.guice.GuiceModule;
+import javax.inject.Inject;
+import java.io.*;
+import java.net.ServerSocket;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The Class VertxJunitSupport.
- * 
+ *
  * @author xavier
  */
 
@@ -78,38 +64,34 @@ import com.qaobee.hive.technical.vertx.utils.guice.GuiceModule;
 @TestModule(name = "com.qaobee~hive~0.1", jsonConfig = "file:config.json")
 @Ignore
 public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest {
-
-	/** The Constant DB_NAME. */
-	public static final String DB_NAME = "hive";
-
-	/** The Constant LOCALE. */
+    /** The Constant LOCALE. */
 	public static final String LOCALE = "fr_FR";
 
-	/** The name. */
+    /** The name. */
 	@Rule
 	public TestName name = new TestName();
 
-	/** The Constant LOG. */
+    /** The Constant LOG. */
 	protected static final Logger LOG = Logger.getLogger(VertxJunitSupport.class.getName());
 
-	/** The module config. */
+    /** The module config. */
 	protected static JsonObject moduleConfig;
 
-	/** The timeout. */
+    /** The timeout. */
 	protected long timeout = 150L;
 
-	/** The queue. */
+    /** The queue. */
 	protected final LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<>();
 
-	/** List for tests with a blank value */
-	protected List<String> blank = Arrays.asList(" ");
-
-	@Inject
+    /**
+     * The Mongo.
+     */
+    @Inject
 	protected MongoDB mongo;
 
-	/**
-	 * Prints the info.
-	 */
+    /**
+     * Prints the info.
+     */
 	@Before
 	public void printInfo() {
 		Injector injector = Guice.createInjector(new GuiceModule(moduleConfig));
@@ -118,9 +100,9 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 		mongo.getDb().dropDatabase();
 	}
 
-	/**
-	 * Start mongo server.
-	 */
+    /**
+     * Start mongo server.
+     */
 	@BeforeClass
 	public static void startMongoServer() {
 		moduleConfig = DeploymentUtils.getJsonConfig(VertxJunitSupport.class.getAnnotation(TestModule.class).jsonConfig());
@@ -132,13 +114,12 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 		}
 	}
 
-	/**
-	 * Find free port.
-	 * 
-	 * @return the int
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
+    /**
+     * Find free port.
+     *
+     * @return the int
+     * @throws IOException              Signals that an I/O exception has occurred.
+     */
 	public static int findFreePort() throws IOException {
 		final ServerSocket server = new ServerSocket(0);
 		final int port = server.getLocalPort();
@@ -146,11 +127,11 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 		return port;
 	}
 
-	/**
-	 * Generate user.
-	 * 
-	 * @return a user
-	 */
+    /**
+     * Generate user.
+     *
+     * @return a user
+     */
 	public Person generateUser() {
 		final Person p = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), Person.class);
 		try {
@@ -165,32 +146,29 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 		return p;
 	}
 
-	/**
-	 * Gets the params.
-	 * 
-	 * @param args
-	 *            tableaux de type [clef, val1, val2, ...]
-	 * @return map de paramètres de requête
-	 */
+    /**
+     * Gets the params.
+     *
+     * @param args             tableaux de type [clef, val1, val2, ...]
+     * @return map de paramètres de requête
+     */
 	public Map<String, List<String>> getParams(final String[]... args) {
-		final Map<String, List<String>> params = new HashMap<String, List<String>>();
+		final Map<String, List<String>> params = new HashMap<>();
 		for (final String[] arg : args) {
 			params.put(arg[0], Arrays.asList((String[]) ArrayUtils.subarray(arg, 1, arg.length)));
 		}
 		return params;
 	}
 
-	/**
-	 * Sendon bus.
-	 * 
-	 * @param address
-	 *            bus address
-	 * @param req
-	 *            request
-	 * @return result
-	 */
+    /**
+     * Sendon bus.
+     *
+     * @param address             bus address
+     * @param req             request
+     * @return result string
+     */
 	public String sendonBus(final String address, final RequestWrapper req) {
-		getEventBus().send(address, Json.encode(req), new QueueReplyHandler<Object>(queue, timeout));
+		getEventBus().send(address, Json.encode(req), new QueueReplyHandler<>(queue, timeout));
 		try {
 			final Object result = queue.poll(timeout, TimeUnit.SECONDS);
 			if (result instanceof ReplyException) {
@@ -215,45 +193,40 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 		return null;
 	}
 
-	/** The Constant POPULATE_ONLY. */
+    /** The Constant POPULATE_ONLY. */
 	public static final String POPULATE_ONLY = "only";
 
-	/** The Constant POPULATE_WITHOUT. */
+    /** The Constant POPULATE_WITHOUT. */
 	public static final String POPULATE_WITHOUT = "without";
 
-	/** The Constant POPULATE_ALL. */
+    /** The Constant POPULATE_ALL. */
 	public static final String POPULATE_ALL = "all";
 
-	/**
-	 * Populates the test base.
-	 * 
-	 * @param populateType
-	 *            (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
-	 * @param mongoFiles
-	 *            (String[]) : array of filenames
-	 */
+    /**
+     * Populates the test base.
+     *
+     * @param populateType             (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
+     * @param mongoFiles             (String[]) : array of filenames
+     */
 	public void populate(String populateType, String... mongoFiles) {
 		populate(populateType, "", mongoFiles);
 	}
 
-	/**
-	 * Populates the test base. It is not needed to indicate the subdirectory name, the function will search in all directories
-	 * of "scripts/mongo".
-	 * 
-	 * @param populateType
-	 *            (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
-	 * @param relativeDirectory
-	 *            (String) : relative dir from "scripts/mongo"
-	 * @param mongoFiles
-	 *            (String[]) : array of filenames
-	 */
+    /**
+     * Populates the test base. It is not needed to indicate the subdirectory name, the function will search in all directories
+     * of "scripts/mongo".
+     *
+     * @param populateType             (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
+     * @param relativeDirectory             (String) : relative dir from "scripts/mongo"
+     * @param mongoFiles             (String[]) : array of filenames
+     */
 	private void populate(String populateType, String relativeDirectory, String... mongoFiles) {
 		boolean comments = false;
 
 		File[] listFiles = (new File("scripts/mongo" + relativeDirectory)).listFiles();
 		if (listFiles != null && listFiles.length > 0) {
 			BufferedReader reader = null;
-			List<String> mongoFilesList = new ArrayList<String>();
+			List<String> mongoFilesList = new ArrayList<>();
 			if (mongoFiles != null && mongoFiles.length > 0) {
 				mongoFilesList = Arrays.asList(mongoFiles);
 			}
@@ -267,6 +240,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 				// all
 				if (POPULATE_ALL.equals(populateType)) {
 					// OK
+                    getContainer().logger().debug("OK");
 				} else if (POPULATE_ONLY.equals(populateType) && !mongoFilesList.contains(scriptMongo.getName())) {
 					continue;
 				} else if (POPULATE_WITHOUT.equals(populateType) && mongoFilesList.contains(scriptMongo.getName())) {
@@ -335,7 +309,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 						try {
 							reader.close();
 						} catch (IOException e) {
-
+                            getContainer().logger().error(e.getMessage(), e);
 						}
 					}
 				}
@@ -343,49 +317,41 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 		}
 
 	}
-	
-	/**
-	 * Commons function for return a country JsonObject
-	 * @param id
-	 * @return
-	 */
+
+    /**
+     * Commons function for return a country JsonObject
+     * @param id the id
+     * @return activity
+     */
 	protected  JsonObject getActivity(String id) {
 		
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
 		req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		final HashMap<String, List<String>> params = new HashMap<>();
 		
 		/* Retreive object */
-		params.put(ActivityVerticle.PARAM_ID, Arrays.asList(id));
+		params.put(ActivityVerticle.PARAM_ID, Collections.singletonList(id));
 		req.setParams(params);
-
 		final String reply = sendonBus(ActivityVerticle.GET, req);
-		JsonObject json = new JsonObject(reply);
-		
-		return json;
+		return new JsonObject(reply);
 	}
-	
-	/**
-	 * Commons function for return a country JsonObject
-	 * @param id
-	 * @return
-	 */
+
+    /**
+     * Commons function for return a country JsonObject
+     * @param id the id
+     * @return country
+     */
 	protected  JsonObject getCountry(String id) {
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
 		req.setMethod(Constantes.GET);
-
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
-		
+		final HashMap<String, List<String>> params = new HashMap<>();
 		/* Retreive object */
-		params.put(CountryVerticle.PARAM_ID, Arrays.asList(id));
+		params.put(CountryVerticle.PARAM_ID, Collections.singletonList(id));
 		req.setParams(params);
-
 		final String reply = sendonBus(CountryVerticle.GET, req);
-		JsonObject json = new JsonObject(reply);
-		
-		return json;
+		return new JsonObject(reply);
 	}
 }
