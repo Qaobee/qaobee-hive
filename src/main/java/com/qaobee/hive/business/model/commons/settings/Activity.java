@@ -37,7 +37,7 @@ public class Activity {
 	private String label;
 
 	/** Label. */
-	private boolean activated;
+	private boolean enable;
 
 	/** Type of activity. */
 	private ActivityTypeEnum activityType;
@@ -128,22 +128,17 @@ public class Activity {
 	}
 
 	/**
-	 * Checks if is activated.
-	 *
-	 * @return the activated
+	 * @return the enable
 	 */
-	public final boolean isActivated() {
-		return activated;
+	public boolean isEnable() {
+		return enable;
 	}
 
 	/**
-	 * Sets the activated.
-	 *
-	 * @param activated
-	 *            the activated to set
+	 * @param enable the enable to set
 	 */
-	public final void setActivated(boolean activated) {
-		this.activated = activated;
+	public void setEnable(boolean enable) {
+		this.enable = enable;
 	}
 
 	/**
@@ -159,5 +154,4 @@ public class Activity {
 	public void setAudit(Audit audit) {
 		this.audit = audit;
 	}
-
 }

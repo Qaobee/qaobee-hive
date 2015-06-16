@@ -31,12 +31,6 @@ public class Country {
 	/** OSCE Code of the country. */
 	private int codeOSCE;
 
-	/** Alpha country code in 2 characters. */
-	private String alpha2;
-
-	/** Alpha country code in 3 characters. */
-	private String alpha3;
-
 	/** Label code. */
 	private String label;
 
@@ -82,44 +76,6 @@ public class Country {
 	 */
 	public void setCodeOSCE(final int codeOSCE) {
 		this.codeOSCE = codeOSCE;
-	}
-
-	/**
-	 * Gets the alpha country code in 2 characters.
-	 *
-	 * @return the alpha country code in 2 characters
-	 */
-	public String getAlpha2() {
-		return alpha2;
-	}
-
-	/**
-	 * Sets the alpha country code in 2 characters.
-	 *
-	 * @param alpha2
-	 *            the new alpha country code in 2 characters
-	 */
-	public void setAlpha2(final String alpha2) {
-		this.alpha2 = alpha2;
-	}
-
-	/**
-	 * Gets the alpha country code in 3 characters.
-	 *
-	 * @return the alpha country code in 3 characters
-	 */
-	public String getAlpha3() {
-		return alpha3;
-	}
-
-	/**
-	 * Sets the alpha country code in 3 characters.
-	 *
-	 * @param alpha3
-	 *            the new alpha country code in 3 characters
-	 */
-	public void setAlpha3(final String alpha3) {
-		this.alpha3 = alpha3;
 	}
 
 	/**
