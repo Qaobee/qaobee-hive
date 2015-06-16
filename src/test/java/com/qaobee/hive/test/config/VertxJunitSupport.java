@@ -23,7 +23,7 @@ import com.google.inject.Injector;
 import com.mongodb.MongoException;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
-import com.qaobee.hive.business.model.sandbox.effective.Person;
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -132,18 +132,18 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      *
      * @return a user
      */
-	public Person generateUser() {
-		final Person p = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), Person.class);
+	public User generateUser() {
+		final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
 		try {
-			final String id = mongo.save(p);
+			final String id = mongo.save(user);
 			if (id == null) {
 				Assert.fail("user id is null");
 			}
-			p.set_id(id);
+			user.set_id(id);
 		} catch (EncodeException | QaobeeException e) {
 			Assert.fail(e.getMessage());
 		}
-		return p;
+		return user;
 	}
 
     /**

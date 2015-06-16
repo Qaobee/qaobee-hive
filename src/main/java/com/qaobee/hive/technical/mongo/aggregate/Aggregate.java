@@ -19,15 +19,16 @@
 
 package com.qaobee.hive.technical.mongo.aggregate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
+ * The type Aggregate.
  * @author cke
  */
 public class Aggregate {
@@ -37,7 +38,7 @@ public class Aggregate {
 
 	/**
 	 * list of field for the stage
-	 */
+     */
 	BasicDBList fields;
 
 	/** the stage */
@@ -48,13 +49,12 @@ public class Aggregate {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param stageName
-	 * @param listFields
-	 */
+	 *
+	 * @param Attrs the attrs
+     */
 	public Aggregate(Map<String, Object> Attrs) {
 
-		pipeline = new ArrayList<DBObject>();
+		pipeline = new ArrayList<>();
 
 		for (Object object : fields) {
 
@@ -64,17 +64,19 @@ public class Aggregate {
 
 	/**
 	 * Add field in the stage
-	 * 
-	 * @param field
-	 * @param value
-	 */
+	 *
+	 * @param field the field
+	 * @param value the value
+     */
 	public void addField(final String field, final String value) {
 		fields.add(new BasicDBObject(field, value));
 	}
 
 	/**
+	 * Gets stage.
+	 *
 	 * @return the stage
-	 */
+     */
 	public final DBObject getStage() {
 		stage = new BasicDBObject(this.typeStage, fields);
 		return stage;

@@ -20,36 +20,49 @@
 package com.qaobee.hive.technical.utils.guice;
 
 
-import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
-import org.vertx.java.core.json.JsonObject;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.tools.PasswordEncryptionServiceImpl;
+import com.qaobee.hive.technical.utils.AuthCheck;
+import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.impl.PersonUtilsImpl;
-import com.qaobee.hive.technical.utils.impl.UtilsImpl;
 import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
 import com.qaobee.hive.technical.utils.guice.services.impl.FIlesImpl;
+import com.qaobee.hive.technical.utils.impl.AuthCheckImpl;
+import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
+import com.qaobee.hive.technical.utils.impl.PersonUtilsImpl;
+import com.qaobee.hive.technical.utils.impl.UtilsImpl;
+import org.vertx.java.core.json.JsonObject;
+
 
 /**
- * Created by xavier on 09/11/14.
+ * The type Guice module.
  */
 public class GuiceModule extends AbstractModule {
 
 
+    /**
+     * The Config.
+     */
     private JsonObject config;
 
+    /**
+     * Instantiates a new Guice module.
+     *
+     * @param config the config
+     */
     public GuiceModule(JsonObject config) {
         this.config = config;
     }
 
+    /**
+     * Configure void.
+     */
     @Override
     protected void configure() {
         //get the vertx configuration
@@ -61,7 +74,7 @@ public class GuiceModule extends AbstractModule {
 
         bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
-//        bind(AuthCheck.class).to(AuthCheckImpl.class).in(Singleton.class);
+        bind(AuthCheck.class).to(AuthCheckImpl.class).in(Singleton.class);
 //        bind(SeasonCheck.class).to(SeasonCheckImpl.class).in(Singleton.class);
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(PersonUtils.class).to(PersonUtilsImpl.class).in(Singleton.class);
