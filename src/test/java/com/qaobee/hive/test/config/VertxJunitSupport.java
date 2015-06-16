@@ -60,7 +60,7 @@ import java.util.logging.Logger;
  */
 
 @RunWith(VertxJUnit4ClassRunner.class)
-@VertxConfiguration(modsDir = "target/mods", injectResources = true)
+@VertxConfiguration(modsDir = "build/mods", injectResources = true)
 @TestModule(name = "com.qaobee~hive~0.1", jsonConfig = "file:config.json")
 @Ignore
 public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest {
