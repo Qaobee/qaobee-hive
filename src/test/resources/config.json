@@ -1,14 +1,4 @@
 {
-	"modules" : [
-		{
-			"name" : "io.vertx~mod-mailer~2.0.0-final", 
-			"conf" : "mailer.mod"
-		}, 
-		{
-			"name" : "com.bloidonia~mod-metrics~1.0.1", 
-			"conf" : "metrix.mod"
-		}
-	], 
 	"cors" : {
 		"enabled" : true
 	}, 
