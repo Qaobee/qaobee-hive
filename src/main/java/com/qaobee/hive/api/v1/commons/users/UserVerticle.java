@@ -33,7 +33,7 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.technical.vertx.utils.TemplatesVerticle;
+import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.apache.commons.lang.StringUtils;

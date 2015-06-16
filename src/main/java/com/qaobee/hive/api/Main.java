@@ -26,7 +26,7 @@ import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.technical.vertx.utils.AssetVerticle;
+import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;

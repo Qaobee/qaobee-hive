@@ -18,11 +18,6 @@
  */
 package com.qaobee.hive.test.config;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-
-import org.vertx.java.core.json.JsonObject;
-
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
@@ -31,6 +26,9 @@ import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
+import org.vertx.java.core.json.JsonObject;
+
+import java.io.IOException;
 
 /**
  * The Class JunitMongoSingleton.
@@ -38,79 +36,82 @@ import de.flapdoodle.embed.process.runtime.Network;
  * @author xavier
  */
 public class JunitMongoSingleton {
-	
-	/** The mongod executable. */
-	private static MongodExecutable mongodExecutable = null;
-	
-	/** The starter. */
-	private static MongodStarter starter = MongodStarter.getDefaultInstance();
-	
-	/** The process. */
-	private MongodProcess process;
 
-	/**
-	 * Instantiates a new junit mongo singleton.
-	 */
-	private JunitMongoSingleton() {
-		//
-	}
+    /**
+     * The mongod executable.
+     */
+    private static MongodExecutable mongodExecutable = null;
 
-	/**
-	 * Start server.
-	 *
-	 * @param config
-	 *            the config
-	 * @throws UnknownHostException
-	 *             the unknown host exception
-	 * @throws IOException
-	 *             Signals that an I/O exception has occurred.
-	 */
-	public void startServer(JsonObject config) throws UnknownHostException, IOException {
-		System.out.println("testing prrocess : " + process);
-		if (process == null || !process.isProcessRunning()) {
-			System.out.println("Running mongod");
-			int port = config.getObject("mongo.persistor").getInteger("port");
-			IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.V2_4).net(new Net(port, Network.localhostIsIPv6())).build();
-			mongodExecutable = starter.prepare(mongodConfig);
-			setProcess(mongodExecutable.start());
-		}
-	}
+    /**
+     * The starter.
+     */
+    private static MongodStarter starter = MongodStarter.getDefaultInstance();
 
-	/**
-	 * Holder.
-	 */
-	private static class JunitMongoSingletonHolder {
+    /**
+     * The process.
+     */
+    private MongodProcess process;
 
-		/** unique instance *. */
-		private static final JunitMongoSingleton INSTANCE = new JunitMongoSingleton();
-	}
+    /**
+     * Instantiates a new junit mongo singleton.
+     */
+    private JunitMongoSingleton() {
+        //
+    }
 
-	/**
-	 * Gets the single instance of JunitMongoSingleton.
-	 *
-	 * @return the instance
-	 */
-	public static JunitMongoSingleton getInstance() {
-		return JunitMongoSingletonHolder.INSTANCE;
-	}
+    /**
+     * Start server.
+     *
+     * @param config the config
+     * @throws IOException          Signals that an I/O exception has occurred.
+     */
+    public void startServer(JsonObject config) throws IOException {
+        System.out.println("testing process : " + process);
+        if (process == null || !process.isProcessRunning()) {
+            System.out.println("Running mongod");
+            int port = config.getObject("mongo.persistor").getInteger("port");
+            IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.V2_4).net(new Net(port, Network.localhostIsIPv6())).build();
+            mongodExecutable = starter.prepare(mongodConfig);
+            setProcess(mongodExecutable.start());
+        }
+    }
 
-	/**
-	 * Gets the process.
-	 *
-	 * @return the process
-	 */
-	public MongodProcess getProcess() {
-		return process;
-	}
+    /**
+     * Holder.
+     */
+    private static class JunitMongoSingletonHolder {
 
-	/**
-	 * Sets the process.
-	 *
-	 * @param process
-	 *            the process to set
-	 */
-	public void setProcess(MongodProcess process) {
-		this.process = process;
-	}
+        /**
+         * unique instance *.
+         */
+        private static final JunitMongoSingleton INSTANCE = new JunitMongoSingleton();
+    }
+
+    /**
+     * Gets the single instance of JunitMongoSingleton.
+     *
+     * @return the instance
+     */
+    public static JunitMongoSingleton getInstance() {
+        return JunitMongoSingletonHolder.INSTANCE;
+    }
+
+    /**
+     * Gets the process.
+     *
+     * @return the process
+     */
+    public MongodProcess getProcess() {
+        return process;
+    }
+
+    /**
+     * Sets the process.
+     *
+     * @param process the process to set
+     */
+    public void setProcess(MongodProcess process) {
+        this.process = process;
+    }
 
 }

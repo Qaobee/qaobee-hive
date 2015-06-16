@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>{forname} {name}</title>
+<link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css' />
+<style>
+{css}
+body {
+	background-color: #fff;
+}
+
+#avatar { 
+	width: 177px;
+  	height: auto;
+  	margin: 10px;
+  	vertical-align: middle;
+}
+</style>
+</head>
+<body>	
+	<h1><div id="avatar" class="media" data-src="{avatar}" />
+		{forname} {name} <small>{username}</small>
+	</h1>
+	<hr />
+	{birthdate}
+	<br /> {address}
+	<br /> {zipcode} {city} {country}
+	<br /> {phoneNumber} / {email}
+</body>
+</html>

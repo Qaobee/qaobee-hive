@@ -16,7 +16,7 @@
  *  is strictly forbidden unless prior written permission is obtained
  *  from Qaobee.
  */
-package com.qaobee.hive.technical.vertx.utils;
+package com.qaobee.hive.api.v1.commons.utils;
 
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
