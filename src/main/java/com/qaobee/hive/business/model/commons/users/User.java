@@ -56,6 +56,11 @@ public class User {
 	 * The address.
 	 */
 	private Address address;
+	
+	/**
+	 * The birthdate.
+	 */
+	private long birthdate;
 
 	/**
 	 * The contact.
@@ -68,6 +73,11 @@ public class User {
 	private Country country;
 	
 	/**
+	 * The nationality.
+	 */
+	private Country nationality;
+	
+	/**
 	 * The Person account list.
 	 */
 	private Account account;
@@ -76,6 +86,11 @@ public class User {
      * The timestamp.
      */
     private long timestamp;
+    
+    /**
+	 * The gender.
+	 */
+	private String gender;
     
 	
 	/**
@@ -221,6 +236,48 @@ public class User {
 	 */
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	/**
+	 * @return the gender
+	 */
+	public String getGender() {
+		return gender;
+	}
+
+	/**
+	 * @param gender the gender to set
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	/**
+	 * @return the nationality
+	 */
+	public Country getNationality() {
+		return nationality;
+	}
+
+	/**
+	 * @param nationality the nationality to set
+	 */
+	public void setNationality(Country nationality) {
+		this.nationality = nationality;
+	}
+
+	/**
+	 * @return the birthdate
+	 */
+	public long getBirthdate() {
+		return birthdate;
+	}
+
+	/**
+	 * @param birthdate the birthdate to set
+	 */
+	public void setBirthdate(long birthdate) {
+		this.birthdate = birthdate;
 	}
 
 

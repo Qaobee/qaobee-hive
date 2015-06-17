@@ -43,7 +43,7 @@ import java.util.Map;
  * @author cke
  *
  */
-@DeployableVerticle
+@DeployableVerticle(isWorker = true)
 public class CountryVerticle extends AbstractGuiceVerticle {
 
 	// Declaration des variables finals

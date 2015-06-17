@@ -18,6 +18,14 @@
  */
 package com.qaobee.hive.test.api.commons.user;
 
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.vertx.java.core.json.DecodeException;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.qaobee.hive.api.v1.commons.users.SignupVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -28,22 +36,39 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.vertx.java.core.json.DecodeException;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 /**
  * The Class LoginTest.
  *
  * @author cke
  */
-public class LoginTest extends VertxJunitSupport {
+public class UserTest extends VertxJunitSupport {
 
-    // TODO : (mx) : implémenter le login fail et le user non actif
+	/**
+     * Test Login OK.
+     */
+	@Test
+	public void LoginOk() {
+
+		populate(POPULATE_ONLY, DATA_USERS);
+
+		/* test based on script mongo */
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.POST);
+		
+		final JsonObject params = new JsonObject();
+		params.putString(UserVerticle.PARAM_LOGIN, "ccaft");
+		params.putString(UserVerticle.PARAM_PWD, "toto");
+		req.setBody(params.encode());
+
+		final String reply = sendonBus(UserVerticle.LOGIN, req);
+		JsonObject result = new JsonObject(reply);
+		
+		String name = result.getString("name");
+		
+		Assert.assertEquals("Hidalgo", name);
+	}
 
     /**
      * Test Login OK.

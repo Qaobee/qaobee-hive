@@ -32,7 +32,7 @@
 /* 
  * Vidage de la collection Person
  */
-db.Person.remove({"_id" : {"$in" : ["a0ef9c2d-6864-4a20-84ba-b66a666d2bf4", "54160977d5bd065a1bb1e563", "54160977d5bd065a1bb1e564",
+db.User.remove({"_id" : {"$in" : ["a0ef9c2d-6864-4a20-84ba-b66a666d2bf4", "54160977d5bd065a1bb1e563", "54160977d5bd065a1bb1e564",
                            "54160977d5bd065a1bb1e565", "54160977d5bd065a1bb1e566","54160977d5bd065a1bb1e568", "5509ef1fdb8f8b6e2f51f4ce",
                            "5509ef1fdb8f8b6e2f51f4cf"]}});
 
@@ -41,17 +41,15 @@ db.Person.remove({"_id" : {"$in" : ["a0ef9c2d-6864-4a20-84ba-b66a666d2bf4", "541
  */
 
 // ladmin : login = admin / mdp = adminqaobee29
-db.Person.insert({
+db.User.insert({
     "_id" : "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
     "name" : "Qaobee",
     "firstname" : "Administrateur",
     "avatar" : null,
     "gender" : "gender.male",
     "birthdate" : NumberLong(1398290400000),
-    "birthcity" : "Brest",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "job" : "Ecrivain",
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "settings.Country.FR.name"},
+    
     "address" : {
         "formatedAddress" : "",
         "place" : "20, rue Cuirassé Bretagne",
@@ -84,10 +82,10 @@ db.Person.insert({
             "key" : "admin_qaobee",
             "description" : "<p>Administrateur <strong>QaoBee</strong></p>"
         } ],
-        "notifications" : null,
+        
         "listPlan" : [ {
             "paymentId" : "9578c234-00d8-4cad-b33e-9c2425f432c9",
-            "levelPlan" : "DISCOVERY",
+            "levelPlan" : "PREMIUM",
             "amountPaid" : 5,
             "paidDate" : NumberLong(1412799496416),
             "startPeriodDate" : 0,
@@ -101,17 +99,15 @@ db.Person.insert({
 });
 
 //DEBUT USER CLUB Dunkerque Handball
-db.Person.insert({
+db.User.insert({
     "_id" : "54160977d5bd065a1bb1e563",
     "name" : "Casal",
     "firstname" : "Patrick",
     "avatar" : null,
     "gender" : "gender.male",
     "birthdate" : NumberLong(39740400000),
-    "birthcity" : "Saint-Joseph",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "job" : "Coach",
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "settings.Country.FR.name"},
+    
     "address" : {
         "formatedAddress" : "",
         "place" : " Stades de Flandres, Avenue de Rosendaël",
@@ -139,7 +135,7 @@ db.Person.insert({
         "token" : null,
         "tokenRenewDate" : NumberLong(0),
         "habilitations" : null,
-        "notifications" : null,
+        
         "listPlan" : [ {
             "paymentId" : "paymentId001",
             "levelPlan" : "PREMIUM",
@@ -149,51 +145,26 @@ db.Person.insert({
             "endPeriodDate" : NumberLong(1435615200000),
             "status" : "paid",
             "periodicity" : "monthly",
-            "structure" : {
-                "_id" : "541168295971d35c1f2d1b5e",
-                "label" : "Dunkerque Handball",
-                "acronym" : "USDK",
-                "codeActivity" : "ACT-HAND",
-                "addressStr" : {
-                    "place" : " Stades de Flandres, Avenue de Rosendaël",
-                    "zipcode" : "59240",
-                    "city" : " DUNKERQUE",
-                    "country" : "France"
-                },
-                "contactStr" : {
-                    "home" : null,
-                    "office" : "03 28 66 91 52",
-                    "cellphone" : "06 30 35 38 19",
-                    "fax" : "",
-                    "email" : "melanie.lefebvre@usdk.fr"
-                },
-                //Mettre l'id user coach pour l'instant
-                "correspondent" : null,
-                "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-                "avatar" : null
-            },
             "activity" : {
                 "_id" : "ACT-HAND",
                 "code" : "ACT-HAND",
                 "label" : "admin.settings.activity.handball.label",
-                "activated" : true,
+                "enable" : true,
                 "activityType" : "TEAM_SPORT"
             }
         } ]
     }
 });
 
-db.Person.insert({
+db.User.insert({
     "_id" : "54160977d5bd065a1bb1e564",
     "name" : "Calbry",
     "firstname" : "Arnaud",
     "avatar" : null,
     "gender" : "gender.male",
     "birthdate" : NumberLong(140655600000),
-    "birthcity" : "Dieppe",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "job" : "Coach-Adjoint",
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "settings.Country.FR.name"},
+    
     "address" : {
         "formatedAddress" : "",
         "place" : " Stades de Flandres, Avenue de Rosendaël",
@@ -221,44 +192,21 @@ db.Person.insert({
         "token" : null,
         "tokenRenewDate" : NumberLong(0),
         "habilitations" : null,
-        "notifications" : null,
+        
         "listPlan" : [ {
             "paymentId" : "paymentId002",
-            "levelPlan" : "DISCOVERY",
+            "levelPlan" : "PREMIUM"
             "amountPaid" : NumberLong(6),
             "paidDate" : NumberLong(1408312800000),
             "startPeriodDate" : NumberLong(1408312800000),
             "endPeriodDate" : NumberLong(1435615200000),
             "status" : "paid",
             "periodicity" : "monthly",
-            "structure" : {
-                "_id" : "541168295971d35c1f2d1b5e",
-                "label" : "Dunkerque Handball",
-                "acronym" : "USDK",
-                "codeActivity" : "ACT-HAND",
-                "addressStr" : {
-                    "place" : " Stades de Flandres, Avenue de Rosendaël",
-                    "zipcode" : "59240",
-                    "city" : " DUNKERQUE",
-                    "country" : "France"
-                },
-                "contactStr" : {
-                    "home" : null,
-                    "office" : "03 28 66 91 52",
-                    "cellphone" : "06 30 35 38 19",
-                    "fax" : "",
-                    "email" : "melanie.lefebvre@usdk.fr"
-                },
-                //Mettre l'id user coach pour l'instant
-                "correspondent" : null,
-                "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-                "avatar" : null
-            },
             "activity" : {
                 "_id" : "ACT-HAND",
                 "code" : "ACT-HAND",
                 "label" : "admin.settings.activity.handball.label",
-                "activated" : true,
+                "enable" : true,
                 "activityType" : "TEAM_SPORT"
             }
         } ]
@@ -269,17 +217,14 @@ db.Person.insert({
 
 
 // DEBUT USER CLUB CESSON RENNES METROPOLE HB
-db.Person.insert({
+db.User.insert({
     "_id" : "5509ef1fdb8f8b6e2f51f4ce",
     "name" : "Sylla",
     "firstname" : "Yerime",
     "avatar" : null,
     "gender" : "gender.male",
     "birthdate" : NumberLong(-21434400000),
-    "birthcity" : "Villemomble",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "job" : "Manager General",
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "settings.Country.FR.name"},
     "address" : {
         "formatedAddress" : "",
         "place" : "3, allée de Champagné",
@@ -307,7 +252,7 @@ db.Person.insert({
         "token" : null,
         "tokenRenewDate" : NumberLong(0),
         "habilitations" : null,
-        "notifications" : null,
+        
         "listPlan" : [ {
             "paymentId" : "paymentId001",
             "levelPlan" : "PREMIUM",
@@ -317,51 +262,26 @@ db.Person.insert({
             "endPeriodDate" : NumberLong(1435615200000),
             "status" : "paid",
             "periodicity" : "monthly",
-            "structure" : {
-                "_id" : "541168295971d35c1f2d1b5f",
-                "label" : "CESSON RENNES METROPOLE HB",
-                "acronym" : "CRMBH",
-                "codeActivity" : "ACT-HAND",
-                "addressStr" : {
-                    "place" : "3, allée de Champagné",
-                    "zipcode" : "35510",
-                    "city" : "CESSON-SEVIGNE",
-                    "country" : "France"
-                },
-                "contactStr" : {
-                    "home" : null,
-                    "office" : "02 23 45 07 19",
-                    "cellphone" : "06 69 97 68 39",
-                    "fax" : "",
-                    "email" : "sandrine@cesson-handball.com"
-                },
-                //Mettre l'id user coach pour l'instant
-                "correspondent" : null,
-                "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-                "avatar" : null
-            },
             "activity" : {
                 "_id" : "ACT-HAND",
                 "code" : "ACT-HAND",
                 "label" : "admin.settings.activity.handball.label",
-                "activated" : true,
+                "enable" : true,
                 "activityType" : "TEAM_SPORT"
             }
         } ]
     }
 });
 
-db.Person.insert({
+db.User.insert({
     "_id" : "5509ef1fdb8f8b6e2f51f4cf",
     "name" : "Oskarsson",
     "firstname" : "Ragnar",
     "avatar" : null,
     "gender" : "gender.male",
     "birthdate" : NumberLong(272325600000),
-    "birthcity" : "Reykjavik",
-    "birthcountry" : {"_id" : "CNTR-352-IS-ISL" , "codeOSCE" : NumberInt(352) , "alpha2" : "IS" , "alpha3" : "ISL" , "label" : "settings.Country.IS.name"},
-    "nationality" : {"_id" : "CNTR-352-IS-ISL" , "codeOSCE" : NumberInt(352) , "alpha2" : "IS" , "alpha3" : "ISL" , "label" : "settings.Country.IS.name"},
-    "job" : "Coach-Adjoint",
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "settings.Country.FR.name"},
+    
     "address" : {
         "formatedAddress" : "",
         "place" : "3, allée de Champagné",
@@ -389,44 +309,21 @@ db.Person.insert({
         "token" : null,
         "tokenRenewDate" : NumberLong(0),
         "habilitations" : null,
-        "notifications" : null,
+        
         "listPlan" : [ {
             "paymentId" : "paymentId002",
-            "levelPlan" : "DISCOVERY",
+            "levelPlan" : "PREMIUM"
             "amountPaid" : NumberLong(6),
             "paidDate" : NumberLong(1408312800000),
             "startPeriodDate" : NumberLong(1408312800000),
             "endPeriodDate" : NumberLong(1435615200000),
             "status" : "paid",
             "periodicity" : "monthly",
-            "structure" : {
-                "_id" : "541168295971d35c1f2d1b5f",
-                "label" : "CESSON RENNES METROPOLE HB",
-                "acronym" : "CRMBH",
-                "codeActivity" : "ACT-HAND",
-                "addressStr" : {
-                    "place" : "3, allée de Champagné",
-                    "zipcode" : "35510",
-                    "city" : "CESSON-SEVIGNE",
-                    "country" : "France"
-                },
-                "contactStr" : {
-                    "home" : null,
-                    "office" : "02 23 45 07 19",
-                    "cellphone" : "06 69 97 68 39",
-                    "fax" : "",
-                    "email" : "sandrine@cesson-handball.com"
-                },
-                //Mettre l'id user coach pour l'instant
-                "correspondent" : null,
-                "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-                "avatar" : null
-            },
             "activity" : {
                 "_id" : "ACT-HAND",
                 "code" : "ACT-HAND",
                 "label" : "admin.settings.activity.handball.label",
-                "activated" : true,
+                "enable" : true,
                 "activityType" : "TEAM_SPORT"
             }
         } ]
@@ -436,17 +333,15 @@ db.Person.insert({
 //FIN USER CESSON RENNES METROPOLE HB
 
 //DEBUT USER Club Demo football
-db.Person.insert({
+db.User.insert({
     "_id" : "54160977d5bd065a1bb1e565",
     "name" : "Hidalgo",
     "firstname" : "Michel",
     "avatar" : null,
     "gender" : "gender.male",
     "birthdate" : NumberLong(-1160701200000),
-    "birthcity" : "Marseille",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "job" : "Ecrivain",
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "settings.Country.FR.name"},
+    
     "address" : {
         "formatedAddress" : "",
         "place" : "1 Rue du Stade",
@@ -474,59 +369,36 @@ db.Person.insert({
         "token" : null,
         "tokenRenewDate" : NumberLong(0),
         "habilitations" : null,
-        "notifications" : null,
+        
         "listPlan" : [ {
             "paymentId" : "paymentId003",
-            "levelPlan" : "TEAM_PLUS",
+            "levelPlan" : "PREMIUM",
             "amountPaid" : NumberLong(6),
             "paidDate" : NumberLong(1408312800000),
             "startPeriodDate" : NumberLong(1408312800000),
             "endPeriodDate" : NumberLong(1435615200000),
             "status" : "paid",
             "periodicity" : "monthly",
-            "structure" : {
-                "_id" : "541168295971d35c1f2d1b60",
-                "label" : "Club Demo football",
-                "acronym" : "CAFB",
-                "codeActivity" : "ACT-FOOT",
-                "addressStr" : {
-                    "place" : "1 Rue Jean Jaurès",
-                    "zipcode" : "Brest",
-                    "city" : "29200",
-                    "country" : "France"
-                },
-                "contactStr" : {
-                    "home" : "02 98 00 00 00",
-                    "office" : "02 98 01 01 01",
-                    "cellphone" : "06 06 06 06 06",
-                    "email" : "0529000@football-france.eu"
-                },
-                "correspondent" : null,
-                "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-                "avatar" : null
-            },
             "activity" : {
                 "_id" : "ACT-FOOT",
                 "code" : "ACT-FOOT",
                 "label" : "admin.settings.activity.football.label",
-                "activated" : true,
+                "enable" : true,
                 "activityType" : "TEAM_SPORT"
             }
         } ]
     }
 });
 
-db.Person.insert({
+db.User.insert({
     "_id" : "54160977d5bd065a1bb1e568",
     "name" : "Michel",
     "firstname" : "Henry",
     "avatar" : null,
     "gender" : "gender.male",
     "birthdate" : NumberLong(-699930000000),
-    "birthcity" : "Aix-en-Provence",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "job" : "Ecrivain",
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "settings.Country.FR.name"},
+    
     "address" : {
         "formatedAddress" : "",
         "place" : "1 Rue du Stade",
@@ -554,59 +426,36 @@ db.Person.insert({
         "token" : null,
         "tokenRenewDate" : NumberLong(0),
         "habilitations" : null,
-        "notifications" : null,
+        
         "listPlan" : [ {
             "paymentId" : "paymentId003",
-            "levelPlan" : "TEAM_PLUS",
+            "levelPlan" : "PREMIUM",
             "amountPaid" : NumberLong(6),
             "paidDate" : NumberLong(1408312800000),
             "startPeriodDate" : NumberLong(1408312800000),
             "endPeriodDate" : NumberLong(1435615200000),
             "status" : "paid",
             "periodicity" : "monthly",
-            "structure" : {
-                "_id" : "541168295971d35c1f2d1b60",
-                "label" : "Club Demo football",
-                "acronym" : "CAFB",
-                "codeActivity" : "ACT-FOOT",
-                "addressStr" : {
-                    "place" : "1 Rue Jean Jaurès",
-                    "zipcode" : "Brest",
-                    "city" : "29200",
-                    "country" : "France"
-                },
-                "contactStr" : {
-                    "home" : "02 98 00 00 00",
-                    "office" : "02 98 01 01 01",
-                    "cellphone" : "06 06 06 06 06",
-                    "email" : "0529000@football-france.eu"
-                },
-                "correspondent" : null,
-                "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-                "avatar" : null
-            },
             "activity" : {
                 "_id" : "ACT-FOOT",
                 "code" : "ACT-FOOT",
                 "label" : "admin.settings.activity.football.label",
-                "activated" : true,
+                "enable" : true,
                 "activityType" : "TEAM_SPORT"
             }
         } ]
     }
 });
 
-db.Person.insert({
+db.User.insert({
     "_id" : "54160977d5bd065a1bb1e566",
     "name" : "Jacquet",
     "firstname" : "Aimé",
     "avatar" : null,
     "gender" : "gender.male",
     "birthdate" : NumberLong(-886640400000),
-    "birthcity" : "Bordeaux",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-    "job" : "Ecrivain",
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "settings.Country.FR.name"},
+    
     "address" : {
         "formatedAddress" : "",
         "place" : "1 Rue du Stade",
@@ -634,7 +483,7 @@ db.Person.insert({
         "token" : null,
         "tokenRenewDate" : NumberLong(0),
         "habilitations" : null,
-        "notifications" : null,
+        
         "listPlan" : [ {
             "paymentId" : "paymentId004",
             "levelPlan" : "PREMIUM",
@@ -644,32 +493,11 @@ db.Person.insert({
             "endPeriodDate" : NumberLong(1435615200000),
             "status" : "paid",
             "periodicity" : "monthly",
-            "structure" : {
-                "_id" : "541168295971d35c1f2d1b60",
-                "label" : "Club Demo football",
-                "acronym" : "CAFB",
-                "codeActivity" : "ACT-FOOT",
-                "addressStr" : {
-                    "place" : "1 Rue Jean Jaurès",
-                    "zipcode" : "Brest",
-                    "city" : "29200",
-                    "country" : "France"
-                },
-                "contactStr" : {
-                    "home" : "02 98 00 00 00",
-                    "office" : "02 98 01 01 01",
-                    "cellphone" : "06 06 06 06 06",
-                    "email" : "0529000@football-france.eu"
-                },
-                "correspondent" : null,
-                "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
-                "avatar" : null
-            },
             "activity" : {
                 "_id" : "ACT-FOOT",
                 "code" : "ACT-FOOT",
                 "label" : "admin.settings.activity.football.label",
-                "activated" : true,
+                "enable" : true,
                 "activityType" : "TEAM_SPORT"
             }
         } ]

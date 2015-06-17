@@ -34,8 +34,10 @@ import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
+
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
@@ -47,6 +49,7 @@ import org.vertx.java.core.json.impl.Base64;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.UUID;
@@ -60,27 +63,33 @@ public class UserVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant LOGIN.
      */
-    public static final String LOGIN = "resthandler.api.v1.user.login";
+    public static final String LOGIN = "resthandler.api.v1.commons.user.login";
     /**
      * The Constant LOGOUT.
      */
-    public static final String LOGOUT = "resthandler.api.v1.user.logout";
+    public static final String LOGOUT = "resthandler.api.v1.commons.user.logout";
     /**
      * The Constant PASSWD_RENEW.
      */
-    public static final String PASSWD_RENEW = "resthandler.api.v1.user.newpasswd";
+    public static final String PASSWD_RENEW = "resthandler.api.v1.commons.user.newpasswd";
     /**
      * The Constant PASSWD_RENEW_CHK.
      */
-    public static final String PASSWD_RENEW_CHK = "resthandler.api.v1.user.passwdcheck";
+    public static final String PASSWD_RENEW_CHK = "resthandler.api.v1.commons.user.passwdcheck";
     /**
      * The Constant PASSWD_RESET.
      */
-    public static final String PASSWD_RESET = "resthandler.api.v1.user.resetPasswd";
+    public static final String PASSWD_RESET = "resthandler.api.v1.commons.user.resetPasswd";
     /**
      * The Constant CURRENT.
      */
-    public static final String CURRENT = "resthandler.api.v1.user.current";
+    public static final String CURRENT = "resthandler.api.v1.commons.user.current";
+    
+    /* List of parameters */
+	/** User login */
+	public static final String PARAM_LOGIN = "login";
+	/** User password */
+	public static final String PARAM_PWD = "passwd";
 
     /**
      * The Mongo.
@@ -118,7 +127,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         final EventBus eb = vertx.eventBus();
         /**
          * @apiDescription Login user
-         * @api {post} /rest/api/v1/user/login resthandler.api.v1.user.login
+         * @api {post} /rest/api/v1/commons/user/login resthandler.api.v1.commons.user.login
          * @apiName loginHandler
          * @apiGroup LoginVerticle
          * @apiParam {String} login login (user.username)
@@ -142,12 +151,12 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     final JsonObject infos = new JsonObject(req.getBody());
 
-                    if (StringUtils.isBlank(infos.getString("login")) || StringUtils.isBlank(infos.getString("passwd"))) {
+                    if (StringUtils.isBlank(infos.getString(PARAM_LOGIN)) || StringUtils.isBlank(infos.getString(PARAM_PWD))) {
                         final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
                         container.logger().error(e.getMessage(), e);
                         utils.sendError(message, e);
                     } else {
-                        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString("login")).get(), null, null, 0, 0, User.class);
+                        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN)).get(), null, null, 0, 0, User.class);
 
                         if (res.size() != 1) {
                             final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
@@ -158,7 +167,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             final JsonObject jsonPerson = res.get(0);
                             final User user = Json.decodeValue(jsonPerson.encode(), User.class);
                             try {
-                                final byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(infos.getString("passwd"), user.getAccount().getSalt());
+                                final byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(infos.getString(PARAM_PWD), user.getAccount().getSalt());
                                 if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
                                     final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
                                     container.logger().error(e.getMessage(), e);
@@ -197,7 +206,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription User logout
-         * @api {get} /rest/api/v1/user/logout resthandler.api.v1.user.logout
+         * @api {get} /rest/api/v1/commons/user/logout resthandler.api.v1.commons.user.logout
          * @apiName logoutHandler
          * @apiGroup LoginVerticle
          * @apiHeader {String} token
@@ -242,7 +251,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Mail generation for password renew
-         * @api {post} /rest/api/v1/user/newpasswd resthandler.api.v1.user.newpasswd
+         * @api {post} /rest/api/v1/commons/user/newpasswd resthandler.api.v1.commons.user.newpasswd
          * @apiName newPasswdHandler
          * @apiGroup LoginVerticle
          * @apiParam {String} login user login
@@ -262,7 +271,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     final JsonObject infos = new JsonObject(req.getBody());
-                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString("login")).get(), null, null, 0, 0, User.class);
+                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN)).get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
                         final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", req.getLocale()));
                         container.logger().error(e.getMessage(), e);
@@ -313,7 +322,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Check activation code supplied in the renew password email
-         * @api {get} /rest/api/v1/user/passwdcheck?code=:code&id=:id resthandler.api.v1.user.passwdcheck
+         * @api {get} /rest/api/v1/commons/user/passwdcheck?code=:code&id=:id resthandler.api.v1.commons.user.passwdcheck
          * @apiParam {String} code Activation code
          * @apiParam {String} id Person id
          * @apiName passwdCheckHandler
@@ -350,7 +359,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Update password after renew ask
-         * @api {post} /rest/api/v1/user/resetPasswd resthandler.api.v1.user.resetPasswd
+         * @api {post} /rest/api/v1/commons/user/resetPasswd resthandler.api.v1.commons.user.resetPasswd
          * @apiParam {Object} data {id, code, passwd}
          * @apiName resetPasswdHandler
          * @apiGroup LoginVerticle

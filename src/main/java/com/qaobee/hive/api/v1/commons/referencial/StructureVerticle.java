@@ -51,7 +51,7 @@ import java.util.Map;
  *         </ul>
  */
 
-@DeployableVerticle
+@DeployableVerticle(isWorker = true)
 public class StructureVerticle extends AbstractGuiceVerticle {
 
 	// Declaration des variables finals

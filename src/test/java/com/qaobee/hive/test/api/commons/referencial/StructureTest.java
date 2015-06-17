@@ -43,7 +43,7 @@ public class StructureTest extends VertxJunitSupport {
 	@Test
 	public void getObjectByIdOk() {
 
-		populate(POPULATE_ONLY, SETTINGS_STRUCTURE);
+		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
 		/* test based on script mongo */
 		final RequestWrapper req = new RequestWrapper();
@@ -71,7 +71,7 @@ public class StructureTest extends VertxJunitSupport {
 	@Test
 	public void getObjectByIdKo() {
 
-		populate(POPULATE_ONLY, SETTINGS_STRUCTURE);
+		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
 		/* test based on script mongo */
 		final RequestWrapper req = new RequestWrapper();
@@ -98,7 +98,7 @@ public class StructureTest extends VertxJunitSupport {
 	@Test
 	public void getUpdateOk() {
 
-		populate(POPULATE_ONLY, SETTINGS_STRUCTURE);
+		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
 		/* test based on script mongo */
 		final RequestWrapper req = new RequestWrapper();
@@ -137,7 +137,7 @@ public class StructureTest extends VertxJunitSupport {
 	@Test
 	public void getUpdateKo() {
 
-		populate(POPULATE_ONLY, SETTINGS_STRUCTURE);
+		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
 		/* test based on script mongo */
 		final RequestWrapper req = new RequestWrapper();

@@ -28,7 +28,7 @@ public class Address {
 	private String place;
 
 	/** The zipcode. */
-	private String zipCode;
+	private String zipcode;
 
 	/** The city. */
 	private String city;
@@ -59,20 +59,7 @@ public class Address {
 		this.place = place;
 	}
 
-	/**
-	 * @return the zipcode
-	 */
-	public String getZipCode() {
-		return zipCode;
-	}
-
-	/**
-	 * @param zipcode the zipcode to set
-	 */
-	public void setZipCode(String zipcode) {
-		this.zipCode = zipcode;
-	}
-
+	
 	/**
 	 * @return the city
 	 */
@@ -141,6 +128,20 @@ public class Address {
 	 */
 	public void setFormatedAddress(String formatedAddress) {
 		this.formatedAddress = formatedAddress;
+	}
+
+	/**
+	 * @return the zipcode
+	 */
+	public String getZipcode() {
+		return zipcode;
+	}
+
+	/**
+	 * @param zipcode the zipcode to set
+	 */
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
 	}
 	
 	

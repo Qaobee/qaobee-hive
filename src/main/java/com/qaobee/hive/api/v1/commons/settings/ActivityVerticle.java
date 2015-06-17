@@ -45,7 +45,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
  * @author cke
  *
  */
-@DeployableVerticle
+@DeployableVerticle(isWorker = true)
 public class ActivityVerticle extends AbstractGuiceVerticle {
 
 	// Declaration des variables finals

@@ -42,7 +42,7 @@ import java.util.Map;
  * @author cke
  *
  */
-@DeployableVerticle
+@DeployableVerticle(isWorker = true)
 public class TeamVerticle extends AbstractGuiceVerticle {
 	
 	// Declaration des variables finals

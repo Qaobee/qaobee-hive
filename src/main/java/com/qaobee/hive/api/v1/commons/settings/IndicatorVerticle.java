@@ -47,7 +47,7 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
  * @author cke
  *
  */
-@DeployableVerticle
+@DeployableVerticle(isWorker = true)
 public class IndicatorVerticle  extends AbstractGuiceVerticle {
 
 	// Declaration des variables finals

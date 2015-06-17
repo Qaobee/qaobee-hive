@@ -45,7 +45,7 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
  * @author cke
  *
  */
-@DeployableVerticle
+@DeployableVerticle(isWorker = true)
 public class SeasonVerticle  extends AbstractGuiceVerticle {
 
 	// Declaration des variables finals
