@@ -60,23 +60,23 @@ public class UserVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant LOGIN.
      */
-    public static final String LOGIN = "resthandler.api.v1.user.login";
+    public static final String LOGIN = "resthandler.api.v1.commons.user.login";
     /**
      * The Constant LOGOUT.
      */
-    public static final String LOGOUT = "resthandler.api.v1.user.logout";
+    public static final String LOGOUT = "resthandler.api.v1.commons.user.logout";
     /**
      * The Constant PASSWD_RENEW.
      */
-    public static final String PASSWD_RENEW = "resthandler.api.v1.user.newpasswd";
+    public static final String PASSWD_RENEW = "resthandler.api.v1.commons.user.newpasswd";
     /**
      * The Constant PASSWD_RENEW_CHK.
      */
-    public static final String PASSWD_RENEW_CHK = "resthandler.api.v1.user.passwdcheck";
+    public static final String PASSWD_RENEW_CHK = "resthandler.api.v1.commons.user.passwdcheck";
     /**
      * The Constant PASSWD_RESET.
      */
-    public static final String PASSWD_RESET = "resthandler.api.v1.user.resetPasswd";
+    public static final String PASSWD_RESET = "resthandler.api.v1.commons.user.resetPasswd";
 
     /**
      * The Mongo.
@@ -114,7 +114,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         final EventBus eb = vertx.eventBus();
         /**
          * @apiDescription Login user
-         * @api {post} /rest/api/v1/user/login resthandler.api.v1.user.login
+         * @api {post} /rest/api/v1/commons/user/login resthandler.api.v1.commons.user.login
          * @apiName loginHandler
          * @apiGroup LoginVerticle
          * @apiParam {String} login login (user.username)
