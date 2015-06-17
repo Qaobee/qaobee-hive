@@ -181,7 +181,7 @@ db.User.insert({
     "account" : {
         "activationCode" : "6d23f95b647d47d9ab35f92bc12819dc",
         "activationPasswd" : null,
-        "active" : true,
+        "active" : false,
         "expirationDate" : NumberLong(0),
         "firstConnexion" : false,
         "login" : "usdk2",

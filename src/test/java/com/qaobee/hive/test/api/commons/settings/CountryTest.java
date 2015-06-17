@@ -105,11 +105,11 @@ public class CountryTest extends VertxJunitSupport {
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
 		
 		// label
-		params.put(CountryVerticle.PARAM_LABEL, Arrays.asList("A.name"));
+		params.put(CountryVerticle.PARAM_LABEL, Arrays.asList("settings.Country.FR.name"));
 		req.setParams(params);
 		
 		JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
-		Assert.assertEquals(12,result.size());
+		Assert.assertEquals(1,result.size());
 
 	}
 
