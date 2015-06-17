@@ -1,7 +1,6 @@
 {
   "runtime" : {
-    "version" : 0.1,
-    "rootPath": "resthandler.api.v1"
+    "version" : 1
   },
   "cors": {
     "enabled": true

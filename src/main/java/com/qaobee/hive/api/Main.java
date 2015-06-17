@@ -189,7 +189,7 @@ public class Main extends AbstractGuiceVerticle {
             }
         });
         // API Rest
-        rm.allWithRegEx("^/rest/.*", new Handler<HttpServerRequest>() {
+        rm.allWithRegEx("^/api/.*", new Handler<HttpServerRequest>() {
             @Override
             public void handle(final HttpServerRequest req) {
                 req.bodyHandler(new Handler<Buffer>() {
@@ -203,8 +203,7 @@ public class Main extends AbstractGuiceVerticle {
                         wrapper.setParams(utils.toMap(req.params()));
                         wrapper.setLocale(req.headers().get("Accept-Language"));
                         List<String> path = Arrays.asList(req.path().split("/"));
-
-                        path = path.subList(2, path.size());
+                        path = path.subList(3, path.size());
                         wrapper.setPath(path);
                         startTimer(StringUtils.join(wrapper.getPath(), '.'));
                         container.logger().debug(path);
@@ -213,13 +212,8 @@ public class Main extends AbstractGuiceVerticle {
                         json.putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'));
                         json.putString("action", "mark");
                         eb.send("metrix", json);
-
                         String busAddress = StringUtils.join(path, '.');
-
-                        if (Arrays.asList("prive", "admin").contains(path.get(0))) {
-                            busAddress = path.get(0);
-                        }
-                        eb.sendWithTimeout("resthandler." + busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
+                        eb.sendWithTimeout(config.getObject("runtime").getInteger("version") + "." + busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
 
                             @Override
                             public void handle(final AsyncResult<Message<String>> message) {
@@ -228,6 +222,7 @@ public class Main extends AbstractGuiceVerticle {
                                     final String response = message.result().body();
                                     if (response.startsWith("[") || !response.startsWith("{")) {
                                         enableCors(req);
+                                        req.response().putHeader("Content-Type", "application/json");
                                         req.response().end(response);
                                     } else {
                                         final JsonObject json = new JsonObject(response);
@@ -245,6 +240,7 @@ public class Main extends AbstractGuiceVerticle {
                                             req.response().sendFile(f.getAbsolutePath());
                                         } else {
                                             enableCors(req);
+                                            req.response().putHeader("Content-Type", "application/json");
                                             req.response().end(response);
                                         }
                                     }
@@ -260,7 +256,8 @@ public class Main extends AbstractGuiceVerticle {
                                     } else {
                                         final JsonObject jsonResp = new JsonObject();
                                         jsonResp.putBoolean("status", false);
-                                        jsonResp.putString("message", ex.failureType().name());
+                                        jsonResp.putString("message", "Nothing here");
+                                        jsonResp.putNumber("httpCode", 404);
                                         req.response().setStatusCode(404);
                                         req.response().end(jsonResp.encode());
                                     }
