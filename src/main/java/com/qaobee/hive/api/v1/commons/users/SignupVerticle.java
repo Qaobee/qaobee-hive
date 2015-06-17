@@ -19,6 +19,7 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 
+import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -66,13 +67,13 @@ import java.util.UUID;
 public class SignupVerticle extends AbstractGuiceVerticle {
 
 	/** The Constant REGISTER. */
-	public static final String REGISTER = "resthandler.api.v1.user.register";
+	public static final String REGISTER = Module.VERSION + ".commons.user.register";
 	/** The Constant LOGIN_TEST. */
-	public static final String LOGIN_TEST = "resthandler.api.v1.user.logintest";
+	public static final String LOGIN_TEST = Module.VERSION + ".commons.user.logintest";
 	/** The Constant LOGIN_EXISTS. */
-	public static final String LOGIN_EXISTS = "resthandler.api.v1.user.loginExists";
+	public static final String LOGIN_EXISTS = Module.VERSION + ".commons.user.loginExists";
 	/** The Constant ACCOUNT_CHECK. */
-	public static final String ACCOUNT_CHECK = "resthandler.api.v1.user.accountcheck";
+	public static final String ACCOUNT_CHECK = Module.VERSION + ".commons.user.accountcheck";
 
 	// MongoDB driver
 	@Inject

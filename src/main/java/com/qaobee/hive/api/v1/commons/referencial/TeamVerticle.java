@@ -18,6 +18,7 @@
  */
 package com.qaobee.hive.api.v1.commons.referencial;
 
+import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -47,11 +48,11 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 	
 	// Declaration des variables finals
 	/** The Constant ADD. */
-	public static final String ADD = "resthandler.api.v1.commons.referencial.commons.structure.add";
+	public static final String ADD = Module.VERSION + ".commons.referencial.commons.structure.add";
 	/** The Constant GET. */
-	public static final String GET = "resthandler.api.v1.commons.referencial.commons.structure.get";
+	public static final String GET = Module.VERSION + ".commons.referencial.commons.structure.get";
 	/** The Constant UPDATE. */
-	public static final String UPDATE = "resthandler.api.v1.commons.referencial.commons.structure.update";
+	public static final String UPDATE = Module.VERSION + ".commons.referencial.commons.structure.update";
 	
 	/* List of parameters */
 	/** Id of the structure */

@@ -18,21 +18,9 @@
  */
 package com.qaobee.hive.api.v1.commons.settings;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang.StringUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.Indicator;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -40,197 +28,221 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang.StringUtils;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author cke
- *
  */
 @DeployableVerticle(isWorker = true)
-public class IndicatorVerticle  extends AbstractGuiceVerticle {
+public class IndicatorVerticle extends AbstractGuiceVerticle {
 
-	// Declaration des variables finals
-	/** The Constant GET. */
-	public static final String GET = "resthandler.api.v1.commons.settings.indicator.get";
-	
-	/** Handler for retrieve list of indicators */
-	public static final String GET_LIST = "resthandler.api.v1.commons.settings.indicator.getList";
-	
+    // Declaration des variables finals
+    /**
+     * The Constant GET.
+     */
+    public static final String GET = Module.VERSION + ".commons.settings.indicator.get";
+
+    /**
+     * Handler for retrieve list of indicators
+     */
+    public static final String GET_LIST = Module.VERSION + ".commons.settings.indicator.getList";
+
 	/* List of parameters */
-	/** Indicator id*/
-	public static final String PARAM_ID = "_id";
-	/** Indicator activity id*/
-	public static final String PARAM_ACTIVITY_ID = "activityId";
-	/** Indicator Country Id */
-	public static final String PARAM_COUNTRY_ID = "countryId";
-	/** Indicator Screen */
-	public static final String PARAM_SCREEN = "screen";
-	/** List of Indicator code */
-	public static final String PARAM_INDICATOR_CODE = "listCodeIndicators";
-	
-	/* Injections */
-	@Inject
-	private MongoDB mongo;
-	@Inject
-	private Utils utils;
+    /**
+     * Indicator id
+     */
+    public static final String PARAM_ID = "_id";
+    /**
+     * Indicator activity id
+     */
+    public static final String PARAM_ACTIVITY_ID = "activityId";
+    /**
+     * Indicator Country Id
+     */
+    public static final String PARAM_COUNTRY_ID = "countryId";
+    /**
+     * Indicator Screen
+     */
+    public static final String PARAM_SCREEN = "screen";
+    /**
+     * List of Indicator code
+     */
+    public static final String PARAM_INDICATOR_CODE = "listCodeIndicators";
+
+    /* Injections */
+    @Inject
+    private MongoDB mongo;
+    @Inject
+    private Utils utils;
 
 
-	@Override
-	public void start() {
-		super.start();
-		container.logger().debug(this.getClass().getName() + " started");
+    @Override
+    public void start() {
+        super.start();
+        container.logger().debug(this.getClass().getName() + " started");
 
-		/**
-		 * @api {get} /rest/api/v1/commons/settings/indicator/get Read data of an indicator
-		 * @apiVersion 0.1.0
-		 * @apiName get
-		 * @apiGroup Indicator API
-		 * @apiPermission all
-		 *
-		 * @apiDescription get a indicator to the collection indicator in settings module
-		 *
-		 * @apiParam {String} id Mandatory The Indicator-ID.
-		 * 
-		 * @apiSuccess {Indicator}   indicator            The Indicator found.
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> get = new Handler<Message<String>>() {
-			
-			@Override
-			public void handle(final Message<String> message) {
-				container.logger().info("get() - Indicator");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					Map<String, List<String>> params = req.getParams();
-					
-					utils.testMandatoryParams(params, PARAM_ID);
-					
-					// Tests mandatory parameters
-					utils.testMandatoryParams(params, PARAM_ID);
-					if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID+" is mandatory");
-					}
-					
-					final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Indicator.class);
-					
-					container.logger().info("Indicator found : " + json.toString());
-					
-					message.reply(json.encode());
-					
-				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
-		
-		/**
-		 * @api {getList} /rest/api/v1/commons/settings/indicator/getList
-		 * @apiVersion 0.1.0
-		 * @apiName getList
-		 * @apiGroup Indicator API
-		 * @apiPermission all
-		 *
-		 * @apiDescription get a list of indicators to the collection indicator in settings module  
-		 *
-		 * @apiParam {String} activityId Mandatory The activity Id.
-		 * @apiParam {String} countryId Mandatory The country Id.
-		 * @apiParam {List<String>} screen Mandatory The list of screen name.
-		 * 
-		 * @apiSuccess {List}   indicators            The list of indicators found.
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> getList = new Handler<Message<String>>() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-			 */
-			@Override
-			public void handle(final Message<String> message) {
-				container.logger().info("getList() - Indicator");
-				final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-				try {
-					utils.testHTTPMetod(Constantes.POST, req.getMethod());
-					JsonObject params = new JsonObject(req.getBody());
-					utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN);
+        /**
+         * @api {get} /rest/api/v1/commons/settings/indicator/get Read data of an indicator
+         * @apiVersion 0.1.0
+         * @apiName get
+         * @apiGroup Indicator API
+         * @apiPermission all
+         *
+         * @apiDescription get a indicator to the collection indicator in settings module
+         *
+         * @apiParam {String} id Mandatory The Indicator-ID.
+         *
+         * @apiSuccess {Indicator}   indicator            The Indicator found.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> get = new Handler<Message<String>>() {
 
-					// Indicator code
-					String activityId = params.getString(PARAM_ACTIVITY_ID);
-					// Country ID
-					String countryId = params.getString(PARAM_COUNTRY_ID);
-					// SCREEN
-					JsonArray screen = params.getArray(PARAM_SCREEN);
-					
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("get() - Indicator");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
 
-					DBObject match, project;
-					BasicDBObject dbObjectParent, dbObjectChild;
+                    utils.testMandatoryParams(params, PARAM_ID);
 
-					// $MATCH section
-					dbObjectParent = new BasicDBObject();
+                    // Tests mandatory parameters
+                    utils.testMandatoryParams(params, PARAM_ID);
+                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
+                    }
 
-					// - activity code
-					dbObjectParent.put("activityId", activityId);
+                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Indicator.class);
 
-					// - country
-					dbObjectParent.put("countryId", countryId);
+                    container.logger().info("Indicator found : " + json.toString());
 
-					// - SCREEN
-					dbObjectChild = new BasicDBObject("$in", screen.toArray());
-					dbObjectParent.put("listScreen", dbObjectChild);
+                    message.reply(json.encode());
 
-					match = new BasicDBObject("$match", dbObjectParent);
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
-					// $PROJECT section
-					// { $project : { "_id" : 0, listIndicator : {code : 1, label : 1}}}
-					dbObjectParent = new BasicDBObject();
-					dbObjectParent.put("_id", 1);
-					dbObjectParent.put("code", 1);
-					dbObjectParent.put("activityId", 1);
-					dbObjectParent.put("indicatorType", 1);
-					dbObjectParent.put("listScreen", 1);
-					dbObjectParent.put("listField", 1);
-					dbObjectParent.put("listValues", 1);
+        /**
+         * @api {getList} /rest/api/v1/commons/settings/indicator/getList
+         * @apiVersion 0.1.0
+         * @apiName getList
+         * @apiGroup Indicator API
+         * @apiPermission all
+         *
+         * @apiDescription get a list of indicators to the collection indicator in settings module
+         *
+         * @apiParam {String} activityId Mandatory The activity Id.
+         * @apiParam {String} countryId Mandatory The country Id.
+         * @apiParam {List<String>} screen Mandatory The list of screen name.
+         *
+         * @apiSuccess {List}   indicators            The list of indicators found.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> getList = new Handler<Message<String>>() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("getList() - Indicator");
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    JsonObject params = new JsonObject(req.getBody());
+                    utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN);
 
-					project = new BasicDBObject("$project", dbObjectParent);
+                    // Indicator code
+                    String activityId = params.getString(PARAM_ACTIVITY_ID);
+                    // Country ID
+                    String countryId = params.getString(PARAM_COUNTRY_ID);
+                    // SCREEN
+                    JsonArray screen = params.getArray(PARAM_SCREEN);
 
-					List<DBObject> pipelineAggregation = Arrays.asList(match, project);
 
-					final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Indicator.class);
+                    DBObject match, project;
+                    BasicDBObject dbObjectParent, dbObjectChild;
 
-					container.logger().info(resultJSon.encodePrettily());
-					message.reply(resultJSon.encode());
+                    // $MATCH section
+                    dbObjectParent = new BasicDBObject();
 
-				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				}
-			}
+                    // - activity code
+                    dbObjectParent.put("activityId", activityId);
 
-		};
+                    // - country
+                    dbObjectParent.put("countryId", countryId);
+
+                    // - SCREEN
+                    dbObjectChild = new BasicDBObject("$in", screen.toArray());
+                    dbObjectParent.put("listScreen", dbObjectChild);
+
+                    match = new BasicDBObject("$match", dbObjectParent);
+
+                    // $PROJECT section
+                    // { $project : { "_id" : 0, listIndicator : {code : 1, label : 1}}}
+                    dbObjectParent = new BasicDBObject();
+                    dbObjectParent.put("_id", 1);
+                    dbObjectParent.put("code", 1);
+                    dbObjectParent.put("activityId", 1);
+                    dbObjectParent.put("indicatorType", 1);
+                    dbObjectParent.put("listScreen", 1);
+                    dbObjectParent.put("listField", 1);
+                    dbObjectParent.put("listValues", 1);
+
+                    project = new BasicDBObject("$project", dbObjectParent);
+
+                    List<DBObject> pipelineAggregation = Arrays.asList(match, project);
+
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Indicator.class);
+
+                    container.logger().info(resultJSon.encodePrettily());
+                    message.reply(resultJSon.encode());
+
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                }
+            }
+
+        };
 
 		/*
 		 * Handlers registration
 		 */
-		vertx.eventBus().registerHandler(GET, get);
-		vertx.eventBus().registerHandler(GET_LIST, getList);
-	}
+        vertx.eventBus().registerHandler(GET, get);
+        vertx.eventBus().registerHandler(GET_LIST, getList);
+    }
 
 }
