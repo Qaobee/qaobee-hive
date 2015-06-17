@@ -26,17 +26,11 @@ import com.google.inject.name.Names;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.tools.PasswordEncryptionServiceImpl;
-import com.qaobee.hive.technical.utils.AuthCheck;
-import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.PersonUtils;
-import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.utils.*;
 import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
 import com.qaobee.hive.technical.utils.guice.services.impl.FIlesImpl;
-import com.qaobee.hive.technical.utils.impl.AuthCheckImpl;
-import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
-import com.qaobee.hive.technical.utils.impl.PersonUtilsImpl;
-import com.qaobee.hive.technical.utils.impl.UtilsImpl;
+import com.qaobee.hive.technical.utils.impl.*;
 import org.vertx.java.core.json.JsonObject;
 
 
@@ -78,7 +72,7 @@ public class GuiceModule extends AbstractModule {
 //        bind(SeasonCheck.class).to(SeasonCheckImpl.class).in(Singleton.class);
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(PersonUtils.class).to(PersonUtilsImpl.class).in(Singleton.class);
-
+        bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
         bind(Files.class).to(FIlesImpl.class).in(Singleton.class);
     }

@@ -139,28 +139,24 @@ public class LoginTest extends VertxJunitSupport {
     /**
      * Test if a user is logged
      */
-    @Ignore
     @Test
     public void notLoggedTest() {
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.GET);
-        final JsonObject error = new JsonObject(sendonBus("resthandler.prive", req));
+        final JsonObject error = new JsonObject(sendonBus(UserVerticle.CURRENT, req));
         Assert.assertTrue(error.getBoolean("error", false));
         Assert.assertEquals(ExceptionCodes.NOT_LOGGED.name(), error.getString("code"));
-
-        final JsonObject error2 = new JsonObject(sendonBus("resthandler.admin", req));
-        Assert.assertTrue(error2.getBoolean("error", false));
-        Assert.assertEquals(ExceptionCodes.NOT_LOGGED.name(), error2.getString("code"));
     }
 
     /**
-     * Test if a user is not A
+     * Test if a user is not an Admin
      */
     @Ignore
     @Test
     public void notAdminTest() {
-        User user = generateUser();
+        // TODO
+        /*User user = generateUser();
         user.getAccount().setToken("12345");
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
         try {
@@ -171,8 +167,12 @@ public class LoginTest extends VertxJunitSupport {
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.GET);
+        req.setUser(user);
+
+        User u2 = hab
+
         final JsonObject error = new JsonObject(sendonBus("resthandler.admin", req));
         Assert.assertTrue(error.getBoolean("error", false));
-        Assert.assertEquals(ExceptionCodes.NOT_LOGGED.name(), error.getString("code"));
+        Assert.assertEquals(ExceptionCodes.NOT_LOGGED.name(), error.getString("code"));*/
     }
 }

@@ -60,23 +60,27 @@ public class UserVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant LOGIN.
      */
-    public static final String LOGIN = "resthandler.api.v1.commons.user.login";
+    public static final String LOGIN = "resthandler.api.v1.user.login";
     /**
      * The Constant LOGOUT.
      */
-    public static final String LOGOUT = "resthandler.api.v1.commons.user.logout";
+    public static final String LOGOUT = "resthandler.api.v1.user.logout";
     /**
      * The Constant PASSWD_RENEW.
      */
-    public static final String PASSWD_RENEW = "resthandler.api.v1.commons.user.newpasswd";
+    public static final String PASSWD_RENEW = "resthandler.api.v1.user.newpasswd";
     /**
      * The Constant PASSWD_RENEW_CHK.
      */
-    public static final String PASSWD_RENEW_CHK = "resthandler.api.v1.commons.user.passwdcheck";
+    public static final String PASSWD_RENEW_CHK = "resthandler.api.v1.user.passwdcheck";
     /**
      * The Constant PASSWD_RESET.
      */
-    public static final String PASSWD_RESET = "resthandler.api.v1.commons.user.resetPasswd";
+    public static final String PASSWD_RESET = "resthandler.api.v1.user.resetPasswd";
+    /**
+     * The Constant CURRENT.
+     */
+    public static final String CURRENT = "resthandler.api.v1.user.current";
 
     /**
      * The Mongo.
@@ -114,7 +118,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         final EventBus eb = vertx.eventBus();
         /**
          * @apiDescription Login user
-         * @api {post} /rest/api/v1/commons/user/login resthandler.api.v1.commons.user.login
+         * @api {post} /rest/api/v1/user/login resthandler.api.v1.user.login
          * @apiName loginHandler
          * @apiGroup LoginVerticle
          * @apiParam {String} login login (user.username)
@@ -397,7 +401,47 @@ public class UserVerticle extends AbstractGuiceVerticle {
             }
         };
 
-		/*
+        /**
+         * @apiDescription Fetch the current logged user
+         * @api {get} /rest/prive/meta/current resthandler.prive.meta.current
+         * @apiName currentHandler
+         * @apiGroup UserMetaVerticle
+         * @apiHeader {String} token
+         * @apiParam {Object} Person com.qaobee.swarn.business.model.tranversal.person.Person
+         * @apiSuccess {Object} Person com.qaobee.swarn.business.model.tranversal.person.Person
+         * @apiError HTTP_ERROR wrong request method
+         * @apiError NOT_LOGGED invalid token
+         */
+        final Handler<Message<String>> currentHandler = new Handler<Message<String>>() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(final Message<String> message) {
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
+                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", req.getHeaders().get("token").get(0)).get(), null, null, 0, 0, User.class);
+                    if (res.size() != 1) {
+                        utils.sendError(message, ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", req.getLocale()));
+                    } else {
+                        // we take the first one (should be only one)
+                        final JsonObject jsonPerson = res.get(0);
+                        message.reply(jsonPerson.encode());
+                        utils.sendStatus(true, message);
+                    }
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    utils.sendError(message, e);
+                }
+            }
+        };
+        /*
          * Handlers declaration
 		 */
         eb.registerHandler(LOGIN, loginHandler);
@@ -405,6 +449,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         eb.registerHandler(PASSWD_RENEW, newPasswdHandler);
         eb.registerHandler(PASSWD_RENEW_CHK, passwdCheckHandler);
         eb.registerHandler(PASSWD_RESET, resetPasswdHandler);
+        eb.registerHandler(CURRENT, currentHandler);
     }
 
 }

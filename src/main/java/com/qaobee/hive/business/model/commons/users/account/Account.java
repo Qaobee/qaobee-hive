@@ -18,6 +18,8 @@
  */
 package com.qaobee.hive.business.model.commons.users.account;
 
+import com.qaobee.hive.business.model.transversal.Habilitation;
+
 import java.util.List;
 
 /**
@@ -97,6 +99,11 @@ public class Account {
      * The list plan.
      */
     private List<Plan> listPlan;
+
+    /**
+     * The Habilitations.
+     */
+    private List<Habilitation> habilitations;
 
     /**
      * Gets the activation code.
@@ -350,4 +357,21 @@ public class Account {
         this.listPlan = listPlan;
     }
 
+    /**
+     * Gets habilitations.
+     *
+     * @return the habilitations
+     */
+    public List<Habilitation> getHabilitations() {
+        return habilitations;
+    }
+
+    /**
+     * Sets habilitations.
+     *
+     * @param habilitations the habilitations
+     */
+    public void setHabilitations(List<Habilitation> habilitations) {
+        this.habilitations = habilitations;
+    }
 }

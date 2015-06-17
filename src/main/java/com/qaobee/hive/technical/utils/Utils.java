@@ -19,8 +19,10 @@
 
 package com.qaobee.hive.technical.utils;
 
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -31,16 +33,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * Created by xavier on 09/11/14.
+ * The interface Utils.
  */
 public interface Utils {
     /**
      * Send error.
      *
      * @param message the message
-     * @param ex      the ex
-     * @param info    the info
+     * @param ex the ex
+     * @param info the info
      */
     void sendError(Message<String> message, ExceptionCodes ex, String info);
 
@@ -48,7 +51,7 @@ public interface Utils {
      * Test http metod.
      *
      * @param allowed méthode accèptée
-     * @param tested  méthode testée
+     * @param tested méthode testée
      * @throws NoSuchMethodException si les deux ne correspondent pas
      */
     void testHTTPMetod(String allowed, String tested) throws NoSuchMethodException;
@@ -65,7 +68,7 @@ public interface Utils {
      * Send error.
      *
      * @param message un message
-     * @param e       une exception
+     * @param e une exception
      */
     void sendError(Message<String> message, QaobeeException e);
 
@@ -73,18 +76,18 @@ public interface Utils {
      * Send error j.
      *
      * @param message un message
-     * @param code    une erreur
-     * @param error   un libellé d'erreur
+     * @param code une erreur
+     * @param error un libellé d'erreur
      */
     void sendErrorJ(Message<JsonObject> message, ExceptionCodes code, String error);
 
     /**
      * Save and resize image.
      *
-     * @param source   fichier source
-     * @param dest     fichier de destination
-     * @param width    largeur
-     * @param height   hauteur
+     * @param source fichier source
+     * @param dest fichier de destination
+     * @param width largeur
+     * @param height hauteur
      * @param isSquare carrée
      * @throws IOException une erreur d'IO
      */
@@ -96,7 +99,7 @@ public interface Utils {
      * @param timestamp unix timestamp
      * @param dateStyle the date style
      * @param timeStyle the time style
-     * @param locale    the locale
+     * @param locale the locale
      * @return formated date
      */
     String formatDate(long timestamp, int dateStyle, int timeStyle, String locale);
@@ -104,9 +107,9 @@ public interface Utils {
     /**
      * Recherche dans un JsonArray d'un JsonObject en fonction de la clef.
      *
-     * @param key   clef de recherche
+     * @param key clef de recherche
      * @param value valeur recherchée
-     * @param res   JsonArray à parcourir
+     * @param res JsonArray à parcourir
      * @return l 'objet trouvé, null sinon
      */
     JsonObject find(String key, String value, JsonArray res);
@@ -114,7 +117,7 @@ public interface Utils {
     /**
      * renvoie une réponse Json de type status.
      *
-     * @param b       le résultat d'une opération
+     * @param b le résultat d'une opération
      * @param message le message sur le bus
      */
     void sendStatus(boolean b, Message<String> message);
@@ -122,7 +125,7 @@ public interface Utils {
     /**
      * Send status json.
      *
-     * @param b       the b
+     * @param b the b
      * @param message the message
      */
     void sendStatusJson(boolean b, Message<JsonObject> message);
@@ -130,7 +133,7 @@ public interface Utils {
     /**
      * Test mandatory params.
      *
-     * @param map    request's parameters
+     * @param map request's parameters
      * @param fields array of fields to test
      * @throws IllegalArgumentException explain missing fields
      */
@@ -139,9 +142,27 @@ public interface Utils {
     /**
      * Test mandatory params.
      *
-     * @param json   request's json body
+     * @param json request's json body
      * @param fields array of fields to test
      * @throws IllegalArgumentException explain missing fields
      */
     void testMandatoryParams(String json, String... fields) throws IllegalArgumentException;
+
+    /**
+     * Is user logged.
+     *
+     * @param request the request
+     * @return the User
+     * @throws QaobeeException the qaobee exception
+     */
+    User isUserLogged(RequestWrapper request) throws QaobeeException;
+
+    /**
+     * Is admin.
+     *
+     * @param request the request
+     * @return the boolean
+     * @throws QaobeeException the qaobee exception
+     */
+    User isLoggedAndAdmin(RequestWrapper request) throws QaobeeException;
 }
