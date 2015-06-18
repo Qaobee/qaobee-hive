@@ -305,6 +305,7 @@ public class UtilsImpl implements Utils {
                 if (user.getAccount().getTokenRenewDate() == 0) {
                     throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", request.getLocale()));
                 }
+                request.setUser(user);
                 return user;
             } catch (final EncodeException e) {
                 throw new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e.getMessage());

@@ -19,6 +19,8 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
+import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -34,11 +36,8 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
-
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
@@ -50,7 +49,6 @@ import org.vertx.java.core.json.impl.Base64;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.UUID;
@@ -85,6 +83,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * The Constant CURRENT.
      */
     public static final String CURRENT = Module.VERSION + ".commons.user.current";
+    /** The Constant META. */
+    public static final String META = Module.VERSION + ".commons.user.meta";
+    public static final String SEASONS_INFO =  Module.VERSION + ".commons.user.season";
+    /** The Constant USER_INFO */
+    public static final String USER_INFO = Module.VERSION + ".commons.user.user";
     
     /* List of parameters */
 	/** User login */
@@ -451,6 +454,119 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 }
             }
         };
+        /**
+         * @apiDescription Fetch meta information
+         * @api {get} /rest/prive/meta resthandler.prive.meta
+         * @apiName getMetasHandler
+         * @apiGroup UserMetaVerticle
+         * @apiHeader {String} token
+         * @apiError HTTP_ERROR wrong request method
+         * @apiError NOT_LOGGED invalid token
+         */
+        final Handler<Message<String>> getMetasHandler = new Handler<Message<String>>() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(final Message<String> message) {
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    User u = utils.isUserLogged(req);
+                    JsonObject result = new JsonObject();
+                    JsonObject user = mongo.getById(u.get_id(), User.class);
+                    JsonObject activity = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("activity");
+                    // FIXME : Récupérer la structure et la saison
+             /*       JsonObject structure = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("structure");
+                    JsonObject country = structure.getObject("country");*/
+
+                    result.putObject("activity", activity);
+                  //  result.putObject("structure", structure);
+                   /* result.putObject(
+                            "season",
+                            (JsonObject) mongo.findByCriterias(
+                                    new CriteriaBuilder().between("startDate", "endDate", System.currentTimeMillis()).add("activityId", activity.getString("_id"))
+                                            .add("countryId", country.getString("_id")).get(), null, null, -1, 1, Season.class).get(0));*/
+                    message.reply(result.encode());
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
+
+        /**
+         * @apiDescription Fetch season informations
+         * @api {get} /rest/prive/meta/season resthandler.prive.meta.season
+         * @apiName getSeasonsHandler
+         * @apiGroup UserMetaVerticle
+         * @apiHeader {Array} seasons codes
+         * @apiError HTTP_ERROR wrong request method
+         * @apiError NOT_LOGGED invalid token
+         */
+        final Handler<Message<String>> getSeasonsHandler = new Handler<Message<String>>() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(final Message<String> message) {
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    eb.send(SeasonVerticle.GET_LIST_BY_ACTIVITY, message.body(), new Handler<Message<String>>() {
+
+                        @Override
+                        public void handle(Message<String> event) {
+                            message.reply(event.body());
+                        }
+                    });
+
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                }
+            }
+        };
+
+        /**
+         * @apiDescription Fetch user information by its id
+         * @api {get} /rest/prive/meta/user resthandler.prive.meta.user
+         * @apiName getUserByIdhandler
+         * @apiGroup UserMetaVerticle
+         * @apiHeader {String} id
+         * @apiError HTTP_ERROR wrong request method
+         * @apiError NOT_LOGGED invalid token
+         */
+        final Handler<Message<String>> getUserByIdhandler = new Handler<Message<String>>() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(final Message<String> message) {
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    message.reply(mongo.getById(req.getParams().get("id").get(0), User.class).encode());
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
+
+
         /*
          * Handlers declaration
 		 */
@@ -460,6 +576,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
         eb.registerHandler(PASSWD_RENEW_CHK, passwdCheckHandler);
         eb.registerHandler(PASSWD_RESET, resetPasswdHandler);
         eb.registerHandler(CURRENT, currentHandler);
+        eb.registerHandler(META, getMetasHandler);
+        eb.registerHandler(USER_INFO, getUserByIdhandler);
+        eb.registerHandler(SEASONS_INFO, getSeasonsHandler);
     }
 
 }
