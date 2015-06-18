@@ -18,14 +18,15 @@
  */
 package com.qaobee.hive.test.api.commons.user;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
-
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import org.junit.Assert;
+import org.junit.Test;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
 
 /**
  * The Class LoginTest.
@@ -127,6 +128,65 @@ public class UserTest extends VertxJunitSupport {
 		final String reply = sendonBus(UserVerticle.LOGIN, req);
 		JsonObject result = new JsonObject(reply);
 		Assert.assertTrue("Wrong login", result.getString("message").contains("Bad login"));
+	}
+
+	/**
+	 * Fetch meta information such as current season, activity and structure
+	 */
+	@Test
+	public void getMetasHandler() {
+		populate(POPULATE_ONLY, SETTINGS_PERSON_FOOT, SETTINGS_ACTIVITY);
+
+		User user = generateLoggedUser();
+
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
+		req.setUser(user);
+		final JsonObject result = new JsonObject(sendonBus(UserVerticle.META, req, user.getAccount().getToken()));
+		//Assert.assertTrue("Season not found !", result.containsField("season"));
+		Assert.assertTrue("Activity not found !", result.containsField("activity"));
+	//	Assert.assertTrue("Structure not found !", result.containsField("structure"));
+		// ACT-HAND FR
+		//Assert.assertTrue("Season not found !", result.containsField("season"));
+	//	JsonObject seasonObject = result.getObject("season");
+	//	Assert.assertEquals("Wrong activity found for season", "ACT-HAND", seasonObject.getString("activityId"));
+	//	Assert.assertEquals("Wrong country found for season", "CNTR-250-FR-FRA", seasonObject.getString("countryId"));
+
+	/*	GregorianCalendar today = new GregorianCalendar();
+		int year = today.get(GregorianCalendar.MONTH) < 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
+		Assert.assertEquals("Wrong period found for season", "SAI-" + year, seasonObject.getString("code"));*/
+	}
+
+
+	/**
+	 * Fetch a user by id
+	 */
+	@Test
+	public void getUserById() {
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
+		req.setUser(user);
+		req.setParams(getParams(new String[]{"id", user.get_id()}));
+		final JsonObject result = new JsonObject(sendonBus(UserVerticle.USER_INFO, req, user.getAccount().getToken()));
+		Assert.assertEquals(result.getString("_id"), user.get_id());
+	}
+
+	/**
+	 * Fetch the current logged user
+	 */
+	@Test
+	public void getCurrentUser() {
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setParams(getParams());
+		req.setMethod(Constantes.GET);
+		req.setUser(user);
+		User p2 = Json.decodeValue(new JsonObject(sendonBus(UserVerticle.CURRENT, req, user.getAccount().getToken())).encode(), User.class);
+		Assert.assertEquals(user.get_id(), p2.get_id());
 	}
 
 }

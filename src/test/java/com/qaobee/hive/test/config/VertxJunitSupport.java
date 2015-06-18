@@ -144,9 +144,30 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      *
      * @return a user
      */
-    public User generateUser() {
+    protected User generateUser() {
         final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
         try {
+            final String id = mongo.save(user);
+            if (id == null) {
+                Assert.fail("user id is null");
+            }
+            user.set_id(id);
+        } catch (EncodeException | QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        return user;
+    }
+
+    /**
+     * Generate logged user.
+     *
+     * @return the user
+     */
+    protected User generateLoggedUser() {
+        final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
+        try {
+            user.getAccount().setToken("12345");
+            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
             final String id = mongo.save(user);
             if (id == null) {
                 Assert.fail("user id is null");
@@ -164,7 +185,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param args tableaux de type [clef, val1, val2, ...]
      * @return map de paramètres de requête
      */
-    public Map<String, List<String>> getParams(final String[]... args) {
+    protected Map<String, List<String>> getParams(final String[]... args) {
         final Map<String, List<String>> params = new HashMap<>();
         for (final String[] arg : args) {
             params.put(arg[0], Arrays.asList((String[]) ArrayUtils.subarray(arg, 1, arg.length)));
@@ -179,7 +200,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param req     request
      * @return result string
      */
-    public String sendonBus(final String address, final RequestWrapper req) {
+    protected String sendonBus(final String address, final RequestWrapper req) {
         getEventBus().send(address, Json.encode(req), new QueueReplyHandler<>(queue, timeout));
         try {
             final Object result = queue.poll(timeout, TimeUnit.SECONDS);
@@ -205,20 +226,30 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         return null;
     }
 
+
+    protected String sendonBus(String address, RequestWrapper req, String token) {
+        if(req.getHeaders() == null){
+            req.setHeaders(new HashMap<String, List<String>>());
+        }
+        req.getHeaders().put("token", Arrays.asList(token));
+        return sendonBus(address, req);
+    }
+
+
     /**
      * The Constant POPULATE_ONLY.
      */
-    public static final String POPULATE_ONLY = "only";
+    protected static final String POPULATE_ONLY = "only";
 
     /**
      * The Constant POPULATE_WITHOUT.
      */
-    public static final String POPULATE_WITHOUT = "without";
+    protected static final String POPULATE_WITHOUT = "without";
 
     /**
      * The Constant POPULATE_ALL.
      */
-    public static final String POPULATE_ALL = "all";
+    protected static final String POPULATE_ALL = "all";
 
     /**
      * Populates the test base.
@@ -226,7 +257,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param populateType (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
      * @param mongoFiles   (String[]) : array of filenames
      */
-    public void populate(String populateType, String... mongoFiles) {
+    protected void populate(String populateType, String... mongoFiles) {
         populate(populateType, "", mongoFiles);
     }
 
@@ -340,7 +371,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * Commons function for return a country JsonObject
      *
      * @param id the id
-     * @return activity
+     * @return activity activity
      */
     protected JsonObject getActivity(String id) {
 
@@ -361,14 +392,14 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * Commons function for return a country JsonObject
      *
      * @param id the id
-     * @return country
+     * @return country country
      */
     protected JsonObject getCountry(String id) {
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.GET);
         final HashMap<String, List<String>> params = new HashMap<>();
-		/* Retreive object */
+        /* Retreive object */
         params.put(CountryVerticle.PARAM_ID, Collections.singletonList(id));
         req.setParams(params);
         final String reply = sendonBus(CountryVerticle.GET, req);

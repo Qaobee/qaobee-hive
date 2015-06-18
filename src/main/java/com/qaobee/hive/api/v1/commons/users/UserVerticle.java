@@ -520,6 +520,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    User u = utils.isUserLogged(req);
                     eb.send(SeasonVerticle.GET_LIST_BY_ACTIVITY, message.body(), new Handler<Message<String>>() {
 
                         @Override
@@ -531,6 +532,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
                 }
             }
         };
@@ -555,6 +559,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    User u = utils.isUserLogged(req);
                     message.reply(mongo.getById(req.getParams().get("id").get(0), User.class).encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
