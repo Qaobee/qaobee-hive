@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 
 import com.qaobee.hive.api.v1.commons.referencial.StructureVerticle;
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -45,9 +46,11 @@ public class StructureTest extends VertxJunitSupport {
 
 		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
-		/* test based on script mongo */
+		/* User simulation connection */
+		User user = generateLoggedUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
+		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
@@ -56,7 +59,7 @@ public class StructureTest extends VertxJunitSupport {
 		params.put(StructureVerticle.PARAM_ID, Arrays.asList("541168295971d35c1f2d1b5e"));
 		req.setParams(params);
 
-		final String reply = sendonBus(StructureVerticle.GET, req);
+		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
 		JsonObject result = new JsonObject(reply);
 		
 		String label = result.getString("label");
@@ -73,21 +76,23 @@ public class StructureTest extends VertxJunitSupport {
 
 		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
-		/* test based on script mongo */
+		/* User simulation connection */
+		User user = generateLoggedUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
+		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
 		
-		JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req));
+		JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 		
 		// id
 		params.put(StructureVerticle.PARAM_ID, Arrays.asList(""));
 		req.setParams(params);
 		
-		resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req));
+		resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
 		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("_id is mandatory"));
 
 	}
@@ -100,9 +105,11 @@ public class StructureTest extends VertxJunitSupport {
 
 		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
-		/* test based on script mongo */
+		/* User simulation connection */
+		User user = generateLoggedUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
+		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
@@ -111,7 +118,7 @@ public class StructureTest extends VertxJunitSupport {
 		params.put(StructureVerticle.PARAM_ID, Arrays.asList("541168295971d35c1f2d1b5e"));
 		req.setParams(params);
 
-		final String reply = sendonBus(StructureVerticle.GET, req);
+		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
 		JsonObject result = new JsonObject(reply);
 		
 		String label = result.getString("label");
@@ -123,7 +130,7 @@ public class StructureTest extends VertxJunitSupport {
 		result.putString("label", "newValue");
 		req.setBody(result.encode());
 
-		final String reply2 = sendonBus(StructureVerticle.UPDATE, req);
+		final String reply2 = sendonBus(StructureVerticle.UPDATE, req, user.getAccount().getToken());
 		JsonObject result2 = new JsonObject(reply2);
 		label = result2.getString("label");
 		Assert.assertEquals("newValue", label);
@@ -139,9 +146,11 @@ public class StructureTest extends VertxJunitSupport {
 
 		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
-		/* test based on script mongo */
+		/* User simulation connection */
+		User user = generateLoggedUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
+		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
@@ -150,7 +159,7 @@ public class StructureTest extends VertxJunitSupport {
 		params.put(StructureVerticle.PARAM_ID, Arrays.asList("541168295971d35c1f2d1b5e"));
 		req.setParams(params);
 
-		final String reply = sendonBus(StructureVerticle.GET, req);
+		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
 		JsonObject result = new JsonObject(reply);
 		
 		String label = result.getString("label");
@@ -163,7 +172,7 @@ public class StructureTest extends VertxJunitSupport {
 		result.putObject("country", null);
 		req.setBody(result.encode());
 
-		final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.UPDATE, req));
+		final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.UPDATE, req, user.getAccount().getToken()));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
 	}
 	
@@ -176,9 +185,13 @@ public class StructureTest extends VertxJunitSupport {
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 		
+		/* User simulation connection */
+		User user = generateLoggedUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
+		req.setUser(user);
 		req.setMethod(Constantes.POST);
+		
 
 		/* Generate a simple Structure Object */
 		final JsonObject params = new JsonObject();
@@ -189,7 +202,7 @@ public class StructureTest extends VertxJunitSupport {
 		
 		req.setBody(params.encode());
 
-		final JsonObject result = new JsonObject(sendonBus(StructureVerticle.ADD, req));
+		final JsonObject result = new JsonObject(sendonBus(StructureVerticle.ADD, req, user.getAccount().getToken()));
 		String id = result.getString("_id");
 		Assert.assertNotNull(id);
 	}
@@ -203,8 +216,11 @@ public class StructureTest extends VertxJunitSupport {
 		
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 
+		/* User simulation connection */
+		User user = generateLoggedUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
+		req.setUser(user);
 		req.setMethod(Constantes.POST);
 
 		/* Generate a simple Structure Object */
@@ -215,7 +231,7 @@ public class StructureTest extends VertxJunitSupport {
 
 		req.setBody(params.encode());
 
-		final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.ADD, req));
+		final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.ADD, req, user.getAccount().getToken()));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
 	}
 

@@ -24,9 +24,11 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -45,9 +47,11 @@ public class ActivityTest extends VertxJunitSupport {
 
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 
-		/* test based on script mongo */
+		/* User simulation connection */
+		User user = generateLoggedUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
+		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
@@ -56,7 +60,7 @@ public class ActivityTest extends VertxJunitSupport {
 		params.put(ActivityVerticle.PARAM_ID, Arrays.asList("ACT-HAND"));
 		req.setParams(params);
 
-		final String reply = sendonBus(ActivityVerticle.GET, req);
+		final String reply = sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken());
 		JsonObject result = new JsonObject(reply);
 		
 		String label = result.getString("label");
@@ -71,21 +75,74 @@ public class ActivityTest extends VertxJunitSupport {
 	@Test
 	public void getObjectByIdKo() {
 
+		/* User simulation connection */
+		User user = generateLoggedUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
+		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
 		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
 		
-		JsonObject resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req));
+		JsonObject resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 		
 		// id
 		params.put(ActivityVerticle.PARAM_ID, Arrays.asList(""));
 		req.setParams(params);
 		
-		resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req));
+		resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
 		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("_id is mandatory"));
 
+	}
+	
+	/**
+	 * Tests getListHandler for ActivityVerticle
+	 */
+	@Test
+	public void getListOk() {
+
+		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
+
+		/* User simulation connection */
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.GET);
+
+		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		
+		// id
+		params.put(ActivityVerticle.PARAM_ID, Arrays.asList("ACT-HAND"));
+		req.setParams(params);
+
+		final String reply = sendonBus(ActivityVerticle.GET_LIST, req, user.getAccount().getToken());
+		Assert.assertEquals(3, new JsonArray(reply).size());
+	}
+	
+	/**
+	 * Tests getListEnableHandler for ActivityVerticle
+	 */
+	@Test
+	public void getListEnableOk() {
+
+		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
+
+		/* User simulation connection */
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.GET);
+
+		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		
+		// id
+		params.put(ActivityVerticle.PARAM_ID, Arrays.asList("ACT-HAND"));
+		req.setParams(params);
+
+		final String reply = sendonBus(ActivityVerticle.GET_LIST_ENABLE, req, user.getAccount().getToken());
+		Assert.assertEquals(2, new JsonArray(reply).size());
 	}
 }

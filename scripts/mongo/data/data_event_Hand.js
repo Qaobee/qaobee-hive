@@ -33,9 +33,7 @@
 /* 
  * Vidage de la collection Event handball
  */
-db.Event.remove({ "activityId" : "ACT-HAND", 
-                   "seasonCode" : "SAI-2014" ,
-                   "categoryAge.code" : "sen"});
+db.Event.remove({ "owner" : { "$in" : [ "55847ed0d040353767a48e70", "55847ed0d040353767a48e71", "55847ed0d040353767a48e72", "55847ed0d040353767a48e73"]}});
 
  
 /***************************************************************
@@ -43,7 +41,7 @@ db.Event.remove({ "activityId" : "ACT-HAND",
  * *************************************************************
  */
 
-db.Event.insert({"_id" : new ObjectId().valueOf(),
+db.Event.insert({"_id" : "55847ed0d040353767a48e70",
     "activityId" : "ACT-HAND",
     "categoryAge" : { "code" : "sen", "label" : "Senior", "ageMax" : NumberInt(34), "ageMin" : NumberInt(20), "genre" : "gender.male"},
     "seasonCode" : "SAI-2014", 
@@ -57,7 +55,7 @@ db.Event.insert({"_id" : new ObjectId().valueOf(),
                       {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}]
 });
 
-db.Event.insert({"_id" : new ObjectId().valueOf(),
+db.Event.insert({"_id" : "55847ed0d040353767a48e71",
     "activityId" : "ACT-HAND",
     "categoryAge" : { "code" : "sen", "label" : "Senior", "ageMax" : NumberInt(34), "ageMin" : NumberInt(20), "genre" : "gender.male"},
     "seasonCode" : "SAI-2014", 
@@ -71,7 +69,7 @@ db.Event.insert({"_id" : new ObjectId().valueOf(),
                       {"id" : "ID-ARENA-BREST", "name" : "Brest Arena", "structureId" : "541168295971d35c1f2d1b5e", "type":"infrastructure"}]
 });
 
-db.Event.insert({"_id" : new ObjectId().valueOf(),
+db.Event.insert({"_id" : "55847ed0d040353767a48e72",
     "activityId" : "ACT-HAND",
     "categoryAge" : { "code" : "sen", "label" : "Senior", "ageMax" : NumberInt(34), "ageMin" : NumberInt(20), "genre" : "gender.male"},
     "seasonCode" : "SAI-2014", 
@@ -85,7 +83,7 @@ db.Event.insert({"_id" : new ObjectId().valueOf(),
                       {"id" : "ID-OUBRON-CRETEIL", "label" : "Robert Oubron", "structureId" : "USCRETEILHANDBALL", "type":"infrastructure"}]
 });
 
-db.Event.insert({"_id" : new ObjectId().valueOf(),
+db.Event.insert({"_id" : "55847ed0d040353767a48e73",
     "activityId" : "ACT-HAND",
     "categoryAge" : { "code" : "sen", "label" : "Senior", "ageMax" : NumberInt(34), "ageMin" : NumberInt(20), "genre" : "gender.male"},
     "seasonCode" : "SAI-2014", 

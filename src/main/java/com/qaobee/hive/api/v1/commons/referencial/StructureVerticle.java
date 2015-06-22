@@ -188,7 +188,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     Map<String, List<String>> params = req.getParams();
-
+                    utils.isUserLogged(req);
                     utils.testMandatoryParams(params, PARAM_ID);
 
                     // Tests mandatory parameters
@@ -248,6 +248,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    utils.isUserLogged(req);
                     final JsonObject params = new JsonObject(req.getBody());
                     utils.testMandatoryParams(params.toMap(), PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY);
 

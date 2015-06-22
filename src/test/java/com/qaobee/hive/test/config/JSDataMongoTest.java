@@ -43,10 +43,8 @@ public interface JSDataMongoTest {
     String SETTINGS_ACTIVITY = "settings_activity.js";
     String SETTINGS_COUNTRY = "settings_country.js";
     String SETTINGS_PERSON_FOOT = "settings_person_Foot_SEN.js";
+    
     /* STATS */
     String SETTINGS_INDICATOR = "settings_indicator_HAND.js";
-
-    /* Events */
-    String SETTINGS_EVENT_HAND = "settings_event_Hand.js";
 
 }

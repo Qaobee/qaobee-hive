@@ -97,7 +97,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
 					Map<String, List<String>> params = req.getParams();
-					
+					utils.isUserLogged(req);
 					utils.testMandatoryParams(params, PARAM_ID);
 					
 					// Tests mandatory parameters
@@ -148,10 +148,9 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					
-					Map<String, Object> criterias = new HashMap<String, Object>();
+					utils.isUserLogged(req);
 										
-					JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
+					JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
 					
 					container.logger().info("Activities found : " + resultJson.toString());
 					
@@ -160,7 +159,10 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 				} catch (final NoSuchMethodException e) {
 					container.logger().error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} 
+				} catch (QaobeeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, e);
+				}
 			}
 		};
 
@@ -188,7 +190,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					
+					utils.isUserLogged(req);
 					Map<String, Object> criterias = new HashMap<String, Object>();
 					criterias.put("enable", true);
 					
@@ -201,7 +203,10 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 				} catch (final NoSuchMethodException e) {
 					container.logger().error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} 
+				} catch (QaobeeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, e);
+				}
 			}
 		};
 

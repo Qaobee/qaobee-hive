@@ -17,11 +17,22 @@
  */
 package com.qaobee.hive.api.v1.commons.referencial;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.referencial.event.Event;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -30,16 +41,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * The type Event verticle.
@@ -60,20 +61,26 @@ public class EventVerticle extends AbstractGuiceVerticle {
 	/* List of parameters */
     /** Event Group ID */
     public static final String PARAM_LIST_ID = "listId";
+    /** Event Group ID */
+    public static final String PARAM_CATEGORY = "categoryAge";
     /** Event ID */
     public static final String PARAM_ID = "id";
     /** Event activity */
     public static final String PARAM_ACTIVITY_ID = "activityId";
     /** Event Season code */
     public static final String PARAM_SEASON_CODE = "seasonCode";
+    /** Event Season code */
+    public static final String PARAM_LABEL = "label";
     /** Event Start date */
     public static final String PARAM_START_DATE = "startDate";
     /** Event End date */
     public static final String PARAM_END_DATE = "endDate";
-    /** Event Type */
-    public static final String PARAM_EVENT_TYPE = "type";
+    /** link Id*/
+    public static final String PARAM_LINK_ID = "link.linkId";
+    /** link Type */
+    public static final String PARAM_LINK_TYPE = "link.type";
     /** Event Owner */
-    public static final String PARAM_EVENT_OWNER = "eventOwner";
+    public static final String PARAM_OWNER = "owner";
     /** participants */
     public static final String PARAM_PARTICIPANTS_CLAUSE = "participantClause";
 
@@ -129,9 +136,9 @@ public class EventVerticle extends AbstractGuiceVerticle {
 					 */
                     // Check param mandatory
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    User u = utils.isUserLogged(req);
+                    utils.isUserLogged(req);
                     JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_START_DATE, PARAM_END_DATE, PARAM_EVENT_TYPE, PARAM_ACTIVITY_ID, PARAM_EVENT_OWNER);
+                    utils.testMandatoryParams(params.toMap(), PARAM_START_DATE, PARAM_END_DATE, PARAM_LINK_TYPE, PARAM_ACTIVITY_ID, PARAM_OWNER);
 
 					/*
 					 * *** Aggregat section ***
@@ -146,10 +153,10 @@ public class EventVerticle extends AbstractGuiceVerticle {
                     dbObjectParent.put(PARAM_ACTIVITY_ID, params.getString(PARAM_ACTIVITY_ID));
 
                     // Event Type
-                    dbObjectParent.put(PARAM_EVENT_TYPE, params.getString(PARAM_EVENT_TYPE));
+                    dbObjectParent.put(PARAM_LINK_TYPE, params.getString(PARAM_LINK_TYPE));
 
                     // Owner
-                    dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_EVENT_OWNER).toArray());
+                    dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_OWNER).toArray());
                     dbObjectParent.put("owner", dbObjectChild);
 
                     // start date
@@ -236,9 +243,10 @@ public class EventVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.PUT, req.getMethod());
-                    User u = utils.isUserLogged(req);
+                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    utils.isUserLogged(req);
                     JsonObject params = new JsonObject(req.getBody());
+                    utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_CATEGORY, PARAM_SEASON_CODE, PARAM_OWNER, PARAM_START_DATE);
                     JsonObject event = params.getObject("event");
 
                     final String id = mongo.save(event, Event.class);
@@ -280,7 +288,7 @@ public class EventVerticle extends AbstractGuiceVerticle {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    User u = utils.isUserLogged(req);
+                    utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_ID);
 
                     message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), Event.class).encode());
