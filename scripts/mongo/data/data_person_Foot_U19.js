@@ -50,20 +50,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Paris",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Pizzaiolo",
     "address" : {
         "formatedAddress" : "",
@@ -209,20 +197,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Saint-Etienne",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Maçon",
     "address" : {
         "formatedAddress" : "",
@@ -368,20 +344,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Monaco",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "coiffeur",
     "address" : {
         "formatedAddress" : "",
@@ -527,20 +491,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Monaco",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Plongeur",
     "address" : {
         "formatedAddress" : "",
@@ -686,20 +638,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Saint-Etienne",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Dentiste",
     "address" : {
         "formatedAddress" : "",
@@ -845,20 +785,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Nantes",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "ferrailleur",
     "address" : {
         "formatedAddress" : "",
@@ -1004,20 +932,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Fort-de-France",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Vigile",
     "address" : {
         "formatedAddress" : "",
@@ -1163,20 +1079,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Toulouse",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Maçon",
     "address" : {
         "formatedAddress" : "",
@@ -1322,20 +1226,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Saint-Etienne",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Assureur",
     "address" : {
         "formatedAddress" : "",
@@ -1482,20 +1374,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Bordeaux",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Boulanger",
     "address" : {
         "formatedAddress" : "",
@@ -1641,20 +1521,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Saint-Etienne",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "VRP",
     "address" : {
         "formatedAddress" : "",
@@ -1800,20 +1668,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Saint-Etienne",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Plombier",
     "address" : {
         "formatedAddress" : "",
@@ -1958,20 +1814,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Bordeaux",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Taxi",
     "address" : {
         "formatedAddress" : "",
@@ -2117,20 +1961,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Bordeaux",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Couvreur",
     "address" : {
         "formatedAddress" : "",
@@ -2277,20 +2109,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Saint-Etienne",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Animateur",
     "address" : {
         "formatedAddress" : "",
@@ -2436,20 +2256,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Bamako",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Platrier",
     "address" : {
         "formatedAddress" : "",
@@ -2595,20 +2403,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Monaco",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Flambeur",
     "address" : {
         "formatedAddress" : "",
@@ -2754,20 +2550,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Monaco",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Mécanicien",
     "address" : {
         "formatedAddress" : "",
@@ -2913,20 +2697,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Bordeaux",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Garagiste",
     "address" : {
         "formatedAddress" : "",
@@ -3061,20 +2833,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Paris",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Soudeur",
     "address" : {
         "formatedAddress" : "",
@@ -3209,20 +2969,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Paris",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Ecrivain",
     "address" : {
         "formatedAddress" : "",
@@ -3358,20 +3106,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(804290400000),
     "birthcity" : "Toulouse",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "VRP",
     "address" : {
         "formatedAddress" : "",

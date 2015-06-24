@@ -62,7 +62,7 @@ db.Structure.insert({
         "fax" : "",
         "email" : "melanie.lefebvre@usdk.fr"
     },
-    "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
+    "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "avatar" : null
 });
 
@@ -90,7 +90,7 @@ db.Structure.insert({
         "fax" : "",
         "email" : "sandrine@cesson-handball.com"
     },
-    "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
+    "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "avatar" : null
 });
 
@@ -118,7 +118,7 @@ db.Structure.insert({
         "fax" : "",
         "email" : "0529000@football-france.eu"
     },
-    "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
+    "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "avatar" : null
 });
 
@@ -146,7 +146,7 @@ db.Structure.insert({
         "fax" : "",
         "email" : "0529000@football-france.eu"
     },
-    "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "alpha2" : "FR" , "alpha3" : "FRA" , "label" : "settings.Country.FR.name"},
+    "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "avatar" : null
 });
 
