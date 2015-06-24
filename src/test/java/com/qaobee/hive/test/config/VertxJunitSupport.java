@@ -164,15 +164,21 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @return the user
      */
     protected User generateLoggedUser() {
+        return generateLoggedUser("12345");
+    }
+
+    protected User generateLoggedUser(String userId) {
         final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
         try {
+            user.set_id(userId);
             user.getAccount().setToken("12345");
             user.getAccount().setTokenRenewDate(System.currentTimeMillis());
             final String id = mongo.save(user);
             if (id == null) {
                 Assert.fail("user id is null");
+            } else {
+                user.set_id(id);
             }
-            user.set_id(id);
         } catch (EncodeException | QaobeeException e) {
             Assert.fail(e.getMessage());
         }

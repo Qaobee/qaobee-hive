@@ -20,6 +20,8 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
+apply plugin: "jacoco"
+
 
 def cpSeparator = System.getProperty("path.separator")
 
@@ -156,7 +158,14 @@ test {
 
     systemProperty 'vertx.mods', "build/mods"
 }
-
+test.finalizedBy jacocoTestReport
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "build/reports/jacocoHtml"
+    }
+}
 task init(description: 'Create module link and CP file') << {
     setSysProps()
     doInit()

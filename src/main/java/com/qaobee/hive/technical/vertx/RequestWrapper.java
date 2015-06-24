@@ -22,6 +22,7 @@ import com.qaobee.hive.business.model.commons.users.User;
 import org.apache.commons.lang.SerializationUtils;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -114,6 +115,7 @@ public class RequestWrapper implements Serializable {
      * @return the params
      */
     public Map<String, List<String>> getParams() {
+        if(params == null) params = new HashMap<>();
         return params;
     }
 

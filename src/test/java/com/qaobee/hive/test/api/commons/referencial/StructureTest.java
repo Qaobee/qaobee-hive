@@ -18,19 +18,18 @@
  */
 package com.qaobee.hive.test.api.commons.referencial;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
-
 import com.qaobee.hive.api.v1.commons.referencial.StructureVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import org.junit.Assert;
+import org.junit.Test;
+import org.vertx.java.core.json.JsonObject;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author cke
@@ -53,10 +52,10 @@ public class StructureTest extends VertxJunitSupport {
 		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		final HashMap<String, List<String>> params = new HashMap<>();
 		
 		// id
-		params.put(StructureVerticle.PARAM_ID, Arrays.asList("541168295971d35c1f2d1b5e"));
+		params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
 		req.setParams(params);
 
 		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
@@ -83,13 +82,13 @@ public class StructureTest extends VertxJunitSupport {
 		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		final HashMap<String, List<String>> params = new HashMap<>();
 		
 		JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 		
 		// id
-		params.put(StructureVerticle.PARAM_ID, Arrays.asList(""));
+		params.put(StructureVerticle.PARAM_ID, Collections.singletonList(""));
 		req.setParams(params);
 		
 		resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
@@ -112,10 +111,10 @@ public class StructureTest extends VertxJunitSupport {
 		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		final HashMap<String, List<String>> params = new HashMap<>();
 		
 		/* Retreive object */
-		params.put(StructureVerticle.PARAM_ID, Arrays.asList("541168295971d35c1f2d1b5e"));
+		params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
 		req.setParams(params);
 
 		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
@@ -153,10 +152,10 @@ public class StructureTest extends VertxJunitSupport {
 		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		final HashMap<String, List<String>> params = new HashMap<>();
 		
 		/* Retreive object */
-		params.put(StructureVerticle.PARAM_ID, Arrays.asList("541168295971d35c1f2d1b5e"));
+		params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
 		req.setParams(params);
 
 		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());

@@ -191,7 +191,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
 					utils.isUserLogged(req);
-					Map<String, Object> criterias = new HashMap<String, Object>();
+					Map<String, Object> criterias = new HashMap<>();
 					criterias.put("enable", true);
 					
 					JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);

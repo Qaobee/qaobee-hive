@@ -67,9 +67,11 @@ public class Structure {
      * The avatar.
      */
     private String avatar;
-    
-    /** audit CRUD object */
-	private Audit audit;
+
+    /**
+     * audit CRUD object
+     */
+    private Audit audit;
 
 
     /**
@@ -133,7 +135,7 @@ public class Structure {
         this.acronym = acronym;
     }
 
-    
+
     /**
      * Gets the avatar.
      *
@@ -154,6 +156,8 @@ public class Structure {
 
 
     /**
+     * Gets country.
+     *
      * @return the country
      */
     public final Country getCountry() {
@@ -161,66 +165,84 @@ public class Structure {
     }
 
     /**
+     * Sets country.
+     *
      * @param country the country to set
      */
     public final void setCountry(Country country) {
         this.country = country;
     }
 
-	/**
-	 * @return the activity
-	 */
-	public Activity getActivity() {
-		return activity;
-	}
+    /**
+     * Gets activity.
+     *
+     * @return the activity
+     */
+    public Activity getActivity() {
+        return activity;
+    }
 
-	/**
-	 * @param activity the activity to set
-	 */
-	public void setActivity(Activity activity) {
-		this.activity = activity;
-	}
+    /**
+     * Sets activity.
+     *
+     * @param activity the activity to set
+     */
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
-	/**
-	 * @return the address
-	 */
-	public Address getAddress() {
-		return address;
-	}
+    /**
+     * Gets address.
+     *
+     * @return the address
+     */
+    public Address getAddress() {
+        return address;
+    }
 
-	/**
-	 * @param address the address to set
-	 */
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    /**
+     * Sets address.
+     *
+     * @param address the address to set
+     */
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-	/**
-	 * @return the contact
-	 */
-	public Contact getContact() {
-		return contact;
-	}
+    /**
+     * Gets contact.
+     *
+     * @return the contact
+     */
+    public Contact getContact() {
+        return contact;
+    }
 
-	/**
-	 * @param contact the contact to set
-	 */
-	public void setContact(Contact contact) {
-		this.contact = contact;
-	}
+    /**
+     * Sets contact.
+     *
+     * @param contact the contact to set
+     */
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
 
-	/**
-	 * @return the audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * Gets audit.
+     *
+     * @return the audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * @param audit the audit to set
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * Sets audit.
+     *
+     * @param audit the audit to set
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 
 }

@@ -17,18 +17,6 @@
  */
 package com.qaobee.hive.api.v1.commons.referencial;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
@@ -41,54 +29,103 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The type Event verticle.
+ *
  * @author cke
  */
 @DeployableVerticle
 public class EventVerticle extends AbstractGuiceVerticle {
 
-    /** Handler to get a set of events */
-    public static final String GET_LIST =  Module.VERSION + ".commons.referencial.event.list";
-    /** Handler to add a event. */
+    /**
+     * Handler to get a set of events
+     */
+    public static final String GET_LIST = Module.VERSION + ".commons.referencial.event.list";
+    /**
+     * Handler to add a event.
+     */
     public static final String ADD = Module.VERSION + ".commons.referencial.event.add";
-    /** Handler to get a particular event from its ID. */
+    /**
+     * Handler to get a particular event from its ID.
+     */
     public static final String GET = Module.VERSION + ".commons.referencial.event.get";
-    /** Handler to update a event. */
+    /**
+     * Handler to update a event.
+     */
     public static final String UPDATE = Module.VERSION + ".commons.referencial.event.update";
 
 	/* List of parameters */
-    /** Event Group ID */
+    /**
+     * Event Group ID
+     */
     public static final String PARAM_LIST_ID = "listId";
-    /** Event Group ID */
+    /**
+     * Event Group ID
+     */
     public static final String PARAM_CATEGORY = "categoryAge";
-    /** Event ID */
+    /**
+     * Event ID
+     */
     public static final String PARAM_ID = "id";
-    /** Event activity */
+    /**
+     * Event activity
+     */
     public static final String PARAM_ACTIVITY_ID = "activityId";
-    /** Event Season code */
+    /**
+     * Event Season code
+     */
     public static final String PARAM_SEASON_CODE = "seasonCode";
-    /** Event Season code */
+    /**
+     * Event Season code
+     */
     public static final String PARAM_LABEL = "label";
-    /** Event Start date */
+    /**
+     * Event Start date
+     */
     public static final String PARAM_START_DATE = "startDate";
-    /** Event End date */
+    /**
+     * Event End date
+     */
     public static final String PARAM_END_DATE = "endDate";
-    /** link Id*/
+    /**
+     * link Id
+     */
     public static final String PARAM_LINK_ID = "link.linkId";
-    /** link Type */
+    /**
+     * link Type
+     */
     public static final String PARAM_LINK_TYPE = "link.type";
-    /** Event Owner */
+    /**
+     * Event Owner
+     */
     public static final String PARAM_OWNER = "owner";
-    /** participants */
+    /**
+     * participants
+     */
     public static final String PARAM_PARTICIPANTS_CLAUSE = "participantClause";
 
-    /** list clause group by */
+    /**
+     * list clause group by
+     */
     public static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
-    /** list clause SORT by */
+    /**
+     * list clause SORT by
+     */
     public static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
-    /** limit number of result */
+    /**
+     * limit number of result
+     */
     public static final String PARAM_LIMIT_RESULT = "limitResult";
 
     /**
@@ -141,7 +178,7 @@ public class EventVerticle extends AbstractGuiceVerticle {
                     utils.testMandatoryParams(params.toMap(), PARAM_START_DATE, PARAM_END_DATE, PARAM_LINK_TYPE, PARAM_ACTIVITY_ID, PARAM_OWNER);
 
 					/*
-					 * *** Aggregat section ***
+                     * *** Aggregat section ***
 					 */
                     DBObject match, sort, limit;
                     BasicDBObject dbObjectParent, dbObjectChild;

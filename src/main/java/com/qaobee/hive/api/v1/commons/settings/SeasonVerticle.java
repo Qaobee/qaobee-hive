@@ -28,7 +28,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -106,21 +105,10 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     Map<String, List<String>> params = req.getParams();
-
                     utils.testMandatoryParams(params, PARAM_ID);
-
-                    // Tests mandatory parameters
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
-                    }
-
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Season.class);
-
                     container.logger().info("Season found : " + json.toString());
-
                     message.reply(json.encode());
-
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -155,24 +143,16 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                     // Tests on method and parameters
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID);
-
                     // Activity ID
                     String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
-                    if (StringUtils.isBlank(activityId)) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Activity id is blank or null");
-                    }
                     // Country ID
                     String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
-                    if (StringUtils.isBlank(countryId)) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Country id is blank or null");
-                    }
-
                     // Creation of the request
-                    Map<String, Object> criterias = new HashMap<String, Object>();
+                    Map<String, Object> criterias = new HashMap<>();
                     criterias.put("activityId", activityId);
                     criterias.put("countryId", countryId);
 
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Season.class);
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");

@@ -67,7 +67,6 @@ dependencies {
 
 test {
     include 'com/qaobee/**'
-
 }
 /*
 If you're uploading stuff to Maven, Gradle needs to generate a POM.

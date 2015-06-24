@@ -18,9 +18,12 @@
  */
 package com.qaobee.hive.api.v1.commons.users;
 
+import com.englishtown.promises.Promise;
+import com.englishtown.promises.Runnable;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
+import com.qaobee.hive.api.v1.sandbox.config.SandBoxCfgVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -42,6 +45,7 @@ import org.apache.commons.lang.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.eventbus.ReplyException;
 import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -51,6 +55,7 @@ import org.vertx.java.core.json.impl.Json;
 import javax.inject.Inject;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -83,17 +88,25 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * The Constant CURRENT.
      */
     public static final String CURRENT = Module.VERSION + ".commons.user.current";
-    /** The Constant META. */
+    /**
+     * The Constant META.
+     */
     public static final String META = Module.VERSION + ".commons.user.meta";
-    public static final String SEASONS_INFO =  Module.VERSION + ".commons.user.season";
-    /** The Constant USER_INFO */
+    public static final String SEASONS_INFO = Module.VERSION + ".commons.user.season";
+    /**
+     * The Constant USER_INFO
+     */
     public static final String USER_INFO = Module.VERSION + ".commons.user.user";
     
     /* List of parameters */
-	/** User login */
-	public static final String PARAM_LOGIN = "login";
-	/** User password */
-	public static final String PARAM_PWD = "password";
+    /**
+     * User login
+     */
+    public static final String PARAM_LOGIN = "login";
+    /**
+     * User password
+     */
+    public static final String PARAM_PWD = "password";
 
     /**
      * The Mongo.
@@ -475,21 +488,26 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     User u = utils.isUserLogged(req);
-                    JsonObject result = new JsonObject();
+
+                    final JsonObject result = new JsonObject();
                     JsonObject user = mongo.getById(u.get_id(), User.class);
                     JsonObject activity = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("activity");
-                    // FIXME : Récupérer la structure et la saison
-             /*       JsonObject structure = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("structure");
-                    JsonObject country = structure.getObject("country");*/
-
                     result.putObject("activity", activity);
-                  //  result.putObject("structure", structure);
-                   /* result.putObject(
-                            "season",
-                            (JsonObject) mongo.findByCriterias(
-                                    new CriteriaBuilder().between("startDate", "endDate", System.currentTimeMillis()).add("activityId", activity.getString("_id"))
-                                            .add("countryId", country.getString("_id")).get(), null, null, -1, 1, Season.class).get(0));*/
-                    message.reply(result.encode());
+
+                    req.getParams().put(SandBoxCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
+                    whenEventBus.send(SandBoxCfgVerticle.GET_BY_OWNER, Json.encode(req))
+                            .then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
+                                @Override
+                                public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
+                                    if (!(objectMessage.body() instanceof ReplyException)) {
+                                        JsonObject sandbox = new JsonObject((String) objectMessage.body());
+                                        result.putObject("season", sandbox.getObject("season"));
+                                        result.putObject("structure", sandbox.getObject("structure"));
+                                    }
+                                    message.reply(result.toString());
+                                    return null;
+                                }
+                            });
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());

@@ -18,98 +18,133 @@
  */
 package com.qaobee.hive.business.model.sandbox.config;
 
-import java.util.List;
-
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.business.model.transversal.Member;
 
+import java.util.List;
+
 /**
- * @author cke
+ * The type Sand box cfg.
  *
+ * @author cke
  */
 public class SandBoxCfg {
-	
-	private String _id;
-	
-	private Structure structure;
-	
-	private SandBox sandBox;
-	
-	private Season season;
-	
-	private List<Member> members;
 
-	/**
-	 * @return the _id
-	 */
-	public String get_id() {
-		return _id;
-	}
+    /**
+     * The _ id.
+     */
+    private String _id;
 
-	/**
-	 * @param _id the _id to set
-	 */
-	public void set_id(String _id) {
-		this._id = _id;
-	}
+    /**
+     * The Structure.
+     */
+    private Structure structure;
 
-	/**
-	 * @return the season
-	 */
-	public Season getSeason() {
-		return season;
-	}
+    /**
+     * The Sand box.
+     */
+    private SandBox sandBox;
 
-	/**
-	 * @param season the season to set
-	 */
-	public void setSeason(Season season) {
-		this.season = season;
-	}
+    /**
+     * The Season.
+     */
+    private Season season;
 
-	/**
-	 * @return the sandBox
-	 */
-	public SandBox getSandBox() {
-		return sandBox;
-	}
+    /**
+     * The Members.
+     */
+    private List<Member> members;
 
-	/**
-	 * @param sandBox the sandBox to set
-	 */
-	public void setSandBox(SandBox sandBox) {
-		this.sandBox = sandBox;
-	}
+    /**
+     * Gets _ id.
+     *
+     * @return the _id
+     */
+    public String get_id() {
+        return _id;
+    }
 
-	/**
-	 * @return the structure
-	 */
-	public Structure getStructure() {
-		return structure;
-	}
+    /**
+     * Sets _ id.
+     *
+     * @param _id the _id to set
+     */
+    public void set_id(String _id) {
+        this._id = _id;
+    }
 
-	/**
-	 * @param structure the structure to set
-	 */
-	public void setStructure(Structure structure) {
-		this.structure = structure;
-	}
+    /**
+     * Gets season.
+     *
+     * @return the season
+     */
+    public Season getSeason() {
+        return season;
+    }
 
-	/**
-	 * @return the members
-	 */
-	public List<Member> getMembers() {
-		return members;
-	}
+    /**
+     * Sets season.
+     *
+     * @param season the season to set
+     */
+    public void setSeason(Season season) {
+        this.season = season;
+    }
 
-	/**
-	 * @param members the members to set
-	 */
-	public void setMembers(List<Member> members) {
-		this.members = members;
-	}
+    /**
+     * Gets sand box.
+     *
+     * @return the sandBox
+     */
+    public SandBox getSandBox() {
+        return sandBox;
+    }
 
-	
+    /**
+     * Sets sand box.
+     *
+     * @param sandBox the sandBox to set
+     */
+    public void setSandBox(SandBox sandBox) {
+        this.sandBox = sandBox;
+    }
+
+    /**
+     * Gets structure.
+     *
+     * @return the structure
+     */
+    public Structure getStructure() {
+        return structure;
+    }
+
+    /**
+     * Sets structure.
+     *
+     * @param structure the structure to set
+     */
+    public void setStructure(Structure structure) {
+        this.structure = structure;
+    }
+
+    /**
+     * Gets members.
+     *
+     * @return the members
+     */
+    public List<Member> getMembers() {
+        return members;
+    }
+
+    /**
+     * Sets members.
+     *
+     * @param members the members to set
+     */
+    public void setMembers(List<Member> members) {
+        this.members = members;
+    }
+
 
 }

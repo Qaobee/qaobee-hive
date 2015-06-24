@@ -28,7 +28,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
@@ -90,13 +89,21 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_COUNTRY = "country";
 
-    /* Injections */
+    /**
+     * The Mongo.
+     */
     @Inject
     private MongoDB mongo;
+    /**
+     * The Utils.
+     */
     @Inject
     private Utils utils;
 
 
+    /**
+     * Start void.
+     */
     @Override
     public void start() {
         super.start();
@@ -190,19 +197,9 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     Map<String, List<String>> params = req.getParams();
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(params, PARAM_ID);
-
-                    // Tests mandatory parameters
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
-                    }
-
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Structure.class);
-
                     container.logger().info("Structure found : " + json.toString());
-
                     message.reply(json.encode());
-
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -276,7 +273,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
         };
 
 		/*
-		 * Handlers registration
+         * Handlers registration
 		 */
         vertx.eventBus().registerHandler(ADD, add);
         vertx.eventBus().registerHandler(GET, get);

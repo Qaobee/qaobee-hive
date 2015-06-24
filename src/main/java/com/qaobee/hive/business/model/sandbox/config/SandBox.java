@@ -20,59 +20,80 @@ package com.qaobee.hive.business.model.sandbox.config;
 
 
 /**
- * @author cke
+ * The type Sand box.
  *
+ * @author cke
  */
 public class SandBox {
-	
-	private String owner;
-	
-	private String activityId;
-	
-	private String structureId;
 
-	/**
-	 * @return the owner
-	 */
-	public String getOwner() {
-		return owner;
-	}
+    /**
+     * The Owner.
+     */
+    private String owner;
 
-	/**
-	 * @param owner the owner to set
-	 */
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
+    /**
+     * The Activity id.
+     */
+    private String activityId;
 
-	/**
-	 * @return the activityId
-	 */
-	public String getActivityId() {
-		return activityId;
-	}
+    /**
+     * The Structure id.
+     */
+    private String structureId;
 
-	/**
-	 * @param activityId the activityId to set
-	 */
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+    /**
+     * Gets owner.
+     *
+     * @return the owner
+     */
+    public String getOwner() {
+        return owner;
+    }
 
-	/**
-	 * @return the structureId
-	 */
-	public String getStructureId() {
-		return structureId;
-	}
+    /**
+     * Sets owner.
+     *
+     * @param owner the owner to set
+     */
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
-	/**
-	 * @param structureId the structureId to set
-	 */
-	public void setStructureId(String structureId) {
-		this.structureId = structureId;
-	}
-	
-	
+    /**
+     * Gets activity id.
+     *
+     * @return the activityId
+     */
+    public String getActivityId() {
+        return activityId;
+    }
+
+    /**
+     * Sets activity id.
+     *
+     * @param activityId the activityId to set
+     */
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
+
+    /**
+     * Gets structure id.
+     *
+     * @return the structureId
+     */
+    public String getStructureId() {
+        return structureId;
+    }
+
+    /**
+     * Sets structure id.
+     *
+     * @param structureId the structureId to set
+     */
+    public void setStructureId(String structureId) {
+        this.structureId = structureId;
+    }
+
 
 }

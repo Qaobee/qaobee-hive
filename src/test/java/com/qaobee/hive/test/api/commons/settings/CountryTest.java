@@ -18,19 +18,16 @@
  */
 package com.qaobee.hive.test.api.commons.settings;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
+import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
+import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.test.config.VertxJunitSupport;
+import java.util.*;
 
 /**
  * @author cke
@@ -51,10 +48,10 @@ public class CountryTest extends VertxJunitSupport {
 		req.setLocale(LOCALE);
 		req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		final Map<String, List<String>> params = new HashMap<>();
 		
 		// id
-		params.put(CountryVerticle.PARAM_ID, Arrays.asList("CNTR-250-FR-FRA"));
+		params.put(CountryVerticle.PARAM_ID, Collections.singletonList("CNTR-250-FR-FRA"));
 		req.setParams(params);
 
 		final String reply = sendonBus(CountryVerticle.GET, req);
@@ -76,13 +73,13 @@ public class CountryTest extends VertxJunitSupport {
 		req.setLocale(LOCALE);
 		req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		final Map<String, List<String>> params = new HashMap<>();
 		
 		JsonObject resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 		
 		// id
-		params.put(CountryVerticle.PARAM_ID, Arrays.asList(""));
+		params.put(CountryVerticle.PARAM_ID, Collections.singletonList(""));
 		req.setParams(params);
 		
 		resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
@@ -102,10 +99,10 @@ public class CountryTest extends VertxJunitSupport {
 		req.setLocale(LOCALE);
 		req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		final Map<String, List<String>> params = new HashMap<>();
 		
 		// label
-		params.put(CountryVerticle.PARAM_LABEL, Arrays.asList("settings.Country.FR.name"));
+		params.put(CountryVerticle.PARAM_LABEL, Collections.singletonList("settings.Country.FR.name"));
 		req.setParams(params);
 		
 		JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
