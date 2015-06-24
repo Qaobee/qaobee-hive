@@ -52,7 +52,7 @@ db.User.insert({
     "avatar": null,
     "gender": "gender.male",
     "birthdate": NumberLong(1398290400000),
-    "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "settings.Country.FR.name"},
+    "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
 
     "address": {
         "formatedAddress": "",
@@ -110,7 +110,7 @@ db.User.insert({
     "avatar": null,
     "gender": "gender.male",
     "birthdate": NumberLong(39740400000),
-    "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "settings.Country.FR.name"},
+    "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
 
     "address": {
         "formatedAddress": "",
@@ -167,7 +167,7 @@ db.User.insert({
     "avatar": null,
     "gender": "gender.male",
     "birthdate": NumberLong(140655600000),
-    "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "settings.Country.FR.name"},
+    "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
 
     "address": {
         "formatedAddress": "",
@@ -228,7 +228,7 @@ db.User.insert({
     "avatar": null,
     "gender": "gender.male",
     "birthdate": NumberLong(-21434400000),
-    "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "settings.Country.FR.name"},
+    "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "address": {
         "formatedAddress": "",
         "place": "3, allée de Champagné",
@@ -284,7 +284,7 @@ db.User.insert({
     "avatar": null,
     "gender": "gender.male",
     "birthdate": NumberLong(272325600000),
-    "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "settings.Country.FR.name"},
+    "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
 
     "address": {
         "formatedAddress": "",
@@ -344,7 +344,7 @@ db.User.insert({
     "avatar": null,
     "gender": "gender.male",
     "birthdate": NumberLong(-1160701200000),
-    "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "settings.Country.FR.name"},
+    "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
 
     "address": {
         "formatedAddress": "",
@@ -401,7 +401,7 @@ db.User.insert({
     "avatar": null,
     "gender": "gender.male",
     "birthdate": NumberLong(-699930000000),
-    "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "settings.Country.FR.name"},
+    "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
 
     "address": {
         "formatedAddress": "",
@@ -458,7 +458,7 @@ db.User.insert({
     "avatar": null,
     "gender": "gender.male",
     "birthdate": NumberLong(-886640400000),
-    "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "settings.Country.FR.name"},
+    "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
 
     "address": {
         "formatedAddress": "",

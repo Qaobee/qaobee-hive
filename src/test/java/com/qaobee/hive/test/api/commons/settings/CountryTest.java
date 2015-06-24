@@ -91,7 +91,28 @@ public class CountryTest extends VertxJunitSupport {
 	 * Tests getList for CountryVerticle
 	 */
 	@Test
-	public void getList() {
+	public void getListAll() {
+
+		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+		
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
+		
+		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
+		params.put(CountryVerticle.PARAM_LOCAL, Arrays.asList("fr"));
+		req.setParams(params);
+		
+		JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
+		Assert.assertEquals(202,result.size());
+
+	}
+	
+	/**
+	 * Tests getList for CountryVerticle
+	 */
+	@Test
+	public void getListFilter() {
 
 		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 		
@@ -102,7 +123,8 @@ public class CountryTest extends VertxJunitSupport {
 		final Map<String, List<String>> params = new HashMap<>();
 		
 		// label
-		params.put(CountryVerticle.PARAM_LABEL, Collections.singletonList("settings.Country.FR.name"));
+		params.put(CountryVerticle.PARAM_LOCAL, Arrays.asList("fr"));
+		params.put(CountryVerticle.PARAM_LABEL, Arrays.asList("France"));
 		req.setParams(params);
 		
 		JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));

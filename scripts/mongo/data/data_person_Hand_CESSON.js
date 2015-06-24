@@ -50,8 +50,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(556236000000),
     "birthcity" : "Zagreb",
-    "birthcountry" : {"_id" : "CNTR-191-HR-HRV" , "codeOSCE" : NumberInt(191) , "alpha2" : "HR" , "alpha3" : "HRV" , "label" : "settings.Country.HR.name"},
-    "nationality" : {"_id" : "CNTR-191-HR-HRV" , "codeOSCE" : NumberInt(191) , "alpha2" : "HR" , "alpha3" : "HRV" , "label" : "settings.Country.HR.name"},
+    "birthcountry" : {"_id" : "CNTR-191-HR-HRV" , "codeOSCE" : NumberInt(191) , "label" : "Croatie" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-191-HR-HRV" , "codeOSCE" : NumberInt(191) , "label" : "Croatie" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -198,20 +198,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(691714800000),
     "birthcity" : "Saint-Raphaël",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -358,20 +346,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(601426800000),
     "birthcity" : "Rennes",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -518,20 +494,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(523663200000),
     "birthcity" : "Rennes",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -678,20 +642,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(444870000000),
     "birthcity" : "Rennes",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -827,20 +779,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(686271600000),
     "birthcity" : "Rennes",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -976,20 +916,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(564706800000),
     "birthcity" : "Rennes",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -1125,20 +1053,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(401580000000),
     "birthcity" : "Rennes",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -1274,20 +1190,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(712274400000),
     "birthcity" : "Rennes",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -1423,8 +1327,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(430437600000),
     "birthcity" : "Budapest",
-    "birthcountry" : {"_id" : "CNTR-348-HU-HUN" , "codeOSCE" : NumberInt(348) , "alpha2" : "HU" , "alpha3" : "HUN" , "label" : "settings.Country.HU.name"},
-    "nationality" : {"_id" : "CNTR-348-HU-HUN" , "codeOSCE" : NumberInt(348) , "alpha2" : "HU" , "alpha3" : "HUN" , "label" : "settings.Country.HU.name"},
+    "birthcountry" : {"_id" : "CNTR-348-HU-HUN" , "codeOSCE" : NumberInt(348) , "label" : "Hongrie" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-348-HU-HUN" , "codeOSCE" : NumberInt(348) , "label" : "Hongrie" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -1561,20 +1465,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(486079200000),
     "birthcity" : "Strasbourg",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -1711,8 +1603,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(504745200000),
     "birthcity" : "Rome",
-    "birthcountry" : {"_id" : "CNTR-380-IT-ITA" , "codeOSCE" : NumberInt(380) , "alpha2" : "IT" , "alpha3" : "ITA" , "label" : "settings.Country.IT.name"},
-    "nationality" : {"_id" : "CNTR-380-IT-ITA" , "codeOSCE" : NumberInt(380) , "alpha2" : "IT" , "alpha3" : "ITA" , "label" : "settings.Country.IT.name"},
+    "birthcountry" : {"_id" : "CNTR-380-IT-ITA" , "codeOSCE" : NumberInt(380) , "label" : "Italie" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-380-IT-ITA" , "codeOSCE" : NumberInt(380) , "label" : "Italie" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -1849,20 +1741,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(529714800000),
     "birthcity" : "Rennes",
-    "birthcountry" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
-    "nationality" : {
-        "_id" : "CNTR-250-FR-FRA",
-        "codeOSCE" : NumberInt(250),
-        "alpha2" : "FR",
-        "alpha3" : "FRA",
-        "label" : "settings.Country.FR.name"
-    },
+    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"}
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
@@ -1998,8 +1878,8 @@ db.Person.insert({
     "gender" : "gender.male",
     "birthdate" : NumberLong(524527200000),
     "birthcity" : "Sarajevo",
-    "birthcountry" : {"_id" : "CNTR-70-BA-BIH" , "codeOSCE" : NumberInt(70) , "alpha2" : "BA" , "alpha3" : "BIH" , "label" : "settings.Country.BA.name"},
-    "nationality" : {"_id" : "CNTR-70-BA-BIH" , "codeOSCE" : NumberInt(70) , "alpha2" : "BA" , "alpha3" : "BIH" , "label" : "settings.Country.BA.name"},
+    "birthcountry" : {"_id" : "CNTR-70-BA-BIH" , "codeOSCE" : NumberInt(70) , "label" : "Bosnie-Herzégovine" , "local" : "fr"},
+    "nationality" : {"_id" : "CNTR-70-BA-BIH" , "codeOSCE" : NumberInt(70) , "label" : "Bosnie-Herzégovine" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
