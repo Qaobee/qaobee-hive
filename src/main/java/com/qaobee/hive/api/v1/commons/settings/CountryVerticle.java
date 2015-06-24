@@ -28,6 +28,7 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+
 import org.apache.commons.lang.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
@@ -36,6 +37,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +68,8 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * Label of the structure
      */
     public static final String PARAM_LABEL = "label";
+    public static final String PARAM_LOCAL = "local";
+    
     public static final String UPDATE = "TODO";
     public static final String ADD = "TODO";
 
@@ -161,16 +165,20 @@ public class CountryVerticle extends AbstractGuiceVerticle {
                 try {
                     // Tests on method and parameters
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_LOCAL);
+                    
                     Map<String, Object> criterias = new HashMap<String, Object>();
+                    criterias.put(PARAM_LOCAL, params.get(PARAM_LOCAL).get(0));
+                    
+                    String label = "undefined";
 
                     // label
-                    String label = req.getParams().get(PARAM_LABEL).get(0);
-
-                    // Creation of the request
-                    if (!StringUtils.isBlank(label)) {
-                        criterias.put("label", label);
-                    }
-
+                    if (params.get(PARAM_LABEL) != null && !StringUtils.isBlank(params.get(PARAM_LABEL).get(0))) {
+                    	label = params.get(PARAM_LABEL).get(0);
+                    	criterias.put(PARAM_LABEL, label);
+                    } 
+                    
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Country.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
