@@ -1,0 +1,12 @@
+{
+  "name": "qaobee-hive",
+  "version": "0.0.1",
+  "description": "Qaobee API",
+  "title": "Qaobee API",
+  "url": "https://www.qaobee.com",
+  "sampleUrl": "https://hive.qaobee.com/api/1",
+  "template": {
+    "withCompare": true,
+    "withGenerator": true
+  }
+}

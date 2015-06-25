@@ -158,7 +158,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          *
          * @apiParam {String} activityId Mandatory The activity Id.
          * @apiParam {String} countryId Mandatory The country Id.
-         * @apiParam {List<String>} screen Mandatory The list of screen name.
+         * @apiParam {List} screen Mandatory The list of screen name.
          *
          * @apiSuccess {List}   indicators            The list of indicators found.
          *
@@ -239,7 +239,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
         };
 
 		/*
-		 * Handlers registration
+         * Handlers registration
 		 */
         vertx.eventBus().registerHandler(GET, get);
         vertx.eventBus().registerHandler(GET_LIST, getList);

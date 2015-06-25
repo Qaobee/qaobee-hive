@@ -64,7 +64,10 @@ dependencies {
     testCompile name: 'vertx-junit-annotations-2.1RC2'
 
 }
-
+task apidoc(type: Exec) {
+    executable 'apidoc'
+    args '-i', 'src/main/java/','-o',  'build/reports/api-doc'
+}
 test {
     include 'com/qaobee/**'
 }
@@ -108,3 +111,4 @@ def configurePom(def pom) {
         }
     }
 }
+
