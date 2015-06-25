@@ -81,6 +81,16 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
         super.start();
         container.logger().debug(this.getClass().getName() + " started");
 
+        /**
+         * @apiDescription Get SandBoxCfg by its id
+         * @api {get} /api/1/commons/settings/sandboxCfg/get Get SandBoxCfg by id
+         * @apiName getSandBoxCfg
+         * @apiGroup SandBoxCfg API
+         * @apiParam {String} _id SandBoxCfg id
+         * @apiError HTTP_ERROR wrong request method
+         * @apiError NOT_LOGGED invalid token
+         * @apiError INVALID_PARAMETER wrong parameters
+         */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
@@ -106,6 +116,16 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
             }
         });
 
+        /**
+         * @apiDescription Get list of SandBoxCfg by owner and activityId
+         * @api {get} /api/1/commons/settings/sandboxCfg/getByOwner Get list of SandBoxCfg by owner
+         * @apiName getSandBoxCfgByOwner
+         * @apiGroup SandBoxCfg API
+         * @apiParam {String} activityId SandBoxCfg activity id
+         * @apiError HTTP_ERROR wrong request method
+         * @apiError NOT_LOGGED invalid token
+         * @apiError INVALID_PARAMETER wrong parameters
+         */
         vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {

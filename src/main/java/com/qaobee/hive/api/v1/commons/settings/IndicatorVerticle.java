@@ -94,7 +94,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
         container.logger().debug(this.getClass().getName() + " started");
 
         /**
-         * @api {get} /rest/api/v1/commons/settings/indicator/get Read data of an indicator
+         * @api {get} /api/v1/commons/settings/indicator/get Read data of an indicator
          * @apiVersion 0.1.0
          * @apiName get
          * @apiGroup Indicator API
@@ -148,7 +148,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
         };
 
         /**
-         * @api {getList} /rest/api/v1/commons/settings/indicator/getList
+         * @api {get} /api/v1/commons/settings/indicator/getList Get a list of indicators
          * @apiVersion 0.1.0
          * @apiName getList
          * @apiGroup Indicator API

@@ -144,9 +144,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
         final EventBus eb = vertx.eventBus();
         /**
          * @apiDescription Login user
-         * @api {post} /rest/api/v1/commons/user/login resthandler.api.v1.commons.user.login
+         * @api {post} /api/1/commons/user/login Login user
          * @apiName loginHandler
-         * @apiGroup LoginVerticle
+         * @apiGroup User API
          * @apiParam {String} login login (user.username)
          * @apiParam {String} passwd password
          * @apiSuccess {Object} user com.qaobee.hive.business.model.commons.users.User
@@ -223,9 +223,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription User logout
-         * @api {get} /rest/api/v1/commons/user/logout resthandler.api.v1.commons.user.logout
+         * @api {get} /api/1/commons/user/logout User logout
          * @apiName logoutHandler
-         * @apiGroup LoginVerticle
+         * @apiGroup User API
          * @apiHeader {String} token
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request method
@@ -268,9 +268,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Mail generation for password renew
-         * @api {post} /rest/api/v1/commons/user/newpasswd resthandler.api.v1.commons.user.newpasswd
+         * @api {post} /api/1/commons/user/newpasswd Password renew
          * @apiName newPasswdHandler
-         * @apiGroup LoginVerticle
+         * @apiGroup User API
          * @apiParam {String} login user login
          * @apiSuccess {Object} status
          * @apiError HTTP_ERROR wrong request method
@@ -339,11 +339,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Check activation code supplied in the renew password email
-         * @api {get} /rest/api/v1/commons/user/passwdcheck?code=:code&id=:id resthandler.api.v1.commons.user.passwdcheck
+         * @api {get} /api/v1/commons/user/passwdcheck Check activation code
          * @apiParam {String} code Activation code
          * @apiParam {String} id Person id
          * @apiName passwdCheckHandler
-         * @apiGroup LoginVerticle
+         * @apiGroup User API
          * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
          * @apiError HTTP_ERROR wrong request method
          */
@@ -376,10 +376,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Update password after renew ask
-         * @api {post} /rest/api/v1/commons/user/resetPasswd resthandler.api.v1.commons.user.resetPasswd
+         * @api {post} /api/v1/commons/user/resetPasswd Update password
          * @apiParam {Object} data {id, code, passwd}
          * @apiName resetPasswdHandler
-         * @apiGroup LoginVerticle
+         * @apiGroup User API
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request method
          */
@@ -429,9 +429,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Fetch the current logged user
-         * @api {get} /rest/prive/meta/current resthandler.prive.meta.current
+         * @api {get} /api/1/commons/user/current Fetch the current logged user
          * @apiName currentHandler
-         * @apiGroup UserMetaVerticle
+         * @apiGroup User API
          * @apiHeader {String} token
          * @apiParam {Object} Person com.qaobee.swarn.business.model.tranversal.person.Person
          * @apiSuccess {Object} Person com.qaobee.swarn.business.model.tranversal.person.Person
@@ -469,9 +469,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
         };
         /**
          * @apiDescription Fetch meta information
-         * @api {get} /rest/prive/meta resthandler.prive.meta
+         * @api {get} /api/1/commons/user/meta Fetch meta information
          * @apiName getMetasHandler
-         * @apiGroup UserMetaVerticle
+         * @apiGroup User API
          * @apiHeader {String} token
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
@@ -519,10 +519,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
         };
 
         /**
-         * @apiDescription Fetch season informations
-         * @api {get} /rest/prive/meta/season resthandler.prive.meta.season
+         * @apiDescription Fetch season information
+         * @api {get} /api/1/commons/user/season Fetch season information
          * @apiName getSeasonsHandler
-         * @apiGroup UserMetaVerticle
+         * @apiGroup User API
          * @apiHeader {Array} seasons codes
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
@@ -559,9 +559,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Fetch user information by its id
-         * @api {get} /rest/prive/meta/user resthandler.prive.meta.user
+         * @api {get} /api/1/commons/user/user Fetch user by id
          * @apiName getUserByIdhandler
-         * @apiGroup UserMetaVerticle
+         * @apiGroup User API
          * @apiHeader {String} id
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token

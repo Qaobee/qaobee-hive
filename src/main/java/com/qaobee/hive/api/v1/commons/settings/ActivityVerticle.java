@@ -42,180 +42,187 @@ import java.util.Map;
 
 /**
  * @author cke
- *
  */
 @DeployableVerticle(isWorker = true)
 public class ActivityVerticle extends AbstractGuiceVerticle {
 
-	// Declaration des variables finals
-	/** The Constant GET. */
-	public static final String GET = Module.VERSION + ".commons.settings.activity.get";
-	/** The Constant GET_LIST. */
-	public static final String GET_LIST = Module.VERSION + ".commons.settings.activity.getList";
-	/** The Constant GET_LIST_ENABLE. */
-	public static final String GET_LIST_ENABLE = Module.VERSION + ".commons.settings.activity.getListEnable";
-	
+    // Declaration des variables finals
+    /**
+     * The Constant GET.
+     */
+    public static final String GET = Module.VERSION + ".commons.settings.activity.get";
+    /**
+     * The Constant GET_LIST.
+     */
+    public static final String GET_LIST = Module.VERSION + ".commons.settings.activity.getList";
+    /**
+     * The Constant GET_LIST_ENABLE.
+     */
+    public static final String GET_LIST_ENABLE = Module.VERSION + ".commons.settings.activity.getListEnable";
+
 	/* List of parameters */
-	/** Id of the structure */
-	public static final String PARAM_ID = "_id";
-	
-	/* Injections */
-	@Inject
-	private MongoDB mongo;
-	@Inject
-	private Utils utils;
+    /**
+     * Id of the structure
+     */
+    public static final String PARAM_ID = "_id";
+
+    /* Injections */
+    @Inject
+    private MongoDB mongo;
+    @Inject
+    private Utils utils;
 
 
-	@Override
-	public void start() {
-		super.start();
-		container.logger().debug(this.getClass().getName() + " started");
+    @Override
+    public void start() {
+        super.start();
+        container.logger().debug(this.getClass().getName() + " started");
 
-		/**
-		 * @api {get} /rest/api/v1/commons/settings/activity/get Read data of an Activity
-		 * @apiVersion 0.1.0
-		 * @apiName get
-		 * @apiGroup Activity API
-		 * @apiPermission all
-		 *
-		 * @apiDescription get a activity to the collection activity in settings module  
-		 *
-		 * @apiParam {String} id The Activity-ID.
-		 * 
-		 * @apiSuccess {Activity}   activity            The Activity found.
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> get = new Handler<Message<String>>() {
-			
-			@Override
-			public void handle(final Message<String> message) {
-				container.logger().info("get() - Activity");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					Map<String, List<String>> params = req.getParams();
-					utils.isUserLogged(req);
-					utils.testMandatoryParams(params, PARAM_ID);
-					
-					// Tests mandatory parameters
-					utils.testMandatoryParams(params, PARAM_ID);
-					if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID+" is mandatory");
-					}
-					
-					final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Activity.class);
-					
-					container.logger().info("Activity found : " + json.toString());
-					
-					message.reply(json.encode());
-					
-				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
-		
-		/**
-		 * @api {getList} /rest/api/v1/commons/settings/activity/getList
-		 * @apiVersion 0.1.0
-		 * @apiName getList
-		 * @apiGroup Activity API
-		 * @apiPermission all
-		 *
-		 * @apiDescription get all activity
-		 * 
-		 * @apiSuccess {List}   activities            List all activity
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> getList = new Handler<Message<String>>() {
-			
-			@Override
-			public void handle(final Message<String> message) {
-				container.logger().info("getList() - Activity");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.isUserLogged(req);
-										
-					JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
-					
-					container.logger().info("Activities found : " + resultJson.toString());
-					
-					message.reply(resultJson.encode());
-					
-				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
+        /**
+         * @api {get} /api/v1/commons/settings/activity/get Read data of an Activity
+         * @apiVersion 0.1.0
+         * @apiName get
+         * @apiGroup Activity API
+         * @apiPermission all
+         *
+         * @apiDescription get a activity to the collection activity in settings module
+         *
+         * @apiParam {String} id The Activity-ID.
+         *
+         * @apiSuccess {Activity} activity The Activity found.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> get = new Handler<Message<String>>() {
+
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("get() - Activity");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
+                    utils.isUserLogged(req);
+                    utils.testMandatoryParams(params, PARAM_ID);
+
+                    // Tests mandatory parameters
+                    utils.testMandatoryParams(params, PARAM_ID);
+                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
+                    }
+
+                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Activity.class);
+
+                    container.logger().info("Activity found : " + json.toString());
+
+                    message.reply(json.encode());
+
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
+
+        /**
+         * @api {get} /api/v1/commons/settings/activity/getList List all activities
+         * @apiVersion 0.1.0
+         * @apiName getList
+         * @apiGroup Activity API
+         * @apiPermission all
+         *
+         * @apiDescription get all activity
+         *
+         * @apiSuccess {List}   activities            List all activity
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> getList = new Handler<Message<String>>() {
+
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("getList() - Activity");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
+
+                    JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
+
+                    container.logger().info("Activities found : " + resultJson.toString());
+
+                    message.reply(resultJson.encode());
+
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
 
-		/**
-		 * @api {getListEnable} /rest/api/v1/commons/settings/activity/getListEnable
-		 * @apiVersion 0.1.0
-		 * @apiName getListEnable
-		 * @apiGroup Activity API
-		 * @apiPermission all
-		 *
-		 * @apiDescription get all activity enable  
-		 * 
-		 * @apiSuccess {List}   activities            List of activity enable
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> getListEnable = new Handler<Message<String>>() {
-			
-			@Override
-			public void handle(final Message<String> message) {
-				container.logger().info("getListEnable() - Activity");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.isUserLogged(req);
-					Map<String, Object> criterias = new HashMap<>();
-					criterias.put("enable", true);
-					
-					JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
-					
-					container.logger().info("Activities found : " + resultJson.toString());
-					
-					message.reply(resultJson.encode());
-					
-				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
+        /**
+         * @api {get} /api/v1/commons/settings/activity/getListEnable List of enabled activities
+         * @apiVersion 0.1.0
+         * @apiName getListEnable
+         * @apiGroup Activity API
+         * @apiPermission all
+         *
+         * @apiDescription List of enabled activities
+         *
+         * @apiSuccess {List}   activities  List of enabled activities
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> getListEnable = new Handler<Message<String>>() {
+
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("getListEnable() - Activity");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
+                    Map<String, Object> criterias = new HashMap<>();
+                    criterias.put("enable", true);
+
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
+
+                    container.logger().info("Activities found : " + resultJson.toString());
+
+                    message.reply(resultJson.encode());
+
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
 		/*
 		 * Handlers registration
 		 */
-		vertx.eventBus().registerHandler(GET, get);
-		vertx.eventBus().registerHandler(GET_LIST, getList);
-		vertx.eventBus().registerHandler(GET_LIST_ENABLE, getListEnable);
-	}
+        vertx.eventBus().registerHandler(GET, get);
+        vertx.eventBus().registerHandler(GET_LIST, getList);
+        vertx.eventBus().registerHandler(GET_LIST_ENABLE, getListEnable);
+    }
 
 }

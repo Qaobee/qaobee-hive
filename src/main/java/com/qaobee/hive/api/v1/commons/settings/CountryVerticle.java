@@ -86,7 +86,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
         container.logger().debug(this.getClass().getName() + " started");
 
         /**
-         * @api {get} /rest/api/v1/commons/settings/country/get Read data of an Country
+         * @api {get} /api/v1/commons/settings/country/get Read data of an Country
          * @apiVersion 0.1.0
          * @apiName get
          * @apiGroup Country API
@@ -140,7 +140,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
         };
 
         /**
-         * @api {getList} /rest/api/v1/commons/settings/country/getList Read data of an Country
+         * @api {get} /api/v1/commons/settings/country/getList Read data of an Country
          * @apiVersion 0.1.0
          * @apiName getList
          * @apiGroup Country API

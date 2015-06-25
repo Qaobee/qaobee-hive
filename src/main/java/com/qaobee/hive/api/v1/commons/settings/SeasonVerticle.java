@@ -88,9 +88,10 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription get a season to the collection season in settings module
-         * @api {post} /rest/api/v1/commons/settings/season/get resthandler.api.v1.commons.settings.season.get
+         * @api {get} /api/v1/commons/settings/season/get Get season by id
          * @apiName getHandler
-         * @apiGroup SeasonVerticle
+         * @apiGroup Season API
+         * @apiParam {String} _id Mandatory The season Id.
          * @apiSuccess {Season} the object found
          * @apiError HTTP_ERROR Bad request
          * @apiError MONGO_ERROR Error on DB request
@@ -124,9 +125,9 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Retrieve all seasons for one activity and one country
-         * @api {get} /rest/api/v1/commons/settings/season/getListByActivity resthandler.api.v1.commons.settings.season.getListByActivity
+         * @api {get} /api/v1/commons/settings/season/getListByActivity Retrieve all seasons
          * @apiName getListByActivityHandler
-         * @apiGroup SeasonVerticle
+         * @apiGroup Season API
          * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
          * @apiError HTTP_ERROR Bad Request
          * @apiError MONGO_ERROR BDD Error

@@ -110,7 +110,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
         container.logger().debug(this.getClass().getName() + " started");
 
         /**
-         * @api {add} /rest/api/v1/commons/referencial/structure/add
+         * @api {post} /api/v1/commons/referencial/structure/add Add structure
          * @apiVersion 0.1.0
          * @apiName add
          * @apiGroup Structure API
@@ -170,7 +170,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
 
         /**
-         * @api {get} /rest/api/v1/commons/referencial/structure/get Read data of a Structure
+         * @api {get} /api/v1/commons/referencial/structure/get Read data of a Structure
          * @apiVersion 0.1.0
          * @apiName get
          * @apiGroup Structure API
@@ -214,7 +214,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
         };
 
         /**
-         * @api {update} /rest/api/v1/commons/referencial/structure/update
+         * @api {post} /api/v1/commons/referencial/structure/update Update a structure
          * @apiVersion 0.1.0
          * @apiName update
          * @apiGroup Structure API

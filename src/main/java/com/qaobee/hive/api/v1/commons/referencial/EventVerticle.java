@@ -149,9 +149,9 @@ public class EventVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription retrieve all events match to parameters filter
-         * @api {post} /rest/prive/transversal/event/list resthandler.prive.transversal.event.list
+         * @api {post} /api/1/commons/referencial/event/list Get all events
          * @apiName getListEventHandler
-         * @apiGroup EventVerticle
+         * @apiGroup Event API
          * @apiSuccess {Array} list of events
          * @apiError HTTP_ERROR Bad request
          * @apiError MONGO_ERROR Error on DB request
@@ -262,9 +262,9 @@ public class EventVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Add a event.
-         * @api {post} /rest/prive/transversal/event/add resthandler.prive.transversal.event.add
+         * @api {post} /api/1/commons/referencial/event/add Add a event
          * @apiName addEvent
-         * @apiGroup EventVerticle
+         * @apiGroup Event API
          * @apiSuccess {Event} Event create
          * @apiError HTTP_ERROR Bad request
          * @apiError MONGO_ERROR Error on DB request
@@ -310,9 +310,9 @@ public class EventVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Retrieve Event by this Id
-         * @api {get} /rest/prive/transversal/event/get resthandler.prive.transversal.event.get
+         * @api {get} /api/1/commons/referencial/event/get Get event by Id
          * @apiName getEventHandler
-         * @apiGroup EventVerticle
+         * @apiGroup Event API
          * @apiParam {String} id
          * @apiSuccess {Object} event com.qaobee.swarn.business.model.tranversal.event.event;
          * @apiError MONGO_ERROR Error during request to Mongo

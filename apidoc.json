@@ -1,12 +1,15 @@
 {
   "name": "qaobee-hive",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Qaobee API",
   "title": "Qaobee API",
-  "url": "https://www.qaobee.com",
-  "sampleUrl": "https://hive.qaobee.com/api/1",
+  "url": "http://hive.qaobee.com",
+  "sampleUrl": "http://hive.qaobee.com/api/1",
   "template": {
     "withCompare": true,
     "withGenerator": true
+  },
+  "header": {
+    "filename": "README.md"
   }
 }

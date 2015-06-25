@@ -80,23 +80,19 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 		container.logger().debug(this.getClass().getName() + " started");
 
 		/**
-		 * @api {add} /rest/api/v1/commons/referencial/structure/add
+		 * @api {post} /api/v1/commons/referencial/structure/add Add team
 		 * @apiVersion 0.1.0
 		 * @apiName add
-		 * @apiGroup Structure API
+		 * @apiGroup Team API
 		 * @apiPermission all
 		 *
-		 * @apiDescription Add structure to the collection structure in referencial module 
+		 * @apiDescription Add team to the collection team in referencial module
 		 * 
-		 * @apiParam {String} label Mandatory The Structure label.
-		 * @apiParam {Activity} activity Mandatory The Structure activity.
-		 * @apiParam {Country} country Mandatory The Structure country
-		 * @apiParam {acronym} acronym Optional The Structure acronym.
-		 * @apiParam {Address} address Optional The Structure-ID.
-		 * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
-		 * @apiParam {String} avatar Optional The Structure logo.
+		 * @apiParam {String} label Mandatory The Team label.
+		 * @apiParam {Activity} activity Mandatory The Team activity.
+		 * @apiParam {Country} country Mandatory The Team country
 		 *
-		 * @apiSuccess {Structure}   structure            The Structure added with the id.
+		 * @apiSuccess {Team}   team            The Team added with the id.
 		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
@@ -139,17 +135,17 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 
 		
 		/**
-		 * @api {get} /rest/api/v1/commons/referencial/structure/get Read data of a Structure
+		 * @api {get} /api/v1/commons/referencial/structure/get Read data of a Team
 		 * @apiVersion 0.1.0
 		 * @apiName get
-		 * @apiGroup Structure API
+		 * @apiGroup Team API
 		 * @apiPermission all
 		 *
-		 * @apiDescription get a structure to the collection structure in referencial module 
+		 * @apiDescription get a team to the collection team in referencial module
 		 *
-		 * @apiParam {String} id The Structure-ID.
+		 * @apiParam {String} id The Team-ID.
 		 * 
-		 * @apiSuccess {Structure}   structure            The Structure found.
+		 * @apiSuccess {Team}   team            The Team found.
 		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request
@@ -193,24 +189,20 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 		};
 
 		/**
-		 * @api {update} /rest/api/v1/commons/referencial/structure/update
+		 * @api {post} /api/v1/commons/referencial/structure/update
 		 * @apiVersion 0.1.0
 		 * @apiName update
-		 * @apiGroup Structure API
+		 * @apiGroup Team API
 		 * @apiPermission all
 		 *
-		 * @apiDescription Update a structure to the collection structure in referencial module 
+		 * @apiDescription Update a Team to the collection Team in referencial module
 		 *
-		 * @apiParam {String} _id Mandatory The Structure ID.
-		 * @apiParam {String} label Mandatory The Structure label.
-		 * @apiParam {Activity} activity Mandatory The Structure activity.
-		 * @apiParam {Country} country Mandatory The Structure country
-		 * @apiParam {acronym} acronym Optional The Structure acronym.
-		 * @apiParam {Address} address Optional The Structure-ID.
-		 * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
-		 * @apiParam {String} avatar Optional The Structure logo.
+		 * @apiParam {String} _id Mandatory The Team ID.
+		 * @apiParam {String} label Mandatory The Team label.
+		 * @apiParam {Activity} activity Mandatory The Team activity.
+		 * @apiParam {Country} country Mandatory The Team country
 		 * 
-		 * @apiSuccess {Structure}   structure            The Structure updated.
+		 * @apiSuccess {Team}   team            The Team updated.
 		 *
 		 * @apiError HTTP_ERROR Bad request
 		 * @apiError MONGO_ERROR Error on DB request

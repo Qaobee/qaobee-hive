@@ -102,6 +102,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		 * 
 		 * return true if exists
 		 */
+
 		final Handler<Message<JsonObject>> userNameExistHandler = new Handler<Message<JsonObject>>() {
 			/*
 			 * (non-Javadoc)
@@ -123,9 +124,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
 		/**
 		 * @apiDescription Login unicity test for rest request
-		 * @api {get} /rest/usernametest resthandler.usernametest
+		 * @api {get} /api/1/commons/user/loginExists Login unicity test
 		 * @apiName userNameTestHandler
-		 * @apiGroup SignupVerticle
+		 * @apiGroup Signup API
 		 * @apiParam {String} [login] person.account.login
 		 * @apiSuccess {Object} status {"status", true|false}
 		 * @apiError HTTP_ERROR wrong request's method
@@ -161,9 +162,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		};
 		/**
 		 * @apiDescription Register a new account
-		 * @api {put} /rest/register resthandler.register
+		 * @api {put} /api/1/commons/user/register Register a new account
 		 * @apiName registerHandler
-		 * @apiGroup SignupVerticle
+		 * @apiGroup Signup API
 		 * @apiParam {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
 		 * @apiSuccess {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
 		 * @apiError HTTP_ERROR wrong request's method
@@ -294,11 +295,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
 		/**
 		 * @apiDescription Account validation check
-		 * @api {get} /rest/accountcheck/?code=:code&id=:id resthandler.accountcheck
+		 * @api {get} /api/1/commons/user/accountcheck Account validation check
 		 * @apiParam {String} code Activation code
 		 * @apiParam {String} Person id
 		 * @apiName accountCheckHandler
-		 * @apiGroup SignupVerticle
+		 * @apiGroup SignupV API
 		 * @apiSuccess {Object} status {"status", true|false}
 		 * @apiError HTTP_ERROR wrong request's method
 		 */
