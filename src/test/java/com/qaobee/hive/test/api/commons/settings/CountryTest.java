@@ -99,8 +99,8 @@ public class CountryTest extends VertxJunitSupport {
 		req.setLocale(LOCALE);
 		req.setMethod(Constantes.GET);
 		
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
-		params.put(CountryVerticle.PARAM_LOCAL, Arrays.asList("fr"));
+		final HashMap<String, List<String>> params = new HashMap<>();
+		params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
 		req.setParams(params);
 		
 		JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
@@ -123,8 +123,8 @@ public class CountryTest extends VertxJunitSupport {
 		final Map<String, List<String>> params = new HashMap<>();
 		
 		// label
-		params.put(CountryVerticle.PARAM_LOCAL, Arrays.asList("fr"));
-		params.put(CountryVerticle.PARAM_LABEL, Arrays.asList("France"));
+		params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
+		params.put(CountryVerticle.PARAM_LABEL, Collections.singletonList("France"));
 		req.setParams(params);
 		
 		JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
