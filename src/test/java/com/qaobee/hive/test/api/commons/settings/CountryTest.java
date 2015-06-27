@@ -59,7 +59,7 @@ public class CountryTest extends VertxJunitSupport {
 		
 		String label = result.getString("label");
 		
-		Assert.assertEquals("settings.Country.FR.name", label);
+		Assert.assertEquals("France", label);
 	}
 	
 	/**
