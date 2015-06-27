@@ -25,76 +25,101 @@ package com.qaobee.hive.business.model.commons.settings;
  */
 public class Country {
 
-	/** Internal identifier. */
-	private String _id;
+    /**
+     * Internal identifier.
+     */
+    private String _id;
 
-	/** OSCE Code of the country. */
-	private int codeOSCE;
+    /**
+     * OSCE Code of the country.
+     */
+    private int codeOSCE;
 
-	/** Label code. */
-	private String label;
+    /**
+     * Label code.
+     */
+    private String label;
+    /**
+     * The Local.
+     */
+    private String local;
 
-	/**
-	 * Constructor.
-	 */
-	public Country() {
-	}
 
-	/**
-	 * Returns the internal identifier.
-	 *
-	 * @return String : id
-	 */
-	public String get_id() {
-		return _id;
-	}
+    /**
+     * Constructor.
+     */
+    public Country() {
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 *
-	 * @param _id
-	 *            (String) : id
-	 */
-	public void set_id(final String _id) {
-		this._id = _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : id
+     */
+    public String get_id() {
+        return _id;
+    }
 
-	/**
-	 * Gets the oSCE Code of the country.
-	 *
-	 * @return the oSCE Code of the country
-	 */
-	public int getCodeOSCE() {
-		return codeOSCE;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : id
+     */
+    public void set_id(final String _id) {
+        this._id = _id;
+    }
 
-	/**
-	 * Sets the oSCE Code of the country.
-	 *
-	 * @param codeOSCE
-	 *            the new oSCE Code of the country
-	 */
-	public void setCodeOSCE(final int codeOSCE) {
-		this.codeOSCE = codeOSCE;
-	}
+    /**
+     * Gets the oSCE Code of the country.
+     *
+     * @return the oSCE Code of the country
+     */
+    public int getCodeOSCE() {
+        return codeOSCE;
+    }
 
-	/**
-	 * Gets the label code.
-	 *
-	 * @return the label code
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Sets the oSCE Code of the country.
+     *
+     * @param codeOSCE the new oSCE Code of the country
+     */
+    public void setCodeOSCE(final int codeOSCE) {
+        this.codeOSCE = codeOSCE;
+    }
 
-	/**
-	 * Sets the label code.
-	 *
-	 * @param label
-	 *            the new label code
-	 */
-	public void setLabel(final String label) {
-		this.label = label;
-	}
+    /**
+     * Gets the label code.
+     *
+     * @return the label code
+     */
+    public String getLabel() {
+        return label;
+    }
 
+    /**
+     * Sets the label code.
+     *
+     * @param label the new label code
+     */
+    public void setLabel(final String label) {
+        this.label = label;
+    }
+
+    /**
+     * Gets local.
+     *
+     * @return the local
+     */
+    public String getLocal() {
+        return local;
+    }
+
+    /**
+     * Sets local.
+     *
+     * @param local the local
+     */
+    public void setLocal(String local) {
+        this.local = local;
+    }
 }
