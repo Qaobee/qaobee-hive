@@ -35,10 +35,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by xavier on 24/06/15.
+ * The type Sand box cfg test.
  */
 public class SandBoxCfgTest extends VertxJunitSupport {
 
+    /**
+     * Retrieve sand box config by id.
+     */
     @Test
     public void retrieveSandBoxConfigById() {
 
@@ -62,6 +65,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
 
     }
 
+    /**
+     * Retrieve sand box config by owner.
+     */
     @Test
     public void retrieveSandBoxConfigByOwner() {
 
