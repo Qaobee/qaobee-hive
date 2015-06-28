@@ -17,17 +17,17 @@
         echo -e "${green}****************************************************"
         echo -e "Build ok, processing openshift deployment"
         echo -e "****************************************************${NC}"
-        cp target/swarn-mod.zip ../qaobee-swarn-dist/dist/swarn-mod.zip
+        cp build/libs/hive-0.1.zip ../qaobee-swarn-dist/dist/swarn-mod.zip
         cd ../qaobee-swarn-dist
         git commit -m 'dist' dist/swarn-mod.zip
         rhc app-tidy swarn
         git push origin master
-        cd ../qaobee-swarn
+        cd ../qaobee-hive
         echo -e "${green}****************************************************"
         echo -e "Deploy doc"
         echo -e "****************************************************${NC}"
-   #     ncftpput -R -u "heber_15054748" -p "zaza666" ftp.hebergratuit.net /htdocs target/site
-
+        lftp ftp://heber_15054748:zaza666@ftp.hebergratuit.net -e "mirror -e -R --parallel=20 --only-newer --verbose build/docs /htdocs/hive/docs; quit"
+        lftp ftp://heber_15054748:zaza666@ftp.hebergratuit.net -e "mirror -e -R --parallel=20 --only-newer --verbose build/reports /htdocs/hive/reports; quit"
     else
         echo -e "${red}****************************************************"
         echo -e "Build Failed"
