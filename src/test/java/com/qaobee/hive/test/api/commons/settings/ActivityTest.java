@@ -92,7 +92,7 @@ public class ActivityTest extends VertxJunitSupport {
 		req.setParams(params);
 		
 		resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("_id is mandatory"));
+		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
 	}
 	

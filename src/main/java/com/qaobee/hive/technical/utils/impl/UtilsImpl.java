@@ -156,7 +156,7 @@ public class UtilsImpl implements Utils {
         }
         final File fDest = new File(dest);
         if (!fDest.getParentFile().exists()) {
-            fDest.getParentFile().mkdirs();
+            boolean mkdirs = fDest.getParentFile().mkdirs();
         }
         ImageIO.write(targetImage, "PNG", fDest);
     }
@@ -233,12 +233,14 @@ public class UtilsImpl implements Utils {
     public void testMandatoryParams(Map<String, ?> map, String... fields) throws IllegalArgumentException {
         final List<String> missingFields = new ArrayList<>();
         if (map == null) {
-            map = new HashMap<String, Object>();
+            map = new HashMap<>();
         }
 
         for (final String field : fields) {
-
             if (!map.containsKey(field) || map.get(field) == null) {
+                missingFields.add(field);
+            } else if ((map.get(field) instanceof List && StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0)))
+                    || (map.get(field) instanceof String && StringUtils.isBlank(((String) map.get(field))))) {
                 missingFields.add(field);
             }
         }
