@@ -23,6 +23,9 @@
         rhc app-tidy swarn
         git push origin master
         cd ../qaobee-hive
+        ./script/changelog.sh > CHANGELOG.md
+        git commit -m 'changelog' CHANGELOG.md
+        git push origin master
         echo -e "${green}****************************************************"
         echo -e "Deploy doc"
         echo -e "****************************************************${NC}"
