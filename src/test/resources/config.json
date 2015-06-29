@@ -36,7 +36,7 @@
     "username": "contact@qaobee.com",
     "password": "qaobee29",
     "content_type": "text/html",
-    "sendTimeout": 5000,
+    "sendTimeout": 1000,
     "debug": true,
     "debugAddress": "logger"
   },
@@ -48,8 +48,11 @@
         "email": "marin.xavier@gmail.com"
       },
       "account": {
-        "passwd": "1234567",
+        "passwd": "toto",
         "login": "xav",
+        "activationCode" : "12345",
+        "password" : "xHvS+ICtNg/1rrrj49WT+A/y9MA=",
+        "salt" : "CPAaJ8ydx6I=",
         "listPlan": [
           {
             "paymentId": "paymentId003",

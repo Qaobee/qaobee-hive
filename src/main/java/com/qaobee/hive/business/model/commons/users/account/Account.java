@@ -104,6 +104,10 @@ public class Account {
      * The Habilitations.
      */
     private List<Habilitation> habilitations;
+    /**
+     * The Mobile token.
+     */
+    private String mobileToken;
 
     /**
      * Gets the activation code.
@@ -373,5 +377,23 @@ public class Account {
      */
     public void setHabilitations(List<Habilitation> habilitations) {
         this.habilitations = habilitations;
+    }
+
+    /**
+     * Gets mobile token.
+     *
+     * @return the mobile token
+     */
+    public String getMobileToken() {
+        return mobileToken;
+    }
+
+    /**
+     * Sets mobile token.
+     *
+     * @param mobileToken the mobile token
+     */
+    public void setMobileToken(String mobileToken) {
+        this.mobileToken = mobileToken;
     }
 }

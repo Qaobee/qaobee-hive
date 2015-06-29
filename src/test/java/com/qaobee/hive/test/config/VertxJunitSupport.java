@@ -146,6 +146,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     protected User generateUser() {
         final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
+        user.getAccount().setActive(true);
         try {
             final String id = mongo.save(user);
             if (id == null) {
@@ -173,6 +174,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
             user.set_id(userId);
             user.getAccount().setToken("12345");
             user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+            user.getAccount().setActive(true);
             final String id = mongo.save(user);
             if (id == null) {
                 Assert.fail("user id is null");

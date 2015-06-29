@@ -95,7 +95,7 @@ public class TemplatesVerticle extends AbstractGuiceVerticle {
         cfg.setLocale(Locale.US);
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 
-        final Handler<Message<JsonObject>> generateHandler = new Handler<Message<JsonObject>>() {
+        vertx.eventBus().registerHandler(TEMPLATE_GENERATE, new Handler<Message<JsonObject>>() {
             @Override
             public void handle(final Message<JsonObject> message) {
                 final Map<String, Object> input = new HashMap<>();
@@ -121,9 +121,6 @@ public class TemplatesVerticle extends AbstractGuiceVerticle {
                     utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
-        };
-
-        // Handlers declaration
-        vertx.eventBus().registerHandler(TEMPLATE_GENERATE, generateHandler);
+        });
     }
 }
