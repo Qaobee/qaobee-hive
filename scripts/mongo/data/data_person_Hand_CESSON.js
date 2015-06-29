@@ -1742,7 +1742,7 @@ db.Person.insert({
     "birthdate" : NumberLong(529714800000),
     "birthcity" : "Rennes",
     "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"}
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",

@@ -643,7 +643,7 @@ db.Person.insert({
     "birthdate" : NumberLong(694479600000),
     "birthcity" : "Sartrouville",
     "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"}
+    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
     "job" : "Handballeur",
     "address" : {
         "formatedAddress" : "",
