@@ -18,12 +18,34 @@
  */
 package com.qaobee.hive.api.v1.commons.users;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Collections;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
+import net.tanesha.recaptcha.ReCaptchaImpl;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.EventBus;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.eventbus.ReplyException;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Base64;
+import org.vertx.java.core.json.impl.Json;
+
 import com.englishtown.promises.Promise;
 import com.englishtown.promises.Runnable;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SandBoxCfgVerticle;
+import com.qaobee.hive.api.v1.sandbox.config.SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -39,24 +61,6 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.apache.commons.lang.StringUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.EventBus;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Base64;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Collections;
-import java.util.UUID;
 
 /**
  * The type User verticle.
@@ -476,6 +480,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
          */
+        //TODO a revoir CKE 29/06/2015
         final Handler<Message<String>> getMetasHandler = new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
@@ -494,8 +499,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     JsonObject activity = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("activity");
                     result.putObject("activity", activity);
 
-                    req.getParams().put(SandBoxCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
-                    whenEventBus.send(SandBoxCfgVerticle.GET_BY_OWNER, Json.encode(req))
+                    req.getParams().put(SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
+                    whenEventBus.send(SandBoxVerticle.GET_BY_OWNER, Json.encode(req))
                             .then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
                                 @Override
                                 public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
