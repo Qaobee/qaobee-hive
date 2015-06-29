@@ -30,13 +30,13 @@
  */
 //////////////////////////////////////////////////////////
 /*
- * Vidage de la collection SandBoxCfg handball
+ * Vidage de la collection SandBoxCfg cesson handball
  */
-db.SandBoxCfg.remove({"sandbox.owner": {"$in": ["55847ed0d040353767a48e70", "55847ed0d040353767a48e71", "55847ed0d040353767a48e72", "55847ed0d040353767a48e73"]}});
+db.SandBoxCfg.remove({"_id": "558b0fc0bd2e39cdab651e21"});
 /*
- * Vidage de la collection SandBox handball
+ * Vidage de la collection SandBox cesson handball
  */
-db.SandBox.remove({"owner": {"$in": ["55847ed0d040353767a48e70", "55847ed0d040353767a48e71", "55847ed0d040353767a48e72", "55847ed0d040353767a48e73"]}});
+db.SandBox.remove({"_id": "558b0efebd2e39cdab651e1f"});
 
 
 /***************************************************************
@@ -46,8 +46,6 @@ db.SandBox.remove({"owner": {"$in": ["55847ed0d040353767a48e70", "55847ed0d04035
 db.SandBox.insert({
     "_id": "558b0efebd2e39cdab651e1f",
     "activityId": "ACT-HAND",
-    "structureId": "541168295971d35c1f2d1b5f",
-    "members": [],
     "owner": "5509ef1fdb8f8b6e2f51f4ce"
 });
 
@@ -61,11 +59,18 @@ db.SandBoxCfg.insert({
     "sandbox": {
         "_id": "558b0efebd2e39cdab651e1f",
         "activityId": "ACT-HAND",
-        "structureId": "541168295971d35c1f2d1b5f",
-        "members": [],
         "owner": "5509ef1fdb8f8b6e2f51f4ce"
     },
-    "members": [],
+    "members": [
+		{ "personId": "5509ef1fdb8f8b6e2f51f4cf",
+		
+		    "role" :
+		    {
+		        "code": "acoach",
+		        "label": "Coach Adjoint"
+		    }
+		}
+    ],
     "season": {
         "_id": "558b0ceaf9285df5b7553fc6",
         "code": "SAI-2015",
@@ -76,37 +81,112 @@ db.SandBoxCfg.insert({
         "countryId": "CNTR-250-FR-FRA"
     },
     "structure": {
-        "_id": "541168295971d35c1f2d1b5f",
-        "label": "CESSON RENNES METROPOLE HB",
-        "acronym": "CRMBH",
-        "activity": {
-            "_id": "ACT-HAND",
-            "code": "ACT-HAND",
-            "label": "admin.settings.activity.handball.label",
-            "activated": true,
-            "activityType": "TEAM_SPORT"
+        "_id" : "541168295971d35c1f2d1b5f",
+        "label" : "CESSON RENNES METROPOLE HB",
+        "acronym" : "CRMBH",
+        "activity" : {
+            "_id" : "ACT-HAND",
+            "code" : "ACT-HAND",
+            "label" : "admin.settings.activity.handball.label",
+            "activated" : true,
+            "activityType" : "TEAM_SPORT"
         },
-        "address": {
-            "place": "3, allée de Champagné",
-            "zipcode": "35510",
-            "city": "CESSON-SEVIGNE",
-            "country": "France"
+        "address" : {
+            "place" : "3, allée de Champagné",
+            "zipcode" : "35510",
+            "city" : "CESSON-SEVIGNE",
+            "country" : "France"
         },
-        "contact": {
-            "home": null,
-            "office": "02 23 45 07 19",
-            "cellphone": "06 69 97 68 39",
-            "fax": "",
-            "email": "sandrine@cesson-handball.com"
+        "contact" : {
+            "home" : null,
+            "office" : "02 23 45 07 19",
+            "cellphone" : "06 69 97 68 39",
+            "fax" : "",
+            "email" : "sandrine@cesson-handball.com"
         },
-        "country": {
-            "_id": "CNTR-250-FR-FRA",
-            "codeOSCE": 250,
-            "alpha2": "FR",
-            "alpha3": "FRA",
-            "label": "settings.Country.FR.name"
+        "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+        "avatar" : null
+    },
+    "teams": []
+});
+
+/*
+ * Vidage de la collection SandBoxCfg dunkerque handball
+ */
+db.SandBoxCfg.remove({"_id": "558b0fc0bd2e39cdab651e21"});
+/*
+ * Vidage de la collection SandBox dunkerque handball
+ */
+db.SandBox.remove({"_id": "558b0efebd2e39cdab651e1f"});
+
+
+/***************************************************************
+ * Alimentation SandBox Dunkerque Handball
+ * *************************************************************
+ */
+db.SandBox.insert({
+    "_id": "5591bb5e127472938a6444a2",
+    "activityId": "ACT-HAND",
+    "owner": "54160977d5bd065a1bb1e563"
+});
+
+
+/***************************************************************
+ * Alimentation SandBoxCfg Dunkerque Handball
+ * *************************************************************
+ */
+db.SandBoxCfg.insert({
+    "_id": "5591bb9c127472938a6444a3",
+    "sandbox": {
+        "_id": "5591bb5e127472938a6444a2",
+        "activityId": "ACT-HAND",
+        "owner": "54160977d5bd065a1bb1e563"
+    },
+    "members": [
+		{ "personId": "54160977d5bd065a1bb1e564",
+		
+		    "role" :
+		    {
+		        "code": "acoach",
+		        "label": "Coach Adjoint"
+		    }
+		}
+    ],
+    "season": {
+        "_id": "558b0ceaf9285df5b7553fc6",
+        "code": "SAI-2015",
+        "label": "SAISON 2015-2016",
+        "startDate": 1435701600000,
+        "endDate": 1467237600000,
+        "activityId": "ACT-HAND",
+        "countryId": "CNTR-250-FR-FRA"
+    },
+    "structure": {
+        "_id" : "541168295971d35c1f2d1b5e",
+        "label" : "Dunkerque Handball",
+        "acronym" : "USDK",
+        "activity" : {
+            "_id" : "ACT-HAND",
+            "code" : "ACT-HAND",
+            "label" : "admin.settings.activity.handball.label",
+            "activated" : true,
+            "activityType" : "TEAM_SPORT"
         },
-        "avatar": null
+        "address" : {
+            "place" : " Stades de Flandres, Avenue de Rosendaël",
+            "zipcode" : "59240",
+            "city" : " DUNKERQUE",
+            "country" : "France"
+        },
+        "contact" : {
+            "home" : null,
+            "office" : "03 28 66 91 52",
+            "cellphone" : "06 30 35 38 19",
+            "fax" : "",
+            "email" : "melanie.lefebvre@usdk.fr"
+        },
+        "country" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+        "avatar" : null
     },
     "teams": []
 });

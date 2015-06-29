@@ -32,10 +32,7 @@
 /* 
  * Vidage de la collection Effective (Club Dunkerque handball sen)
  */
-db.Effective.remove({ "structureId" : "541168295971d35c1f2d1b5e",
-                      "seasonCode" : "SAI-2014" , 
-                      "categoryAge.code" : "sen"
-});
+db.Effective.remove({ "_id" : "550b31f925da07681592db22"});
 
 /** ************************************************************* */
 /*
@@ -44,8 +41,7 @@ db.Effective.remove({ "structureId" : "541168295971d35c1f2d1b5e",
 /** ************************************************************* */
 db.Effective.insert({
     "_id" : "550b31f925da07681592db22",
-    "structureId" : "541168295971d35c1f2d1b5e",
-    "seasonCode" : "SAI-2014" , 
+    "sandBoxCfgId" : "5591bb9c127472938a6444a3",
     "categoryAge" : {
         "code" : "sen",
         "label" : "Senior",
@@ -53,11 +49,21 @@ db.Effective.insert({
         "ageMin" : NumberInt(20),
         "genre" : "gender.male"
     },
-    "members" : ["541d2c5fb3f78c0317eea2be", "541d3136f61fbf69868c1214", "541d3136f61fbf69868c1215",
-                 "541d3136f61fbf69868c1216", "541d3136f61fbf69868c1217", "541d3136f61fbf69868c1218",
-                 "541d3136f61fbf69868c1219", "541d3136f61fbf69868c121a", "541d3136f61fbf69868c121b",
-                 "541d3136f61fbf69868c121c", "5509f71adb8f8b6e2f51f4d4", "5509f71adb8f8b6e2f51f4d5",
-                 "5509f71adb8f8b6e2f51f4d6", "5509f71adb8f8b6e2f51f4d7", "550a02acdb8f8b6e2f51f4da"
+    "members" : [{ "personId": "541d2c5fb3f78c0317eea2be","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "541d3136f61fbf69868c1214","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "541d3136f61fbf69868c1215","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "541d3136f61fbf69868c1216","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "541d3136f61fbf69868c1217","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "541d3136f61fbf69868c1218","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "541d3136f61fbf69868c1219","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "541d3136f61fbf69868c121a","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "541d3136f61fbf69868c121b","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "541d3136f61fbf69868c121c","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "5509f71adb8f8b6e2f51f4d4","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "5509f71adb8f8b6e2f51f4d5","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "5509f71adb8f8b6e2f51f4d6","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "5509f71adb8f8b6e2f51f4d7","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a02acdb8f8b6e2f51f4da","role" : {"code": "player", "label": "Joueur"}}
     ]
 });
 
@@ -65,20 +71,16 @@ db.Effective.insert({
 /* 
  * Vidage de la collection Effective (Club Cesson handball sen)
  */
-db.Effective.remove({ "structureId" : "541168295971d35c1f2d1b5f",
-                      "seasonCode" : "SAI-2014" , 
-                      "categoryAge.code" : "sen"
-});
+db.Effective.remove({ "_id" : "550b31f925da07681592db23"});
 
 /** ************************************************************* */
 /*
- * Alimentation Effective (Club Dunkerque Handball)
+ * Alimentation Effective (Club Cesson Handball)
  */
 /** ************************************************************* */
 db.Effective.insert({
     "_id" : "550b31f925da07681592db23",
-    "structureId" : "541168295971d35c1f2d1b5f",
-    "seasonCode" : "SAI-2014" , 
+    "sandBoxCfgId" : "558b0fc0bd2e39cdab651e21",
     "categoryAge" : {
         "code" : "sen",
         "label" : "Senior",
@@ -86,10 +88,19 @@ db.Effective.insert({
         "ageMin" : NumberInt(20),
         "genre" : "gender.male"
     },
-    "members" : ["550a05dadb8f8b6e2f51f4db", "550a05e3db8f8b6e2f51f4dc", "550a05e9db8f8b6e2f51f4dd",
-                 "550a05f7db8f8b6e2f51f4de", "550a0600db8f8b6e2f51f4df", "550a0606db8f8b6e2f51f4e0",
-                 "550a060ddb8f8b6e2f51f4e1", "550a0614db8f8b6e2f51f4e2", "550a061bdb8f8b6e2f51f4e3",
-                 "550a0620db8f8b6e2f51f4e4", "550a0620db8f8b6e2f51f4e5", "550a0620db8f8b6e2f51f4e6",
-                 "550a0620db8f8b6e2f51f4e7", "550a0620db8f8b6e2f51f4e8"
+    "members" : [{ "personId": "550a05dadb8f8b6e2f51f4db","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a05e3db8f8b6e2f51f4dc","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a05e9db8f8b6e2f51f4dd","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a05f7db8f8b6e2f51f4de","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a0600db8f8b6e2f51f4df","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a0606db8f8b6e2f51f4e0","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a060ddb8f8b6e2f51f4e1","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a0614db8f8b6e2f51f4e2","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a061bdb8f8b6e2f51f4e3","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a0620db8f8b6e2f51f4e4","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a0620db8f8b6e2f51f4e5","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a0620db8f8b6e2f51f4e6","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a0620db8f8b6e2f51f4e7","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "550a0620db8f8b6e2f51f4e8","role" : {"code": "player", "label": "Joueur"}}
     ]
 });
