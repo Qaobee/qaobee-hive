@@ -18,267 +18,319 @@
  */
 package com.qaobee.hive.business.model.commons.users;
 
-import java.util.List;
-
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.commons.users.account.Account;
 import com.qaobee.hive.business.model.commons.users.communication.Notification;
 import com.qaobee.hive.business.model.transversal.Address;
 import com.qaobee.hive.business.model.transversal.Contact;
 
+import java.util.List;
+
 /**
- * @author cke
+ * The type User.
  *
+ * @author cke
  */
 public class User {
-	
-	/**
-	 * The _id.
-	 */
-	private String _id;
-	
-	/**
-	 * The avatar.
-	 */
-	private String avatar;
 
-	/**
-	 * The name.
-	 */
-	private String name;
+    /**
+     * The _id.
+     */
+    private String _id;
 
-	/**
-	 * The firstname.
-	 */
-	private String firstname;
-	
-	/**
-	 * The address.
-	 */
-	private Address address;
-	
-	/**
-	 * The birthdate.
-	 */
-	private long birthdate;
+    /**
+     * The avatar.
+     */
+    private String avatar;
 
-	/**
-	 * The contact.
-	 */
-	private Contact contact;
-	
-	/**
-	 * The nationality.
-	 */
-	private Country country;
-	
-	/**
-	 * The nationality.
-	 */
-	private Country nationality;
-	
-	/**
-	 * The Person account list.
-	 */
-	private Account account;
-	
-	/**
+    /**
+     * The name.
+     */
+    private String name;
+
+    /**
+     * The firstname.
+     */
+    private String firstname;
+
+    /**
+     * The address.
+     */
+    private Address address;
+
+    /**
+     * The birthdate.
+     */
+    private long birthdate;
+
+    /**
+     * The contact.
+     */
+    private Contact contact;
+
+    /**
+     * The nationality.
+     */
+    private Country country;
+
+    /**
+     * The nationality.
+     */
+    private Country nationality;
+
+    /**
+     * The Person account list.
+     */
+    private Account account;
+
+    /**
      * The timestamp.
      */
     private long timestamp;
-    
+
     /**
-	 * The gender.
-	 */
-	private String gender;
-    
-	
-	/**
+     * The gender.
+     */
+    private String gender;
+
+    /**
      * The notifications.
      */
     private List<Notification> notifications;
 
-	/**
-	 * @return the _id
-	 */
-	public String get_id() {
-		return _id;
-	}
+    /**
+     * Gets _ id.
+     *
+     * @return the _id
+     */
+    public String get_id() {
+        return _id;
+    }
 
-	/**
-	 * @param _id the _id to set
-	 */
-	public void set_id(String _id) {
-		this._id = _id;
-	}
+    /**
+     * Sets _ id.
+     *
+     * @param _id the _id to set
+     */
+    public void set_id(String _id) {
+        this._id = _id;
+    }
 
-	/**
-	 * @return the avatar
-	 */
-	public String getAvatar() {
-		return avatar;
-	}
+    /**
+     * Gets avatar.
+     *
+     * @return the avatar
+     */
+    public String getAvatar() {
+        return avatar;
+    }
 
-	/**
-	 * @param avatar the avatar to set
-	 */
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
+    /**
+     * Sets avatar.
+     *
+     * @param avatar the avatar to set
+     */
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * Sets name.
+     *
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * @return the firstname
-	 */
-	public String getFirstname() {
-		return firstname;
-	}
+    /**
+     * Gets firstname.
+     *
+     * @return the firstname
+     */
+    public String getFirstname() {
+        return firstname;
+    }
 
-	/**
-	 * @param firstname the firstname to set
-	 */
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
+    /**
+     * Sets firstname.
+     *
+     * @param firstname the firstname to set
+     */
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
 
-	/**
-	 * @return the address
-	 */
-	public Address getAddress() {
-		return address;
-	}
+    /**
+     * Gets address.
+     *
+     * @return the address
+     */
+    public Address getAddress() {
+        return address;
+    }
 
-	/**
-	 * @param address the address to set
-	 */
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    /**
+     * Sets address.
+     *
+     * @param address the address to set
+     */
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-	/**
-	 * @return the contact
-	 */
-	public Contact getContact() {
-		return contact;
-	}
+    /**
+     * Gets contact.
+     *
+     * @return the contact
+     */
+    public Contact getContact() {
+        return contact;
+    }
 
-	/**
-	 * @param contact the contact to set
-	 */
-	public void setContact(Contact contact) {
-		this.contact = contact;
-	}
+    /**
+     * Sets contact.
+     *
+     * @param contact the contact to set
+     */
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
 
-	/**
-	 * @return the country
-	 */
-	public Country getCountry() {
-		return country;
-	}
+    /**
+     * Gets country.
+     *
+     * @return the country
+     */
+    public Country getCountry() {
+        return country;
+    }
 
-	/**
-	 * @param country the country to set
-	 */
-	public void setCountry(Country country) {
-		this.country = country;
-	}
+    /**
+     * Sets country.
+     *
+     * @param country the country to set
+     */
+    public void setCountry(Country country) {
+        this.country = country;
+    }
 
-	/**
-	 * @return the account
-	 */
-	public Account getAccount() {
-		return account;
-	}
+    /**
+     * Gets account.
+     *
+     * @return the account
+     */
+    public Account getAccount() {
+        return account;
+    }
 
-	/**
-	 * @param account the account to set
-	 */
-	public void setAccount(Account account) {
-		this.account = account;
-	}
+    /**
+     * Sets account.
+     *
+     * @param account the account to set
+     */
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
-	/**
-	 * @return the notifications
-	 */
-	public List<Notification> getNotifications() {
-		return notifications;
-	}
+    /**
+     * Gets notifications.
+     *
+     * @return the notifications
+     */
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
 
-	/**
-	 * @param notifications the notifications to set
-	 */
-	public void setNotifications(List<Notification> notifications) {
-		this.notifications = notifications;
-	}
+    /**
+     * Sets notifications.
+     *
+     * @param notifications the notifications to set
+     */
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
 
-	/**
-	 * @return the timestamp
-	 */
-	public long getTimestamp() {
-		return timestamp;
-	}
+    /**
+     * Gets timestamp.
+     *
+     * @return the timestamp
+     */
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-	/**
-	 * @param timestamp the timestamp to set
-	 */
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
-	}
+    /**
+     * Sets timestamp.
+     *
+     * @param timestamp the timestamp to set
+     */
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	/**
-	 * @return the gender
-	 */
-	public String getGender() {
-		return gender;
-	}
+    /**
+     * Gets gender.
+     *
+     * @return the gender
+     */
+    public String getGender() {
+        return gender;
+    }
 
-	/**
-	 * @param gender the gender to set
-	 */
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+    /**
+     * Sets gender.
+     *
+     * @param gender the gender to set
+     */
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
-	/**
-	 * @return the nationality
-	 */
-	public Country getNationality() {
-		return nationality;
-	}
+    /**
+     * Gets nationality.
+     *
+     * @return the nationality
+     */
+    public Country getNationality() {
+        return nationality;
+    }
 
-	/**
-	 * @param nationality the nationality to set
-	 */
-	public void setNationality(Country nationality) {
-		this.nationality = nationality;
-	}
+    /**
+     * Sets nationality.
+     *
+     * @param nationality the nationality to set
+     */
+    public void setNationality(Country nationality) {
+        this.nationality = nationality;
+    }
 
-	/**
-	 * @return the birthdate
-	 */
-	public long getBirthdate() {
-		return birthdate;
-	}
+    /**
+     * Gets birthdate.
+     *
+     * @return the birthdate
+     */
+    public long getBirthdate() {
+        return birthdate;
+    }
 
-	/**
-	 * @param birthdate the birthdate to set
-	 */
-	public void setBirthdate(long birthdate) {
-		this.birthdate = birthdate;
-	}
+    /**
+     * Sets birthdate.
+     *
+     * @param birthdate the birthdate to set
+     */
+    public void setBirthdate(long birthdate) {
+        this.birthdate = birthdate;
+    }
 
 
 }

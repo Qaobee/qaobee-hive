@@ -113,11 +113,11 @@ db.SandBoxCfg.insert({
 /*
  * Vidage de la collection SandBoxCfg dunkerque handball
  */
-db.SandBoxCfg.remove({"_id": "558b0fc0bd2e39cdab651e21"});
+db.SandBoxCfg.remove({"_id": "5591bb9c127472938a6444a3"});
 /*
  * Vidage de la collection SandBox dunkerque handball
  */
-db.SandBox.remove({"_id": "558b0efebd2e39cdab651e1f"});
+db.SandBox.remove({"_id": "5591bb5e127472938a6444a2"});
 
 
 /***************************************************************

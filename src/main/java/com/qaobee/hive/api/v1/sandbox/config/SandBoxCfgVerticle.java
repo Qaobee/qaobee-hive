@@ -33,7 +33,6 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.sandbox.config.SandBoxCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -70,7 +69,7 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
     /**
      * The constant PARAM_OWNER.
      */
-    public static final String PARAM_OWNER = "owner";
+    public static final String PARAM_SANDBOX_ID = "sandbox._id";
 
 
     /**
@@ -146,20 +145,20 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
                     Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_OWNER);
+                    utils.testMandatoryParams(params, PARAM_SANDBOX_ID);
                     
                     Map<String, Object> criterias = new HashMap<String, Object>();
-                    criterias.put(PARAM_OWNER, params.get(PARAM_OWNER).get(0));
+                    criterias.put(PARAM_SANDBOX_ID, params.get(PARAM_SANDBOX_ID).get(0));
                     
                     // label
                     if (params.get(PARAM_SEASON_CODE) != null && !StringUtils.isBlank(params.get(PARAM_SEASON_CODE).get(0))) {
                     	criterias.put(PARAM_SEASON_CODE, params.get(PARAM_SEASON_CODE).get(0));
                     } 
                     
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Country.class);
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SandBoxCfg.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBoxCfg defined for owner (" + params.get(PARAM_OWNER).get(0) + ")");
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBoxCfg defined for sandBox if (" + params.get(PARAM_SANDBOX_ID).get(0) + ")");
                     }
                     container.logger().info("SandBoxCfg found : " + resultJson.toString());
                     

@@ -66,13 +66,10 @@ public class SandBoxCfgTest extends VertxJunitSupport {
     }
 
     /**
-     * Retrieve sand box config by owner.
+     * Retrieve sand box config by sand box id.
      */
     @Test
-    public void retrieveSandBoxConfigByOwner() {
-
-        // SandBoxCfg._id
-        String id = "558b0fc0bd2e39cdab651e21";
+    public void retrieveSandBoxConfigBySandBoxId() {
 
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
@@ -86,12 +83,13 @@ public class SandBoxCfgTest extends VertxJunitSupport {
             req.setMethod(Constantes.GET);
             req.setUser(user);
             final Map<String, List<String>> params = new HashMap<>();
-            params.put(SandBoxCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("ACT-HAND"));
+            params.put(SandBoxCfgVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
+            params.put(SandBoxCfgVerticle.PARAM_SEASON_CODE, Collections.singletonList("SAI-2015"));
             req.setParams(params);
 
-            final String reply = sendonBus(SandBoxCfgVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
+            final String reply = sendonBus(SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());
             JsonObject result = new JsonObject(reply);
-            Assert.assertEquals(id, result.getString("_id"));
+            
             Assert.assertEquals(user.get_id(), result.getObject("sandbox").getString("owner"));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
