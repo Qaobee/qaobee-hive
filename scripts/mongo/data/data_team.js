@@ -42,20 +42,52 @@ db.Team.remove({});
 db.Team.insert({
     "_id" : "552d5e08644a77b3a20afdfe",
     "label" : "Team A",
-    "structureId" : "541168295971d35c1f2d1b60",
+    "sandBoxCfgId" : "5591bb9c127472938a6444a3",
     "categoryAge" : {
         "code" : "sen",
-        "label" : "Senior Gars"
-    }    
+        "label" : "Senior",
+        "ageMax" : NumberInt(34),
+        "ageMin" : NumberInt(20),
+        "genre" : "gender.male"
+    },
+    "championship" : {
+        "id" : "1", 
+        "label" : "Honor",
+    },                      
+    "listStaffMember" : [
+         {
+           "personId" : "54160977d5bd065a1bb1e563",
+           "role" : {
+               "code" : "coach",
+               "label" : "Coach"
+           }
+         }
+    ] 
 });
 
 //"_id" : ObjectId().valueOf(),
 db.Team.insert({
     "_id" : "552d5e08644a77b3a20afdff",
     "label" : "Team B",
-    "structureId" : "541168295971d35c1f2d1b60",
+    "sandBoxCfgId" : "5591bb9c127472938a6444a3",
     "categoryAge" : {
         "code" : "sen",
-        "label" : "Senior Gars"
-    }    
+        "label" : "Senior",
+        "ageMax" : NumberInt(34),
+        "ageMin" : NumberInt(20),
+        "genre" : "gender.male"
+    },
+    "championship" : {
+        "id" : "2", 
+        "label" : "Exellence",
+    },                     
+    "listStaffMember" : [
+        {
+          "personId" : "541d3136f61fbf69868c121d",
+          "role" : {
+              "code" : "coach",
+               "label" : "Coach"
+           }
+        }
+   ] 
 });
