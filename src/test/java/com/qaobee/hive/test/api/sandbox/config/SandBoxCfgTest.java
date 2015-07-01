@@ -17,7 +17,17 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.test.api.sandbox;
+package com.qaobee.hive.test.api.sandbox.config;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
 
 import com.qaobee.hive.api.v1.sandbox.config.SandBoxCfgVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -25,14 +35,6 @@ import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The type Sand box cfg test.
@@ -88,9 +90,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
             req.setParams(params);
 
             final String reply = sendonBus(SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());
-            JsonObject result = new JsonObject(reply);
+            JsonArray result = new JsonArray(reply);
+            Assert.assertEquals(1,result.size());
             
-            Assert.assertEquals(user.get_id(), result.getObject("sandbox").getString("owner"));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
