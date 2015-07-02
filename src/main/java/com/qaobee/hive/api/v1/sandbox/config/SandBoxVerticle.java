@@ -92,6 +92,7 @@ public class SandBoxVerticle extends AbstractGuiceVerticle {
 	     * @apiError HTTP_ERROR wrong request method
 	     * @apiError NOT_LOGGED invalid token
 	     * @apiError INVALID_PARAMETER wrong parameters
+	     * @apiError INTERNAL_ERROR Generic error
 	     */
 	    vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
 	        @Override
