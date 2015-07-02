@@ -4,7 +4,7 @@
   "description": "Qaobee API",
   "title": "Qaobee API",
   "url": "http://hive.qaobee.com",
-  "sampleUrl": "http://hive.qaobee.com/api/1",
+  "sampleUrl": "http://hive.qaobee.com",
   "template": {
     "withCompare": true,
     "withGenerator": true
