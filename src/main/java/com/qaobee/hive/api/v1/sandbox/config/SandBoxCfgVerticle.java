@@ -19,19 +19,6 @@
 
 package com.qaobee.hive.api.v1.sandbox.config;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang.StringUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.config.SandBoxCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -42,6 +29,17 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang.StringUtils;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The type Sand box cfg verticle.
@@ -52,12 +50,10 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
      * The constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.sandboxCfg.get";
-    
     /**
      * The constant GETLIST.
      */
     public static final String GETLIST = Module.VERSION + ".commons.settings.sandboxCfg.getList";
-    
     /**
      * The constant PARAM_ID.
      */
@@ -65,12 +61,11 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
     /**
      * The constant PARAM_SEASON_CODE.
      */
-    public static final String PARAM_SEASON_CODE = "season.code";
+    public static final String PARAM_SEASON_ID = "season._id";
     /**
      * The constant PARAM_OWNER.
      */
     public static final String PARAM_SANDBOX_ID = "sandbox._id";
-
 
     /**
      * The Mongo.
@@ -122,6 +117,9 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -131,8 +129,8 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
          * @api {get} /api/1/commons/settings/sandboxCfg/getList Get list SandBoxCfg by its owner
          * @apiName getListSandBoxCfg
          * @apiGroup SandBoxCfg API
-         * @apiParam {String} seaonCode SandBoxCfg season
-         * @apiParam {String} owner SandBoxCfg owner
+         * @apiParam {String} seaonId SandBoxCfg season
+         * @apiParam {String} sandBoxId sandbox Id
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
          * @apiError INVALID_PARAMETER wrong parameters
@@ -145,23 +143,23 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
                     Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_SANDBOX_ID);
-                    
+                    utils.testMandatoryParams(params, PARAM_SANDBOX_ID, PARAM_SEASON_ID);
+
                     Map<String, Object> criterias = new HashMap<String, Object>();
-                    criterias.put(PARAM_SANDBOX_ID, params.get(PARAM_SANDBOX_ID).get(0));
-                    
+                    criterias.put("sandbox._id", params.get(PARAM_SANDBOX_ID).get(0));
+
                     // label
-                    if (params.get(PARAM_SEASON_CODE) != null && !StringUtils.isBlank(params.get(PARAM_SEASON_CODE).get(0))) {
-                    	criterias.put(PARAM_SEASON_CODE, params.get(PARAM_SEASON_CODE).get(0));
-                    } 
-                    
+                    if (StringUtils.isNotBlank(params.get(PARAM_SEASON_ID).get(0))) {
+                        criterias.put("season._id", params.get(PARAM_SEASON_ID).get(0));
+                    }
+
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SandBoxCfg.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBoxCfg defined for sandBox if (" + params.get(PARAM_SANDBOX_ID).get(0) + ")");
                     }
                     container.logger().info("SandBoxCfg found : " + resultJson.toString());
-                    
+
                     message.reply(resultJson.encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
@@ -172,6 +170,9 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });

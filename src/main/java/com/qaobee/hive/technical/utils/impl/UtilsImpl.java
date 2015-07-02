@@ -33,6 +33,7 @@ import org.imgscalr.Scalr;
 import org.imgscalr.Scalr.Mode;
 import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.eventbus.ReplyException;
 import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -113,6 +114,18 @@ public class UtilsImpl implements Utils {
     @Override
     public void sendError(final Message<String> message, final QaobeeException e) {
         message.fail(e.getCode().getCode(), Json.encode(e));
+    }
+
+    /**
+     * Send error.
+     *
+     * @param message the message
+     * @param e       the e
+     */
+    @Override
+    public void sendError(Message<String> message, ReplyException e) {
+        JsonObject ex = new JsonObject(e.getMessage());
+        sendError(message, ExceptionCodes.valueOf(ex.getString("code", ExceptionCodes.INTERNAL_ERROR.name())), ex.getString("message", "Internal Error"));
     }
 
     /**

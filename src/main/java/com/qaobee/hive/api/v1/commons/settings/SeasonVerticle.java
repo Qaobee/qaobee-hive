@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The type Season verticle.
  * @author cke
  */
 @DeployableVerticle(isWorker = true)
@@ -55,6 +56,10 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * The Constant GET_LIST_BY_ACTIVITY.
      */
     public static final String GET_LIST_BY_ACTIVITY = Module.VERSION + ".commons.settings.season.getListByActivity";
+    /**
+     * The constant GET_CURRENT.
+     */
+    public static final String GET_CURRENT = Module.VERSION + ".commons.settings.season.current";
 
 	/* List of parameters */
     /**
@@ -74,13 +79,23 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_DATE = "date";
 
-    /* Injections */
+
+    /**
+     * The Mongo.
+     */
+/* Injections */
     @Inject
     private MongoDB mongo;
+    /**
+     * The Utils.
+     */
     @Inject
     private Utils utils;
 
 
+    /**
+     * Start void.
+     */
     @Override
     public void start() {
         super.start();
@@ -94,10 +109,10 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} _id Mandatory The season Id.
          * @apiSuccess {Season} the object found
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INTERNAL_ERROR internal error
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> getHandler = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
@@ -119,22 +134,26 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
         /**
          * @apiDescription Retrieve all seasons for one activity and one country
          * @api {get} /api/v1/commons/settings/season/getListByActivity Retrieve all seasons
          * @apiName getListByActivityHandler
+         * @apiParam activityId Activity Id
+         * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
          * @apiGroup Season API
          * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
-         * @apiError HTTP_ERROR Bad Request
-         * @apiError MONGO_ERROR BDD Error
-         * @apiError INVALID_PARAMETER
-         * @apiError DB_NO_ROW_RETURNED
+         * @apiError HTTP_ERROR Bad request
+         * @apiError INTERNAL_ERROR internal error
+         * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> getListByActivityHandler = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET_LIST_BY_ACTIVITY, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
@@ -169,15 +188,71 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                 } catch (final QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
-		/*
-		 * Handlers registration
-		 */
-        vertx.eventBus().registerHandler(GET, getHandler);
-        vertx.eventBus().registerHandler(GET_LIST_BY_ACTIVITY, getListByActivityHandler);
+        /**
+         * @apiDescription Retrieve current season for one activity and one country
+         * @api {get} /api/v1/commons/settings/season/current Retrieve current seasons
+         * @apiName getCurrentHandler
+         * @apiGroup Season API
+         * @apiParam activityId Activity Id
+         * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
+         * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
+         * @apiError HTTP_ERROR Bad request
+         * @apiError INTERNAL_ERROR internal error
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        vertx.eventBus().registerHandler(GET_CURRENT, new Handler<Message<String>>() {
+
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("getCurrentHandler() - Season");
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    // Tests on method and parameters
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID);
+                    // Activity ID
+                    String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
+                    // Country ID
+                    String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
+                    // Creation of the request
+                    Map<String, Object> criterias = new HashMap<>();
+                    criterias.put("activityId", activityId);
+                    criterias.put("countryId", countryId);
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
+                    long currentDate = System.currentTimeMillis();
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
+                    }
+                    for(int i =0; i < resultJson.size(); i++) {
+                        JsonObject s = resultJson.get(i);
+                        if(s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
+                            message.reply(s.encode());
+                            return;
+                        }
+                    }
+                    message.reply(new JsonObject().encode());
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (final QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
     }
 
 }

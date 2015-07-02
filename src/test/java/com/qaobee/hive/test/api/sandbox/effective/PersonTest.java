@@ -37,7 +37,7 @@ import java.util.*;
  * The type Person test.
  */
 public class PersonTest extends VertxJunitSupport {
-
+@Ignore
     @Test
     public void getListPersonTest() {
         populate(POPULATE_ONLY, SETTINGS_PERSON_FOOT);

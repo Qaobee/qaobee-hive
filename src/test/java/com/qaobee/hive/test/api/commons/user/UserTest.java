@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
@@ -39,6 +40,7 @@ import java.util.UUID;
  * @author cke
  */
 public class UserTest extends VertxJunitSupport {
+
 
     /**
      * Test Login OK.
@@ -171,8 +173,7 @@ public class UserTest extends VertxJunitSupport {
             params.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
             params.putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
             req.setBody(params.encode());
-            final String reply = sendonBus(UserVerticle.LOGIN, req);
-            JsonObject result = new JsonObject(reply);
+            JsonObject result = new JsonObject(sendonBus(UserVerticle.LOGIN, req));
             Assert.assertTrue("User inactive", result.getString("code").contains(ExceptionCodes.NON_ACTIVE.toString()));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
@@ -184,7 +185,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetas() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES, SETTINGS_SEASONS);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
@@ -192,6 +193,7 @@ public class UserTest extends VertxJunitSupport {
             final RequestWrapper req = new RequestWrapper();
             req.setLocale(LOCALE);
             req.setMethod(Constantes.GET);
+            req.getParams().put(UserVerticle.PARAM_COUNTRY_ID, Collections.singletonList("CNTR-250-FR-FRA"));
             final JsonObject result = new JsonObject(sendonBus(UserVerticle.META, req, user.getAccount().getToken()));
             Assert.assertTrue("Season not found !", result.containsField("season"));
             Assert.assertTrue("Activity not found !", result.containsField("activity"));
@@ -204,6 +206,66 @@ public class UserTest extends VertxJunitSupport {
             GregorianCalendar today = new GregorianCalendar();
             int year = today.get(GregorianCalendar.MONTH) < 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
             Assert.assertEquals("Wrong period found for season", "SAI-" + year, seasonObject.getString("code"));
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Gets metas with wrong hTTP method.
+     */
+    @Test
+    public void getMetasWithWrongHTTPMethod() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES, SETTINGS_SEASONS);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+        try {
+            mongo.save(user);
+            final RequestWrapper req = new RequestWrapper();
+            req.setLocale(LOCALE);
+            req.setMethod(Constantes.POST);
+            req.getParams().put(UserVerticle.PARAM_COUNTRY_ID, Collections.singletonList("Vulcain"));
+            final JsonObject result = new JsonObject(sendonBus(UserVerticle.META, req, user.getAccount().getToken()));
+            Assert.assertTrue("getMetasWithWrongCountry", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Gets metas with wrong country.
+     */
+    @Test
+    public void getMetasWithWrongCountry() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES, SETTINGS_SEASONS);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+        try {
+            mongo.save(user);
+            final RequestWrapper req = new RequestWrapper();
+            req.setLocale(LOCALE);
+            req.setMethod(Constantes.GET);
+            req.getParams().put(UserVerticle.PARAM_COUNTRY_ID, Collections.singletonList("Vulcain"));
+            final JsonObject result = new JsonObject(sendonBus(UserVerticle.META, req, user.getAccount().getToken()));
+            Assert.assertTrue("getMetasWithWrongCountry", result.getString("code").contains(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void getMetasWithWrongUser() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES, SETTINGS_SEASONS);
+        User user = generateLoggedUser();
+        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+        try {
+            mongo.save(user);
+            final RequestWrapper req = new RequestWrapper();
+            req.setLocale(LOCALE);
+            req.setMethod(Constantes.GET);
+            req.getParams().put(UserVerticle.PARAM_COUNTRY_ID, Collections.singletonList("CNTR-250-FR-FRA"));
+            final JsonObject result = new JsonObject(sendonBus(UserVerticle.META, req, user.getAccount().getToken()));
+            Assert.assertTrue("getMetasWithWrongCountry", result.getString("code").contains(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -235,6 +297,9 @@ public class UserTest extends VertxJunitSupport {
         Assert.assertEquals(u.getName(), reply.getString("name"));
     }
 
+    /**
+     * Login by mobile token wrong hTTP method.
+     */
     @Test
     public void loginByMobileTokenWrongHTTPMethod() {
         User u = generateUser();
@@ -255,6 +320,9 @@ public class UserTest extends VertxJunitSupport {
         Assert.assertTrue("Wrong http method", reply.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
+    /**
+     * Login by mobile token wrong login.
+     */
     @Test
     public void loginByMobileTokenWrongLogin() {
         User u = generateUser();
@@ -278,6 +346,9 @@ public class UserTest extends VertxJunitSupport {
         Assert.assertTrue("loginByMobileTokenWrongLogin", reply.getString("code").contains(ExceptionCodes.BAD_LOGIN.toString()));
     }
 
+    /**
+     * Login by mobile token wrong token.
+     */
     @Test
     public void loginByMobileTokenWrongToken() {
         User u = generateUser();
@@ -301,6 +372,9 @@ public class UserTest extends VertxJunitSupport {
         Assert.assertTrue("loginByMobileTokenWrongToken", reply.getString("code").contains(ExceptionCodes.BAD_LOGIN.toString()));
     }
 
+    /**
+     * Login by mobile token no data.
+     */
     @Test
     public void loginByMobileTokenNoData() {
         User u = generateUser();

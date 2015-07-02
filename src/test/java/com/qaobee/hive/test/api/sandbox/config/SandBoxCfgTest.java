@@ -19,22 +19,21 @@
 
 package com.qaobee.hive.test.api.sandbox.config;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-
 import com.qaobee.hive.api.v1.sandbox.config.SandBoxCfgVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import org.junit.Assert;
+import org.junit.Test;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The type Sand box cfg test.
@@ -73,7 +72,7 @@ public class SandBoxCfgTest extends VertxJunitSupport {
     @Test
     public void retrieveSandBoxConfigBySandBoxId() {
 
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES, SETTINGS_SEASONS);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
 
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
@@ -86,7 +85,7 @@ public class SandBoxCfgTest extends VertxJunitSupport {
             req.setUser(user);
             final Map<String, List<String>> params = new HashMap<>();
             params.put(SandBoxCfgVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-            params.put(SandBoxCfgVerticle.PARAM_SEASON_CODE, Collections.singletonList("SAI-2015"));
+            params.put(SandBoxCfgVerticle.PARAM_SEASON_ID, Collections.singletonList("558b0ceaf9285df5b7553fc6"));
             req.setParams(params);
 
             final String reply = sendonBus(SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());

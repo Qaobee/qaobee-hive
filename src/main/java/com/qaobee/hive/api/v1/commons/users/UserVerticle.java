@@ -24,7 +24,6 @@ import com.englishtown.promises.Runnable;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
-import com.qaobee.hive.api.v1.sandbox.config.SandBoxCfgVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -66,6 +65,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * The Constant LOGIN.
      */
     public static final String LOGIN = Module.VERSION + ".commons.user.login";
+    /**
+     * The constant LOGIN_BY_TOKEN.
+     */
     public static final String LOGIN_BY_TOKEN = Module.VERSION + ".commons.user.sso";
     /**
      * The Constant LOGOUT.
@@ -105,6 +107,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * User login
      */
     public static final String PARAM_LOGIN = "login";
+    /**
+     * The constant PARAM_COUNTRY_ID.
+     */
+    public static final String PARAM_COUNTRY_ID = "country";
     /**
      * User password
      */
@@ -474,86 +480,52 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiDescription Fetch meta information
          * @api {get} /api/1/commons/user/meta Fetch meta information
          * @apiName getMetasHandler
+         * @apiParam country Country Id (ie "CNTR-250-FR-FRA")
          * @apiGroup User API
          * @apiHeader {String} token
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
          */
-        //TODO a revoir CKE 29/06/2015
         vertx.eventBus().registerHandler(META, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     User u = utils.isUserLogged(req);
-
-                    final JsonObject result = new JsonObject();
+                    utils.testMandatoryParams(req.getParams(), PARAM_COUNTRY_ID);
                     JsonObject user = mongo.getById(u.get_id(), User.class);
-                    JsonObject activity = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("activity");
-                    result.putObject("activity", activity);
+                    final JsonObject activity = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("activity");
 
-                    req.getParams().put(SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
-                    whenEventBus.send(SandBoxVerticle.GET_BY_OWNER, Json.encode(req))
-                            .then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
-                                @Override
-                                public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
-                                    if (!(objectMessage.body() instanceof ReplyException)) {
-                                        JsonObject sandbox = new JsonObject((String) objectMessage.body());
-                                        result.putObject("season", sandbox.getObject("season"));
-                                        result.putObject("structure", sandbox.getObject("structure"));
-                                    }
-                                    message.reply(result.toString());
-                                    return null;
-                                }
-                            });
-                } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
-
-        /**
-         * @apiDescription Fetch season information
-         * @api {get} /api/1/commons/user/season Fetch season information
-         * @apiName getSeasonsHandler
-         * @apiGroup User API
-         * @apiHeader {Array} seasons codes
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError NOT_LOGGED invalid token
-         */
-        vertx.eventBus().registerHandler(SEASONS_INFO, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
-                    vertx.eventBus().send(SeasonVerticle.GET_LIST_BY_ACTIVITY, message.body(), new Handler<Message<String>>() {
-
+                    req.getParams().put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
+                    req.getParams().put(SeasonVerticle.PARAM_COUNTRY_ID, Collections.singletonList(req.getParams().get(PARAM_COUNTRY_ID).get(0)));
+                    whenEventBus.send(SeasonVerticle.GET_CURRENT, Json.encode(req)).then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
                         @Override
-                        public void handle(Message<String> event) {
-                            message.reply(event.body());
+                        public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
+                            if (objectMessage.body() instanceof ReplyException) {
+                                utils.sendError(message, (ReplyException) objectMessage.body());
+                            } else {
+                                final JsonObject season = new JsonObject((String) objectMessage.body());
+                                req.getParams().put(SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
+                                req.getParams().put(SandBoxVerticle.PARAM_SEASON_ID, Collections.singletonList(season.getString("_id")));
+                                whenEventBus.send(SandBoxVerticle.GET_BY_OWNER, Json.encode(req))
+                                        .then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
+                                            @Override
+                                            public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
+                                                if (objectMessage.body() instanceof ReplyException) {
+                                                    utils.sendError(message, (ReplyException) objectMessage.body());
+                                                } else {
+                                                    JsonObject sandbox = new JsonObject((String) objectMessage.body());
+                                                    sandbox.putObject("activity", activity);
+                                                    message.reply(sandbox.encode());
+                                                }
+                                                return null;
+                                            }
+                                        });
+                            }
+                            return null;
                         }
                     });
-
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -645,7 +617,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 } catch (final IllegalArgumentException | NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                }  catch (final Exception e) {
+                } catch (final Exception e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }

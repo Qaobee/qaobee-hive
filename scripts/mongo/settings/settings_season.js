@@ -81,7 +81,7 @@ db.Season.insert({
 
 _id = new ObjectId().valueOf();
 db.Season.insert({
-    "_id" : _id,
+    "_id" : "558b0ceaf9285df5b7553fc6",
     "code" : "SAI-2015",
     "label" : "SAISON 2015-2016",
     /* Start : 01/07/2015*/
