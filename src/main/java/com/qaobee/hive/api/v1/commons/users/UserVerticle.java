@@ -159,7 +159,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiName loginHandler
          * @apiGroup User API
          * @apiParam {String} login login (user.username)
-         * @apiParam {String} passwd password
+         * @apiParam {String} password password
          * @apiParam {String} mobileToken optionnal mobile token for SSO
          * @apiSuccess {Object} user com.qaobee.hive.business.model.commons.users.User
          * @apiError PASSWD_EXCEPTION wrong password encoding
