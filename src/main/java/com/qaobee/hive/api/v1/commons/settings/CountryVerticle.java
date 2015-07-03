@@ -69,9 +69,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_LABEL = "label";
     public static final String PARAM_LOCAL = "local";
-    
-    public static final String UPDATE = "TODO";
-    public static final String ADD = "TODO";
+  
 
     /* Injections */
     @Inject
