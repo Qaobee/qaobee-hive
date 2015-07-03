@@ -188,6 +188,13 @@ public class Main extends AbstractGuiceVerticle {
                 req.response().end();
             }
         });
+
+        rm.get("/", new Handler<HttpServerRequest>() {
+            @Override
+            public void handle(HttpServerRequest event) {
+                event.response().end("Welcome to Qaobee Hive");
+            }
+        });
         // API Rest
         rm.allWithRegEx("^/api/.*", new Handler<HttpServerRequest>() {
             @Override
