@@ -3,14 +3,14 @@
 red='\e[0;31m'
 green='\e[0;32m'
 NC='\e[0m' # No Color
-db=' -u admin -p UZWNgp3WIKlQ --verbose localhost:59366/swarn '
+db=' -u admin -p F-9ATqk2yWzs --verbose localhost:51081/hive '
 
 function pause(){
    read -p "$*"
 }
 
 
-echo -e "${red}PRODUCTION !!! Don't forget rhc port-forward -a swarn${NC}"
+echo -e "${red}PRODUCTION !!! Don't forget rhc port-forward -a hive${NC}"
 pause 'Press [Enter] key to continue...'
 
 echo -e "${green}****************************************************"
