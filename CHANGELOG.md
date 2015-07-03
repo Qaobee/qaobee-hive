@@ -4,18 +4,20 @@
 ## 2015-07-04
 
 ## 2015-07-03
+> + correctif doc (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:27 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0b92f65d3f5faecfbad62d775d11877ba9546c65)*)
+> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:17 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e7787672f3a3c1f090b3cd36790469aeb96bb94f)*)
 > + dist (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e07620c60260101c24047c92009256ec355eea7e)*)
 > + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:14 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0c856d983bbdc809abee5dcd410a064f536612a1)*)
 > + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:59 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/5e3afce8b0e3c7c33fb8a5d1af91c012b98a41fe)*)
 > + team (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:59 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ebfe71bb4c265837e084730b9b165709d236588a)*)
 > + check http (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:57 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/382e2ee1f36148f63a5b78a01c2b9ebd5ff8483e)*)
 > + apidoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:32 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/8fab9a3acdcab46ae1d0f7e7f3ba5463fd0967fc)*)
+
+## 2015-07-02
 > + Changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:25 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3ec86871ec9d6f54c2474392999e25641f2c4e20)*)
 > + dist script (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:25 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/75b42eafea91f551d7f32674aa78d7cda6ac8ba0)*)
 > + Changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:24 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/9e35a5c2975336678e965fdb9c2e1844c707327b)*)
 > + Récupération des méta informations (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1543398a74aba6dd9f3ac2589fa1f4e82783a75e)*)
-
-## 2015-07-02
 > + Exception générique (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:03 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/7dcd1517a9ddbb4d8e1ace2b67595f3c24fd57b8)*)
 > + Exception générique (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:02 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/749d0eb01075f9e29a9e1181c0d5ae300587bb42)*)
 
@@ -79,10 +81,10 @@
 > + commons (*par [Christophe Kervella](ch.kervella@gmail.com) à 14:54 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e7673b6425a11d08f33dfc28dc9cdcff40f7d46d)*)
 > + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:49 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/62007f2bd0fe789156b768daa959063e101e6eae)*)
 > + Vérification du status loggué du user (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:48 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/9bdf6ab6dabe9903a2b61b64f39e87114c7d64b7)*)
-> + Merge remote-tracking branch 'origin/master' (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/8c5f85d4ae4c1e555cfe017d95b36b8f01a8d884)*)
-> + Migration gradle (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/90e09eb15bc72668c9ede02896cce959526a13d9)*)
 
 ## 2015-06-16
+> + Merge remote-tracking branch 'origin/master' (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/8c5f85d4ae4c1e555cfe017d95b36b8f01a8d884)*)
+> + Migration gradle (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/90e09eb15bc72668c9ede02896cce959526a13d9)*)
 > + javadoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:10 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/52696afeced281335d2068c3951d859e4a42b246)*)
 > + implémentation login (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:09 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/407d3916a7943807d2937c32c3bc2c1a3c1ea8c1)*)
 > + Merge remote-tracking branch 'origin/master' (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:02 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/98df8655bef0ef2c60e17e49553b329a3e9b3165)*)
