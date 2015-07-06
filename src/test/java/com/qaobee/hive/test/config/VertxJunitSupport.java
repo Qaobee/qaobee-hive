@@ -381,7 +381,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param id the id
      * @return activity activity
      */
-    protected JsonObject getActivity(String id) {
+    protected JsonObject getActivity(String id, User user) {
 
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -392,7 +392,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 		/* Retreive object */
         params.put(ActivityVerticle.PARAM_ID, Collections.singletonList(id));
         req.setParams(params);
-        final String reply = sendonBus(ActivityVerticle.GET, req);
+        final String reply = sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken());
         return new JsonObject(reply);
     }
 

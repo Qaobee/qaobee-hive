@@ -14,9 +14,9 @@
  * Season : liste des saisons pour une activite
  */
 db.Season.remove({});
-var _id = new ObjectId().valueOf();
+
 db.Season.insert({
-    "_id" : _id,
+    "_id" :"559a9294889089a442f3d495",
     "code" : "SAI-2013",
     "label" : "SAISON 2013-2014",
     /* Start : 01/07/2013*/
@@ -29,7 +29,7 @@ db.Season.insert({
 
 _id = new ObjectId().valueOf();
 db.Season.insert({
-    "_id" : _id,
+    "_id" : "559a9294889089a442f3d496",
     "code" : "SAI-2014",
     "label" : "SAISON 2014-2015",
     /* Start : 01/06/2014*/
@@ -42,7 +42,7 @@ db.Season.insert({
 
 _id = new ObjectId().valueOf();
 db.Season.insert({
-    "_id" : _id,
+    "_id" : "559a9294889089a442f3d497",
     "code" : "SAI-2015",
     "label" : "SAISON 2015-2016",
     /* Start : 01/07/2015*/
@@ -55,7 +55,7 @@ db.Season.insert({
 
 _id = new ObjectId().valueOf();
 db.Season.insert({
-    "_id" : _id,
+    "_id" : "559a9294889089a442f3d498",
     "code" : "SAI-2013",
     "label" : "SAISON 2013-2014",
     /* Start : 01/07/2013*/
@@ -68,7 +68,7 @@ db.Season.insert({
 
 _id = new ObjectId().valueOf();
 db.Season.insert({
-    "_id" : _id,
+    "_id" : "559a9294889089a442f3d499",
     "code" : "SAI-2014",
     "label" : "SAISON 2014-2015",
     /* Start : 01/07/2014*/

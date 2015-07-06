@@ -197,7 +197,7 @@ public class StructureTest extends VertxJunitSupport {
 		params.putString("label", "labelValue");
 		params.putString("acronym", "acronymValue");
 		params.putObject(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
-		params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND"));
+		params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", user));
 		
 		req.setBody(params.encode());
 
@@ -226,7 +226,7 @@ public class StructureTest extends VertxJunitSupport {
 		final JsonObject params = new JsonObject();
 		params.putString("label", "labelValue");
 		params.putString("acronym", "acronymValue");
-		params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND"));
+		params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", user));
 
 		req.setBody(params.encode());
 
