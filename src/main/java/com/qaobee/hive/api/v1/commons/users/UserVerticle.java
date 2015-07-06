@@ -593,6 +593,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @api {post} /api/1/commons/user/sso SSO login by mobile token
          * @apiVersion 0.1.0
          * @apiName loginByMobileToken
+         * @apiParam {String} mobileToken Mobile device Id
+         * @apiParam {String} login Login
          * @apiGroup User API
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
