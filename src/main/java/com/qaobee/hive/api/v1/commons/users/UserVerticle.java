@@ -208,9 +208,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
                                         user.getAccount().setMobileToken(infos.getString(MOBILE_TOKEN));
                                     }
                                     mongo.save(user);
-                                    String result = Json.encode(user);
-                                    container.logger().debug(result);
-                                    message.reply(result);
+                                    JsonObject jUser = new JsonObject(Json.encode(user));
+                                    jUser.getObject("account").removeField("passwd");
+                                    jUser.getObject("account").removeField("password");
+                                    jUser.getObject("account").removeField("salt");
+                                    message.reply(jUser.toString());
                                 } else {
                                     utils.sendError(message, ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", req.getLocale()));
                                 }
@@ -468,7 +470,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     User user = utils.isUserLogged(req);
-                    message.reply(Json.encode(user));
+                    JsonObject jUser = new JsonObject(Json.encode(user));
+                    jUser.getObject("account").removeField("passwd");
+                    jUser.getObject("account").removeField("password");
+                    jUser.getObject("account").removeField("salt");
+                    message.reply(jUser.toString());
                     utils.sendStatus(true, message);
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
