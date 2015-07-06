@@ -124,11 +124,11 @@ public class CountryTest extends VertxJunitSupport {
 		
 		// label
 		params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
-		params.put(CountryVerticle.PARAM_LABEL, Collections.singletonList("France"));
+		params.put(CountryVerticle.PARAM_LABEL, Collections.singletonList("//Fra"));
 		req.setParams(params);
 		
 		JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
-		Assert.assertEquals(1,result.size());
+		Assert.assertEquals(4,result.size());
 
 	}
 

@@ -125,7 +125,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		/**
 		 * @apiDescription Login unicity test for rest request
 		 * @api {get} /api/1/commons/user/loginExists Login unicity test
-		 * @apiName userNameTestHandler
+		 * @apiVersion 0.1.0
+         * @apiName userNameTestHandler
 		 * @apiGroup Signup API
 		 * @apiParam {String} [login] person.account.login
 		 * @apiSuccess {Object} status {"status", true|false}
@@ -163,7 +164,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		/**
 		 * @apiDescription Register a new account
 		 * @api {put} /api/1/commons/user/register Register a new account
-		 * @apiName registerHandler
+		 * @apiVersion 0.1.0
+         * @apiName registerHandler
 		 * @apiGroup Signup API
 		 * @apiParam {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
 		 * @apiSuccess {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
@@ -298,7 +300,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		 * @api {get} /api/1/commons/user/accountcheck Account validation check
 		 * @apiParam {String} code Activation code
 		 * @apiParam {String} Person id
-		 * @apiName accountCheckHandler
+		 * @apiVersion 0.1.0
+         * @apiName accountCheckHandler
 		 * @apiGroup SignupV API
 		 * @apiSuccess {Object} status {"status", true|false}
 		 * @apiError HTTP_ERROR wrong request's method

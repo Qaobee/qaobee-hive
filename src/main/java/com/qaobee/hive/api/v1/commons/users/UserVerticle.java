@@ -156,6 +156,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Login user
          * @api {post} /api/1/commons/user/login Login user
+         * @apiVersion 0.1.0
          * @apiName loginHandler
          * @apiGroup User API
          * @apiParam {String} login login (user.username)
@@ -233,6 +234,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription User logout
          * @api {get} /api/1/commons/user/logout User logout
+         * @apiVersion 0.1.0
+         * @apiVersion 0.1.0
          * @apiName logoutHandler
          * @apiGroup User API
          * @apiHeader {String} token
@@ -279,6 +282,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Mail generation for password renew
          * @api {post} /api/1/commons/user/newpasswd Password renew
+         * @apiVersion 0.1.0
          * @apiName newPasswdHandler
          * @apiGroup User API
          * @apiParam {String} login user login
@@ -349,6 +353,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @api {get} /api/v1/commons/user/passwdcheck Check activation code
          * @apiParam {String} code Activation code
          * @apiParam {String} id Person id
+         * @apiVersion 0.1.0
+         * @apiVersion 0.1.0
          * @apiName passwdCheckHandler
          * @apiGroup User API
          * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
@@ -389,6 +395,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiDescription Update password after renew ask
          * @api {post} /api/v1/commons/user/resetPasswd Update password
          * @apiParam {Object} data {id, code, passwd}
+         * @apiVersion 0.1.0
+         * @apiVersion 0.1.0
          * @apiName resetPasswdHandler
          * @apiGroup User API
          * @apiSuccess {Object} status {"status", true|false}
@@ -442,6 +450,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Fetch the current logged user
          * @api {get} /api/1/commons/user/current Fetch the current logged user
+         * @apiVersion 0.1.0
+         * @apiVersion 0.1.0
          * @apiName currentHandler
          * @apiGroup User API
          * @apiHeader {String} token
@@ -479,6 +489,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Fetch meta information
          * @api {get} /api/1/commons/user/meta Fetch meta information
+         * @apiVersion 0.1.0
+         * @apiVersion 0.1.0
          * @apiName getMetasHandler
          * @apiParam country Country Id (ie "CNTR-250-FR-FRA")
          * @apiGroup User API
@@ -542,6 +554,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Fetch user information by its id
          * @api {get} /api/1/commons/user/user Fetch user by id
+         * @apiVersion 0.1.0
          * @apiName getUserByIdhandler
          * @apiGroup User API
          * @apiParam {String} id
@@ -577,6 +590,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription SSO login by mobile token (token provided at the login phase corresponding to the device id)
          * @api {post} /api/1/commons/user/sso SSO login by mobile token
+         * @apiVersion 0.1.0
          * @apiName loginByMobileToken
          * @apiGroup User API
          * @apiError HTTP_ERROR wrong request method

@@ -341,7 +341,18 @@ public class MongoDBImpl implements MongoDB {
         if (criteria != null) {
             final BasicDBList and = new BasicDBList();
             for (final String k : criteria.keySet()) {
-                and.add(new BasicDBObject(k, criteria.get(k)));
+            	if( criteria.get(k) instanceof String ) {
+            		
+            		 String param =  (String)criteria.get(k);
+            		 if(param.startsWith("//")){
+            			 param = param.substring(2);
+            			 and.add(new BasicDBObject(k, java.util.regex.Pattern.compile(param)));
+            		 } else {
+            			 and.add(new BasicDBObject(k, criteria.get(k)));
+            		 }
+            	} else {
+            		and.add(new BasicDBObject(k, criteria.get(k)));
+            	}
             }
             query = new BasicDBObject("$and", and);
         }
