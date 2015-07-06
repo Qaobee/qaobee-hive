@@ -152,6 +152,12 @@ public class EventVerticle extends AbstractGuiceVerticle {
          * @api {post} /api/1/commons/referencial/event/list Get all events
          * @apiName getListEventHandler
          * @apiGroup Event API
+         * @apiParam {String} startDate start date
+         * @apiParam {String} endDate end date
+         * @apiParam {String} link.type Link type
+         * @apiParam {String} activityId Activity Id
+         * @apiParam {String} owner Owner
+         * @apiHeader {String} token
          * @apiSuccess {Array} list of events
          * @apiError HTTP_ERROR Bad request
          * @apiError MONGO_ERROR Error on DB request
