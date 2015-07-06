@@ -161,7 +161,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiGroup User API
          * @apiParam {String} login login (user.username)
          * @apiParam {String} password password
-         * @apiParam {String} mobileToken optionnal mobile token for SSO
+         * @apiParam {String} [mobileToken] optionnal mobile token for SSO
          * @apiSuccess {Object} user com.qaobee.hive.business.model.commons.users.User
          * @apiError PASSWD_EXCEPTION wrong password encoding
          * @apiError BAD_LOGIN wrong login or password
@@ -234,7 +234,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription User logout
          * @api {get} /api/1/commons/user/logout User logout
-         * @apiVersion 0.1.0
          * @apiVersion 0.1.0
          * @apiName logoutHandler
          * @apiGroup User API
@@ -354,7 +353,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} code Activation code
          * @apiParam {String} id Person id
          * @apiVersion 0.1.0
-         * @apiVersion 0.1.0
          * @apiName passwdCheckHandler
          * @apiGroup User API
          * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
@@ -395,7 +393,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiDescription Update password after renew ask
          * @api {post} /api/v1/commons/user/resetPasswd Update password
          * @apiParam {Object} data {id, code, passwd}
-         * @apiVersion 0.1.0
          * @apiVersion 0.1.0
          * @apiName resetPasswdHandler
          * @apiGroup User API
@@ -451,7 +448,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiDescription Fetch the current logged user
          * @api {get} /api/1/commons/user/current Fetch the current logged user
          * @apiVersion 0.1.0
-         * @apiVersion 0.1.0
          * @apiName currentHandler
          * @apiGroup User API
          * @apiHeader {String} token
@@ -488,8 +484,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         });
         /**
          * @apiDescription Fetch meta information
-         * @api {get} /api/1/commons/user/meta Fetch meta information
-         * @apiVersion 0.1.0
+         * @api {get} /api/1/commons/user/meta?country= Fetch meta information
          * @apiVersion 0.1.0
          * @apiName getMetasHandler
          * @apiParam country Country Id (ie "CNTR-250-FR-FRA")
