@@ -24,7 +24,7 @@ import java.util.List;
  * @author cke
  *
  */
-public class Indicator {
+public class IndicatorCfg {
 	
 	private String _id;
 	
