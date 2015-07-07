@@ -1,9 +1,18 @@
 # CHANGELOG
 ---
 
+## 2015-07-07
+
 ## 2015-07-06
+> + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:02 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/9589b4b638b768ec78486a6e785cf32c86f33138)*)
+> + SandBoxVerticle + sandBoxTest (*par [Christophe Kervella](ch.kervella@gmail.com) à 19:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/809d557d14e184508bf36eb903d3eaaf640ed73d)*)
+> + IndicatorTest OK (*par [Christophe Kervella](ch.kervella@gmail.com) à 17:54 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/19a563198bf45a8965d388f32a5dff4b45c3c679)*)
+> + apidoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:20 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ad0aeaa2d0cb372855541b265025d2b8e3994e3c)*)
+> + apidoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:14 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/42c787ecf7eac20358ffe4a838f0be5d310f1d18)*)
+> + security fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/cde692ec87d0782fefe8d8eadd2045bc4a6947be)*)
 
 ## 2015-07-04
+> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:18 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4b35ed8f506cf11a2f6768d279a5a2c139b0bd43)*)
 > + correctif doc (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/8ffff85ced4ddcd3a19320c2d2cc099f875d6acc)*)
 > + Test Season OK (*par [Christophe Kervella](ch.kervella@gmail.com) à 18:13 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/dac13787c7456402f7e1d59d84e17faa56b15d0b)*)
 > + Ajout like sur findByCriterias, CountryApi ok (*par [Christophe Kervella](ch.kervella@gmail.com) à 17:21 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d71a296bd6e74618191fa718c0b9b2235ba47bec)*)
@@ -43,11 +52,11 @@
 > + Implémentation package effectif (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:31 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/7be66a9e9ca590166d287c1ca8405a0ac1a6f900)*)
 > + dist script (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:27 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/916b93d4152851f252456ab528b8b39c9120eb52)*)
 > + dist script (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:09 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d36cca7823d09238e2213b5aaf0eb75419b4b0db)*)
+
+## 2015-06-27
 > + dist script (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:34 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/77785e295ac1ab42ae78bf36e69a977e6f41a23f)*)
 > + update mongo driver (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:34 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/cc95bc1aca0d264c2b9f79bed01ab0fa2f3919ca)*)
 > + Amélioration du test des paramètres obligatoires (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:34 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/da5c52bb239cfcb1d736e4e1375e49b70763e768)*)
-
-## 2015-06-27
 
 ## 2015-06-25
 > + git repport (*par [Xavier MARIN](marin.xavier@gmail.com) à 11:34 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d038b079333336d2092d27762308fbcb34bc5532)*)
@@ -55,9 +64,9 @@
 > + déphasage MOO/mongo (*par [Xavier MARIN](marin.xavier@gmail.com) à 10:22 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e8a8444712ac9e3c9bbbc980cac1d1682a99b7ae)*)
 > + APIDoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:17 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4ef3d5953af8a8d52fb3b57bc76a3e5d1690bd71)*)
 > + APIDoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/fa6a6228a87670af3cdeb6ae2cf28eebdf7d8010)*)
-> + some fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/94397d2ff8a3e11f5de90635a4364cb8f57bf2ae)*)
 
 ## 2015-06-23
+> + some fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/94397d2ff8a3e11f5de90635a4364cb8f57bf2ae)*)
 > + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:55 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/40ae8c8055cda2bfdb2de70997aa11c203b07bf0)*)
 > + StructureConfig + Tests u + couverture de code (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:48 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/84f25874055fe50f6a6a2ccde1b8982f92da4f73)*)
 > + Adaptation Test et Verticale Country (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:33 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0e4c78b706450fca2e0f40e0696d451854763f00)*)
@@ -66,9 +75,9 @@
 
 ## 2015-06-22
 > + Add JunitTest + EventVerticle revision (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/66061de4674e5fc253a273f42e3b948f551b4b84)*)
-> + version (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:59 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/5a3a836e215bbdf98353b86483ce40fe62cd567c)*)
 
 ## 2015-06-19
+> + version (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:59 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/5a3a836e215bbdf98353b86483ce40fe62cd567c)*)
 
 ## 2015-06-18
 > + Tests unitaire et début verticle événements (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:09 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/13cfbb810acad2c1799354de64139f5392ac5433)*)
@@ -80,9 +89,9 @@
 > + gradle (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:41 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/31904a07949fe5365408ea3edfce7ef83fc0861c)*)
 > + correctif collection User (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:38 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bc749073914c1f6ea5cfa56cff0472bd154bc825)*)
 > + gradle (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:07 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ddb6cad79dab16b93fd0b8ebc3821825fcfb746e)*)
-> + javadoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:02 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3035e7d79f96958a70e1ba91c4585b1b666dd81f)*)
 
 ## 2015-06-16
+> + javadoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:02 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3035e7d79f96958a70e1ba91c4585b1b666dd81f)*)
 > + User Test (*par [Christophe Kervella](ch.kervella@gmail.com) à 17:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/fcd13779b5dfe6039ff2dba6974d1390eb24d4a4)*)
 > + Adaptation jeu de données + test LoginOk (*par [Christophe Kervella](ch.kervella@gmail.com) à 16:41 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/07988e4d92b9dc8c08b0f2d20f38a5c7e3ebcceb)*)
 > + Merge remote-tracking branch 'origin/master' (*par [Christophe Kervella](ch.kervella@gmail.com) à 14:56 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/34c94553c33f57e6fe464825123bc656cf6d5422)*)
@@ -102,9 +111,9 @@
 > + migration gradle (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/fb597ae8d6ba69da6aa5f46ee40d28e7298e0a2e)*)
 > + Merge branch 'master' of https://gitlab.com/qaobee/qaobee-hive.git (*par [Christophe Kervella](ch.kervella@gmail.com) à 22:54 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/15a83e7d4d396a29a90a21268dd4ee4bdfa063e5)*)
 > + Scripts Mongo (*par [Christophe Kervella](ch.kervella@gmail.com) à 22:47 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ace0aabad16724c1c6f348bf8a56008102d00d3c)*)
-> + Migration Gradle + UserVerticle (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:40 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/38a43801d393594ea1b16f18266c995d9a0c6507)*)
 
 ## 2015-06-15
+> + Migration Gradle + UserVerticle (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:40 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/38a43801d393594ea1b16f18266c995d9a0c6507)*)
 > + Mgration Gradle + UserVerticle (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:11 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/264ca1e81297a51f604be28e78c5046a01b359be)*)
 > + Modele objet (*par [Christophe Kervella](cke@imac-ck7.home) à 23:59 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a0d268336340148d29bad3a8d1bc143b8a26df36)*)
 > + Modele objet (*par [Christophe Kervella](cke@imac-ck7.home) à 23:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/febaba284069cb7054fc6ac9983fad295f1aaa6f)*)
@@ -114,6 +123,3 @@
 > + APIDOC (*par [Christophe Kervella](cke@imac-ck7.home) à 23:08 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/9b99adfc407abfb119c08caa88becac7b1a3b74c)*)
 
 ## 2015-06-13
-
-## 2015-06-12
-> + Settings API (*par [Christophe Kervella](cke@imac-ck7.home) à 00:11 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/070f0c47f091dd888e9ef812df5b3d81de0bf5e9)*)
