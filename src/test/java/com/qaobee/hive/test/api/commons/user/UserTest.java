@@ -233,6 +233,9 @@ public class UserTest extends VertxJunitSupport {
     }
 
 
+    /**
+     * Gets metas with wrong user.
+     */
     @Test
     public void getMetasWithWrongUser() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES, SETTINGS_SEASONS);
