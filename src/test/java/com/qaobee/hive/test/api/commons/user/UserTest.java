@@ -232,26 +232,6 @@ public class UserTest extends VertxJunitSupport {
         }
     }
 
-    /**
-     * Gets metas with wrong country.
-     */
-    @Test
-    public void getMetasWithWrongCountry() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES, SETTINGS_SEASONS);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-        try {
-            mongo.save(user);
-            final RequestWrapper req = new RequestWrapper();
-            req.setLocale(LOCALE);
-            req.setMethod(Constantes.GET);
-            req.getParams().put(UserVerticle.PARAM_COUNTRY_ID, Collections.singletonList("Vulcain"));
-            final JsonObject result = new JsonObject(sendonBus(UserVerticle.META, req, user.getAccount().getToken()));
-            Assert.assertTrue("getMetasWithWrongCountry", result.getString("code").contains(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-    }
 
     @Test
     public void getMetasWithWrongUser() {
