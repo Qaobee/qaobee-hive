@@ -19,8 +19,19 @@
 
 package com.qaobee.hive.api.v1.sandbox.config;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.sandbox.config.SandBoxCfg;
+import com.qaobee.hive.business.model.sandbox.config.SandBox;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -30,15 +41,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The type Sand box cfg verticle.
@@ -49,15 +51,21 @@ public class SandBoxVerticle extends AbstractGuiceVerticle {
     /**
      * The constant GET.
      */
-    public static final String GET = Module.VERSION + ".commons.settings.sandboxCfg.get";
+    public static final String GET = Module.VERSION + ".sandbox.config.sandbox.get";
     /**
      * The constant GET_BY_OWNER.
      */
-    public static final String GET_BY_OWNER = Module.VERSION + ".commons.settings.sandboxCfg.getByOwner";
+    public static final String GET_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getByOwner";
     /**
      * The constant PARAM_ID.
      */
     public static final String PARAM_ID = "_id";
+    
+    /**
+     * The constant PARAM_ID.
+     */
+    public static final String PARAM_OWNER_ID = "owner";
+    
     /**
      * The constant PARAM_ACTIVITY_ID.
      */
@@ -88,37 +96,45 @@ public class SandBoxVerticle extends AbstractGuiceVerticle {
 
 
         /**
-         * @apiDescription Get list of SandBoxCfg by owner and activityId
-         * @api {get} /api/1/commons/settings/sandboxCfg/getByOwner Get list of SandBoxCfg by owner
-         * @apiName getSandBoxCfgByOwner
-         * @apiGroup SandBoxCfg API
-         * @apiParam {String} activityId SandBoxCfg activity id
-         * @apiParam {String} seasonId SandBoxCfg season id
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError NOT_LOGGED invalid token
-         * @apiError INVALID_PARAMETER wrong parameters
-         * @apiError INTERNAL_ERROR Generic error
-         */
+		 * @api {post} /api/v1/sandbox/config/sandbox/getByOwner
+		 * @apiVersion 0.1.0
+		 * @apiName getByOwner
+		 * @apiGroup SandBox API
+		 * @apiPermission all
+		 *
+		 * @apiDescription Retrieve the user's sandbox
+		 *
+		 * @apiParam {String} activityId Mandatory The sandBox activity.
+		 * 
+		 * @apiSuccess {sandBox}   sandBox    The sandBox updated.
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
         vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
+            	container.logger().info(GET_BY_OWNER+" - SandBox");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
                     Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_ACTIVITY_ID, PARAM_SEASON_ID);
+                    utils.testMandatoryParams(params, PARAM_ACTIVITY_ID);
 
                     CriteriaBuilder cb = new CriteriaBuilder();
-                    cb.add("structure.activity._id", params.get(PARAM_ACTIVITY_ID).get(0));
-                    cb.add("sandbox.owner", req.getUser().get_id());
-                    cb.add("season._id", params.get(PARAM_SEASON_ID).get(0));
-                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SandBoxCfg.class);
+
+                    cb.add(PARAM_OWNER_ID, req.getUser().get_id());
+                    cb.add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
+                    
+                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SandBox.class);
+                    
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBoxCfg defined for " + params.get(PARAM_ACTIVITY_ID));
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" +req.getUser().get_id() +" ,and activityId : "+ params.get(PARAM_ACTIVITY_ID));
                     }
                     JsonObject json = resultJson.get(0);
-                    container.logger().info("SandBoxCfg found : " + json.toString());
+                    container.logger().info("SandBox found : " + json.toString());
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
