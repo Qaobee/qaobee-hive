@@ -32,12 +32,11 @@
  */
 db.IndicatorCfg.remove({"activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA"});
 
-
 /* *******************
  * Characteristics of person
- ******************* */
+ */
 //Int Value
-db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "hightPerson",     "activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA", "indicatorType" : "PERS-CHARACTERISTIC", "listScreen" : [ "EFF-PLAYERSHEET" ],"description" : null,"listField" : [ {"name" : "code","type" : "STRING"}, {"name" : "timer","type" : "LONG"}, {"name" : "owner","type" : "STRING"}, {"name" : "producter","type" : "ARRAY"}, {"name" : "structureId","type" : "STRING"}, {"name" : "activityId","type" : "STRING"}, {"name" : "chunkKey","type" : "LONG"}, {"name" : "value","type" : "INT"} ]});
+db.IndicatorCfg.insert({"_id" : "559a9294889089a442f3d464" ,"code" : "hightPerson",     "activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA", "indicatorType" : "PERS-CHARACTERISTIC", "listScreen" : [ "EFF-PLAYERSHEET" ],"description" : null,"listField" : [ {"name" : "code","type" : "STRING"}, {"name" : "timer","type" : "LONG"}, {"name" : "owner","type" : "STRING"}, {"name" : "producter","type" : "ARRAY"}, {"name" : "structureId","type" : "STRING"}, {"name" : "activityId","type" : "STRING"}, {"name" : "chunkKey","type" : "LONG"}, {"name" : "value","type" : "INT"} ]});
 db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "weightPerson",    "activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA", "indicatorType" : "PERS-CHARACTERISTIC", "listScreen" : [ "EFF-PLAYERSHEET" ],"description" : null,"listField" : [ {"name" : "code","type" : "STRING"}, {"name" : "timer","type" : "LONG"}, {"name" : "owner","type" : "STRING"}, {"name" : "producter","type" : "ARRAY"}, {"name" : "structureId","type" : "STRING"}, {"name" : "activityId","type" : "STRING"}, {"name" : "chunkKey","type" : "LONG"}, {"name" : "value","type" : "INT"} ]});
 db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "attendance",      "activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA", "indicatorType" : "PERS-CHARACTERISTIC", "listScreen" : [ "EFF-PLAYERSHEET" ],"description" : null,"listField" : [ {"name" : "code","type" : "STRING"}, {"name" : "timer","type" : "LONG"}, {"name" : "owner","type" : "STRING"}, {"name" : "producter","type" : "ARRAY"}, {"name" : "structureId","type" : "STRING"}, {"name" : "activityId","type" : "STRING"}, {"name" : "chunkKey","type" : "LONG"}, {"name" : "eventId","type" : "STRING"}, {"name" : "value","type" : "INT"} ], "listValues" : [ 0, 1 ]});
 
@@ -49,7 +48,7 @@ db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "unavailabilit
 
 /* *******************
  * stat event person
- ******************* */
+ */
 //Int Value
 db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "2minutes",        "activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA", "indicatorType" : "PERS-SANCTION", "listScreen" : [ "COLLECTE", "EFF-PLAYERSHEET" ],"description" : null,"listField" : [ {"name" : "code","type" : "STRING"}, {"name" : "timer","type" : "LONG"}, {"name" : "owner","type" : "STRING"}, {"name" : "producter","type" : "ARRAY"}, {"name" : "structureId","type" : "STRING"}, {"name" : "activityId","type" : "STRING"}, {"name" : "chunkKey","type" : "LONG"}, {"name" : "eventId","type" : "STRING"}, {"name" : "chrono","type" : "LONG"},{"name" : "value","type" : "INT"} ]});
 db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "yellowCard",      "activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA", "indicatorType" : "PERS-SANCTION", "listScreen" : [ "COLLECTE", "EFF-PLAYERSHEET" ],"description" : null,"listField" : [ {"name" : "code","type" : "STRING"}, {"name" : "timer","type" : "LONG"}, {"name" : "owner","type" : "STRING"}, {"name" : "producter","type" : "ARRAY"}, {"name" : "structureId","type" : "STRING"}, {"name" : "activityId","type" : "STRING"}, {"name" : "chunkKey","type" : "LONG"}, {"name" : "eventId","type" : "STRING"}, {"name" : "chrono","type" : "LONG"},{"name" : "value","type" : "INT"} ]});
@@ -96,7 +95,7 @@ db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "originShootAt
 
 /* *******************
  * stat event team
- ******************* */
+ */
 //Int Value
 db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "defenseSysUs",      "activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA", "indicatorType" : "TEAM-INFO-GAME", "listScreen" : [ "COLLECTE", "CPT-TEAMSHEET" ],"description" : null,"listField" : [ {"name" : "code","type" : "STRING"}, {"name" : "timer","type" : "LONG"}, {"name" : "owner","type" : "STRING"}, {"name" : "producter","type" : "ARRAY"}, {"name" : "structureId","type" : "STRING"}, {"name" : "activityId","type" : "STRING"}, {"name" : "chunkKey","type" : "LONG"}, {"name" : "eventId","type" : "STRING"}, {"name" : "chrono","type" : "LONG"},{"name" : "value","type" : "STRING"} ], "listValues" : [ "0-6", "1-5", "2-4", "3-3", "1-2-3" ]});
 db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "defenseSystemThem", "activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA", "indicatorType" : "TEAM-INFO-GAME", "listScreen" : [ "COLLECTE", "CPT-TEAMSHEET" ],"description" : null,"listField" : [ {"name" : "code","type" : "STRING"}, {"name" : "timer","type" : "LONG"}, {"name" : "owner","type" : "STRING"}, {"name" : "producter","type" : "ARRAY"}, {"name" : "structureId","type" : "STRING"}, {"name" : "activityId","type" : "STRING"}, {"name" : "chunkKey","type" : "LONG"}, {"name" : "eventId","type" : "STRING"}, {"name" : "chrono","type" : "LONG"},{"name" : "value","type" : "STRING"} ], "listValues" : [ "0-6", "1-5", "2-4", "3-3", "1-2-3" ]});
@@ -107,5 +106,5 @@ db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "timeoutThem",
 
 /* *******************
  * stat event
- ******************* */
+ */
 db.IndicatorCfg.insert({"_id" : new ObjectId().valueOf(),"code" : "audience",        "activityId" : "ACT-HAND","countryId" : "CNTR-250-FR-FRA","listScreen" : [ "CPT-EVENTSHEET" ],"description" : null,"listField" : [ {"name" : "code","type" : "STRING"}, {"name" : "timer","type" : "LONG"}, {"name" : "owner","type" : "STRING"}, {"name" : "producter","type" : "ARRAY"}, {"name" : "structureId","type" : "STRING"}, {"name" : "activityId","type" : "STRING"}, {"name" : "chunkKey","type" : "LONG"}, {"name" : "eventId","type" : "STRING"}, {"name" : "chrono","type" : "LONG"},{"name" : "value","type" : "INT"} ]});

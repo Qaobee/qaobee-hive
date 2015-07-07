@@ -21,7 +21,7 @@ package com.qaobee.hive.api.v1.commons.settings;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.settings.Indicator;
+import com.qaobee.hive.business.model.commons.settings.IndicatorCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -76,10 +76,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * Indicator Screen
      */
     public static final String PARAM_SCREEN = "screen";
-    /**
-     * List of Indicator code
-     */
-    public static final String PARAM_INDICATOR_CODE = "listCodeIndicators";
+    
 
     /* Injections */
     @Inject
@@ -121,6 +118,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                     Map<String, List<String>> params = req.getParams();
 
                     utils.testMandatoryParams(params, PARAM_ID);
+                    utils.isUserLogged(req);
 
                     // Tests mandatory parameters
                     utils.testMandatoryParams(params, PARAM_ID);
@@ -128,7 +126,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                         throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
                     }
 
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Indicator.class);
+                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), IndicatorCfg.class);
 
                     container.logger().info("Indicator found : " + json.toString());
 
@@ -180,6 +178,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     JsonObject params = new JsonObject(req.getBody());
                     utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN);
+                    utils.isUserLogged(req);
 
                     // Indicator code
                     String activityId = params.getString(PARAM_ACTIVITY_ID);
@@ -222,7 +221,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
 
                     List<DBObject> pipelineAggregation = Arrays.asList(match, project);
 
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Indicator.class);
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
 
                     container.logger().info(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
@@ -233,6 +232,9 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                 } catch (final IllegalArgumentException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
                 }
             }
 

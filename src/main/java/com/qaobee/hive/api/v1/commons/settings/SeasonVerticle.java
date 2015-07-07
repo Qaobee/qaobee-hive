@@ -123,6 +123,8 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     Map<String, List<String>> params = req.getParams();
                     utils.testMandatoryParams(params, PARAM_ID);
+                    utils.isUserLogged(req);
+                    
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Season.class);
                     container.logger().info("Season found : " + json.toString());
                     message.reply(json.encode());
@@ -165,6 +167,8 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                     // Tests on method and parameters
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID);
+                    utils.isUserLogged(req);
+                    
                     // Activity ID
                     String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
                     // Country ID
@@ -220,6 +224,8 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                     // Tests on method and parameters
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID);
+                    utils.isUserLogged(req);
+                    
                     // Activity ID
                     String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
                     // Country ID
