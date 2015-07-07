@@ -22,8 +22,8 @@ package com.qaobee.hive.api.v1.commons.users;
 import com.englishtown.promises.Promise;
 import com.englishtown.promises.Runnable;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
+import com.qaobee.hive.api.v1.sandbox.config.SandBoxCfgVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -493,7 +493,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @api {get} /api/1/commons/user/meta?country= Fetch meta information
          * @apiVersion 0.1.0
          * @apiName getMetasHandler
-         * @apiParam country Country Id (ie "CNTR-250-FR-FRA")
          * @apiGroup User API
          * @apiHeader {String} token
          * @apiError HTTP_ERROR wrong request method
@@ -506,39 +505,36 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     User u = utils.isUserLogged(req);
-                    utils.testMandatoryParams(req.getParams(), PARAM_COUNTRY_ID);
                     JsonObject user = mongo.getById(u.get_id(), User.class);
                     final JsonObject activity = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("activity");
 
-                    req.getParams().put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
-                    req.getParams().put(SeasonVerticle.PARAM_COUNTRY_ID, Collections.singletonList(req.getParams().get(PARAM_COUNTRY_ID).get(0)));
-                    whenEventBus.send(SeasonVerticle.GET_CURRENT, Json.encode(req)).then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
-                        @Override
-                        public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
-                            if (objectMessage.body() instanceof ReplyException) {
-                                utils.sendError(message, (ReplyException) objectMessage.body());
-                            } else {
-                                final JsonObject season = new JsonObject((String) objectMessage.body());
-                                req.getParams().put(SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
-                                req.getParams().put(SandBoxVerticle.PARAM_SEASON_ID, Collections.singletonList(season.getString("_id")));
-                                whenEventBus.send(SandBoxVerticle.GET_BY_OWNER, Json.encode(req))
-                                        .then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
+                    req.getParams().put(SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
+                    whenEventBus.send(SandBoxVerticle.GET_BY_OWNER, Json.encode(req))
+                            .then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
+                                @Override
+                                public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
+                                    if (objectMessage.body() instanceof ReplyException) {
+                                        utils.sendError(message, (ReplyException) objectMessage.body());
+                                    } else {
+                                        JsonObject sandbox = new JsonObject((String) objectMessage.body());
+                                        req.getParams().put(SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(sandbox.getString("sandboxCfgId")));
+                                        whenEventBus.send(SandBoxCfgVerticle.GET, Json.encode(req)).then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
                                             @Override
-                                            public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
+                                            public Promise<Message<Object>, Void> run(Message objectMessage) {
                                                 if (objectMessage.body() instanceof ReplyException) {
                                                     utils.sendError(message, (ReplyException) objectMessage.body());
                                                 } else {
-                                                    JsonObject sandbox = new JsonObject((String) objectMessage.body());
-                                                    sandbox.putObject("activity", activity);
-                                                    message.reply(sandbox.encode());
+                                                    message.reply((String) objectMessage.body());
                                                 }
                                                 return null;
                                             }
                                         });
-                            }
-                            return null;
-                        }
-                    });
+
+                                    }
+                                    return null;
+                                }
+                            });
+
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
