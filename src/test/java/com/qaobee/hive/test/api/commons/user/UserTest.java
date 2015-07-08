@@ -185,7 +185,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetas() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES, SETTINGS_SEASONS);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
@@ -216,7 +216,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetasWithWrongHTTPMethod() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES, SETTINGS_SEASONS);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
@@ -238,7 +238,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetasWithWrongUser() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES, SETTINGS_SEASONS);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = generateLoggedUser();
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
@@ -382,7 +382,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetasNotLogged() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND);
         User user = generateUser();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -396,7 +396,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetasWrongHTTPMethod() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND);
         User user = generateUser();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);

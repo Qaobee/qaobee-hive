@@ -96,7 +96,7 @@ db.Structure.insert({
 
 db.Structure.insert({
     "_id" : "541168295971d35c1f2d1b60",
-    "label" : "Club Demo football",
+    "label" : "France A",
     "acronym" : "CAFB",
     "activity" : {
         "_id" : "ACT-FOOT",
@@ -124,7 +124,7 @@ db.Structure.insert({
 
 db.Structure.insert({
     "_id" : "541168295971d35c1f2d1b61",
-    "label" : "Club B-football",
+    "label" : "Club Demo Foot",
     "acronym" : "CBFB",
     "activity" : {
         "_id" : "ACT-FOOT",

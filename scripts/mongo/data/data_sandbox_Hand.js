@@ -206,3 +206,16 @@ db.SandBoxCfg.insert({
     },
     "teams": []
 });
+
+/***************************************************************
+ * Alimentation SandBox Jeu de test pour user ayant pls sandbox
+ * *************************************************************
+ */
+db.SandBox.remove({"_id": "559d2d3018e3cb71c60d964c"});
+
+db.SandBox.insert({
+    "_id": "559d2d3018e3cb71c60d964c",
+    "activityId": "ACT-HAND",
+    "owner": "54160977d5bd065a1bb1e565",
+    "sandboxCfgId": "bidon"
+});

@@ -31,7 +31,8 @@ public interface JSDataMongoTest {
     String DATA_STATS_MATCH = "data_stats_match.js";
     String DATA_STRUCTURE = "data_structures.js";
     String DATA_USERS = "data_users.js";
-    String DATA_SANDBOXES = "data_sandbox_Hand.js";
+    String DATA_SANDBOXES_HAND = "data_sandbox_Hand.js";
+    String DATA_SANDBOXES_FOOT = "data_sandbox_Foot.js";
 
     /* Training */
     String DATA_CYCLE = "data_training_cycle.js";

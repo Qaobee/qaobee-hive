@@ -18,19 +18,43 @@
  */
 package com.qaobee.hive.technical.mongo.impl;
 
-import com.mongodb.*;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
+
+import javax.net.ssl.SSLSocketFactory;
+
 import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
+import org.vertx.java.platform.Container;
 
-import javax.net.ssl.SSLSocketFactory;
-import java.net.UnknownHostException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
+import com.mongodb.MongoException;
+import com.mongodb.ReadPreference;
+import com.mongodb.ServerAddress;
+import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.test.config.VertxJunitSupport;
 
 /**
  * The Class MongoDB.
@@ -38,6 +62,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author xavier
  */
 public class MongoDBImpl implements MongoDB {
+	
+	/**
+     * The Constant LOG.
+     */
+    protected static final Logger LOG = Logger.getLogger(MongoDBImpl.class.getName());
 
     /**
      * The db.
@@ -356,6 +385,9 @@ public class MongoDBImpl implements MongoDB {
             }
             query = new BasicDBObject("$and", and);
         }
+        
+        LOG.info("findByCriterias -> Query : " + query.toString());
+        
         DBCursor res;
         if (fields != null) {
             res = coll.find(query, new BasicDBObject(getMinimal(fields)));

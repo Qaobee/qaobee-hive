@@ -54,6 +54,12 @@ public class SandBoxVerticle extends AbstractGuiceVerticle {
      * The constant GET_BY_OWNER.
      */
     public static final String GET_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getByOwner";
+    
+    /**
+     * The constant GET_BY_OWNER.
+     */
+    public static final String GET_LIST_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getListByOwner";
+    
     /**
      * The constant PARAM_ID.
      */
@@ -134,6 +140,65 @@ public class SandBoxVerticle extends AbstractGuiceVerticle {
                     JsonObject json = resultJson.get(0);
                     container.logger().info("SandBox found : " + json.toString());
                     message.reply(json.encode());
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
+        
+        /**
+		 * @api {post} /api/v1/sandbox/config/sandbox/getListByOwner
+		 * @apiVersion 0.1.0
+		 * @apiName getListByOwner
+		 * @apiGroup SandBox API
+		 * @apiPermission all
+		 *
+		 * @apiDescription Retrieve the user's sandbox
+		 *
+		 * @apiParam {String} activityId Mandatory The sandBox activity.
+		 * 
+		 * @apiSuccess {sandBox}   sandBox    The sandBox updated.
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+        vertx.eventBus().registerHandler(GET_LIST_BY_OWNER, new Handler<Message<String>>() {
+            @Override
+            public void handle(Message<String> message) {
+            	container.logger().info(GET_LIST_BY_OWNER+" - SandBox");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
+                    
+                    CriteriaBuilder cb = new CriteriaBuilder();
+
+                    cb.add(PARAM_OWNER_ID, req.getUser().get_id());
+                    
+                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SandBox.class);
+                    
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" +req.getUser().get_id());
+                    }
+                    
+                    for (int i = 0; i < resultJson.size(); i++) {
+                    	JsonObject json = resultJson.get(i);
+                        container.logger().info("SandBox found : " + json.toString());
+					}
+                    
+                    message.reply(resultJson.encode());
+                    
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());

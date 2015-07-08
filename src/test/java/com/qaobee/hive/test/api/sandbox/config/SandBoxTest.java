@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
@@ -46,7 +47,7 @@ public class SandBoxTest extends VertxJunitSupport {
     @Test
     public void getSandBoxByOwnerOk() {
 
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -101,7 +102,7 @@ public class SandBoxTest extends VertxJunitSupport {
     @Test
     public void getSandBoxByOwnerBadUser() {
 
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -126,7 +127,7 @@ public class SandBoxTest extends VertxJunitSupport {
     @Test
     public void getSandBoxByOwnerBadActivity() {
 
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -142,6 +143,24 @@ public class SandBoxTest extends VertxJunitSupport {
         JsonObject result = new JsonObject(reply);
         
         Assert.assertTrue("SandBox not found", result.getString("message").contains("No SandBox found for user id"));
+
+    }
+    
+    /**
+     * Retrieve list of sand box for one owner.
+     */
+    @Test
+    public void getListSandBoxByOwnerOk() {
+
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_FOOT, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
+        User user = generateLoggedUser("54160977d5bd065a1bb1e565");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
+
+        final String reply = sendonBus(SandBoxVerticle.GET_LIST_BY_OWNER, req, user.getAccount().getToken());
+        Assert.assertEquals(2, new JsonArray(reply).size());
 
     }
 

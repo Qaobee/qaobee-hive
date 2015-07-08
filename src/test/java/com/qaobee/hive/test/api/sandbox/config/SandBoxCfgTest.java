@@ -49,7 +49,7 @@ public class SandBoxCfgTest extends VertxJunitSupport {
         // SandBoxCfg._id
         String id = "558b0fc0bd2e39cdab651e21";
 
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -72,7 +72,7 @@ public class SandBoxCfgTest extends VertxJunitSupport {
     @Test
     public void retrieveSandBoxConfigBySandBoxId() {
 
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES, SETTINGS_SEASONS);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
 
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
