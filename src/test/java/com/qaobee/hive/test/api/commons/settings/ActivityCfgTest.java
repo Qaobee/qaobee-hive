@@ -29,11 +29,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * The type Activity cfg test.
  */
@@ -51,11 +46,9 @@ public class ActivityCfgTest extends VertxJunitSupport {
         req.setUser(user);
         req.setMethod(Constantes.POST);
 
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("ACT-HAND"));
-        req.setParams(params);
+        JsonObject body = new JsonObject();
+        body.putString(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+        req.setBody(body.toString());
 
         final String reply = sendonBus(ActivityCfgVerticle.GET, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
@@ -75,11 +68,9 @@ public class ActivityCfgTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setUser(user);
         req.setMethod(Constantes.GET);
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("ACT-HAND"));
-        req.setParams(params);
+        JsonObject body = new JsonObject();
+        body.putString(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+        req.setBody(body.toString());
         final String reply = sendonBus(ActivityCfgVerticle.GET, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("getWithWrongHttpMethodTest", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
@@ -98,7 +89,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
         req.setMethod(Constantes.POST);
         final String reply = sendonBus(ActivityCfgVerticle.GET, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
-        Assert.assertTrue("getWithoutParameterTest", result.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
+        Assert.assertTrue("getWithoutParameterTest", result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
@@ -112,11 +103,9 @@ public class ActivityCfgTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setUser(user);
         req.setMethod(Constantes.POST);
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("123"));
-        req.setParams(params);
+        JsonObject body = new JsonObject();
+        body.putString(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "123");
+        req.setBody(body.toString());
         final String reply = sendonBus(ActivityCfgVerticle.GET, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
         System.out.println(reply);

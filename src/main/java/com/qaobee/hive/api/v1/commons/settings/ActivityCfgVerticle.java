@@ -87,8 +87,9 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
+
+                    utils.testMandatoryParams(req.getBody(), PARAM_ACTIVITY_ID);
                     JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY_ID);
                     JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("activityId", params.getString(PARAM_ACTIVITY_ID)).get(), null, null, -1, -1, ActivityCfg.class);
                     if(res.size() ==0) {
                         QaobeeException e = new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No result for " + params.getString(PARAM_ACTIVITY_ID));
