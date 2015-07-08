@@ -19,7 +19,6 @@
 
 package com.qaobee.hive.api.v1.sandbox.effective;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +33,6 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.effective.Effective;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -61,11 +58,6 @@ public class EffectiveVerticle extends AbstractGuiceVerticle {
     public static final String GET_LIST = Module.VERSION + ".sandbox.effective.effective.getList";
     
     /**
-     * The constant GET_LIST_MEMBER_BY_ROLE.
-     */
-    public static final String GET_LIST_MEMBER_BY_ROLE = Module.VERSION + ".sandbox.effective.effective.getListMemberByRole";
-    
-    /**
      * The constant ADD.
      */
     public static final String ADD = Module.VERSION + ".sandbox.effective.effective.add";
@@ -85,7 +77,7 @@ public class EffectiveVerticle extends AbstractGuiceVerticle {
 	public static final String PARAM_SANDBOXCFG_ID = "sandBoxCfgId";
 	
 	/** Category Age Code */
-	public static final String PARAM_CATEGORY_AGE_CODE = "categoryAgeCode";
+	public static final String PARAM_CATEGORY_AGE_CODE = "categoryAge.code";
 	
 	/** Role of member */
 	public static final String PARAM_ROLE_MEMBER = "members.role.code";
@@ -123,7 +115,7 @@ public class EffectiveVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("get() - Effective");
+                container.logger().info(GET + " - Effective");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -174,7 +166,7 @@ public class EffectiveVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getList() - Effective");
+                container.logger().info(GET_LIST +" - Effective");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters
@@ -210,89 +202,6 @@ public class EffectiveVerticle extends AbstractGuiceVerticle {
                 }
             }
         });
-        
-        /**
-		 * @api {post} /api/v1/sandbox/effective/effective/getListMembersByRole
-		 * @apiVersion 0.1.0
-		 * @apiName getListMembersByRole
-		 * @apiGroup Effective API
-		 * @apiPermission all
-		 *
-		 * @apiDescription Retrieve the member's effective for one role
-		 *
-		 * @apiParam {String} sandBoxCfgId Mandatory The sandBox config Id.
-		 * @apiParam {String} role Mandatory The role of members of the effective.
-		 * @apiParam {String} categoryCode Optional The category Code of the effective. 
-		 * 
-		 * @apiSuccess {list}   Members    The members for one role.
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-        vertx.eventBus().registerHandler(GET_LIST_MEMBER_BY_ROLE, new Handler<Message<String>>() {
-        	
-			@Override
-			public void handle(final Message<String> message) {
-				container.logger().info("getListMemberByRole() - Effective");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.POST, req.getMethod());
-					JsonObject params = new JsonObject(req.getBody());
-					utils.testMandatoryParams(params.toMap(), PARAM_SANDBOXCFG_ID, PARAM_ROLE_MEMBER);
-					utils.isUserLogged(req);
-
-					/*
-					 * Construction de la requete
-					 */
-					DBObject match, project;
-					BasicDBObject dbObjectParent;
-
-					// $MATCH section
-					dbObjectParent = new BasicDBObject();
-
-					dbObjectParent.put(PARAM_SANDBOXCFG_ID, params.getString(PARAM_SANDBOXCFG_ID));
-					dbObjectParent.put(PARAM_ROLE_MEMBER, params.getString(PARAM_ROLE_MEMBER));
-					
-					if(params.getString(PARAM_CATEGORY_AGE_CODE)!=null && !StringUtils.isBlank(params.getString(PARAM_CATEGORY_AGE_CODE)))
-					{
-						dbObjectParent.put(PARAM_CATEGORY_AGE_CODE, params.getString(PARAM_CATEGORY_AGE_CODE));
-					}
-
-					match = new BasicDBObject("$match", dbObjectParent);
-
-					/* *** $PROJECT section *** */
-					dbObjectParent = new BasicDBObject();
-					dbObjectParent.put("members", "$members");
-
-					project = new BasicDBObject("$project", dbObjectParent);
-
-					List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-					container.logger().info("getListMemberByRole : " + pipelineAggregation.toString());
-
-					final JsonArray resultJson = mongo.aggregate(null, pipelineAggregation, Effective.class);
-					
-					if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No Member Effective found "
-                        		+ "for ( sandBoxCfgId : " + params.getString(PARAM_SANDBOXCFG_ID) + params.getString(PARAM_CATEGORY_AGE_CODE)!=null?" "
-                        				+ "and for category : "+params.getString(PARAM_CATEGORY_AGE_CODE)+")":")");
-                    }
-
-					container.logger().info(resultJson.encodePrettily());
-					message.reply(resultJson.encode());
-
-				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-			}
-		});
         
         /**
 		 * @api {post} /api/v1/sandbox/effective/effective/update
