@@ -291,10 +291,8 @@ public class EventVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
-                    JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_CATEGORY, PARAM_SEASON_CODE, PARAM_OWNER, PARAM_START_DATE);
-                    JsonObject event = params.getObject("event");
-
+                    JsonObject event = new JsonObject(req.getBody());
+                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_CATEGORY, PARAM_SEASON_CODE, PARAM_OWNER, PARAM_START_DATE);
                     final String id = mongo.save(event, Event.class);
                     event.putString("_id", id);
 
