@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
+import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.api.v1.sandbox.effective.EffectiveVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -104,5 +105,58 @@ public class EffectiveTest extends VertxJunitSupport {
 		members = itemTwo.getArray("members");
 
 		Assert.assertEquals(23, members.size());
+	}
+	
+	/**
+	 * Tests get for EffectiveVerticle
+	 */
+	@Test
+	public void getObjectByIdOk() {
+
+		populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
+
+		final Map<String, List<String>> params = new HashMap<>();
+		
+		// id
+		params.put(EffectiveVerticle.PARAM_ID, Collections.singletonList("550b31f925da07681592db23"));
+		req.setParams(params);
+
+		final String reply = sendonBus(EffectiveVerticle.GET, req, user.getAccount().getToken());
+		JsonObject result = new JsonObject(reply);
+
+		JsonArray members = result.getArray("members");
+		Assert.assertEquals(16, members.size());
+	}
+	
+	/**
+	 * Tests get for CountryVerticle
+	 * with missing mandatory fields
+	 */
+	@Test
+	public void getObjectByIdKo() {
+
+		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
+
+		final Map<String, List<String>> params = new HashMap<>();
+		
+		JsonObject resultUpdate = new JsonObject(sendonBus(EffectiveVerticle.GET, req, user.getAccount().getToken()));
+		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+		
+		// id
+		params.put(CountryVerticle.PARAM_ID, Collections.singletonList(""));
+		req.setParams(params);
+		
+		resultUpdate = new JsonObject(sendonBus(EffectiveVerticle.GET, req, user.getAccount().getToken()));
+		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+
 	}
 }
