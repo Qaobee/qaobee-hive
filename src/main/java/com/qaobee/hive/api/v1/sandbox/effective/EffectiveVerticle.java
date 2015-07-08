@@ -19,17 +19,79 @@
 
 package com.qaobee.hive.api.v1.sandbox.effective;
 
-import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.business.model.sandbox.effective.Effective;
+import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
+
 @DeployableVerticle(isWorker = true)
 public class EffectiveVerticle extends AbstractGuiceVerticle {
-    public static final String GET = Module.VERSION + ".xxx";
+   
+	/**
+     * The constant GET.
+     */
+    public static final String GET = Module.VERSION + ".sandbox.effective.effective.get";
+    
+    /**
+     * The constant GET_LIST.
+     */
+    public static final String GET_LIST = Module.VERSION + ".sandbox.effective.effective.getList";
+    
+    /**
+     * The constant GET_LIST_MEMBER_BY_ROLE.
+     */
+    public static final String GET_LIST_MEMBER_BY_ROLE = Module.VERSION + ".sandbox.effective.effective.getListMemberByRole";
+    
+    /**
+     * The constant ADD.
+     */
+    public static final String ADD = Module.VERSION + ".sandbox.effective.effective.add";
+    
+    /**
+     * The constant update.
+     */
+    public static final String UPDATE = Module.VERSION + ".sandbox.effective.effective.update";
+    
+    
+    /**
+     * The constant PARAM_ID.
+     */
+    public static final String PARAM_ID = "_id";
+    
+    /** Sandbox config id */
+	public static final String PARAM_SANDBOXCFG_ID = "sandBoxCfgId";
+	
+	/** Category Age Code */
+	public static final String PARAM_CATEGORY_AGE_CODE = "categoryAgeCode";
+	
+	/** Role of member */
+	public static final String PARAM_ROLE_MEMBER = "members.role.code";
+	
+
+	
     @Inject
     private MongoDB mongo;
     @Inject
@@ -39,7 +101,289 @@ public class EffectiveVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         container.logger().debug(this.getClass().getName() + " started");
+        
+        /**
+		 * @api {post} /api/v1/sandbox/effective/effective/get
+		 * @apiVersion 0.1.0
+		 * @apiName get
+		 * @apiGroup Effective API
+		 * @apiPermission all
+		 *
+		 * @apiDescription Retrieve the effective by id
+		 *
+		 * @apiParam {String} id Mandatory The effective Id.
+		 * 
+		 * @apiSuccess {Effective}   effective    The effective found.
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
 
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("get() - Effective");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_ID);
+                    utils.isUserLogged(req);
+                    
+                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Effective.class);
+                    container.logger().info("Effective found : " + json.toString());
+                    
+                    message.reply(json.encode());
+                    
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
 
+        /**
+         * @api {get} /api/v1/commons/effective/effective/getList 
+         * @apiVersion 0.1.0
+         * @apiName getList
+         * @apiGroup Effective API
+         * @apiPermission all
+         *
+         * @apiDescription get a list of effectives for one sandbox Config id
+         *
+         * @apiParam {String} sandBoxCfgOd Mandatory The sandBox config Id.
+         * @apiParam {String} categoryCode Optional The category code of the effective.
+         *
+         * @apiSuccess {List}   effectives            The list of effectives found.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
+
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("getList() - Effective");
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    // Tests on method and parameters
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_SANDBOXCFG_ID);
+                    utils.isUserLogged(req);
+                    
+                    Map<String, Object> criterias = new HashMap<String, Object>();
+                    criterias.put(PARAM_SANDBOXCFG_ID, params.get(PARAM_SANDBOXCFG_ID).get(0));
+                    
+                    // category code
+                    String code = null;
+                    if (params.get(PARAM_CATEGORY_AGE_CODE) != null && !StringUtils.isBlank(params.get(PARAM_CATEGORY_AGE_CODE).get(0))) {
+                    	code = params.get(PARAM_CATEGORY_AGE_CODE).get(0);
+                    	criterias.put(PARAM_CATEGORY_AGE_CODE, code);
+                    } 
+                    
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Effective.class);
+
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No Effective found "
+                        		+ "for ( sandBoxCfgId : " + params.get(PARAM_SANDBOXCFG_ID).get(0) + code!=null?"and for category : "+code+")":")");
+                    }
+
+                    message.reply(resultJson.encode());
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        });
+        
+        /**
+		 * @api {post} /api/v1/sandbox/effective/effective/getListMembersByRole
+		 * @apiVersion 0.1.0
+		 * @apiName getListMembersByRole
+		 * @apiGroup Effective API
+		 * @apiPermission all
+		 *
+		 * @apiDescription Retrieve the member's effective for one role
+		 *
+		 * @apiParam {String} sandBoxCfgId Mandatory The sandBox config Id.
+		 * @apiParam {String} role Mandatory The role of members of the effective.
+		 * @apiParam {String} categoryCode Optional The category Code of the effective. 
+		 * 
+		 * @apiSuccess {list}   Members    The members for one role.
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+        vertx.eventBus().registerHandler(GET_LIST_MEMBER_BY_ROLE, new Handler<Message<String>>() {
+        	
+			@Override
+			public void handle(final Message<String> message) {
+				container.logger().info("getListMemberByRole() - Effective");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.POST, req.getMethod());
+					JsonObject params = new JsonObject(req.getBody());
+					utils.testMandatoryParams(params.toMap(), PARAM_SANDBOXCFG_ID, PARAM_ROLE_MEMBER);
+					utils.isUserLogged(req);
+
+					/*
+					 * Construction de la requete
+					 */
+					DBObject match, project;
+					BasicDBObject dbObjectParent;
+
+					// $MATCH section
+					dbObjectParent = new BasicDBObject();
+
+					dbObjectParent.put(PARAM_SANDBOXCFG_ID, params.getString(PARAM_SANDBOXCFG_ID));
+					dbObjectParent.put(PARAM_ROLE_MEMBER, params.getString(PARAM_ROLE_MEMBER));
+					
+					if(params.getString(PARAM_CATEGORY_AGE_CODE)!=null && !StringUtils.isBlank(params.getString(PARAM_CATEGORY_AGE_CODE)))
+					{
+						dbObjectParent.put(PARAM_CATEGORY_AGE_CODE, params.getString(PARAM_CATEGORY_AGE_CODE));
+					}
+
+					match = new BasicDBObject("$match", dbObjectParent);
+
+					/* *** $PROJECT section *** */
+					dbObjectParent = new BasicDBObject();
+					dbObjectParent.put("members", "$members");
+
+					project = new BasicDBObject("$project", dbObjectParent);
+
+					List<DBObject> pipelineAggregation = Arrays.asList(match, project);
+					container.logger().info("getListMemberByRole : " + pipelineAggregation.toString());
+
+					final JsonArray resultJson = mongo.aggregate(null, pipelineAggregation, Effective.class);
+					
+					if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No Member Effective found "
+                        		+ "for ( sandBoxCfgId : " + params.getString(PARAM_SANDBOXCFG_ID) + params.getString(PARAM_CATEGORY_AGE_CODE)!=null?" "
+                        				+ "and for category : "+params.getString(PARAM_CATEGORY_AGE_CODE)+")":")");
+                    }
+
+					container.logger().info(resultJson.encodePrettily());
+					message.reply(resultJson.encode());
+
+				} catch (final NoSuchMethodException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final IllegalArgumentException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+				} catch (final QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+			}
+		});
+        
+        /**
+		 * @api {post} /api/v1/sandbox/effective/effective/update
+		 * @apiVersion 0.1.0
+		 * @apiName update
+		 * @apiGroup Effective API
+		 * @apiPermission all
+		 *
+		 * @apiDescription Update one effective
+		 *
+		 * @apiParam {Effective} effective Mandatory The effective to update.
+		 * 
+		 * @apiSuccess {Effective}   effective    The effective updated.
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+        vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
+		
+			@Override
+			public void handle(final Message<String> message) {
+				container.logger().info(UPDATE + " - Effective");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.PUT, req.getMethod());
+					final JsonObject json = new JsonObject(req.getBody());
+					utils.isUserLogged(req);
+					
+					final String id = mongo.update(json, Effective.class);
+					json.putString("_id", id);
+					
+					message.reply(json.encode());
+					
+				} catch (final NoSuchMethodException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final EncodeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+				} catch (final QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+			}
+		});
+        
+        /**
+		 * @api {post} /api/v1/sandbox/effective/effective/add
+		 * @apiVersion 0.1.0
+		 * @apiName add
+		 * @apiGroup Effective API
+		 * @apiPermission all
+		 *
+		 * @apiDescription Update one effective
+		 *
+		 * @apiParam {Effective} effective Mandatory The effective to add.
+		 * 
+		 * @apiSuccess {Effective}   effective    The effective added.
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
+		
+			@Override
+			public void handle(final Message<String> message) {
+				container.logger().info(ADD + " - Effective");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.PUT, req.getMethod());
+					final JsonObject json = new JsonObject(req.getBody());
+					utils.isUserLogged(req);
+					
+					final String id = mongo.save(json, Effective.class);
+					json.putString("_id", id);
+					
+					message.reply(json.encode());
+					
+				} catch (final NoSuchMethodException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final EncodeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+				} catch (final QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+			}
+		});
     }
 }

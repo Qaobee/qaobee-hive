@@ -30,11 +30,11 @@
  */
 //////////////////////////////////////////////////////////
 /*
- * Vidage de la collection SandBoxCfg cesson handball
+ * Vidage de la collection SandBoxCfg France A
  */
 db.SandBoxCfg.remove({"_id": "559d268318e3cb71c60d9649"});
 /*
- * Vidage de la collection SandBox cesson handball
+ * Vidage de la collection SandBox France A
  */
 db.SandBox.remove({"_id": "559d266a18e3cb71c60d9648"});
 

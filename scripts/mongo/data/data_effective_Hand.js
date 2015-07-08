@@ -63,7 +63,9 @@ db.Effective.insert({
                  { "personId": "5509f71adb8f8b6e2f51f4d5","role" : {"code": "player", "label": "Joueur"}},
                  { "personId": "5509f71adb8f8b6e2f51f4d6","role" : {"code": "player", "label": "Joueur"}},
                  { "personId": "5509f71adb8f8b6e2f51f4d7","role" : {"code": "player", "label": "Joueur"}},
-                 { "personId": "550a02acdb8f8b6e2f51f4da","role" : {"code": "player", "label": "Joueur"}}
+                 { "personId": "550a02acdb8f8b6e2f51f4da","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "54160977d5bd065a1bb1e563","role" : {"code": "coach", "label": "Coach"}},
+                 { "personId": "54160977d5bd065a1bb1e564","role" : {"code": "acoach", "label": "Coach Adjoint"}}
     ]
 });
 
@@ -101,6 +103,8 @@ db.Effective.insert({
                  { "personId": "550a0620db8f8b6e2f51f4e5","role" : {"code": "player", "label": "Joueur"}},
                  { "personId": "550a0620db8f8b6e2f51f4e6","role" : {"code": "player", "label": "Joueur"}},
                  { "personId": "550a0620db8f8b6e2f51f4e7","role" : {"code": "player", "label": "Joueur"}},
-                 { "personId": "550a0620db8f8b6e2f51f4e8","role" : {"code": "player", "label": "Joueur"}}
+                 { "personId": "550a0620db8f8b6e2f51f4e8","role" : {"code": "player", "label": "Joueur"}},
+                 { "personId": "5509ef1fdb8f8b6e2f51f4ce","role" : {"code": "coach", "label": "Coach"}},
+                 { "personId": "5509ef1fdb8f8b6e2f51f4cf","role" : {"code": "acoach", "label": "Coach Adjoint"}}
     ]
 });
