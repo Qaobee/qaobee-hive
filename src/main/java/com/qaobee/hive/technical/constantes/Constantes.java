@@ -26,7 +26,7 @@ package com.qaobee.hive.technical.constantes;
 public final class Constantes {
 
 	/** The Constant TIMEOUT. */
-	public static final long TIMEOUT = 30000L;
+	public static final long TIMEOUT = 10000L;
 
 	/** The Constant DEFAULT_SESSION_TIMEOUT. */
 	public static final long DEFAULT_SESSION_TIMEOUT = 30 * 60 * 1000;
