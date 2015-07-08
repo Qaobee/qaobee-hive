@@ -156,7 +156,7 @@ public class EventVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} endDate end date
          * @apiParam {String} link.type Link type
          * @apiParam {String} activityId Activity Id
-         * @apiParam {String} owner Owner
+         * @apiParam {Array} owner Owner
          * @apiHeader {String} token
          * @apiSuccess {Array} list of events
          * @apiError HTTP_ERROR Bad request
@@ -262,6 +262,9 @@ public class EventVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (Exception  e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         };
@@ -310,6 +313,9 @@ public class EventVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                } catch (final Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         };
@@ -344,12 +350,15 @@ public class EventVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (final Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         };
 
 		/*
-		 * Handlers declaration.
+         * Handlers declaration.
 		 */
         vertx.eventBus().registerHandler(GET_LIST, getListEventHandler);
         vertx.eventBus().registerHandler(GET, getEventHandler);

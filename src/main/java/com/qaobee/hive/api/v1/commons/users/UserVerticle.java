@@ -94,10 +94,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
      */
     public static final String META = Module.VERSION + ".commons.user.meta";
     /**
-     * The constant SEASONS_INFO.
-     */
-    public static final String SEASONS_INFO = Module.VERSION + ".commons.user.season";
-    /**
      * The Constant USER_INFO
      */
     public static final String USER_INFO = Module.VERSION + ".commons.user.user";
@@ -623,6 +619,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         final User user = Json.decodeValue(jsonPerson.encode(), User.class);
                         user.getAccount().setToken(UUID.randomUUID().toString());
                         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                        mongo.save(user);
                         String result = Json.encode(user);
                         container.logger().debug(result);
                         message.reply(result);
