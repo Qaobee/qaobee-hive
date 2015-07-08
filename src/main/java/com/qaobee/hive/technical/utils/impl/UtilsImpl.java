@@ -272,6 +272,9 @@ public class UtilsImpl implements Utils {
      */
     @Override
     public void testMandatoryParams(String body, final String... fields) throws IllegalArgumentException {
+        if (null == body) {
+            body = "{}";
+        }
         testMandatoryParams(new JsonObject(body).toMap(), fields);
     }
 
