@@ -137,9 +137,6 @@ public class EffectiveVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -189,13 +186,16 @@ public class EffectiveVerticle extends AbstractGuiceVerticle {
 
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No Effective found "
-                        		+ "for ( sandBoxCfgId : " + params.get(PARAM_SANDBOXCFG_ID).get(0) + code!=null?"and for category : "+code+")":")");
+                        		+ "for ( sandBoxCfgId : " + params.get(PARAM_SANDBOXCFG_ID).get(0) + " " +(code!=null?"and for category : "+code+")":")"));
                     }
 
                     message.reply(resultJson.encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (final QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -228,8 +228,8 @@ public class EffectiveVerticle extends AbstractGuiceVerticle {
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.PUT, req.getMethod());
-					final JsonObject json = new JsonObject(req.getBody());
 					utils.isUserLogged(req);
+					final JsonObject json = new JsonObject(req.getBody());
 					
 					final String id = mongo.update(json, Effective.class);
 					json.putString("_id", id);
