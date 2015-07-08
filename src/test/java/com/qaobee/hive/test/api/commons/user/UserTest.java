@@ -374,7 +374,7 @@ public class UserTest extends VertxJunitSupport {
         Assert.assertEquals(u.getName(), result.getString("name"));
         req.setBody(null);
         JsonObject reply = new JsonObject(sendonBus(UserVerticle.LOGIN_BY_TOKEN, req));
-        Assert.assertTrue("loginByMobileTokenNoData", reply.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
+        Assert.assertTrue("loginByMobileTokenNoData", reply.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
