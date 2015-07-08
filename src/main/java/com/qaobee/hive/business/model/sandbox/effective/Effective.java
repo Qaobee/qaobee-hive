@@ -30,7 +30,7 @@ public class Effective {
 	private String _id;
 
 	/** the sandbox's id */
-	private String sandBoxIdCfg;
+	private String sandBoxCfgId;
 
 	/** The age category. */
 	private CategoryAge categoryAge;
@@ -54,19 +54,7 @@ public class Effective {
 		this._id = _id;
 	}
 
-	/**
-	 * @return the sandBoxIdCfg
-	 */
-	public String getSandBoxIdCfg() {
-		return sandBoxIdCfg;
-	}
-
-	/**
-	 * @param sandBoxIdCfg the sandBoxIdCfg to set
-	 */
-	public void setSandBoxIdCfg(String sandBoxIdCfg) {
-		this.sandBoxIdCfg = sandBoxIdCfg;
-	}
+	
 
 	/**
 	 * @return the categoryAge
@@ -94,6 +82,20 @@ public class Effective {
 	 */
 	public void setMembers(List<Member> members) {
 		this.members = members;
+	}
+
+	/**
+	 * @return the sandBoxCfgId
+	 */
+	public String getSandBoxCfgId() {
+		return sandBoxCfgId;
+	}
+
+	/**
+	 * @param sandBoxCfgId the sandBoxCfgId to set
+	 */
+	public void setSandBoxCfgId(String sandBoxCfgId) {
+		this.sandBoxCfgId = sandBoxCfgId;
 	}
 	
 	
