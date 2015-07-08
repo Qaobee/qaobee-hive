@@ -25,12 +25,14 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
@@ -87,7 +89,14 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     JsonObject params = new JsonObject(req.getBody());
                     utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY_ID);
-                    message.reply(mongo.getById(params.getString(PARAM_ACTIVITY_ID), ActivityCfg.class));
+                    JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("activityId", params.getString(PARAM_ACTIVITY_ID)).get(), null, null, -1, -1, ActivityCfg.class);
+                    if(res.size() ==0) {
+                        QaobeeException e = new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No result for " + params.getString(PARAM_ACTIVITY_ID));
+                        container.logger().error(e.getMessage(), e);
+                        utils.sendError(message, e);
+                    } else {
+                        message.reply(res.get(0).toString());
+                    }
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());

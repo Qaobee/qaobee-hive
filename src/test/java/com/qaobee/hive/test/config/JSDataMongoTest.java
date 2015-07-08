@@ -42,6 +42,7 @@ public interface JSDataMongoTest {
 
     /* SETTINGS */
     String SETTINGS_ACTIVITY = "settings_activity.js";
+    String SETTINGS_ACTIVITY_CFG = "settings_activityCfg.js";
     String SETTINGS_COUNTRY = "settings_country.js";
     String SETTINGS_PERSON_FOOT = "settings_person_Foot_SEN.js";
     String SETTINGS_SEASONS = "settings_season.js";
