@@ -486,7 +486,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         });
         /**
          * @apiDescription Fetch meta information
-         * @api {get} /api/1/commons/user/meta?country= Fetch meta information
+         * @api {get} /api/1/commons/user/meta Fetch meta information
          * @apiVersion 0.1.0
          * @apiName getMetasHandler
          * @apiGroup User API
