@@ -388,7 +388,7 @@ public class UserTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.GET);
         final JsonObject result = new JsonObject(sendonBus(UserVerticle.META, req, user.getAccount().getToken()));
-        Assert.assertTrue("Wrong login", result.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
+        Assert.assertTrue("getMetasWrongHTTPMethod", result.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -402,7 +402,7 @@ public class UserTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         final JsonObject result = new JsonObject(sendonBus(UserVerticle.META, req, user.getAccount().getToken()));
-        Assert.assertTrue("Wrong login", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
+        Assert.assertTrue("getMetasWrongHTTPMethod", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
 

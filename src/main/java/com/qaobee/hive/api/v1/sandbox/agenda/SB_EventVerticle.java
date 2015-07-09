@@ -20,7 +20,6 @@ package com.qaobee.hive.api.v1.sandbox.agenda;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.referencial.event.Event;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -51,19 +50,19 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
     /**
      * Handler to get a set of events
      */
-    public static final String GET_LIST = Module.VERSION + ".commons.referencial.event.list";
+    public static final String GET_LIST = Module.VERSION + ".event.list";
     /**
      * Handler to add a event.
      */
-    public static final String ADD = Module.VERSION + ".commons.referencial.event.add";
+    public static final String ADD = Module.VERSION + ".event.add";
     /**
      * Handler to get a particular event from its ID.
      */
-    public static final String GET = Module.VERSION + ".commons.referencial.event.get";
+    public static final String GET = Module.VERSION + ".event.get";
     /**
      * Handler to update a event.
      */
-    public static final String UPDATE = Module.VERSION + ".commons.referencial.event.update";
+    public static final String UPDATE = Module.VERSION + ".event.update";
 
 	/* List of parameters */
     /**
@@ -106,6 +105,10 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
      * link Type
      */
     public static final String PARAM_LINK_TYPE = "link.type";
+    /**
+     * The constant PARAM_LINK.
+     */
+    public static final String PARAM_LINK = "link";
     /**
      * Event Owner
      */
@@ -163,7 +166,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> getListEventHandler = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
              *
@@ -248,7 +251,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
 
                     container.logger().info("getListEventHandler : " + pipelineAggregation.toString());
 
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Event.class);
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_EventVerticle.class);
 
                     container.logger().info(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
@@ -262,12 +265,12 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception  e) {
+                } catch (Exception e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
         /**
          * @apiDescription Add a event.
@@ -279,7 +282,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> addEvent = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
              *
@@ -291,11 +294,10 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
-                    JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_CATEGORY, PARAM_SEASON_CODE, PARAM_OWNER, PARAM_START_DATE);
-                    JsonObject event = params.getObject("event");
+                    JsonObject event = new JsonObject(req.getBody());
+                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_CATEGORY, PARAM_SEASON_CODE, PARAM_OWNER, PARAM_START_DATE);
 
-                    final String id = mongo.save(event, Event.class);
+                    final String id = mongo.save(event, SB_EventVerticle.class);
                     event.putString("_id", id);
 
 					/* return */
@@ -312,13 +314,13 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendError(message,e);
                 } catch (final Exception e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
         /**
          * @apiDescription Retrieve Event by this Id
@@ -331,7 +333,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiError INVALID_PARAMETER Invalid Parameters
          * @apiError HTTP_ERROR Bad Request
          */
-        final Handler<Message<String>> getEventHandler = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
                 try {
@@ -340,7 +342,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_ID);
 
-                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), Event.class).encode());
+                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_EventVerticle.class).encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -355,14 +357,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
-        };
-
-		/*
-         * Handlers declaration.
-		 */
-        vertx.eventBus().registerHandler(GET_LIST, getListEventHandler);
-        vertx.eventBus().registerHandler(GET, getEventHandler);
-        vertx.eventBus().registerHandler(ADD, addEvent);
-
+        });
     }
 }

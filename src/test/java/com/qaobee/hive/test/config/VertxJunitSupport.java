@@ -24,6 +24,7 @@ import com.mongodb.MongoException;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.business.model.transversal.Habilitation;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -168,6 +169,12 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         return generateLoggedUser("12345");
     }
 
+    /**
+     * Generate logged user.
+     *
+     * @param userId the user id
+     * @return the user
+     */
     protected User generateLoggedUser(String userId) {
         final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
         try {
@@ -181,6 +188,37 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
             } else {
                 user.set_id(id);
             }
+        } catch (EncodeException | QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        return user;
+    }
+
+    /**
+     * Generate logged admin user.
+     *
+     * @return the user
+     */
+    protected User generateLoggedAdminUser() {
+        return generateLoggedAdminUser("12345");
+    }
+
+    /**
+     * Generate logged admin user.
+     *
+     * @param userId the user id
+     * @return the user
+     */
+    protected User generateLoggedAdminUser(String userId) {
+        User user = generateLoggedUser(userId);
+        Habilitation habilitation = new Habilitation();
+        habilitation.set_id("123456");
+        habilitation.setDescription("admin Qaobee");
+        habilitation.setKey(Constantes.ADMIN_HABILIT);
+        user.getAccount().setHabilitations(new ArrayList<Habilitation>());
+        user.getAccount().getHabilitations().add(habilitation);
+        try {
+            mongo.save(user);
         } catch (EncodeException | QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -235,8 +273,16 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     }
 
 
+    /**
+     * Sendon bus.
+     *
+     * @param address the address
+     * @param req     the req
+     * @param token   the token
+     * @return the string
+     */
     protected String sendonBus(String address, RequestWrapper req, String token) {
-        if(req.getHeaders() == null){
+        if (req.getHeaders() == null) {
             req.setHeaders(new HashMap<String, List<String>>());
         }
         req.getHeaders().put("token", Arrays.asList(token));
@@ -378,7 +424,8 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     /**
      * Commons function for return a country JsonObject
      *
-     * @param id the id
+     * @param id   the id
+     * @param user the user
      * @return activity activity
      */
     protected JsonObject getActivity(String id, User user) {

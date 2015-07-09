@@ -19,114 +19,307 @@
 
 package com.qaobee.hive.test.api.commons.referencial;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
+import com.qaobee.hive.api.v1.commons.referencial.EventVerticle;
+import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import com.qaobee.hive.api.v1.commons.referencial.EventVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.test.config.VertxJunitSupport;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
+/**
+ * The type Event test.
+ */
 public class EventTest extends VertxJunitSupport {
 
-	@Test
-	public void getListEventTest() {
-		populate(POPULATE_ONLY, DATA_EVENT_HAND);
-		
-		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-
-		/* test based on script mongo */
-		req.setMethod(Constantes.POST);
-
-		/* list of parameters */
-		final JsonObject params = new JsonObject();
-		
-
-		params.putString(EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-		params.putString(EventVerticle.PARAM_LINK_TYPE, "championship");
-
-		/* start and end Date */
-		params.putNumber(EventVerticle.PARAM_START_DATE, 1428518700000l);
-		params.putNumber(EventVerticle.PARAM_END_DATE, 1435615200000l);
-
-		/* ListId owner of event */
-		params.putArray(EventVerticle.PARAM_OWNER, new JsonArray(new String[] { "ID-TEAM-DUNKERQUE" }));
-
-		req.setBody(params.encode());
-
-		/* Call to verticle */
-		final String reply = sendonBus(EventVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals(1, new JsonArray(reply).size());
-
-	}
-	
-	@Test
-	public void getObjectByIdOk() {
-		populate(POPULATE_ONLY, DATA_EVENT_HAND);
-		
-		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-
-		/* test based on script mongo */
-		req.setMethod(Constantes.GET);
-
-		/* list of parameters */
-		final HashMap<String, List<String>> params = new HashMap<String, List<String>>();
-		
-		/* Retreive object */
-		params.put(EventVerticle.PARAM_ID, Arrays.asList("55847ed0d040353767a48e71"));
-		req.setParams(params);
-
-		/* Call to verticle */
-		final String reply = sendonBus(EventVerticle.GET, req, user.getAccount().getToken());
-		JsonObject result = new JsonObject(reply);
-		
-		String label = result.getString("label");
-		Assert.assertEquals("Championnat : Journée 21", label);
-
-	}
-	
 	/**
-	 * Tests addHandler for EventVerticle
-	 */
+	 * Add event test.
+     */
 	@Test
-	public void getAddKO() {
-		
-		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-		
-		/* User simulation connection */
-		User user = generateLoggedUser();
+	public void addEventTest() {
+		User user = generateLoggedAdminUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
 		req.setUser(user);
 		req.setMethod(Constantes.POST);
-		
-
-		/* Generate a simple Structure Object */
 		final JsonObject params = new JsonObject();
 		params.putString(EventVerticle.PARAM_LABEL, "labelValue");
 		params.putString(EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
 		params.putString(EventVerticle.PARAM_SEASON_CODE, "SAI-2014");
-		
+		JsonObject categoryAge = new JsonObject("{\"ageMax\": \"150\",\"ageMin\": \"18\",\"code\": \"sen\",\"genre\": \"Masculin\",\"label\": \"Senior Gars\",\"order\": 1}");
+		params.putObject(EventVerticle.PARAM_CATEGORY, categoryAge);
+		params.putArray(EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+		params.putNumber(EventVerticle.PARAM_START_DATE, 1438206743022l);
+		params.putNumber(EventVerticle.PARAM_END_DATE, 1438206743022l);
+		params.putObject(EventVerticle.PARAM_LINK, new JsonObject("{\"linkId\" : \"AAAA\", \"type\" : \"championship\"}"));
 		req.setBody(params.encode());
-
 		final JsonObject result = new JsonObject(sendonBus(EventVerticle.ADD, req, user.getAccount().getToken()));
-		Assert.assertTrue("Missing mandatory parameters", result.getString("message").contains("Missing mandatory parameters : [categoryAge, owner, startDate]"));
+		Assert.assertNotNull("id is null", result.getString("_id"));
+	}
+
+
+	/**
+	 * Add event with missing mandatory parameters test.
+     */
+	@Test
+	public void addEventWithMissingMandatoryParametersTest() {
+		User user = generateLoggedAdminUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.POST);
+		final JsonObject params = new JsonObject();
+		params.putString(EventVerticle.PARAM_LABEL, "labelValue");
+		params.putString(EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+		params.putString(EventVerticle.PARAM_SEASON_CODE, "SAI-2014");
+		JsonObject categoryAge = new JsonObject("{\"ageMax\": \"150\",\"ageMin\": \"18\",\"code\": \"sen\",\"genre\": \"Masculin\",\"label\": \"Senior Gars\",\"order\": 1}");
+		params.putObject(EventVerticle.PARAM_CATEGORY, categoryAge);
+		req.setBody(params.encode());
+		final JsonObject result = new JsonObject(sendonBus(EventVerticle.ADD, req, user.getAccount().getToken()));
+		Assert.assertTrue("addEventWithMissingMandatoryParametersTest", result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
+	}
+
+	/**
+	 * Add event with wrong http method test.
+     */
+	@Test
+	public void addEventWithWrongHttpMethodTest() {
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.GET);
+		final JsonObject result = new JsonObject(sendonBus(EventVerticle.ADD, req, user.getAccount().getToken()));
+		Assert.assertTrue("addEventWithWrongHttpMethodTest", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
+	}
+
+	/**
+	 * Add event with not logged user test.
+     */
+	@Test
+	public void addEventWithNotLoggedUserTest() {
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.POST);
+		final JsonObject result = new JsonObject(sendonBus(EventVerticle.ADD, req));
+		System.out.println(result.encodePrettily());
+		Assert.assertTrue("addEventWithNotLoggedUserTest", result.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
+	}
+
+	/**
+	 * Add event with not admin user test.
+     */
+	@Test
+	public void addEventWithNotAdminUserTest() {
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.POST);
+		final JsonObject result = new JsonObject(sendonBus(EventVerticle.ADD, req, user.getAccount().getToken()));
+		System.out.println(result.encodePrettily());
+		Assert.assertTrue("addEventWithNotAdminUserTest", result.getString("code").contains(ExceptionCodes.NOT_ADMIN.toString()));
+	}
+
+	/**
+	 * Gets list event test.
+     */
+	@Test
+	public void getListEventTest() {
+		//First Add an event
+		User user = generateLoggedUser();
+		User adminUser = generateLoggedAdminUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(adminUser);
+		req.setMethod(Constantes.POST);
+		final JsonObject event = new JsonObject();
+		event.putString(EventVerticle.PARAM_LABEL, "labelValue");
+		event.putString(EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+		event.putString(EventVerticle.PARAM_SEASON_CODE, "SAI-2014");
+		JsonObject categoryAge = new JsonObject("{\"ageMax\": \"150\",\"ageMin\": \"18\",\"code\": \"sen\",\"genre\": \"Masculin\",\"label\": \"Senior Gars\",\"order\": 1}");
+		event.putObject(EventVerticle.PARAM_CATEGORY, categoryAge);
+		event.putArray(EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+		event.putNumber(EventVerticle.PARAM_START_DATE, 1438206743022l);
+		event.putNumber(EventVerticle.PARAM_END_DATE, 1438206743022l);
+		event.putObject(EventVerticle.PARAM_LINK, new JsonObject("{\"linkId\" : \"AAAA\", \"type\" : \"championship\"}"));
+		req.setBody(event.encode());
+		final JsonObject result = new JsonObject(sendonBus(EventVerticle.ADD, req, adminUser.getAccount().getToken()));
+		Assert.assertNotNull("getListEventTest : id is null", result.getString("_id"));
+        /* list of parameters */
+		final JsonObject params = new JsonObject();
+		params.putString(EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+		params.putString(EventVerticle.PARAM_LINK_TYPE, "championship");
+		params.putNumber(EventVerticle.PARAM_START_DATE, 1428518700000l);
+		params.putNumber(EventVerticle.PARAM_END_DATE, 1439615200000l);
+		params.putArray(EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+		req.setBody(params.encode());
+		final String reply = sendonBus(EventVerticle.GET_LIST, req, user.getAccount().getToken());
+		Assert.assertEquals("getListEventTest", 1, new JsonArray(reply).size());
+		Assert.assertEquals("getListEventTest", "labelValue", ((JsonObject) new JsonArray(reply).get(0)).getString(EventVerticle.PARAM_LABEL));
+	}
+
+	/**
+	 * Gets list event with wrong http method test.
+     */
+	@Test
+	public void getListEventWithWrongHttpMethodTest() {
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.GET);
+		final JsonObject params = new JsonObject();
+		params.putString(EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+		params.putString(EventVerticle.PARAM_LINK_TYPE, "championship");
+		params.putNumber(EventVerticle.PARAM_START_DATE, 1428518700000l);
+		params.putNumber(EventVerticle.PARAM_END_DATE, 1439615200000l);
+		params.putArray(EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+		req.setBody(params.encode());
+		final String reply = sendonBus(EventVerticle.GET_LIST, req, user.getAccount().getToken());
+		Assert.assertTrue("getListEventWithWrongHttpMethodTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
+	}
+
+	/**
+	 * Gets list event with missing parameters test.
+     */
+	@Test
+	public void getListEventWithMissingParametersTest() {
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.POST);
+		final JsonObject params = new JsonObject();
+		params.putString(EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+		params.putString(EventVerticle.PARAM_LINK_TYPE, "championship");
+		params.putArray(EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+		req.setBody(params.encode());
+		final String reply = sendonBus(EventVerticle.GET_LIST, req, user.getAccount().getToken());
+		Assert.assertTrue("getListEventWithMissingParametersTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
+	}
+
+	/**
+	 * Gets list event with not logged user test.
+     */
+	@Test
+	public void getListEventWithNotLoggedUserTest() {
+		//First Add an event
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.POST);
+		final JsonObject params = new JsonObject();
+		params.putString(EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+		params.putString(EventVerticle.PARAM_LINK_TYPE, "championship");
+		params.putArray(EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+		req.setBody(params.encode());
+		final String reply = sendonBus(EventVerticle.GET_LIST, req);
+		Assert.assertTrue("getListEventWithNotLoggedUserTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
+	}
+
+	/**
+	 * Gets event by id test.
+     */
+	@Test
+	public void getEventByIdTest() {
+		//First Add an event
+		User user = generateLoggedUser();
+		User adminUser = generateLoggedAdminUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(adminUser);
+		req.setMethod(Constantes.POST);
+		final JsonObject event = new JsonObject();
+		event.putString(EventVerticle.PARAM_LABEL, "labelValue");
+		event.putString(EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+		event.putString(EventVerticle.PARAM_SEASON_CODE, "SAI-2014");
+		JsonObject categoryAge = new JsonObject("{\"ageMax\": \"150\",\"ageMin\": \"18\",\"code\": \"sen\",\"genre\": \"Masculin\",\"label\": \"Senior Gars\",\"order\": 1}");
+		event.putObject(EventVerticle.PARAM_CATEGORY, categoryAge);
+		event.putArray(EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+		event.putNumber(EventVerticle.PARAM_START_DATE, 1438206743022l);
+		event.putNumber(EventVerticle.PARAM_END_DATE, 1438206743022l);
+		event.putObject(EventVerticle.PARAM_LINK, new JsonObject("{\"linkId\" : \"AAAA\", \"type\" : \"championship\"}"));
+		req.setBody(event.encode());
+		final JsonObject result = new JsonObject(sendonBus(EventVerticle.ADD, req, adminUser.getAccount().getToken()));
+		Assert.assertNotNull("getListEventTest : id is null", result.getString("_id"));
+
+		req.setMethod(Constantes.GET);
+		final HashMap<String, List<String>> params = new HashMap<>();
+		params.put(EventVerticle.PARAM_ID, Collections.singletonList(result.getString("_id")));
+		req.setParams(params);
+		final JsonObject reply = new JsonObject(sendonBus(EventVerticle.GET, req, user.getAccount().getToken()));
+		Assert.assertEquals("getEventByIdTest", "labelValue", reply.getString("label"));
+	}
+
+	/**
+	 * Gets event by id with wrong http method test.
+     */
+	@Test
+	public void getEventByIdWithWrongHttpMethodTest() {
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.POST);
+		final HashMap<String, List<String>> params = new HashMap<>();
+		params.put(EventVerticle.PARAM_ID, Collections.singletonList("12345"));
+		req.setParams(params);
+		final JsonObject reply = new JsonObject(sendonBus(EventVerticle.GET, req, user.getAccount().getToken()));
+		Assert.assertTrue("getEventByIdWithWrongHttpMethodTest", reply.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
+	}
+
+	/**
+	 * Gets event by id with not logged user test.
+     */
+	@Test
+	public void getEventByIdWithNotLoggedUserTest() {
+		//First Add an event
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
+		final HashMap<String, List<String>> params = new HashMap<>();
+		params.put(EventVerticle.PARAM_ID, Collections.singletonList("12345"));
+		req.setParams(params);
+		final JsonObject reply = new JsonObject(sendonBus(EventVerticle.GET, req));
+		Assert.assertTrue("getEventByIdWithNotLoggedUserTest", reply.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
+	}
+
+	/**
+	 * Gets event by id with missing parameters test.
+     */
+	@Test
+	public void getEventByIdWithMissingParametersTest() {
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.GET);
+		final HashMap<String, List<String>> params = new HashMap<>();
+		req.setParams(params);
+		final JsonObject reply = new JsonObject(sendonBus(EventVerticle.GET, req, user.getAccount().getToken()));
+		Assert.assertTrue("getEventByIdWithMissingParametersTest", reply.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
+	}
+
+	/**
+	 * Gets event by id with empty parameters test.
+     */
+	@Test
+	public void getEventByIdWithEmptyParametersTest() {
+		User user = generateLoggedUser();
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.GET);
+		final JsonObject reply = new JsonObject(sendonBus(EventVerticle.GET, req, user.getAccount().getToken()));
+		Assert.assertTrue("getEventByIdWithEmptyParametersTest", reply.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
 	}
 
 }

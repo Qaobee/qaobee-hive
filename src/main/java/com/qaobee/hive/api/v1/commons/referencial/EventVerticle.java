@@ -103,6 +103,10 @@ public class EventVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_LINK_ID = "link.linkId";
     /**
+     * The constant PARAM_LINK.
+     */
+    public static final String PARAM_LINK = "link";
+    /**
      * link Type
      */
     public static final String PARAM_LINK_TYPE = "link.type";
@@ -262,7 +266,7 @@ public class EventVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception  e) {
+                } catch (Exception e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
@@ -290,15 +294,13 @@ public class EventVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
+                    utils.isLoggedAndAdmin(req);
                     JsonObject event = new JsonObject(req.getBody());
                     utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_CATEGORY, PARAM_SEASON_CODE, PARAM_OWNER, PARAM_START_DATE);
                     final String id = mongo.save(event, Event.class);
                     event.putString("_id", id);
-
 					/* return */
                     message.reply(event.encode());
-
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -310,7 +312,7 @@ public class EventVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendError(message, e);
                 } catch (final Exception e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
