@@ -30,7 +30,7 @@ import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Future;
 import org.vertx.java.core.Handler;

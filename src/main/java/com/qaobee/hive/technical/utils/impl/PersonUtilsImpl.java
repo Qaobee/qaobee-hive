@@ -18,17 +18,15 @@
  */
 package com.qaobee.hive.technical.utils.impl;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.utils.PersonUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.inject.Inject;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.UUID;
 
 /**
  * The Class PersonUtils.

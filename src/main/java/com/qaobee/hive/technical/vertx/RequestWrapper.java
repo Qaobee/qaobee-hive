@@ -19,7 +19,7 @@
 package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.business.model.commons.users.User;
-import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;

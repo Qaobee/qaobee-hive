@@ -28,7 +28,7 @@ import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
 import org.imgscalr.Scalr.Mode;
 import org.vertx.java.core.MultiMap;
