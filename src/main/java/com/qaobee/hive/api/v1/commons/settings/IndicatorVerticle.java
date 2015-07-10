@@ -87,7 +87,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
     /**
      * The constant PARAM_INDICATOR_CODE.
      */
-    public static final String PARAM_INDICATOR_CODE = "code";
+    public static final String PARAM_INDICATOR_CODE = "listIndicators";
 
 
     /**
@@ -277,7 +277,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          *
          * @apiParam {String} activityId Mandatory The activity Id.
          * @apiParam {String} countryId Mandatory The country Id.
-         * @apiParam {String} code Mandatory indicator code
+         * @apiParam {Array} listIndicators Mandatory list of indicator's codes
          *
          * @apiSuccess {List}   indicators            The list of indicators found.
          *
