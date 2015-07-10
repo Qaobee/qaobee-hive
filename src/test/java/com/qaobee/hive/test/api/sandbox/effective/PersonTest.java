@@ -25,6 +25,7 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import com.qaobee.hive.api.v1.sandbox.effective.SB_PersonVerticle;
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -36,11 +37,15 @@ public class PersonTest extends VertxJunitSupport {
 
     @Test
     public void getListPersonTest() {
-        populate(POPULATE_ONLY, SETTINGS_PERSON_FOOT);
 
-		/* test based on script mongo */
+        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_FOOT);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
+
+		/* test based on script mongo */
         req.setMethod(Constantes.POST);
 
 		/* list of parameters */
@@ -56,7 +61,7 @@ public class PersonTest extends VertxJunitSupport {
         req.setBody(params.encode());
 
 		/* Call to verticle */
-        final String reply = sendonBus(SB_PersonVerticle.GET_LIST, req);
+        final String reply = sendonBus(SB_PersonVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals(11, new JsonArray(reply).size());
 
     }

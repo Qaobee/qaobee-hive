@@ -25,7 +25,7 @@ public interface JSDataMongoTest {
     String DATA_EFFECTIVE_FOOT = "data_effective_Foot.js";
     String DATA_EFFECTIVE_HAND = "data_effective_Hand.js";
     String DATA_EVENT_HAND = "data_event_Hand.js";
-    String DATA_GROUP_FOOT = "data_group.js";
+
     String DATA_PERSON_FOOT = "data_person_Foot_SEN.js";
     String DATA_STATS_FOOT = "data_stats_Foot_SEN.js";
     String DATA_STATS_MATCH = "data_stats_match.js";
@@ -44,7 +44,6 @@ public interface JSDataMongoTest {
     String SETTINGS_ACTIVITY = "settings_activity.js";
     String SETTINGS_ACTIVITY_CFG = "settings_activityCfg.js";
     String SETTINGS_COUNTRY = "settings_country.js";
-    String SETTINGS_PERSON_FOOT = "settings_person_Foot_SEN.js";
     String SETTINGS_SEASONS = "settings_season.js";
     /* STATS */
     String SETTINGS_INDICATOR = "settings_indicator_HAND.js";
