@@ -54,7 +54,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
  * @author cke
  *
  */
-public class StatisticsVerticle extends AbstractGuiceVerticle {
+public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
 	/** Handler for average rate for one or many indicator and for one or many person, group by PARAM_LIST_GROUPBY */
 	public static final String GET_STAT_GROUPBY = Module.VERSION + ".sandbox.stats.statistics.getStatGroupBy";

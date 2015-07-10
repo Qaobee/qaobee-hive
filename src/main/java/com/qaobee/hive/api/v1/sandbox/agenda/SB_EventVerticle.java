@@ -50,19 +50,19 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
     /**
      * Handler to get a set of events
      */
-    public static final String GET_LIST = Module.VERSION + ".sandbox.event.list";
+    public static final String GET_LIST = Module.VERSION + ".sandbox.agenda.event.list";
     /**
      * Handler to add a event.
      */
-    public static final String ADD = Module.VERSION + ".sandbox.event.add";
+    public static final String ADD = Module.VERSION + ".sandbox.event.agenda.add";
     /**
      * Handler to get a particular event from its ID.
      */
-    public static final String GET = Module.VERSION + ".sandbox.event.get";
+    public static final String GET = Module.VERSION + ".sandbox.event.agenda.get";
     /**
      * Handler to update a event.
      */
-    public static final String UPDATE = Module.VERSION + ".sandbox.event.update";
+    public static final String UPDATE = Module.VERSION + ".sandbox.event.agenda.update";
 
 	/* List of parameters */
     /**
