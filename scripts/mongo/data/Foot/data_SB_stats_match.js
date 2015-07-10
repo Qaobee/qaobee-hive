@@ -29,18 +29,6 @@
  * AUTHOR : Christophe kervella pour QaoBee
  */
 //////////////////////////////////////////////////////////
-
-
-db.SB_Stats.insert({activityId: "ACT-HAND",
-    chrono: 24,
-    code: "passDec",
-    eventId: "6a125e56-f92c-4729-8877-53b556906ecc",
-    owner: "550a0600db8f8b6e2f51f4df",
-    producter: ["54160977d5bd065a1bb1e565"],
-    structureId: "541168295971d35c1f2d1b5f",
-    timer: 1433696958907,
-    value: 1
-});
     
 
 /* 

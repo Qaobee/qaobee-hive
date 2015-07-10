@@ -33,42 +33,30 @@
 /*
  * Empty the collection
  */
-db.Team.remove({});
+db.SB_Team.remove({});
 
 /*
- * Create the collection with test data
+ * Cesson-Sevigne Team
  */
-//"_id" : ObjectId().valueOf(),
-db.Team.insert({
+db.SB_Team.insert({
     "_id" : "552d5e08644a77b3a20afdfe",
-    "label" : "Team A",
-    "sandBoxCfgId" : "5591bb9c127472938a6444a3",
+    "label" : "Cesson-Sevigne A",
+    "sandBoxCfgId" : "558b0fc0bd2e39cdab651e21",
     "categoryAge" : {
         "code" : "sen",
         "label" : "Senior",
         "ageMax" : NumberInt(34),
         "ageMin" : NumberInt(20),
         "genre" : "gender.male"
-    },
-    "championship" : {
-        "id" : "1", 
-        "label" : "Honor",
-    },                      
-    "listStaffMember" : [
-         {
-           "personId" : "54160977d5bd065a1bb1e563",
-           "role" : {
-               "code" : "coach",
-               "label" : "Coach"
-           }
-         }
-    ] 
+    }
 });
 
-//"_id" : ObjectId().valueOf(),
-db.Team.insert({
+/*
+ * Dunkerque Team
+ */
+db.SB_Team.insert({
     "_id" : "552d5e08644a77b3a20afdff",
-    "label" : "Team B",
+    "label" : "Dunkerque A",
     "sandBoxCfgId" : "5591bb9c127472938a6444a3",
     "categoryAge" : {
         "code" : "sen",
@@ -76,18 +64,5 @@ db.Team.insert({
         "ageMax" : NumberInt(34),
         "ageMin" : NumberInt(20),
         "genre" : "gender.male"
-    },
-    "championship" : {
-        "id" : "2", 
-        "label" : "Exellence",
-    },                     
-    "listStaffMember" : [
-        {
-          "personId" : "541d3136f61fbf69868c121d",
-          "role" : {
-              "code" : "coach",
-               "label" : "Coach"
-           }
-        }
-   ] 
+    }
 });
