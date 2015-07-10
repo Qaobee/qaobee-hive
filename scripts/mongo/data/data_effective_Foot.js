@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////
 /* 
  * SCRIPT MONGO DB 
- * INJECTION Effective
+ * INJECTION SB_Effective
  * V1.2
  * 
  * This script creates documents for collections :
@@ -30,16 +30,16 @@
  */
 //////////////////////////////////////////////////////////
 /* 
- * Vidage de la collection Effective (France A sen)
+ * Vidage de la collection SB_Effective (France A sen)
  */
-db.Effective.remove({ "_id" : "559d2a2518e3cb71c60d964a"});
+db.SB_Effective.remove({ "_id" : "559d2a2518e3cb71c60d964a"});
 
 /** ************************************************************* */
 /*
- * Alimentation Effective (France A sen)
+ * Alimentation SB_Effective (France A sen)
  */
 /** ************************************************************* */
-db.Effective.insert({
+db.SB_Effective.insert({
     "_id" : "559d2a2518e3cb71c60d964a",
     "sandBoxCfgId" : "559d268318e3cb71c60d9649",
     "categoryAge" : {
@@ -79,17 +79,17 @@ db.Effective.insert({
 /** ************************************************************* */
 
 /* 
- * Vidage de la collection Effective (France A sen)
+ * Vidage de la collection SB_Effective (France A sen)
  */
-db.Effective.remove({ "_id" : "559d2abf18e3cb71c60d964b"});
+db.SB_Effective.remove({ "_id" : "559d2abf18e3cb71c60d964b"});
 
 /** ************************************************************* */
 /*
- * Alimentation Effective (France A u19)
+ * Alimentation SB_Effective (France A u19)
  */
 /** ************************************************************* */
 
-db.Effective.insert({
+db.SB_Effective.insert({
     "_id" : "559d2abf18e3cb71c60d964b",
     "sandBoxCfgId" : "559d268318e3cb71c60d9649", 
     "categoryAge" : {

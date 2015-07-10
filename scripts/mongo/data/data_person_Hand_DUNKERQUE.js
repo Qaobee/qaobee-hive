@@ -20,29 +20,29 @@
 //////////////////////////////////////////////////////////
 /* 
  * SCRIPT MONGO DB 
- * INJECTION Person
+ * INJECTION SB_Person
  * V1.2
  * 
  * This script creates documents for collections :
- * - Person
+ * - SB_Person
  * 
  * AUTHOR : Christophe kervella pour QaoBee
  */
 //////////////////////////////////////////////////////////
 /* 
- * Vidage de la collection Person (Club Dunkerque handball sen)
+ * Vidage de la collection SB_Person (Club Dunkerque handball sen)
  */
-db.Person.remove({ "$and" : [ { "listLicenses.structureId" : "541168295971d35c1f2d1b5e"} , 
+db.SB_Person.remove({ "$and" : [ { "listLicenses.structureId" : "541168295971d35c1f2d1b5e"} , 
                               { "listLicenses.listHistoLicense" : 
                                 { "$elemMatch" : { "seasonCode" : "SAI-2014" , "categoryAgeCode" : "sen"}}}
 ]});
 
 /*******************************************************************************
- * Alimentation Person Club A Handball
+ * Alimentation SB_Person Club A Handball
  * *************************************************************
  */
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d2c5fb3f78c0317eea2be",
     "name" : "Gerard",
     "firstname" : "Vincent",
@@ -190,7 +190,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1214",
     "name" : "Annotel",
     "firstname" : "William",
@@ -338,7 +338,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1215",
     "name" : "Butto",
     "firstname" : "Baptiste",
@@ -486,7 +486,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1216",
     "name" : "Touati",
     "firstname" : "Jaleleddine",
@@ -634,7 +634,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1217",
     "name" : "Emonet",
     "firstname" : "Julien",
@@ -771,7 +771,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1218",
     "name" : "Afgour",
     "firstname" : "Benjamin",
@@ -908,7 +908,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1219",
     "name" : "Mokrani",
     "firstname" : "Mohamed",
@@ -1045,7 +1045,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121a",
     "name" : "Causse",
     "firstname" : "Théophile",
@@ -1182,7 +1182,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121b",
     "name" : "Grocaut",
     "firstname" : "Mickael",
@@ -1319,7 +1319,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121c",
     "name" : "Nagy",
     "firstname" : "Kornel",
@@ -1456,7 +1456,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "5509f71adb8f8b6e2f51f4d4",
     "name" : "Pejovic",
     "firstname" : "Zarko",
@@ -1593,7 +1593,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "5509f71adb8f8b6e2f51f4d5",
     "name" : "Guillard",
     "firstname" : "Romain",
@@ -1730,7 +1730,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "5509f71adb8f8b6e2f51f4d6",
     "name" : "Lamon",
     "firstname" : "Bastien",
@@ -1867,7 +1867,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "5509f71adb8f8b6e2f51f4d7",
     "name" : "Paczkowski",
     "firstname" : "Pawel",
@@ -2004,7 +2004,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "550a02acdb8f8b6e2f51f4da",
     "name" : "Soudry",
     "firstname" : "Pierre",

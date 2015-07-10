@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////
 /* 
  * SCRIPT MONGO DB 
- * INJECTION Effective
+ * INJECTION SB_Effective
  * V1.2
  * 
  * This script creates documents for collections :
@@ -30,16 +30,16 @@
  */
 //////////////////////////////////////////////////////////
 /* 
- * Vidage de la collection Effective (Club Dunkerque handball sen)
+ * Vidage de la collection SB_Effective (Club Dunkerque handball sen)
  */
-db.Effective.remove({ "_id" : "550b31f925da07681592db22"});
+db.SB_Effective.remove({ "_id" : "550b31f925da07681592db22"});
 
 /** ************************************************************* */
 /*
- * Alimentation Effective (Club Dunkerque Handball)
+ * Alimentation SB_Effective (Club Dunkerque Handball)
  */
 /** ************************************************************* */
-db.Effective.insert({
+db.SB_Effective.insert({
     "_id" : "550b31f925da07681592db22",
     "sandBoxCfgId" : "5591bb9c127472938a6444a3",
     "categoryAge" : {
@@ -71,16 +71,16 @@ db.Effective.insert({
 
 //////////////////////////////////////////////////////////
 /* 
- * Vidage de la collection Effective (Club Cesson handball sen)
+ * Vidage de la collection SB_Effective (Club Cesson handball sen)
  */
-db.Effective.remove({ "_id" : "550b31f925da07681592db23"});
+db.SB_Effective.remove({ "_id" : "550b31f925da07681592db23"});
 
 /** ************************************************************* */
 /*
- * Alimentation Effective (Club Cesson Handball)
+ * Alimentation SB_Effective (Club Cesson Handball)
  */
 /** ************************************************************* */
-db.Effective.insert({
+db.SB_Effective.insert({
     "_id" : "550b31f925da07681592db23",
     "sandBoxCfgId" : "558b0fc0bd2e39cdab651e21",
     "categoryAge" : {

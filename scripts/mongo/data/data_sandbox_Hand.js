@@ -19,31 +19,31 @@
 //////////////////////////////////////////////////////////
 /*
  * SCRIPT MONGO DB
- * INJECTION SandBoxCfg
+ * INJECTION SB_SandBoxCfg
  * V1.0
  *
  * This script creates documents for collections :
- * - SandBoxCfg
- * - SandBox
+ * - SB_SandBoxCfg
+ * - SB_SandBox
  *
  * AUTHOR : xavier MARIN pour Qaobee
  */
 //////////////////////////////////////////////////////////
 /*
- * Vidage de la collection SandBoxCfg cesson handball
+ * Vidage de la collection SB_SandBoxCfg cesson handball
  */
-db.SandBoxCfg.remove({"_id": "558b0fc0bd2e39cdab651e21"});
+db.SB_SandBoxCfg.remove({"_id": "558b0fc0bd2e39cdab651e21"});
 /*
- * Vidage de la collection SandBox cesson handball
+ * Vidage de la collection SB_SandBox cesson handball
  */
-db.SandBox.remove({"_id": "558b0efebd2e39cdab651e1f"});
+db.SB_SandBox.remove({"_id": "558b0efebd2e39cdab651e1f"});
 
 
 /***************************************************************
- * Alimentation SandBox Cesson Handball
+ * Alimentation SB_SandBox Cesson Handball
  * *************************************************************
  */
-db.SandBox.insert({
+db.SB_SandBox.insert({
     "_id": "558b0efebd2e39cdab651e1f",
     "activityId": "ACT-HAND",
     "owner": "5509ef1fdb8f8b6e2f51f4ce",
@@ -52,10 +52,10 @@ db.SandBox.insert({
 
 
 /***************************************************************
- * Alimentation SandBoxCfg Cesson Handball
+ * Alimentation SB_SandBoxCfg Cesson Handball
  * *************************************************************
  */
-db.SandBoxCfg.insert({
+db.SB_SandBoxCfg.insert({
     "_id": "558b0fc0bd2e39cdab651e21",
     "activity": {
         "_id": "ACT-HAND",
@@ -119,20 +119,20 @@ db.SandBoxCfg.insert({
 });
 
 /*
- * Vidage de la collection SandBoxCfg dunkerque handball
+ * Vidage de la collection SB_SandBoxCfg dunkerque handball
  */
-db.SandBoxCfg.remove({"_id": "5591bb9c127472938a6444a3"});
+db.SB_SandBoxCfg.remove({"_id": "5591bb9c127472938a6444a3"});
 /*
- * Vidage de la collection SandBox dunkerque handball
+ * Vidage de la collection SB_SandBox dunkerque handball
  */
-db.SandBox.remove({"_id": "5591bb5e127472938a6444a2"});
+db.SB_SandBox.remove({"_id": "5591bb5e127472938a6444a2"});
 
 
 /***************************************************************
- * Alimentation SandBox Dunkerque Handball
+ * Alimentation SB_SandBox Dunkerque Handball
  * *************************************************************
  */
-db.SandBox.insert({
+db.SB_SandBox.insert({
     "_id": "5591bb5e127472938a6444a2",
     "activityId": "ACT-HAND",
     "owner": "54160977d5bd065a1bb1e563",
@@ -141,10 +141,10 @@ db.SandBox.insert({
 
 
 /***************************************************************
- * Alimentation SandBoxCfg Dunkerque Handball
+ * Alimentation SB_SandBoxCfg Dunkerque Handball
  * *************************************************************
  */
-db.SandBoxCfg.insert({
+db.SB_SandBoxCfg.insert({
     "_id": "5591bb9c127472938a6444a3",
     "activity": {
         "_id": "ACT-HAND",
@@ -208,12 +208,12 @@ db.SandBoxCfg.insert({
 });
 
 /***************************************************************
- * Alimentation SandBox Jeu de test pour user ayant pls sandbox
+ * Alimentation SB_SandBox Jeu de test pour user ayant pls sandbox
  * *************************************************************
  */
-db.SandBox.remove({"_id": "559d2d3018e3cb71c60d964c"});
+db.SB_SandBox.remove({"_id": "559d2d3018e3cb71c60d964c"});
 
-db.SandBox.insert({
+db.SB_SandBox.insert({
     "_id": "559d2d3018e3cb71c60d964c",
     "activityId": "ACT-HAND",
     "owner": "54160977d5bd065a1bb1e565",

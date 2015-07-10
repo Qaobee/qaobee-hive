@@ -29,13 +29,13 @@
 /* 
  * emptying of collections
  */
-db.Cycle.remove({"_id" : "c3089ddf-b456-4fdc-9484-ea5609adc225"});
+db.SB_Cycle.remove({"_id" : "c3089ddf-b456-4fdc-9484-ea5609adc225"});
 
 /*
  * Data tests of cycle
  */
   
-   db.Cycle.insert(
+   db.SB_Cycle.insert(
            /* 0 */
            {
                "_id" : "c3089ddf-b456-4fdc-9484-ea5609adc225",

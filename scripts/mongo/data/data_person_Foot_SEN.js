@@ -20,29 +20,29 @@
 //////////////////////////////////////////////////////////
 /* 
  * SCRIPT MONGO DB 
- * INJECTION Person
+ * INJECTION SB_SB_Person
  * V1.2
  * 
  * This script creates documents for collections :
- * - Person
+ * - SB_SB_Person
  * 
  * AUTHOR : Christophe kervella pour QaoBee
  */
 //////////////////////////////////////////////////////////
 /* 
- * Vidage de la collection Person (Club Demo Football sen)
+ * Vidage de la collection SB_SB_Person (Club Demo Football sen)
  */
-db.Person.remove({ "$and" : [ { "listLicenses.structureId" : "541168295971d35c1f2d1b60"} , 
+db.SB_SB_Person.remove({ "$and" : [ { "listLicenses.structureId" : "541168295971d35c1f2d1b60"} , 
                               { "listLicenses.listHistoLicense" : 
                                 { "$elemMatch" : { "seasonCode" : "SAI-2014" , "categoryAgeCode" : "sen"}}}
 ]});
 
 /** ************************************************************* */
 /*
- * Alimentation Person Club A Football
+ * Alimentation SB_SB_Person Club A Football
  */
 /** ************************************************************* */
-db.Person.insert({
+db.SB_SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121d",
     "name" : "Baratelli",
     "firstname" : "Dominique",
@@ -189,7 +189,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121e",
     "name" : "Castaneda",
     "firstname" : "Jean",
@@ -336,7 +336,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1220",
     "name" : "Amoros",
     "firstname" : "Manuel",
@@ -483,7 +483,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121f",
     "name" : "Ettori",
     "firstname" : "Jean-Luc",
@@ -630,7 +630,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1221",
     "name" : "Battiston",
     "firstname" : "Patrick",
@@ -777,7 +777,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1222",
     "name" : "Bossis",
     "firstname" : "Maxime",
@@ -924,7 +924,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1223",
     "name" : "Janvion",
     "firstname" : "Gérard",
@@ -1071,7 +1071,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1224",
     "name" : "Lopez",
     "firstname" : "Christian",
@@ -1218,7 +1218,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1225",
     "name" : "Mahut",
     "firstname" : "Philippe",
@@ -1366,7 +1366,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1226",
     "name" : "Tresor",
     "firstname" : "Marius",
@@ -1513,7 +1513,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1227",
     "name" : "Genghini",
     "firstname" : "Bernard",
@@ -1660,7 +1660,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1228",
     "name" : "Platini",
     "firstname" : "Michel",
@@ -1806,7 +1806,7 @@ db.Person.insert({
         } ]
     } ]
 });
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1229",
     "name" : "Girard",
     "firstname" : "René",
@@ -1953,7 +1953,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c122a",
     "name" : "Giresse",
     "firstname" : "Alain",
@@ -2101,7 +2101,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c122b",
     "name" : "Larios",
     "firstname" : "Jean-François",
@@ -2248,7 +2248,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c122c",
     "name" : "Tigana",
     "firstname" : "Jean",
@@ -2395,7 +2395,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c122d",
     "name" : "Bellone",
     "firstname" : "Bruno",
@@ -2542,7 +2542,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c122e",
     "name" : "Couriol",
     "firstname" : "Alain",
@@ -2689,7 +2689,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c122f",
     "name" : "Lacombe",
     "firstname" : "Bernard",
@@ -2825,7 +2825,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1230",
     "name" : "Rocheteau",
     "firstname" : "Dominique",
@@ -2961,7 +2961,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1231",
     "name" : "Six",
     "firstname" : "Didier",
@@ -3098,7 +3098,7 @@ db.Person.insert({
     } ]
 });
 
-db.Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1232",
     "name" : "Soler",
     "firstname" : "Gerard",

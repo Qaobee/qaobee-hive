@@ -31,7 +31,7 @@
 //////////////////////////////////////////////////////////
 
 
-db.Stats.insert({activityId: "ACT-HAND",
+db.SB_Stats.insert({activityId: "ACT-HAND",
     chrono: 24,
     code: "passDec",
     eventId: "6a125e56-f92c-4729-8877-53b556906ecc",
@@ -46,35 +46,35 @@ db.Stats.insert({activityId: "ACT-HAND",
 /* 
  * Vidage des Stats "pour les matchs"
  */
-db.Stats.remove(
+db.SB_Stats.remove(
   {"code" : "goalscored"}
 );
 
-db.Stats.remove(
+db.SB_Stats.remove(
   {"code" : "goalconceded"}
 );
 
-db.Stats.remove(
+db.SB_Stats.remove(
   {"code" : "holder"}
 );
 
-db.Stats.remove(
+db.SB_Stats.remove(
   {"code" : "substitue"}
 );
 
-db.Stats.remove(
+db.SB_Stats.remove(
   {"code" : "yellowCard"}
 );
 
-db.Stats.remove(
+db.SB_Stats.remove(
   {"code" : "redCard"}
 );
 
-db.Stats.remove(
+db.SB_Stats.remove(
   {"code" : "playtime"}
 );
 
-db.Stats.remove(
+db.SB_Stats.remove(
   {"code" : "audience"}
 );
 
@@ -84,7 +84,7 @@ db.Stats.remove(
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "audience",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -101,7 +101,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "audience",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -118,7 +118,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "audience",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -135,7 +135,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "audience",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -152,7 +152,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "audience",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -169,7 +169,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "audience",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -186,7 +186,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "audience",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -203,7 +203,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1402927215000), //06/16/2014 16:00:15
@@ -215,7 +215,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1402932120000), //06/16/2014 17:22:00
@@ -227,7 +227,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1402933080000), //06/16/2014 17:38:00
@@ -239,7 +239,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -251,7 +251,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -263,7 +263,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1403364600000), //06/21/2014 17:30:00
@@ -275,7 +275,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -287,7 +287,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -299,7 +299,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1403624340000), //06/24/2014 17:39:00
@@ -311,7 +311,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -323,7 +323,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -335,7 +335,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -347,7 +347,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -359,7 +359,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1404504000000), //07/04/2014 22:00
@@ -371,7 +371,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -383,7 +383,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -395,7 +395,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1404845220000), //07/04/2014 20:47
@@ -407,7 +407,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1404506820000), //07/04/2014 22:47
@@ -419,7 +419,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1404507180000), //07/04/2014 22:53
@@ -431,7 +431,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -443,7 +443,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -461,7 +461,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -473,7 +473,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -485,7 +485,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1403361780000), //06/21/2014 16:43
@@ -497,7 +497,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -509,7 +509,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -521,7 +521,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -533,7 +533,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -545,7 +545,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -557,7 +557,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -569,7 +569,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -581,7 +581,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -593,7 +593,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1404845760000), //07/08/2014 20:56
@@ -611,7 +611,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -623,7 +623,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -635,7 +635,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -647,7 +647,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -659,7 +659,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -671,7 +671,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -683,7 +683,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -695,7 +695,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -707,7 +707,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -719,7 +719,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -731,7 +731,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -743,7 +743,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -755,7 +755,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1404851520000), //07/08/2014 22:32
@@ -767,7 +767,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -779,7 +779,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -797,7 +797,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-    db.Stats.insert({
+    db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -809,7 +809,7 @@ _id = new ObjectId().valueOf();
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -821,7 +821,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -833,7 +833,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -845,7 +845,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -857,7 +857,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -869,7 +869,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -881,7 +881,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -893,7 +893,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1404500580000), //07/04/2014 21:03
@@ -905,7 +905,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1404504300000), //07/04/2014 22:05
@@ -917,7 +917,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -929,7 +929,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -941,7 +941,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -953,7 +953,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -965,7 +965,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1404851880000), //07/08/2014 22:38
@@ -977,7 +977,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "yellowCard",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -995,7 +995,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1007,7 +1007,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1019,7 +1019,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -1031,7 +1031,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -1049,7 +1049,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1402928760000), //06/16/2014 16:26
@@ -1061,7 +1061,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1073,7 +1073,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1085,7 +1085,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1097,7 +1097,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1109,7 +1109,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -1121,7 +1121,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -1133,7 +1133,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1145,7 +1145,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1157,7 +1157,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -1169,7 +1169,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -1181,7 +1181,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -1193,7 +1193,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -1205,7 +1205,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "yellowCard",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -1223,7 +1223,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1235,7 +1235,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1247,7 +1247,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1259,7 +1259,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1271,7 +1271,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1404502320000), //07/04/2014 21:32
@@ -1283,7 +1283,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1404503580000), //07/04/2014 21:53
@@ -1295,7 +1295,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -1307,7 +1307,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -1319,7 +1319,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1331,7 +1331,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1347,7 +1347,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1359,7 +1359,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1371,7 +1371,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1383,7 +1383,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1395,7 +1395,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "yellowCard",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1407,7 +1407,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -1419,7 +1419,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -1431,7 +1431,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "yellowCard",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -1443,7 +1443,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -1455,7 +1455,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -1467,7 +1467,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1479,7 +1479,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1491,7 +1491,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -1503,7 +1503,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -1521,7 +1521,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1533,7 +1533,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1545,7 +1545,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1557,7 +1557,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1569,7 +1569,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1581,7 +1581,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1599,7 +1599,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1611,7 +1611,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1623,7 +1623,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1635,7 +1635,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1647,7 +1647,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1403365500000), //06/21/2014 17:45
@@ -1659,7 +1659,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -1671,7 +1671,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -1683,7 +1683,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1695,7 +1695,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1707,7 +1707,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -1719,7 +1719,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -1731,7 +1731,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1743,7 +1743,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1761,7 +1761,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1773,7 +1773,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1785,7 +1785,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1797,7 +1797,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1809,7 +1809,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1821,7 +1821,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -1833,7 +1833,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -1845,7 +1845,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -1861,7 +1861,7 @@ db.Stats.insert({
  */
 ////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1873,7 +1873,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -1885,7 +1885,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1897,7 +1897,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -1909,7 +1909,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1403362980000), //06/21/2014 17:03
@@ -1921,7 +1921,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1403623260000), //06/24/2014 17:21
@@ -1933,7 +1933,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -1945,7 +1945,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -1957,7 +1957,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1969,7 +1969,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -1981,7 +1981,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -1993,7 +1993,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2005,7 +2005,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -2017,7 +2017,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -2029,7 +2029,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2041,7 +2041,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2059,7 +2059,7 @@ db.Stats.insert({
  */
 ////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -2071,7 +2071,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -2083,7 +2083,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2095,7 +2095,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2107,7 +2107,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "yellowCard",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2119,7 +2119,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2131,7 +2131,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2143,7 +2143,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -2155,7 +2155,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -2167,7 +2167,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2179,7 +2179,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2197,7 +2197,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -2209,7 +2209,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -2221,7 +2221,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2233,7 +2233,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2245,7 +2245,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2257,7 +2257,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2275,7 +2275,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -2287,7 +2287,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -2299,7 +2299,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2311,7 +2311,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2323,7 +2323,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2335,7 +2335,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2347,7 +2347,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2359,7 +2359,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2371,7 +2371,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -2383,7 +2383,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -2395,7 +2395,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2407,7 +2407,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2425,7 +2425,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1403361060000), //06/21/2014 16:31
@@ -2437,7 +2437,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -2449,7 +2449,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403359200000), //06/21/2014 16:00
@@ -2461,7 +2461,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2473,7 +2473,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2485,7 +2485,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1403970840000), //06/28/2014 17:54
@@ -2497,7 +2497,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2509,7 +2509,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2521,7 +2521,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2533,7 +2533,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2545,7 +2545,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -2557,7 +2557,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -2569,7 +2569,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "yellowCard",
     "timer" : NumberLong(1404844200000), //07/08/2014 20:30
@@ -2587,7 +2587,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -2599,7 +2599,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1402927200000), //06/16/2014 16:00
@@ -2611,7 +2611,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2623,7 +2623,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2635,7 +2635,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2647,7 +2647,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403968500000), //06/28/2014 17:15
@@ -2659,7 +2659,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2671,7 +2671,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2683,7 +2683,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1405017780000), //07/10/2014 20:43
@@ -2702,7 +2702,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2714,7 +2714,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1403618400000), //06/24/2014 16:00
@@ -2726,7 +2726,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "substitue",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2738,7 +2738,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1404498600000), //07/04/2014 20:30
@@ -2750,7 +2750,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2762,7 +2762,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2774,7 +2774,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalscored",
     "timer" : NumberLong(1405022280000), //07/10/2014 21:58
@@ -2793,7 +2793,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2805,7 +2805,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2817,7 +2817,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1405019460000), //07/04/2014 21:11
@@ -2829,7 +2829,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1405019640000), //07/04/2014 21:14
@@ -2841,7 +2841,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "goalconceded",
     "timer" : NumberLong(1405020660000), //07/04/2014 21:31
@@ -2859,7 +2859,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2871,7 +2871,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2889,7 +2889,7 @@ db.Stats.insert({
  */
 //////////////////////////////////////////////////////////
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "holder",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30
@@ -2901,7 +2901,7 @@ db.Stats.insert({
 });
 
 _id = new ObjectId().valueOf();
-db.Stats.insert({
+db.SB_Stats.insert({
     "_id" : _id,
     "code" : "playtime",
     "timer" : NumberLong(1405017000000), //07/10/2014 20:30

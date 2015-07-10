@@ -29,7 +29,7 @@
 /* 
  * emptying of collections
  */
-   db.Exercise.remove({"structureId" : "541168295971d35c1f2d1b60"});
+   db.SB_Exercise.remove({"structureId" : "541168295971d35c1f2d1b60"});
 
 /*
  * Data tests of cycle
@@ -37,7 +37,7 @@
 
 /* 0 */
   
-   db.Exercise.insert(
+   db.SB_Exercise.insert(
            {
                "_id" : "d242e0a3-e7de-493e-b387-8eb8b8b648d4",
                "activityId" : "ACT-FOOT",
@@ -98,7 +98,7 @@
                "dateCreate" : "2015-04-22T20:19:34.247Z"
            }); 
  
-   db.Exercise.insert(
+   db.SB_Exercise.insert(
            {
                "_id" : "b7d1c1c3-378f-44fc-825f-c21ef3296751",
                "activityId" : "ACT-FOOT",
@@ -159,7 +159,7 @@
                "dateCreate" : "2015-04-22T20:19:34.247Z"
            }); 
    
-   db.Exercise.insert(
+   db.SB_Exercise.insert(
            {
                "_id" : "9b832208-5958-43c8-9e1f-53fd63762b6c",
                "subTheme" : {

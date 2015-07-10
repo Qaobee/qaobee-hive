@@ -29,14 +29,14 @@
 /* 
  * emptying of collections
  */
-   db.Session.remove({"structureId" : "541168295971d35c1f2d1b60"});
+   db.SB_Session.remove({"structureId" : "541168295971d35c1f2d1b60"});
 
 /*
  * Data tests of session
  */
 
 /* 0 */
-   db.Session.insert({
+   db.SB_Session.insert({
        "_id" : "4d456aaa-85c9-4de8-9e56-96ba29b80221",
        "activityId" : "ACT-FOOT",
        "structureId" : "541168295971d35c1f2d1b60",
@@ -197,7 +197,7 @@
        "dateCreate" : "2015-04-22T20:50:13.487Z"
    });
 
-   db.Session.insert({
+   db.SB_Session.insert({
        "_id" : "e7bebc2c-918f-4a33-b46a-1770aedb9b32",
        "categoryAge" : {
            "code" : "sen",

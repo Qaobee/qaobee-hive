@@ -19,31 +19,31 @@
 //////////////////////////////////////////////////////////
 /*
  * SCRIPT MONGO DB
- * INJECTION SandBoxCfg
+ * INJECTION SB_SandBoxCfg
  * V1.0
  *
  * This script creates documents for collections :
- * - SandBoxCfg
- * - SandBox
+ * - SB_SandBoxCfg
+ * - SB_SandBox
  *
  * AUTHOR : xavier MARIN pour Qaobee
  */
 //////////////////////////////////////////////////////////
 /*
- * Vidage de la collection SandBoxCfg France A
+ * Vidage de la collection SB_SandBoxCfg France A
  */
-db.SandBoxCfg.remove({"_id": "559d268318e3cb71c60d9649"});
+db.SB_SandBoxCfg.remove({"_id": "559d268318e3cb71c60d9649"});
 /*
- * Vidage de la collection SandBox France A
+ * Vidage de la collection SB_SandBox France A
  */
-db.SandBox.remove({"_id": "559d266a18e3cb71c60d9648"});
+db.SB_SandBox.remove({"_id": "559d266a18e3cb71c60d9648"});
 
 
 /***************************************************************
  * Alimentation SandBox France A
  * *************************************************************
  */
-db.SandBox.insert({
+db.SB_SandBox.insert({
     "_id": "559d266a18e3cb71c60d9648",
     "activityId": "ACT-FOOT",
     "owner": "54160977d5bd065a1bb1e565",
@@ -52,10 +52,10 @@ db.SandBox.insert({
 
 
 /***************************************************************
- * Alimentation SandBoxCfg France A
+ * Alimentation SB_SandBoxCfg France A
  * *************************************************************
  */
-db.SandBoxCfg.insert({
+db.SB_SandBoxCfg.insert({
     "_id": "559d268318e3cb71c60d9649",
     "activity": {
         "_id" : "ACT-FOOT",

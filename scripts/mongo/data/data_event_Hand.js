@@ -20,28 +20,28 @@
 //////////////////////////////////////////////////////////
 /* 
  * SCRIPT MONGO DB 
- * INJECTION Event
+ * INJECTION SB_Event
  * V1.0
  * 
  * This script creates documents for collections :
- * - Event
+ * - SB_Event
  * 
  * AUTHOR : Christophe kervella pour Qaobee
  */
 //////////////////////////////////////////////////////////
 
 /* 
- * Vidage de la collection Event handball
+ * Vidage de la collection SB_Event handball
  */
-db.Event.remove({ "owner" : { "$in" : [ "55847ed0d040353767a48e70", "55847ed0d040353767a48e71", "55847ed0d040353767a48e72", "55847ed0d040353767a48e73"]}});
+db.SB_Event.remove({ "owner" : { "$in" : [ "55847ed0d040353767a48e70", "55847ed0d040353767a48e71", "55847ed0d040353767a48e72", "55847ed0d040353767a48e73"]}});
 
  
 /***************************************************************
- * Alimentation Event Cesson Handball
+ * Alimentation SB_Event Cesson Handball
  * *************************************************************
  */
 
-db.Event.insert({"_id" : "55847ed0d040353767a48e70",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e70",
     "activityId" : "ACT-HAND",
     "categoryAge" : { "code" : "sen", "label" : "Senior", "ageMax" : NumberInt(34), "ageMin" : NumberInt(20), "genre" : "gender.male"},
     "seasonCode" : "SAI-2014", 
@@ -55,7 +55,7 @@ db.Event.insert({"_id" : "55847ed0d040353767a48e70",
                       {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}]
 });
 
-db.Event.insert({"_id" : "55847ed0d040353767a48e71",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71",
     "activityId" : "ACT-HAND",
     "categoryAge" : { "code" : "sen", "label" : "Senior", "ageMax" : NumberInt(34), "ageMin" : NumberInt(20), "genre" : "gender.male"},
     "seasonCode" : "SAI-2014", 
@@ -69,7 +69,7 @@ db.Event.insert({"_id" : "55847ed0d040353767a48e71",
                       {"id" : "ID-ARENA-BREST", "name" : "Brest Arena", "structureId" : "541168295971d35c1f2d1b5e", "type":"infrastructure"}]
 });
 
-db.Event.insert({"_id" : "55847ed0d040353767a48e72",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e72",
     "activityId" : "ACT-HAND",
     "categoryAge" : { "code" : "sen", "label" : "Senior", "ageMax" : NumberInt(34), "ageMin" : NumberInt(20), "genre" : "gender.male"},
     "seasonCode" : "SAI-2014", 
@@ -83,7 +83,7 @@ db.Event.insert({"_id" : "55847ed0d040353767a48e72",
                       {"id" : "ID-OUBRON-CRETEIL", "label" : "Robert Oubron", "structureId" : "USCRETEILHANDBALL", "type":"infrastructure"}]
 });
 
-db.Event.insert({"_id" : "55847ed0d040353767a48e73",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e73",
     "activityId" : "ACT-HAND",
     "categoryAge" : { "code" : "sen", "label" : "Senior", "ageMax" : NumberInt(34), "ageMin" : NumberInt(20), "genre" : "gender.male"},
     "seasonCode" : "SAI-2014", 
