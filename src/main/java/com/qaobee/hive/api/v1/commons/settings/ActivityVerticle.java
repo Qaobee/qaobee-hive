@@ -95,7 +95,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> get = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
@@ -127,9 +127,12 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
         /**
          * @api {get} /api/v1/commons/settings/activity/getList List all activities
@@ -146,7 +149,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> getList = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
@@ -168,9 +171,12 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
 
         /**
@@ -188,7 +194,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> getListEnable = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET_LIST_ENABLE, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
@@ -208,16 +214,11 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } 
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
             }
-        };
-
-		/*
-		 * Handlers registration
-		 */
-        vertx.eventBus().registerHandler(GET, get);
-        vertx.eventBus().registerHandler(GET_LIST, getList);
-        vertx.eventBus().registerHandler(GET_LIST_ENABLE, getListEnable);
+        });
     }
-
 }
