@@ -306,7 +306,7 @@ public class Main extends AbstractGuiceVerticle {
         }, new Runnable<Promise<List<String>, Void>, Value<List<String>>>() {
             @Override
             public Promise<List<String>, Void> run(final Value<List<String>> value) {
-                System.out.println(value.error.getMessage());
+                container.logger().error(value.error.getMessage());
                 return null;
             }
         });

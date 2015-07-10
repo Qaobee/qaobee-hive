@@ -38,7 +38,7 @@ public enum ExceptionCodes {
 	/** The mandatory field. */
 	MANDATORY_FIELD(504),
 	/** The bad login. */
-	BAD_LOGIN(505),
+	BAD_LOGIN(401),
 	/** The mail exception. */
 	MAIL_EXCEPTION(505),
 	/** The not logged. */
