@@ -20,20 +20,11 @@
 package com.qaobee.hive.api.v1.sandbox.effective;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
-import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
@@ -41,10 +32,18 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
+import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
 
 /**
  * The type Person verticle.
@@ -112,6 +111,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Add Person
          * @api {put} /api/1/person/add Add Person
+         * @apiVersion 0.1.0
          * @apiName addPerson
          * @apiGroup Person API
          * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
@@ -130,36 +130,6 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
                     final JsonObject personJson = new JsonObject(dataContainer.getElement("person").toString());
                     Json.decodeValue(personJson.toString(), SB_Person.class);
 
-					/* Control metier */
-                    // TODO :      PersonCheck.getInstance().validate(person, req.getLocale());
-
-					/* Add default values */
-                    // Creation of request
-                    CriteriaBuilder criterias = new CriteriaBuilder();
-                    criterias.add("activityId", dataContainer.getString("activityId"));
-                    criterias.add("countryId", dataContainer.getString("countryId"));
-                    criterias.between("startDate", "endDate", new Date().getTime());
-                    // TODO : A voir si c'est toujours comme ça
-                    // retrieve characteristics for one activity
-                    JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, ActivityCfg.class);
-                    JsonObject json = resultJSon.get(0);
-                    JsonArray caracs = json.getArray("caracteristicsPerson");
-
-                    JsonObject status = personJson.getField("status");
-                    String positionPerson = status.getField("positionType");
-                    /* set default value for characteristics, depends positionType */
-                    for (Object object : caracs) {
-                        JsonObject obj = new JsonObject(object.toString());
-                        String positiontype = obj.getField("positionType").toString();
-                        if (positiontype.contains(positionPerson)) {
-                            personJson.putElement("physicalFolder", obj.getArray("physicalFolder"));
-                            personJson.putElement("technicalFolder", obj.getArray("technicalFolder"));
-                            personJson.putElement("mentalFolder", obj.getArray("mentalFolder"));
-                            break;
-                        }
-                    }
-					/* force medicalFolder to null (bug) */
-                    personJson.putElement("medicalFolder", null);
                     final String id = mongo.save(personJson, SB_Person.class);
                     personJson.putString("_id", id);
 					/* return */
@@ -180,6 +150,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Retrieve Person by this Id
          * @api {get} /api/1/person/get Get Person by Id
+         * @apiVersion 0.1.0
          * @apiName getPersonById
          * @apiGroup Person API
          * @apiParam {String} id
@@ -213,6 +184,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Update person
          * @api {get} /api/1/person/get Update person
+         * @apiVersion 0.1.0
          * @apiName updatePerson
          * @apiGroup Person API
          * @apiParam {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
@@ -246,6 +218,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Return list of person as member of group
          * @api {post} /api/1/person/list Get list of persons
+         * @apiVersion 0.1.0
          * @apiName getListPerson
          * @apiGroup Person API
          * @apiSuccess {Array} list of persons
