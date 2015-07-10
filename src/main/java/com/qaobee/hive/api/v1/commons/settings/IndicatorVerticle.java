@@ -328,8 +328,6 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                     List<DBObject> pipelineAggregation = Collections.singletonList(match);
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
-
-                    container.logger().info(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
