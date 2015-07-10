@@ -195,7 +195,6 @@ public class UserTest extends VertxJunitSupport {
             req.setMethod(Constantes.GET);
             req.getParams().put(UserVerticle.PARAM_COUNTRY_ID, Collections.singletonList("CNTR-250-FR-FRA"));
             final JsonObject result = new JsonObject(sendonBus(UserVerticle.META, req, user.getAccount().getToken()));
-            Assert.assertTrue("Season not found !", result.containsField("season"));
             Assert.assertTrue("Activity not found !", result.containsField("activity"));
             Assert.assertTrue("Structure not found !", result.containsField("structure"));
             // ACT-HAND FR
