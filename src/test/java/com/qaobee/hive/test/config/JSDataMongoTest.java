@@ -22,29 +22,28 @@ package com.qaobee.hive.test.config;
 public interface JSDataMongoTest {
 
     /* DATA */
-    String DATA_EFFECTIVE_FOOT = "data_effective_Foot.js";
-    String DATA_EFFECTIVE_HAND = "data_effective_Hand.js";
-    String DATA_EVENT_HAND = "data_event_Hand.js";
-    String DATA_GROUP_FOOT = "data_group.js";
-    String DATA_PERSON_FOOT = "data_person_Foot_SEN.js";
-    String DATA_STATS_FOOT = "data_stats_Foot_SEN.js";
-    String DATA_STATS_MATCH = "data_stats_match.js";
+    String DATA_EFFECTIVE_FOOT = "data_SB_effective_Foot.js";
+    String DATA_EFFECTIVE_HAND = "data_SB_effective_Hand.js";
+    String DATA_EVENT_HAND = "data_SB_event_Hand.js";
+
+    String DATA_PERSON_FOOT = "data_SB_person_Foot_SEN.js";
+    String DATA_STATS_FOOT = "data_SB_stats_Foot_SEN.js";
+    String DATA_STATS_MATCH = "data_SB_stats_match.js";
     String DATA_STRUCTURE = "data_structures.js";
     String DATA_USERS = "data_users.js";
-    String DATA_SANDBOXES_HAND = "data_sandbox_Hand.js";
-    String DATA_SANDBOXES_FOOT = "data_sandbox_Foot.js";
+    String DATA_SANDBOXES_HAND = "data_SB_sandbox_Hand.js";
+    String DATA_SANDBOXES_FOOT = "data_SB_sandbox_Foot.js";
 
     /* Training */
-    String DATA_CYCLE = "data_training_cycle.js";
-    String DATA_SESSION = "data_training_session.js";
-    String DATA_EXERCISE = "data_training_exercise.js";
-    String DATA_THEME = "data_training_theme.js";
+    String DATA_CYCLE = "data_SB_training_cycle.js";
+    String DATA_SESSION = "data_SB_training_session.js";
+    String DATA_EXERCISE = "data_SB_training_exercise.js";
+    String DATA_THEME = "data_SB_training_theme.js";
 
     /* SETTINGS */
     String SETTINGS_ACTIVITY = "settings_activity.js";
     String SETTINGS_ACTIVITY_CFG = "settings_activityCfg.js";
     String SETTINGS_COUNTRY = "settings_country.js";
-    String SETTINGS_PERSON_FOOT = "settings_person_Foot_SEN.js";
     String SETTINGS_SEASONS = "settings_season.js";
     /* STATS */
     String SETTINGS_INDICATOR = "settings_indicator_HAND.js";

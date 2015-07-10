@@ -18,51 +18,31 @@
  */
 package com.qaobee.hive.business.model.sandbox.training;
 
+import java.util.List;
+
 /**
- * The Class Exercise.
+ * The Class Session.
  *
  * @author cke
  */
-public class ExerciseSession extends TrainingAbstract {
+public class SB_Session extends TrainingAbstract {
 
-	/** order number. */
-	private int orderNumber;
-
-	/** Exercice */
-	private SB_Exercise exercise;
+	/** List exerciseSession. */
+	private List<ExerciseSession> exerciseSessionList;
 
 	/**
-	 * @return the exercise
+	 * @return the exerciseSessionList
 	 */
-	public SB_Exercise getExercise() {
-		return exercise;
+	public List<ExerciseSession> getExerciseSessionList() {
+		return exerciseSessionList;
 	}
 
 	/**
-	 * @param exercise
-	 *            the exercise to set
+	 * @param exerciseSessionList
+	 *            the exerciseSessionList to set
 	 */
-	public void setExercise(SB_Exercise exercise) {
-		this.exercise = exercise;
-	}
-
-	/**
-	 * Gets the order number.
-	 *
-	 * @return the order number
-	 */
-	public final int getOrderNumber() {
-		return orderNumber;
-	}
-
-	/**
-	 * Sets the order number.
-	 *
-	 * @param orderNumber
-	 *            the new order number
-	 */
-	public final void setOrderNumber(final int orderNumber) {
-		this.orderNumber = orderNumber;
+	public void setExerciseSessionList(List<ExerciseSession> exerciseSessionList) {
+		this.exerciseSessionList = exerciseSessionList;
 	}
 
 }

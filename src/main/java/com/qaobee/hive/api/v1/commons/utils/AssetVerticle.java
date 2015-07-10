@@ -23,7 +23,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
-import com.qaobee.hive.business.model.sandbox.effective.Person;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -84,7 +84,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                 JsonObject resp = new JsonObject();
                 try {
                     utils.testMandatoryParams(message.body().toMap(), "uid", "token", "filename", "collection", "field", "contentType");
-                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString("token")).get(), null, null, 0, 0, Person.class);
+                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString("token")).get(), null, null, 0, 0, SB_Person.class);
                     if (res.size() != 1) {
                         FileUtils.deleteQuietly(new File(message.body().getString("filename")));
 
@@ -102,11 +102,11 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                         gfsFile.setMetaData(meta);
                         gfsFile.setContentType(message.body().getString("contentType"));
                         gfsFile.save();
-                        if (message.body().getString("collection").equals(Person.class.getSimpleName())) {
+                        if (message.body().getString("collection").equals(SB_Person.class.getSimpleName())) {
                             JsonObject personToSave = new JsonObject();
                             personToSave.putString("_id", message.body().getString("uid"));
                             personToSave.putString(message.body().getString("field"), gfsFile.getId().toString());
-                            mongo.update(personToSave, Person.class);
+                            mongo.update(personToSave, SB_Person.class);
                             resp.putNumber("statusCode", 200);
                             resp.putString("message", personToSave.encode());
                         }
@@ -138,7 +138,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     utils.testMandatoryParams(message.body().toMap(), "collection", "id");
                     GridFS img = new GridFS(mongo.getDb(), "Assets");
 
-                    if (message.body().getString("collection").equals(Person.class.getSimpleName())) {
+                    if (message.body().getString("collection").equals(SB_Person.class.getSimpleName())) {
                         GridFSDBFile imageForOutput = img.findOne(new ObjectId(message.body().getString("id")));
                         if (imageForOutput != null && imageForOutput.getChunkSize() > 0) {
                             ByteArrayOutputStream bos = new ByteArrayOutputStream();

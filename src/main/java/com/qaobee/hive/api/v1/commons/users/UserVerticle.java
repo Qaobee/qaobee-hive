@@ -23,8 +23,8 @@ import com.englishtown.promises.Promise;
 import com.englishtown.promises.Runnable;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
-import com.qaobee.hive.api.v1.sandbox.config.SandBoxCfgVerticle;
-import com.qaobee.hive.api.v1.sandbox.config.SandBoxVerticle;
+import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxCfgVerticle;
+import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -504,8 +504,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     JsonObject user = mongo.getById(u.get_id(), User.class);
                     final JsonObject activity = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("activity");
 
-                    req.getParams().put(SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
-                    whenEventBus.send(SandBoxVerticle.GET_BY_OWNER, Json.encode(req))
+                    req.getParams().put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
+                    whenEventBus.send(SB_SandBoxVerticle.GET_BY_OWNER, Json.encode(req))
                             .then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
                                 @Override
                                 public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
@@ -513,8 +513,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
                                         utils.sendError(message, (ReplyException) objectMessage.body());
                                     } else {
                                         JsonObject sandbox = new JsonObject((String) objectMessage.body());
-                                        req.getParams().put(SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(sandbox.getString("sandboxCfgId")));
-                                        whenEventBus.send(SandBoxCfgVerticle.GET, Json.encode(req)).then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
+                                        req.getParams().put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(sandbox.getString("sandboxCfgId")));
+                                        whenEventBus.send(SB_SandBoxCfgVerticle.GET, Json.encode(req)).then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
                                             @Override
                                             public Promise<Message<Object>, Void> run(Message objectMessage) {
                                                 if (objectMessage.body() instanceof ReplyException) {
