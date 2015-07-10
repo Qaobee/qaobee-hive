@@ -20,7 +20,7 @@
 package com.qaobee.hive.api.v1.sandbox.config;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.sandbox.config.SandBoxCfg;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -45,7 +45,7 @@ import java.util.Map;
  * The type Sand box cfg verticle.
  */
 @DeployableVerticle(isWorker = true)
-public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
+public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {
     /**
      * The constant GET.
      */
@@ -105,7 +105,7 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     Map<String, List<String>> params = req.getParams();
                     utils.testMandatoryParams(params, PARAM_ID);
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SandBoxCfg.class);
+                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_SandBoxCfg.class);
                     container.logger().info("SandBoxCfg found : " + json.toString());
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
@@ -153,7 +153,7 @@ public class SandBoxCfgVerticle extends AbstractGuiceVerticle {
                         criterias.put("season._id", params.get(PARAM_SEASON_ID).get(0));
                     }
 
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SandBoxCfg.class);
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_SandBoxCfg.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBoxCfg defined for sandBox if (" + params.get(PARAM_SANDBOX_ID).get(0) + ")");

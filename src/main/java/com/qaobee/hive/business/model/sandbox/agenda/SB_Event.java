@@ -17,7 +17,7 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.business.model.commons.referencial.event;
+package com.qaobee.hive.business.model.sandbox.agenda;
 
 import java.util.List;
 
@@ -25,15 +25,17 @@ import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.business.model.transversal.Address;
+import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.EventLink;
 import com.qaobee.hive.business.model.transversal.Participant;
+import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
  * The Class Exercise.
  *
  * @author cke
  */
-public class Event {
+public class SB_Event {
 
 	/**
 	 * The Event id.
@@ -94,6 +96,16 @@ public class Event {
 	 * Event Link
 	 */
 	private EventLink eventLink;
+	
+	/** 
+	 * List labels
+	 */
+	private List<Tag> labels;
+	
+	/** 
+	 * audit CRUD object 
+	 */
+	private Audit audit;
 
 	/**
 	 * @return the _id
@@ -261,6 +273,34 @@ public class Event {
 	 */
 	public void setEventLink(EventLink eventLink) {
 		this.eventLink = eventLink;
+	}
+
+	/**
+	 * @return the labels
+	 */
+	public List<Tag> getLabels() {
+		return labels;
+	}
+
+	/**
+	 * @param labels the labels to set
+	 */
+	public void setLabels(List<Tag> labels) {
+		this.labels = labels;
+	}
+
+	/**
+	 * @return the audit
+	 */
+	public Audit getAudit() {
+		return audit;
+	}
+
+	/**
+	 * @param audit the audit to set
+	 */
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
 
 	

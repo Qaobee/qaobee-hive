@@ -26,12 +26,8 @@ import java.io.File;
  *
  * @author Mohamed EL MARZGIOUI
  */
-public class Exercise extends TrainingAbstract {
+public class SB_Exercise extends TrainingAbstract {
 
-	/** Theme */
-	private Theme theme;
-	/** Subtheme */
-	private SubTheme subTheme;
 	/** Objective. */
 	private String objective;
 
@@ -43,21 +39,6 @@ public class Exercise extends TrainingAbstract {
 
 	/** File . */
 	private File file;
-
-	/**
-	 * @return the theme
-	 */
-	public Theme getTheme() {
-		return theme;
-	}
-
-	/**
-	 * @param theme
-	 *            the theme to set
-	 */
-	public void setTheme(Theme theme) {
-		this.theme = theme;
-	}
 
 	/**
 	 * @return the file
@@ -72,21 +53,6 @@ public class Exercise extends TrainingAbstract {
 	 */
 	public void setFile(File file) {
 		this.file = file;
-	}
-
-	/**
-	 * @return the subTheme
-	 */
-	public SubTheme getSubTheme() {
-		return subTheme;
-	}
-
-	/**
-	 * @param subTheme
-	 *            the subTheme to set
-	 */
-	public void setSubTheme(SubTheme subTheme) {
-		this.subTheme = subTheme;
 	}
 
 	/**

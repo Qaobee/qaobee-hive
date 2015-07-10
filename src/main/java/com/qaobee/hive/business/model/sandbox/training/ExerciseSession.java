@@ -29,12 +29,12 @@ public class ExerciseSession extends TrainingAbstract {
 	private int orderNumber;
 
 	/** Exercice */
-	private Exercise exercise;
+	private SB_Exercise exercise;
 
 	/**
 	 * @return the exercise
 	 */
-	public Exercise getExercise() {
+	public SB_Exercise getExercise() {
 		return exercise;
 	}
 
@@ -42,7 +42,7 @@ public class ExerciseSession extends TrainingAbstract {
 	 * @param exercise
 	 *            the exercise to set
 	 */
-	public void setExercise(Exercise exercise) {
+	public void setExercise(SB_Exercise exercise) {
 		this.exercise = exercise;
 	}
 

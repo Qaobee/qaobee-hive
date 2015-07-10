@@ -24,7 +24,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
-import com.qaobee.hive.business.model.sandbox.effective.Person;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -50,36 +50,28 @@ import java.util.List;
  * The type Person verticle.
  */
 @DeployableVerticle(isWorker = true)
-public class PersonVerticle extends AbstractGuiceVerticle {
+public class SB_PersonVerticle extends AbstractGuiceVerticle {
     /**
      * Handler to get a set of persons
      */
-    public static final String GET_LIST = Module.VERSION + ".person.list";
-    /**
-     * Handler to get a set of persons
-     */
-    public static final String GET_LIST_STRUCTURE = Module.VERSION + ".person.listStructure";
+    public static final String GET_LIST = Module.VERSION + ".sandbox.effective.person.list";
     /**
      * Handler to add a person.
      */
-    public static final String ADD = Module.VERSION + ".person.add";
+    public static final String ADD = Module.VERSION + ".sandbox.effective.person.add";
     /**
      * Handler to get a particular person from its ID.
      */
-    public static final String GET = Module.VERSION + ".person.get";
+    public static final String GET = Module.VERSION + ".sandbox.effective.person.get";
     /**
      * Handler to update a person.
      */
-    public static final String UPDATE = Module.VERSION + ".person.update";
+    public static final String UPDATE = Module.VERSION + ".sandbox.effective.person.update";
     /**
      * Handler to update the avatar of a person.
      */
-    public static final String AVATAR = Module.VERSION + ".person.avatar";
-    /**
-     * Handler to update feature of an effective
-     */
-    public static final String UPDATE_FEATURE = Module.VERSION + ".person.feature.update";
-
+    public static final String AVATAR = Module.VERSION + ".sandbox.effective.person.avatar";
+    
 	/* List of parameters */
     /**
      * Group ID
@@ -94,25 +86,10 @@ public class PersonVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_SEASON_CODE = "seasonCode";
     /**
-     * Structure ID
-     */
-    public static final String PARAM_STRUCTURE_ID = "structureId";
-    /**
      * Person ID
      */
     public static final String PARAM_PERSON_ID = "id";
-    /**
-     * Feature Folder Name (technical, physical, mental)
-     */
-    public static final String PARAM_FEATURE_FOLDER_NAME = "featureFolderName";
-    /**
-     * Feature Key
-     */
-    public static final String PARAM_FEATURE_KEY = "featureKey";
-    /**
-     * Feature Value
-     */
-    public static final String PARAM_FEATURE_VALUE = "featureValue";
+    
     /**
      * The Mongo.
      */
@@ -151,7 +128,7 @@ public class PersonVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     final JsonObject dataContainer = new JsonObject(req.getBody());
                     final JsonObject personJson = new JsonObject(dataContainer.getElement("person").toString());
-                    final Person person = Json.decodeValue(personJson.toString(), Person.class);
+                    Json.decodeValue(personJson.toString(), SB_Person.class);
 
 					/* Control metier */
                     // TODO :      PersonCheck.getInstance().validate(person, req.getLocale());
@@ -183,7 +160,7 @@ public class PersonVerticle extends AbstractGuiceVerticle {
                     }
 					/* force medicalFolder to null (bug) */
                     personJson.putElement("medicalFolder", null);
-                    final String id = mongo.save(personJson, Person.class);
+                    final String id = mongo.save(personJson, SB_Person.class);
                     personJson.putString("_id", id);
 					/* return */
                     message.reply(personJson.encode());
@@ -219,7 +196,7 @@ public class PersonVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_PERSON_ID);
-                    message.reply(mongo.getById(req.getParams().get(PARAM_PERSON_ID).get(0), Person.class).encode());
+                    message.reply(mongo.getById(req.getParams().get(PARAM_PERSON_ID).get(0), SB_Person.class).encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -250,7 +227,7 @@ public class PersonVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());
                     utils.isUserLogged(req);
                     final JsonObject json = new JsonObject(req.getBody());
-                    final String id = mongo.update(json, Person.class);
+                    final String id = mongo.update(json, SB_Person.class);
                     json.putString("_id", id);
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
@@ -262,61 +239,6 @@ public class PersonVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
-                }
-            }
-        });
-
-        /**
-         * @apiDescription Update person's features
-         * @api {get} /api/1/person/feature/update Update person's features
-         * @apiName updatePersonFeature
-         * @apiGroup Person API
-         * @apiParam {Object} Person Person com.qaobee.hive.business.model.sandbox.effective.Person
-         * @apiSuccess {Object} Person Person com.qaobee.hive.business.model.sandbox.effective.Person
-         * @apiError HTTP_ERROR Bad request
-         */
-        // TODO est-ce que ça existe toujours?
-        vertx.eventBus().registerHandler(UPDATE_FEATURE, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.PUT, req.getMethod());
-                    utils.isUserLogged(req);
-                    JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_PERSON_ID, PARAM_FEATURE_FOLDER_NAME, PARAM_FEATURE_KEY, PARAM_FEATURE_VALUE);
-                    String folder = params.getString(PARAM_FEATURE_FOLDER_NAME);
-                    if (!"technicalFolder".equals(folder) && !"mentalFolder".equals(folder) && !"physicalFolder".equals(folder)) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Folder should be 'technicalFolder', 'physicalFolder' or 'mentalFolder'");
-                    }
-
-                    // QUERY
-                    JsonObject query = new JsonObject();
-                    query.putString("_id", params.getString(PARAM_PERSON_ID));
-                    query.putString(params.getString(PARAM_FEATURE_FOLDER_NAME) + ".key", params.getString(PARAM_FEATURE_KEY));
-
-                    // SET
-                    JsonObject set = new JsonObject();
-                    JsonObject value = new JsonObject();
-                    value.putNumber(params.getString(PARAM_FEATURE_FOLDER_NAME) + ".$.value", params.getInteger(PARAM_FEATURE_VALUE));
-                    set.putObject("$set", value);
-
-                    mongo.update(query, set, Person.class);
-                    utils.sendStatus(true, message);
-                } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, e.getCode(), e.getMessage());
                 }
             }
         });
@@ -373,7 +295,7 @@ public class PersonVerticle extends AbstractGuiceVerticle {
                     List<DBObject> pipelineAggregation = Arrays.asList(match, project);
                     container.logger().info("getListPerson : " + pipelineAggregation.toString());
 
-                    final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, Person.class);
+                    final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, SB_Person.class);
 
                     container.logger().info(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
@@ -390,83 +312,6 @@ public class PersonVerticle extends AbstractGuiceVerticle {
                 }
             }
 
-        });
-
-        /**
-         * @apiDescription Retrieve all person for one structure
-         * @api {get} /api/1/person/listStructure Get list of person by structure
-         * @apiName getListPersonStructure
-         * @apiGroup Person API
-         * @apiParam {String} structureId
-         * @apiParam {String} seasonCode
-         * @apiParam {String} listField
-         * @apiSuccess {Array} list of persons
-         * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
-         */
-        vertx.eventBus().registerHandler(GET_LIST_STRUCTURE, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
-                    JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_STRUCTURE_ID, PARAM_SEASON_CODE, PARAM_LIST_FIELD);
-
-                    // Structure ID
-                    String structureId = req.getParams().get(PARAM_STRUCTURE_ID).get(0);
-                    // Season Code
-                    String seasonCode = req.getParams().get(PARAM_SEASON_CODE).get(0);
-
-                    // List of field
-                    JsonArray listfield = params.getArray(PARAM_LIST_FIELD);
-
-                    DBObject match, project;
-                    BasicDBObject dbObjectParent;
-
-                    // $MATCH section
-                    dbObjectParent = new BasicDBObject();
-                    // - structureId
-                    dbObjectParent.put("listLicenses.structureId", structureId);
-                    // - seasonCode
-                    dbObjectParent.put("listLicenses.listHistoLicense.seasonCode", seasonCode);
-
-                    match = new BasicDBObject("$match", dbObjectParent);
-
-					/* *** $PROJECT section *** */
-                    dbObjectParent = new BasicDBObject();
-                    for (Object field : listfield) {
-                        dbObjectParent.put((String) field, "$" + field);
-                    }
-
-                    project = new BasicDBObject("$project", dbObjectParent);
-
-                    List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-                    container.logger().info("getListPersonStructure : " + pipelineAggregation.toString());
-
-                    final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, Person.class);
-
-                    container.logger().info(resultJSon.encodePrettily());
-                    message.reply(resultJSon.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, e.getCode(), e.getMessage());
-                }
-            }
         });
     }
 }

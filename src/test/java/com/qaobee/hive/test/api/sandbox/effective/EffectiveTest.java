@@ -21,7 +21,7 @@ import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_EffectiveVerticle;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.business.model.sandbox.effective.Effective;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
 import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -291,7 +291,7 @@ public class EffectiveTest extends VertxJunitSupport {
             members.add(member);
         }
 
-        Effective effective = new Effective();
+        SB_Effective effective = new SB_Effective();
         effective.setSandBoxCfgId("idBidon");
         effective.setCategoryAge(categoryAge);
         effective.setMembers(members);
@@ -362,7 +362,7 @@ public class EffectiveTest extends VertxJunitSupport {
             members.add(member);
         }
 
-        Effective effective = new Effective();
+        SB_Effective effective = new SB_Effective();
         effective.setSandBoxCfgId("idBidon");
         effective.setCategoryAge(categoryAge);
         effective.setMembers(members);

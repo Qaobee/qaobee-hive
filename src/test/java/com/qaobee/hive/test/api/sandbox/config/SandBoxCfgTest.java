@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.test.api.sandbox.config;
 
-import com.qaobee.hive.api.v1.sandbox.config.SandBoxCfgVerticle;
+import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxCfgVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -56,10 +56,10 @@ public class SandBoxCfgTest extends VertxJunitSupport {
         req.setMethod(Constantes.GET);
         req.setUser(user);
         final Map<String, List<String>> params = new HashMap<>();
-        params.put(SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(id));
+        params.put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(id));
         req.setParams(params);
 
-        final String reply = sendonBus(SandBoxCfgVerticle.GET, req, user.getAccount().getToken());
+        final String reply = sendonBus(SB_SandBoxCfgVerticle.GET, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
         Assert.assertEquals(id, result.getString("_id"));
         Assert.assertEquals(user.get_id(), result.getObject("sandbox").getString("owner"));
@@ -84,11 +84,11 @@ public class SandBoxCfgTest extends VertxJunitSupport {
             req.setMethod(Constantes.GET);
             req.setUser(user);
             final Map<String, List<String>> params = new HashMap<>();
-            params.put(SandBoxCfgVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-            params.put(SandBoxCfgVerticle.PARAM_SEASON_ID, Collections.singletonList("558b0ceaf9285df5b7553fc6"));
+            params.put(SB_SandBoxCfgVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
+            params.put(SB_SandBoxCfgVerticle.PARAM_SEASON_ID, Collections.singletonList("558b0ceaf9285df5b7553fc6"));
             req.setParams(params);
 
-            final String reply = sendonBus(SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());
+            final String reply = sendonBus(SB_SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());
             JsonArray result = new JsonArray(reply);
             Assert.assertEquals(1,result.size());
             

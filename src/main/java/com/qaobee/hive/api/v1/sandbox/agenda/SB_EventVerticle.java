@@ -17,9 +17,22 @@
  */
 package com.qaobee.hive.api.v1.sandbox.agenda;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.business.model.sandbox.agenda.SB_Event;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -28,16 +41,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * The type Event verticle.
@@ -251,7 +254,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
 
                     container.logger().info("getListEventHandler : " + pipelineAggregation.toString());
 
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_EventVerticle.class);
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Event.class);
 
                     container.logger().info(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
@@ -297,7 +300,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     JsonObject event = new JsonObject(req.getBody());
                     utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_CATEGORY, PARAM_SEASON_CODE, PARAM_OWNER, PARAM_START_DATE);
 
-                    final String id = mongo.save(event, SB_EventVerticle.class);
+                    final String id = mongo.save(event, SB_Event.class);
                     event.putString("_id", id);
 
 					/* return */
@@ -342,7 +345,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_ID);
 
-                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_EventVerticle.class).encode());
+                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_Event.class).encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());

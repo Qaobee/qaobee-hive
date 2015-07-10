@@ -41,7 +41,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.sandbox.stats.Stats;
+import com.qaobee.hive.business.model.sandbox.stats.SB_Stats;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -266,7 +266,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
 					container.logger().info("getStatGroupBy : " + pipelineAggregation.toString());
 
-					final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Stats.class);
+					final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
 
 					container.logger().info(resultJSon.encodePrettily());
 					message.reply(resultJSon.encode());
@@ -383,7 +383,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
 					container.logger().info("getListDetailValue : " + pipelineAggregation.toString());
 
-					final JsonArray resultJSon = mongo.aggregate("timer", pipelineAggregation, Stats.class);
+					final JsonArray resultJSon = mongo.aggregate("timer", pipelineAggregation, SB_Stats.class);
 
 					container.logger().info(resultJSon.encodePrettily());
 					message.reply(resultJSon.encode());
@@ -427,7 +427,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.PUT, req.getMethod());
 					JsonObject params = new JsonObject(req.getBody());
-					Stats stats = Json.decodeValue(params.encode(), Stats.class);
+					SB_Stats stats = Json.decodeValue(params.encode(), SB_Stats.class);
 					if (stats.getTimer() == 0) {
 						stats.setTimer(new Date().getTime());
 					}

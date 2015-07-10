@@ -22,9 +22,11 @@ package com.qaobee.hive.business.model.sandbox.effective;
 import java.util.List;
 
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
+import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Member;
+import com.qaobee.hive.business.model.transversal.Tag;
 
-public class Effective {
+public class SB_Effective {
 
 	/** Internal identifier. */
 	private String _id;
@@ -37,6 +39,16 @@ public class Effective {
 
 	/** List of persons that composed the current group */
 	private List<Member> members;
+	
+	/** 
+	 * List labels
+	 */
+	private List<Tag> labels;
+	
+	/** 
+	 * audit CRUD object 
+	 */
+	private Audit audit;
 	
 
 	/**
@@ -96,6 +108,34 @@ public class Effective {
 	 */
 	public void setSandBoxCfgId(String sandBoxCfgId) {
 		this.sandBoxCfgId = sandBoxCfgId;
+	}
+
+	/**
+	 * @return the labels
+	 */
+	public List<Tag> getLabels() {
+		return labels;
+	}
+
+	/**
+	 * @param labels the labels to set
+	 */
+	public void setLabels(List<Tag> labels) {
+		this.labels = labels;
+	}
+
+	/**
+	 * @return the audit
+	 */
+	public Audit getAudit() {
+		return audit;
+	}
+
+	/**
+	 * @param audit the audit to set
+	 */
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
 	
 	

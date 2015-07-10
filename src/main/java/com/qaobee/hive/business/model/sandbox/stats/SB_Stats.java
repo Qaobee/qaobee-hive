@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author cke | Jerome
  */
-public class Stats {
+public class SB_Stats {
 
     /**
      * The id.

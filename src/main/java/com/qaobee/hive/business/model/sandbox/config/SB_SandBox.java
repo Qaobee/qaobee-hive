@@ -24,7 +24,7 @@ package com.qaobee.hive.business.model.sandbox.config;
  *
  * @author cke
  */
-public class SandBox {
+public class SB_SandBox {
 
     /**
      * The Owner.

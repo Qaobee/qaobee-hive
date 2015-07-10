@@ -1,4 +1,4 @@
-package com.qaobee.hive.business.model.commons.referencial.event;
+package com.qaobee.hive.business.model.transversal;
 
 /**
  * 

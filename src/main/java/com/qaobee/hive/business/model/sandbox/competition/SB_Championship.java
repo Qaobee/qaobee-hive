@@ -16,34 +16,45 @@
  *  is strictly forbidden unless prior written permission is obtained
  *  from Qaobee.
  */
-package com.qaobee.hive.business.model.sandbox.effective;
+
+package com.qaobee.hive.business.model.sandbox.competition;
 
 import java.util.List;
 
-import com.qaobee.hive.business.model.commons.settings.LevelGame;
-import com.qaobee.hive.business.model.transversal.Member;
+import com.qaobee.hive.business.model.transversal.Audit;
+import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
- * This class describes a Group.
- * 
- * @author Jerome
+ * The Class Championship.
+ *
+ * @author Nada Vujanic-Maquin
+ * @version V1.0
  */
-public class Group {
 
-	/** Internal identifier */
+public class SB_Championship {
+
+	// Declaration des variables
+
+	/** Internal identifier. */
 	private String _id;
 
-	/** Label */
+	/** The label. */
 	private String label;
 	
-	/** Level game */
-	private LevelGame levelGame;
+	/** 
+	 * List labels
+	 */
+	private List<Tag> labels;
 	
-	/** List of persons that composed the current group */
-	private List<Member> members;
+	/** 
+	 * audit CRUD object 
+	 */
+	private Audit audit;
+
+	// Getters and Setters
 
 	/**
-	 * Returns the internal identifier.
+	 * Returns the internal identifier of the championship.
 	 * 
 	 * @return String : internal identifier
 	 */
@@ -52,7 +63,7 @@ public class Group {
 	}
 
 	/**
-	 * Defines the internal identifier.
+	 * Defines the internal identifier of the championship.
 	 * 
 	 * @param _id
 	 *            (String) : identifier
@@ -62,8 +73,8 @@ public class Group {
 	}
 
 	/**
-	 * Returns the label of the group.
-	 * 
+	 * Returns the label of the championship.
+	 *
 	 * @return String : label
 	 */
 	public String getLabel() {
@@ -71,8 +82,8 @@ public class Group {
 	}
 
 	/**
-	 * Defines the label of the group.
-	 * 
+	 * Defines the label of the championship.
+	 *
 	 * @param label
 	 *            (String) : label
 	 */
@@ -80,41 +91,32 @@ public class Group {
 		this.label = label;
 	}
 
-	
-
 	/**
-	 * Returns the level game associated to the group.
-	 * 
-	 * @return LevelGame : level game
+	 * @return the labels
 	 */
-	public LevelGame getLevelGame() {
-		return levelGame;
+	public List<Tag> getLabels() {
+		return labels;
 	}
 
 	/**
-	 * Defines the level game associated to the group.
-	 * 
-	 * @param levelGame
-	 *            (LevelGame) : level game
+	 * @param labels the labels to set
 	 */
-	public void setLevelGame(LevelGame levelGame) {
-		this.levelGame = levelGame;
+	public void setLabels(List<Tag> labels) {
+		this.labels = labels;
 	}
 
 	/**
-	 * @return the members
+	 * @return the audit
 	 */
-	public List<Member> getMembers() {
-		return members;
+	public Audit getAudit() {
+		return audit;
 	}
 
 	/**
-	 * @param members the members to set
+	 * @param audit the audit to set
 	 */
-	public void setMembers(List<Member> members) {
-		this.members = members;
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
-	
-	
 
 }

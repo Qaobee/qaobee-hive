@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author cke
  */
-public class Session extends TrainingAbstract {
+public class SB_Session extends TrainingAbstract {
 
 	/** List exerciseSession. */
 	private List<ExerciseSession> exerciseSessionList;

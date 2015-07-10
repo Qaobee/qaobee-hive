@@ -20,7 +20,7 @@
 package com.qaobee.hive.api.v1.sandbox.config;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.sandbox.config.SandBox;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -44,7 +44,7 @@ import java.util.Map;
  * The type Sand box cfg verticle.
  */
 @DeployableVerticle(isWorker = true)
-public class SandBoxVerticle extends AbstractGuiceVerticle {
+public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
 
     /**
      * The constant GET.
@@ -132,7 +132,7 @@ public class SandBoxVerticle extends AbstractGuiceVerticle {
                     cb.add(PARAM_OWNER_ID, req.getUser().get_id());
                     cb.add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
                     
-                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SandBox.class);
+                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
                     
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" +req.getUser().get_id() +" ,and activityId : "+ params.get(PARAM_ACTIVITY_ID));
@@ -186,7 +186,7 @@ public class SandBoxVerticle extends AbstractGuiceVerticle {
 
                     cb.add(PARAM_OWNER_ID, req.getUser().get_id());
                     
-                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SandBox.class);
+                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
                     
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" +req.getUser().get_id());

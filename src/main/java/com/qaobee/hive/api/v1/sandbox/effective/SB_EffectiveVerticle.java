@@ -20,7 +20,7 @@
 package com.qaobee.hive.api.v1.sandbox.effective;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.sandbox.effective.Effective;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -138,7 +138,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
                     utils.testMandatoryParams(params, PARAM_ID);
                     utils.isUserLogged(req);
 
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Effective.class);
+                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_Effective.class);
                     container.logger().info("Effective found : " + json.toString());
 
                     message.reply(json.encode());
@@ -197,7 +197,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
                         criterias.put(PARAM_CATEGORY_AGE_CODE, code);
                     }
 
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Effective.class);
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Effective.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No Effective found "
@@ -246,7 +246,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     final JsonObject json = new JsonObject(req.getBody());
 
-                    final String id = mongo.update(json, Effective.class);
+                    final String id = mongo.update(json, SB_Effective.class);
                     json.putString("_id", id);
 
                     message.reply(json.encode());
@@ -292,7 +292,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
                     final JsonObject json = new JsonObject(req.getBody());
                     utils.isUserLogged(req);
 
-                    final String id = mongo.save(json, Effective.class);
+                    final String id = mongo.save(json, SB_Effective.class);
                     json.putString("_id", id);
 
                     message.reply(json.encode());

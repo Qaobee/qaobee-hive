@@ -18,7 +18,11 @@
  */
 package com.qaobee.hive.business.model.sandbox.competition;
 
+import java.util.List;
+
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
+import com.qaobee.hive.business.model.transversal.Audit;
+import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
  * The Class Team.
@@ -27,7 +31,7 @@ import com.qaobee.hive.business.model.commons.settings.CategoryAge;
  * @version V1.2
  */
 
-public class Team {
+public class SB_Team {
 
 	// Declaration of variables
 
@@ -42,6 +46,16 @@ public class Team {
 	
 	/** the sandbox's id */
 	private String sandBoxIdCfg;
+	
+	/** 
+	 * List labels
+	 */
+	private List<Tag> labels;
+	
+	/** 
+	 * audit CRUD object 
+	 */
+	private Audit audit;
 
 	// Getters and Setters
 
@@ -115,6 +129,34 @@ public class Team {
 	 */
 	public void setSandBoxIdCfg(String sandBoxIdCfg) {
 		this.sandBoxIdCfg = sandBoxIdCfg;
+	}
+
+	/**
+	 * @return the labels
+	 */
+	public List<Tag> getLabels() {
+		return labels;
+	}
+
+	/**
+	 * @param labels the labels to set
+	 */
+	public void setLabels(List<Tag> labels) {
+		this.labels = labels;
+	}
+
+	/**
+	 * @return the audit
+	 */
+	public Audit getAudit() {
+		return audit;
+	}
+
+	/**
+	 * @param audit the audit to set
+	 */
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
 
 }

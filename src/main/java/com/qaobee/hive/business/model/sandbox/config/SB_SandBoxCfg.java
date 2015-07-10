@@ -29,7 +29,7 @@ import java.util.List;
  *
  * @author cke
  */
-public class SandBoxCfg {
+public class SB_SandBoxCfg {
 
     /**
      * The _ id.
@@ -44,7 +44,7 @@ public class SandBoxCfg {
     /**
      * The Sand box.
      */
-    private SandBox sandBox;
+    private SB_SandBox sandBox;
 
     /**
      * The Season.
@@ -97,7 +97,7 @@ public class SandBoxCfg {
      *
      * @return the sandBox
      */
-    public SandBox getSandBox() {
+    public SB_SandBox getSandBox() {
         return sandBox;
     }
 
@@ -106,7 +106,7 @@ public class SandBoxCfg {
      *
      * @param sandBox the sandBox to set
      */
-    public void setSandBox(SandBox sandBox) {
+    public void setSandBox(SB_SandBox sandBox) {
         this.sandBox = sandBox;
     }
 

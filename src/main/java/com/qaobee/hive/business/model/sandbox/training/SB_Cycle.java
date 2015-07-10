@@ -23,10 +23,10 @@ import java.util.List;
 /**
  * The Class Cycle.
  */
-public class Cycle extends TrainingAbstract {
+public class SB_Cycle extends TrainingAbstract {
 
 	/** Session's list. */
-	private List<Session> sessionList;
+	private List<SB_Session> sessionList;
 
 	/** Session's start date. */
 	private long startDate;
@@ -37,7 +37,7 @@ public class Cycle extends TrainingAbstract {
 	/**
 	 * @return the sessionList
 	 */
-	public List<Session> getSessionList() {
+	public List<SB_Session> getSessionList() {
 		return sessionList;
 	}
 
@@ -45,7 +45,7 @@ public class Cycle extends TrainingAbstract {
 	 * @param sessionList
 	 *            the sessionList to set
 	 */
-	public void setSessionList(List<Session> sessionList) {
+	public void setSessionList(List<SB_Session> sessionList) {
 		this.sessionList = sessionList;
 	}
 

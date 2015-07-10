@@ -18,15 +18,19 @@
  */
 package com.qaobee.hive.business.model.sandbox.effective;
 
+import java.util.List;
+
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.transversal.Address;
+import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Contact;
+import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
  * @author cke
  *
  */
-public class Person {
+public class SB_Person {
 	
 	/**
 	 * The _id.
@@ -92,6 +96,16 @@ public class Person {
 	 * the job of the person
 	 */
 	private String job;
+	
+	/** 
+	 * List labels
+	 */
+	private List<Tag> labels;
+	
+	/** 
+	 * audit CRUD object 
+	 */
+	private Audit audit;
 
 	/**
 	 * @return the _id
@@ -273,6 +287,34 @@ public class Person {
 	 */
 	public void setJob(String job) {
 		this.job = job;
+	}
+
+	/**
+	 * @return the labels
+	 */
+	public List<Tag> getLabels() {
+		return labels;
+	}
+
+	/**
+	 * @param labels the labels to set
+	 */
+	public void setLabels(List<Tag> labels) {
+		this.labels = labels;
+	}
+
+	/**
+	 * @return the audit
+	 */
+	public Audit getAudit() {
+		return audit;
+	}
+
+	/**
+	 * @param audit the audit to set
+	 */
+	public void setAudit(Audit audit) {
+		this.audit = audit;
 	}
 
 }

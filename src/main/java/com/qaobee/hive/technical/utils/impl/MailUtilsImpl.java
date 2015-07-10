@@ -20,7 +20,7 @@ package com.qaobee.hive.technical.utils.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
-import com.qaobee.hive.business.model.sandbox.effective.Person;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.MailUtils;
