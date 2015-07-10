@@ -42,7 +42,7 @@ db.SB_SB_Person.remove({ "$and" : [ { "listLicenses.structureId" : "541168295971
  * Alimentation SB_SB_Person Club A Football
  */
 /** ************************************************************* */
-db.SB_SB_Person.insert({
+db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121d",
     "name" : "Baratelli",
     "firstname" : "Dominique",

@@ -164,7 +164,7 @@ db.StructureCfg.insert({
     "_id" :  id,
     "structureId" : "541168295971d35c1f2d1b5e" ,
     "season" : {
-        "_id" : _id,
+        "_id" : "559a9294889089a442f3d499",
         "code" : "SAI-2014",
         "label" : "SAISON 2014-2015",
         /* Start : 01/07/2014*/
@@ -307,7 +307,7 @@ db.StructureCfg.insert({
     "_id" :  id,
     "structureId" : "541168295971d35c1f2d1b5f" ,
     "season" : {
-        "_id" : _id,
+        "_id" : "559a9294889089a442f3d499",
         "code" : "SAI-2014",
         "label" : "SAISON 2014-2015",
         /* Start : 01/07/2014*/
@@ -449,7 +449,7 @@ db.StructureCfg.insert({
     "_id" :  id,
     "structureId" : "541168295971d35c1f2d1b60" ,
     "season" : {
-        "_id" : _id,
+        "_id" : "559a9294889089a442f3d496",
         "code" : "SAI-2013",
         "label" : "SAISON 2013-2014",
         /* Start : 01/07/2013*/
@@ -771,7 +771,7 @@ db.StructureCfg.insert({
     "_id" :  id,
     "structureId" : "541168295971d35c1f2d1b60" ,
     "season" : {
-        "_id" : _id,
+        "_id" : "559a9294889089a442f3d496",
         "code" : "SAI-2014",
         "label" : "SAISON 2014-2015",
         /* Start : 01/06/2014*/
