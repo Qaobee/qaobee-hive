@@ -18,20 +18,6 @@
  */
 package com.qaobee.hive.api.v1.sandbox.competition;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.StringUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.competition.SB_Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -42,6 +28,18 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang3.StringUtils;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The type Team verticle.
@@ -223,7 +221,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         });
 
         /**
-         * @api {get} /api/v1/sandbox/competition/team/get Read data of a set of SB_Team
+         * @api {get} /api/1/sandbox/competition/team/list Read data of a set of SB_Team
          * @apiVersion 0.1.0
          * @apiName get
          * @apiGroup SB_Team API
@@ -249,7 +247,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     Map<String, List<String>> params = req.getParams();
                     utils.testMandatoryParams(params, PARAM_SANDBOXCFG_ID);
-                    
+                    utils.isUserLogged(req);
                     Map<String, Object> criterias = new HashMap<String, Object>();
                     criterias.put(PARAM_SANDBOXCFG_ID, params.get(PARAM_SANDBOXCFG_ID).get(0));
                     

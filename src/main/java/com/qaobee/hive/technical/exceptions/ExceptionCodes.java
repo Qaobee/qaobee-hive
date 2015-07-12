@@ -26,43 +26,37 @@ package com.qaobee.hive.technical.exceptions;
 public enum ExceptionCodes {
 
 	/** The http error. */
-	HTTP_ERROR(403),
+	HTTP_ERROR(405),
 	/** The non active. */
-	NON_ACTIVE(405),
-	/** The es unavailable. */
-	ES_UNAVAILABLE(501),
+	NON_ACTIVE(403),
 	/** The passwd exception. */
-	PASSWD_EXCEPTION(502),
+	PASSWD_EXCEPTION(500),
 	/** The bad format. */
 	BAD_FORMAT(503),
 	/** The mandatory field. */
-	MANDATORY_FIELD(504),
+	MANDATORY_FIELD(400),
 	/** The bad login. */
 	BAD_LOGIN(401),
 	/** The mail exception. */
 	MAIL_EXCEPTION(505),
 	/** The not logged. */
-	NOT_LOGGED(506),
+	NOT_LOGGED(401),
 	/** The not admin. */
-	NOT_ADMIN(507),
+	NOT_ADMIN(401),
 	/** internal error. */
 	INTERNAL_ERROR(500),
 	/** Invalid parameter. */
-	INVALID_PARAMETER(508),
+	INVALID_PARAMETER(400),
 	/** The mongo error. */
-	MONGO_ERROR(508),
+	MONGO_ERROR(500),
 	/** The non unique login. */
-	NON_UNIQUE_LOGIN(509),
+	NON_UNIQUE_LOGIN(400),
 	/** The captcha exception. */
-	CAPTCHA_EXCEPTION(510),
+	CAPTCHA_EXCEPTION(400),
 	/** The json exception. */
-	JSON_EXCEPTION(511),
+	JSON_EXCEPTION(500),
 	/** No document returned by request */
-	DB_NO_ROW_RETURNED(512),
-	/** More than one row returned in a read one line request */
-	DB_MORE_ONE_LINE_RETURNED(513),
-	/** Inconsistency of retrieved values / Inconsistent return values */
-	DB_INCONSISTENT_RETURN_VALUES(514);
+	DB_NO_ROW_RETURNED(500);
 
 	/** The code. */
 	private int code;
