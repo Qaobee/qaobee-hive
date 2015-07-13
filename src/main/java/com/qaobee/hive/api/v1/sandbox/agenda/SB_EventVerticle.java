@@ -155,7 +155,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription retrieve all events match to parameters filter
-         * @api {post} /api/1/commons/referencial/event/list Get all events
+         * @api {post} /api/1/sandbox/agenda/event/list Get all events
          * @apiName getListEventHandler
          * @apiGroup Event API
          * @apiParam {String} startDate start date
@@ -276,8 +276,8 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
         });
 
         /**
-         * @apiDescription Add a event.
-         * @api {post} /api/1/commons/referencial/event/add Add a event
+         * @apiDescription Add an event.
+         * @api {add} /api/1/sandbox/agenda/event/add Add an event
          * @apiName addEvent
          * @apiGroup Event API
          * @apiSuccess {Event} Event create
@@ -327,7 +327,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Retrieve Event by this Id
-         * @api {get} /api/1/commons/referencial/event/get Get event by Id
+         * @api {get} /api/1/sandbox/agenda/event/get Get event by Id
          * @apiName getEventHandler
          * @apiGroup Event API
          * @apiParam {String} id
