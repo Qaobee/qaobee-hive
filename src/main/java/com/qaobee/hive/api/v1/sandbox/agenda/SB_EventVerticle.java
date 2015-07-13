@@ -277,7 +277,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Add an event.
-         * @api {add} /api/1/sandbox/agenda/event/add Add an event
+         * @api {post} /api/1/sandbox/agenda/event/add Add an event
          * @apiName addEvent
          * @apiGroup Event API
          * @apiSuccess {Event} Event create
