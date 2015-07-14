@@ -165,7 +165,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
          *
          * @apiDescription get a list of effectives for one sandbox Config id
          *
-         * @apiParam {String} sandBoxCfgOd Mandatory The sandBox config Id.
+         * @apiParam {String} sandBoxCfgId Mandatory The sandBox config Id.
          * @apiParam {String} categoryCode Optional The category code of the effective.
          *
          * @apiSuccess {List}   effectives            The list of effectives found.
