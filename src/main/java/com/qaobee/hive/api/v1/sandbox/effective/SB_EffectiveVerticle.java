@@ -157,7 +157,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
         });
 
         /**
-         * @api {get} /api/v1/commons/effective/effective/getList 
+         * @api {get} /api/v1/sandbox/effective/effective/getList 
          * @apiVersion 0.1.0
          * @apiName getList
          * @apiGroup Effective API
