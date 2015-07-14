@@ -110,7 +110,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Add Person
-         * @api {put} /api/1/person/add Add Person
+         * @api {put} /api/1/sandbox/effective/person/add Add Person
          * @apiVersion 0.1.0
          * @apiName addPerson
          * @apiGroup Person API
@@ -149,7 +149,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Retrieve Person by this Id
-         * @api {get} /api/1/person/get Get Person by Id
+         * @api {get} /api/1/sandbox/effective/person/get Get Person by Id
          * @apiVersion 0.1.0
          * @apiName getPersonById
          * @apiGroup Person API
@@ -183,7 +183,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Update person
-         * @api {get} /api/1/person/get Update person
+         * @api {get} /api/1/sandbox/effective/person/get Update person
          * @apiVersion 0.1.0
          * @apiName updatePerson
          * @apiGroup Person API
@@ -217,7 +217,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Return list of person as member of group
-         * @api {post} /api/1/person/list Get list of persons
+         * @api {post} /api/1/sandbox/effective/person/list Get list of persons
          * @apiVersion 0.1.0
          * @apiName getListPerson
          * @apiGroup Person API
