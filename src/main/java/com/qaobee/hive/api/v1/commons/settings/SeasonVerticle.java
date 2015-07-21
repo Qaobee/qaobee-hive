@@ -103,7 +103,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription get a season to the collection season in settings module
-         * @api {get} /api/v1/commons/settings/season/get Get season by id
+         * @api {get} /api/1/commons/settings/season/get Get season by id
          * @apiVersion 0.1.0
          * @apiName getHandler
          * @apiGroup Season API
@@ -146,7 +146,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Retrieve all seasons for one activity and one country
-         * @api {get} /api/v1/commons/settings/season/getListByActivity Retrieve all seasons
+         * @api {get} /api/1/commons/settings/season/getListByActivity Retrieve all seasons
          * @apiVersion 0.1.0
          * @apiName getListByActivityHandler
          * @apiParam activityId Activity Id
@@ -203,7 +203,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Retrieve current season for one activity and one country
-         * @api {get} /api/v1/commons/settings/season/current Retrieve current seasons
+         * @api {get} /api/1/commons/settings/season/current Retrieve current seasons
          * @apiVersion 0.1.0
          * @apiName getCurrentHandler
          * @apiGroup Season API

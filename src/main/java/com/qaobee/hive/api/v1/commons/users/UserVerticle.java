@@ -151,7 +151,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         container.logger().debug(this.getClass().getName() + " started");
         /**
          * @apiDescription Login user
-         * @api {post} /api/1/commons/user/login Login user
+         * @api {post} /api/1/commons/users/user/login Login user
          * @apiVersion 0.1.0
          * @apiName loginHandler
          * @apiGroup User API
@@ -231,7 +231,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription User logout
-         * @api {get} /api/1/commons/user/logout User logout
+         * @api {get} /api/1/commons/users/user/logout User logout
          * @apiVersion 0.1.0
          * @apiName logoutHandler
          * @apiGroup User API
@@ -278,7 +278,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Mail generation for password renew
-         * @api {post} /api/1/commons/user/newpasswd Password renew
+         * @api {post} /api/1/commons/users/user/newpasswd Password renew
          * @apiVersion 0.1.0
          * @apiName newPasswdHandler
          * @apiGroup User API
@@ -347,7 +347,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Check activation code supplied in the renew password email
-         * @api {get} /api/v1/commons/user/passwdcheck Check activation code
+         * @api {get} /api/v1/commons/users/user/passwdcheck Check activation code
          * @apiParam {String} code Activation code
          * @apiParam {String} id Person id
          * @apiVersion 0.1.0
@@ -389,7 +389,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Update password after renew ask
-         * @api {post} /api/v1/commons/user/resetPasswd Update password
+         * @api {post} /api/v1/commons/users/user/resetPasswd Update password
          * @apiParam {Object} data {id, code, passwd}
          * @apiVersion 0.1.0
          * @apiName resetPasswdHandler
@@ -444,7 +444,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Fetch the current logged user
-         * @api {get} /api/1/commons/user/current Fetch the current logged user
+         * @api {get} /api/1/commons/users/user/current Fetch the current logged user
          * @apiVersion 0.1.0
          * @apiName currentHandler
          * @apiGroup User API
@@ -486,7 +486,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         });
         /**
          * @apiDescription Fetch meta information
-         * @api {get} /api/1/commons/user/meta Fetch meta information
+         * @api {get} /api/1/commons/users/user/meta Fetch meta information
          * @apiVersion 0.1.0
          * @apiName getMetasHandler
          * @apiGroup User API
@@ -546,7 +546,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Fetch user information by its id
-         * @api {get} /api/1/commons/user/user Fetch user by id
+         * @api {get} /api/1/commons/users/user/user Fetch user by id
          * @apiVersion 0.1.0
          * @apiName getUserByIdhandler
          * @apiGroup User API
@@ -582,7 +582,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription SSO login by mobile token (token provided at the login phase corresponding to the device id)
-         * @api {post} /api/1/commons/user/sso SSO login by mobile token
+         * @api {post} /api/1/commons/users/user/sso SSO login by mobile token
          * @apiVersion 0.1.0
          * @apiName loginByMobileToken
          * @apiParam {String} mobileToken Mobile device Id

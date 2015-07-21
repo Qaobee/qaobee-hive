@@ -66,10 +66,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
      * Handler to update a person.
      */
     public static final String UPDATE = Module.VERSION + ".sandbox.effective.person.update";
-    /**
-     * Handler to update the avatar of a person.
-     */
-    public static final String AVATAR = Module.VERSION + ".sandbox.effective.person.avatar";
+
     
 	/* List of parameters */
     /**
@@ -183,7 +180,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Update person
-         * @api {get} /api/1/sandbox/effective/person/get Update person
+         * @api {get} /api/1/sandbox/effective/person/update Update person
          * @apiVersion 0.1.0
          * @apiName updatePerson
          * @apiGroup Person API

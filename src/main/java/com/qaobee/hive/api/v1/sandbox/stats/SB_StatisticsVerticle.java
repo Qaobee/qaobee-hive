@@ -107,7 +107,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 		container.logger().debug(this.getClass().getName() + " started");
 
 		/**
-		 * @api {post} /api/v1/sandbox/stats/statistics/getStatGroupBy
+		 * @api {post} /api/1/sandbox/stats/statistics/getStatGroupBy
 		 * @apiVersion 0.1.0
 		 * @apiName getStatGroupBy
 		 * @apiGroup Statistics API
@@ -282,7 +282,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 		});
 
 		/**
-		 * @api {post} /api/v1/sandbox/stats/statistics/getListDetailValue
+		 * @api {post} /api/1/sandbox/stats/statistics/getListDetailValue
 		 * @apiVersion 0.1.0
 		 * @apiName getListDetailValue
 		 * @apiGroup Statistics API
@@ -401,7 +401,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
 		
 		/**
-		 * @api {post} /api/v1/sandbox/stats/statistics/add
+		 * @api {post} /api/1/sandbox/stats/statistics/add
 		 * @apiVersion 0.1.0
 		 * @apiName add
 		 * @apiGroup Statistics API
@@ -409,7 +409,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 		 *
 		 * @apiDescription add statistic
 		 *
-		 * @apiParam {Stats} statss Mandatory The stats object to add.
+		 * @apiParam {Stats} stats Mandatory The stats object to add.
 		 * 
 		 * @apiSuccess {Stats}   stats    The stats added.
 		 *
@@ -452,7 +452,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 		});
 
 		/**
-		 * @api {post} /api/v1/sandbox/stats/statistics/addBulk
+		 * @api {post} /api/1/sandbox/stats/statistics/addBulk
 		 * @apiVersion 0.1.0
 		 * @apiName addBulk
 		 * @apiGroup Statistics API

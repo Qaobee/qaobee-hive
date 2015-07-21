@@ -88,7 +88,7 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Get SandBoxCfg by its id
-         * @api {get} /api/1/commons/settings/sandboxCfg/get Get SandBoxCfg by id
+         * @api {get} /api/1/sandbox/config/sandboxCfg/get Get SandBoxCfg by id
          * @apiName getSandBoxCfg
          * @apiGroup SandBoxCfg API
          * @apiParam {String} _id SandBoxCfg id
@@ -126,7 +126,7 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Get list SandBoxCfg by its owner
-         * @api {get} /api/1/commons/settings/sandboxCfg/getList Get list SandBoxCfg by its owner
+         * @api {get} /api/1/sandbox/config/sandboxCfg/getList Get list SandBoxCfg by its owner
          * @apiName getListSandBoxCfg
          * @apiGroup SandBoxCfg API
          * @apiParam {String} seaonId SandBoxCfg season

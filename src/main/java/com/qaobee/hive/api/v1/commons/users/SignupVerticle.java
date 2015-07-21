@@ -97,12 +97,16 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		super.start();
 		container.logger().debug(this.getClass().getName() + " started");
 
-		/*
-		 * Test the existence of a username in the db
-		 * 
-		 * return true if exists
+        /**
+		 * @apiDescription Test the existence of a username in the db
+		 * @api {get} /api/1/commons/users/signup/logintest
+		 * @apiVersion 0.1.0
+         * @apiName userNameExistHandler
+		 * @apiGroup Signup API
+		 * @apiParam {String} [login] person.account.login
+		 * @apiSuccess {Object} status {"status", true|false}
+		 * @apiError HTTP_ERROR wrong request's method
 		 */
-
 		final Handler<Message<JsonObject>> userNameExistHandler = new Handler<Message<JsonObject>>() {
 			/*
 			 * (non-Javadoc)
@@ -124,7 +128,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
 		/**
 		 * @apiDescription Login unicity test for rest request
-		 * @api {get} /api/1/commons/user/loginExists Login unicity test
+		 * @api {get} /api/1/commons/users/signup/loginExists Login unicity test
 		 * @apiVersion 0.1.0
          * @apiName userNameTestHandler
 		 * @apiGroup Signup API
@@ -163,7 +167,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		};
 		/**
 		 * @apiDescription Register a new account
-		 * @api {put} /api/1/commons/user/register Register a new account
+		 * @api {put} /api/1/commons/users/signup/register Register a new account
 		 * @apiVersion 0.1.0
          * @apiName registerHandler
 		 * @apiGroup Signup API
@@ -297,7 +301,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
 		/**
 		 * @apiDescription Account validation check
-		 * @api {get} /api/1/commons/user/accountcheck Account validation check
+		 * @api {get} /api/1/commons/users/signup/accountcheck Account validation check
 		 * @apiParam {String} code Activation code
 		 * @apiParam {String} Person id
 		 * @apiVersion 0.1.0

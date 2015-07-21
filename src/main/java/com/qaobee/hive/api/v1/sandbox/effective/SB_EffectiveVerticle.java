@@ -110,7 +110,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
         container.logger().debug(this.getClass().getName() + " started");
 
         /**
-         * @api {post} /api/v1/sandbox/effective/effective/get
+         * @api {post} /api/1/sandbox/effective/effective/get
          * @apiVersion 0.1.0
          * @apiName get
          * @apiGroup Effective API
@@ -157,7 +157,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
         });
 
         /**
-         * @api {get} /api/v1/sandbox/effective/effective/getList 
+         * @api {get} /api/1/sandbox/effective/effective/getList 
          * @apiVersion 0.1.0
          * @apiName getList
          * @apiGroup Effective API
@@ -219,7 +219,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
         });
 
         /**
-         * @api {post} /api/v1/sandbox/effective/effective/update
+         * @api {post} /api/1/sandbox/effective/effective/update
          * @apiVersion 0.1.0
          * @apiName update
          * @apiGroup Effective API
@@ -265,13 +265,13 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
         });
 
         /**
-         * @api {post} /api/v1/sandbox/effective/effective/add
+         * @api {post} /api/1/sandbox/effective/effective/add
          * @apiVersion 0.1.0
          * @apiName add
          * @apiGroup Effective API
          * @apiPermission all
          *
-         * @apiDescription Update one effective
+         * @apiDescription add one effective
          *
          * @apiParam {Effective} effective Mandatory The effective to add.
          *

@@ -80,7 +80,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 		container.logger().debug(this.getClass().getName() + " started");
 
 		/**
-		 * @api {post} /api/v1/commons/referencial/team/add Add team
+		 * @api {post} /api/1/commons/referencial/team/add Add team
 		 * @apiVersion 0.1.0
 		 * @apiName add
 		 * @apiGroup Team API
@@ -135,7 +135,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 
 		
 		/**
-		 * @api {get} /api/v1/commons/referencial/team/get Read data of a Team
+		 * @api {get} /api/1/commons/referencial/team/get Read data of a Team
 		 * @apiVersion 0.1.0
 		 * @apiName get
 		 * @apiGroup Team API
@@ -189,7 +189,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 		};
 
 		/**
-		 * @api {post} /api/v1/commons/referencial/team/update
+		 * @api {post} /api/1/commons/referencial/team/update
 		 * @apiVersion 0.1.0
 		 * @apiName update
 		 * @apiGroup Team API

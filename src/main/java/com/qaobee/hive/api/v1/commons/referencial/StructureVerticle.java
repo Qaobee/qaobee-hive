@@ -45,9 +45,9 @@ import java.util.Map;
  *         <br>
  *         <strong>Description de la classe:</strong>
  *         <ul>
- *         <li>resthandler.api.v1.commons.referencial.structure.add : Add a structure</li>
- *         <li>resthandler.api.v1.commons.referencial.structure.get : fetch a structure</li>
- *         <li>resthandler.api.v1.commons.referencial.structure.update : update structure</li>
+ *         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>
+ *         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>
+ *         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>
  *         </ul>
  */
 
@@ -110,7 +110,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
         container.logger().debug(this.getClass().getName() + " started");
 
         /**
-         * @api {post} /api/v1/commons/referencial/structure/add Add structure
+         * @api {post} /api/1/commons/referencial/structure/add Add structure
          * @apiVersion 0.1.0
          * @apiName add
          * @apiGroup Structure API
@@ -170,7 +170,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
 
         /**
-         * @api {get} /api/v1/commons/referencial/structure/get Read data of a Structure
+         * @api {get} /api/1/commons/referencial/structure/get Read data of a Structure
          * @apiVersion 0.1.0
          * @apiName get
          * @apiGroup Structure API
@@ -214,7 +214,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
         };
 
         /**
-         * @api {post} /api/v1/commons/referencial/structure/update Update a structure
+         * @api {post} /api/1/commons/referencial/structure/update Update a structure
          * @apiVersion 0.1.0
          * @apiName update
          * @apiGroup Structure API
