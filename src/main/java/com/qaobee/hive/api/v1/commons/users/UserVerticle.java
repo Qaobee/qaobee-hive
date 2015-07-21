@@ -64,39 +64,39 @@ public class UserVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant LOGIN.
      */
-    public static final String LOGIN = Module.VERSION + ".commons.user.login";
+    public static final String LOGIN = Module.VERSION + ".commons.users.user.login";
     /**
      * The constant LOGIN_BY_TOKEN.
      */
-    public static final String LOGIN_BY_TOKEN = Module.VERSION + ".commons.user.sso";
+    public static final String LOGIN_BY_TOKEN = Module.VERSION + ".commons.users.user.sso";
     /**
      * The Constant LOGOUT.
      */
-    public static final String LOGOUT = Module.VERSION + ".commons.user.logout";
+    public static final String LOGOUT = Module.VERSION + ".commons.users.user.logout";
     /**
      * The Constant PASSWD_RENEW.
      */
-    public static final String PASSWD_RENEW = Module.VERSION + ".commons.user.newpasswd";
+    public static final String PASSWD_RENEW = Module.VERSION + ".commons.users.user.newpasswd";
     /**
      * The Constant PASSWD_RENEW_CHK.
      */
-    public static final String PASSWD_RENEW_CHK = Module.VERSION + ".commons.user.passwdcheck";
+    public static final String PASSWD_RENEW_CHK = Module.VERSION + ".commons.users.user.passwdcheck";
     /**
      * The Constant PASSWD_RESET.
      */
-    public static final String PASSWD_RESET = Module.VERSION + ".commons.user.resetPasswd";
+    public static final String PASSWD_RESET = Module.VERSION + ".commons.users.user.resetPasswd";
     /**
      * The Constant CURRENT.
      */
-    public static final String CURRENT = Module.VERSION + ".commons.user.current";
+    public static final String CURRENT = Module.VERSION + ".commons.users.user.current";
     /**
      * The Constant META.
      */
-    public static final String META = Module.VERSION + ".commons.user.meta";
+    public static final String META = Module.VERSION + ".commons.users.user.meta";
     /**
      * The Constant USER_INFO
      */
-    public static final String USER_INFO = Module.VERSION + ".commons.user.user";
+    public static final String USER_INFO = Module.VERSION + ".commons.users.user.user";
     
     /* List of parameters */
     /**

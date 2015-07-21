@@ -48,11 +48,11 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 	
 	// Declaration des variables finals
 	/** The Constant ADD. */
-	public static final String ADD = Module.VERSION + ".commons.referencial.commons.team.add";
+	public static final String ADD = Module.VERSION + ".commons.referencial.team.add";
 	/** The Constant GET. */
-	public static final String GET = Module.VERSION + ".commons.referencial.commons.team.get";
+	public static final String GET = Module.VERSION + ".commons.referencial.team.get";
 	/** The Constant UPDATE. */
-	public static final String UPDATE = Module.VERSION + ".commons.referencial.commons.team.update";
+	public static final String UPDATE = Module.VERSION + ".commons.referencial.team.update";
 	
 	/* List of parameters */
 	/** Id of the team */

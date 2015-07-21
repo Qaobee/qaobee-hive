@@ -58,15 +58,15 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant ADD.
      */
-    public static final String ADD = Module.VERSION + ".commons.referencial.commons.structure.add";
+    public static final String ADD = Module.VERSION + ".commons.referencial.structure.add";
     /**
      * The Constant GET.
      */
-    public static final String GET = Module.VERSION + ".commons.referencial.commons.structure.get";
+    public static final String GET = Module.VERSION + ".commons.referencial.structure.get";
     /**
      * The Constant UPDATE.
      */
-    public static final String UPDATE = Module.VERSION + ".commons.referencial.commons.structure.update";
+    public static final String UPDATE = Module.VERSION + ".commons.referencial.structure.update";
 
 	/* List of parameters */
     /**

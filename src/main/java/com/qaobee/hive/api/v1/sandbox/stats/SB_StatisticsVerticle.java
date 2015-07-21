@@ -63,10 +63,10 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 	public static final String GET_LISTDETAIL_VALUES = Module.VERSION + ".sandbox.stats.statistics.getListDetailValue";
 	
 	/** Handler for adding a new stat */
-	public static final String ADD_STAT = Module.VERSION + ".sandbox.stats.stats.statistics.add";
+	public static final String ADD_STAT = Module.VERSION + ".sandbox.stats.statistics.add";
 	
 	/** Handler for adding a set of stat */
-	public static final String ADD_STAT_BULK = Module.VERSION + ".sandbox.stats.stats.statistics.addBulk";
+	public static final String ADD_STAT_BULK = Module.VERSION + ".sandbox.stats.statistics.addBulk";
 
 	/* List of parameters */
 	/** List of Indicator code */

@@ -49,11 +49,11 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {
     /**
      * The constant GET.
      */
-    public static final String GET = Module.VERSION + ".commons.settings.sandboxCfg.get";
+    public static final String GET = Module.VERSION + ".sandbox.config.sandboxCfg.get";
     /**
      * The constant GETLIST.
      */
-    public static final String GETLIST = Module.VERSION + ".commons.settings.sandboxCfg.getList";
+    public static final String GETLIST = Module.VERSION + ".sandbox.config.sandboxCfg.getList";
     /**
      * The constant PARAM_ID.
      */

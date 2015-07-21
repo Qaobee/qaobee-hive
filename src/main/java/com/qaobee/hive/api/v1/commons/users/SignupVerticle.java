@@ -67,13 +67,13 @@ import java.util.UUID;
 public class SignupVerticle extends AbstractGuiceVerticle {
 
 	/** The Constant REGISTER. */
-	public static final String REGISTER = Module.VERSION + ".commons.user.register";
+	public static final String REGISTER = Module.VERSION + ".commons.users.signup.register";
 	/** The Constant LOGIN_TEST. */
-	public static final String LOGIN_TEST = Module.VERSION + ".commons.user.logintest";
+	public static final String LOGIN_TEST = Module.VERSION + ".commons.users.signup.logintest";
 	/** The Constant LOGIN_EXISTS. */
-	public static final String LOGIN_EXISTS = Module.VERSION + ".commons.user.loginExists";
+	public static final String LOGIN_EXISTS = Module.VERSION + ".commons.users.signup.loginExists";
 	/** The Constant ACCOUNT_CHECK. */
-	public static final String ACCOUNT_CHECK = Module.VERSION + ".commons.user.accountcheck";
+	public static final String ACCOUNT_CHECK = Module.VERSION + ".commons.users.signup.accountcheck";
 
 	// MongoDB driver
 	@Inject
