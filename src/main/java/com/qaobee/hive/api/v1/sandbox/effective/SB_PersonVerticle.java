@@ -87,7 +87,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
     /**
      * Person ID
      */
-    public static final String PARAM_PERSON_ID = "id";
+    public static final String PARAM_PERSON_ID = "_id";
     
     /**
      * The Mongo.
