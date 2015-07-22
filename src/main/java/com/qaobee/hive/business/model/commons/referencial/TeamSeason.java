@@ -30,7 +30,7 @@ import com.qaobee.hive.business.model.transversal.Member;
 public class TeamSeason {
 	
 	/** Internal identifier. */
-	private ChampionShip championShip;
+	private Championship championShip;
 
 	/** label. */
 	private Season season;
@@ -41,14 +41,14 @@ public class TeamSeason {
 	/**
 	 * @return the championShip
 	 */
-	public ChampionShip getChampionShip() {
+	public Championship getChampionShip() {
 		return championShip;
 	}
 
 	/**
 	 * @param championShip the championShip to set
 	 */
-	public void setChampionShip(ChampionShip championShip) {
+	public void setChampionShip(Championship championShip) {
 		this.championShip = championShip;
 	}
 

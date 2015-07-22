@@ -30,7 +30,7 @@ import com.qaobee.hive.business.model.transversal.Tag;
  * @author cke
  *
  */
-public class ChampionShip {
+public class Championship {
 	
 	/**
      * The _id.

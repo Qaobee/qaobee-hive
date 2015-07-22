@@ -328,17 +328,6 @@ public class MongoDBImpl implements MongoDB {
         coll.remove(new BasicDBObject("_id", id));
     }
 
-    /**
-     * Find document by criteria with minimal fields and a sort order.
-     *
-     * @param criteria   criteria
-     * @param fields     fields to include
-     * @param sort       sort field
-     * @param order      sort order
-     * @param limit      limit
-     * @param collection collection
-     * @return an array
-     */
     @Override
     @SuppressWarnings("unchecked")
     public JsonArray findByCriterias(final Map<String, Object> criteria, final List<String> fields, final String sort, final int order, final int limit, final Class<?> collection) {
