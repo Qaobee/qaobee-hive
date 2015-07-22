@@ -204,7 +204,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                     utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN);
                     utils.isUserLogged(req);
 
-                    // Indicator code
+                    // Activity ID
                     String activityId = params.getString(PARAM_ACTIVITY_ID);
                     // Country ID
                     String countryId = params.getString(PARAM_COUNTRY_ID);
