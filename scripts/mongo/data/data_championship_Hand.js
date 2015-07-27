@@ -74,20 +74,26 @@ db.Championship.insert({
     },
     {
         "id" : "ID-TEAM-CRETEIL",
-        "label" : "US CRETEIL HANDBALL",
+        "name" : "US CRETEIL HANDBALL",
         "structureId" : "USCRETEILHANDBALL",
         "type" : "team"
+    },
+    {
+    	"id" : "ID-PHARE-CHAMBERY", 
+    	"name" : "Le phare", 
+    	"structureId" : "CHAMBERYSAVOIEHB", 
+    	"type" : "infrastructure"
     }],
     "journeys" : [ 
         {
 	    	"label" : "Championnat : Journée 20",
-	    	"startDate" : NumberLong(1428518700000), 
-	    	"endDate" : NumberLong(1428525900000),
+	    	"startDate" : NumberLong(ISODate("2015-02-06T12:00:00Z").getTime()), 
+	    	"endDate" : NumberLong(ISODate("2015-02-08T23:00:00Z").getTime()),
 	    	"matchs" : [
 	    	    /* FDM 1 : CHEMBERY - CESSON*/
 	    	    {
 	    		"code" : "fdm1",
-	    		"dateTime" : "J20 14h00",
+	    		"dateTime" : NumberLong(ISODate("2015-02-08T14:00:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-CHAMBERY", "name" : "CHAMBERY SAVOIE HB", "structureId" : "CHAMBERYSAVOIEHB", "type":"teamHome"}, 
 	    	                      {"id" : "ID-TEAM-CESSON", "name" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamVisitor"},
@@ -97,10 +103,10 @@ db.Championship.insert({
 	    	    /* FDM 2 : DUNKERQUE - CRETEIL*/
 	    	    {
 	    		"code" : "fdm2",
-	    		"dateTime" : "J20 16h00",
+	    		"dateTime" : NumberLong(ISODate("2015-02-08T16:00:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-DUNKERQUE", "name" : "USDK Dunkerque", "structureId" : "541168295971d35c1f2d1b5f", "type" : "teamHome"},
-	    		                  {"id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamVisitor"},
+	    		                  {"id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamVisitor"},
 	    	                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}],
 	    	    "result" : {"scoreHome" : NumberInt(30), "scoreVisitor" : NumberInt(28)}
 	    	    }
@@ -129,7 +135,7 @@ db.Championship.insert({
 	    	    },
 	    	    {
 	    	    	"place" : NumberInt(3),
-	    	        "id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
+	    	        "id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
 	    	        "nbPlayed" : NumberInt(1), "nbWon" : NumberInt(0), "nbLost" : NumberInt(1), "nbDraw" : NumberInt(0), 
 	        	    "sumScored" : NumberInt(28), "sumConceded" : NumberInt(30), "goalAverage" : NumberInt(28-30),
 	        	    "points" : NumberInt(1)
@@ -138,13 +144,13 @@ db.Championship.insert({
         },
         {
 	    	"label" : "Championnat : Journée 21",
-	    	"startDate" : NumberLong(1429123500000), 
-	    	"endDate" : NumberLong(1429130700000),
+	    	"startDate" : NumberLong(ISODate("2015-02-20T12:00:00Z").getTime()), 
+	    	"endDate" : NumberLong(ISODate("2015-02-22T23:00:00Z").getTime()),
 	    	"matchs" : [
 	    	    /* FDM 3 : CHEMBERY - DUNKERQUE*/
 	    	    {
 	    		"code" : "fdm3",
-	    		"dateTime" : "J21 14h00",
+	    		"dateTime" : NumberLong(ISODate("2015-02-22T14:00:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-CHAMBERY", "name" : "CHAMBERY SAVOIE HB", "structureId" : "CHAMBERYSAVOIEHB", "type":"teamHome"}, 
 	    		                  {"id" : "ID-TEAM-DUNKERQUE", "name" : "USDK Dunkerque", "structureId" : "541168295971d35c1f2d1b5f", "type" : "teamVisitor"},
@@ -154,10 +160,10 @@ db.Championship.insert({
 	    	    /* FDM 4 : CRETEIL - CESSON*/
 	    	    {
 	    		"code" : "fdm4",
-	    		"dateTime" : "J21 16h00",
+	    		"dateTime" : NumberLong(ISODate("2015-02-22T16:00:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-CESSON", "name" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamHome"},
-	    		                  {"id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamVisitor"},
+	    		                  {"id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamVisitor"},
 	    	                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}],
 	    	    "result" : {"scoreHome" : NumberInt(12), "scoreVisitor" : NumberInt(12)}
 	    	    }
@@ -186,7 +192,7 @@ db.Championship.insert({
 	    	    },
 	    	    {
 	    	    	"place" : NumberInt(3),
-	    	        "id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
+	    	        "id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
 	    	        "nbPlayed" : NumberInt(2), "nbWon" : NumberInt(0), "nbLost" : NumberInt(1), "nbDraw" : NumberInt(1), 
 	        	    "sumScored" : NumberInt(28+12), "sumConceded" : NumberInt(30+12), "goalAverage" : NumberInt(28-30+12-12),
 	        	    "points" : NumberInt(1+2)
@@ -195,15 +201,15 @@ db.Championship.insert({
         },
         {
 	    	"label" : "Championnat : Journée 22",
-	    	"startDate" : NumberLong(1429123500000), 
-	    	"endDate" : NumberLong(1429130700000),
+	    	"startDate" : NumberLong(ISODate("2015-03-06T12:00:00Z").getTime()), 
+	    	"endDate" : NumberLong(ISODate("2015-03-08T23:00:00Z").getTime()),
 	    	"matchs" : [
 	    	    /* FDM 5 : CHEMBERY - CRETEIL*/
 	    	    {
 	    		"code" : "fdm5",
-	    		"dateTime" : "J22 14h00",
+	    		"dateTime" : NumberLong(ISODate("2015-03-08T14:00:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
-	    		"participants" : [{"id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamHome"},
+	    		"participants" : [{"id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamHome"},
 	    		                  {"id" : "ID-TEAM-CHAMBERY", "name" : "CHAMBERY SAVOIE HB", "structureId" : "CHAMBERYSAVOIEHB", "type":"teamVisitor"},
 	    	                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}],
 	    	    "result" : {"scoreHome" : NumberInt(14), "scoreVisitor" : NumberInt(28)}
@@ -211,7 +217,7 @@ db.Championship.insert({
 	    	    /* FDM 6 : DUNKERQUE - CESSON*/
 	    	    {
 	    		"code" : "fdm6",
-	    		"dateTime" : "J22 16h00",
+	    		"dateTime" : NumberLong(ISODate("2015-03-08T16:00:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-DUNKERQUE", "name" : "USDK Dunkerque", "structureId" : "541168295971d35c1f2d1b5f", "type" : "teamHome"},
 	    		                  {"id" : "ID-TEAM-CESSON", "name" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamVisitor"},
@@ -243,7 +249,7 @@ db.Championship.insert({
 	    	    },
 	    	    {
 	    	    	"place" : NumberInt(3),
-	    	        "id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
+	    	        "id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
 	    	        "nbPlayed" : NumberInt(3), "nbWon" : NumberInt(0), "nbLost" : NumberInt(2), "nbDraw" : NumberInt(1), 
 	        	    "sumScored" : NumberInt(28+12+14), "sumConceded" : NumberInt(30+12+28), "goalAverage" : NumberInt(28-30+12-12+14-28),
 	        	    "points" : NumberInt(1+2+1)
@@ -267,9 +273,9 @@ db.Championship.insert({
     "instance" : "Ligue de Bretagne",
     "activityId" : "ACT-HAND",
     "categoryAge" : {
-        "code" : "sen",
-        "label" : "Senior",
-        "ageMax" : NumberInt(50),
+        "code" : "vet",
+        "label" : "Vétéran",
+        "ageMax" : NumberInt(150),
         "ageMin" : NumberInt(35),
         "genre" : "gender.male"
     },
@@ -294,34 +300,40 @@ db.Championship.insert({
     },
     {
         "id" : "ID-TEAM-CRETEIL",
-        "label" : "US CRETEIL HANDBALL",
+        "name" : "US CRETEIL HANDBALL",
         "structureId" : "USCRETEILHANDBALL",
         "type" : "team"
+    },
+    {
+        "id" : "ID-ARENA-BREST",
+        "name" : "Brest Arena",
+        "structureId" : "541168295971d35c1f2d1b5e",
+        "type" : "infrastructure"
     }],
     "journeys" : [ 
         {
 	    	"label" : "Championnat : Journée 10",
-	    	"startDate" : NumberLong(1428518700000), 
-	    	"endDate" : NumberLong(1428525900000),
+	    	"startDate" : NumberLong(ISODate("2014-11-14T12:00:00Z").getTime()), 
+	    	"endDate" : NumberLong(ISODate("2014-11-16T23:00:00Z").getTime()),
 	    	"matchs" : [
-	    	    /* FDM 1 : CHEMBERY - CESSON*/
+	    	    /* FDM 21 : CHEMBERY - CESSON*/
 	    	    {
-	    		"code" : "fdm1",
-	    		"dateTime" : "J10 14h00",
+	    		"code" : "fdm21",
+	    		"dateTime" : NumberLong(ISODate("2014-11-16T14:00:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-CHAMBERY", "name" : "CHAMBERY SAVOIE HB", "structureId" : "CHAMBERYSAVOIEHB", "type":"teamHome"}, 
 	    	                      {"id" : "ID-TEAM-CESSON", "name" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamVisitor"},
-	    	                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}],
+	    	                      {"id" : "ID-ARENA-BREST", "name" : "Brest Arena", "structureId" : "541168295971d35c1f2d1b5e", "type" : "infrastructure"}],
 	    	    "result" : {"scoreHome" : NumberInt(12), "scoreVisitor" : NumberInt(34)}
 	    	    },
-	    	    /* FDM 2 : DUNKERQUE - CRETEIL*/
+	    	    /* FDM 22 : DUNKERQUE - CRETEIL*/
 	    	    {
-	    		"code" : "fdm2",
-	    		"dateTime" : "J10 16h00",
+	    		"code" : "fdm22",
+	    		"dateTime" : NumberLong(ISODate("2014-11-16T16:00:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-DUNKERQUE", "name" : "USDK Dunkerque", "structureId" : "541168295971d35c1f2d1b5f", "type" : "teamHome"},
-	    		                  {"id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamVisitor"},
-	    	                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}],
+	    		                  {"id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamVisitor"},
+	    		                  {"id" : "ID-ARENA-BREST", "name" : "Brest Arena", "structureId" : "541168295971d35c1f2d1b5e", "type" : "infrastructure"}],
 	    	    "result" : {"scoreHome" : NumberInt(30), "scoreVisitor" : NumberInt(28)}
 	    	    }
 	    	],
@@ -349,7 +361,7 @@ db.Championship.insert({
 	    	    },
 	    	    {
 	    	    	"place" : NumberInt(3),
-	    	        "id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
+	    	        "id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
 	    	        "nbPlayed" : NumberInt(1), "nbWon" : NumberInt(0), "nbLost" : NumberInt(1), "nbDraw" : NumberInt(0), 
 	        	    "sumScored" : NumberInt(28), "sumConceded" : NumberInt(30), "goalAverage" : NumberInt(28-30),
 	        	    "points" : NumberInt(1)
@@ -358,27 +370,27 @@ db.Championship.insert({
         },
         {
 	    	"label" : "Championnat : Journée 11",
-	    	"startDate" : NumberLong(1429123500000), 
-	    	"endDate" : NumberLong(1429130700000),
+	    	"startDate" : NumberLong(ISODate("2014-11-28T12:00:00Z").getTime()), 
+	    	"endDate" : NumberLong(ISODate("2014-11-30T23:00:00Z").getTime()),
 	    	"matchs" : [
-	    	    /* FDM 3 : CHEMBERY - DUNKERQUE*/
+	    	    /* FDM 23 : CHEMBERY - DUNKERQUE*/
 	    	    {
-	    		"code" : "fdm3",
-	    		"dateTime" : "J11 14h00",
+	    		"code" : "fdm23",
+	    		"dateTime" : NumberLong(ISODate("2014-11-30T14:00:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-CHAMBERY", "name" : "CHAMBERY SAVOIE HB", "structureId" : "CHAMBERYSAVOIEHB", "type":"teamHome"}, 
 	    		                  {"id" : "ID-TEAM-DUNKERQUE", "name" : "USDK Dunkerque", "structureId" : "541168295971d35c1f2d1b5f", "type" : "teamVisitor"},
-	    	                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}],
+	    		                  {"id" : "ID-ARENA-BREST", "name" : "Brest Arena", "structureId" : "541168295971d35c1f2d1b5e", "type" : "infrastructure"}],
 	    	    "result" : {"scoreHome" : NumberInt(16), "scoreVisitor" : NumberInt(20)}
 	    	    },
-	    	    /* FDM 4 : CRETEIL - CESSON*/
+	    	    /* FDM 24 : CRETEIL - CESSON*/
 	    	    {
-	    		"code" : "fdm4",
-	    		"dateTime" : "J11 16h00",
+	    		"code" : "fdm24",
+	    		"dateTime" : NumberLong(ISODate("2014-11-30T14:30:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-CESSON", "name" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamHome"},
-	    		                  {"id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamVisitor"},
-	    	                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}],
+	    		                  {"id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamVisitor"},
+	    		                  {"id" : "ID-ARENA-BREST", "name" : "Brest Arena", "structureId" : "541168295971d35c1f2d1b5e", "type" : "infrastructure"}],
 	    	    "result" : {"scoreHome" : NumberInt(12), "scoreVisitor" : NumberInt(12)}
 	    	    }
 	    	],
@@ -406,7 +418,7 @@ db.Championship.insert({
 	    	    },
 	    	    {
 	    	    	"place" : NumberInt(3),
-	    	        "id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
+	    	        "id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
 	    	        "nbPlayed" : NumberInt(2), "nbWon" : NumberInt(0), "nbLost" : NumberInt(1), "nbDraw" : NumberInt(1), 
 	        	    "sumScored" : NumberInt(28+12), "sumConceded" : NumberInt(30+12), "goalAverage" : NumberInt(28-30+12-12),
 	        	    "points" : NumberInt(1+2)
@@ -415,27 +427,27 @@ db.Championship.insert({
         },
         {
 	    	"label" : "Championnat : Journée 12",
-	    	"startDate" : NumberLong(1429123500000), 
-	    	"endDate" : NumberLong(1429130700000),
+	    	"startDate" : NumberLong(ISODate("2014-12-12T12:00:00Z").getTime()), 
+	    	"endDate" : NumberLong(ISODate("2014-12-14T23:00:00Z").getTime()),
 	    	"matchs" : [
-	    	    /* FDM 5 : CHEMBERY - CRETEIL*/
+	    	    /* FDM 25 : CHEMBERY - CRETEIL*/
 	    	    {
-	    		"code" : "fdm5",
-	    		"dateTime" : "J12 14h00",
+	    		"code" : "fdm25",
+	    		"dateTime" : NumberLong(ISODate("2014-12-14T12:30:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
-	    		"participants" : [{"id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamHome"},
+	    		"participants" : [{"id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type" : "teamHome"},
 	    		                  {"id" : "ID-TEAM-CHAMBERY", "name" : "CHAMBERY SAVOIE HB", "structureId" : "CHAMBERYSAVOIEHB", "type":"teamVisitor"},
-	    	                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}],
+	    		                  {"id" : "ID-ARENA-BREST", "name" : "Brest Arena", "structureId" : "541168295971d35c1f2d1b5e", "type" : "infrastructure"}],
 	    	    "result" : {"scoreHome" : NumberInt(14), "scoreVisitor" : NumberInt(28)}
 	    	    },
-	    	    /* FDM 6 : DUNKERQUE - CESSON*/
+	    	    /* FDM 26 : DUNKERQUE - CESSON*/
 	    	    {
-	    		"code" : "fdm6",
-	    		"dateTime" : "J12 16h00",
+	    		"code" : "fdm26",
+	    		"dateTime" : NumberLong(ISODate("2014-12-14T17:15:00Z").getTime()),
 	    		"address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
 	    		"participants" : [{"id" : "ID-TEAM-DUNKERQUE", "name" : "USDK Dunkerque", "structureId" : "541168295971d35c1f2d1b5f", "type" : "teamHome"},
 	    		                  {"id" : "ID-TEAM-CESSON", "name" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamVisitor"},
-	    	                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}],
+	    		                  {"id" : "ID-ARENA-BREST", "name" : "Brest Arena", "structureId" : "541168295971d35c1f2d1b5e", "type" : "infrastructure"}],
 	    	    "result" : {"scoreHome" : NumberInt(17), "scoreVisitor" : NumberInt(13)}
 	    	    }
 	    	],
@@ -463,7 +475,7 @@ db.Championship.insert({
 	    	    },
 	    	    {
 	    	    	"place" : NumberInt(3),
-	    	        "id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
+	    	        "id" : "ID-TEAM-CRETEIL", "name" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL",
 	    	        "nbPlayed" : NumberInt(3), "nbWon" : NumberInt(0), "nbLost" : NumberInt(2), "nbDraw" : NumberInt(1), 
 	        	    "sumScored" : NumberInt(28+12+14), "sumConceded" : NumberInt(30+12+28), "goalAverage" : NumberInt(28-30+12-12+14-28),
 	        	    "points" : NumberInt(1+2+1)

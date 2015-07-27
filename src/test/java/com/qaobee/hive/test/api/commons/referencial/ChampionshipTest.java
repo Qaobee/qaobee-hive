@@ -41,18 +41,90 @@ public class ChampionshipTest extends VertxJunitSupport {
 	
 	@Test
 	public void getListChampionshipsTest() {
+		// Populate default value
 		populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
+		// User connected
 		User user = generateLoggedAdminUser();
+		
+		// Request
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
 		req.setUser(user);
 		req.setMethod(Constantes.POST);
+
+		// Params
 		final JsonObject params = new JsonObject();
 		params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
+		params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
+		params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
 		
 		req.setBody(params.encode());
+		
+		// Send request
 		final String reply = sendonBus(ChampionshipVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals("getListChampionshipsTest", 2, new JsonArray(reply).size());
+		Assert.assertEquals("getListChampionshipsTest", 1, new JsonArray(reply).size());
+	}
+	
+	@Test
+	public void getListChampionshipsWithInfraTest() {
+		// Populate default value
+		populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
+		// User connected
+		User user = generateLoggedAdminUser();
+		
+		// Request
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.POST);
+
+		// Params
+		final JsonObject params = new JsonObject();
+		params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
+		params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
+		params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
+		
+		JsonObject paramParticipant = new JsonObject();
+		paramParticipant.putString("id", "ID-PHARE-CHAMBERY");
+		paramParticipant.putString("type", "infrastructure");
+		params.putObject(ChampionshipVerticle.PARAM_PARTICIPANT, paramParticipant);
+		
+		req.setBody(params.encode());
+		
+		// Send request
+		final String reply = sendonBus(ChampionshipVerticle.GET_LIST, req, user.getAccount().getToken());
+		Assert.assertEquals("getListChampionshipsTest", 1, new JsonArray(reply).size());
+	}
+	
+	@Test
+	public void getListChampionshipsWithInfraUnknownTest() {
+		// Populate default value
+		populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
+		// User connected
+		User user = generateLoggedAdminUser();
+		
+		// Request
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.POST);
+
+		// Params
+		final JsonObject params = new JsonObject();
+		params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
+		params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
+		params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
+		
+		JsonObject paramParticipant = new JsonObject();
+		paramParticipant.putString("id", "ID-Anywhere-But-Not-There");
+		paramParticipant.putString("type", "infrastructure");
+		params.putObject(ChampionshipVerticle.PARAM_PARTICIPANT, paramParticipant);
+		
+		req.setBody(params.encode());
+		
+		// Send request
+		final String reply = sendonBus(ChampionshipVerticle.GET_LIST, req, user.getAccount().getToken());
+		Assert.assertEquals("getListChampionshipsTest", 0, new JsonArray(reply).size());
 	}
 	
 	@Test
@@ -70,6 +142,63 @@ public class ChampionshipTest extends VertxJunitSupport {
 		final JsonObject reply = new JsonObject(sendonBus(ChampionshipVerticle.GET, req, user.getAccount().getToken()));
 		System.out.println(reply);
 		Assert.assertEquals("getChampionshipByIdTest", "Championnat du bout du monde", reply.getString("label"));
+	}
+	
+	@Test
+	public void addChampionshipTest() {
+		User user = generateLoggedAdminUser();
+		RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.POST);
+		
+		final JsonObject params = new JsonObject();
+		params.putString(ChampionshipVerticle.PARAM_LABEL, "Mon championnat");
+		
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.putString("code", "R");
+		jsonObject.putString("label", "regional");
+		params.putObject(ChampionshipVerticle.PARAM_LEVEL_GAME, jsonObject);
+		
+		params.putString(ChampionshipVerticle.PARAM_SUB_LEVEL_GAME, "Honneur regional");
+		params.putString(ChampionshipVerticle.PARAM_POOL, "Cocotte");
+		params.putString(ChampionshipVerticle.PARAM_INSTANCE, "Ligue du Boukhistan");
+		params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
+		
+		jsonObject = new JsonObject();
+		jsonObject.putString("code", "sen");
+		jsonObject.putString("label", "senior");
+		jsonObject.putNumber("ageMax", 34);
+		jsonObject.putNumber("ageMin", 20);
+		jsonObject.putString("genre", "gender.male");
+		params.putObject(ChampionshipVerticle.PARAM_CATEGORY_AGE, jsonObject);
+		
+		params.putString(ChampionshipVerticle.PARAM_SEASON_CODE, "SAI-2014");
+		
+		jsonObject = new JsonObject();
+		jsonObject.putString("id", "mon-id");
+		jsonObject.putString("name", "participantName");
+		jsonObject.putString("structureId", "participantStructureId");
+		jsonObject.putString("type", "team");
+		params.putArray(ChampionshipVerticle.PARAM_LIST_PARTICIPANTS, new JsonArray().addObject(jsonObject));
+		
+		req.setBody(params.encode());
+		
+		final JsonObject result = new JsonObject(sendonBus(ChampionshipVerticle.ADD, req, user.getAccount().getToken()));
+		Assert.assertNotNull("id is null", result.getString("_id"));
+		
+		// Test si donnée présente et accessible
+		req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.GET);
+		final HashMap<String, List<String>> params2 = new HashMap<>();
+		params2.put(ChampionshipVerticle.PARAM_ID, Collections.singletonList(result.getString("_id")));
+		req.setParams(params2);
+		
+		final JsonObject reply = new JsonObject(sendonBus(ChampionshipVerticle.GET, req, user.getAccount().getToken()));
+		System.out.println(reply);
+		Assert.assertEquals("addChampionshipTest", "Mon championnat", reply.getString("label"));
 	}
 
 }
