@@ -140,7 +140,6 @@ public class ChampionshipTest extends VertxJunitSupport {
 		req.setParams(params);
 		
 		final JsonObject reply = new JsonObject(sendonBus(ChampionshipVerticle.GET, req, user.getAccount().getToken()));
-		System.out.println(reply);
 		Assert.assertEquals("getChampionshipByIdTest", "Championnat du bout du monde", reply.getString("label"));
 	}
 	
@@ -199,6 +198,52 @@ public class ChampionshipTest extends VertxJunitSupport {
 		final JsonObject reply = new JsonObject(sendonBus(ChampionshipVerticle.GET, req, user.getAccount().getToken()));
 		System.out.println(reply);
 		Assert.assertEquals("addChampionshipTest", "Mon championnat", reply.getString("label"));
+	}
+	
+	@Test
+	public void updateChampionshipTest() {
+		populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
+		User user = generateLoggedAdminUser();
+		RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.GET);
+		HashMap<String, List<String>> params = new HashMap<>();
+		params.put(ChampionshipVerticle.PARAM_ID, Collections.singletonList("559ebfb499f07aa6f04dec76"));
+		req.setParams(params);
+		
+		JsonObject reply = new JsonObject(sendonBus(ChampionshipVerticle.GET, req, user.getAccount().getToken()));
+		Assert.assertEquals("updateChampionshipTest", "Championnat du bout du monde", reply.getString("label"));
+		
+		// Return the _id to "id" param
+		reply.putString(ChampionshipVerticle.PARAM_ID, reply.getString("_id"));
+		
+		// Update a field
+		final String newLabel = "Autre";
+		reply.putString("label", newLabel);
+		
+		// Prepare update request
+		req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.POST);
+		req.setBody(reply.encode());
+		
+		reply = new JsonObject(sendonBus(ChampionshipVerticle.UPDATE, req, user.getAccount().getToken()));
+		Assert.assertEquals("updateChampionshipTest - result update", newLabel, reply.getString("label"));
+		
+		
+		// Just to see if it's really updated
+		req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setUser(user);
+		req.setMethod(Constantes.GET);
+		params = new HashMap<>();
+		params.put(ChampionshipVerticle.PARAM_ID, Collections.singletonList("559ebfb499f07aa6f04dec76"));
+		req.setParams(params);
+		
+		reply = new JsonObject(sendonBus(ChampionshipVerticle.GET, req, user.getAccount().getToken()));
+		Assert.assertEquals("updateChampionshipTest - get check", newLabel, reply.getString("label"));
 	}
 
 }

@@ -55,7 +55,7 @@ public class ChampionshipVerticle  extends AbstractGuiceVerticle {
     public static final String GET_LIST 	= Module.VERSION + ".commons.referencial.championship.list";
     /** Handler to add a event. */
     public static final String ADD 			= Module.VERSION + ".commons.referencial.championship.add";
-    /** Handler to get a particular event from its ID. */
+    /** Handler to get a particular championship from its ID. */
     public static final String GET 			= Module.VERSION + ".commons.referencial.championship.get";
     /** Handler to update a event. */
     public static final String UPDATE 		= Module.VERSION + ".commons.referencial.championship.update";
@@ -258,6 +258,7 @@ public class ChampionshipVerticle  extends AbstractGuiceVerticle {
             }
         };
         
+        
         /**
          * @apiDescription Add a championship.
          * @api {post} /api/1/commons/referencial/championship/add Add a championship
@@ -265,7 +266,16 @@ public class ChampionshipVerticle  extends AbstractGuiceVerticle {
          * @apiGroup Championship API
          * @apiPermission TBD
          * 
-         * @apiParam {String} id
+         * @apiParam {String} label : championship label
+         * @apiParam {LevelGame} levelGame : level game
+         * @apiParam {String} subLevelGame : sub-level game label
+         * @apiParam {String} pool : pool label
+         * @apiParam {String} instance (optional) : instance
+         * @apiParam {String} activityId : ID activity
+         * @apiParam {CategoryAge} categoryAge : age category
+         * @apiParam {String} seasonCode : season
+         * @apiParam {Array(Participant)} participants : list of participants (at least one)
+         * @apiParam {Array(Journey)} journeys (optional) : list of journeys
          * 
          * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
          * @apiError HTTP_ERROR Bad request
@@ -312,13 +322,78 @@ public class ChampionshipVerticle  extends AbstractGuiceVerticle {
             }
         };
         
+        
+        /**
+         * @apiDescription Update a championship.
+         * @api {post} /api/1/commons/referencial/championship/update Update a championship
+         * @apiName updateChampionshipHandler
+         * @apiGroup Championship API
+         * @apiPermission TBD
+         * 
+         * @apiParam {String} id : identifier of the championship
+         * @apiParam {String} label : championship label
+         * @apiParam {LevelGame} levelGame : level game
+         * @apiParam {String} subLevelGame : sub-level game label
+         * @apiParam {String} pool : pool label
+         * @apiParam {String} instance (optional) : instance
+         * @apiParam {String} activityId : ID activity
+         * @apiParam {CategoryAge} categoryAge : age category
+         * @apiParam {String} seasonCode : season
+         * @apiParam {Array(Participant)} participants : list of participants (at least one)
+         * @apiParam {Array(Journey)} journeys (optional) : list of journeys
+         * 
+         * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> updateChampionshipHandler = new Handler<Message<String>>() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(final Message<String> message) {
+            	container.logger().info("update() - Championship");
+                try {
+                	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                	
+                	// Check param mandatory
+                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    utils.isLoggedAndAdmin(req);
+                    JsonObject championship = new JsonObject(req.getBody());
+                    utils.testMandatoryParams(championship.toMap(), PARAM_ID, PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, 
+                    		PARAM_CATEGORY_AGE, PARAM_SEASON_CODE); //, PARAM_LIST_PARTICIPANTS => pb sur TestMandatory quand liste d'objets autre que String
+                    
+                    // Call to MongoDB
+                    mongo.save(championship, Championship.class);
+                    
+                    // Reply
+                    message.reply(championship.encode());
+                    
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+
+            }
+        };
+        
+        
 	   	/*
 		 * Handlers declaration.
 		 */
 	    vertx.eventBus().registerHandler(GET_LIST, getListChampionshipsHandler);
 	    vertx.eventBus().registerHandler(ADD, addChampionshipHandler);
 	    vertx.eventBus().registerHandler(GET, getChampionshipHandler);
-	    vertx.eventBus().registerHandler(UPDATE, null);
+	    vertx.eventBus().registerHandler(UPDATE, updateChampionshipHandler);
     }
     
     
