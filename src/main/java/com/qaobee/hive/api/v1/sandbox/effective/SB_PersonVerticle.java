@@ -125,8 +125,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     final JsonObject dataContainer = new JsonObject(req.getBody());
                     final JsonObject personJson = new JsonObject(dataContainer.getElement("person").toString());
-                    Json.decodeValue(personJson.toString(), SB_Person.class);
-
+                    
                     final String id = mongo.save(personJson, SB_Person.class);
                     personJson.putString("_id", id);
 					/* return */
