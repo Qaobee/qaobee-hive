@@ -33,7 +33,7 @@ import org.vertx.java.core.json.impl.Json;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.referencial.Championship;
+import com.qaobee.hive.business.model.commons.referencial.ChampionShip;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -48,7 +48,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
  *
  */
 @DeployableVerticle(isWorker=true)
-public class ChampionshipVerticle  extends AbstractGuiceVerticle {
+public class ChampionShipVerticle  extends AbstractGuiceVerticle {
 	
 	
 	/** Handler to get a set of events */
@@ -188,7 +188,7 @@ public class ChampionshipVerticle  extends AbstractGuiceVerticle {
                     
                     container.logger().info("getListChampionshipHandler : " + pipelineAggregation.toString());
 
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Championship.class);
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
 
                     container.logger().info(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
@@ -242,7 +242,7 @@ public class ChampionshipVerticle  extends AbstractGuiceVerticle {
                     utils.testMandatoryParams(req.getParams(), PARAM_ID);
                     
                     /* Call to MongoDB */
-                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), Championship.class).encode());
+                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), ChampionShip.class).encode());
                     
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
@@ -302,7 +302,7 @@ public class ChampionshipVerticle  extends AbstractGuiceVerticle {
                     		PARAM_SEASON_CODE); //, PARAM_LIST_PARTICIPANTS => pb sur TestMandatory quand liste d'objets autre que String
                     
                     // Call to MongoDB
-                    final String id = mongo.save(championship, Championship.class);
+                    final String id = mongo.save(championship, ChampionShip.class);
                     championship.putString("_id", id);
                     
                     // Reply
@@ -367,7 +367,7 @@ public class ChampionshipVerticle  extends AbstractGuiceVerticle {
                     		PARAM_CATEGORY_AGE, PARAM_SEASON_CODE); //, PARAM_LIST_PARTICIPANTS => pb sur TestMandatory quand liste d'objets autre que String
                     
                     // Call to MongoDB
-                    mongo.save(championship, Championship.class);
+                    mongo.save(championship, ChampionShip.class);
                     
                     // Reply
                     message.reply(championship.encode());
