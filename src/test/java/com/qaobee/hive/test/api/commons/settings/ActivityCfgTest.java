@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgVerticle;
@@ -132,5 +133,31 @@ public class ActivityCfgTest extends VertxJunitSupport {
         final String reply = sendonBus(ActivityCfgVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("getWitWrongActivityIdTest", result.getString("code").contains(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+    }
+    
+    /**
+     * Get list of value for one parameter config.
+     */
+    @Test
+    public void getParamsFields() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
+        
+        /* User simulation connection */
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
+
+		final Map<String, List<String>> params = new HashMap<>();
+		
+		// parameter
+		params.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("ACT-BIDON"));
+		params.put(ActivityCfgVerticle.PARAM_COUNTRY_ID, Collections.singletonList("CNTR-250-FR-FRA"));
+		params.put(ActivityCfgVerticle.PARAM_DATE, Collections.singletonList("1391209200000"));
+		params.put(ActivityCfgVerticle.PARAM_FIELD_LIST, Collections.singletonList("listPositionType"));
+		req.setParams(params);
+
+        final String reply = sendonBus(ActivityCfgVerticle.PARAMS, req);
+        JsonArray result = new JsonArray(reply);
+        Assert.assertTrue("getListParamsField", result.size()==7);
     }
 }
