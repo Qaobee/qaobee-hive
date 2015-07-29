@@ -100,36 +100,22 @@ db.ActivityCfg.insert({
                 { key:"professionalism", value: NumberInt(3)}
             ]
         }],
-    "listRubricSheet" : [ {
-        "code" : "SHEET-DAS",
-        "label" : "Tableau de bord",
-        "isDefault" : true,
-        "order" : NumberInt(1),
-        "indicatorFamily" : "IND-DASHBOARD"
+    "listPositionType" : [ {
+        "code" : "forward",
+        "label" : "Attaquant",
+        "order" : NumberInt(1)
     }, {
-        "code" : "SHEET-TEC",
-        "label" : "Technique",
-        "isDefault" : false,
-        "order" : NumberInt(2),
-        "indicatorFamily" : "IND-TECHNICAL"
+        "code" : "midfielder",
+        "label" : "Milieu",
+        "order" : NumberInt(2)
     }, {
-        "code" : "SHEET-PHY",
-        "label" : "Physique",
-        "isDefault" : false,
-        "order" : NumberInt(3),
-        "indicatorFamily" : "IND-PHYSICAL"
+        "code" : "defender",
+        "label" : "Défenseur",
+        "order" : NumberInt(3)
     }, {
-        "code" : "SHEET-MEN",
-        "label" : "Mental",
-        "isDefault" : false,
-        "order" : NumberInt(4),
-        "indicatorFamily" : "IND-MENTAL"
-    },{
-        "code" : "SHEET-ADM",
-        "label" : "Administratif",
-        "isDefault" : false,
-        "order" : NumberInt(5),
-        "indicatorFamily" : "IND-ADMIN"
+        "code" : "goalkeeper",
+        "label" : "Gardien",
+        "order" : NumberInt(4)
     }],
     "listLevelGame" : [ {
         "code" : "nv1",
@@ -149,33 +135,37 @@ db.ActivityCfg.insert({
         "order" : NumberInt(4)
     }],
     "listRoleStr" : [ {
-        "code" : "president",
-        "label" : "Président",
+        "code" : "player",
+        "label" : "Joueur",
         "order" : NumberInt(1)
-    }, {
-        "code" : "treasurer",
-        "label" : "Trésorier",
-        "order" : NumberInt(2)
-    }, {
-        "code" : "secretary",
-        "label" : "Secrétaire",
-        "order" : NumberInt(3)
     }, {
         "code" : "coach",
         "label" : "Coach",
-        "order" : NumberInt(4)
+        "order" : NumberInt(2)
     }, {
         "code" : "acoach",
         "label" : "Coach Adjoint",
+        "order" : NumberInt(3)
+    }, {
+        "code" : "president",
+        "label" : "Président",
+        "order" : NumberInt(4)
+    }, {
+        "code" : "treasurer",
+        "label" : "Trésorier",
         "order" : NumberInt(5)
+    }, {
+        "code" : "secretary",
+        "label" : "Secrétaire",
+        "order" : NumberInt(6)
     }, {
         "code" : "physiotherapist",
         "label" : "Kinésithérapeute",
-        "order" : NumberInt(6)
-    }, {
-        "code" : "member",
-        "label" : "Membre",
         "order" : NumberInt(7)
+    }, {
+        "code" : "other",
+        "label" : "Autre",
+        "order" : NumberInt(8)
     } ],
     "listCategoryAge" : [ {
         "code" : "vet",
@@ -283,40 +273,40 @@ db.ActivityCfg.insert({
     /* End : 31/12/2199*/
     "endDate" : NumberLong(7258028400000),
     "caracteristicsPerson" : [{
-        "positionType" : ["pivot", "center-backcourt", "left-backcourt", "right-backcourt", "left-wingman", "right-wingman"],
-        "physicalFolder" : [
-            { key:"explosive", value: NumberInt(3)},
-            { key:"speed", value: NumberInt(3)},
-            { key:"traction", value: NumberInt(3)},
-            { key:"verticaljump", value: NumberInt(3)},
-            { key:"endurance", value: NumberInt(3)},
-            { key:"equilibrium", value: NumberInt(3)},
-            { key:"strenght", value: NumberInt(3)},
-            { key:"nimbleness", value: NumberInt(3)}
-        ],
-        "technicalFolder" : [
-            { key:"pass", value: NumberInt(3)},
-            { key:"center", value: NumberInt(3)},
-            { key:"corner", value: NumberInt(3)},
-            { key:"freekick", value: NumberInt(3)},
-            { key:"penalty", value: NumberInt(3)},
-            { key:"shoot", value: NumberInt(3)},
-            { key:"dribble", value: NumberInt(3)},
-            { key:"tacle", value: NumberInt(3)}
-        ],
-        "mentalFolder" : [
-            { key:"aggressiveness", value: NumberInt(3)},
-            { key:"anticipation", value: NumberInt(3)},
-            { key:"concentration", value: NumberInt(3)},
-            { key:"altruism", value: NumberInt(3)},
-            { key:"courage", value: NumberInt(3)},
-            { key:"creativity", value: NumberInt(3)},
-            { key:"motivation", value: NumberInt(3)},
-            { key:"self-control", value: NumberInt(3)},
-            { key:"leadership", value: NumberInt(3)},
-            { key:"professionalism", value: NumberInt(3)}
-        ]
-    },
+	        "positionType" : ["pivot", "center-backcourt", "left-backcourt", "right-backcourt", "left-wingman", "right-wingman"],
+	        "physicalFolder" : [
+	            { key:"explosive", value: NumberInt(3)},
+	            { key:"speed", value: NumberInt(3)},
+	            { key:"traction", value: NumberInt(3)},
+	            { key:"verticaljump", value: NumberInt(3)},
+	            { key:"endurance", value: NumberInt(3)},
+	            { key:"equilibrium", value: NumberInt(3)},
+	            { key:"strenght", value: NumberInt(3)},
+	            { key:"nimbleness", value: NumberInt(3)}
+	        ],
+	        "technicalFolder" : [
+	            { key:"pass", value: NumberInt(3)},
+	            { key:"center", value: NumberInt(3)},
+	            { key:"corner", value: NumberInt(3)},
+	            { key:"freekick", value: NumberInt(3)},
+	            { key:"penalty", value: NumberInt(3)},
+	            { key:"shoot", value: NumberInt(3)},
+	            { key:"dribble", value: NumberInt(3)},
+	            { key:"tacle", value: NumberInt(3)}
+	        ],
+	        "mentalFolder" : [
+	            { key:"aggressiveness", value: NumberInt(3)},
+	            { key:"anticipation", value: NumberInt(3)},
+	            { key:"concentration", value: NumberInt(3)},
+	            { key:"altruism", value: NumberInt(3)},
+	            { key:"courage", value: NumberInt(3)},
+	            { key:"creativity", value: NumberInt(3)},
+	            { key:"motivation", value: NumberInt(3)},
+	            { key:"self-control", value: NumberInt(3)},
+	            { key:"leadership", value: NumberInt(3)},
+	            { key:"professionalism", value: NumberInt(3)}
+	        ]
+	    },
         {
             "positionType" : ["goalkeeper"],
             "physicalFolder" : [
@@ -351,38 +341,37 @@ db.ActivityCfg.insert({
                 { key:"leadership", value: NumberInt(3)},
                 { key:"professionalism", value: NumberInt(3)}
             ]
-        }],
-    "listRubricSheet" : [ {
-        "code" : "SHEET-DAS",
-        "label" : "Tableau de bord",
-        "isDefault" : true,
-        "order" : NumberInt(1),
-        "indicatorFamily" : "IND-DASHBOARD"
-    }, {
-        "code" : "SHEET-TEC",
-        "label" : "Technique",
-        "isDefault" : false,
-        "order" : NumberInt(2),
-        "indicatorFamily" : "IND-TECHNICAL"
-    }, {
-        "code" : "SHEET-PHY",
-        "label" : "Physique",
-        "isDefault" : false,
-        "order" : NumberInt(3),
-        "indicatorFamily" : "IND-PHYSICAL"
-    }, {
-        "code" : "SHEET-MEN",
-        "label" : "Mental",
-        "isDefault" : false,
-        "order" : NumberInt(4),
-        "indicatorFamily" : "IND-MENTAL"
-    },{
-        "code" : "SHEET-ADM",
-        "label" : "Administratif",
-        "isDefault" : false,
-        "order" : NumberInt(5),
-        "indicatorFamily" : "IND-ADMIN"
     }],
+    "listPositionType" : [ {
+        "code" : "right-wingman",
+        "label" : "Ailier Droit",
+        "order" : NumberInt(1)
+    }, {
+        "code" : "left-wingman",
+        "label" : "Ailier Gauche",
+        "order" : NumberInt(2)
+    }, {
+        "code" : "right-backcourt",
+        "label" : "Arrière Droit",
+        "order" : NumberInt(3)
+    }, {
+        "code" : "left-backcourt",
+        "label" : "Arrière Gauche",
+        "order" : NumberInt(4)
+    }, {
+        "code" : "center-backcourt",
+        "label" : "Demi-centre",
+        "order" : NumberInt(5)
+    }, {
+        "code" : "goalkeeper",
+        "label" : "Gardien",
+        "order" : NumberInt(6)
+    }, {
+        "code" : "pivot",
+        "label" : "Pivot",
+        "order" : NumberInt(7)
+    }],
+    
     "listLevelGame" : [ {
         "code" : "nv1",
         "label" : "Elite",
@@ -401,33 +390,37 @@ db.ActivityCfg.insert({
         "order" : NumberInt(4)
     } ],
     "listRoleStr" : [ {
-        "code" : "president",
-        "label" : "Président",
+        "code" : "player",
+        "label" : "Joueur",
         "order" : NumberInt(1)
-    }, {
-        "code" : "treasurer",
-        "label" : "Trésorier",
-        "order" : NumberInt(2)
-    }, {
-        "code" : "secretary",
-        "label" : "Secrétaire",
-        "order" : NumberInt(3)
     }, {
         "code" : "coach",
         "label" : "Coach",
-        "order" : NumberInt(4)
+        "order" : NumberInt(2)
     }, {
         "code" : "acoach",
         "label" : "Coach Adjoint",
+        "order" : NumberInt(3)
+    }, {
+        "code" : "president",
+        "label" : "Président",
+        "order" : NumberInt(4)
+    }, {
+        "code" : "treasurer",
+        "label" : "Trésorier",
         "order" : NumberInt(5)
+    }, {
+        "code" : "secretary",
+        "label" : "Secrétaire",
+        "order" : NumberInt(6)
     }, {
         "code" : "physiotherapist",
         "label" : "Kinésithérapeute",
-        "order" : NumberInt(6)
-    }, {
-        "code" : "member",
-        "label" : "Membre",
         "order" : NumberInt(7)
+    }, {
+        "code" : "other",
+        "label" : "Autre",
+        "order" : NumberInt(8)
     } ],
     "listCategoryAge" : [ {
         "code" : "sen",

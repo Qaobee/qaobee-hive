@@ -19,15 +19,20 @@
 
 package com.qaobee.hive.test.api.commons.settings;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.vertx.java.core.json.JsonObject;
+
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
 
 /**
  * The type Activity cfg test.
@@ -40,17 +45,21 @@ public class ActivityCfgTest extends VertxJunitSupport {
     @Test
     public void getTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
+        
+        /* User simulation connection */
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
 
-        JsonObject body = new JsonObject();
-        body.putString(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        req.setBody(body.toString());
+		final Map<String, List<String>> params = new HashMap<>();
+		
+		// parameter
+		params.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("ACT-HAND"));
+		params.put(ActivityCfgVerticle.PARAM_COUNTRY_ID, Collections.singletonList("CNTR-250-FR-FRA"));
+		params.put(ActivityCfgVerticle.PARAM_DATE, Collections.singletonList("1391209200000"));
+		req.setParams(params);
 
-        final String reply = sendonBus(ActivityCfgVerticle.GET, req, user.getAccount().getToken());
+        final String reply = sendonBus(ActivityCfgVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
 
         String id = result.getString("activityId");
@@ -62,16 +71,20 @@ public class ActivityCfgTest extends VertxJunitSupport {
      */
     @Test
     public void getWithWrongHttpMethodTest() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-        JsonObject body = new JsonObject();
-        body.putString(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        req.setBody(body.toString());
-        final String reply = sendonBus(ActivityCfgVerticle.GET, req, user.getAccount().getToken());
+        /* User simulation connection */
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.POST);
+
+		final Map<String, List<String>> params = new HashMap<>();
+		
+		// parameter
+		params.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("ACT-HAND"));
+		params.put(ActivityCfgVerticle.PARAM_COUNTRY_ID, Collections.singletonList("CNTR-250-FR-FRA"));
+		params.put(ActivityCfgVerticle.PARAM_DATE, Collections.singletonList("1391209200000"));
+		req.setParams(params);
+
+        final String reply = sendonBus(ActivityCfgVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("getWithWrongHttpMethodTest", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
@@ -81,13 +94,17 @@ public class ActivityCfgTest extends VertxJunitSupport {
      */
     @Test
     public void getWithoutParameterTest() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-        final String reply = sendonBus(ActivityCfgVerticle.GET, req, user.getAccount().getToken());
+    	/* User simulation connection */
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
+
+		final Map<String, List<String>> params = new HashMap<>();
+		
+		// parameter
+		req.setParams(params);
+
+        final String reply = sendonBus(ActivityCfgVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("getWithoutParameterTest", result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
@@ -98,17 +115,22 @@ public class ActivityCfgTest extends VertxJunitSupport {
     @Test
     public void getWitWrongActivityIdTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-        JsonObject body = new JsonObject();
-        body.putString(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "123");
-        req.setBody(body.toString());
-        final String reply = sendonBus(ActivityCfgVerticle.GET, req, user.getAccount().getToken());
+        
+        /* User simulation connection */
+		final RequestWrapper req = new RequestWrapper();
+		req.setLocale(LOCALE);
+		req.setMethod(Constantes.GET);
+
+		final Map<String, List<String>> params = new HashMap<>();
+		
+		// parameter
+		params.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("ACT-BIDON"));
+		params.put(ActivityCfgVerticle.PARAM_COUNTRY_ID, Collections.singletonList("CNTR-250-FR-FRA"));
+		params.put(ActivityCfgVerticle.PARAM_DATE, Collections.singletonList("1391209200000"));
+		req.setParams(params);
+
+        final String reply = sendonBus(ActivityCfgVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
-        System.out.println(reply);
         Assert.assertTrue("getWitWrongActivityIdTest", result.getString("code").contains(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
     }
 }

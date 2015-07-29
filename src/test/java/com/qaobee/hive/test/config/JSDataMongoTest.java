@@ -22,7 +22,7 @@ package com.qaobee.hive.test.config;
 public interface JSDataMongoTest {
 
     /* DATA */
-	String DATA_CHAMPIONSHIP_HAND = "data_championship_Hand.js";
+	String DATA_CHAMPIONSHIP_HAND = "data_championShip_Hand.js";
     String DATA_EFFECTIVE_FOOT = "data_SB_effective_Foot.js";
     String DATA_EFFECTIVE_HAND = "data_SB_effective_Hand.js";
     String DATA_EVENT_HAND = "data_SB_event_Hand.js";

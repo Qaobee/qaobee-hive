@@ -48,10 +48,8 @@ public class ActivityTest extends VertxJunitSupport {
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 
 		/* User simulation connection */
-		User user = generateLoggedUser();
 		final RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
-		req.setUser(user);
 		req.setMethod(Constantes.GET);
 
 		final Map<String, List<String>> params = new HashMap<>();
@@ -60,7 +58,7 @@ public class ActivityTest extends VertxJunitSupport {
 		params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
 		req.setParams(params);
 
-		final String reply = sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken());
+		final String reply = sendonBus(ActivityVerticle.GET, req);
 		JsonObject result = new JsonObject(reply);
 		
 		String label = result.getString("label");

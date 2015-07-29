@@ -41,7 +41,7 @@ public interface MongoDB {
      * @param o object to save
      * @return id string
      * @throws EncodeException can't encode
-     * @throws EncodeException can't encode
+     * @throws QaobeeException can't save
      */
     String save(Object o) throws EncodeException, QaobeeException;
 
@@ -79,7 +79,7 @@ public interface MongoDB {
      * @param collection target
      * @return id string
      * @throws QaobeeException can't save
-     * @throws QaobeeException can't save
+     * @throws MongoException can't save
      */
     String save(JsonObject document, Class<?> collection) throws QaobeeException, MongoException;
 

@@ -37,10 +37,10 @@ import com.qaobee.hive.test.config.VertxJunitSupport;
  * @author jerome
  *
  */
-public class ChampionshipTest extends VertxJunitSupport {
+public class ChampionShipTest extends VertxJunitSupport {
 	
 	@Test
-	public void getListChampionshipsTest() {
+	public void getListChampionShipsTest() {
 		// Populate default value
 		populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
 		// User connected
@@ -62,11 +62,11 @@ public class ChampionshipTest extends VertxJunitSupport {
 		
 		// Send request
 		final String reply = sendonBus(ChampionShipVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals("getListChampionshipsTest", 1, new JsonArray(reply).size());
+		Assert.assertEquals("getListChampionShipsTest", 1, new JsonArray(reply).size());
 	}
 	
 	@Test
-	public void getListChampionshipsWithInfraTest() {
+	public void getListChampionShipsWithInfraTest() {
 		// Populate default value
 		populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
 		// User connected
@@ -93,11 +93,11 @@ public class ChampionshipTest extends VertxJunitSupport {
 		
 		// Send request
 		final String reply = sendonBus(ChampionShipVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals("getListChampionshipsTest", 1, new JsonArray(reply).size());
+		Assert.assertEquals("getListChampionShipsTest", 1, new JsonArray(reply).size());
 	}
 	
 	@Test
-	public void getListChampionshipsWithInfraUnknownTest() {
+	public void getListChampionShipsWithInfraUnknownTest() {
 		// Populate default value
 		populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
 		// User connected
@@ -124,11 +124,11 @@ public class ChampionshipTest extends VertxJunitSupport {
 		
 		// Send request
 		final String reply = sendonBus(ChampionShipVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals("getListChampionshipsTest", 0, new JsonArray(reply).size());
+		Assert.assertEquals("getListChampionShipsTest", 0, new JsonArray(reply).size());
 	}
 	
 	@Test
-	public void getChampionshipTest() {
+	public void getChampionShipTest() {
 		populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
 		User user = generateLoggedAdminUser();
 		final RequestWrapper req = new RequestWrapper();
@@ -140,11 +140,11 @@ public class ChampionshipTest extends VertxJunitSupport {
 		req.setParams(params);
 		
 		final JsonObject reply = new JsonObject(sendonBus(ChampionShipVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertEquals("getChampionshipByIdTest", "Championnat du bout du monde", reply.getString("label"));
+		Assert.assertEquals("getChampionShipByIdTest", "Championnat du bout du monde", reply.getString("label"));
 	}
 	
 	@Test
-	public void addChampionshipTest() {
+	public void addChampionShipTest() {
 		User user = generateLoggedAdminUser();
 		RequestWrapper req = new RequestWrapper();
 		req.setLocale(LOCALE);
@@ -197,11 +197,11 @@ public class ChampionshipTest extends VertxJunitSupport {
 		
 		final JsonObject reply = new JsonObject(sendonBus(ChampionShipVerticle.GET, req, user.getAccount().getToken()));
 		System.out.println(reply);
-		Assert.assertEquals("addChampionshipTest", "Mon championnat", reply.getString("label"));
+		Assert.assertEquals("addChampionShipTest", "Mon championnat", reply.getString("label"));
 	}
 	
 	@Test
-	public void updateChampionshipTest() {
+	public void updateChampionShipTest() {
 		populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
 		User user = generateLoggedAdminUser();
 		RequestWrapper req = new RequestWrapper();
@@ -213,7 +213,7 @@ public class ChampionshipTest extends VertxJunitSupport {
 		req.setParams(params);
 		
 		JsonObject reply = new JsonObject(sendonBus(ChampionShipVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertEquals("updateChampionshipTest", "Championnat du bout du monde", reply.getString("label"));
+		Assert.assertEquals("updateChampionShipTest", "Championnat du bout du monde", reply.getString("label"));
 		
 		// Return the _id to "id" param
 		reply.putString(ChampionShipVerticle.PARAM_ID, reply.getString("_id"));
@@ -230,7 +230,7 @@ public class ChampionshipTest extends VertxJunitSupport {
 		req.setBody(reply.encode());
 		
 		reply = new JsonObject(sendonBus(ChampionShipVerticle.UPDATE, req, user.getAccount().getToken()));
-		Assert.assertEquals("updateChampionshipTest - result update", newLabel, reply.getString("label"));
+		Assert.assertEquals("updateChampionShipTest - result update", newLabel, reply.getString("label"));
 		
 		
 		// Just to see if it's really updated
@@ -243,7 +243,7 @@ public class ChampionshipTest extends VertxJunitSupport {
 		req.setParams(params);
 		
 		reply = new JsonObject(sendonBus(ChampionShipVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertEquals("updateChampionshipTest - get check", newLabel, reply.getString("label"));
+		Assert.assertEquals("updateChampionShipTest - get check", newLabel, reply.getString("label"));
 	}
 
 }
