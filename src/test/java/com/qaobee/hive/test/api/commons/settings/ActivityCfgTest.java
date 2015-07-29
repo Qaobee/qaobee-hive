@@ -150,7 +150,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
 		final Map<String, List<String>> params = new HashMap<>();
 		
 		// parameter
-		params.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("ACT-BIDON"));
+		params.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, Collections.singletonList("ACT-HAND"));
 		params.put(ActivityCfgVerticle.PARAM_COUNTRY_ID, Collections.singletonList("CNTR-250-FR-FRA"));
 		params.put(ActivityCfgVerticle.PARAM_DATE, Collections.singletonList("1391209200000"));
 		params.put(ActivityCfgVerticle.PARAM_FIELD_LIST, Collections.singletonList("listPositionType"));
