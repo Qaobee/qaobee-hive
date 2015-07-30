@@ -54,6 +54,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
  * @author cke
  *
  */
+@DeployableVerticle(isWorker = true)
 public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
 	/** Handler for average rate for one or many indicator and for one or many person, group by PARAM_LIST_GROUPBY */
