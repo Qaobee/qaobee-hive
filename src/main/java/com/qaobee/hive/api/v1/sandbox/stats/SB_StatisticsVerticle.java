@@ -41,6 +41,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.business.model.sandbox.stats.SB_Stats;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
