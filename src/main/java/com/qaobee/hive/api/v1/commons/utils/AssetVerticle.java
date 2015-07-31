@@ -19,10 +19,24 @@
 
 package com.qaobee.hive.api.v1.commons.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
+import javax.inject.Inject;
+
+import org.apache.commons.io.FileUtils;
+import org.bson.types.ObjectId;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -31,17 +45,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import org.apache.commons.io.FileUtils;
-import org.bson.types.ObjectId;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-
-import javax.inject.Inject;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 
 
 /**
@@ -84,7 +87,8 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                 JsonObject resp = new JsonObject();
                 try {
                     utils.testMandatoryParams(message.body().toMap(), "uid", "token", "filename", "collection", "field", "contentType");
-                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString("token")).get(), null, null, 0, 0, SB_Person.class);
+                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString("token")).get(), null, null, 0, 0, User.class);
+                    
                     if (res.size() != 1) {
                         FileUtils.deleteQuietly(new File(message.body().getString("filename")));
 
@@ -102,14 +106,20 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                         gfsFile.setMetaData(meta);
                         gfsFile.setContentType(message.body().getString("contentType"));
                         gfsFile.save();
-                        if (message.body().getString("collection").equals(SB_Person.class.getSimpleName())) {
-                            JsonObject personToSave = new JsonObject();
-                            personToSave.putString("_id", message.body().getString("uid"));
-                            personToSave.putString(message.body().getString("field"), gfsFile.getId().toString());
+
+                        JsonObject personToSave = new JsonObject();
+                        personToSave.putString("_id", message.body().getString("uid"));
+                        personToSave.putString(message.body().getString("field"), gfsFile.getId().toString());
+                     
+                        if (message.body().getString("collection").equals("SB_Person")) {
                             mongo.update(personToSave, SB_Person.class);
-                            resp.putNumber("statusCode", 200);
-                            resp.putString("message", personToSave.encode());
+                        } else {
+                        	mongo.update(personToSave, User.class);
                         }
+                        
+                        resp.putNumber("statusCode", 200);
+                        resp.putString("message", personToSave.encode());
+                        
                         FileUtils.deleteQuietly(new File(message.body().getString("filename")));
                         message.reply(resp);
                     }
