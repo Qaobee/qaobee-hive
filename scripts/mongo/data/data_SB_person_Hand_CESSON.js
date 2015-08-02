@@ -32,10 +32,7 @@
 /* 
  * Vidage de la collection SB_Person Cesson handball
  */
-db.SB_Person.remove({ "$and" : [ { "listLicenses.structureId" : "541168295971d35c1f2d1b5f"} , 
-                              { "listLicenses.listHistoLicense" : 
-                                { "$elemMatch" : { "seasonCode" : "SAI-2014" , "categoryAgeCode" : "sen"}}}
-]});
+db.SB_Person.remove({ "sandboxId" : "558b0efebd2e39cdab651e1f"});
 
 /*******************************************************************************
  * Alimentation SB_Person Club A Handball
@@ -44,21 +41,16 @@ db.SB_Person.remove({ "$and" : [ { "listLicenses.structureId" : "541168295971d35
 
 db.SB_Person.insert({
     "_id" : "550a05dadb8f8b6e2f51f4db",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Batinovic",
     "firstname" : "Damir",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(556236000000),
     "birthcity" : "Zagreb",
-    "birthcountry" : {"_id" : "CNTR-191-HR-HRV" , "codeOSCE" : NumberInt(191) , "label" : "Croatie" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-191-HR-HRV" , "codeOSCE" : NumberInt(191) , "label" : "Croatie" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "Croatie",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 01",
@@ -78,135 +70,21 @@ db.SB_Person.insert({
         "squadnumber" : "33",
         "positionType" : "center-backcourt",
         "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000001",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        }, {
-            "dateQualification" : NumberLong(1376776800000),
-            "dateInscription" : NumberLong(1376776800000),
-            "seasonCode" : "SAI-2013",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a05e3db8f8b6e2f51f4dc",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Bonnefoi",
     "firstname" : "Kevin",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(691714800000),
     "birthcity" : "Saint-Raphaël",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 02",
@@ -226,135 +104,21 @@ db.SB_Person.insert({
         "squadnumber" : "16",
         "positionType" : "goalkeeper",
         "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000002",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        }, {
-            "dateQualification" : NumberLong(1376776800000),
-            "dateInscription" : NumberLong(1376776800000),
-            "seasonCode" : "SAI-2013",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a05e9db8f8b6e2f51f4dd",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Briffe",
     "firstname" : "Romain",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(601426800000),
     "birthcity" : "Rennes",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 03",
@@ -374,135 +138,21 @@ db.SB_Person.insert({
         "squadnumber" : "13",
         "positionType" : "left-backcourt",
         "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000003",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        }, {
-            "dateQualification" : NumberLong(1376776800000),
-            "dateInscription" : NumberLong(1376776800000),
-            "seasonCode" : "SAI-2013",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a05f7db8f8b6e2f51f4de",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Derbier",
     "firstname" : "Maxime",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(523663200000),
     "birthcity" : "Rennes",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 04",
@@ -522,135 +172,21 @@ db.SB_Person.insert({
         "squadnumber" : "3",
         "positionType" : "right-wingman",
         "laterality" : "lefthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000004",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        }, {
-            "dateQualification" : NumberLong(1376776800000),
-            "dateInscription" : NumberLong(1376776800000),
-            "seasonCode" : "SAI-2013",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a0600db8f8b6e2f51f4df",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Dore",
     "firstname" : "Benoir",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(444870000000),
     "birthcity" : "Rennes",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 05",
@@ -670,124 +206,21 @@ db.SB_Person.insert({
         "squadnumber" : "35",
         "positionType" : "left-wingman",
         "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000005",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a0606db8f8b6e2f51f4e0",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Guillo",
     "firstname" : "Romaric",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(686271600000),
     "birthcity" : "Rennes",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 06",
@@ -807,124 +240,21 @@ db.SB_Person.insert({
         "squadnumber" : "56",
         "positionType" : "pivot",
         "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000006",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a060ddb8f8b6e2f51f4e1",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Hochet",
     "firstname" : "Sylvain",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(564706800000),
     "birthcity" : "Rennes",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 07",
@@ -944,124 +274,21 @@ db.SB_Person.insert({
         "squadnumber" : "11",
         "positionType" : "left-wingman",
         "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000007",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a0614db8f8b6e2f51f4e2",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Lanfranchi",
     "firstname" : "Mathieu",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(401580000000),
     "birthcity" : "Rennes",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 08",
@@ -1081,124 +308,21 @@ db.SB_Person.insert({
         "squadnumber" : "23",
         "positionType" : "pivot",
         "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000008",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a061bdb8f8b6e2f51f4e3",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Le boulaire",
     "firstname" : "Léo",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(712274400000),
     "birthcity" : "Rennes",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 09",
@@ -1218,124 +342,21 @@ db.SB_Person.insert({
         "squadnumber" : "15",
         "positionType" : "right-wingman",
         "laterality" : "lefthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000009",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a0620db8f8b6e2f51f4e4",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Redei",
     "firstname" : "Istvan",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(430437600000),
     "birthcity" : "Budapest",
-    "birthcountry" : {"_id" : "CNTR-348-HU-HUN" , "codeOSCE" : NumberInt(348) , "label" : "Hongrie" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-348-HU-HUN" , "codeOSCE" : NumberInt(348) , "label" : "Hongrie" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "Hongrie",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1355,125 +376,22 @@ db.SB_Person.insert({
         "squadnumber" : "19",
         "positionType" : "right-backcourt",
         "laterality" : "lefthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000010",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 
 db.SB_Person.insert({
     "_id" : "550a0620db8f8b6e2f51f4e5",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Robin",
     "firstname" : "Mickaël",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(486079200000),
     "birthcity" : "Strasbourg",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1493,125 +411,22 @@ db.SB_Person.insert({
         "squadnumber" : "4",
         "positionType" : "goalkeeper",
         "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000010",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 
 db.SB_Person.insert({
     "_id" : "550a0620db8f8b6e2f51f4e6",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Skatar",
     "firstname" : "mikele",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(504745200000),
     "birthcity" : "Rome",
-    "birthcountry" : {"_id" : "CNTR-380-IT-ITA" , "codeOSCE" : NumberInt(380) , "label" : "Italie" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-380-IT-ITA" , "codeOSCE" : NumberInt(380) , "label" : "Italie" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "Italie",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1631,125 +446,22 @@ db.SB_Person.insert({
         "squadnumber" : "17",
         "positionType" : "right-backcourt",
         "laterality" : "lefthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000010",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 
 db.SB_Person.insert({
     "_id" : "550a0620db8f8b6e2f51f4e7",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Suty",
     "firstname" : "Jérémy",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(529714800000),
     "birthcity" : "Rennes",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1769,124 +481,21 @@ db.SB_Person.insert({
         "squadnumber" : "5",
         "positionType" : "center-backcourt",
         "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000010",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a0620db8f8b6e2f51f4e8",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "name" : "Celica",
     "firstname" : "Dusko",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(524527200000),
     "birthcity" : "Sarajevo",
-    "birthcountry" : {"_id" : "CNTR-70-BA-BIH" , "codeOSCE" : NumberInt(70) , "label" : "Bosnie-Herzégovine" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-70-BA-BIH" , "codeOSCE" : NumberInt(70) , "label" : "Bosnie-Herzégovine" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "Bosnie-Herzégovine",
     "address" : {
-        "formatedAddress" : "",
-        "place" : "3, allée de Champagné",
-        "zipcode" : "35510",
-        "city" : "CESSON-SEVIGNE",
-        "country" : "France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1906,103 +515,101 @@ db.SB_Person.insert({
         "squadnumber" : "10",
         "positionType" : "left-backcourt",
         "laterality" : "righthanded",
+    }
+});
+
+db.SB_Person.insert({
+    "_id" : "7cf258dc-8126-4718-9912-5721abc69aac",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 10,
+        "weight" : 84,
+        "height" : 181,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "center-backcourt"
     },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "05290751000010",
-        "structureId" : "541168295971d35c1f2d1b5f",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+    "address" : {
+        "formatedAddress" : "5 Rue du Trégor, Plouzané, France"
+    },
+    "contact" : {
+        "email" : "chris1.kervella@gmele.com",
+        "home" : "0298020202",
+        "cellphone" : "0707070707"
+    },
+    "firstname" : "Chris1",
+    "name" : "Kervella",
+    "birthdate" : NumberLong(110415600000),
+    "gender" : "Homme",
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "avatar" : null
+});
+
+db.SB_Person.insert({
+    "_id" : "7cf258dc-8126-4718-9912-5721abc69aad",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 10,
+        "weight" : 84,
+        "height" : 181,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "center-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "5 Rue du Trégor, Plouzané, France"
+    },
+    "contact" : {
+        "email" : "chris2.kervella@gmele.com",
+        "home" : "0298020202",
+        "cellphone" : "0707070707"
+    },
+    "firstname" : "Chris2",
+    "name" : "Kervella",
+    "birthdate" : NumberLong(425944800000),
+    "gender" : "Homme",
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "avatar" : null
+});
+
+db.SB_Person.insert({
+    "_id" : "7cf258dc-8126-4718-9912-5721abc69aae",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 10,
+        "weight" : 84,
+        "height" : 181,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "center-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "5 Rue du Trégor, Plouzané, France"
+    },
+    "contact" : {
+        "email" : "chris3.kervella@gmele.com",
+        "home" : "0298020202",
+        "cellphone" : "0707070707"
+    },
+    "firstname" : "Chris3",
+    "name" : "Kervella",
+    "birthdate" : NumberLong(741564000000),
+    "gender" : "Homme",
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "avatar" : null
 });

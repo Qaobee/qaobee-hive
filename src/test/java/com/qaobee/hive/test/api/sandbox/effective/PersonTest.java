@@ -19,6 +19,11 @@
 
 package com.qaobee.hive.test.api.sandbox.effective;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
@@ -36,7 +41,7 @@ import com.qaobee.hive.test.config.VertxJunitSupport;
 public class PersonTest extends VertxJunitSupport {
 
     @Test
-    public void getListPersonTest() {
+    public void getListPersonByIdTest() {
 
         populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_FOOT);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
@@ -63,6 +68,28 @@ public class PersonTest extends VertxJunitSupport {
 		/* Call to verticle */
         final String reply = sendonBus(SB_PersonVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals(11, new JsonArray(reply).size());
+
+    }
+    
+    @Test
+    public void getListPersonSandboxTest() {
+
+        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
+
+        final Map<String, List<String>> params = new HashMap<>();
+		
+		// id
+		params.put(SB_PersonVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
+		req.setParams(params);
+
+		/* Call to verticle */
+        final String reply = sendonBus(SB_PersonVerticle.GET_LIST_SANDBOX, req, user.getAccount().getToken());
+        Assert.assertEquals(17, new JsonArray(reply).size());
 
     }
 }

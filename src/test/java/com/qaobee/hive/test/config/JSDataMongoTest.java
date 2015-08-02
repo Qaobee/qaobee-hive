@@ -28,6 +28,7 @@ public interface JSDataMongoTest {
     String DATA_EVENT_HAND = "data_SB_event_Hand.js";
 
     String DATA_PERSON_FOOT = "data_SB_person_Foot_SEN.js";
+    String DATA_PERSON_HAND = "data_SB_person_Hand_CESSON.js";
     String DATA_STATS_FOOT = "data_SB_stats_Foot_SEN.js";
     String DATA_STATS_MATCH = "data_SB_stats_match.js";
     String DATA_STRUCTURE = "data_structures.js";

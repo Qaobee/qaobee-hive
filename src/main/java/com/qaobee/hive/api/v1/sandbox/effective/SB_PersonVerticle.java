@@ -21,7 +21,9 @@ package com.qaobee.hive.api.v1.sandbox.effective;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -55,6 +57,10 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
      */
     public static final String GET_LIST = Module.VERSION + ".sandbox.effective.person.list";
     /**
+     * Handler to get all persons to sandbox's user
+     */
+    public static final String GET_LIST_SANDBOX = Module.VERSION + ".sandbox.effective.person.listSandbox";
+    /**
      * Handler to add a person.
      */
     public static final String ADD = Module.VERSION + ".sandbox.effective.person.add";
@@ -78,9 +84,9 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_LIST_FIELD = "listField";
     /**
-     * Season code
+     * Sandbox Id
      */
-    public static final String PARAM_SEASON_CODE = "seasonCode";
+    public static final String PARAM_SANDBOX_ID = "sandboxId";
     /**
      * Person ID
      */
@@ -281,6 +287,50 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
                 }
             }
 
+        });
+        
+        /**
+         * @apiDescription Return list of person as member of group
+         * @api {post} /api/1/sandbox/effective/person/list Get list of persons
+         * @apiVersion 0.1.0
+         * @apiName getListPerson
+         * @apiGroup Person API
+         * @apiSuccess {Array} list of persons
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        vertx.eventBus().registerHandler(GET_LIST_SANDBOX, new Handler<Message<String>>() {
+
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info(GET_LIST_SANDBOX+" - Country");
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    // Tests on method and parameters
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_SANDBOX_ID);
+                    
+                    Map<String, Object> criterias = new HashMap<String, Object>();
+                    criterias.put(PARAM_SANDBOX_ID, params.get(PARAM_SANDBOX_ID).get(0));
+                    
+                    
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Person.class);
+
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No person found for sandboxId (" + params.get(PARAM_SANDBOX_ID).get(0) + ")");
+                    }
+
+                    message.reply(resultJson.encode());
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
         });
     }
 }
