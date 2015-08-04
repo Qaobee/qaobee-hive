@@ -1,0 +1,21 @@
+image: java8
+types:
+  - build
+  - test
+
+job1:
+  type: build
+  script:
+    - ./gradlew clean build -x test
+  only:
+    - master
+  tags:
+    - docker
+job2:
+  type: build
+  script:
+    - ./gradlew clean build test
+  only:
+    - master
+  tags:
+    - docker
