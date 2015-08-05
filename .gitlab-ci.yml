@@ -4,7 +4,7 @@ types:
 job1:
   type: build
   script:
-    - ./gradlew clean build -x test
+    - "./gradlew clean build -x test"
   only:
     - master
   tags:
@@ -12,8 +12,6 @@ job1:
 job2:
   type: test
   script:
-    - ./gradlew clean build test
+    - "./gradlew clean build test"
   only:
     - master
-  tags:
-    - docker
