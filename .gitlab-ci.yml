@@ -11,7 +11,7 @@ job2:
   stage: test
   script:
     - gradlew test
-job2:
+job3:
   stage: deploy
   script:
     - git_stats generate -o build/reports/git
