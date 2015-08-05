@@ -1,18 +1,18 @@
-types:
+stages:
   - build
   - test
   - deploy
 job1:
-  type: build
+  stage: build
   script:
     - ls
     - gradle clean build -x test
 job2:
-  type: test
+  stage: test
   script:
     - gradlew test
 job2:
-  type: deploy
+  stage: deploy
   script:
     - git_stats generate -o build/reports/git
     - lftp ftp://heber_15054748:zaza666@ftp.hebergratuit.net -e "mirror -e -R --parallel=20 --only-newer --verbose build/docs /htdocs/hive/docs; quit"
