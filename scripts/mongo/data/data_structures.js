@@ -46,7 +46,7 @@ db.Structure.insert({
         "_id" : "ACT-HAND",
         "code" : "ACT-HAND",
         "label" : "admin.settings.activity.handball.label",
-        "activated" : true,
+        "enable" : true,
         "activityType" : "TEAM_SPORT"
     },
     "address" : {
@@ -74,7 +74,7 @@ db.Structure.insert({
         "_id" : "ACT-HAND",
         "code" : "ACT-HAND",
         "label" : "admin.settings.activity.handball.label",
-        "activated" : true,
+        "enable" : true,
         "activityType" : "TEAM_SPORT"
     },
     "address" : {
@@ -102,7 +102,7 @@ db.Structure.insert({
         "_id" : "ACT-FOOT",
         "code" : "ACT-FOOT",
         "label" : "admin.settings.activity.football.label",
-        "activated" : true,
+        "enable" : true,
         "activityType" : "TEAM_SPORT"
     },
     "address" : {
@@ -130,7 +130,7 @@ db.Structure.insert({
         "_id" : "ACT-FOOT",
         "code" : "ACT-FOOT",
         "label" : "admin.settings.activity.football.label",
-        "activated" : true,
+        "enable" : true,
         "activityType" : "TEAM_SPORT"
     },
     "address" : {
