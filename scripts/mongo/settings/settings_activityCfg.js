@@ -172,56 +172,56 @@ db.ActivityCfg.insert({
         "label" : "Vétérant",
         "ageMax" : NumberInt(150),
         "ageMin" : NumberInt(35),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(1)
     }, {
         "code" : "sen",
         "label" : "Senior",
         "ageMax" : NumberInt(34),
         "ageMin" : NumberInt(20),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(2)
     }, {
         "code" : "senF",
         "label" : "Senior Féminin",
         "ageMax" : NumberInt(34),
         "ageMin" : NumberInt(19),
-        "genre" : "Féminin",
+        "genre" : "Femme",
         "order" : NumberInt(3)
     }, {
         "code" : "u19",
         "label" : "U19",
         "ageMax" : NumberInt(18),
         "ageMin" : NumberInt(17),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(4)
     }, {
         "code" : "u17",
         "label" : "U17",
         "ageMax" : NumberInt(16),
         "ageMin" : NumberInt(15),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(5)
     }, {
         "code" : "u15",
         "label" : "U15",
         "ageMax" : NumberInt(14),
         "ageMin" : NumberInt(13),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(6)
     }, {
         "code" : "u13",
         "label" : "U13",
         "ageMax" : NumberInt(12),
         "ageMin" : NumberInt(11),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(7)
     }, {
         "code" : "u11",
         "label" : "U11",
         "ageMax" : NumberInt(10),
         "ageMin" : NumberInt(9),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(8)
     } ],
     "listAvailabityStatus" : [ {
@@ -377,32 +377,32 @@ db.ActivityCfg.insert({
             ]
     }],
     "listPositionType" : [ {
-        "code" : "right-wingman",
-        "label" : "Ailier Droit",
-        "order" : NumberInt(1)
-    }, {
         "code" : "left-wingman",
         "label" : "Ailier Gauche",
-        "order" : NumberInt(2)
-    }, {
-        "code" : "right-backcourt",
-        "label" : "Arrière Droit",
-        "order" : NumberInt(3)
+        "order" : NumberInt(1)
     }, {
         "code" : "left-backcourt",
         "label" : "Arrière Gauche",
-        "order" : NumberInt(4)
-    }, {
-        "code" : "center-backcourt",
-        "label" : "Demi-centre",
-        "order" : NumberInt(5)
-    }, {
-        "code" : "goalkeeper",
-        "label" : "Gardien",
-        "order" : NumberInt(6)
+        "order" : NumberInt(2)
     }, {
         "code" : "pivot",
         "label" : "Pivot",
+        "order" : NumberInt(3)
+    }, {
+        "code" : "center-backcourt",
+        "label" : "Demi-centre",
+        "order" : NumberInt(4)
+    }, {
+        "code" : "right-backcourt",
+        "label" : "Arrière Droit",
+        "order" : NumberInt(5)
+    }, {
+        "code" : "right-wingman",
+        "label" : "Ailier Droit",
+        "order" : NumberInt(6)
+    }, {
+        "code" : "goalkeeper",
+        "label" : "Gardien",
         "order" : NumberInt(7)
     }],
     
@@ -461,84 +461,84 @@ db.ActivityCfg.insert({
         "label" : "Senior Gars",
         "ageMax" : NumberInt(150),
         "ageMin" : NumberInt(18),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(1)
     }, {
         "code" : "senF",
         "label" : "Senior Féminin",
         "ageMax" : NumberInt(150),
         "ageMin" : NumberInt(18),
-        "genre" : "Féminin",
+        "genre" : "Femme",
         "order" : NumberInt(2)
     }, {
         "code" : "u18",
         "label" : "Moins de 18 Gars",
         "ageMax" : NumberInt(17),
         "ageMin" : NumberInt(17),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(3)
     }, {
         "code" : "u18F",
         "label" : "Moins de 18 Fille",
         "ageMax" : NumberInt(17),
         "ageMin" : NumberInt(16),
-        "genre" : "Féminin",
+        "genre" : "Femme",
         "order" : NumberInt(4)
     }, {
         "code" : "u17",
         "label" : "Moins de 17 Gars",
         "ageMax" : NumberInt(16),
         "ageMin" : NumberInt(16),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(5)
     }, {
         "code" : "u16",
         "label" : "Moins de 16 Gars",
         "ageMax" : NumberInt(15),
         "ageMin" : NumberInt(15),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(6)
     }, {
         "code" : "u16F",
         "label" : "Moins de 16 Fille",
         "ageMax" : NumberInt(15),
         "ageMin" : NumberInt(14),
-        "genre" : "Féminin",
+        "genre" : "Femme",
         "order" : NumberInt(7)
     }, {
         "code" : "u15",
         "label" : "Moins de 15 Gars",
         "ageMax" : NumberInt(14),
         "ageMin" : NumberInt(14),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(8)
     }, {
         "code" : "u14",
         "label" : "Moins de 14 Gars",
         "ageMax" : NumberInt(13),
         "ageMin" : NumberInt(12),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(9)
     }, {
         "code" : "u14F",
         "label" : "Moins de 14 Fille",
         "ageMax" : NumberInt(13),
         "ageMin" : NumberInt(12),
-        "genre" : "Féminin",
+        "genre" : "Femme",
         "order" : NumberInt(10)
     }, {
         "code" : "u12",
         "label" : "Moins de 12 Gars",
         "ageMax" : NumberInt(11),
         "ageMin" : NumberInt(10),
-        "genre" : "Masculin",
+        "genre" : "Homme",
         "order" : NumberInt(11)
     }, {
         "code" : "u12F",
         "label" : "Moins de 12 Fille",
         "ageMax" : NumberInt(11),
         "ageMin" : NumberInt(10),
-        "genre" : "Féminin",
+        "genre" : "Femme",
         "order" : NumberInt(12)
     }, {
         "code" : "u10",

@@ -44,10 +44,11 @@ db.SB_Effective.insert({
     "sandBoxCfgId" : "5591bb9c127472938a6444a3",
     "categoryAge" : {
         "code" : "sen",
-        "label" : "Senior",
-        "ageMax" : NumberInt(34),
-        "ageMin" : NumberInt(20),
-        "genre" : "gender.male"
+        "label" : "Senior Gars",
+        "ageMax" : NumberInt(150),
+        "ageMin" : NumberInt(18),
+        "genre" : "Homme",
+        "order" : NumberInt(1)
     },
     "members" : [{ "personId": "541d2c5fb3f78c0317eea2be","role" : {"code": "player", "label": "Joueur"}},
                  { "personId": "541d3136f61fbf69868c1214","role" : {"code": "player", "label": "Joueur"}},
@@ -85,10 +86,11 @@ db.SB_Effective.insert({
     "sandBoxCfgId" : "558b0fc0bd2e39cdab651e21",
     "categoryAge" : {
         "code" : "sen",
-        "label" : "Senior",
-        "ageMax" : NumberInt(34),
-        "ageMin" : NumberInt(20),
-        "genre" : "gender.male"
+        "label" : "Senior Gars",
+        "ageMax" : NumberInt(150),
+        "ageMin" : NumberInt(18),
+        "genre" : "Homme",
+        "order" : NumberInt(1)
     },
     "members" : [{ "personId": "550a05dadb8f8b6e2f51f4db","role" : {"code": "player", "label": "Joueur"}},
                  { "personId": "550a05e3db8f8b6e2f51f4dc","role" : {"code": "player", "label": "Joueur"}},
