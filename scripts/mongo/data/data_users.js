@@ -229,6 +229,7 @@ db.User.insert({
     "gender": "gender.male",
     "birthdate": NumberLong(-21434400000),
     "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "effectiveDefault":"550b31f925da07681592db23",
     "address": {
         "formatedAddress": "",
         "place": "3, allée de Champagné",
