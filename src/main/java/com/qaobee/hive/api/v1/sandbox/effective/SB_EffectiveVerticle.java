@@ -187,7 +187,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
                     utils.testMandatoryParams(params, PARAM_SANDBOXCFG_ID);
                     utils.isUserLogged(req);
 
-                    Map<String, Object> criterias = new HashMap<String, Object>();
+                    Map<String, Object> criterias = new HashMap<>();
                     criterias.put(PARAM_SANDBOXCFG_ID, params.get(PARAM_SANDBOXCFG_ID).get(0));
 
                     // category code
