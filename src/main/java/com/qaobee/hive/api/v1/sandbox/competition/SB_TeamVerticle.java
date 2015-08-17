@@ -248,7 +248,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
                     Map<String, List<String>> params = req.getParams();
                     utils.testMandatoryParams(params, PARAM_SANDBOXCFG_ID);
                     utils.isUserLogged(req);
-                    Map<String, Object> criterias = new HashMap<String, Object>();
+                    Map<String, Object> criterias = new HashMap<>();
                     criterias.put(PARAM_SANDBOXCFG_ID, params.get(PARAM_SANDBOXCFG_ID).get(0));
                     
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Team.class);
