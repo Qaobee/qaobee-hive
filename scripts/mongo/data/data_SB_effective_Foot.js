@@ -42,6 +42,7 @@ db.SB_Effective.remove({ "_id" : "559d2a2518e3cb71c60d964a"});
 db.SB_Effective.insert({
     "_id" : "559d2a2518e3cb71c60d964a",
     "sandBoxCfgId" : "559d268318e3cb71c60d9649",
+    "label": "France A",
     "categoryAge" : {
         "code" : "sen",
         "label" : "Senior",
@@ -91,7 +92,8 @@ db.SB_Effective.remove({ "_id" : "559d2abf18e3cb71c60d964b"});
 
 db.SB_Effective.insert({
     "_id" : "559d2abf18e3cb71c60d964b",
-    "sandBoxCfgId" : "559d268318e3cb71c60d9649", 
+    "sandBoxCfgId" : "559d268318e3cb71c60d9649",
+    "label": "France A", 
     "categoryAge" : {
         "code" : "u19",
         "label" : "U19",

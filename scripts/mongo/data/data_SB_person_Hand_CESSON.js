@@ -50,7 +50,13 @@ db.SB_Person.insert({
     "birthcity" : "Zagreb",
     "nationality" : "Croatie",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 01",
@@ -65,11 +71,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "95",
-        "height" : "193",
-        "squadnumber" : "33",
+        "weight" : NumberInt(95),
+        "height" : NumberInt(193),
+        "squadnumber" : NumberInt(33),
         "positionType" : "center-backcourt",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -84,7 +90,13 @@ db.SB_Person.insert({
     "birthcity" : "Saint-Raphaël",
     "nationality" : "France",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 02",
@@ -99,11 +111,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "108",
-        "height" : "191",
-        "squadnumber" : "16",
+        "weight" :  NumberInt(108),
+        "height" :  NumberInt(191),
+        "squadnumber" : NumberInt(16),
         "positionType" : "goalkeeper",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -118,7 +130,13 @@ db.SB_Person.insert({
     "birthcity" : "Rennes",
     "nationality" : "France",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 03",
@@ -133,11 +151,11 @@ db.SB_Person.insert({
             "cause" : "injured"
         },
         "stateForm" : "middling",
-        "weight" : "83",
-        "height" : "189",
-        "squadnumber" : "13",
+        "weight" :  NumberInt(83),
+        "height" :  NumberInt(189),
+        "squadnumber" : NumberInt(13),
         "positionType" : "left-backcourt",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -151,8 +169,14 @@ db.SB_Person.insert({
     "birthdate" : NumberLong(523663200000),
     "birthcity" : "Rennes",
     "nationality" : "France",
-    "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+   "address" : {
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 04",
@@ -167,11 +191,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "77",
-        "height" : "179",
-        "squadnumber" : "3",
+        "weight" :  NumberInt(77),
+        "height" :  NumberInt(179),
+        "squadnumber" : NumberInt(3),
         "positionType" : "right-wingman",
-        "laterality" : "lefthanded",
+        "laterality" : "Gaucher"
     }
 });
 
@@ -186,7 +210,13 @@ db.SB_Person.insert({
     "birthcity" : "Rennes",
     "nationality" : "France",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 05",
@@ -201,11 +231,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "82",
-        "height" : "183",
-        "squadnumber" : "35",
+        "weight" :  NumberInt(82),
+        "height" :  NumberInt(183),
+        "squadnumber" : NumberInt(35),
         "positionType" : "left-wingman",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -220,7 +250,13 @@ db.SB_Person.insert({
     "birthcity" : "Rennes",
     "nationality" : "France",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 06",
@@ -235,11 +271,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "106",
-        "height" : "207",
-        "squadnumber" : "56",
+        "weight" :  NumberInt(106),
+        "height" :  NumberInt(207),
+        "squadnumber" : NumberInt(56),
         "positionType" : "pivot",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -254,7 +290,13 @@ db.SB_Person.insert({
     "birthcity" : "Rennes",
     "nationality" : "France",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 07",
@@ -269,11 +311,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "87",
-        "height" : "185",
-        "squadnumber" : "11",
+        "weight" :  NumberInt(87),
+        "height" :  NumberInt(185),
+        "squadnumber" : NumberInt(11),
         "positionType" : "left-wingman",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -288,7 +330,13 @@ db.SB_Person.insert({
     "birthcity" : "Rennes",
     "nationality" : "France",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 08",
@@ -303,11 +351,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "93",
-        "height" : "178",
-        "squadnumber" : "23",
+        "weight" :  NumberInt(93),
+        "height" :  NumberInt(178),
+        "squadnumber" : NumberInt(23),
         "positionType" : "pivot",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -322,7 +370,13 @@ db.SB_Person.insert({
     "birthcity" : "Rennes",
     "nationality" : "France",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 09",
@@ -337,11 +391,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "85",
-        "height" : "180",
-        "squadnumber" : "15",
+        "weight" :  NumberInt(85),
+        "height" :  NumberInt(180),
+        "squadnumber" : NumberInt(15),
         "positionType" : "right-wingman",
-        "laterality" : "lefthanded",
+        "laterality" : "Gaucher"
     }
 });
 
@@ -356,7 +410,13 @@ db.SB_Person.insert({
     "birthcity" : "Budapest",
     "nationality" : "Hongrie",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -371,11 +431,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "101",
-        "height" : "197",
-        "squadnumber" : "19",
+        "weight" :  NumberInt(101),
+        "height" :  NumberInt(197),
+        "squadnumber" : NumberInt(19),
         "positionType" : "right-backcourt",
-        "laterality" : "lefthanded",
+        "laterality" : "Gaucher"
     }
 });
 
@@ -391,7 +451,13 @@ db.SB_Person.insert({
     "birthcity" : "Strasbourg",
     "nationality" : "France",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -406,11 +472,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "87",
-        "height" : "190",
-        "squadnumber" : "4",
+        "weight" :  NumberInt(87),
+        "height" :  NumberInt(190),
+        "squadnumber" : NumberInt(4),
         "positionType" : "goalkeeper",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -426,7 +492,13 @@ db.SB_Person.insert({
     "birthcity" : "Rome",
     "nationality" : "Italie",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -441,11 +513,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "94",
-        "height" : "190",
-        "squadnumber" : "17",
+        "weight" :  NumberInt(94),
+        "height" :  NumberInt(190),
+        "squadnumber" : NumberInt(17),
         "positionType" : "right-backcourt",
-        "laterality" : "lefthanded",
+        "laterality" : "Gaucher"
     }
 });
 
@@ -461,7 +533,13 @@ db.SB_Person.insert({
     "birthcity" : "Rennes",
     "nationality" : "France",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -476,11 +554,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "85",
-        "height" : "188",
-        "squadnumber" : "5",
+        "weight" :  NumberInt(85),
+        "height" :  NumberInt(188),
+        "squadnumber" : NumberInt(5),
         "positionType" : "center-backcourt",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -495,7 +573,13 @@ db.SB_Person.insert({
     "birthcity" : "Sarajevo",
     "nationality" : "Bosnie-Herzégovine",
     "address" : {
-        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -510,11 +594,11 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "100",
-        "height" : "198",
-        "squadnumber" : "10",
+        "weight" :  NumberInt(100),
+        "height" :  NumberInt(198),
+        "squadnumber" : NumberInt(10),
         "positionType" : "left-backcourt",
-        "laterality" : "righthanded",
+        "laterality" : "Droitier"
     }
 });
 
@@ -526,15 +610,21 @@ db.SB_Person.insert({
             "value" : "available",
             "cause" : "available"
         },
-        "squadnumber" : 10,
-        "weight" : 84,
-        "height" : 181,
+        "squadnumber" : NumberInt(10),
+        "weight" : NumberInt(84),
+        "height" : NumberInt(81),
         "laterality" : "Droitier",
         "stateForm" : "good",
         "positionType" : "center-backcourt"
     },
     "address" : {
-        "formatedAddress" : "5 Rue du Trégor, Plouzané, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "email" : "chris1.kervella@gmele.com",
@@ -558,15 +648,21 @@ db.SB_Person.insert({
             "value" : "available",
             "cause" : "available"
         },
-        "squadnumber" : 10,
-        "weight" : 84,
-        "height" : 181,
+        "squadnumber" : NumberInt(10),
+        "weight" : NumberInt(84),
+        "height" : NumberInt(81),
         "laterality" : "Droitier",
         "stateForm" : "good",
         "positionType" : "center-backcourt"
     },
     "address" : {
-        "formatedAddress" : "5 Rue du Trégor, Plouzané, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "email" : "chris2.kervella@gmele.com",
@@ -590,15 +686,21 @@ db.SB_Person.insert({
             "value" : "available",
             "cause" : "available"
         },
-        "squadnumber" : 10,
-        "weight" : 84,
-        "height" : 181,
+        "squadnumber" : NumberInt(10),
+        "weight" : NumberInt(84),
+        "height" : NumberInt(81),
         "laterality" : "Droitier",
         "stateForm" : "good",
         "positionType" : "center-backcourt"
     },
     "address" : {
-        "formatedAddress" : "5 Rue du Trégor, Plouzané, France"
+        "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
+        "lat" : 48.0899268000000006,
+        "lng" : -1.6145389000000001,
+        "place" : "3 Rue de Champagne",
+        "city" : "Chantepie",
+        "country" : "France",
+        "zipcode" : "35135"
     },
     "contact" : {
         "email" : "chris3.kervella@gmele.com",

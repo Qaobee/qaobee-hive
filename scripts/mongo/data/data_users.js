@@ -111,7 +111,7 @@ db.User.insert({
     "gender": "gender.male",
     "birthdate": NumberLong(39740400000),
     "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-
+    "effectiveDefault":"550b31f925da07681592db22",
     "address": {
         "formatedAddress": "",
         "place": " Stades de Flandres, Avenue de Rosendaël",
@@ -168,7 +168,7 @@ db.User.insert({
     "gender": "gender.male",
     "birthdate": NumberLong(140655600000),
     "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-
+    "effectiveDefault":"550b31f925da07681592db22",
     "address": {
         "formatedAddress": "",
         "place": " Stades de Flandres, Avenue de Rosendaël",
