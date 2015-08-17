@@ -97,6 +97,11 @@ public class User {
      * The notifications.
      */
     private List<Notification> notifications;
+    
+    /**
+     * The user's effective by default.
+     */
+    private String effectiveDefault;
 
     /**
      * Gets _ id.
@@ -331,6 +336,20 @@ public class User {
     public void setBirthdate(long birthdate) {
         this.birthdate = birthdate;
     }
+
+	/**
+	 * @return the effectiveDefault
+	 */
+	public String getEffectiveDefault() {
+		return effectiveDefault;
+	}
+
+	/**
+	 * @param effectiveDefault the effectiveDefault to set
+	 */
+	public void setEffectiveDefault(String effectiveDefault) {
+		this.effectiveDefault = effectiveDefault;
+	}
 
 
 }

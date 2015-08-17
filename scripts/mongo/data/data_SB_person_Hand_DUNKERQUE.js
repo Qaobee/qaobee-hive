@@ -32,10 +32,7 @@
 /* 
  * Vidage de la collection SB_Person (Club Dunkerque handball sen)
  */
-db.SB_Person.remove({ "$and" : [ { "listLicenses.structureId" : "541168295971d35c1f2d1b5e"} , 
-                              { "listLicenses.listHistoLicense" : 
-                                { "$elemMatch" : { "seasonCode" : "SAI-2014" , "categoryAgeCode" : "sen"}}}
-]});
+db.SB_Person.remove({ "sandboxId" : "5591bb5e127472938a6444a2"});
 
 /*******************************************************************************
  * Alimentation SB_Person Club A Handball
@@ -44,21 +41,22 @@ db.SB_Person.remove({ "$and" : [ { "listLicenses.structureId" : "541168295971d35
 
 db.SB_Person.insert({
     "_id" : "541d2c5fb3f78c0317eea2be",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Gerard",
     "firstname" : "Vincent",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(535071600000),
     "birthcity" : "Woippy",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 01",
@@ -73,140 +71,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "97",
-        "height" : "188",
-        "squadnumber" : "1",
+        "weight" : NumberInt(97),
+        "height" : NumberInt(188),
+        "squadnumber" : NumberInt(1),
         "positionType" : "goalkeeper",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100001",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        }, {
-            "dateQualification" : NumberLong(1376776800000),
-            "dateInscription" : NumberLong(1376776800000),
-            "seasonCode" : "SAI-2013",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1214",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Annotel",
     "firstname" : "William",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(417736800000),
     "birthcity" : "Lagny/Marne",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 02",
@@ -221,140 +111,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "93",
-        "height" : "195",
-        "squadnumber" : "16",
+        "weight" : NumberInt(93),
+        "height" : NumberInt(195),
+        "squadnumber" : NumberInt(16),
         "positionType" : "goalkeeper",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002103047",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        }, {
-            "dateQualification" : NumberLong(1376776800000),
-            "dateInscription" : NumberLong(1376776800000),
-            "seasonCode" : "SAI-2013",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1215",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Butto",
     "firstname" : "Baptiste",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(540169200000),
     "birthcity" : "Algrange",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 03",
@@ -369,140 +151,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "77",
-        "height" : "183",
-        "squadnumber" : "57",
+        "weight" : NumberInt(77),
+        "height" : NumberInt(183),
+        "squadnumber" : NumberInt(57),
         "positionType" : "left-wingman",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002102829",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        }, {
-            "dateQualification" : NumberLong(1376776800000),
-            "dateInscription" : NumberLong(1376776800000),
-            "seasonCode" : "SAI-2013",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1216",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Touati",
     "firstname" : "Jaleleddine",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(395272800000),
     "birthcity" : "Tunis",
-    "birthcountry" : {"_id" : "CNTR-788-TN-TUN" , "codeOSCE" : NumberInt(788) , "label" : "Tunisie" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-788-TN-TUN" , "codeOSCE" : NumberInt(788) , "label" : "Tunisie" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "Tunisie",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 04",
@@ -517,140 +191,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "78",
-        "height" : "179",
-        "squadnumber" : "7",
+        "weight" : NumberInt(78),
+        "height" : NumberInt(179),
+        "squadnumber" : NumberInt(7),
         "positionType" : "right-wingman",
-        "laterality" : "lefthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100004",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        }, {
-            "dateQualification" : NumberLong(1376776800000),
-            "dateInscription" : NumberLong(1376776800000),
-            "seasonCode" : "SAI-2013",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Gaucher"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1217",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Emonet",
     "firstname" : "Julien",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(694479600000),
     "birthcity" : "Sartrouville",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 05",
@@ -665,129 +231,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "90",
-        "height" : "182",
-        "squadnumber" : "17",
+        "weight" : NumberInt(90),
+        "height" : NumberInt(182),
+        "squadnumber" : NumberInt(17),
         "positionType" : "left-wingman",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100005",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1218",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Afgour",
     "firstname" : "Benjamin",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(670456800000),
     "birthcity" : "Rethel",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 06",
@@ -802,129 +271,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "105",
-        "height" : "195",
-        "squadnumber" : "3",
+        "weight" : NumberInt(105),
+        "height" : NumberInt(195),
+        "squadnumber" : NumberInt(3),
         "positionType" : "pivot",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100006",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c1219",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Mokrani",
     "firstname" : "Mohamed",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(349743600000),
     "birthcity" : "Ivry sur Seine",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-12-DZ-DZA" , "codeOSCE" : NumberInt(12) , "label" : "Algérie" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "Algérie",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 07",
@@ -939,129 +311,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "94",
-        "height" : "186",
-        "squadnumber" : "46",
+        "weight" : NumberInt(94),
+        "height" : NumberInt(186),
+        "squadnumber" : NumberInt(46),
         "positionType" : "pivot",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100007",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121a",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Causse",
     "firstname" : "Théophile",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(718844400000),
     "birthcity" : "Port-au-Prince",
-    "birthcountry" : {"_id" : "CNTR-332-HT-HTI" , "codeOSCE" : NumberInt(332) , "label" : "Haïti" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 08",
@@ -1076,129 +351,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "72",
-        "height" : "180",
-        "squadnumber" : "9",
+        "weight" : NumberInt(72),
+        "height" : NumberInt(180),
+        "squadnumber" : NumberInt(9),
         "positionType" : "right-wingman",
-        "laterality" : "lefthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100008",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Gaucher"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121b",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Grocaut",
     "firstname" : "Mickael",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(325548000000),
     "birthcity" : "Hénin-Beaumont",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 09",
@@ -1213,129 +391,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "103",
-        "height" : "194",
-        "squadnumber" : "21",
+        "weight" : NumberInt(103),
+        "height" : NumberInt(194),
+        "squadnumber" : NumberInt(21),
         "positionType" : "pivot",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100009",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "541d3136f61fbf69868c121c",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Nagy",
     "firstname" : "Kornel",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(532911600000),
     "birthcity" : "Püspökladany",
-    "birthcountry" : {"_id" : "CNTR-348-HU-HUN" , "codeOSCE" : NumberInt(348) , "label" : "Hongrie" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-348-HU-HUN" , "codeOSCE" : NumberInt(348) , "label" : "Hongrie" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "Hongrie",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1350,129 +431,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "100",
-        "height" : "195",
-        "squadnumber" : "6",
+        "weight" : NumberInt(100),
+        "height" : NumberInt(195),
+        "squadnumber" : NumberInt(6),
         "positionType" : "left-backcourt",
-        "laterality" : "lefthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100010",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Gaucher"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "5509f71adb8f8b6e2f51f4d4",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Pejovic",
     "firstname" : "Zarko",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(506991600000),
     "birthcity" : "Mojkovac",
-    "birthcountry" : {"_id" : "CNTR-499-ME-MNE" , "codeOSCE" : NumberInt(499) , "label" : "Moldovie" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-499-ME-MNE" , "codeOSCE" : NumberInt(499) , "label" : "Moldovie" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "Moldovie",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1487,129 +471,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "94",
-        "height" : "190",
-        "squadnumber" : "19",
+        "weight" : NumberInt(94),
+        "height" : NumberInt(190),
+        "squadnumber" : NumberInt(19),
         "positionType" : "center-backcourt",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100010",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "5509f71adb8f8b6e2f51f4d5",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Guillard",
     "firstname" : "Romain",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(506041200000),
     "birthcity" : "Suresnes",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1624,129 +511,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "100",
-        "height" : "190",
-        "squadnumber" : "19",
+        "weight" : NumberInt(100),
+        "height" : NumberInt(190),
+        "squadnumber" : NumberInt(19),
         "positionType" : "center-backcourt",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100010",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "5509f71adb8f8b6e2f51f4d6",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Lamon",
     "firstname" : "Bastien",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(348620400000),
     "birthcity" : "Roubaix",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1761,129 +551,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "80",
-        "height" : "186",
-        "squadnumber" : "4",
+        "weight" : NumberInt(80),
+        "height" : NumberInt(186),
+        "squadnumber" : NumberInt(4),
         "positionType" : "center-backcourt",
-        "laterality" : "righthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002100010",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Droitier"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "5509f71adb8f8b6e2f51f4d7",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Paczkowski",
     "firstname" : "Pawel",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(740008800000),
     "birthcity" : "Swiecie",
-    "birthcountry" : {"_id" : "CNTR-616-PL-POL" , "codeOSCE" : NumberInt(616) , "label" : "Pologne" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-616-PL-POL" , "codeOSCE" : NumberInt(616) , "label" : "Pologne" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "Pologne",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -1898,129 +591,32 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "93",
-        "height" : "195",
-        "squadnumber" : "32",
+        "weight" : NumberInt(93),
+        "height" : NumberInt(195),
+        "squadnumber" : NumberInt(32),
         "positionType" : "right-backcourt",
-        "laterality" : "lefthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002102916",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Gaucher"
+    }
 });
 
 db.SB_Person.insert({
     "_id" : "550a02acdb8f8b6e2f51f4da",
+    "sandboxId" : "5591bb5e127472938a6444a2",
     "name" : "Soudry",
     "firstname" : "Pierre",
     "avatar" : null,
-    "gender" : "gender.male",
+    "gender" : "Homme",
     "birthdate" : NumberLong(575420400000),
     "birthcity" : "Amiens",
-    "birthcountry" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "nationality" : {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
-    "job" : "Handballeur",
+    "nationality" : "France",
     "address" : {
-        "formatedAddress" : "",
-        "place" : " Stades de Flandres, Avenue de Rosendaël",
-        "zipcode" : "59240",
-        "city" : " DUNKERQUE",
-        "country" : "France"
+        "formatedAddress" : "59240 Avenue de Rosendaël Jacques Collache, Dunkerque, France",
+        "lat" : 51.0370455999999990,
+        "lng" : 2.3964314000000000,
+        "place" : "Avenue de Rosendaël Jacques Collache",
+        "city" : "Dunkerque",
+        "country" : "France",
+        "zipcode" : "59240"
     },
     "contact" : {
         "home" : "05 04 00 00 10",
@@ -2035,108 +631,10 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : "81",
-        "height" : "183",
-        "squadnumber" : "19",
+        "weight" : NumberInt(81),
+        "height" : NumberInt(183),
+        "squadnumber" : NumberInt(19),
         "positionType" : "right-backcourt",
-        "laterality" : "lefthanded",
-    },
-    "physicalFolder" : [ {
-        key : "explosive",
-        value : NumberInt(4)
-    }, {
-        key : "speed",
-        value : NumberInt(4)
-    }, {
-        key : "traction",
-        value : NumberInt(3)
-    }, {
-        key : "verticaljump",
-        value : NumberInt(5)
-    }, {
-        key : "endurance",
-        value : NumberInt(4)
-    }, {
-        key : "equilibrium",
-        value : NumberInt(5)
-    }, {
-        key : "strenght",
-        value : NumberInt(4)
-    }, {
-        key : "nimbleness",
-        value : NumberInt(4)
-    } ],
-    "technicalFolder" : [ {
-        key : "pass",
-        value : NumberInt(5)
-    }, {
-        key : "center",
-        value : NumberInt(5)
-    }, {
-        key : "corner",
-        value : NumberInt(4)
-    }, {
-        key : "freekick",
-        value : NumberInt(5)
-    }, {
-        key : "penalty",
-        value : NumberInt(4)
-    }, {
-        key : "shoot",
-        value : NumberInt(5)
-    }, {
-        key : "dribble",
-        value : NumberInt(5)
-    }, {
-        key : "tacle",
-        value : NumberInt(5)
-    } ],
-    "mentalFolder" : [ {
-        key : "aggressiveness",
-        value : NumberInt(5)
-    }, {
-        key : "anticipation",
-        value : NumberInt(5)
-    }, {
-        key : "concentration",
-        value : NumberInt(4)
-    }, {
-        key : "altruism",
-        value : NumberInt(4)
-    }, {
-        key : "courage",
-        value : NumberInt(4)
-    }, {
-        key : "creativity",
-        value : NumberInt(5)
-    }, {
-        key : "motivation",
-        value : NumberInt(5)
-    }, {
-        key : "self-control",
-        value : NumberInt(4)
-    }, {
-        key : "leadership",
-        value : NumberInt(5)
-    }, {
-        key : "professionalism",
-        value : NumberInt(4)
-    } ],
-    "medicalFolder" : null,
-    "listLicenses" : [ {
-        "numLicense" : "1159002102916",
-        "structureId" : "541168295971d35c1f2d1b5e",
-        "listHistoLicense" : [ {
-            "dateQualification" : NumberLong(1408312800000),
-            "dateInscription" : NumberLong(1408312800000),
-            "seasonCode" : "SAI-2014",
-            "categoryAgeCode" : "sen",
-            "tarif" : null,
-            "typeLicence" : {
-                "code" : "A",
-                "label" : "Licence A",
-                "order" : NumberInt(1)
-            }
-        } ]
-    } ]
+        "laterality" : "Gaucher"
+    }
 });

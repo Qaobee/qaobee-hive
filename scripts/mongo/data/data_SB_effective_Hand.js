@@ -42,6 +42,7 @@ db.SB_Effective.remove({ "_id" : "550b31f925da07681592db22"});
 db.SB_Effective.insert({
     "_id" : "550b31f925da07681592db22",
     "sandBoxCfgId" : "5591bb9c127472938a6444a3",
+    "label": "Dunkerque A",
     "categoryAge" : {
         "code" : "sen",
         "label" : "Senior Gars",
@@ -84,6 +85,7 @@ db.SB_Effective.remove({ "_id" : "550b31f925da07681592db23"});
 db.SB_Effective.insert({
     "_id" : "550b31f925da07681592db23",
     "sandBoxCfgId" : "558b0fc0bd2e39cdab651e21",
+    "label": "Cesson A",
     "categoryAge" : {
         "code" : "sen",
         "label" : "Senior Gars",
