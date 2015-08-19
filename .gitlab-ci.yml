@@ -1,7 +1,7 @@
 job1:
   script:
     - npm install
-    - ./gradlew clean build test
+    - ./gradlew clean build test apidoc
     - git_stats generate -o build/reports/git
     - lftp ftp://heber_15054748:zaza666@ftp.hebergratuit.net -e "mirror -e -R --parallel=20 --only-newer --verbose build/docs /htdocs/hive/docs; quit"
     - lftp ftp://heber_15054748:zaza666@ftp.hebergratuit.net -e "mirror -e -R --parallel=20 --only-newer --verbose build/reports /htdocs/hive/reports; quit"
