@@ -1,0 +1,22 @@
+{
+  "name": "qaobee-hive",
+  "version": "1.0.0",
+  "description": "API Qaobee",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/qaobee/qaobee-hive.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/qaobee/qaobee-hive/issues"
+  },
+  "homepage": "https://gitlab.com/qaobee/qaobee-hive#README",
+  "devDependencies": {
+    "apidoc": "^0.13.1"
+  }
+}
