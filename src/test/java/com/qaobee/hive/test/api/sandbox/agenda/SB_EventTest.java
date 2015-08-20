@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * The type Event test.
  */
-public class EventTest extends VertxJunitSupport {
+public class SB_EventTest extends VertxJunitSupport {
 
 
     /**
@@ -53,9 +53,7 @@ public class EventTest extends VertxJunitSupport {
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putString(SB_EventVerticle.PARAM_SEASON_CODE, "SAI-2014");
-        JsonObject categoryAge = new JsonObject("{\"ageMax\": \"150\",\"ageMin\": \"18\",\"code\": \"sen\",\"genre\": \"Masculin\",\"label\": \"Senior Gars\",\"order\": 1}");
-        params.putObject(SB_EventVerticle.PARAM_CATEGORY, categoryAge);
+        
         params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
         params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1438206743022l);
         params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1438206743022l);
@@ -78,9 +76,7 @@ public class EventTest extends VertxJunitSupport {
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putString(SB_EventVerticle.PARAM_SEASON_CODE, "SAI-2014");
-        JsonObject categoryAge = new JsonObject("{\"ageMax\": \"150\",\"ageMin\": \"18\",\"code\": \"sen\",\"genre\": \"Masculin\",\"label\": \"Senior Gars\",\"order\": 1}");
-        params.putObject(SB_EventVerticle.PARAM_CATEGORY, categoryAge);
+        
         req.setBody(params.encode());
         final JsonObject result = new JsonObject(sendonBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
         Assert.assertTrue("addEventWithMissingMandatoryParametersTest", result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
@@ -127,9 +123,7 @@ public class EventTest extends VertxJunitSupport {
         final JsonObject event = new JsonObject();
         event.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
         event.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        event.putString(SB_EventVerticle.PARAM_SEASON_CODE, "SAI-2014");
-        JsonObject categoryAge = new JsonObject("{\"ageMax\": \"150\",\"ageMin\": \"18\",\"code\": \"sen\",\"genre\": \"Masculin\",\"label\": \"Senior Gars\",\"order\": 1}");
-        event.putObject(SB_EventVerticle.PARAM_CATEGORY, categoryAge);
+        
         event.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
         event.putNumber(SB_EventVerticle.PARAM_START_DATE, 1438206743022l);
         event.putNumber(SB_EventVerticle.PARAM_END_DATE, 1438206743022l);
@@ -223,9 +217,7 @@ public class EventTest extends VertxJunitSupport {
         final JsonObject event = new JsonObject();
         event.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
         event.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        event.putString(SB_EventVerticle.PARAM_SEASON_CODE, "SAI-2014");
-        JsonObject categoryAge = new JsonObject("{\"ageMax\": \"150\",\"ageMin\": \"18\",\"code\": \"sen\",\"genre\": \"Masculin\",\"label\": \"Senior Gars\",\"order\": 1}");
-        event.putObject(SB_EventVerticle.PARAM_CATEGORY, categoryAge);
+        
         event.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
         event.putNumber(SB_EventVerticle.PARAM_START_DATE, 1438206743022l);
         event.putNumber(SB_EventVerticle.PARAM_END_DATE, 1438206743022l);
