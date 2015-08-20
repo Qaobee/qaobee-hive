@@ -54,7 +54,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
      * Handler to get a set of events
      */
     public static final String GET_LIST = Module.VERSION + ".sandbox.agenda.event.list";
-    
     /**
      * Handler to add a event.
      */
@@ -97,11 +96,11 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
     /**
      * link Id
      */
-    public static final String PARAM_LINK_ID = "link.linkId";
+    public static final String PARAM_LINK_ID = "linkId";
     /**
      * link Type
      */
-    public static final String PARAM_LINK_TYPE = "link.type";
+    public static final String PARAM_LINK_TYPE = "linkType";
     /**
      * The constant PARAM_LINK.
      */
@@ -146,124 +145,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         container.logger().debug(this.getClass().getName() + " started");
-
-        /**
-         * @apiDescription retrieve all SB_Event for one owner
-         * @api {post} /api/1/sandbox/agenda/event/list Get all SB_Event
-         * @apiName getListOwner
-         * @apiGroup SB_Event API
-         * @apiParam {String} startDate start date
-         * @apiParam {String} endDate end date
-         * @apiParam {String} link.type Link type
-         * @apiParam {String} activityId Activity Id
-         * @apiParam {Array} owner Owner
-         * @apiHeader {String} token
-         * @apiSuccess {Array} list of SB_Event
-         * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
-         */
-        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-
-					/*
-                     * *** Params section ***
-					 */
-                    // Check param mandatory
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
-                    JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_START_DATE, PARAM_END_DATE, PARAM_LINK_TYPE, PARAM_ACTIVITY_ID, PARAM_OWNER);
-
-					/*
-                     * *** Aggregat section ***
-					 */
-                    DBObject match, sort, limit;
-                    BasicDBObject dbObjectParent, dbObjectChild;
-
-					/* *** $MACTH section *** */
-                    dbObjectParent = new BasicDBObject();
-
-                    // Event Activity
-                    dbObjectParent.put(PARAM_ACTIVITY_ID, params.getString(PARAM_ACTIVITY_ID));
-
-                    // Event Type
-                    dbObjectParent.put(PARAM_LINK_TYPE, params.getString(PARAM_LINK_TYPE));
-
-                    // Owner
-                    dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_OWNER).toArray());
-                    dbObjectParent.put("owner", dbObjectChild);
-
-                    // start date
-                    DBObject o = new BasicDBObject();
-                    o.put("$gte", params.getLong(PARAM_START_DATE));
-                    dbObjectParent.put("startDate", o);
-
-                    // end date
-                    o = new BasicDBObject();
-                    o.put("$lt", params.getLong(PARAM_END_DATE));
-                    dbObjectParent.put("endDate", o);
-
-                    
-                    // participants
-                    if (params.containsField(PARAM_PARTICIPANTS_CLAUSE)) {
-                        dbObjectParent.put("participants", params.getString(PARAM_PARTICIPANTS_CLAUSE));
-                    }
-
-                    match = new BasicDBObject("$match", dbObjectParent);
-
-					/* *** $SORT section *** */
-                    dbObjectParent = new BasicDBObject();
-                    if (params.containsField(PARAM_LIST_SORTBY)) {
-                        for (Object item : params.getArray(PARAM_LIST_SORTBY)) {
-                            JsonObject field = (JsonObject) item;
-                            dbObjectParent.put(field.getString("fieldName"), field.getInteger("sortOrder"));
-                        }
-                    } else {
-                        dbObjectParent.put("_id", 1);
-                    }
-                    sort = new BasicDBObject("$sort", dbObjectParent);
-
-					/* *** $limit section *** */
-                    List<DBObject> pipelineAggregation;
-                    if (params.containsField(PARAM_LIMIT_RESULT)) {
-                        int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
-                        limit = new BasicDBObject("$limit", limitNumber);
-                        pipelineAggregation = Arrays.asList(match, sort, limit);
-                    } else {
-                        pipelineAggregation = Arrays.asList(match, sort);
-                    }
-
-                    container.logger().info("getListOwner : " + pipelineAggregation.toString());
-
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Event.class);
-
-                    container.logger().info(resultJSon.encodePrettily());
-                    message.reply(resultJSon.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
         
         /**
          * @apiDescription retrieve all events for one or  many owner
@@ -331,7 +212,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     
                     // Link.type
                     if (params.containsField(PARAM_LINK_TYPE)) {
-                        dbObjectParent.put(PARAM_LINK_TYPE, params.getString(PARAM_LINK_TYPE));
+                        dbObjectParent.put("link.type", params.getString(PARAM_LINK_TYPE));
                     }
 
                     // participants
@@ -409,7 +290,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     JsonObject event = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE);
+                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE, PARAM_END_DATE);
 
                     final String id = mongo.save(event, SB_Event.class);
                     event.putString("_id", id);
@@ -446,7 +327,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
              *
@@ -459,7 +340,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     JsonObject event = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE);
+                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE, PARAM_END_DATE);
 
                     mongo.save(event, SB_Event.class);
                     
