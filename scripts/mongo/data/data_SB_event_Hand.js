@@ -112,7 +112,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71",
         "country" : "France",
         "zipcode" : "29200"
     },
-    "link" : {"linkId" : "AAAA", "type" : "championship"},
+    "link" : {"type" : "cup"},
     "participants" : {
         "teamHome":"CRMHB Cesson-Sévigné", 
         "teamVisitor":"USDK Dunkerque",
@@ -169,7 +169,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e74",
         "country" : "France",
         "zipcode" : "29200"
     },
-    "link" : {"type" : "cup"},
+    "link" : {"linkId" : "AAAA", "type" : "championship"},
     "participants" : {
         "teamHome":"Toulouse HB", 
         "teamVisitor":"CRMHB Cesson-Sévigné",
