@@ -47,11 +47,20 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e70",
     "owner" : ["ID-TEAM-CHAMBERY", "552d5e08644a77b3a20afdfe", "ID-PHARE-CHAMBERY", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
     "startDate" : NumberLong(1442080800000), 
     "endDate" : NumberLong(1442088000000),
-    "address" : { "place" : "Le phare - 800 Avenue du Grand Arietaz", "zipcode" : "73000", "city" : "Chambéry", "country" : "France" },
+    "address" : {
+        "formatedAddress" : "LE PHARE - CHAMBERY METROPOLE, 800 Avenue du Grand Arietaz, Chambéry, France",
+        "lat" : 45.583892,
+        "lng" : 5.899586999999997,
+        "place" : "800 Avenue du Grand Arietaz",
+        "city" : "Chambéry",
+        "country" : "France",
+        "zipcode" : "73000"
+    },
     "link" : {"linkId" : "AAAA", "type" : "championship"},
-    "participants" : [{"id" : "ID-TEAM-CHAMBERY", "name" : "CHAMBERY SAVOIE HB", "structureId" : "CHAMBERYSAVOIEHB", "type":"teamHome"}, 
-                      {"id" : "552d5e08644a77b3a20afdfe", "name" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamVisitor"},
-                      {"id" : "ID-PHARE-CHAMBERY", "name" : "Le phare", "structureId" : "CHAMBERYSAVOIEHB", "type":"infrastructure"}]
+    "participants" : {
+        "teamHome":"CHAMBERY SAVOIE HB", 
+        "teamVisitor":"CRMHB Cesson-Sévigné",
+        "infrastructure":"Le phare"}
 });
 
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71",
@@ -60,11 +69,20 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71",
     "owner" : ["552d5e08644a77b3a20afdfe", "ID-TEAM-DUNKERQUE", "ID-ARENA-BREST", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
     "startDate" : NumberLong(1442685600000), 
     "endDate" : NumberLong(1442692800000),
-    "address" : { "place" : "Brest Arena - 140 Boulevard de Plymouth", "zipcode" : "29200", "city" : "Brest", "country" : "France" },
+    "address" : {
+        "formatedAddress" : "Brest Arena, Boulevard de Plymouth, Brest, France",
+        "lat" : 48.387501,
+        "lng" : -4.519812000000002,
+        "place" : "Boulevard de Plymouth",
+        "city" : "Brest",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
     "link" : {"linkId" : "AAAA", "type" : "championship"},
-    "participants" : [{"id" : "552d5e08644a77b3a20afdfe", "name" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamHome"}, 
-                      {"id" : "ID-TEAM-DUNKERQUE", "name" : "USDK Dunkerque", "structureId" : "541168295971d35c1f2d1b5f", "type":"teamVisitor"}, 
-                      {"id" : "ID-ARENA-BREST", "name" : "Brest Arena", "structureId" : "541168295971d35c1f2d1b5e", "type":"infrastructure"}]
+    "participants" : {
+        "teamHome":"CRMHB Cesson-Sévigné", 
+        "teamVisitor":"USDK Dunkerque",
+        "infrastructure":"Brest Arena"}
 });
 
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e72",
@@ -73,11 +91,20 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e72",
     "owner" : ["ID-TEAM-CRETEIL", "552d5e08644a77b3a20afdfe", "ID-OUBRON-CRETEIL", "558b0efebd2e39cdab651e1f","550b31f925da07681592db23"],
     "startDate" : NumberLong(1443290400000), 
     "endDate" : NumberLong(1443297600000),
-    "address" : { "place" : "Robert Oubron - Rue Pasteur Vallery Radot", "zipcode" : "94000", "city" : "Creteil", "country" : "France" },
+    "address" : {
+        "formatedAddress" : "Palais des sports Robert-Oubron, Rue Pasteur Vallery Radot, Créteil, France",
+        "lat" : 48.787513,
+        "lng" : 2.441669000000047,
+        "place" : "5 Rue Pasteur Vallery Radot",
+        "city" : "Créteil",
+        "country" : "France",
+        "zipcode" : "94000"
+    },
     "link" : {"linkId" : "AAAA", "type" : "championship"},
-    "participants" : [{"id" : "ID-TEAM-CRETEIL", "label" : "US CRETEIL HANDBALL", "structureId" : "USCRETEILHANDBALL", "type":"teamHome"}, 
-                      {"id" : "552d5e08644a77b3a20afdfe", "label" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamVisitor"},
-                      {"id" : "ID-OUBRON-CRETEIL", "label" : "Robert Oubron", "structureId" : "USCRETEILHANDBALL", "type":"infrastructure"}]
+    "participants" : {
+        "teamHome":"US CRETEIL HANDBALL", 
+        "teamVisitor":"CRMHB Cesson-Sévigné",
+        "infrastructure":"Robert Oubron"}
 });
 
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e73",
@@ -86,9 +113,9 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e73",
     "owner" : ["552d5e08644a77b3a20afdfe", "ID-TEAM-RAPHAEL", "ID-LIBERTE-RENNES", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
     "startDate" : NumberLong(1443895200000), 
     "endDate" : NumberLong(1443902400000),
-    "address" : { "place" : "Le liberté, Esplanade Charles de Gaulle", "zipcode" : "35000", "city" : "Rennes", "country" : "France" },
     "link" : {"linkId" : "AAAA", "type" : "championship"},
-    "participants" : [{"id" : "552d5e08644a77b3a20afdfe", "label" : "CRMHB Cesson-Sévigné", "structureId" : "541168295971d35c1f2d1b5e", "type":"teamHome"}, 
-                      {"id" : "ID-TEAM-RAPHAEL", "label" : "SAINT RAPHAEL VHB", "structureId" : "SAINTRAPHAELVHB", "type":"teamVisitor"},
-                      {"id" : "ID-LIBERTE-RENNES", "label" : "Le liberte Rennes", "structureId" : "541168295971d35c1f2d1b5e", "type":"infrastructure"}]
+    "participants" : {
+        "teamHome":"CRMHB Cesson-Sévigné", 
+        "teamVisitor":"SAINT RAPHAEL VHB",
+        "infrastructure":"Le liberte Rennes"}
 });
