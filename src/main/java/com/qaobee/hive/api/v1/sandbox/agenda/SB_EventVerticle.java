@@ -153,7 +153,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiGroup SB_Event API
          * @apiParam {String} startDate start date
          * @apiParam {String} endDate end date
-         * @apiParam {String} link.type Link type
+         * @apiParam {Array} linkType Link type
          * @apiParam {String} activityId Activity Id
          * @apiParam {Array} owner Owner
          * @apiHeader {String} token
@@ -212,7 +212,8 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     
                     // Link.type
                     if (params.containsField(PARAM_LINK_TYPE)) {
-                        dbObjectParent.put("link.type", params.getString(PARAM_LINK_TYPE));
+                        dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_LINK_TYPE).toArray());
+                        dbObjectParent.put("link.type", dbObjectChild);
                     }
 
                     // participants

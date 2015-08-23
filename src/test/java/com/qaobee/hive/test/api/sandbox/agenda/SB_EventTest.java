@@ -134,7 +134,7 @@ public class SB_EventTest extends VertxJunitSupport {
         /* list of parameters */
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship");
+        params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
         params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1428518700000l);
         params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1439615200000l);
         params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
@@ -156,7 +156,7 @@ public class SB_EventTest extends VertxJunitSupport {
         req.setMethod(Constantes.GET);
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship");
+        params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
         params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1428518700000l);
         params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1439615200000l);
         params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
@@ -177,7 +177,7 @@ public class SB_EventTest extends VertxJunitSupport {
         req.setMethod(Constantes.POST);
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship");
+        params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
         params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
         req.setBody(params.encode());
         final String reply = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
@@ -196,7 +196,7 @@ public class SB_EventTest extends VertxJunitSupport {
         req.setMethod(Constantes.POST);
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship");
+        params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
         params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
         req.setBody(params.encode());
         final String reply = sendonBus(SB_EventVerticle.GET_LIST, req);
