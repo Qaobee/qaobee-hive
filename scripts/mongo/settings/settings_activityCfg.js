@@ -147,18 +147,6 @@ db.ActivityCfg.insert({
         "label" : "Coach Adjoint",
         "order" : NumberInt(3)
     }, {
-        "code" : "president",
-        "label" : "Président",
-        "order" : NumberInt(4)
-    }, {
-        "code" : "treasurer",
-        "label" : "Trésorier",
-        "order" : NumberInt(5)
-    }, {
-        "code" : "secretary",
-        "label" : "Secrétaire",
-        "order" : NumberInt(6)
-    }, {
         "code" : "physiotherapist",
         "label" : "Kinésithérapeute",
         "order" : NumberInt(7)
@@ -291,6 +279,19 @@ db.ActivityCfg.insert({
         "code" : "E",
         "label" : "Joueur Loisir",
         "order" : NumberInt(5)
+    } ],
+    "listEventType" : [ {
+        "code" : "championship",
+        "label" : "Championnat",
+        "order" : NumberInt(1)
+    }, {
+        "code" : "cup",
+        "label" : "Coupe",
+        "order" : NumberInt(2)
+    }, {
+        "code" : "amical",
+        "label" : "Match amical",
+        "order" : NumberInt(3)
     } ]
 });
 
@@ -435,18 +436,6 @@ db.ActivityCfg.insert({
         "code" : "acoach",
         "label" : "Coach Adjoint",
         "order" : NumberInt(3)
-    }, {
-        "code" : "president",
-        "label" : "Président",
-        "order" : NumberInt(4)
-    }, {
-        "code" : "treasurer",
-        "label" : "Trésorier",
-        "order" : NumberInt(5)
-    }, {
-        "code" : "secretary",
-        "label" : "Secrétaire",
-        "order" : NumberInt(6)
     }, {
         "code" : "physiotherapist",
         "label" : "Kinésithérapeute",
@@ -626,5 +615,18 @@ db.ActivityCfg.insert({
         "code" : "CE",
         "label" : "Licence CE",
         "order" : NumberInt(6)
+    } ],
+    "listEventType" : [ {
+        "code" : "championship",
+        "label" : "Championnat",
+        "order" : NumberInt(1)
+    }, {
+        "code" : "cup",
+        "label" : "Coupe",
+        "order" : NumberInt(2)
+    }, {
+        "code" : "amical",
+        "label" : "Match amical",
+        "order" : NumberInt(3)
     } ]
 }); 
