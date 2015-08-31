@@ -110,18 +110,15 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
         container.logger().debug(this.getClass().getName() + " started");
 
         /**
-         * @api {post} /api/1/sandbox/effective/effective/get
+         * @api {get} /api/1/sandbox/effective/effective/get
          * @apiVersion 0.1.0
          * @apiName get
-         * @apiGroup Effective API
+         * @apiGroup SB_Effective API
          * @apiPermission all
-         *
          * @apiDescription Retrieve the effective by id
-         *
-         * @apiParam {String} id Mandatory The effective Id.
-         *
+         * @apiHeader {String} token
+         * @apiParam {String} _id Mandatory The effective Id.
          * @apiSuccess {Effective}   effective    The effective found.
-         *
          * @apiError HTTP_ERROR Bad request
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
@@ -160,16 +157,13 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
          * @api {get} /api/1/sandbox/effective/effective/getList 
          * @apiVersion 0.1.0
          * @apiName getList
-         * @apiGroup Effective API
+         * @apiGroup SB_Effective API
          * @apiPermission all
-         *
+         * @apiHeader {String} token
          * @apiDescription get a list of effectives for one sandbox Config id
-         *
          * @apiParam {String} sandBoxCfgId Mandatory The sandBox config Id.
          * @apiParam {String} categoryCode Optional The category code of the effective.
-         *
          * @apiSuccess {List}   effectives            The list of effectives found.
-         *
          * @apiError HTTP_ERROR Bad request
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
