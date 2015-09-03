@@ -114,15 +114,15 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
     /**
      * Event Owner sandboxId
      */
-    public static final String PARAM_OWNER_SANBOXID = "owner.sandboxId";
+    public static final String PARAM_OWNER_SANBOXID = "ownersandboxId";
     /**
      * Event Owner effectiveId
      */
-    public static final String PARAM_OWNER_EFFECTIVEID = "owner.effectiveId";
+    public static final String PARAM_OWNER_EFFECTIVEID = "ownereffectiveId";
     /**
      * Event Owner teamId
      */
-    public static final String PARAM_OWNER_TEAMID = "owner.teamId";
+    public static final String PARAM_OWNER_TEAMID = "ownerteamId";
 
     /**
      * participants
@@ -210,14 +210,14 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     dbObjectParent.put(PARAM_ACTIVITY_ID, params.getString(PARAM_ACTIVITY_ID));
                     
                     // Event sandboxId
-                    dbObjectParent.put(PARAM_OWNER_SANBOXID, params.getString(PARAM_OWNER_SANBOXID));
+                    dbObjectParent.put("owner.sandboxId", params.getString(PARAM_OWNER_SANBOXID));
                     
                     if(params.getString(PARAM_OWNER_EFFECTIVEID)!=null && "".equals(params.getString(PARAM_OWNER_EFFECTIVEID).trim())) {
-                        dbObjectParent.put(PARAM_OWNER_EFFECTIVEID, params.getString(PARAM_OWNER_EFFECTIVEID));
+                        dbObjectParent.put("owner.effectiveId", params.getString(PARAM_OWNER_EFFECTIVEID));
                     }
                        
                     if(params.getString(PARAM_OWNER_TEAMID)!=null && "".equals(params.getString(PARAM_OWNER_TEAMID).trim())) {
-                        dbObjectParent.put(PARAM_OWNER_TEAMID, params.getString(PARAM_OWNER_TEAMID));
+                        dbObjectParent.put("owner.teamId", params.getString(PARAM_OWNER_TEAMID));
                     }
                        
                     // start date
@@ -356,7 +356,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     JsonObject event = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID, PARAM_OWNER_EFFECTIVEID, PARAM_START_DATE, PARAM_END_DATE);
+                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE, PARAM_END_DATE);
 
                     mongo.save(event, SB_Event.class);
                     
