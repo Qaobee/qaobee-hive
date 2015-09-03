@@ -300,7 +300,7 @@ db.ActivityCfg.insert({
         "code" : "other",
         "label" : "Autre",
         "order" : NumberInt(5)
-    }] ]
+    }]
 });
 
 
