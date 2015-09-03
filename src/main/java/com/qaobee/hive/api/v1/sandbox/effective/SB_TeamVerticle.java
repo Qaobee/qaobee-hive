@@ -16,10 +16,10 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.api.v1.sandbox.competition;
+package com.qaobee.hive.api.v1.sandbox.effective;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.sandbox.competition.SB_Team;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -28,6 +28,7 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
@@ -37,6 +38,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,21 +49,21 @@ import java.util.Map;
 @DeployableVerticle(isWorker = true)
 public class SB_TeamVerticle extends AbstractGuiceVerticle {
     /**
-     * Handler to get a set of teams
+     * Handler to get a set of team
      */
-    public static final String GET_LIST = Module.VERSION + ".sandbox.competition.team.list";
+    public static final String GET_LIST = Module.VERSION + ".sandbox.effective.team.List";  
     /**
      * Handler to add a team.
      */
-    public static final String ADD = Module.VERSION + ".sandbox.competition.team.add";
+    public static final String ADD = Module.VERSION + ".sandbox.effective.team.add";
     /**
      * Handler to get a particular team from its ID.
      */
-    public static final String GET = Module.VERSION + ".sandbox.competition.team.get";
+    public static final String GET = Module.VERSION + ".sandbox.effective.team.get";
     /**
      * Handler to update a team.
      */
-    public static final String UPDATE = Module.VERSION + ".sandbox.competition.team.update";
+    public static final String UPDATE = Module.VERSION + ".sandbox.effective.team.update";
 
     
 	/* List of parameters */
@@ -70,9 +72,24 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ID = "_id";
     /**
-     * Sandbox Config Id param
+     * SandboxId param
      */
-    public static final String PARAM_SANDBOXCFG_ID = "sandBoxCfgId";
+    public static final String PARAM_SANDBOX_ID = "sandboxId";
+    
+    /**
+     * EffectiveId param
+     */
+    public static final String PARAM_EFFECTIVE_ID = "effectiveId";
+    
+    /**
+     * adversary param (true or false)
+     */
+    public static final String PARAM_ENABLE = "enable";
+    
+    /**
+     * adversary param (true or false)
+     */
+    public static final String PARAM_ADVERSARY = "adversary";
     
     
     /**
@@ -96,11 +113,11 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Add Team
-         * @api {put} /api/1/sandbox/competition/team/add Add Team
+         * @api {put} /api/1/sandbox/effective/team/add Add Team
          * @apiVersion 0.1.0
          * @apiName add
          * @apiGroup Team API
-         * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.competition.Team
+         * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
          * @apiError INTERNAL_ERROR Error during encode value
          * @apiError QAOBEE EXCEPTION Error during validate data of Team Object
          * @apiError HTTP_ERROR Bad Request
@@ -111,10 +128,10 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
             	container.logger().info(ADD+" - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.PUT, req.getMethod());
+                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     final JsonObject json = new JsonObject(req.getBody());
-                    final String id = mongo.update(json, SB_Team.class);
+                    final String id = mongo.save(json, SB_Team.class);
                     json.putString("_id", id);
 					/* return */
                     message.reply(json.encode());
@@ -133,12 +150,12 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         
         /**
          * @apiDescription Update Team
-         * @api {get} /api/1/sandbox/competition/team/get Update team
+         * @api {get} /api/1/sandbox/effective/team/get Update team
          * @apiVersion 0.1.0
          * @apiName updateTeam
          * @apiGroup Team API
-         * @apiParam {Object} Team com.qaobee.hive.business.model.sandbox.competition.Team
-         * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.competition.Team
+         * @apiParam {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
+         * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
          * @apiError HTTP_ERROR Bad request
          */
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
@@ -168,7 +185,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         
         
         /**
-         * @api {get} /api/v1/sandbox/competition/team/get Read data of an SB_Team
+         * @api {get} /api/v1/sandbox/effective/team/get Read data of an SB_Team
          * @apiVersion 0.1.0
          * @apiName get
          * @apiGroup SB_Team API
@@ -221,15 +238,16 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         });
 
         /**
-         * @api {get} /api/1/sandbox/competition/team/list Read data of a set of SB_Team
+         * @api {get} /api/1/sandbox/effective/team/list Read data of a set of SB_Team
          * @apiVersion 0.1.0
          * @apiName get
          * @apiGroup SB_Team API
          * @apiPermission all
          *
-         * @apiDescription get a team to the collection SB_team
+         * @apiDescription get a list of my teams to the collection SB_team
          *
-         * @apiParam {String} sandBoxCfgId Mandatory The sandBox Config Id
+         * @apiParam {String} sandBoxId Mandatory The sandBox Id
+         * @apiParam {String} effectiveId Mandatory The effective Id 
          *
          * @apiSuccess {Array}   teams           The set of SB_Team found.
          *
@@ -246,16 +264,16 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
                     // Tests on method and parameters
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_SANDBOXCFG_ID);
+                    utils.testMandatoryParams(params, PARAM_SANDBOX_ID, PARAM_EFFECTIVE_ID, PARAM_ENABLE, PARAM_ADVERSARY);
                     utils.isUserLogged(req);
                     Map<String, Object> criterias = new HashMap<>();
-                    criterias.put(PARAM_SANDBOXCFG_ID, params.get(PARAM_SANDBOXCFG_ID).get(0));
+                    criterias.put(PARAM_SANDBOX_ID, params.get(PARAM_SANDBOX_ID).get(0));
+                    criterias.put(PARAM_EFFECTIVE_ID, params.get(PARAM_EFFECTIVE_ID).get(0));
+                    criterias.put(PARAM_ENABLE, "true".equals(params.get(PARAM_ENABLE).get(0)));
+                    criterias.put(PARAM_ADVERSARY, "true".equals(params.get(PARAM_ADVERSARY).get(0)));
                     
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Team.class);
-
-                    if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SB_Team found for sandBoxCfgId (" + PARAM_SANDBOXCFG_ID + ")");
-                    }
+                    container.logger().info("RETURN : "+resultJson);
 
                     message.reply(resultJson.encode());
                 } catch (final NoSuchMethodException e) {

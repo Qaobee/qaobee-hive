@@ -16,7 +16,7 @@
  *  is strictly forbidden unless prior written permission is obtained
  *  from Qaobee.
  */
-package com.qaobee.hive.business.model.sandbox.competition;
+package com.qaobee.hive.business.model.sandbox.effective;
 
 import java.util.List;
 

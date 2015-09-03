@@ -39,7 +39,7 @@ import java.util.*;
  * The type Effective test.
  * @author cke
  */
-public class EffectiveTest extends VertxJunitSupport {
+public class SB_EffectiveTest extends VertxJunitSupport {
 
     /**
      * Tests of getting a list of members of effective for one category

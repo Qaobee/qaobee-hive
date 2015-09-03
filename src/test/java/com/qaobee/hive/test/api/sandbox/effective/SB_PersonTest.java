@@ -38,7 +38,7 @@ import com.qaobee.hive.test.config.VertxJunitSupport;
 /**
  * The type Person test.
  */
-public class PersonTest extends VertxJunitSupport {
+public class SB_PersonTest extends VertxJunitSupport {
 
     @Test
     public void getListPersonByIdTest() {

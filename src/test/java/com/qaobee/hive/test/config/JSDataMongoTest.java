@@ -25,6 +25,7 @@ public interface JSDataMongoTest {
 	String DATA_CHAMPIONSHIP_HAND = "data_championShip_Hand.js";
     String DATA_EFFECTIVE_FOOT = "data_SB_effective_Foot.js";
     String DATA_EFFECTIVE_HAND = "data_SB_effective_Hand.js";
+    String DATA_TEAM_HAND = "data_SB_team_Hand.js";
     String DATA_EVENT_HAND = "data_SB_event_Hand.js";
 
     String DATA_PERSON_FOOT = "data_SB_person_Foot_SEN.js";

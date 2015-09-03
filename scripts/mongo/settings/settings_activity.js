@@ -40,7 +40,7 @@ db.Activity.remove({});
 db.Activity.insert({
     "_id" : "ACT-FOOT",
     "code" : "ACT-FOOT",
-    "label" : "admin.settings.activity.football.label",
+    "label" : "commons.settings.activity.football",
     "enable" : true,
     "activityType" : "TEAM_SPORT"
 });
@@ -48,15 +48,31 @@ db.Activity.insert({
 db.Activity.insert({
     "_id" : "ACT-HAND",
     "code" : "ACT-HAND",
-    "label" : "admin.settings.activity.handball.label",
+    "label" : "commons.settings.activity.handball",
     "enable" : true,
     "activityType" : "TEAM_SPORT"
 });
 
 db.Activity.insert({
-    "_id" : "ACT-FENC",
-    "code" : "ACT-FENC",
-    "label" : "admin.settings.activity.fencing.label",
+    "_id" : "ACT-VOLLEY",
+    "code" : "ACT-VOLLEY",
+    "label" : "commons.settings.activity.volleyball",
+    "enable" : false,
+    "activityType" : "TEAM_SPORT"
+});
+
+db.Activity.insert({
+    "_id" : "ACT-BASKET",
+    "code" : "ACT-BASKET",
+    "label" : "commons.settings.activity.basketball",
+    "enable" : false,
+    "activityType" : "TEAM_SPORT"
+});
+
+db.Activity.insert({
+    "_id" : "ACT-RUGBY",
+    "code" : "ACT-RUGBY",
+    "label" : "commons.settings.activity.rugbyball",
     "enable" : false,
     "activityType" : "TEAM_SPORT"
 });

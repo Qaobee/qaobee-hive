@@ -109,6 +109,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
                     // Tests mandatory parameters
                     utils.testMandatoryParams(params, PARAM_ID);
                     if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
+                    	container.logger().info("get() JSON - "+params);
                         throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
                     }
 

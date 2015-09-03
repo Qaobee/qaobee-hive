@@ -50,16 +50,25 @@ public class SB_EventTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setUser(user);
         req.setMethod(Constantes.POST);
+        
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
         
-        params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1438206743022l);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1438206743022l);
-        params.putObject(SB_EventVerticle.PARAM_LINK, new JsonObject("{\"linkId\" : \"AAAA\", \"type\" : \"championship\"}"));
+        final JsonObject link = new JsonObject();
+        link.putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship");
+        params.putObject("link", link);
+        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
+        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1435701600100l);
+        
+        final JsonObject owner = new JsonObject();
+        owner.putString("sandboxId", "558b0efebd2e39cdab651e1f");
+        owner.putString("effectiveId", "550b31f925da07681592db23");
+        params.putObject("owner", owner);
+        
         req.setBody(params.encode());
         final JsonObject result = new JsonObject(sendonBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
+        System.out.println(result);
         Assert.assertNotNull("id is null", result.getString("_id"));
     }
 
@@ -114,34 +123,27 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getListEventTest() {
-        //First Add an event
+        
+    	populate(POPULATE_ONLY, DATA_EVENT_HAND);
+    	
+    	//First Add an event
         User user = generateLoggedUser();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setUser(user);
         req.setMethod(Constantes.POST);
-        final JsonObject event = new JsonObject();
-        event.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
-        event.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
         
-        event.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
-        event.putNumber(SB_EventVerticle.PARAM_START_DATE, 1438206743022l);
-        event.putNumber(SB_EventVerticle.PARAM_END_DATE, 1438206743022l);
-        event.putObject(SB_EventVerticle.PARAM_LINK, new JsonObject("{\"linkId\" : \"AAAA\", \"type\" : \"championship\"}"));
-        req.setBody(event.encode());
-        final JsonObject result = new JsonObject(sendonBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
-        Assert.assertNotNull("getListEventTest : id is null", result.getString("_id"));
         /* list of parameters */
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
         params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1428518700000l);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1439615200000l);
-        params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
+        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000l);
+        params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
+        params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
         req.setBody(params.encode());
         final String reply = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertEquals("getListEventTest", 1, new JsonArray(reply).size());
-        Assert.assertEquals("getListEventTest", "labelValue", ((JsonObject) new JsonArray(reply).get(0)).getString(SB_EventVerticle.PARAM_LABEL));
+        Assert.assertEquals("getListEventTest", 4, new JsonArray(reply).size());
     }
 
     /**
@@ -157,9 +159,10 @@ public class SB_EventTest extends VertxJunitSupport {
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
         params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1428518700000l);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1439615200000l);
-        params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
+        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000l);
+        params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
+        params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
         req.setBody(params.encode());
         final String reply = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertTrue("getListEventWithWrongHttpMethodTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
@@ -176,28 +179,30 @@ public class SB_EventTest extends VertxJunitSupport {
         req.setUser(user);
         req.setMethod(Constantes.POST);
         final JsonObject params = new JsonObject();
-        params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
         params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
+        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000l);
         req.setBody(params.encode());
         final String reply = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertTrue("getListEventWithMissingParametersTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
-
+    
     /**
      * Gets list event with not logged user test.
      */
     @Test
     public void getListEventWithNotLoggedUserTest() {
         //First Add an event
-        User user = generateLoggedUser();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
         params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
+        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
+        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000l);
+        params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
+        params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
         req.setBody(params.encode());
         final String reply = sendonBus(SB_EventVerticle.GET_LIST, req);
         Assert.assertTrue("getListEventWithNotLoggedUserTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
@@ -208,30 +213,20 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getEventByIdTest() {
+    	
+    	populate(POPULATE_ONLY, DATA_EVENT_HAND);
+    	
         //First Add an event
         User user = generateLoggedUser();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setUser(user);
-        req.setMethod(Constantes.POST);
-        final JsonObject event = new JsonObject();
-        event.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
-        event.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        
-        event.putArray(SB_EventVerticle.PARAM_OWNER, new JsonArray(new String[]{user.get_id()}));
-        event.putNumber(SB_EventVerticle.PARAM_START_DATE, 1438206743022l);
-        event.putNumber(SB_EventVerticle.PARAM_END_DATE, 1438206743022l);
-        event.putObject(SB_EventVerticle.PARAM_LINK, new JsonObject("{\"linkId\" : \"AAAA\", \"type\" : \"championship\"}"));
-        req.setBody(event.encode());
-        final JsonObject result = new JsonObject(sendonBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
-        Assert.assertNotNull("getListEventTest : id is null", result.getString("_id"));
-
         req.setMethod(Constantes.GET);
         final HashMap<String, List<String>> params = new HashMap<>();
-        params.put(SB_EventVerticle.PARAM_ID, Collections.singletonList(result.getString("_id")));
+        params.put(SB_EventVerticle.PARAM_ID, Collections.singletonList("55847ed0d040353767a48e68"));
         req.setParams(params);
         final JsonObject reply = new JsonObject(sendonBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertEquals("getEventByIdTest", "labelValue", reply.getString("label"));
+        Assert.assertEquals("getEventByIdTest", "Amical", reply.getString("label"));
     }
 
     /**

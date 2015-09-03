@@ -292,7 +292,15 @@ db.ActivityCfg.insert({
         "code" : "amical",
         "label" : "Match amical",
         "order" : NumberInt(3)
-    } ]
+    }, {
+        "code" : "training",
+        "label" : "Entraînement",
+        "order" : NumberInt(4)
+    }, {
+        "code" : "other",
+        "label" : "Autre",
+        "order" : NumberInt(5)
+    }] ]
 });
 
 
@@ -628,5 +636,22 @@ db.ActivityCfg.insert({
         "code" : "amical",
         "label" : "Match amical",
         "order" : NumberInt(3)
-    } ]
+    }, {
+        "code" : "training",
+        "label" : "Entraînement",
+        "order" : NumberInt(4)
+    }, {
+        "code" : "other",
+        "label" : "Autre",
+        "order" : NumberInt(5)
+    }],
+    "parametersGame": {
+        "nbPeriod" : 2,
+        "periodDuration" : 1800,
+        "nbTimeout" : 3,
+        "timeoutDuration" : 60,
+        "yellowCardMax": 1,
+        "exclusionTempo": 3,
+        "halfTimeDuration": 600
+    }
 }); 

@@ -43,7 +43,11 @@ db.SB_Event.remove({ "owner" : { "$in" : [ "558b0efebd2e39cdab651e1f"]}});
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e68",
     "activityId" : "ACT-HAND",
     "label" : "Amical",
-    "owner" : ["552d5e08644a77b3a20afdfe", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
+    "owner" : {
+        "sandboxId" : "558b0efebd2e39cdab651e1f", 
+        "effectiveId" : "550b31f925da07681592db23", 
+        "teamId" : "552d5e08644a77b3a20afdfe"
+    },
     "startDate" : NumberLong(1440693000000), 
     "endDate" : NumberLong(1440700200000),
     "address" : {
@@ -57,28 +61,36 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e68",
     },
     "link" : {"type" : "friendlyGame"},
     "participants" : {
-        "teamHome":"PSG Handball", 
-        "teamVisitor":"CRMHB Cesson-Sévigné",
+        "teamHome": {"id":"55e7619a427aacaa7148056a", "label":"PSG Handball"}, 
+        "teamVisitor": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"},
         "infrastructure":"Brest Arena"}
 });
 
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e69",
     "activityId" : "ACT-HAND",
     "label" : "Amical",
-    "owner" : ["552d5e08644a77b3a20afdfe", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
+    "owner" : {
+        "sandboxId" : "558b0efebd2e39cdab651e1f", 
+        "effectiveId" : "550b31f925da07681592db23", 
+        "teamId" : "552d5e08644a77b3a20afdfe"
+    },
     "startDate" : NumberLong(1440959400000), 
     "endDate" : NumberLong(1440966600000),
     "link" : {"linkId" : "AAAA", "type" : "friendlyGame"},
     "participants" : {
-        "teamHome":"Nantes HBC", 
-        "teamVisitor":"CRMHB Cesson-Sévigné",
+        "teamHome": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"}, 
+        "teamVisitor": {"id":"55e76161427aacaa71480569", "label":"Nantes HBC"},
         "infrastructure":"Brest Arena"}
 });
 
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e70",
     "activityId" : "ACT-HAND",
     "label" : "Championnat : Journée 1",
-    "owner" : ["552d5e08644a77b3a20afdfe", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
+    "owner" : {
+        "sandboxId" : "558b0efebd2e39cdab651e1f", 
+        "effectiveId" : "550b31f925da07681592db23", 
+        "teamId" : "552d5e08644a77b3a20afdfe"
+    },
     "startDate" : NumberLong(1442080800000), 
     "endDate" : NumberLong(1442088000000),
     "address" : {
@@ -92,15 +104,19 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e70",
     },
     "link" : {"linkId" : "AAAA", "type" : "championship"},
     "participants" : {
-        "teamHome":"CHAMBERY SAVOIE HB", 
-        "teamVisitor":"CRMHB Cesson-Sévigné",
+        "teamHome": {"id":"55e76b04427aacaa7148056c", "label":"CHAMBERY SAVOIE HB"}, 
+        "teamVisitor": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"},
         "infrastructure":"Le phare"}
 });
 
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71",
     "activityId" : "ACT-HAND",
-    "label" : "Championnat : Journée 2",
-    "owner" : ["552d5e08644a77b3a20afdfe", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
+    "label" : "Coupe de France",
+    "owner" : {
+        "sandboxId" : "558b0efebd2e39cdab651e1f", 
+        "effectiveId" : "550b31f925da07681592db23", 
+        "teamId" : "552d5e08644a77b3a20afdfe"
+    },
     "startDate" : NumberLong(1442685600000), 
     "endDate" : NumberLong(1442692800000),
     "address" : {
@@ -113,16 +129,45 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71",
         "zipcode" : "29200"
     },
     "link" : {"type" : "cup"},
+    "participants" : { 
+        "teamHome": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"},
+        "teamVisitor": {"id":"55e76b26427aacaa7148056d", "label":"USDK Dunkerque"},
+        "infrastructure":"Brest Arena"}
+});
+
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e75",
+    "activityId" : "ACT-HAND",
+    "label" : "Entraînement",
+    "owner" : {
+        "sandboxId" : "558b0efebd2e39cdab651e1f", 
+        "effectiveId" : "550b31f925da07681592db23", 
+        "teamId" : "552d5e08644a77b3a20afdfe"
+    },
+    "startDate" : NumberLong(1442856600000), 
+    "endDate" : NumberLong(1442863800000),
+    "address" : {
+        "formatedAddress" : "Brest Arena, Boulevard de Plymouth, Brest, France",
+        "lat" : 48.387501,
+        "lng" : -4.519812000000002,
+        "place" : "Boulevard de Plymouth",
+        "city" : "Brest",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
+    "link" : {"type" : "training"},
     "participants" : {
-        "teamHome":"CRMHB Cesson-Sévigné", 
-        "teamVisitor":"USDK Dunkerque",
+        "teamHome": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"},
         "infrastructure":"Brest Arena"}
 });
 
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e72",
     "activityId" : "ACT-HAND",
-    "label" : "Championnat : Journée 3",
-    "owner" : ["552d5e08644a77b3a20afdfe", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
+    "label" : "Championnat : Journée 2",
+    "owner" : {
+        "sandboxId" : "558b0efebd2e39cdab651e1f", 
+        "effectiveId" : "550b31f925da07681592db23", 
+        "teamId" : "552d5e08644a77b3a20afdfe"
+    },
     "startDate" : NumberLong(1443290400000), 
     "endDate" : NumberLong(1443297600000),
     "address" : {
@@ -135,29 +180,37 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e72",
         "zipcode" : "94000"
     },
     "link" : {"linkId" : "AAAA", "type" : "championship"},
-    "participants" : {
-        "teamHome":"US CRETEIL HANDBALL", 
-        "teamVisitor":"CRMHB Cesson-Sévigné",
+    "participants" : { 
+        "teamHome": {"id":"55e76b44427aacaa7148056e", "label":"US CRETEIL HANDBALL"},
+        "teamVisitor": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"},
         "infrastructure":"Robert Oubron"}
 });
 
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e73",
     "activityId" : "ACT-HAND",
-    "label" : "Championnat : Journée 4",
-    "owner" : ["552d5e08644a77b3a20afdfe", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
+    "label" : "Championnat : Journée 3",
+    "owner" : {
+        "sandboxId" : "558b0efebd2e39cdab651e1f", 
+        "effectiveId" : "550b31f925da07681592db23", 
+        "teamId" : "552d5e08644a77b3a20afdfe"
+    },
     "startDate" : NumberLong(1443895200000), 
     "endDate" : NumberLong(1443902400000),
     "link" : {"linkId" : "AAAA", "type" : "championship"},
     "participants" : {
-        "teamHome":"CRMHB Cesson-Sévigné", 
-        "teamVisitor":"SAINT RAPHAEL VHB",
+        "teamHome": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"},
+        "teamVisitor": {"id":"55e7619a427aacaa7148056a", "label":"PSG Handball"},
         "infrastructure":"Le liberte Rennes"}
 });
 
 db.SB_Event.insert({"_id" : "55847ed0d040353767a48e74",
     "activityId" : "ACT-HAND",
     "label" : "Amical",
-    "owner" : ["552d5e08644a77b3a20afdfe", "558b0efebd2e39cdab651e1f", "550b31f925da07681592db23"],
+    "owner" : {
+        "sandboxId" : "558b0efebd2e39cdab651e1f", 
+        "effectiveId" : "550b31f925da07681592db23", 
+        "teamId" : "552d5e08644a77b3a20afdfe"
+    },
     "startDate" : NumberLong(1444655715000), 
     "endDate" : NumberLong(1444662915000),
     "address" : {
@@ -171,7 +224,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e74",
     },
     "link" : {"linkId" : "AAAA", "type" : "championship"},
     "participants" : {
-        "teamHome":"Toulouse HB", 
-        "teamVisitor":"CRMHB Cesson-Sévigné",
+        "teamHome": {"id":"55e76b64427aacaa7148056f", "label":"Toulouse HB"},
+        "teamVisitor": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"},
         "infrastructure":"Brest Arena"}
 });

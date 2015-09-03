@@ -28,6 +28,7 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
@@ -36,6 +37,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -64,8 +66,14 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 	/** activity of the team */
 	public static final String PARAM_ACTIVITY = "activity";
 	
-	/** country of the team */
-	public static final String PARAM_COUNTRY = "country";
+	/**
+     * Team sandboxId
+     */
+    public static final String PARAM_SANBOXID = "sandboxId";
+    /**
+     * Team effectiveId
+     */
+    public static final String PARAM_EFFECTIVEID = "effectiveId";
 
 	/* Injections */
 	@Inject
@@ -107,7 +115,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
 					final JsonObject params = new JsonObject(req.getBody());
-					utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY);
+					utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID);
 					
 					// Insert a team
 					final String id = mongo.save(params, Team.class);
@@ -217,7 +225,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
 					final JsonObject params = new JsonObject(req.getBody());
-					utils.testMandatoryParams(params.toMap(), PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY);
+					utils.testMandatoryParams(params.toMap(), PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID);
 					
 					// Update a team
 					mongo.save(params, Team.class);

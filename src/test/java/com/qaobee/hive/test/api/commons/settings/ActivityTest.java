@@ -63,7 +63,7 @@ public class ActivityTest extends VertxJunitSupport {
 		
 		String label = result.getString("label");
 		
-		Assert.assertEquals("admin.settings.activity.handball.label", label);
+		Assert.assertEquals("commons.settings.activity.handball", label);
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class ActivityTest extends VertxJunitSupport {
 		req.setParams(params);
 
 		final String reply = sendonBus(ActivityVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals(3, new JsonArray(reply).size());
+		Assert.assertEquals(5, new JsonArray(reply).size());
 	}
 	
 	/**

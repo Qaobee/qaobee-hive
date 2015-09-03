@@ -75,7 +75,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
     /**
      * Event ID
      */
-    public static final String PARAM_ID = "id";
+    public static final String PARAM_ID = "_id";
     /**
      * Event activity
      */
@@ -94,21 +94,36 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_END_DATE = "endDate";
     /**
-     * link Id
+     * link id
      */
-    public static final String PARAM_LINK_ID = "linkId";
+    public static final String PARAM_LINK_ID = "id";
     /**
      * link Type
      */
-    public static final String PARAM_LINK_TYPE = "linkType";
+    public static final String PARAM_LINK_TYPE = "type";
     /**
      * The constant PARAM_LINK.
      */
     public static final String PARAM_LINK = "link";
+    
     /**
      * Event Owner
      */
     public static final String PARAM_OWNER = "owner";
+    
+    /**
+     * Event Owner sandboxId
+     */
+    public static final String PARAM_OWNER_SANBOXID = "owner.sandboxId";
+    /**
+     * Event Owner effectiveId
+     */
+    public static final String PARAM_OWNER_EFFECTIVEID = "owner.effectiveId";
+    /**
+     * Event Owner teamId
+     */
+    public static final String PARAM_OWNER_TEAMID = "owner.teamId";
+
     /**
      * participants
      */
@@ -180,7 +195,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER);
+                    utils.testMandatoryParams(params.toMap(), PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID);
 
 					/*
                      * *** Aggregat section ***
@@ -193,7 +208,18 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
 
                     // Event Activity
                     dbObjectParent.put(PARAM_ACTIVITY_ID, params.getString(PARAM_ACTIVITY_ID));
-
+                    
+                    // Event sandboxId
+                    dbObjectParent.put(PARAM_OWNER_SANBOXID, params.getString(PARAM_OWNER_SANBOXID));
+                    
+                    if(params.getString(PARAM_OWNER_EFFECTIVEID)!=null && "".equals(params.getString(PARAM_OWNER_EFFECTIVEID).trim())) {
+                        dbObjectParent.put(PARAM_OWNER_EFFECTIVEID, params.getString(PARAM_OWNER_EFFECTIVEID));
+                    }
+                       
+                    if(params.getString(PARAM_OWNER_TEAMID)!=null && "".equals(params.getString(PARAM_OWNER_TEAMID).trim())) {
+                        dbObjectParent.put(PARAM_OWNER_TEAMID, params.getString(PARAM_OWNER_TEAMID));
+                    }
+                       
                     // start date
                     DBObject o = new BasicDBObject();
                     o.put("$gte", params.getLong(PARAM_START_DATE));
@@ -204,21 +230,10 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     o.put("$lt", params.getLong(PARAM_END_DATE));
                     dbObjectParent.put("endDate", o);
                     
-                    // ownerID
-                    if (params.containsField(PARAM_OWNER)) {
-                    	dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_OWNER).toArray());
-                        dbObjectParent.put("owner", dbObjectChild);
-                    }
-                    
                     // Link.type
                     if (params.containsField(PARAM_LINK_TYPE)) {
                         dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_LINK_TYPE).toArray());
                         dbObjectParent.put("link.type", dbObjectChild);
-                    }
-
-                    // participants
-                    if (params.containsField(PARAM_PARTICIPANTS_CLAUSE)) {
-                        dbObjectParent.put("participants", params.getString(PARAM_PARTICIPANTS_CLAUSE));
                     }
 
                     match = new BasicDBObject("$match", dbObjectParent);
@@ -341,7 +356,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     JsonObject event = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE, PARAM_END_DATE);
+                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID, PARAM_OWNER_EFFECTIVEID, PARAM_START_DATE, PARAM_END_DATE);
 
                     mongo.save(event, SB_Event.class);
                     
