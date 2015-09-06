@@ -143,7 +143,19 @@ public class SB_EventTest extends VertxJunitSupport {
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
         req.setBody(params.encode());
         final String reply = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertEquals("getListEventTest", 4, new JsonArray(reply).size());
+        Assert.assertEquals("getListEventTest1", 4, new JsonArray(reply).size());
+        
+        params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "");
+        
+        req.setBody(params.encode());
+        final String reply2 = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
+        Assert.assertEquals("getListEventTest2", 4, new JsonArray(reply2).size());
+        
+        params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "TOTO");
+        
+        req.setBody(params.encode());
+        final String reply3 = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
+        Assert.assertEquals("getListEventTest3", 0, new JsonArray(reply3).size());
     }
 
     /**

@@ -212,11 +212,11 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     // Event sandboxId
                     dbObjectParent.put("owner.sandboxId", params.getString(PARAM_OWNER_SANBOXID));
                     
-                    if(params.getString(PARAM_OWNER_EFFECTIVEID)!=null && "".equals(params.getString(PARAM_OWNER_EFFECTIVEID).trim())) {
+                    if(params.getString(PARAM_OWNER_EFFECTIVEID)!=null && !"".equals(params.getString(PARAM_OWNER_EFFECTIVEID).trim())) {
                         dbObjectParent.put("owner.effectiveId", params.getString(PARAM_OWNER_EFFECTIVEID));
                     }
                        
-                    if(params.getString(PARAM_OWNER_TEAMID)!=null && "".equals(params.getString(PARAM_OWNER_TEAMID).trim())) {
+                    if(params.getString(PARAM_OWNER_TEAMID)!=null && !"".equals(params.getString(PARAM_OWNER_TEAMID).trim())) {
                         dbObjectParent.put("owner.teamId", params.getString(PARAM_OWNER_TEAMID));
                     }
                        
