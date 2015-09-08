@@ -54,11 +54,11 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant GET_LIST.
      */
-    public static final String GET_LIST = Module.VERSION + ".commons.settings.activity.getList";
+    public static final String GET_LIST = Module.VERSION + ".commons.settings.activity.list";
     /**
      * The Constant GET_LIST_ENABLE.
      */
-    public static final String GET_LIST_ENABLE = Module.VERSION + ".commons.settings.activity.getListEnable";
+    public static final String GET_LIST_ENABLE = Module.VERSION + ".commons.settings.activity.listEnable";
 
 	/* List of parameters */
     /**
@@ -158,7 +158,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
+//                    utils.isUserLogged(req);
 
                     JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
 
@@ -169,9 +169,9 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, e);
+//                } catch (QaobeeException e) {
+//                    container.logger().error(e.getMessage(), e);
+//                    utils.sendError(message, e);
                 } catch (Exception e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
