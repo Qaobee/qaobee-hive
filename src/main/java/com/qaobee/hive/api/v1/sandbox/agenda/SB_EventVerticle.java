@@ -219,16 +219,11 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     if(params.getString(PARAM_OWNER_TEAMID)!=null && !"".equals(params.getString(PARAM_OWNER_TEAMID).trim())) {
                         dbObjectParent.put("owner.teamId", params.getString(PARAM_OWNER_TEAMID));
                     }
-                       
-                    // start date
+                    
                     DBObject o = new BasicDBObject();
                     o.put("$gte", params.getLong(PARAM_START_DATE));
-                    dbObjectParent.put("startDate", o);
-
-                    // end date
-                    o = new BasicDBObject();
                     o.put("$lt", params.getLong(PARAM_END_DATE));
-                    dbObjectParent.put("endDate", o);
+                    dbObjectParent.put("startDate", o);
                     
                     // Link.type
                     if (params.containsField(PARAM_LINK_TYPE)) {
@@ -306,7 +301,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     JsonObject event = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE, PARAM_END_DATE);
+                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE);
 
                     final String id = mongo.save(event, SB_Event.class);
                     event.putString("_id", id);
@@ -356,7 +351,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     JsonObject event = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE, PARAM_END_DATE);
+                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE);
 
                     mongo.save(event, SB_Event.class);
                     

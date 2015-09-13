@@ -269,7 +269,10 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
                     Map<String, Object> criterias = new HashMap<>();
                     criterias.put(PARAM_SANDBOX_ID, params.get(PARAM_SANDBOX_ID).get(0));
                     criterias.put(PARAM_EFFECTIVE_ID, params.get(PARAM_EFFECTIVE_ID).get(0));
-                    criterias.put(PARAM_ENABLE, "true".equals(params.get(PARAM_ENABLE).get(0)));
+                    
+                    if(!"all".equals(params.get(PARAM_ENABLE).get(0))) {
+                        criterias.put(PARAM_ENABLE, "true".equals(params.get(PARAM_ENABLE).get(0)));
+                    }
                     criterias.put(PARAM_ADVERSARY, "true".equals(params.get(PARAM_ADVERSARY).get(0)));
                     
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Team.class);

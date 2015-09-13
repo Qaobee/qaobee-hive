@@ -289,7 +289,7 @@ db.ActivityCfg.insert({
         "label" : "Coupe",
         "order" : NumberInt(2)
     }, {
-        "code" : "amical",
+        "code" : "friendlyGame",
         "label" : "Match amical",
         "order" : NumberInt(3)
     }, {
@@ -633,7 +633,7 @@ db.ActivityCfg.insert({
         "label" : "Coupe",
         "order" : NumberInt(2)
     }, {
-        "code" : "amical",
+        "code" : "friendlyGame",
         "label" : "Match amical",
         "order" : NumberInt(3)
     }, {
