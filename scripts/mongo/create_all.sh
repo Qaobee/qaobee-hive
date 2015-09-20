@@ -4,17 +4,18 @@ echo '****************************************************'
 echo 'Script de creation des collections dans la base Hive'
 echo '****************************************************'
 
-#pathFile=`find . -name create_all.sh`
-#echo $pathFile
-#pathDir=`expr match "$pathFile" '\(.*\)\/create_all.sh'`
-#pathDir=`expr "$pathFile" '\(.*\)\/create_all.sh'`
-#echo "Change directory to : $pathDir"
-#cd $pathDir
-
+pathFile=`find . -name create_all.sh`
+echo $pathFile
+pathDir=`expr match "$pathFile" '\(.*\)\/create_all.sh'`
+echo "Change directory to : $pathDir"
+cd $pathDir
 echo `pwd`
 
-mongo hive --eval "db.dropDatabase()"
+echo `pwd`
+mongo hive --eval "use hive"
+mongo hive --eval "db.getCollectionNames().forEach(function(c) { if (c.indexOf(\"system.\") == -1) db[c].drop(); })"
 mongo hive **/*.js
+mongo ${db} *.js
 mongo hive --eval "db.printCollectionStats()" | grep '\(ns\|count\)'
 
 

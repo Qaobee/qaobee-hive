@@ -24,7 +24,7 @@ echo "Change directory to : $pathDir"
 cd $pathDir
 echo `pwd`
 
-#mongo ${db} --eval "db.dropDatabase()"
+mongo hive --eval "db.getCollectionNames().forEach(function(c) { if (c.indexOf(\"system.\") == -1) db[c].drop(); })"
 mongo ${db} *.js
 mongo ${db} **/*.js
 
