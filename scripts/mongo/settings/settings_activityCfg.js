@@ -300,7 +300,18 @@ db.ActivityCfg.insert({
         "code" : "other",
         "label" : "Autre",
         "order" : NumberInt(5)
-    }]
+    }],
+    "parametersGame": {
+        "nbMaxPlayers" : 16,
+        "nbMinPlayers" : 7,
+        "nbPeriod" : 2,
+        "periodDuration" : 2700,
+        "nbTimeout" : 0,
+        "timeoutDuration" : 0,
+        "yellowCardMax": 2,
+        "exclusionTempo": 0,
+        "halfTimeDuration": 600
+    }
 });
 
 
@@ -646,6 +657,8 @@ db.ActivityCfg.insert({
         "order" : NumberInt(5)
     }],
     "parametersGame": {
+        "nbMaxPlayers" : 12,
+        "nbMinPlayers" : 4,
         "nbPeriod" : 2,
         "periodDuration" : 1800,
         "nbTimeout" : 3,
