@@ -47,7 +47,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(556236000000),
-    "birthcity" : "Zagreb",
+    "birthcity" : "Zagreb, Croatie",
     "nationality" : "Croatie",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -87,7 +87,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(691714800000),
-    "birthcity" : "Saint-Raphaël",
+    "birthcity" : "Saint-Raphaël, France",
     "nationality" : "France",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -127,7 +127,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(601426800000),
-    "birthcity" : "Rennes",
+    "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -167,7 +167,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(523663200000),
-    "birthcity" : "Rennes",
+    "birthcity" : "Rennes, France",
     "nationality" : "France",
    "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -207,7 +207,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(444870000000),
-    "birthcity" : "Rennes",
+    "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -247,7 +247,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(686271600000),
-    "birthcity" : "Rennes",
+    "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -287,7 +287,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(564706800000),
-    "birthcity" : "Rennes",
+    "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -327,7 +327,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(401580000000),
-    "birthcity" : "Rennes",
+    "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -367,7 +367,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(712274400000),
-    "birthcity" : "Rennes",
+    "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -407,7 +407,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(430437600000),
-    "birthcity" : "Budapest",
+    "birthcity" : "Budapest, Hongrie",
     "nationality" : "Hongrie",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -448,7 +448,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(486079200000),
-    "birthcity" : "Strasbourg",
+    "birthcity" : "Strasbourg, France",
     "nationality" : "France",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -489,7 +489,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(504745200000),
-    "birthcity" : "Rome",
+    "birthcity" : "Rome, Italie",
     "nationality" : "Italie",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -530,7 +530,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(529714800000),
-    "birthcity" : "Rennes",
+    "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
@@ -570,7 +570,7 @@ db.SB_Person.insert({
     "avatar" : null,
     "gender" : "Homme",
     "birthdate" : NumberLong(524527200000),
-    "birthcity" : "Sarajevo",
+    "birthcity" : "Sarajevo, Fédération de Bosnie-et-Herzégovine, Bosnie-Herzégovine",
     "nationality" : "Bosnie-Herzégovine",
     "address" : {
         "formatedAddress" : "3 Allée de Champagne, Cesson-Sévigné, France",
