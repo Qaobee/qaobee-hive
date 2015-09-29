@@ -74,6 +74,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 	public static final String LOGIN_EXISTS = Module.VERSION + ".commons.users.signup.loginExists";
 	/** The Constant ACCOUNT_CHECK. */
 	public static final String ACCOUNT_CHECK = Module.VERSION + ".commons.users.signup.accountcheck";
+	
+	public static final String FINALIZE_SIGNUP = Module.VERSION + ".commons.users.signup.finalize";
 
 	// MongoDB driver
 	@Inject
@@ -344,6 +346,46 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 				}
 			}
 		};
+		
+		final Handler<Message<String>> finalizeSignupHandler = new Handler<Message<String>>() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+			 */
+			@Override
+			public void handle(final Message<String> message) {
+				final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+				try {
+					utils.testHTTPMetod(Constantes.POST, req.getMethod());
+					final JsonObject jsonReq = new JsonObject(req.getBody());
+					final String id = jsonReq.getString("id");
+					final String activationCode = jsonReq.getString("code");
+					
+					final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
+					if(user==null) {
+						utils.sendStatus(false, message);
+					} else if(user.getAccount().isActive()) {
+						utils.sendStatus(false, message);
+					} else if(!user.getAccount().getActivationCode().equals(activationCode)) {
+						utils.sendStatus(false, message);
+					} else {
+						message.reply(Json.encode(user));
+						utils.sendStatus(true, message);
+					}
+					
+				} catch (final NoSuchMethodException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final EncodeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+				} catch (final QaobeeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+				}
+			}
+		};
 		/*
 		 * Handlers declaration
 		 */
@@ -351,5 +393,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		vertx.eventBus().registerHandler(LOGIN_TEST, userNameTestHandler);
 		vertx.eventBus().registerHandler(LOGIN_EXISTS, userNameExistHandler);
 		vertx.eventBus().registerHandler(ACCOUNT_CHECK, accountCheckHandler);
+		vertx.eventBus().registerHandler(FINALIZE_SIGNUP, finalizeSignupHandler);
 	}
 }

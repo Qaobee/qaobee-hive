@@ -20,10 +20,12 @@ package com.qaobee.hive.api.v1.commons.referencial;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
+import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -31,6 +33,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
@@ -64,6 +67,10 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     public static final String GET = Module.VERSION + ".commons.referencial.structure.get";
     /**
+     * The Constant GET_LIST.
+     */
+    public static final String GET_LIST = Module.VERSION + ".commons.referencial.structure.getList";
+    /**
      * The Constant UPDATE.
      */
     public static final String UPDATE = Module.VERSION + ".commons.referencial.structure.update";
@@ -88,6 +95,10 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * country of the structure
      */
     public static final String PARAM_COUNTRY = "country";
+    
+    /** City label */
+    public static final String PARAM_ADDRESS_CITY = "addressCity";
+    
 
     /**
      * The Mongo.
@@ -212,6 +223,63 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                 }
             }
         };
+        
+        /**
+         * @api {get} /api/1/commons/referencial/structure/getList Returns list of structures from criterias
+         * @apiVersion 0.1.0
+         * @apiName getList
+         * @apiGroup Structure API
+         * @apiPermission all
+         *
+         * @apiDescription Gets list of structures from criterias from the collection structure in referencial module
+         *
+         * @apiParam {String} activity The Activity-ID.
+         * @apiParam {String} country Country
+         * @apiParam {String} addressCity The city label
+         *
+         * @apiSuccess {Structure}   structure            The Structure found.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> getList = new Handler<Message<String>>() {
+
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("getList() - Structure");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_ACTIVITY, PARAM_COUNTRY, PARAM_ADDRESS_CITY);
+                    
+                    String activity = req.getParams().get(PARAM_ACTIVITY).get(0);
+                    String country = req.getParams().get(PARAM_COUNTRY).get(0);
+                    String addressCity = req.getParams().get(PARAM_ADDRESS_CITY).get(0);
+                    
+                    // Creation of request
+					CriteriaBuilder criterias = new CriteriaBuilder();
+					criterias.add("activity._id", activity);
+//					criterias.add("country._id", );
+					criterias.add("address.city", addressCity.toUpperCase());
+                    
+                    
+					JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, Structure.class);
+                    container.logger().info("Structure found : " + resultJSon.size());
+                    message.reply(resultJSon.encode());
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+//                } catch (QaobeeException e) {
+//                    container.logger().error(e.getMessage(), e);
+//                    utils.sendError(message, e);
+                }
+            }
+        };
 
         /**
          * @api {post} /api/1/commons/referencial/structure/update Update a structure
@@ -277,6 +345,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 		 */
         vertx.eventBus().registerHandler(ADD, add);
         vertx.eventBus().registerHandler(GET, get);
+        vertx.eventBus().registerHandler(GET_LIST, getList);
         vertx.eventBus().registerHandler(UPDATE, update);
     }
 }
