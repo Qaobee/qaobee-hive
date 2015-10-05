@@ -21,13 +21,13 @@ package com.qaobee.hive.api;
 import com.englishtown.promises.Promise;
 import com.englishtown.promises.Runnable;
 import com.englishtown.promises.Value;
+import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +44,7 @@ import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
+import org.vertx.mods.Mailer;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -280,6 +281,7 @@ public class Main extends AbstractGuiceVerticle {
         final List<Promise<String, Void>> promises = new ArrayList<>();
         // Loading modules
         promises.add(whenContainer.deployWorkerVerticle(com.bloidonia.vertx.metrics.MetricsModule.class.getCanonicalName(), config.getObject("metrix.mod"), 1, true));
+        promises.add(whenContainer.deployWorkerVerticle(Mailer.class.getCanonicalName(), config.getObject("mailer.mod"), 1, true));
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
         for (final Class<?> restMod : restModules) {
