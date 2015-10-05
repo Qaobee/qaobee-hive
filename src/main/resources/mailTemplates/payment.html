@@ -1,15 +1,18 @@
-<#import "header.html" as h> 
+<#import "header.html" as h>
 
-<@h.header />
-<div class="jumbotron well">
-	<h1>${title}</h1>
-	<p>${desc}</p>
-</div>
-<div class="page-header">
-	<h1>
-		${header} <small>${subheader}</small>
-	</h1>
-</div>
-<h3>${message}</h3>
-<h3>${sig}</h3>
-<@h.footer />
+    <@h.header />
+    <main style="display: block; box-sizing: inherit; flex: 1 0 auto;">
+        <div style="box-sizing: inherit; max-width: 1280px; width: 70%; margin: 0 auto;">
+
+            <h4 style="box-sizing: inherit; font-weight: 400; line-height: 110%; font-size: 2.28rem; margin: 1.14rem 0 0.912rem;">
+                ${title}</h4>
+
+            <p style="box-sizing: inherit;">${desc}</p>
+
+            <p style="box-sizing: inherit;">${message}</p>
+            <h6 style="box-sizing: inherit; font-weight: 400; line-height: 110%; font-size: 1rem; margin: 0.5rem 0 0.4rem;">
+                ${sig}</h6>
+
+        </div>
+    </main>
+    <@h.footer />

@@ -1,51 +1,60 @@
 <#macro header>
-<!doctype html>
-<html>
-<head>
-<base href="http://swarn-qaobee.rhcloud.com/" target="_blank">
-<link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap.css" />
-<link rel="stylesheet" href="js/libs/font-awesome/css/font-awesome.min.css" />
-<link href="css/flatty.css" rel="stylesheet" />
-<link href='http://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css' />
-<link href="css/qaobee.css" rel="stylesheet" />
-<script src="js/libs/bootstrap/dist/js/bootstrap.js"></script>
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-<![endif]-->
-<meta charset="UTF-8">
-</head>
-<body>
-	<div class="container">
-		<!--  horizontal logo -->
-		<div class="row clearfix">
-			<div class="col-md-12 column">
+    <!DOCTYPE html>
+    <html style="font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; box-sizing: border-box; line-height: 1.5; font-weight: normal; color: rgba(0, 0, 0, 0.87); font-size: 15px;">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
+    </head>
+    <body style="box-sizing: inherit; display: flex; min-height: 100vh; flex-direction: column; margin: 0;">
+    <style type="text/css">
+        a:active { outline: 0 !important; }
+        a:hover { outline: 0 !important; }
+        *:before { box-sizing: inherit !important; }
+        *:after { box-sizing: inherit !important; }
+        ></style>
+
+    <div style="display: block; box-sizing: inherit;"><div style="box-sizing: inherit; position: relative; height: 64px; z-index: 998;">
+        <div role="navigation" style="background-color: #9ccc65 !important; display: block; box-sizing: inherit; color: #fff; width: 100%; height: 64px; line-height: 64px; position: fixed;"><div style="box-sizing: inherit; max-width: 1280px; width: 70%; margin: 0 auto;">
+            <div style="box-sizing: inherit; position: relative; height: 100%;">
+                <a href="https://www.qaobee.com" target="_blank" style="box-sizing: inherit; color: #fff; text-decoration: none; -webkit-tap-highlight-color: transparent; position: absolute; display: inline-block; font-size: 2.1rem; white-space: nowrap; left: 50%; -webkit-transform: translateX(-50%); -moz-transform: translateX(-50%); -ms-transform: translateX(-50%); -o-transform: translateX(-50%); transform: translateX(-50%); background-color: transparent; padding: 0;">
+                    <img height="30" src="data:image/png;base64,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" style="box-sizing: inherit; border: 0;"></a>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
 </#macro>
 
-<#macro footer></div>
-			<div class="row clearfix">
-				<div class="col-md-12 column"><div id="footer">
-		<footer>
-			<div class="container">
-				<hr />
-				<p class="pull-left">Copyright &copy; QaoBee 2014</p>
-				
-				<ul class="pull-right nav nav-pills">
-					<li><a href="#/about" translate="footer.link.about"></a></li>
-					<li><a href="#/mentionslegales" translate="footer.link.legalmentions"></a></li>
-					<li><a href="#/contact" translate="footer.link.contact"></a></li>
-					<li><a href="https://twitter.com/Qaobee" target="_blank"><i class="fa fa-twitter-square"></i></a></li>
-					<li><a href="https://www.facebook.com/qaobee" target="_blank"><i class="fa fa-facebook-square"></i></a></li>
-					<li><a href="https://plus.google.com/u/0/b/109302606857272710440/109302606857272710440/about" target="_blank"><i class="fa fa-google-plus-square"></i></a></li>
-				</ul>
-			</div>
-			<!-- /.container -->
-		</footer>
-	</div></div>
-			</div>
-		</div>
-	</div>
-</body>
-</html>
+<#macro footer>
+    <div style="background-color: #43A047 !important; display: block; box-sizing: inherit; margin-top: 20px; padding-top: 20px;"><div style="box-sizing: inherit; max-width: 1280px; width: 70%; margin: 0 auto;">
+        <div style="box-sizing: inherit; margin-left: -0.75rem; margin-right: -0.75rem; margin-bottom: 20px;">
+            <div style="box-sizing: border-box; float: left; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; width: 50%; margin-left: 0; padding: 0 0.75rem;">
+                <h5 style="color: #FFFFFF !important; box-sizing: inherit; font-weight: 400; line-height: 110%; font-size: 1.64rem; margin: 0.82rem 0 0.656rem;">Qaobee</h5>
+
+                <p style="color: #f5f5f5 !important; box-sizing: inherit;">Le premier assistant personnel de collecte et d'analyse en temps
+                    réel de données sportives.</p>
+            </div>
+            <div style="box-sizing: border-box; float: left; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; width: 33.33333%; margin-left: 16.66667%; padding: 0 0.75rem;">
+                <h5 style="color: #FFFFFF !important; box-sizing: inherit; font-weight: 400; line-height: 110%; font-size: 1.64rem; margin: 0.82rem 0 0.656rem;">Restons connectés</h5>
+                <ul style="box-sizing: inherit; list-style-type: none; padding: 0;">
+                    <li style="box-sizing: inherit; list-style-type: none;"><a href="https://twitter.com/Qaobee" target="_blank" style="color: #eeeeee !important; box-sizing: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; background-color: transparent;">@Qaobee</a></li>
+                    <li style="box-sizing: inherit; list-style-type: none;">
+                        <a href="https://www.facebook.com/qaobee" target="_blank" style="color: #eeeeee !important; box-sizing: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; background-color: transparent;">Facebook</a>
+                    </li>
+                    <li style="box-sizing: inherit; list-style-type: none;">
+                        <a href="https://www.google.com/+QaobeeSARL" target="_blank" style="color: #eeeeee !important; box-sizing: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; background-color: transparent;">+Qaobee</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+        <div style="box-sizing: inherit; overflow: hidden; height: 50px; line-height: 50px; color: rgba(255, 255, 255, 0.8); background-color: rgba(51, 51, 51, 0.08);">
+            <div style="box-sizing: inherit; max-width: 1280px; width: 70%; margin: 0 auto;">
+                Copyright © Qaobee 2015
+                <a href="https://www.qaobee.com" target="_blank" style="color: #f5f5f5 !important; box-sizing: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; float: right !important; background-color: transparent;">www.qaobee.com</a>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
 </#macro>
