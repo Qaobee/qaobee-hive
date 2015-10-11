@@ -19,9 +19,35 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
+import com.qaobee.hive.business.commons.users.UsersBusiness;
+import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Team;
+import com.qaobee.hive.business.model.transversal.Member;
+import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -36,21 +62,9 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
+
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * The Class SignupVerticle.
@@ -74,8 +88,15 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 	public static final String LOGIN_EXISTS = Module.VERSION + ".commons.users.signup.loginExists";
 	/** The Constant ACCOUNT_CHECK. */
 	public static final String ACCOUNT_CHECK = Module.VERSION + ".commons.users.signup.accountcheck";
-	
+	/** The Constant FIRST_CONNECTION_CHECK */
+	public static final String FIRST_CONNECTION_CHECK = Module.VERSION + ".commons.users.signup.firstconnectioncheck";
+	/** The Constant FINALIZE_SIGNUP */
 	public static final String FINALIZE_SIGNUP = Module.VERSION + ".commons.users.signup.finalize";
+	
+	/** Parameter ID*/
+	public static final String PARAM_ID = "id";
+	/** Parameter CODE */
+	public static final String PARAM_CODE = "code";
 
 	// MongoDB driver
 	@Inject
@@ -88,6 +109,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 	private Utils utils;
 	@Inject
 	private PersonUtils personUtils;
+	@Inject
+	private UsersBusiness usersBusiness;
 
 	/*
 	 * (non-Javadoc)
@@ -212,6 +235,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 						json.removeField("plan");
 						container.logger().info(json.encode());
 						final User user = Json.decodeValue(json.encode(), User.class);
+						
+						// Check user informations
+						usersBusiness.checkUserInformations(user, req.getLocale());
+						
 						// check if email is correct
 						if (authCheck.testEmail(user.getContact().getEmail(), req.getLocale())) {
 							// unique login test
@@ -347,6 +374,75 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 			}
 		};
 		
+		/**
+		 * @apiDescription First connection account check
+		 * @api {get} /api/1/commons/users/signup/firstconnectioncheck Account validation check
+		 * @apiParam {String} code Activation code
+		 * @apiParam {String} Person id
+		 * @apiVersion 0.1.0
+         * @apiName accountCheckHandler
+		 * @apiGroup SignupV API
+		 * @apiSuccess {Object} status {"status", true|false}
+		 * @apiError HTTP_ERROR wrong request's method
+		 */
+		final Handler<Message<String>> firstConnectionCheckHandler = new Handler<Message<String>>() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+			 */
+			@Override
+			public void handle(final Message<String> message) {
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.GET, req.getMethod());
+					Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_ID, PARAM_CODE);
+                    
+					final String id = params.get(PARAM_ID).get(0);
+					final String activationCode = params.get(PARAM_CODE).get(0);
+					
+					final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
+					if(user==null) {
+						utils.sendError(message, ExceptionCodes.BAD_LOGIN, "user.not.exist");
+					} else if(!user.getAccount().isActive()) {
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.not.active");
+					} else if(!user.getAccount().isFirstConnexion()) {
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.first.done");
+					} else if(!user.getAccount().getActivationCode().equals(activationCode)) {
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.activationcode.wrong");
+					} else {
+						message.reply(Json.encode(user));
+						utils.sendStatus(true, message);
+					}
+
+				} catch (final NoSuchMethodException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final EncodeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+				} catch (final QaobeeException e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+				}
+			}
+		};
+		
+		/**
+		 * @apiDescription Finalizes signup 
+		 * @api {get} /api/1/commons/users/signup/finalizesignup Account finalizes signup
+		 * @apiParam {Object} user
+		 * @apiParam {String} activation code
+		 * @apiParam {Object} structure
+		 * @apiParam {Object] activity
+		 * @apiParam 
+		 * @apiVersion 0.1.0
+         * @apiName finalizeSignupHandler
+		 * @apiGroup Signup API
+		 * @apiSuccess {Object} user {"status", true|false}
+		 * @apiError HTTP_ERROR wrong request's method
+		 */
 		final Handler<Message<String>> finalizeSignupHandler = new Handler<Message<String>>() {
 			/*
 			 * (non-Javadoc)
@@ -359,17 +455,90 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 				try {
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
 					final JsonObject jsonReq = new JsonObject(req.getBody());
-					final String id = jsonReq.getString("id");
+					container.logger().error(jsonReq.encodePrettily());
+					
+					// JSon User
+					final JsonObject jsonUser = jsonReq.getObject("user");
+					//TODO : pb sur la date de naissance
+					jsonUser.removeField("birthdate");
+					jsonUser.removeField("activity");
+					
+					User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
+					final String id = jsonUser.getString("_id");
+					// Code activation
 					final String activationCode = jsonReq.getString("code");
 					
+					// JSon Structure
+					final JsonObject jsonStructure = jsonReq.getObject("structure");
+					String structureId = jsonStructure.getString("referencialId");
+					jsonStructure.removeField("referencialId");
+					Structure structure = Json.decodeValue(jsonStructure.encode(), Structure.class);
+					
+					// JSon Activity
+					final String jsonActivity = jsonReq.getString("activity");
+					
 					final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
+					
+					container.logger().error("ID: " + id + ", code:" + activationCode + ", structure: " + jsonStructure + ", activity:" + jsonActivity);
+					
 					if(user==null) {
-						utils.sendStatus(false, message);
-					} else if(user.getAccount().isActive()) {
-						utils.sendStatus(false, message);
+						utils.sendError(message, ExceptionCodes.BAD_LOGIN, "user.not.exist");
+					} else if(!user.getAccount().isActive()) {
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.not.active");
+					} else if(!user.getAccount().isFirstConnexion()) {
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.first.done");
 					} else if(!user.getAccount().getActivationCode().equals(activationCode)) {
-						utils.sendStatus(false, message);
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.activationcode.wrong");
 					} else {
+						// MaJ User
+						user.getAccount().setFirstConnexion(false);
+						user.setContact(userUpdate.getContact());
+						user.setCountry(null);
+						user.setGender(user.getGender());
+						user.setFirstname(userUpdate.getFirstname());
+						user.setName(userUpdate.getName());
+						mongo.save(user);				
+						
+						// Création SandBox
+						SB_SandBox sandbox = new SB_SandBox();
+						sandbox.setActivityId(jsonActivity);
+						sandbox.setOwner(user.get_id());
+						sandbox.setStructureId(structureId);
+						String sandboxId = mongo.save(sandbox);
+						
+						// Création SandBoxCfg
+						SB_SandBoxCfg sandboxCfg = new SB_SandBoxCfg();
+						sandboxCfg.setStructure(structure);
+						sandboxCfg.setSandBox(sandbox);
+						sandboxCfg.setStructure(structure);
+						String sandboxCfgId = mongo.save(sandboxCfg);
+						
+						// Création Effective
+						SB_Effective sandboxEffective = new SB_Effective();
+						sandboxEffective.setSandBoxCfgId(sandboxCfgId);
+						Role role = new Role();
+						role.setCode("player");
+						role.setLabel("Joueur");
+						for(int i=1; i<13 ;i++) {
+							// Création Person
+							SB_Person sandboxPerson = new SB_Person();
+							sandboxPerson.setName("Player " + i);
+							sandboxPerson.setFirstname("Player " + i);
+							String personId = mongo.save(sandboxPerson);
+							Member member = new Member();
+							member.setPersonId(personId);
+							member.setRole(role);
+							sandboxEffective.addMember(member);
+						}
+						String sandboxEffectiveId = mongo.save(sandboxEffective);
+
+						// Création Team
+						SB_Team sandBoxTeam = new SB_Team();
+						sandBoxTeam.setLabel("Team 1");
+						sandBoxTeam.setSandBoxIdCfg(sandboxCfgId);
+						sandBoxTeam.setEffectiveId(sandboxEffectiveId);
+						String sandboxTeamId = mongo.save(sandBoxTeam);
+						
 						message.reply(Json.encode(user));
 						utils.sendStatus(true, message);
 					}
@@ -386,6 +555,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 				}
 			}
 		};
+		
 		/*
 		 * Handlers declaration
 		 */
@@ -393,6 +563,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		vertx.eventBus().registerHandler(LOGIN_TEST, userNameTestHandler);
 		vertx.eventBus().registerHandler(LOGIN_EXISTS, userNameExistHandler);
 		vertx.eventBus().registerHandler(ACCOUNT_CHECK, accountCheckHandler);
+		vertx.eventBus().registerHandler(FIRST_CONNECTION_CHECK, firstConnectionCheckHandler);
 		vertx.eventBus().registerHandler(FINALIZE_SIGNUP, finalizeSignupHandler);
 	}
 }

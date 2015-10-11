@@ -19,6 +19,7 @@
 
 package com.qaobee.hive.business.model.sandbox.effective;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
@@ -94,6 +95,17 @@ public class SB_Effective {
 	 */
 	public void setMembers(List<Member> members) {
 		this.members = members;
+	}
+	
+	/**
+	 * Adds a member to the effective list.
+	 * @param member
+	 */
+	public void addMember(Member member) {
+		if(members==null) {
+			members = new ArrayList<Member>();
+		}
+		members.add(member);
 	}
 
 	/**

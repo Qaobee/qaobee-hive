@@ -23,6 +23,8 @@ package com.qaobee.hive.technical.utils.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+import com.qaobee.hive.business.commons.users.UsersBusiness;
+import com.qaobee.hive.business.commons.users.impl.UsersBusinessImpl;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.tools.PasswordEncryptionServiceImpl;
@@ -66,14 +68,17 @@ public class GuiceModule extends AbstractModule {
                 .annotatedWith(Names.named("mongo.persistor"))
                 .toInstance(mongoConfig);
 
+        // TECHNICAL MODULES
         bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
         bind(AuthCheck.class).to(AuthCheckImpl.class).in(Singleton.class);
-//        bind(SeasonCheck.class).to(SeasonCheckImpl.class).in(Singleton.class);
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(PersonUtils.class).to(PersonUtilsImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
         bind(Files.class).to(FIlesImpl.class).in(Singleton.class);
+        
+        // BUSINESS MODULES
+        bind(UsersBusiness.class).to(UsersBusinessImpl.class).in(Singleton.class);
     }
 }

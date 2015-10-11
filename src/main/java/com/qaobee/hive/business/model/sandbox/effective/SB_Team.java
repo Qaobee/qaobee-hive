@@ -47,6 +47,9 @@ public class SB_Team {
 	/** the sandbox's id */
 	private String sandBoxIdCfg;
 	
+	/** Effective ID */
+	private String effectiveId;
+	
 	/** 
 	 * List labels
 	 */
@@ -157,6 +160,14 @@ public class SB_Team {
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
+	}
+
+	public String getEffectiveId() {
+		return effectiveId;
+	}
+
+	public void setEffectiveId(String effectiveId) {
+		this.effectiveId = effectiveId;
 	}
 
 }
