@@ -19,22 +19,6 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
@@ -62,9 +46,22 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The Class SignupVerticle.
@@ -332,7 +329,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		 * @apiDescription Account validation check
 		 * @api {get} /api/1/commons/users/signup/accountcheck Account validation check
 		 * @apiParam {String} code Activation code
-		 * @apiParam {String} Person id
+		 * @apiParam {String} id Person id
 		 * @apiVersion 0.1.0
          * @apiName accountCheckHandler
 		 * @apiGroup SignupV API
@@ -378,7 +375,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		 * @apiDescription First connection account check
 		 * @api {get} /api/1/commons/users/signup/firstconnectioncheck Account validation check
 		 * @apiParam {String} code Activation code
-		 * @apiParam {String} Person id
+		 * @apiParam {String} id Person id
 		 * @apiVersion 0.1.0
          * @apiName accountCheckHandler
 		 * @apiGroup SignupV API
@@ -435,7 +432,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 		 * @apiParam {Object} user
 		 * @apiParam {String} activation code
 		 * @apiParam {Object} structure
-		 * @apiParam {Object] activity
+		 * @apiParam {Object} activity
 		 * @apiParam 
 		 * @apiVersion 0.1.0
          * @apiName finalizeSignupHandler
