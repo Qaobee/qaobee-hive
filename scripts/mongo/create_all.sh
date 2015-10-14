@@ -4,9 +4,9 @@ echo '****************************************************'
 echo 'Script de creation des collections dans la base Hive'
 echo '****************************************************'
 
-pathFile=`find . -name create_all.sh`
+pathFile='find . -name create_all.sh'
 echo $pathFile
-pathDir=`expr match "$pathFile" '\(.*\)\/create_all.sh'`
+pathDir='expr match "$pathFile" '\(.*\)\/create_all.sh''
 echo "Change directory to : $pathDir"
 cd $pathDir
 echo `pwd`
