@@ -401,13 +401,13 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 					
 					final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
 					if(user==null) {
-						utils.sendError(message, ExceptionCodes.BAD_LOGIN, "user.not.exist");
-					} else if(!user.getAccount().isActive()) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.not.active");
+						utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
+					} else if(user.getAccount().isActive()) {
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.already.active", req.getLocale()));
 					} else if(!user.getAccount().isFirstConnexion()) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.first.done");
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.first.done", req.getLocale()));
 					} else if(!user.getAccount().getActivationCode().equals(activationCode)) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.activationcode.wrong");
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
 					} else {
 						message.reply(Json.encode(user));
 						utils.sendStatus(true, message);
@@ -459,6 +459,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 					//TODO : pb sur la date de naissance
 					jsonUser.removeField("birthdate");
 					jsonUser.removeField("activity");
+					jsonUser.removeField("nationality");
 					
 					User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
 					final String id = jsonUser.getString("_id");
@@ -479,15 +480,16 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 					container.logger().error("ID: " + id + ", code:" + activationCode + ", structure: " + jsonStructure + ", activity:" + jsonActivity);
 					
 					if(user==null) {
-						utils.sendError(message, ExceptionCodes.BAD_LOGIN, "user.not.exist");
-					} else if(!user.getAccount().isActive()) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.not.active");
+						utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
+					} else if(user.getAccount().isActive()) {
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.already.active", req.getLocale()));
 					} else if(!user.getAccount().isFirstConnexion()) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.first.done");
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.first.done", req.getLocale()));
 					} else if(!user.getAccount().getActivationCode().equals(activationCode)) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, "user.activationcode.wrong");
+						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
 					} else {
 						// MaJ User
+						user.getAccount().setActive(true);
 						user.getAccount().setFirstConnexion(false);
 						user.setContact(userUpdate.getContact());
 						user.setCountry(null);
@@ -549,6 +551,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 				} catch (final QaobeeException e) {
 					container.logger().error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+				} catch (final Exception e) {
+					container.logger().error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
 				}
 			}
 		};
