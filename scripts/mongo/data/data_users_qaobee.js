@@ -30,7 +30,7 @@
  */
 //////////////////////////////////////////////////////////
 /* 
- * Vidage de la collection User
+ * Vidage de la collection User qaobee
  */
 db.User.remove({
     "_id": {
@@ -134,7 +134,7 @@ db.SB_SandBox.insert({
 db.SB_SandBoxCfg.remove({"_id": "561ec092409937a6b439d4e8"});
 
 /***************************************************************
- * Alimentation SB_SandBoxCfg Cesson Handball
+ * Alimentation SB_SandBoxCfg CKE
  * *************************************************************
  */
 db.SB_SandBoxCfg.insert({
@@ -213,9 +213,9 @@ db.SB_Effective.insert({
 });
 
 
-/***************************************************************
-/***************************************************************/
-
+/*
+ * Alimentation collection USER : JRO
+ */
 db.User.insert({
     "_id" : "b50b3325-fdbd-41bf-bda4-81c827982002",
     "avatar" : null,
@@ -276,9 +276,104 @@ db.User.insert({
     "timestamp" : NumberLong(1444854317672),
     "gender" : null,
     "notifications" : null,
-    "effectiveDefault" : null
+    "effectiveDefault" : "56202514758f1cc6a4753306"
 });
 
+/*
+ * Vidage de la collection SB_SandBox JRO
+ */
+db.SB_SandBox.remove({"_id": "56202363758f1cc6a4753304"});
+
+/***************************************************************
+ * Alimentation SB_SandBox JRO
+ * *************************************************************
+ */
+db.SB_SandBox.insert({
+    "_id": "56202363758f1cc6a4753304",
+    "activityId": "ACT-HAND",
+    "owner": "b50b3325-fdbd-41bf-bda4-81c827982002",
+    "sandboxCfgId": "5620240c758f1cc6a4753305"
+});
+
+/*
+ * Vidage de la collection SB_SandBoxCfg JRO
+ */
+db.SB_SandBoxCfg.remove({"_id": "5620240c758f1cc6a4753305"});
+
+/***************************************************************
+ * Alimentation SB_SandBoxCfg JRO
+ * *************************************************************
+ */
+db.SB_SandBoxCfg.insert({
+    "_id": "5620240c758f1cc6a4753305",
+    "activity": {
+        "_id": "ACT-HAND",
+        "code": "ACT-HAND",
+        "label": "admin.settings.activity.handball.label",
+        "enable": true,
+        "activityType": "TEAM_SPORT"
+    },
+    "sandbox": {
+        "_id": "56202363758f1cc6a4753304",
+        "activityId": "ACT-HAND",
+        "owner": "b50b3325-fdbd-41bf-bda4-81c827982002"
+    },
+    "members": [],
+    "season": {
+        "_id": "558b0ceaf9285df5b7553fc6",
+        "code": "SAI-2015",
+        "label": "SAISON 2015-2016",
+        "startDate": 1435701600000,
+        "endDate": 1467237600000,
+        "activityId": "ACT-HAND",
+        "countryId": "CNTR-250-FR-FRA"
+    },
+    "structure": {
+        "_id": "541168295971d35c1f2d1b5f",
+        "label": "CLUB JRO HB",
+        "acronym": "JROHB",
+        "activity": {
+            "_id": "ACT-HAND",
+            "code": "ACT-HAND",
+            "label": "admin.settings.activity.handball.label",
+            "activated": true,
+            "activityType": "TEAM_SPORT"
+        },
+        "country": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "France", "local": "fr"},
+        "avatar": null
+    }
+});
+
+//////////////////////////////////////////////////////////
+/* 
+ * Vidage de la collection SB_Effective (JRO)
+ */
+db.SB_Effective.remove({ "_id" : "56202514758f1cc6a4753306"});
+
+/** ************************************************************* */
+/*
+ * Alimentation SB_Effective (JRO)
+ */
+/** ************************************************************* */
+db.SB_Effective.insert({
+    "_id" : "56202514758f1cc6a4753306",
+    "sandBoxCfgId" : "5620240c758f1cc6a4753305",
+    "label": "JRO A",
+    "categoryAge" : {
+        "code" : "sen",
+        "label" : "Senior Gars",
+        "ageMax" : NumberInt(150),
+        "ageMin" : NumberInt(18),
+        "genre" : "Homme",
+        "order" : NumberInt(1)
+    },
+    "members" : []
+});
+
+
+/*
+ * Alimentation collection USER : FIS
+ */
 db.User.insert({
     "_id" : "b50b3325-fdbd-41bf-bda4-81c827982003",
     "avatar" : null,
@@ -339,9 +434,103 @@ db.User.insert({
     "timestamp" : NumberLong(1444854317672),
     "gender" : null,
     "notifications" : null,
-    "effectiveDefault" : null
+    "effectiveDefault" : "56202720758f1cc6a4753309"
 });
 
+/*
+ * Vidage de la collection SB_SandBox FIS
+ */
+db.SB_SandBox.remove({"_id": "562026b8758f1cc6a4753307"});
+
+/***************************************************************
+ * Alimentation SB_SandBox FIS
+ * *************************************************************
+ */
+db.SB_SandBox.insert({
+    "_id": "562026b8758f1cc6a4753307",
+    "activityId": "ACT-HAND",
+    "owner": "b50b3325-fdbd-41bf-bda4-81c827982003",
+    "sandboxCfgId": "562026e7758f1cc6a4753308"
+});
+
+/*
+ * Vidage de la collection SB_SandBoxCfg FIS
+ */
+db.SB_SandBoxCfg.remove({"_id": "562026e7758f1cc6a4753308"});
+
+/***************************************************************
+ * Alimentation SB_SandBoxCfg FIS
+ * *************************************************************
+ */
+db.SB_SandBoxCfg.insert({
+    "_id": "562026e7758f1cc6a4753308",
+    "activity": {
+        "_id": "ACT-HAND",
+        "code": "ACT-HAND",
+        "label": "admin.settings.activity.handball.label",
+        "enable": true,
+        "activityType": "TEAM_SPORT"
+    },
+    "sandbox": {
+        "_id": "562026b8758f1cc6a4753307",
+        "activityId": "ACT-HAND",
+        "owner": "b50b3325-fdbd-41bf-bda4-81c827982003"
+    },
+    "members": [],
+    "season": {
+        "_id": "558b0ceaf9285df5b7553fc6",
+        "code": "SAI-2015",
+        "label": "SAISON 2015-2016",
+        "startDate": 1435701600000,
+        "endDate": 1467237600000,
+        "activityId": "ACT-HAND",
+        "countryId": "CNTR-250-FR-FRA"
+    },
+    "structure": {
+        "_id": "5620281c758f1cc6a475330c",
+        "label": "CLUB FIS HB",
+        "acronym": "FISHB",
+        "activity": {
+            "_id": "ACT-HAND",
+            "code": "ACT-HAND",
+            "label": "admin.settings.activity.handball.label",
+            "activated": true,
+            "activityType": "TEAM_SPORT"
+        },
+        "country": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "France", "local": "fr"},
+        "avatar": null
+    }
+});
+
+//////////////////////////////////////////////////////////
+/* 
+ * Vidage de la collection SB_Effective (FIS)
+ */
+db.SB_Effective.remove({ "_id" : "56202720758f1cc6a4753309"});
+
+/** ************************************************************* */
+/*
+ * Alimentation SB_Effective (FIS)
+ */
+/** ************************************************************* */
+db.SB_Effective.insert({
+    "_id" : "56202720758f1cc6a4753309",
+    "sandBoxCfgId" : "562026e7758f1cc6a4753308",
+    "label": "FIS A",
+    "categoryAge" : {
+        "code" : "sen",
+        "label" : "Senior Gars",
+        "ageMax" : NumberInt(150),
+        "ageMin" : NumberInt(18),
+        "genre" : "Homme",
+        "order" : NumberInt(1)
+    },
+    "members" : []
+});
+
+/*
+ * Alimentation collection USER : XMA
+ */
 db.User.insert({
     "_id" : "b50b3325-fdbd-41bf-bda4-81c827982004",
     "avatar" : null,
@@ -402,9 +591,103 @@ db.User.insert({
     "timestamp" : NumberLong(1444854317672),
     "gender" : null,
     "notifications" : null,
-    "effectiveDefault" : null
+    "effectiveDefault" : "5620284d758f1cc6a475330d"
 });
 
+/*
+ * Vidage de la collection SB_SandBox XMA
+ */
+db.SB_SandBox.remove({"_id": "56202805758f1cc6a475330a"});
+
+/***************************************************************
+ * Alimentation SB_SandBox XMA
+ * *************************************************************
+ */
+db.SB_SandBox.insert({
+    "_id": "56202805758f1cc6a475330a",
+    "activityId": "ACT-HAND",
+    "owner": "b50b3325-fdbd-41bf-bda4-81c827982004",
+    "sandboxCfgId": "5620281c758f1cc6a475330b"
+});
+
+/*
+ * Vidage de la collection SB_SandBoxCfg XMA
+ */
+db.SB_SandBoxCfg.remove({"_id": "5620281c758f1cc6a475330b"});
+
+/***************************************************************
+ * Alimentation SB_SandBoxCfg XMA
+ * *************************************************************
+ */
+db.SB_SandBoxCfg.insert({
+    "_id": "5620281c758f1cc6a475330b",
+    "activity": {
+        "_id": "ACT-HAND",
+        "code": "ACT-HAND",
+        "label": "admin.settings.activity.handball.label",
+        "enable": true,
+        "activityType": "TEAM_SPORT"
+    },
+    "sandbox": {
+        "_id": "56202805758f1cc6a475330a",
+        "activityId": "ACT-HAND",
+        "owner": "b50b3325-fdbd-41bf-bda4-81c827982004"
+    },
+    "members": [],
+    "season": {
+        "_id": "558b0ceaf9285df5b7553fc6",
+        "code": "SAI-2015",
+        "label": "SAISON 2015-2016",
+        "startDate": 1435701600000,
+        "endDate": 1467237600000,
+        "activityId": "ACT-HAND",
+        "countryId": "CNTR-250-FR-FRA"
+    },
+    "structure": {
+        "_id": "5620281c758f1cc6a475330c",
+        "label": "CLUB XMA HB",
+        "acronym": "XMAHB",
+        "activity": {
+            "_id": "ACT-HAND",
+            "code": "ACT-HAND",
+            "label": "admin.settings.activity.handball.label",
+            "activated": true,
+            "activityType": "TEAM_SPORT"
+        },
+        "country": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "France", "local": "fr"},
+        "avatar": null
+    }
+});
+
+//////////////////////////////////////////////////////////
+/* 
+ * Vidage de la collection SB_Effective (XMA)
+ */
+db.SB_Effective.remove({ "_id" : "5620284d758f1cc6a475330d"});
+
+/** ************************************************************* */
+/*
+ * Alimentation SB_Effective (XMA)
+ */
+/** ************************************************************* */
+db.SB_Effective.insert({
+    "_id" : "5620284d758f1cc6a475330d",
+    "sandBoxCfgId" : "5620281c758f1cc6a475330b",
+    "label": "XMA A",
+    "categoryAge" : {
+        "code" : "sen",
+        "label" : "Senior Gars",
+        "ageMax" : NumberInt(150),
+        "ageMin" : NumberInt(18),
+        "genre" : "Homme",
+        "order" : NumberInt(1)
+    },
+    "members" : []
+});
+
+/*
+ * Alimentation collection USER : PPE
+ */
 db.User.insert({
     "_id" : "b50b3325-fdbd-41bf-bda4-81c827982005",
     "avatar" : null,
@@ -465,9 +748,103 @@ db.User.insert({
     "timestamp" : NumberLong(1444854317672),
     "gender" : null,
     "notifications" : null,
-    "effectiveDefault" : null
+    "effectiveDefault" : "5620290f758f1cc6a4753320"
 });
 
+/*
+ * Vidage de la collection SB_SandBox PPE
+ */
+db.SB_SandBox.remove({"_id": "562028bd758f1cc6a475330e"});
+
+/***************************************************************
+ * Alimentation SB_SandBox PPE
+ * *************************************************************
+ */
+db.SB_SandBox.insert({
+    "_id": "562028bd758f1cc6a475330e",
+    "activityId": "ACT-HAND",
+    "owner": "b50b3325-fdbd-41bf-bda4-81c827982005",
+    "sandboxCfgId": "562028d9758f1cc6a475330f"
+});
+
+/*
+ * Vidage de la collection SB_SandBoxCfg PPE
+ */
+db.SB_SandBoxCfg.remove({"_id": "562028d9758f1cc6a475330f"});
+
+/***************************************************************
+ * Alimentation SB_SandBoxCfg PPE
+ * *************************************************************
+ */
+db.SB_SandBoxCfg.insert({
+    "_id": "562028d9758f1cc6a475330f",
+    "activity": {
+        "_id": "ACT-HAND",
+        "code": "ACT-HAND",
+        "label": "admin.settings.activity.handball.label",
+        "enable": true,
+        "activityType": "TEAM_SPORT"
+    },
+    "sandbox": {
+        "_id": "562028bd758f1cc6a475330e",
+        "activityId": "ACT-HAND",
+        "owner": "b50b3325-fdbd-41bf-bda4-81c827982005"
+    },
+    "members": [],
+    "season": {
+        "_id": "558b0ceaf9285df5b7553fc6",
+        "code": "SAI-2015",
+        "label": "SAISON 2015-2016",
+        "startDate": 1435701600000,
+        "endDate": 1467237600000,
+        "activityId": "ACT-HAND",
+        "countryId": "CNTR-250-FR-FRA"
+    },
+    "structure": {
+        "_id": "5620281c758f1cc6a475330c",
+        "label": "CLUB PPE HB",
+        "acronym": "PPEHB",
+        "activity": {
+            "_id": "ACT-HAND",
+            "code": "ACT-HAND",
+            "label": "admin.settings.activity.handball.label",
+            "activated": true,
+            "activityType": "TEAM_SPORT"
+        },
+        "country": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "France", "local": "fr"},
+        "avatar": null
+    }
+});
+
+//////////////////////////////////////////////////////////
+/* 
+ * Vidage de la collection SB_Effective (PPE)
+ */
+db.SB_Effective.remove({ "_id" : "5620290f758f1cc6a4753320"});
+
+/** ************************************************************* */
+/*
+ * Alimentation SB_Effective (PPE)
+ */
+/** ************************************************************* */
+db.SB_Effective.insert({
+    "_id" : "5620290f758f1cc6a4753320",
+    "sandBoxCfgId" : "562028d9758f1cc6a475330f",
+    "label": "PPE A",
+    "categoryAge" : {
+        "code" : "sen",
+        "label" : "Senior Gars",
+        "ageMax" : NumberInt(150),
+        "ageMin" : NumberInt(18),
+        "genre" : "Homme",
+        "order" : NumberInt(1)
+    },
+    "members" : []
+});
+
+/*
+ * Alimentation collection USER : MGA
+ */
 db.User.insert({
     "_id" : "b50b3325-fdbd-41bf-bda4-81c827982006",
     "avatar" : null,
@@ -528,5 +905,96 @@ db.User.insert({
     "timestamp" : NumberLong(1444854317672),
     "gender" : null,
     "notifications" : null,
-    "effectiveDefault" : null
+    "effectiveDefault" : "56202974758f1cc6a4753323"
+});
+
+/*
+ * Vidage de la collection SB_SandBox MGA
+ */
+db.SB_SandBox.remove({"_id": "5620294b758f1cc6a4753321"});
+
+/***************************************************************
+ * Alimentation SB_SandBox MGA
+ * *************************************************************
+ */
+db.SB_SandBox.insert({
+    "_id": "5620294b758f1cc6a4753321",
+    "activityId": "ACT-HAND",
+    "owner": "b50b3325-fdbd-41bf-bda4-81c827982006",
+    "sandboxCfgId": "5620295f758f1cc6a4753322"
+});
+
+/*
+ * Vidage de la collection SB_SandBoxCfg MGA
+ */
+db.SB_SandBoxCfg.remove({"_id": "5620295f758f1cc6a4753322"});
+
+/***************************************************************
+ * Alimentation SB_SandBoxCfg MGA
+ * *************************************************************
+ */
+db.SB_SandBoxCfg.insert({
+    "_id": "5620295f758f1cc6a4753322",
+    "activity": {
+        "_id": "ACT-HAND",
+        "code": "ACT-HAND",
+        "label": "admin.settings.activity.handball.label",
+        "enable": true,
+        "activityType": "TEAM_SPORT"
+    },
+    "sandbox": {
+        "_id": "5620294b758f1cc6a4753321",
+        "activityId": "ACT-HAND",
+        "owner": "b50b3325-fdbd-41bf-bda4-81c827982006"
+    },
+    "members": [],
+    "season": {
+        "_id": "558b0ceaf9285df5b7553fc6",
+        "code": "SAI-2015",
+        "label": "SAISON 2015-2016",
+        "startDate": 1435701600000,
+        "endDate": 1467237600000,
+        "activityId": "ACT-HAND",
+        "countryId": "CNTR-250-FR-FRA"
+    },
+    "structure": {
+        "_id": "5620281c758f1cc6a475330c",
+        "label": "CLUB MGA HB",
+        "acronym": "MGAHB",
+        "activity": {
+            "_id": "ACT-HAND",
+            "code": "ACT-HAND",
+            "label": "admin.settings.activity.handball.label",
+            "activated": true,
+            "activityType": "TEAM_SPORT"
+        },
+        "country": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "France", "local": "fr"},
+        "avatar": null
+    }
+});
+
+//////////////////////////////////////////////////////////
+/* 
+ * Vidage de la collection SB_Effective (MGA)
+ */
+db.SB_Effective.remove({ "_id" : "56202974758f1cc6a4753323"});
+
+/** ************************************************************* */
+/*
+ * Alimentation SB_Effective (MGA)
+ */
+/** ************************************************************* */
+db.SB_Effective.insert({
+    "_id" : "56202974758f1cc6a4753323",
+    "sandBoxCfgId" : "562028d9758f1cc6a475330f",
+    "label": "MGA A",
+    "categoryAge" : {
+        "code" : "sen",
+        "label" : "Senior Gars",
+        "ageMax" : NumberInt(150),
+        "ageMin" : NumberInt(18),
+        "genre" : "Homme",
+        "order" : NumberInt(1)
+    },
+    "members" : []
 });
