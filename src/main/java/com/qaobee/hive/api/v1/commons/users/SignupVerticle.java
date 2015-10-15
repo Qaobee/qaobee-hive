@@ -403,11 +403,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 					if(user==null) {
 						utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
 					} else if(user.getAccount().isActive()) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.already.active", req.getLocale()));
+						utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
 					} else if(!user.getAccount().isFirstConnexion()) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.first.done", req.getLocale()));
+						utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
 					} else if(!user.getAccount().getActivationCode().equals(activationCode)) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
+						utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
 					} else {
 						message.reply(Json.encode(user));
 						utils.sendStatus(true, message);
@@ -482,11 +482,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 					if(user==null) {
 						utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
 					} else if(user.getAccount().isActive()) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.already.active", req.getLocale()));
+						utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
 					} else if(!user.getAccount().isFirstConnexion()) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.first.done", req.getLocale()));
+						utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
 					} else if(!user.getAccount().getActivationCode().equals(activationCode)) {
-						utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
+						utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
 					} else {
 						// MaJ User
 						user.getAccount().setActive(true);

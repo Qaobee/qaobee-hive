@@ -56,7 +56,9 @@ public enum ExceptionCodes {
 	/** The json exception. */
 	JSON_EXCEPTION(500),
 	/** No document returned by request */
-	DB_NO_ROW_RETURNED(500);
+	DB_NO_ROW_RETURNED(500),
+	/** Business Error */
+	BUSINESS_ERROR(200);
 
 	/** The code. */
 	private int code;
