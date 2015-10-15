@@ -209,7 +209,7 @@ db.SB_Effective.insert({
         "genre" : "Homme",
         "order" : NumberInt(1)
     },
-    "members" : null
+    "members" : []
 });
 
 
