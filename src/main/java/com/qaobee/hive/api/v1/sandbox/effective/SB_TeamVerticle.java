@@ -51,7 +51,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
     /**
      * Handler to get a set of team
      */
-    public static final String GET_LIST = Module.VERSION + ".sandbox.effective.team.List";  
+    public static final String GET_LIST = Module.VERSION + ".sandbox.effective.team.list";
     /**
      * Handler to add a team.
      */
