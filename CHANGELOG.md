@@ -1,7 +1,10 @@
 # CHANGELOG
 ---
 
+## 2015-10-20
+
 ## 2015-10-16
+> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:14 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ccf0da21bf3d3ccd2ed8686778bc42863036942c)*)
 > + cohérence de typo (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/98470181445070c613ce7c83a2cee75614f4fed7)*)
 
 ## 2015-10-15
@@ -12,10 +15,10 @@
 
 ## 2015-10-13
 > + Signup : correctifs (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:16 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/401ef0dc0ccde945d5eae96b23bc05582198e14a)*)
-> + Signup : màj messages d'erreur (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:25 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/7903deeee85e57948c6114ace702d14e74276cb3)*)
-> + Signup : Correction fichier params.properties (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:07 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a68168b91de07335017e5763cdd8eb65a11110fc)*)
 
 ## 2015-10-12
+> + Signup : màj messages d'erreur (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:25 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/7903deeee85e57948c6114ace702d14e74276cb3)*)
+> + Signup : Correction fichier params.properties (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:07 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a68168b91de07335017e5763cdd8eb65a11110fc)*)
 > + apiDoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:42 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bb2cb9c45e1246a44e88bec503b470b4a7dc2d1a)*)
 
 ## 2015-10-11
@@ -31,10 +34,10 @@
 
 ## 2015-09-20
 > + Signup (*par [Jerome ROUE](jerome.roue@gmail.com) à 20:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/c97bd1a3a6a2276cc8f88a65b25af068be95cfec)*)
-> + scripts de création bdd avec purge (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/5e9c8c3d36159ca958f30c0a6bd28b8e8a09a77e)*)
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:49 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/857bb0e839de5296759c207b820825565b988788)*)
 
 ## 2015-09-15
+> + scripts de création bdd avec purge (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/5e9c8c3d36159ca958f30c0a6bd28b8e8a09a77e)*)
+> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:49 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/857bb0e839de5296759c207b820825565b988788)*)
 > + Ajout Nb joueur par activité (*par [Christophe Kervella](ch.kervella@gmail.com) à 18:40 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/866ec742570528d5b1ed8afecf4babffebad1a79)*)
 > + Amélioration jeu de données (*par [Christophe Kervella](ch.kervella@gmail.com) à 18:40 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ca7d805f88e9fc0027de68b184eba4ed64b3ef4c)*)
 
@@ -73,11 +76,3 @@
 > + Evolution SB_Event (*par [Christophe Kervella](ch.kervella@gmail.com) à 22:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/45514a50696ac55439f446f9328b4141744bb594)*)
 
 ## 2015-08-19
-> + apidoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:02 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f1d0d768aa817157baa8b652f361f9c3f1860fdf)*)
-
-## 2015-08-17
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 11:08 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/998d20747a52a45481b656e4ad32a55383561fdd)*)
-> + apidoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 11:02 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0d5fa50ae9f1a1891ad82553df1a61ffc11a0ce5)*)
-> + jdk7 (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/70913d5caae1965c2987e6e4d86f487623b50a22)*)
-> + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:52 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/5b8145fb61a4184c2328f1f88c890e2372c7c5a1)*)
-> + jdk7 (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:51 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/5815f78d828e01ab6e30f9aa9051e1521413d3b4)*)
