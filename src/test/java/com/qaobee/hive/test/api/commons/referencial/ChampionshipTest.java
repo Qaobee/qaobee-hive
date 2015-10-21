@@ -18,20 +18,19 @@
  */
 package com.qaobee.hive.test.api.commons.referencial;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-
 import com.qaobee.hive.api.v1.commons.referencial.ChampionshipVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import org.junit.Assert;
+import org.junit.Test;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author jerome
