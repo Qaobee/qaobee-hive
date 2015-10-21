@@ -23,6 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
+import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
@@ -260,6 +261,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 											plan.setStatus("open");
 											plan.setAmountPaid(Long.parseLong(Params.getString("plan." + plan.getLevelPlan().name() + ".price")) / 100l);
 											plan.setStartPeriodDate(System.currentTimeMillis());
+											JsonObject activity = mongo.getById(plan.getActivity().get_id(), Activity.class);
+
+											plan.setActivity(Json.<Activity>decodeValue(activity.encode(), Activity.class));
 											user.getAccount().getListPlan().add(plan);
 
 											final String id = mongo.save(personUtils.prepareUpsert(user));
@@ -452,7 +456,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 				try {
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
 					final JsonObject jsonReq = new JsonObject(req.getBody());
-					container.logger().error(jsonReq.encodePrettily());
+					container.logger().info(jsonReq.encodePrettily());
 					
 					// JSon User
 					final JsonObject jsonUser = jsonReq.getObject("user");
@@ -476,8 +480,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 					final String jsonActivity = jsonReq.getString("activity");
 					
 					final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
-					
-					container.logger().error("ID: " + id + ", code:" + activationCode + ", structure: " + jsonStructure + ", activity:" + jsonActivity);
+
+					container.logger().info("ID: " + id + ", code:" + activationCode + ", structure: " + jsonStructure + ", activity:" + jsonActivity);
 					
 					if(user==null) {
 						utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
@@ -490,7 +494,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 					} else {
 						// MaJ User
 						user.getAccount().setActive(true);
-						user.getAccount().setFirstConnexion(false);
+						user.getAccount().setFirstConnexion(true);
 						user.setContact(userUpdate.getContact());
 						user.setCountry(null);
 						user.setGender(user.getGender());
@@ -537,7 +541,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 						sandBoxTeam.setSandBoxIdCfg(sandboxCfgId);
 						sandBoxTeam.setEffectiveId(sandboxEffectiveId);
 						String sandboxTeamId = mongo.save(sandBoxTeam);
-						
+						user.setEffectiveDefault(sandboxEffectiveId);
 						message.reply(Json.encode(user));
 						utils.sendStatus(true, message);
 					}
