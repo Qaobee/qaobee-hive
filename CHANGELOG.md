@@ -1,10 +1,19 @@
 # CHANGELOG
 ---
 
+## 2015-10-21
+
 ## 2015-10-20
+> + casse (*par [Xavier MARIN](marin.xavier@gmail.com) à 18:49 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/24e261ed3e87aa17553f72622f5f5b15e144950f)*)
+> + conf de prod (*par [Xavier MARIN](marin.xavier@gmail.com) à 18:48 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/11e911b072b9efbe3ab255e07f2a06d08b64ff24)*)
+> + casse (*par [Xavier MARIN](marin.xavier@gmail.com) à 18:48 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1e25dbf2b1a3d2fcc3dfda73890edd7f9d904f9e)*)
+> + Conf de prod (*par [Xavier MARIN](xavier.marin@arkea.com) à 14:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a2c15344a21f8ffa4cd2507b115851a19dec1a09)*)
+> + casse (*par [Xavier MARIN](xavier.marin@arkea.com) à 12:03 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1e6594c5ca2dc46f0e697b154f5032dd060dc1f1)*)
+> + url prod (*par [Xavier MARIN](xavier.marin@arkea.com) à 11:52 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f29cdfb541fc11f067ed7383889d206eedb843c4)*)
+> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:48 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/67a8c947f443cc520e8a248f7f1f001bfd9ac041)*)
+> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:14 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ccf0da21bf3d3ccd2ed8686778bc42863036942c)*)
 
 ## 2015-10-16
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:14 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ccf0da21bf3d3ccd2ed8686778bc42863036942c)*)
 > + cohérence de typo (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/98470181445070c613ce7c83a2cee75614f4fed7)*)
 
 ## 2015-10-15
@@ -15,10 +24,10 @@
 
 ## 2015-10-13
 > + Signup : correctifs (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:16 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/401ef0dc0ccde945d5eae96b23bc05582198e14a)*)
-
-## 2015-10-12
 > + Signup : màj messages d'erreur (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:25 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/7903deeee85e57948c6114ace702d14e74276cb3)*)
 > + Signup : Correction fichier params.properties (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:07 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a68168b91de07335017e5763cdd8eb65a11110fc)*)
+
+## 2015-10-12
 > + apiDoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:42 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bb2cb9c45e1246a44e88bec503b470b4a7dc2d1a)*)
 
 ## 2015-10-11
@@ -31,13 +40,13 @@
 > + Branchement du module de mail (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:51 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ed3c6ba62e36b996eaba9383edf596834a989098)*)
 
 ## 2015-09-29
-
-## 2015-09-20
 > + Signup (*par [Jerome ROUE](jerome.roue@gmail.com) à 20:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/c97bd1a3a6a2276cc8f88a65b25af068be95cfec)*)
 
-## 2015-09-15
+## 2015-09-20
 > + scripts de création bdd avec purge (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/5e9c8c3d36159ca958f30c0a6bd28b8e8a09a77e)*)
 > + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:49 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/857bb0e839de5296759c207b820825565b988788)*)
+
+## 2015-09-15
 > + Ajout Nb joueur par activité (*par [Christophe Kervella](ch.kervella@gmail.com) à 18:40 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/866ec742570528d5b1ed8afecf4babffebad1a79)*)
 > + Amélioration jeu de données (*par [Christophe Kervella](ch.kervella@gmail.com) à 18:40 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ca7d805f88e9fc0027de68b184eba4ed64b3ef4c)*)
 
@@ -46,9 +55,9 @@
 > + List team + Event (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ee109346afc93ab87a08833550be28da00b04106)*)
 
 ## 2015-09-08
+> + renommage car en écart par rapport à l'API REST (*par [Jerome ROUE](jerome.roue@gmail.com) à 20:03 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/22fda764fe4721778367917af4d247378e2b91a3)*)
 
 ## 2015-09-06
-> + renommage car en écart par rapport à l'API REST (*par [Jerome ROUE](jerome.roue@gmail.com) à 20:03 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/22fda764fe4721778367917af4d247378e2b91a3)*)
 
 ## 2015-09-03
 > + Event Bug filtre effectiveId et teamId (*par [Christophe Kervella](ch.kervella@gmail.com) à 12:17 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4810382c6231ab967a8ca7de7323674239d96d69)*)
@@ -68,11 +77,9 @@
 ## 2015-08-23
 > + Evolution Event (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0f00af22732926568813bde2cd6d8fcc1a1c367f)*)
 > + Evolution Event (*par [Christophe Kervella](ch.kervella@gmail.com) à 22:29 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/339285cc95ce67f0f3a15054215e3265e10facd7)*)
+> + Event : Evolution document (*par [Christophe Kervella](ch.kervella@gmail.com) à 19:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f1751c2acac6d41841907ce0603663adaa4bf00e)*)
 
 ## 2015-08-20
-> + Event : Evolution document (*par [Christophe Kervella](ch.kervella@gmail.com) à 19:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f1751c2acac6d41841907ce0603663adaa4bf00e)*)
 > + Evolution SB_Event II le retour (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:37 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/35ba2ac5f7b93f2df2c2fed6850f936a7fb45af6)*)
 > + MAJ Script (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:04 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1908dc77101006e83cd216c006101a62476ea7cf)*)
 > + Evolution SB_Event (*par [Christophe Kervella](ch.kervella@gmail.com) à 22:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/45514a50696ac55439f446f9328b4141744bb594)*)
-
-## 2015-08-19
