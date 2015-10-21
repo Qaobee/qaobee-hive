@@ -7,7 +7,7 @@
     echo -e "${green}****************************************************"
     echo -e "Running build"
     echo -e "****************************************************${NC}"
-    ./gradlew clean build test apidoc javadoc modZip
+    ./gradlew -Penv=prod clean build test apidoc javadoc modZip
     STATUS=$?
     if [ $STATUS -eq 0 ]; then
         echo -e "${green}****************************************************"
