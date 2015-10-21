@@ -103,12 +103,19 @@ sourceSets {
 }
 
 task copyMod( type:Copy, dependsOn: 'classes', description: 'Assemble the module into the local mods directory' ) {
+    def environment = project.hasProperty('env') ? env : 'dev'
     into "build/mods/$moduleName"
     from compileGroovy
     from compileJava
     from 'src/main/resources'
+
     into( 'lib' ) {
         from configurations.compile
+    }
+    println 'Environnement : ' + environment
+    if(environment == 'prod') {
+        from 'src/main/resources/PROD'
+        into "build/mods/$moduleName"
     }
 }
 
