@@ -48,7 +48,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
  *
  */
 @DeployableVerticle(isWorker=true)
-public class ChampionShipVerticle  extends AbstractGuiceVerticle {
+public class ChampionshipVerticle extends AbstractGuiceVerticle {
 	
 	
 	/** Handler to get a set of events */
