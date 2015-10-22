@@ -504,7 +504,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     } else {
                         // MaJ User
                         user.getAccount().setActive(true);
-                        user.getAccount().setFirstConnexion(true);
+                        user.getAccount().setFirstConnexion(false);
                         user.setContact(userUpdate.getContact());
                         user.setCountry(null);
                         user.setGender(user.getGender());

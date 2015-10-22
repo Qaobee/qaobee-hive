@@ -35,6 +35,8 @@ public class SignupTest extends VertxJunitSupport {
 	
 	@Test
     public void registerOk() {
+		populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+		
 		final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.PUT);
@@ -54,6 +56,9 @@ public class SignupTest extends VertxJunitSupport {
         // Plan
         jsonObject = new JsonObject();
         jsonObject.putString("levelPlan", "FREEMIUM");
+        JsonObject objChild = new JsonObject();
+        objChild.putString("_id", "ACT-HAND");
+        jsonObject.putObject("activity", objChild);
         params.putObject("plan", jsonObject);
         
         // Nom & Prénom

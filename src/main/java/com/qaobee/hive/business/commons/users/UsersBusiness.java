@@ -30,7 +30,7 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 public interface UsersBusiness {
 	
 	Pattern VALID_NAME_REGEX = Pattern.compile("^([a-z'àâéèêôùûç\\ \\-]+)$", Pattern.CASE_INSENSITIVE);
-	Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9\\.]+)$", Pattern.CASE_INSENSITIVE);
+	Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9\\.\\-]+)$", Pattern.CASE_INSENSITIVE);
 	
 	boolean checkUserInformations(User user, String locale) throws QaobeeException;
 
