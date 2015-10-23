@@ -30,6 +30,8 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+
+import org.apache.commons.lang3.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -183,8 +185,11 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     
                     CriteriaBuilder cb = new CriteriaBuilder();
-
-                    cb.add(PARAM_OWNER_ID, req.getUser().get_id());
+                    if(req.getParams().get("id")!=null && !req.getParams().get("id").isEmpty() && StringUtils.isNoneBlank(req.getParams().get("id").get(0))) {
+                    	cb.add(PARAM_OWNER_ID, req.getParams().get("id").get(0));
+                    } else {
+                    	cb.add(PARAM_OWNER_ID, req.getUser().get_id());
+                    }
                     
                     JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
                     

@@ -71,7 +71,7 @@ public class SignupTest extends VertxJunitSupport {
         req.setBody(params.encode());
         final String reply = sendonBus(SignupVerticle.REGISTER, req);
         JsonObject result = new JsonObject(reply);
-System.out.println(result.encodePrettily());
+        
         Assert.assertNotNull(result.getObject("person"));
         Assert.assertNotNull(result.getObject("person").getString("_id"));
 	}

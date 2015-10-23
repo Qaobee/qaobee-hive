@@ -61,84 +61,48 @@ import java.util.UUID;
 @DeployableVerticle(isWorker = true)
 public class UserVerticle extends AbstractGuiceVerticle {
 
-    /**
-     * The Constant LOGIN.
-     */
+    /** The Constant LOGIN. */
     public static final String LOGIN = Module.VERSION + ".commons.users.user.login";
-    /**
-     * The constant LOGIN_BY_TOKEN.
-     */
+    /** The constant LOGIN_BY_TOKEN. */
     public static final String LOGIN_BY_TOKEN = Module.VERSION + ".commons.users.user.sso";
-    /**
-     * The Constant LOGOUT.
-     */
+    /** The Constant LOGOUT. */
     public static final String LOGOUT = Module.VERSION + ".commons.users.user.logout";
-    /**
-     * The Constant PASSWD_RENEW.
-     */
+    /** The Constant PASSWD_RENEW. */
     public static final String PASSWD_RENEW = Module.VERSION + ".commons.users.user.newpasswd";
-    /**
-     * The Constant PASSWD_RENEW_CHK.
-     */
+    /** The Constant PASSWD_RENEW_CHK. */
     public static final String PASSWD_RENEW_CHK = Module.VERSION + ".commons.users.user.passwdcheck";
-    /**
-     * The Constant PASSWD_RESET.
-     */
+    /** The Constant PASSWD_RESET. */
     public static final String PASSWD_RESET = Module.VERSION + ".commons.users.user.resetPasswd";
-    /**
-     * The Constant CURRENT.
-     */
+    /** The Constant CURRENT. */
     public static final String CURRENT = Module.VERSION + ".commons.users.user.current";
-    /**
-     * The Constant META.
-     */
+    /** The Constant META. */
     public static final String META = Module.VERSION + ".commons.users.user.meta";
-    /**
-     * The Constant USER_INFO
-     */
+    /** The Constant USER_INFO */
     public static final String USER_INFO = Module.VERSION + ".commons.users.user.user";
     
     /* List of parameters */
-    /**
-     * User login
-     */
+    /** User login */
     public static final String PARAM_LOGIN = "login";
-    /**
-     * The constant PARAM_COUNTRY_ID.
-     */
+    /** The constant PARAM_COUNTRY_ID. */
     public static final String PARAM_COUNTRY_ID = "country";
-    /**
-     * User password
-     */
+    /** User password */
     public static final String PARAM_PWD = "password";
-    /**
-     * The constant MOBILE_TOKEN.
-     */
+    /** The constant MOBILE_TOKEN. */
     public static final String MOBILE_TOKEN = "mobileToken";
 
-    /**
-     * The Mongo.
-     */
+    /** The Mongo. */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Mail utils.
-     */
+    /** The Mail utils. */
     @Inject
     private MailUtils mailUtils;
-    /**
-     * The Utils.
-     */
+    /** The Utils. */
     @Inject
     private Utils utils;
-    /**
-     * The Password encryption service.
-     */
+    /** The Password encryption service. */
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
-    /**
-     * The Person utils.
-     */
+    /** The Person utils. */
     @Inject
     private PersonUtils personUtils;
 
@@ -149,6 +113,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         container.logger().debug(this.getClass().getName() + " started");
+        
         /**
          * @apiDescription Login user
          * @api {post} /api/1/commons/users/user/login Login user
@@ -185,7 +150,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN)).get(), null, null, 0, 0, User.class);
                         if (res.size() != 1) {
                             final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
-                            container.logger().error(e.getMessage(), e);
                             utils.sendError(message, e);
                         } else {
                             // we take the first one (should be only one)

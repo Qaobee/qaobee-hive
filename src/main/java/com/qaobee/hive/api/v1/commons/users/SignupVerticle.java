@@ -72,38 +72,22 @@ import java.util.*;
 @DeployableVerticle
 public class SignupVerticle extends AbstractGuiceVerticle {
 
-    /**
-     * The Constant REGISTER.
-     */
+    /**The Constant REGISTER. */
     public static final String REGISTER = Module.VERSION + ".commons.users.signup.register";
-    /**
-     * The Constant LOGIN_TEST.
-     */
+    /** The Constant LOGIN_TEST. */
     public static final String LOGIN_TEST = Module.VERSION + ".commons.users.signup.logintest";
-    /**
-     * The Constant LOGIN_EXISTS.
-     */
+    /** The Constant LOGIN_EXISTS. */
     public static final String LOGIN_EXISTS = Module.VERSION + ".commons.users.signup.loginExists";
-    /**
-     * The Constant ACCOUNT_CHECK.
-     */
+    /** The Constant ACCOUNT_CHECK. */
     public static final String ACCOUNT_CHECK = Module.VERSION + ".commons.users.signup.accountcheck";
-    /**
-     * The Constant FIRST_CONNECTION_CHECK
-     */
+    /** The Constant FIRST_CONNECTION_CHECK */
     public static final String FIRST_CONNECTION_CHECK = Module.VERSION + ".commons.users.signup.firstconnectioncheck";
-    /**
-     * The Constant FINALIZE_SIGNUP
-     */
+    /** The Constant FINALIZE_SIGNUP */
     public static final String FINALIZE_SIGNUP = Module.VERSION + ".commons.users.signup.finalize";
 
-    /**
-     * Parameter ID
-     */
+    /** Parameter ID */
     public static final String PARAM_ID = "id";
-    /**
-     * Parameter CODE
-     */
+    /** Parameter CODE */
     public static final String PARAM_CODE = "code";
 
     // MongoDB driver
@@ -140,7 +124,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        final Handler<Message<JsonObject>> userNameExistHandler = new Handler<Message<JsonObject>>() {
+        vertx.eventBus().registerHandler(LOGIN_EXISTS, new Handler<Message<JsonObject>>() {
             /*
              * (non-Javadoc)
              *
@@ -157,7 +141,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.sendStatusJson(false, message);
                 }
             }
-        };
+        });
 
         /**
          * @apiDescription Login unicity test for rest request
@@ -169,7 +153,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        final Handler<Message<String>> userNameTestHandler = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(LOGIN_TEST, new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
              *
@@ -197,7 +181,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 }
             }
-        };
+        });
+        
         /**
          * @apiDescription Register a new account
          * @api {put} /api/1/commons/users/signup/register Register a new account
@@ -211,7 +196,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiError NON_UNIQUE_LOGIN Non unique login
          * @apiError MAIL_EXCEPTION problème d'envoi d'email
          */
-        final Handler<Message<String>> registerHandler = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(REGISTER, new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
              *
@@ -271,9 +256,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                             plan.setStatus("open");
                                             plan.setAmountPaid(Long.parseLong(Params.getString("plan." + plan.getLevelPlan().name() + ".price")) / 100l);
                                             plan.setStartPeriodDate(System.currentTimeMillis());
-                                            JsonObject activity = mongo.getById(plan.getActivity().get_id(), Activity.class);
-
-                                            plan.setActivity(Json.<Activity>decodeValue(activity.encode(), Activity.class));
+                                            // Si on vient du mobile, on connait le plan, mais pas par le web
+                                            if(plan.getActivity()!=null) {
+	                                            JsonObject activity = mongo.getById(plan.getActivity().get_id(), Activity.class);
+	                                            plan.setActivity(Json.<Activity>decodeValue(activity.encode(), Activity.class));
+                                            }
                                             user.getAccount().getListPlan().add(plan);
 
                                             final String id = mongo.save(personUtils.prepareUpsert(user));
@@ -294,7 +281,14 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                         emailReq.putString("subject", Messages.getString("mail.account.validation.subject"));
                                                         emailReq.putString("content_type", "text/html");
                                                         emailReq.putString("body", tplRes);
-                                                        vertx.eventBus().publish("mailer.mod", emailReq);
+                                                        
+                                                        // Envoi du mail si pas en test jUnit
+                                                        if(!injunit) {
+                                                        	vertx.eventBus().publish("mailer.mod", emailReq);
+                                                        } else {
+                                                        	container.logger().info(emailReq);
+                                                        }
+                                                        
                                                         final JsonObject res = new JsonObject();
                                                         try {
                                                             res.putObject("person", mongo.getById(id, User.class));
@@ -337,7 +331,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.MAIL_EXCEPTION, e.getMessage());
                 }
             }
-        };
+        });
 
         /**
          * @apiDescription Account validation check
@@ -350,7 +344,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        final Handler<Message<String>> accountCheckHandler = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(ACCOUNT_CHECK, new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
              *
@@ -383,7 +377,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
         /**
          * @apiDescription First connection account check
@@ -396,7 +390,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        final Handler<Message<String>> firstConnectionCheckHandler = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(FIRST_CONNECTION_CHECK, new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
              *
@@ -438,7 +432,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
         /**
          * @apiDescription Finalizes signup
@@ -454,7 +448,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} user {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        final Handler<Message<String>> finalizeSignupHandler = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(FINALIZE_SIGNUP, new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
              *
@@ -594,16 +588,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
-        };
-
-		/*
-         * Handlers declaration
-		 */
-        vertx.eventBus().registerHandler(REGISTER, registerHandler);
-        vertx.eventBus().registerHandler(LOGIN_TEST, userNameTestHandler);
-        vertx.eventBus().registerHandler(LOGIN_EXISTS, userNameExistHandler);
-        vertx.eventBus().registerHandler(ACCOUNT_CHECK, accountCheckHandler);
-        vertx.eventBus().registerHandler(FIRST_CONNECTION_CHECK, firstConnectionCheckHandler);
-        vertx.eventBus().registerHandler(FINALIZE_SIGNUP, finalizeSignupHandler);
+        });
     }
 }
