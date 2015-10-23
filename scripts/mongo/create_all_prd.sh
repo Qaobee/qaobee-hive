@@ -25,7 +25,6 @@ cd $pathDir
 echo `pwd`
 
 mongo hive --eval "db.getCollectionNames().forEach(function(c) { if (c.indexOf(\"system.\") == -1) db[c].drop(); })"
-mongo ${db} *.js
 mongo ${db} **/*.js
 
 mongo ${db} --eval "db.printCollectionStats()" | grep '\(ns\|count\)'
