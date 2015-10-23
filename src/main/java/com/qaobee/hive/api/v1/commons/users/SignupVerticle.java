@@ -21,9 +21,11 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
+import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
+import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
@@ -103,6 +105,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     private PersonUtils personUtils;
     @Inject
     private UsersBusiness usersBusiness;
+    @Inject
+    private CountryBusiness countryBusiness;
 
     /*
      * (non-Javadoc)
@@ -467,7 +471,14 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     //TODO : pb sur la date de naissance
                     jsonUser.removeField("birthdate");
                     jsonUser.removeField("activity");
-                    jsonUser.removeField("nationality");
+                    
+                    if(jsonUser.containsField("nationality") && jsonUser.getObject("nationality").containsField("alpha2")) {
+                    	Country countryNationality = countryBusiness.getCountryFromAlpha2(jsonUser.getObject("nationality").getString("alpha2"));
+                    	if(countryNationality!=null) {
+                    		jsonUser.removeField("nationality");
+                    		jsonUser.putObject("nationality", new JsonObject(Json.encode(countryNationality)));
+                    	}
+                    }
 
                     User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
                     final String id = jsonUser.getString("_id");
@@ -500,10 +511,13 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         user.getAccount().setActive(true);
                         user.getAccount().setFirstConnexion(false);
                         user.setContact(userUpdate.getContact());
-                        user.setCountry(null);
-                        user.setGender(user.getGender());
+                        // TODO : revoir
+                        user.setCountry(userUpdate.getNationality());
+                     // user.setEffectiveDefault(null);
                         user.setFirstname(userUpdate.getFirstname());
+                        user.setGender(userUpdate.getGender());
                         user.setName(userUpdate.getName());
+                        user.setNationality(userUpdate.getNationality());
 
 
                         // Création SandBox
