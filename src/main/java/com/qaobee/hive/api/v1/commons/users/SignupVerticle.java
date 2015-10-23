@@ -466,7 +466,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     final JsonObject jsonReq = new JsonObject(req.getBody());
                     container.logger().info(jsonReq.encodePrettily());
 
-                    // JSon User
+                    // JSon User,
                     final JsonObject jsonUser = jsonReq.getObject("user");
                     //TODO : pb sur la date de naissance
                     jsonUser.removeField("birthdate");
