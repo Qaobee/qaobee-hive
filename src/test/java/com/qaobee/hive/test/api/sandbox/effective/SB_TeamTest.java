@@ -100,10 +100,16 @@ public class SB_TeamTest extends VertxJunitSupport {
         JsonArray result = new JsonArray(reply);
 
         Assert.assertEquals(7, result.size());
-
+        
         JsonObject team = result.get(0);
         Assert.assertEquals("Nantes HBC",team.getString("label"));
-
+        
+        params.put(SB_TeamVerticle.PARAM_LINK_TEAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
+        
+        final String reply2 = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
+        JsonArray result2 = new JsonArray(reply2);
+        
+        Assert.assertEquals(6, result2.size());
     }
     
     /**

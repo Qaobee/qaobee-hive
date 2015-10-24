@@ -188,6 +188,536 @@ db.SB_SandBoxCfg.insert({
 
 //////////////////////////////////////////////////////////
 /* 
+ * Vidage de la collection SB_Person (CKE)
+ */
+db.SB_Person.remove({"sandboxId":"561ec20b409937a6b439d4e9"});
+
+
+/* 1 */
+db.SB_Person.insert({
+    "_id" : "807f1fc0-6e1b-4b4d-a0d8-7a4a5de8c0dd",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 11,
+        "weight" : 60,
+        "height" : 177,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "left-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "45 Allée Parc ar Groas, Plouzané, France",
+        "lat" : 48.3771823000000012,
+        "lng" : -4.6230722000000002,
+        "place" : "45 Allée Parc ar Groas",
+        "city" : "Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "cellphone" : "0781635773",
+        "home" : "0298382987",
+        "email" : "ch.kervella@gmail.com"
+    },
+    "firstname" : "Tristan",
+    "name" : "Kervella",
+    "birthdate" : NumberLong(1038351600000),
+    "gender" : "Homme",
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 2 */
+db.SB_Person.insert({
+    "_id" : "31aa373e-7cde-4c3d-ada6-f48f41dc38d2",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 10,
+        "weight" : 55,
+        "height" : 155,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "pivot"
+    },
+    "address" : {
+        "formatedAddress" : "8 Hameau de Ker Yan, Locmaria-Plouzané, France",
+        "lat" : 48.3736687999999972,
+        "lng" : -4.6507980000000000,
+        "place" : "8 Hameau de Ker Yan",
+        "city" : "Locmaria-Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "cellphone" : "0698997229",
+        "home" : "0298489077",
+        "email" : "patrick.fleury@laposte.net"
+    },
+    "firstname" : "Thibaut",
+    "name" : "Fleury",
+    "birthdate" : NumberLong(1015023600000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "gender" : "Homme",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 3 */
+db.SB_Person.insert({
+    "_id" : "836fff9c-c955-4861-8776-d68999a0abb5",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 9,
+        "weight" : 50,
+        "height" : 155,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "left-wingman"
+    },
+    "address" : {
+        "formatedAddress" : "8 Rue Courlis, Locmaria-Plouzané, France",
+        "lat" : 48.3698181000000034,
+        "lng" : -4.6586223999999996,
+        "place" : "8 Rue Courlis",
+        "city" : "Locmaria-Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "email" : "katdomclo@gmail.com",
+        "home" : "0298382324"
+    },
+    "firstname" : "Victor",
+    "name" : "Clorennec",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1034546400000),
+    "nationality" : "France",
+    "birthCity" : "Senlis, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 4 */
+db.SB_Person.insert({
+    "_id" : "5a21dfc4-8d93-4b71-b082-1ec7c821dd45",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 8,
+        "weight" : 60,
+        "height" : 165,
+        "laterality" : "Gaucher",
+        "stateForm" : "good",
+        "positionType" : "right-wingman"
+    },
+    "address" : {
+        "formatedAddress" : "3 Route de Kerfily, Locmaria-Plouzané, France",
+        "lat" : 48.3749360999999993,
+        "lng" : -4.6458358000000004,
+        "place" : "3 Route de Kerfily",
+        "city" : "Locmaria-Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "home" : "0298485392",
+        "email" : "gbergot@laposte.net"
+    },
+    "firstname" : "Mathys",
+    "name" : "Bergot",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1037314800000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 5 */
+db.SB_Person.insert({
+    "_id" : "0ec47086-3266-451c-b452-62cd9091d1c6",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 12,
+        "weight" : 65,
+        "height" : 175,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "goalkeeper"
+    },
+    "address" : {
+        "formatedAddress" : "1 Rue Duperré, Brest, France",
+        "lat" : 48.3961918999999980,
+        "lng" : -4.4837622000000001,
+        "place" : "1 Rue Duperré",
+        "city" : "Brest",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
+    "contact" : {
+        "home" : "0298430448"
+    },
+    "firstname" : "Ewenn",
+    "name" : "Scoarnec",
+    "birthdate" : NumberLong(1017183600000),
+    "nationality" : "France",
+    "birthCity" : "Bordeaux, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 6 */
+db.SB_Person.insert({
+    "_id" : "94b05409-1ee4-4c84-af86-34de4d5f6824",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 6,
+        "weight" : 65,
+        "height" : 178,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "right-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "34 Rue Albert Louppe, Brest, France",
+        "lat" : 48.4034297999999978,
+        "lng" : -4.4710770000000002,
+        "place" : "34 Rue Albert Louppe",
+        "city" : "Brest",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
+    "contact" : {
+        "cellphone" : "0611857269",
+        "home" : "0256294305"
+    },
+    "firstname" : "Clement",
+    "name" : "Pellen",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1019340000000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 7 */
+db.SB_Person.insert({
+    "_id" : "940819ad-9b44-4512-aa4f-86e802e85607",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 5,
+        "weight" : 65,
+        "height" : 164,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "center-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "275 Rue des Iris, Plouzané, France",
+        "lat" : 48.3700189999999992,
+        "lng" : -4.5799702000000000,
+        "place" : "275 Rue des Iris",
+        "city" : "Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "email" : "frank.charrault@hotmail.fr",
+        "home" : "0298037320",
+        "cellphone" : "0760970956"
+    },
+    "firstname" : "Hugo",
+    "name" : "Charrault",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1003269600000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 8 */
+db.SB_Person.insert({
+    "_id" : "7d6df586-4476-4bf8-a4cb-324d5421acee",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 1,
+        "weight" : 67,
+        "height" : 177,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "goalkeeper"
+    },
+    "address" : {
+        "formatedAddress" : "275 Rue des Iris, Plouzané, France",
+        "lat" : 48.3700189999999992,
+        "lng" : -4.5799702000000000,
+        "place" : "275 Rue des Iris",
+        "city" : "Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "cellphone" : "0760970956",
+        "home" : "0298037320",
+        "email" : "frank.charrault@hotmail.fr"
+    },
+    "firstname" : "Tom",
+    "name" : "Charrault",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1034805600000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 9 */
+db.SB_Person.insert({
+    "_id" : "84f90ac4-528a-41ec-aecf-ced45b3cb1f2",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 4,
+        "weight" : 65,
+        "height" : 173,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "left-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "14 Allée du Thym, Plouzané, France",
+        "lat" : 48.3754877000000008,
+        "lng" : -4.5923733999999996,
+        "place" : "14 Allée du Thym",
+        "city" : "Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "cellphone" : "0642718984",
+        "home" : "0298050815",
+        "email" : "gaelle.espinosa@free.fr"
+    },
+    "firstname" : "Florian",
+    "name" : "Espinosa",
+    "birthdate" : NumberLong(984438000000),
+    "gender" : "Homme",
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 10 */
+db.SB_Person.insert({
+    "_id" : "aa5018a5-7804-438b-9a31-52403ac62359",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 3,
+        "weight" : 57,
+        "height" : 163,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "pivot"
+    },
+    "address" : {
+        "formatedAddress" : "6 Impasse du Valy, Locmaria-Plouzané, France",
+        "lat" : 48.3615472999999980,
+        "lng" : -4.6754585000000004,
+        "place" : "6 Impasse du Valy",
+        "city" : "Locmaria-Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "home" : "0298382183",
+        "cellphone" : "0781163147",
+        "email" : "n.e.predon@aliceadsl.fr"
+    },
+    "firstname" : "Mathias",
+    "name" : "Predon",
+    "birthdate" : NumberLong(1017529200000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "gender" : "Homme",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 11 */
+db.SB_Person.insert({
+    "_id" : "5b844a2e-fa1c-4daf-a60a-3c66ebf44b7b",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 2,
+        "weight" : 63,
+        "height" : 170,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "right-wingman"
+    },
+    "address" : {
+        "formatedAddress" : "225 Pen ar Ménez, Locmaria-Plouzané, France",
+        "lat" : 48.3595380000000006,
+        "lng" : -4.6379733999999999,
+        "place" : "225 Route de Pen ar Ménez",
+        "city" : "Locmaria-Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "email" : "nathalie.l_hopital@bbox.fr",
+        "cellphone" : "0659377230",
+        "home" : "0983932414"
+    },
+    "firstname" : "Elvin",
+    "name" : "L'hopital",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1006038000000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 12 */
+db.SB_Person.insert({
+    "_id" : "4d24e5f6-db65-4c2a-9a62-a0309a4c15e0",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 14,
+        "weight" : 70,
+        "height" : 182,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "left-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "Languiforc'h, Locmaria-Plouzané, France",
+        "lat" : 48.3483510000000010,
+        "lng" : -4.6322349999999997,
+        "city" : "Locmaria-Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "email" : "bourge.solene@neuf.fr",
+        "home" : "0298436498",
+        "cellphone" : "0607568090"
+    },
+    "firstname" : "Vassily",
+    "name" : "Lhomer",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(991087200000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 13 */
+db.SB_Person.insert({
+    "_id" : "7da59c29-b0c2-440f-8720-a22ed0770950",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 15,
+        "weight" : 70,
+        "height" : 178,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "left-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "33 Rue Raoul Dufy, Brest, France",
+        "lat" : 48.4082823999999974,
+        "lng" : -4.4512372999999998,
+        "place" : "33 Rue Raoul Dufy",
+        "city" : "Brest",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
+    "contact" : {
+        "cellphone" : "0662428314"
+    },
+    "firstname" : "Elouan",
+    "name" : "Lesven",
+    "birthdate" : NumberLong(1005260400000),
+    "nationality" : "France",
+    "birthCity" : "La Rochelle, France",
+    "gender" : "Homme",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 14 */
+db.SB_Person.insert({
+    "_id" : "bdb180eb-9fc9-4648-b83e-394d2e4743fc",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 16,
+        "weight" : 70,
+        "height" : 173,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "goalkeeper"
+    },
+    "address" : {
+        "formatedAddress" : "65 Rue de Brest, Plouzané, France",
+        "lat" : 48.3717307999999875,
+        "lng" : -4.5810651000000000,
+        "place" : "65 Rue de Brest",
+        "city" : "Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "contact" : {
+        "email" : "steph.29200@free.fr",
+        "cellphone" : "0781204882",
+        "home" : "0951978298"
+    },
+    "firstname" : "Samuel",
+    "name" : "Morisset",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(997221600000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+//////////////////////////////////////////////////////////
+/* 
  * Vidage de la collection SB_Effective (CKE)
  */
 db.SB_Effective.remove({ "_id" : "561ec4d0409937a6b439d4ea"});
@@ -200,18 +730,239 @@ db.SB_Effective.remove({ "_id" : "561ec4d0409937a6b439d4ea"});
 db.SB_Effective.insert({
     "_id" : "561ec4d0409937a6b439d4ea",
     "sandBoxCfgId" : "561ec092409937a6b439d4e8",
-    "label": "CKE A",
+    "label" : "CKE A",
     "categoryAge" : {
         "code" : "sen",
         "label" : "Senior Gars",
-        "ageMax" : NumberInt(150),
-        "ageMin" : NumberInt(18),
+        "ageMax" : 150,
+        "ageMin" : 18,
         "genre" : "Homme",
-        "order" : NumberInt(1)
+        "order" : 1
     },
-    "members" : []
+    "members" : [ 
+        {
+            "personId" : "807f1fc0-6e1b-4b4d-a0d8-7a4a5de8c0dd",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "31aa373e-7cde-4c3d-ada6-f48f41dc38d2",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "836fff9c-c955-4861-8776-d68999a0abb5",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "5a21dfc4-8d93-4b71-b082-1ec7c821dd45",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "0ec47086-3266-451c-b452-62cd9091d1c6",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "94b05409-1ee4-4c84-af86-34de4d5f6824",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "940819ad-9b44-4512-aa4f-86e802e85607",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "7d6df586-4476-4bf8-a4cb-324d5421acee",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "84f90ac4-528a-41ec-aecf-ced45b3cb1f2",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "aa5018a5-7804-438b-9a31-52403ac62359",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "4d24e5f6-db65-4c2a-9a62-a0309a4c15e0",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "7da59c29-b0c2-440f-8720-a22ed0770950",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "bdb180eb-9fc9-4648-b83e-394d2e4743fc",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "5b844a2e-fa1c-4daf-a60a-3c66ebf44b7b",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }
+    ]
 });
 
+/** ************************************************************* */
+/*
+ * Alimentation SB_Team (CKE)
+ */
+db.SB_Team.insert({
+    "_id" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "label" : "Avenir Du Ponant 1",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "enable" : true,
+    "adversary" : false
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba23db70fd108e375395b",
+    "label" : "Ploemeur Atlantique Hb",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba2a5b70fd108e375395c", 
+    "label" : "Guingamp Hb",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba2a5b70fd108e375395d",
+    "label" : "Hb Pays De Vannes",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba2d4b70fd108e375395e",
+    "label" : "Golfe 56",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba2e3b70fd108e375395f",
+    "label" : "Cesson Rennes Métropole Hb",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba300b70fd108e3753960",
+    "label" : "Cercle Paul Bert Rennes Hb",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba318b70fd108e3753961",
+    "label" : "Rennes Métropole Hb",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba335b70fd108e3753962",
+    "label" : "Stiren Languidic",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba34db70fd108e3753963",
+    "label" : "Concarneau Hb",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba368b70fd108e3753964",
+    "label" : "Lesneven Hb",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
+
+db.SB_Team.insert({
+    "_id" : "562ba37eb70fd108e3753965",
+    "label" : "Hbc Plerin",
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "effectiveId" : "561ec4d0409937a6b439d4ea",
+    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "enable" : true,
+    "adversary": true
+});
 
 /*
  * Alimentation collection USER : JRO

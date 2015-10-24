@@ -91,6 +91,10 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ADVERSARY = "adversary";
     
+    /**
+     * team home link
+     */
+    public static final String PARAM_LINK_TEAM_ID = "linkTeamId";
     
     /**
      * The Mongo.
@@ -274,6 +278,12 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
                         criterias.put(PARAM_ENABLE, "true".equals(params.get(PARAM_ENABLE).get(0)));
                     }
                     criterias.put(PARAM_ADVERSARY, "true".equals(params.get(PARAM_ADVERSARY).get(0)));
+                    
+                    
+                    if(params.get(PARAM_LINK_TEAM_ID)!=null && !"".equals(params.get(PARAM_LINK_TEAM_ID).get(0).trim())) {
+                        criterias.put(PARAM_LINK_TEAM_ID, params.get(PARAM_LINK_TEAM_ID).get(0));
+                    }
+                    
                     
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Team.class);
                     container.logger().info("RETURN : "+resultJson);

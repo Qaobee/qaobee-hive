@@ -52,6 +52,7 @@ db.SB_Team.insert({
     "label" : "Nantes HBC",
     "sandboxId" : "558b0efebd2e39cdab651e1f", 
     "effectiveId" : "550b31f925da07681592db23",
+    "linkTeamId" : "552d5e08644a77b3a20afdfe",
     "enable" : true,
     "adversary": true
 });
@@ -61,6 +62,7 @@ db.SB_Team.insert({
     "label" : "PSG Handball",
     "sandboxId" : "558b0efebd2e39cdab651e1f", 
     "effectiveId" : "550b31f925da07681592db23",
+    "linkTeamId" : "552d5e08644a77b3a20afdfe",
     "enable" : true,
     "adversary": true
 });
@@ -68,9 +70,10 @@ db.SB_Team.insert({
 
 db.SB_Team.insert({
     "_id" : "55e768c0427aacaa7148056b",
-    "label" : "CHAMBERY SAVOIE HB",
+    "label" : "AIX En Provence HB",
     "sandboxId" : "558b0efebd2e39cdab651e1f", 
     "effectiveId" : "550b31f925da07681592db23",
+    "linkTeamId" : "552d5e08644a77b3a20affff",
     "enable" : true,
     "adversary": true
 });
@@ -80,6 +83,7 @@ db.SB_Team.insert({
     "label" : "CHAMBERY SAVOIE HB",
     "sandboxId" : "558b0efebd2e39cdab651e1f", 
     "effectiveId" : "550b31f925da07681592db23",
+    "linkTeamId" : "552d5e08644a77b3a20afdfe",
     "enable" : true,
     "adversary": true
 });
@@ -89,6 +93,7 @@ db.SB_Team.insert({
     "label" : "USDK Dunkerque",
     "sandboxId" : "558b0efebd2e39cdab651e1f", 
     "effectiveId" : "550b31f925da07681592db23",
+    "linkTeamId" : "552d5e08644a77b3a20afdfe",
     "enable" : true,
     "adversary": true
 });
@@ -98,6 +103,7 @@ db.SB_Team.insert({
     "label" : "US CRETEIL HANDBALL",
     "sandboxId" : "558b0efebd2e39cdab651e1f", 
     "effectiveId" : "550b31f925da07681592db23",
+    "linkTeamId" : "552d5e08644a77b3a20afdfe",
     "enable" : true,
     "adversary": true
 });
@@ -107,6 +113,7 @@ db.SB_Team.insert({
     "label" : "Toulouse HB",
     "sandboxId" : "558b0efebd2e39cdab651e1f", 
     "effectiveId" : "550b31f925da07681592db23",
+    "linkTeamId" : "552d5e08644a77b3a20afdfe",
     "enable" : true,
     "adversary": true
 });
