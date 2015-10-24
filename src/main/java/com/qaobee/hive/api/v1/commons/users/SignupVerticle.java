@@ -21,6 +21,7 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
+import com.qaobee.hive.business.commons.settings.ActivityBusiness;
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
@@ -107,6 +108,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     private UsersBusiness usersBusiness;
     @Inject
     private CountryBusiness countryBusiness;
+    @Inject
+    private ActivityBusiness activityBusiness;
 
     /*
      * (non-Javadoc)
@@ -468,8 +471,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                     // JSon User,
                     final JsonObject jsonUser = jsonReq.getObject("user");
-                    //TODO : pb sur la date de naissance
-                    jsonUser.removeField("birthdate");
                     jsonUser.removeField("activity");
                     
                     if(jsonUser.containsField("nationality") && jsonUser.getObject("nationality").containsField("alpha2")) {
@@ -510,6 +511,17 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         // MaJ User
                         user.getAccount().setActive(true);
                         user.getAccount().setFirstConnexion(false);
+                        user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
+                        // récupération des activities des plans
+                        for(Plan plan : user.getAccount().getListPlan()) {
+                        	if(plan.getActivity()!=null) {
+                        		Activity activity = activityBusiness.getActivityFromId(plan.getActivity().get_id());
+                        		if(activity!=null) {
+                        			plan.setActivity(activity);
+                        		}
+                        	}
+                        }
+                        user.setBirthdate(userUpdate.getBirthdate());
                         user.setContact(userUpdate.getContact());
                         // TODO : revoir
                         user.setCountry(userUpdate.getNationality());

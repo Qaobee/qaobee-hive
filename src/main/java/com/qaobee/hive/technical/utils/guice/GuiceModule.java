@@ -23,7 +23,9 @@ package com.qaobee.hive.technical.utils.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
+import com.qaobee.hive.business.commons.settings.ActivityBusiness;
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
+import com.qaobee.hive.business.commons.settings.impl.ActivityBusinessImpl;
 import com.qaobee.hive.business.commons.settings.impl.CountryBusinessImpl;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.commons.users.impl.UsersBusinessImpl;
@@ -82,6 +84,7 @@ public class GuiceModule extends AbstractModule {
         
         // BUSINESS MODULES
         bind(UsersBusiness.class).to(UsersBusinessImpl.class).in(Singleton.class);
+        bind(ActivityBusiness.class).to(ActivityBusinessImpl.class).in(Singleton.class);
         bind(CountryBusiness.class).to(CountryBusinessImpl.class).in(Singleton.class);
     }
 }
