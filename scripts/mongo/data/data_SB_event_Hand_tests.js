@@ -35,52 +35,12 @@
  */
 db.SB_Event.remove({ "owner" : { "$in" : [ "558b0efebd2e39cdab651e1f"]}});
 
-var dateToday = new Date();
-var dateYear = 1900 + dateToday.getYear();
-
-// Event dans 2 mois
-var dateMonth2 = dateToday.getMonth() + 2;
-var dateYear2  = dateYear;
-if(dateMonth2 > 12) {
-	dateYear2 = dateYear2 + 1;
-	dateMonth2 = dateMonth2 - 12;
-}
-if(dateMonth2 < 10) {
-	dateMonth2 = '0' + dateMonth2;
-}
-
-// Event dans 3 mois
-var dateMonth3 = dateToday.getMonth() + 3;
-var dateYear3  = dateYear;
-if(dateMonth3 > 12) {
-	dateYear3 = dateYear3 + 1;
-	dateMonth3 = dateMonth3 - 12;
-}
-if(dateMonth3 < 10) {
-	dateMonth3 = '0' + dateMonth3;
-}
-
-// Event dans 4 mois
-var dateMonth4 = dateToday.getMonth() + 4;
-var dateYear4  = dateYear;
-if(dateMonth4 > 12) {
-	dateYear4 = dateYear4 + 1;
-	dateMonth4 = dateMonth4 - 12;
-}
-if(dateMonth4 < 10) {
-	dateMonth4 = '0' + dateMonth4;
-}
-
-print('2M : '+ dateYear2 + '-' + dateMonth2);
-print('3M : '+ dateYear3 + '-' + dateMonth3);
-print('4M : '+ dateYear4 + '-' + dateMonth4);
-
  
 /***************************************************************
  * Alimentation SB_Event Cesson Handball
- * *************************************************************/
-
-db.SB_Event.insert({"_id" : "55847ed0d040353767a48e68j",
+ * *************************************************************
+ */
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e68",
     "activityId" : "ACT-HAND",
     "label" : "Amical",
     "owner" : {
@@ -88,8 +48,8 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e68j",
         "effectiveId" : "550b31f925da07681592db23", 
         "teamId" : "552d5e08644a77b3a20afdfe"
     },
-    "startDate" : NumberLong(new ISODate(dateYear2 + "-" + dateMonth2 + "-24T16:30:00Z")*1), 
-    "endDate" : NumberLong(new ISODate(dateYear2 + "-" + dateMonth2 + "-24T18:30:00Z")*1),
+    "startDate" : NumberLong(1440693000000), 
+    "endDate" : NumberLong(1440700200000),
     "address" : {
         "formatedAddress" : "Brest Arena, Boulevard de Plymouth, Brest, France",
         "lat" : 48.387501,
@@ -106,7 +66,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e68j",
         "infrastructure":"Brest Arena"}
 });
 
-db.SB_Event.insert({"_id" : "55847ed0d040353767a48e69j",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e69",
     "activityId" : "ACT-HAND",
     "label" : "Amical",
     "owner" : {
@@ -114,8 +74,8 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e69j",
         "effectiveId" : "550b31f925da07681592db23", 
         "teamId" : "552d5e08644a77b3a20afdfe"
     },
-    "startDate" : NumberLong(new ISODate(dateYear2 + "-" + dateMonth2 + "-28T18:30:00Z")*1), 
-    "endDate" : NumberLong(new ISODate(dateYear2 + "-" + dateMonth2 + "-28T20:30:00Z")*1),
+    "startDate" : NumberLong(1440959400000), 
+    "endDate" : NumberLong(1440966600000),
     "link" : {"linkId" : "AAAA", "type" : "friendlyGame"},
     "participants" : {
         "teamHome": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"}, 
@@ -123,7 +83,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e69j",
         "infrastructure":"Brest Arena"}
 });
 
-db.SB_Event.insert({"_id" : "55847ed0d040353767a48e70j",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e70",
     "activityId" : "ACT-HAND",
     "label" : "Championnat : Journée 1",
     "owner" : {
@@ -131,8 +91,8 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e70j",
         "effectiveId" : "550b31f925da07681592db23", 
         "teamId" : "552d5e08644a77b3a20afdfe"
     },
-    "startDate" : NumberLong(new ISODate(dateYear3 + "-" + dateMonth3 + "-12T18:00:00Z")*1), 
-    "endDate" : NumberLong(new ISODate(dateYear3 + "-" + dateMonth3 + "-12T20:00:00Z")*1),
+    "startDate" : NumberLong(1442080800000), 
+    "endDate" : NumberLong(1442088000000),
     "address" : {
         "formatedAddress" : "LE PHARE - CHAMBERY METROPOLE, 800 Avenue du Grand Arietaz, Chambéry, France",
         "lat" : 45.583892,
@@ -149,7 +109,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e70j",
         "infrastructure":"Le phare"}
 });
 
-db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71j",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71",
     "activityId" : "ACT-HAND",
     "label" : "Coupe de France",
     "owner" : {
@@ -157,8 +117,8 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71j",
         "effectiveId" : "550b31f925da07681592db23", 
         "teamId" : "552d5e08644a77b3a20afdfe"
     },
-    "startDate" : NumberLong(new ISODate(dateYear3 + "-" + dateMonth3 + "-19T18:00:00Z")*1), 
-    "endDate" : NumberLong(new ISODate(dateYear3 + "-" + dateMonth3 + "-19T20:00:00Z")*1),
+    "startDate" : NumberLong(1442685600000), 
+    "endDate" : NumberLong(1442692800000),
     "address" : {
         "formatedAddress" : "Brest Arena, Boulevard de Plymouth, Brest, France",
         "lat" : 48.387501,
@@ -175,7 +135,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e71j",
         "infrastructure":"Brest Arena"}
 });
 
-db.SB_Event.insert({"_id" : "55847ed0d040353767a48e75j",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e75",
     "activityId" : "ACT-HAND",
     "label" : "Entraînement",
     "owner" : {
@@ -183,8 +143,8 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e75j",
         "effectiveId" : "550b31f925da07681592db23", 
         "teamId" : "552d5e08644a77b3a20afdfe"
     },
-    "startDate" : NumberLong(new ISODate(dateYear3 + "-" + dateMonth3 + "-21T17:30:00Z")*1), 
-    "endDate" : NumberLong(new ISODate(dateYear3 + "-" + dateMonth3 + "-21T19:30:00Z")*1),
+    "startDate" : NumberLong(1442856600000), 
+    "endDate" : NumberLong(1442863800000),
     "address" : {
         "formatedAddress" : "Brest Arena, Boulevard de Plymouth, Brest, France",
         "lat" : 48.387501,
@@ -200,7 +160,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e75j",
         "infrastructure":"Brest Arena"}
 });
 
-db.SB_Event.insert({"_id" : "55847ed0d040353767a48e72j",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e72",
     "activityId" : "ACT-HAND",
     "label" : "Championnat : Journée 2",
     "owner" : {
@@ -208,8 +168,8 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e72j",
         "effectiveId" : "550b31f925da07681592db23", 
         "teamId" : "552d5e08644a77b3a20afdfe"
     },
-    "startDate" : NumberLong(new ISODate(dateYear3 + "-" + dateMonth3 + "-26T18:00:00Z")*1), 
-    "endDate" : NumberLong(new ISODate(dateYear3 + "-" + dateMonth3 + "-26T20:00:00Z")*1),
+    "startDate" : NumberLong(1443290400000), 
+    "endDate" : NumberLong(1443297600000),
     "address" : {
         "formatedAddress" : "Palais des sports Robert-Oubron, Rue Pasteur Vallery Radot, Créteil, France",
         "lat" : 48.787513,
@@ -226,7 +186,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e72j",
         "infrastructure":"Robert Oubron"}
 });
 
-db.SB_Event.insert({"_id" : "55847ed0d040353767a48e73j",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e73",
     "activityId" : "ACT-HAND",
     "label" : "Championnat : Journée 3",
     "owner" : {
@@ -234,8 +194,8 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e73j",
         "effectiveId" : "550b31f925da07681592db23", 
         "teamId" : "552d5e08644a77b3a20afdfe"
     },
-    "startDate" : NumberLong(new ISODate(dateYear4 + "-" + dateMonth4 + "-03T18:00:00Z")*1), 
-    "endDate" : NumberLong(new ISODate(dateYear4 + "-" + dateMonth4 + "-03T20:00:00Z")*1),
+    "startDate" : NumberLong(1443895200000), 
+    "endDate" : NumberLong(1443902400000),
     "link" : {"linkId" : "AAAA", "type" : "championship"},
     "participants" : {
         "teamHome": {"id":"552d5e08644a77b3a20afdfe", "label":"CRMHB Cesson-Sévigné"},
@@ -243,7 +203,7 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e73j",
         "infrastructure":"Le liberte Rennes"}
 });
 
-db.SB_Event.insert({"_id" : "55847ed0d040353767a48e74j",
+db.SB_Event.insert({"_id" : "55847ed0d040353767a48e74",
     "activityId" : "ACT-HAND",
     "label" : "Amical",
     "owner" : {
@@ -251,8 +211,8 @@ db.SB_Event.insert({"_id" : "55847ed0d040353767a48e74j",
         "effectiveId" : "550b31f925da07681592db23", 
         "teamId" : "552d5e08644a77b3a20afdfe"
     },
-    "startDate" : NumberLong(new ISODate(dateYear4 + "-" + dateMonth4 + "-12T13:15:15Z")*1), 
-    "endDate" : NumberLong(new ISODate(dateYear4 + "-" + dateMonth4 + "-12T15:15:15Z")*1),
+    "startDate" : NumberLong(1444655715000), 
+    "endDate" : NumberLong(1444662915000),
     "address" : {
         "formatedAddress" : "Brest Arena, Boulevard de Plymouth, Brest, France",
         "lat" : 48.387501,
