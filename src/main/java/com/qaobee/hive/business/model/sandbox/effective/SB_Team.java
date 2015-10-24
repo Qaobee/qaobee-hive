@@ -37,18 +37,18 @@ public class SB_Team {
 
 	/** Internal identifier. */
 	private String _id;
-
 	/** The label. */
 	private String label;
-
 	/** The age category. */
 	private CategoryAge categoryAge;
-	
 	/** the sandbox's id */
-	private String sandBoxIdCfg;
-	
+	private String sandboxId;
 	/** Effective ID */
 	private String effectiveId;
+	/** Enable ? */
+	private boolean enable;
+	/** Adversary ? */
+	private boolean adversary;
 	
 	/** 
 	 * List labels
@@ -121,17 +121,17 @@ public class SB_Team {
 	}
 
 	/**
-	 * @return the sandBoxIdCfg
+	 * @return the sandboxId
 	 */
-	public String getSandBoxIdCfg() {
-		return sandBoxIdCfg;
+	public String getSandboxId() {
+		return sandboxId;
 	}
 
 	/**
-	 * @param sandBoxIdCfg the sandBoxIdCfg to set
+	 * @param sandboxId the sandboxId to set
 	 */
-	public void setSandBoxIdCfg(String sandBoxIdCfg) {
-		this.sandBoxIdCfg = sandBoxIdCfg;
+	public void setSandboxId(String sandboxId) {
+		this.sandboxId = sandboxId;
 	}
 
 	/**
@@ -168,6 +168,38 @@ public class SB_Team {
 
 	public void setEffectiveId(String effectiveId) {
 		this.effectiveId = effectiveId;
+	}
+
+	/**
+	 * Is the team enable ?
+	 * @return boolean : true if team enable
+	 */
+	public boolean isEnable() {
+		return enable;
+	}
+
+	/**
+	 * Defines if the team is enable.
+	 * @param enable (boolean) : true if team enable
+	 */
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
+
+	/**
+	 * Is the team an adversary ?
+	 * @return boolean : true if adversary
+	 */
+	public boolean isAdversary() {
+		return adversary;
+	}
+
+	/**
+	 * Defines if the team is an adversary.
+	 * @param adversary (boolean) : true if adversary team
+	 */
+	public void setAdversary(boolean adversary) {
+		this.adversary = adversary;
 	}
 
 }

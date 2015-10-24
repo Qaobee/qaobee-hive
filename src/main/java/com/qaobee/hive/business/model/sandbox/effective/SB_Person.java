@@ -106,6 +106,9 @@ public class SB_Person {
 	 * audit CRUD object 
 	 */
 	private Audit audit;
+	
+	/** Sansdbox ID */
+	private String sandboxId;
 
 	/**
 	 * @return the _id
@@ -315,6 +318,22 @@ public class SB_Person {
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
+	}
+
+	/**
+	 * Returns the sandbox ID.
+	 * @return String : _id
+	 */
+	public String getSandboxId() {
+		return sandboxId;
+	}
+
+	/**
+	 * Defines the sandbox ID.
+	 * @param sandboxId (String) : _id
+	 */
+	public void setSandboxId(String sandboxId) {
+		this.sandboxId = sandboxId;
 	}
 
 }

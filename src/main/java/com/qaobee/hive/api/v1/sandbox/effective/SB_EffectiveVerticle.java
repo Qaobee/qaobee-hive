@@ -48,56 +48,31 @@ import java.util.Map;
 @DeployableVerticle(isWorker = true)
 public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
 
-    /**
-     * The constant GET.
-     */
+	/* Handler */
+    /** The constant GET. */
     public static final String GET = Module.VERSION + ".sandbox.effective.effective.get";
-
-    /**
-     * The constant GET_LIST.
-     */
+    /** The constant GET_LIST. */
     public static final String GET_LIST = Module.VERSION + ".sandbox.effective.effective.getList";
-
-    /**
-     * The constant ADD.
-     */
+    /** The constant ADD. */
     public static final String ADD = Module.VERSION + ".sandbox.effective.effective.add";
-
-    /**
-     * The constant update.
-     */
+    /** The constant update. */
     public static final String UPDATE = Module.VERSION + ".sandbox.effective.effective.update";
 
-
-    /**
-     * The constant PARAM_ID.
-     */
+    /* Params */
+    /** The constant PARAM_ID. */
     public static final String PARAM_ID = "_id";
-
-    /**
-     * Sandbox config id
-     */
+    /** Sandbox config id */
     public static final String PARAM_SANDBOXCFG_ID = "sandBoxCfgId";
-
-    /**
-     * Category Age Code
-     */
+    /** Category Age Code */
     public static final String PARAM_CATEGORY_AGE_CODE = "categoryAge.code";
-
-    /**
-     * Role of member
-     */
+    /** Role of member */
     public static final String PARAM_ROLE_MEMBER = "members.role.code";
 
-
-    /**
-     * The Mongo.
-     */
+    /* Injections */
+    /** The Mongo. */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Utils.
-     */
+    /** The Utils. */
     @Inject
     private Utils utils;
 
