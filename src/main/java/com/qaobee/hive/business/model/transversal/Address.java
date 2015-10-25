@@ -18,10 +18,13 @@
  */
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * @author cke
  *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Address {
 	
 	/** The place. */

@@ -18,6 +18,7 @@
  */
 package com.qaobee.hive.business.model.commons.referencial;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.transversal.Address;
@@ -30,53 +31,27 @@ import com.qaobee.hive.business.model.transversal.Contact;
  * @author Nada Vujanic-Maquin
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Structure {
 
     // Declaration des variables
-    /**
-     * The _id.
-     */
+    /** The _id. */
     private String _id;
-
-    /**
-     * The label.
-     */
+    /** The label. */
     private String label;
-
-    /**
-     * Structure's Acronym.
-     */
+    /** Structure's Acronym. */
     private String acronym;
-
-    /**
-     * activity code of the structure.
-     */
+    /** activity code of the structure. */
     private Activity activity;
-
-    /**
-     * The address.
-     */
+    /** The address. */
     private Address address;
-
-    /**
-     * The contact.
-     */
+    /** The contact. */
     private Contact contact;
-
-    /**
-     * The avatar.
-     */
+    /** The avatar. */
     private String avatar;
-
-    /**
-     * audit CRUD object
-     */
+    /** audit CRUD object */
     private Audit audit;
-
-
-    /**
-     * country of the structure
-     */
+    /** country of the structure */
     private Country country;
 
     // Getters and Setters
