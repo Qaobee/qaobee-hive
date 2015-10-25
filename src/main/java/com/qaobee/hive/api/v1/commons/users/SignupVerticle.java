@@ -488,7 +488,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     final JsonObject jsonUser = jsonReq.getObject("user");
                     jsonUser.removeField("activity");
                     
-                    if(jsonUser.containsField("nationality") && jsonUser.getObject("nationality").containsField("alpha2")) {
+                    if(jsonUser.containsField("nationality") && jsonUser.getObject("nationality")!=null && jsonUser.getObject("nationality").containsField("alpha2")) {
                     	Country countryNationality = countryBusiness.getCountryFromAlpha2(jsonUser.getObject("nationality").getString("alpha2"));
                     	if(countryNationality!=null) {
                     		jsonUser.removeField("nationality");
@@ -501,19 +501,22 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     // Code activation
                     final String activationCode = jsonReq.getString("code");
 
-                    // JSon Structure
-                    String structureId = jsonReq.getObject("structure").getString("referencialId");
-                    final JsonObject structure = mongo.getById(structureId, Structure.class);
-                    Structure structureObj = null;
-                    {
-                    	JsonObject s = structure.copy();
-//                    	s.removeField("idFederation");
-//                    	s.getObject("address").removeField("addressGoogleMap");
-                    	structureObj = Json.decodeValue(s.encode(), Structure.class);
-                    }
-
                     // JSon Activity
                     final String activityId = jsonReq.getString("activity");
+                    
+                    // JSon Structure
+                    JsonObject structure = jsonReq.getObject("structure"); 
+                    if(jsonReq.getObject("structure").containsField("_id")) {
+                    	structure = mongo.getById(jsonReq.getObject("structure").getString("_id"), Structure.class);
+                    } else {
+                    	Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("country").getString("alpha2"));
+                    	structure.putObject("country", new JsonObject(Json.encode(country)));
+                    	structure.getObject("address").putString("country", country.getLabel());
+                    	structure.putObject("activity", new JsonObject(Json.encode(activityBusiness.getActivityFromId(activityId))));
+                    }
+                    Structure structureObj = Json.decodeValue(structure.encode(), Structure.class);
+
+                    // Country
                     final String countryId = jsonReq.getString("country", "CNTR-250-FR-FRA");
 
                     final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
