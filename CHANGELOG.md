@@ -1,7 +1,12 @@
 # CHANGELOG
 ---
 
+## 2015-10-25
+
 ## 2015-10-24
+> + Merge branch 'master' of git@gitlab.com:qaobee/qaobee-hive.git (*par [Jerome ROUE](jerome.roue@gmail.com) à 22:21 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ea11d6bb3ee3dcbc936dc7c1f58e9e718872b33f)*)
+> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:55 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/53b5bdebf44e939dffaf7a2c16a07d4216e34568)*)
+> + Ajout script infra + modifs signup (*par [Jerome ROUE](jerome.roue@gmail.com) à 15:20 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/86bc29f1b4f067c34791670b24c179666ee07650)*)
 
 ## 2015-10-23
 > + Création de tout l'environnement pour l'inscription (*par [Jerome ROUE](jerome.roue@gmail.com) à 18:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/c47694c8746edbf7e01d9b668b7e818d02343306)*)
@@ -53,9 +58,9 @@
 
 ## 2015-10-05
 > + Signup (*par [Jerome ROUE](jerome.roue@gmail.com) à 10:36 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/56a081498a6b21bdfe819eacb864c19651740478)*)
-> + Templates de mail (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:18 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/13b7b26487f0f6c26b40ea5251035c752586a9c1)*)
 
 ## 2015-09-29
+> + Templates de mail (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:18 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/13b7b26487f0f6c26b40ea5251035c752586a9c1)*)
 > + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:11 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6eff902831a85f342e0ca7417fc2a280a4436c1d)*)
 > + Pour tests sur Signup (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/2d2ae7dc919711a695f5dae5f03ad85e01c0174f)*)
 > + Branchement du module de mail (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:51 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ed3c6ba62e36b996eaba9383edf596834a989098)*)
@@ -71,9 +76,9 @@
 
 ## 2015-09-13
 > + Ajout du plan FREEMIUM avec sa valeur à 0 euros (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:18 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/216bcdcb8897bc32c27e4d5f3f82007fe36f7ab9)*)
-> + List team + Event (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ee109346afc93ab87a08833550be28da00b04106)*)
 
 ## 2015-09-08
+> + List team + Event (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ee109346afc93ab87a08833550be28da00b04106)*)
 
 ## 2015-09-06
 > + renommage car en écart par rapport à l'API REST (*par [Jerome ROUE](jerome.roue@gmail.com) à 20:03 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/22fda764fe4721778367917af4d247378e2b91a3)*)
@@ -81,10 +86,8 @@
 ## 2015-09-03
 > + Event Bug filtre effectiveId et teamId (*par [Christophe Kervella](ch.kervella@gmail.com) à 12:17 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4810382c6231ab967a8ca7de7323674239d96d69)*)
 > + Bug via APIRest (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:47 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/13582650a28fa7eb04d8768847ed676590f06889)*)
-> + Petit loupé (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/2639fcb151e82af321acdbdc30053981608324bc)*)
-> + Evolution SB_Event et SB_Team (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:13 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/61ecc371d98598d8702a5fd862ca042c597c99c1)*)
 
 ## 2015-09-01
+> + Petit loupé (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/2639fcb151e82af321acdbdc30053981608324bc)*)
+> + Evolution SB_Event et SB_Team (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:13 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/61ecc371d98598d8702a5fd862ca042c597c99c1)*)
 > + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/36f3876ae8a8ed811f71df72be417522fca3957a)*)
-
-## 2015-08-31
