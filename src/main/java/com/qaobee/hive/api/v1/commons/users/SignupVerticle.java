@@ -19,23 +19,6 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
@@ -67,40 +50,60 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.*;
 
 /**
  * The Class SignupVerticle.
  *
- * @author Xavier MARIN
- * <ul>
- *     <li>resthandler.register : Register a new accunt</li>
- *     <li>resthandler.logintest : Login unicity test for rest request</li>
- *     <li>loginExists : Login unicity test for internal use</li>
- *     <li>resthandler.accountcheck : email validation number check</li>
- * </ul>
+ * @author Xavier MARIN         <ul>         <li>resthandler.register : Register a new accunt</li>         <li>resthandler.logintest : Login unicity test for rest request</li>         <li>loginExists : Login unicity test for internal use</li>         <li>resthandler.accountcheck : email validation number check</li>         </ul>
  */
 @DeployableVerticle
 public class SignupVerticle extends AbstractGuiceVerticle {
 
-    /**The Constant REGISTER. */
+    /**
+     * The Constant REGISTER.
+     */
     public static final String REGISTER = Module.VERSION + ".commons.users.signup.register";
-    /** The Constant LOGIN_TEST. */
+    /**
+     * The Constant LOGIN_TEST.
+     */
     public static final String LOGIN_TEST = Module.VERSION + ".commons.users.signup.logintest";
-    /** The Constant LOGIN_EXISTS. */
+    /**
+     * The Constant LOGIN_EXISTS.
+     */
     public static final String LOGIN_EXISTS = Module.VERSION + ".commons.users.signup.loginExists";
-    /** The Constant ACCOUNT_CHECK. */
+    /**
+     * The Constant ACCOUNT_CHECK.
+     */
     public static final String ACCOUNT_CHECK = Module.VERSION + ".commons.users.signup.accountcheck";
-    /** The Constant FIRST_CONNECTION_CHECK */
+    /**
+     * The Constant FIRST_CONNECTION_CHECK
+     */
     public static final String FIRST_CONNECTION_CHECK = Module.VERSION + ".commons.users.signup.firstconnectioncheck";
-    /** The Constant FINALIZE_SIGNUP */
+    /**
+     * The Constant FINALIZE_SIGNUP
+     */
     public static final String FINALIZE_SIGNUP = Module.VERSION + ".commons.users.signup.finalize";
 
-    /** Parameter ID */
+    /**
+     * Parameter ID
+     */
     public static final String PARAM_ID = "id";
-    /** Parameter CODE */
+    /**
+     * Parameter CODE
+     */
     public static final String PARAM_CODE = "code";
 
     // MongoDB driver
@@ -199,7 +202,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 }
             }
         });
-        
+
         /**
          * @apiDescription Register a new account
          * @api {put} /api/1/commons/users/signup/register Register a new account
@@ -274,9 +277,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                             plan.setAmountPaid(Long.parseLong(Params.getString("plan." + plan.getLevelPlan().name() + ".price")) / 100l);
                                             plan.setStartPeriodDate(System.currentTimeMillis());
                                             // Si on vient du mobile, on connait le plan, mais pas par le web
-                                            if(plan.getActivity()!=null) {
-	                                            JsonObject activity = mongo.getById(plan.getActivity().get_id(), Activity.class);
-	                                            plan.setActivity(Json.<Activity>decodeValue(activity.encode(), Activity.class));
+                                            if (plan.getActivity() != null) {
+                                                JsonObject activity = mongo.getById(plan.getActivity().get_id(), Activity.class);
+                                                plan.setActivity(Json.<Activity>decodeValue(activity.encode(), Activity.class));
                                             }
                                             user.getAccount().getListPlan().add(plan);
 
@@ -298,14 +301,14 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                         emailReq.putString("subject", Messages.getString("mail.account.validation.subject"));
                                                         emailReq.putString("content_type", "text/html");
                                                         emailReq.putString("body", tplRes);
-                                                        
+
                                                         // Envoi du mail si pas en test jUnit
-                                                        if(!injunit) {
-                                                        	vertx.eventBus().publish("mailer.mod", emailReq);
+                                                        if (!injunit) {
+                                                            vertx.eventBus().publish("mailer.mod", emailReq);
                                                         } else {
-                                                        	container.logger().info(emailReq);
+                                                            container.logger().info(emailReq);
                                                         }
-                                                        
+
                                                         final JsonObject res = new JsonObject();
                                                         try {
                                                             res.putObject("person", mongo.getById(id, User.class));
@@ -357,7 +360,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} id Person id
          * @apiVersion 0.1.0
          * @apiName accountCheckHandler
-         * @apiGroup SignupV API
+         * @apiGroup Signup API
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
@@ -403,7 +406,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} id Person id
          * @apiVersion 0.1.0
          * @apiName accountCheckHandler
-         * @apiGroup SignupV API
+         * @apiGroup Signup API
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
@@ -434,11 +437,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
                         utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
                     } else {
-                    	
-                    	user.getAccount().setToken(UUID.randomUUID().toString());
+
+                        user.getAccount().setToken(UUID.randomUUID().toString());
                         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
                         mongo.save(user);
-                        
+
                         message.reply(Json.encode(user));
                         utils.sendStatus(true, message);
                     }
@@ -459,11 +462,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
         /**
          * @apiDescription Finalizes signup
          * @api {get} /api/1/commons/users/signup/finalizesignup Account finalizes signup
-         * @apiParam {Object} user
-         * @apiParam {String} activation code
-         * @apiParam {Object} structure
-         * @apiParam {Object} activity
-         * @apiParam
+         * @apiParam {Object} user the user
+         * @apiParam {String} activationCode The activation code
+         * @apiParam {Object} structure The structure
+         * @apiParam {Object} activity the activity
          * @apiVersion 0.1.0
          * @apiName finalizeSignupHandler
          * @apiGroup Signup API
@@ -483,17 +485,17 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     final JsonObject jsonReq = new JsonObject(req.getBody());
-                    
+
                     // JSon User
                     final JsonObject jsonUser = jsonReq.getObject("user");
                     jsonUser.removeField("activity");
-                    
-                    if(jsonUser.containsField("nationality") && jsonUser.getObject("nationality")!=null && jsonUser.getObject("nationality").containsField("alpha2")) {
-                    	Country countryNationality = countryBusiness.getCountryFromAlpha2(jsonUser.getObject("nationality").getString("alpha2"));
-                    	if(countryNationality!=null) {
-                    		jsonUser.removeField("nationality");
-                    		jsonUser.putObject("nationality", new JsonObject(Json.encode(countryNationality)));
-                    	}
+
+                    if (jsonUser.containsField("nationality") && jsonUser.getObject("nationality") != null && jsonUser.getObject("nationality").containsField("alpha2")) {
+                        Country countryNationality = countryBusiness.getCountryFromAlpha2(jsonUser.getObject("nationality").getString("alpha2"));
+                        if (countryNationality != null) {
+                            jsonUser.removeField("nationality");
+                            jsonUser.putObject("nationality", new JsonObject(Json.encode(countryNationality)));
+                        }
                     }
 
                     User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
@@ -503,16 +505,16 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                     // JSon Activity
                     final String activityId = jsonReq.getString("activity");
-                    
+
                     // JSon Structure
-                    JsonObject structure = jsonReq.getObject("structure"); 
-                    if(jsonReq.getObject("structure").containsField("_id")) {
-                    	structure = mongo.getById(jsonReq.getObject("structure").getString("_id"), Structure.class);
+                    JsonObject structure = jsonReq.getObject("structure");
+                    if (jsonReq.getObject("structure").containsField("_id")) {
+                        structure = mongo.getById(jsonReq.getObject("structure").getString("_id"), Structure.class);
                     } else {
-                    	Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("country").getString("alpha2"));
-                    	structure.putObject("country", new JsonObject(Json.encode(country)));
-                    	structure.getObject("address").putString("country", country.getLabel());
-                    	structure.putObject("activity", new JsonObject(Json.encode(activityBusiness.getActivityFromId(activityId))));
+                        Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("country").getString("alpha2"));
+                        structure.putObject("country", new JsonObject(Json.encode(country)));
+                        structure.getObject("address").putString("country", country.getLabel());
+                        structure.putObject("activity", new JsonObject(Json.encode(activityBusiness.getActivityFromId(activityId))));
                     }
                     Structure structureObj = Json.decodeValue(structure.encode(), Structure.class);
 
@@ -537,24 +539,24 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         user.getAccount().setFirstConnexion(false);
                         user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
                         // récupération des activities des plans
-                        for(Plan plan : user.getAccount().getListPlan()) {
-                        	if(plan.getActivity()!=null) {
-                        		Activity activity = activityBusiness.getActivityFromId(plan.getActivity().get_id());
-                        		if(activity!=null) {
-                        			plan.setActivity(activity);
-                        		}
-                        	}
+                        for (Plan plan : user.getAccount().getListPlan()) {
+                            if (plan.getActivity() != null) {
+                                Activity activity = activityBusiness.getActivityFromId(plan.getActivity().get_id());
+                                if (activity != null) {
+                                    plan.setActivity(activity);
+                                }
+                            }
                         }
                         user.setBirthdate(userUpdate.getBirthdate());
                         user.setContact(userUpdate.getContact());
                         // TODO : revoir
                         user.setCountry(userUpdate.getNationality());
-                     // user.setEffectiveDefault(null);
+                        // user.setEffectiveDefault(null);
                         user.setFirstname(userUpdate.getFirstname());
                         user.setGender(userUpdate.getGender());
                         user.setName(userUpdate.getName());
                         user.setNationality(userUpdate.getNationality());
-                        
+
                         RequestWrapper reqSB = new RequestWrapper();
                         reqSB.setMethod(Constantes.PUT);
                         final JsonObject params = new JsonObject();
@@ -579,11 +581,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         sandbox.putString("owner", user.get_id());
                         String sandboxId = mongo.save(sandbox, SB_SandBox.class);
                         sandbox.putString("_id", sandboxId);
-                        
+
                         // Création SB_Person
                         String[] listPersonsId = new String[14];
                         // Coach adjoint
-                        SB_Person person= new SB_Person();
+                        SB_Person person = new SB_Person();
                         person.setAddress(structureObj.getAddress());
                         person.setBirthcity(structureObj.getAddress().getCity());
                         person.setBirthcountry(structureObj.getCountry());
@@ -595,12 +597,12 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         person.setSandboxId(sandboxId);
                         listPersonsId[0] = mongo.save(person);
                         // Joueurs
-                        for(int i=1; i<14; i++) {
-                        	person.setFirstname("Numero " + i);
-                        	person.setName("Joueur");
-                        	listPersonsId[i] = mongo.save(person);
+                        for (int i = 1; i < 14; i++) {
+                            person.setFirstname("Numero " + i);
+                            person.setName("Joueur");
+                            listPersonsId[i] = mongo.save(person);
                         }
-			
+
                         // Création SandBoxCfg
                         JsonObject sandboxCfg = new JsonObject();
                         // SB_Cfg -> Activity
@@ -638,15 +640,15 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         member.putObject("role", role);
                         listMembers.add(member);
                         sandboxCfg.putArray("members", listMembers);
-                        
+
                         // Sauvegarde SB_Cfg
                         String sandboxCfgId = mongo.save(sandboxCfg, SB_SandBoxCfg.class);
                         sandboxCfg.putString("_id", sandboxCfgId);
-                        
+
                         // Sauvegarde Sandbox avec ID sandbox Cfg
                         sandbox.putString("sandboxCfgId", sandboxCfgId);
                         mongo.save(sandbox, SB_SandBox.class);
-                        
+
                         // Création Sandbox Effective
                         JsonObject sandboxEffective = new JsonObject();
                         sandboxEffective.putString("sandBoxCfgId", sandboxCfgId);
@@ -663,21 +665,21 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         categoryAge.putString("genre", "Homme");
                         categoryAge.putNumber("order", 1);
                         sandboxEffective.putObject("categoryAge", categoryAge);
-                        
+
                         // SB_Effective -> members
                         listMembers = new JsonArray();
                         role = new JsonObject();
                         role.putString("code", "player");
                         role.putString("label", "Joueur");
-                        for(int i=1; i<14; i++) {
-	                        member = new JsonObject();
-	                        member.putString("personId", listPersonsId[i]);
-	                        member.putObject("role", role);
-	                        listMembers.add(member);
+                        for (int i = 1; i < 14; i++) {
+                            member = new JsonObject();
+                            member.putString("personId", listPersonsId[i]);
+                            member.putObject("role", role);
+                            listMembers.add(member);
                         }
                         sandboxEffective.putArray("members", listMembers);
                         String sandboxEffectiveId = mongo.save(sandboxEffective, SB_Effective.class);
-                        
+
                         // Création SB_Teams
                         // My team
                         SB_Team team = new SB_Team();
@@ -687,12 +689,12 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         team.setEnable(true);
                         team.setAdversary(false);
                         mongo.save(team);
-                        
+
                         // Equipe adversaire
                         team.setLabel("Equipe adverse");
                         team.setAdversary(true);
                         mongo.save(team);
-                        
+
                         user.setEffectiveDefault(sandboxEffectiveId);
                         mongo.save(user);
                         message.reply(Json.encode(user));
