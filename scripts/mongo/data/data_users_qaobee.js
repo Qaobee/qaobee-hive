@@ -859,7 +859,7 @@ db.SB_Team.insert({
     "label" : "Ploemeur Atlantique Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -869,7 +869,7 @@ db.SB_Team.insert({
     "label" : "Guingamp Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -879,7 +879,7 @@ db.SB_Team.insert({
     "label" : "Hb Pays De Vannes",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -889,7 +889,7 @@ db.SB_Team.insert({
     "label" : "Golfe 56",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -899,7 +899,7 @@ db.SB_Team.insert({
     "label" : "Cesson Rennes Métropole Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -909,7 +909,7 @@ db.SB_Team.insert({
     "label" : "Cercle Paul Bert Rennes Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -919,7 +919,7 @@ db.SB_Team.insert({
     "label" : "Rennes Métropole Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -929,7 +929,7 @@ db.SB_Team.insert({
     "label" : "Stiren Languidic",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -939,7 +939,7 @@ db.SB_Team.insert({
     "label" : "Concarneau Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -949,7 +949,7 @@ db.SB_Team.insert({
     "label" : "Lesneven Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
@@ -959,7 +959,7 @@ db.SB_Team.insert({
     "label" : "Hbc Plerin",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
 });
