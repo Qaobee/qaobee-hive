@@ -18,18 +18,12 @@
  */
 package com.qaobee.hive.api.v1.commons.referencial;
 
-import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.referencial.Structure;
-import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
@@ -37,9 +31,21 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Map;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.business.commons.settings.CountryBusiness;
+import com.qaobee.hive.business.model.commons.referencial.Structure;
+import com.qaobee.hive.business.model.commons.settings.Country;
+import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import com.qaobee.hive.technical.vertx.RequestWrapper;
 
 /**
  * Module commons - referencial - Structure.
@@ -57,59 +63,38 @@ import java.util.Map;
 @DeployableVerticle(isWorker = true)
 public class StructureVerticle extends AbstractGuiceVerticle {
 
-    // Declaration des variables finals
-    /**
-     * The Constant ADD.
-     */
+    /* List of handlers */
+    /** The Constant ADD. */
     public static final String ADD = Module.VERSION + ".commons.referencial.structure.add";
-    /**
-     * The Constant GET.
-     */
+    /** The Constant GET. */
     public static final String GET = Module.VERSION + ".commons.referencial.structure.get";
-    /**
-     * The Constant GET_LIST.
-     */
+    /** The Constant GET_LIST. */
     public static final String GET_LIST = Module.VERSION + ".commons.referencial.structure.getList";
-    /**
-     * The Constant UPDATE.
-     */
+    /** The Constant UPDATE. */
     public static final String UPDATE = Module.VERSION + ".commons.referencial.structure.update";
 
 	/* List of parameters */
-    /**
-     * Id of the structure
-     */
+    /** Id of the structure */
     public static final String PARAM_ID = "_id";
-
-    /**
-     * Label of the structure
-     */
+    /** Label of the structure */
     public static final String PARAM_LABEL = "label";
-
-    /**
-     * activity of the structure
-     */
+    /** activity of the structure */
     public static final String PARAM_ACTIVITY = "activity";
-
-    /**
-     * country of the structure
-     */
+    /** country of the structure */
     public static final String PARAM_COUNTRY = "country";
+    /** Address */
+    public static final String PARAM_ADDRESS = "address";
     
-    /** City label */
-    public static final String PARAM_ADDRESS_CITY = "addressCity";
-    
-
-    /**
-     * The Mongo.
-     */
+    /* Injections */
+    /** The Mongo. */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Utils.
-     */
+    /** The Utils. */
     @Inject
     private Utils utils;
+    /** Country Business */
+    @Inject
+    private CountryBusiness countryBusiness;
 
 
     /**
@@ -143,7 +128,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> add = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
@@ -177,7 +162,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
 
         /**
@@ -197,7 +182,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> get = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
@@ -222,7 +207,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, e);
                 }
             }
-        };
+        });
         
         /**
          * @api {get} /api/1/commons/referencial/structure/getList Returns list of structures from criterias
@@ -243,29 +228,51 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> getList = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
                 container.logger().info("getList() - Structure");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_ACTIVITY, PARAM_COUNTRY, PARAM_ADDRESS_CITY);
+                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    utils.isUserLogged(req);
+                    JsonObject params = new JsonObject(req.getBody());
+                    utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY, PARAM_ADDRESS);
                     
-                    String activity = req.getParams().get(PARAM_ACTIVITY).get(0);
-                    String country = req.getParams().get(PARAM_COUNTRY).get(0);
-                    String addressCity = req.getParams().get(PARAM_ADDRESS_CITY).get(0);
+                    String activity = params.getString(PARAM_ACTIVITY);
+                    JsonObject address = params.getObject(PARAM_ADDRESS);
                     
-                    // Creation of request
-					CriteriaBuilder criterias = new CriteriaBuilder();
-					criterias.add("activity._id", activity);
-//					criterias.add("country._id", );
-					criterias.add("address.city", addressCity.toUpperCase());
+                    Country country = countryBusiness.getCountryFromAlpha2(address.getString("countryAlpha2", "FR"));
                     
+                    /*
+                     * *** Aggregat section ***
+					 */
+                    DBObject match;
+                    BasicDBObject dbObjectParent, dbObjectChild;
+
+					/* *** $MACTH section *** */
+                    dbObjectParent = new BasicDBObject();
+                    // Activity ID
+                    dbObjectParent.put("activity._id", activity);
+                    // Country ID
+                    dbObjectParent.put("country._id", country.get_id());
                     
-					JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, Structure.class);
+                    // City OR Zipcode
+                    BasicDBList dbList = new BasicDBList();
+                    dbList.add(new BasicDBObject("address.city", address.getString("city").toUpperCase()));
+                    dbList.add(new BasicDBObject("address.zipcode", address.getString("zipcode")));
+                    dbObjectParent.put("$or", dbList.toArray());
+                    
+                    match = new BasicDBObject("$match", dbObjectParent);
+                    
+                    /* Pipeline */
+                    List<DBObject> pipelineAggregation = Arrays.asList(match);
+                    
+                    container.logger().info("getListChampionshipHandler : " + pipelineAggregation.toString());
+
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Structure.class);
+                    
                     container.logger().info("Structure found : " + resultJSon.size());
                     message.reply(resultJSon.encode());
                 } catch (final NoSuchMethodException e) {
@@ -274,12 +281,12 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                 } catch (final IllegalArgumentException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-//                } catch (QaobeeException e) {
-//                    container.logger().error(e.getMessage(), e);
-//                    utils.sendError(message, e);
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
                 }
             }
-        };
+        });
 
         /**
          * @api {post} /api/1/commons/referencial/structure/update Update a structure
@@ -305,7 +312,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiError MONGO_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        final Handler<Message<String>> update = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
@@ -338,14 +345,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 }
             }
-        };
+        });
 
-		/*
-         * Handlers registration
-		 */
-        vertx.eventBus().registerHandler(ADD, add);
-        vertx.eventBus().registerHandler(GET, get);
-        vertx.eventBus().registerHandler(GET_LIST, getList);
-        vertx.eventBus().registerHandler(UPDATE, update);
     }
 }
