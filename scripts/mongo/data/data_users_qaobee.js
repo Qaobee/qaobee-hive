@@ -195,7 +195,7 @@ db.SB_Person.remove({"sandboxId":"561ec20b409937a6b439d4e9"});
 
 /* 1 */
 db.SB_Person.insert({
-    "_id" : "807f1fc0-6e1b-4b4d-a0d8-7a4a5de8c0dd",
+    "_id" : "5f82c510-2c89-46b0-b87d-d3b59e748615",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -203,7 +203,7 @@ db.SB_Person.insert({
         },
         "squadnumber" : 11,
         "weight" : 60,
-        "height" : 177,
+        "height" : 175,
         "laterality" : "Droitier",
         "stateForm" : "good",
         "positionType" : "left-backcourt"
@@ -217,23 +217,19 @@ db.SB_Person.insert({
         "country" : "France",
         "zipcode" : "29280"
     },
-    "contact" : {
-        "cellphone" : "0781635773",
-        "home" : "0298382987",
-        "email" : "ch.kervella@gmail.com"
-    },
+    "contact" : {},
     "firstname" : "Tristan",
     "name" : "Kervella",
-    "birthdate" : NumberLong(1038351600000),
+    "birthdate" : NumberLong(1014332400000),
     "gender" : "Homme",
     "nationality" : "France",
-    "birthCity" : "Brest, France",
+    "birthCity" : "Plouzané, France",
     "sandboxId" : "561ec20b409937a6b439d4e9"
 });
 
 /* 2 */
 db.SB_Person.insert({
-    "_id" : "31aa373e-7cde-4c3d-ada6-f48f41dc38d2",
+    "_id" : "d31d3550-479a-4ee9-8304-84a132202d89",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -271,7 +267,7 @@ db.SB_Person.insert({
 
 /* 3 */
 db.SB_Person.insert({
-    "_id" : "836fff9c-c955-4861-8776-d68999a0abb5",
+    "_id" : "88afb9c2-eb10-482c-938d-34089405e65f",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -308,7 +304,7 @@ db.SB_Person.insert({
 
 /* 4 */
 db.SB_Person.insert({
-    "_id" : "5a21dfc4-8d93-4b71-b082-1ec7c821dd45",
+    "_id" : "c0bf7706-f039-46c3-86b2-460930696890",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -345,7 +341,7 @@ db.SB_Person.insert({
 
 /* 5 */
 db.SB_Person.insert({
-    "_id" : "0ec47086-3266-451c-b452-62cd9091d1c6",
+    "_id" : "26baf31a-f153-41b0-9e1d-c32cb9e859dd",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -380,7 +376,7 @@ db.SB_Person.insert({
 
 /* 6 */
 db.SB_Person.insert({
-    "_id" : "94b05409-1ee4-4c84-af86-34de4d5f6824",
+    "_id" : "8915da91-832f-419f-b5e6-a92d6828fd31",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -417,7 +413,7 @@ db.SB_Person.insert({
 
 /* 7 */
 db.SB_Person.insert({
-    "_id" : "940819ad-9b44-4512-aa4f-86e802e85607",
+    "_id" : "941f9d48-45e8-4b2f-b0ce-d33900a92fb8",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -455,7 +451,7 @@ db.SB_Person.insert({
 
 /* 8 */
 db.SB_Person.insert({
-    "_id" : "7d6df586-4476-4bf8-a4cb-324d5421acee",
+    "_id" : "c857c124-79c0-4b6e-8406-f89a26b8426f",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -493,7 +489,7 @@ db.SB_Person.insert({
 
 /* 9 */
 db.SB_Person.insert({
-    "_id" : "84f90ac4-528a-41ec-aecf-ced45b3cb1f2",
+    "_id" : "ce18d73e-dedf-43e5-8e75-16e0375be349",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -531,7 +527,7 @@ db.SB_Person.insert({
 
 /* 10 */
 db.SB_Person.insert({
-    "_id" : "aa5018a5-7804-438b-9a31-52403ac62359",
+    "_id" : "5f5f6267-7f09-48bf-9557-3f52bcd6be8f",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -569,7 +565,7 @@ db.SB_Person.insert({
 
 /* 11 */
 db.SB_Person.insert({
-    "_id" : "5b844a2e-fa1c-4daf-a60a-3c66ebf44b7b",
+    "_id" : "1ce4591d-74a8-46e9-af80-d633f9344d27",
     "status" : {
         "availability" : {
             "value" : "available",
@@ -716,6 +712,233 @@ db.SB_Person.insert({
     "sandboxId" : "561ec20b409937a6b439d4e9"
 });
 
+/* 15 */
+db.SB_Person.insert({
+    "_id" : "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 19,
+        "weight" : 70,
+        "height" : 173,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "center-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "6 impasse marie curie, Guilers, France",
+        "lat" : 48.426340,
+        "lng" : -4.565373,
+        "place" : "6 impasse marie curie",
+        "city" : "Guilers",
+        "country" : "France",
+        "zipcode" : "29820"
+    },
+    "contact" : {
+        "email" : "nonoderrien@orange.fr",
+        "cellphone" : "0607882976",
+        "home" : "0298074029"
+    },
+    "firstname" : "Mathieu",
+    "name" : "Derrien",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1018735200000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 16 */
+db.SB_Person.insert({
+    "_id" : "cb1ad24e-6195-4c11-854f-4d7a68a43c6e",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 17,
+        "weight" : 70,
+        "height" : 173,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "left-wingman"
+    },
+    "address" : {
+        "formatedAddress" : "200 rue Django Reinhardt, Brest, France",
+        "lat" : 48.4156331,
+        "lng" : -4.5057746,
+        "place" : "200 rue Django Reinhardt",
+        "city" : "Brest",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
+    "contact" : {
+        "email" : "fclvz@free.fr",
+        "cellphone" : "0651616148",
+        "home" : "0298035698"
+    },
+    "firstname" : "Hugo",
+    "name" : "Calvez",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(985129200000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 17 */
+db.SB_Person.insert({
+    "_id" : "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 18,
+        "weight" : 70,
+        "height" : 173,
+        "laterality" : "Gaucher",
+        "stateForm" : "good",
+        "positionType" : "right-wingman"
+    },
+    "address" : {
+        "formatedAddress" : "16 rue Notre Dame, Bourg-Blanc, France",
+        "lat" : 48.5001999,
+        "lng" : -4.5065255,
+        "place" : "16 rue Notre Dame",
+        "city" : "Bourg-Blanc",
+        "country" : "France",
+        "zipcode" : "29860"
+    },
+    "contact" : {
+        "email" : "annekermarrec@live.fr",
+        "cellphone" : "0650571471",
+        "home" : "0298421788"
+    },
+    "firstname" : "Allan",
+    "name" : "Kermarrec",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1019685600000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 18 */
+db.SB_Person.insert({
+    "_id" : "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 20,
+        "weight" : 70,
+        "height" : 173,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "pivot"
+    },
+    "address" : {
+        "formatedAddress" : "29 rue Pierre Talcoat, Brest, France",
+        "lat" : 48.4261371,
+        "lng" : -4.5065255,
+        "place" : "29 rue Pierre Talcoat",
+        "city" : "Brest",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
+    "contact" : {
+        "email" : "alain.moine@yahoo.fr",
+        "cellphone" : "0663200117",
+        "home" : "0230018283"
+    },
+    "firstname" : "Alex",
+    "name" : "Moine",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1005174000000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 19 */
+db.SB_Person.insert({
+    "_id" : "cc5d449a-d466-400c-b73f-955c676103ed",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 21,
+        "weight" : 70,
+        "height" : 173,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "left-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "9 Rue Jean Louis Delmotte, Brest, France",
+        "lat" : 48.4293424,
+        "lng" : -4.4952663,
+        "place" : "9 Rue Jean Louis Delmotte",
+        "city" : "Brest",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
+    "contact" : {
+        "email" : "lcperson@free.fr",
+        "cellphone" : "0660059239",
+        "home" : "0973593269"
+    },
+    "firstname" : "Clément",
+    "name" : "Person",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(993420000000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 20 */
+db.SB_Person.insert({
+    "_id" : "5a1c12af-0fc4-4eb8-a342-216e51bbada8",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 22,
+        "weight" : 70,
+        "height" : 173,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "center-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "30 Rue de la Paix, Saint-Renan, France",
+        "lat" : 48.4273124,
+        "lng" : -4.6222088,
+        "place" : "30 Rue de la Paix",
+        "city" : "Saint-Renan",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
+    "contact" : {
+        "email" : "lcperson@free.fr",
+        "cellphone" : "0662497695"
+    },
+    "firstname" : "Malo",
+    "name" : "Lurton",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(978303600000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
 //////////////////////////////////////////////////////////
 /* 
  * Vidage de la collection SB_Effective (CKE)
@@ -741,70 +964,77 @@ db.SB_Effective.insert({
     },
     "members" : [ 
         {
-            "personId" : "807f1fc0-6e1b-4b4d-a0d8-7a4a5de8c0dd",
+            "personId" : "5f82c510-2c89-46b0-b87d-d3b59e748615",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
             }
         }, 
         {
-            "personId" : "31aa373e-7cde-4c3d-ada6-f48f41dc38d2",
+            "personId" : "d31d3550-479a-4ee9-8304-84a132202d89",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
             }
         }, 
         {
-            "personId" : "836fff9c-c955-4861-8776-d68999a0abb5",
+            "personId" : "88afb9c2-eb10-482c-938d-34089405e65f",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
             }
         }, 
         {
-            "personId" : "5a21dfc4-8d93-4b71-b082-1ec7c821dd45",
+            "personId" : "c0bf7706-f039-46c3-86b2-460930696890",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
             }
         }, 
         {
-            "personId" : "0ec47086-3266-451c-b452-62cd9091d1c6",
+            "personId" : "26baf31a-f153-41b0-9e1d-c32cb9e859dd",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
             }
         }, 
         {
-            "personId" : "94b05409-1ee4-4c84-af86-34de4d5f6824",
+            "personId" : "8915da91-832f-419f-b5e6-a92d6828fd31",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
             }
         }, 
         {
-            "personId" : "940819ad-9b44-4512-aa4f-86e802e85607",
+            "personId" : "941f9d48-45e8-4b2f-b0ce-d33900a92fb8",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
             }
         }, 
         {
-            "personId" : "7d6df586-4476-4bf8-a4cb-324d5421acee",
+            "personId" : "c857c124-79c0-4b6e-8406-f89a26b8426f",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
             }
         }, 
         {
-            "personId" : "84f90ac4-528a-41ec-aecf-ced45b3cb1f2",
+            "personId" : "ce18d73e-dedf-43e5-8e75-16e0375be349",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
             }
         }, 
         {
-            "personId" : "aa5018a5-7804-438b-9a31-52403ac62359",
+            "personId" : "5f5f6267-7f09-48bf-9557-3f52bcd6be8f",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "1ce4591d-74a8-46e9-af80-d633f9344d27",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
@@ -832,7 +1062,42 @@ db.SB_Effective.insert({
             }
         }, 
         {
-            "personId" : "5b844a2e-fa1c-4daf-a60a-3c66ebf44b7b",
+            "personId" : "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "cb1ad24e-6195-4c11-854f-4d7a68a43c6e",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "cc5d449a-d466-400c-b73f-955c676103ed",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "5a1c12af-0fc4-4eb8-a342-216e51bbada8",
             "role" : {
                 "code" : "player",
                 "label" : "Joueur"
@@ -846,7 +1111,7 @@ db.SB_Effective.insert({
  * Alimentation SB_Team (CKE)
  */
 db.SB_Team.insert({
-    "_id" : "3c43067f-469f-4369-92f7-82b0be36c1a9",
+    "_id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
     "label" : "Avenir Du Ponant 1",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
@@ -855,7 +1120,7 @@ db.SB_Team.insert({
 });
 
 db.SB_Team.insert({
-    "_id" : "562ba23db70fd108e375395b",
+    "_id" : "5a931b17-63c5-4b1a-be6e-2e5ed8521059",
     "label" : "Ploemeur Atlantique Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
@@ -962,6 +1227,39 @@ db.SB_Team.insert({
     "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
     "enable" : true,
     "adversary": true
+});
+
+db.SB_Event.remove({ "owner.sandboxId" : "561ec20b409937a6b439d4e9"});
+
+db.SB_Event.insert({"_id" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
+    "activityId" : "ACT-HAND",
+    "owner" : {
+        "sandboxId" : "561ec20b409937a6b439d4e9",
+        "effectiveId" : "561ec4d0409937a6b439d4ea",
+        "teamId" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
+    },
+    "address" : {
+        "formatedAddress" : "Guilers, France",
+        "lat" : 48.4248430000000027,
+        "lng" : -4.5582410000000007,
+        "city" : "Guilers",
+        "country" : "France"
+    },
+    "link" : {
+        "type" : "championship"
+    },
+    "label" : "Journée 5",
+    "startDate" : NumberLong(1446305400000),
+    "participants" : {
+        "teamHome" : {
+            "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
+            "label" : "Locmaria Hb 1"
+        },
+        "teamVisitor" : {
+            "id" : "5a931b17-63c5-4b1a-be6e-2e5ed8521059",
+            "label" : "Ploemeur Atlantique Hb"
+        }
+    }
 });
 
 /*

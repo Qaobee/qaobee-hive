@@ -33,7 +33,7 @@
 /* 
  * Vidage de la collection SB_Event pour la sandbox de Cesson-Sevigne
  */
-db.SB_Event.remove({ "owner" : { "$in" : [ "558b0efebd2e39cdab651e1f"]}});
+db.SB_Event.remove({ "owner.sandboxId" : "558b0efebd2e39cdab651e1f"});
 
  
 /***************************************************************
