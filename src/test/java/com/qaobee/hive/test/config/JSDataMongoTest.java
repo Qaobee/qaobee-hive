@@ -23,19 +23,14 @@ public interface JSDataMongoTest {
 
     /* DATA */
 	String DATA_CHAMPIONSHIP_HAND = "data_championShip_Hand.js";
-    String DATA_EFFECTIVE_FOOT = "data_SB_effective_Foot.js";
     String DATA_EFFECTIVE_HAND = "data_SB_effective_Hand.js";
     String DATA_TEAM_HAND = "data_SB_team_Hand.js";
     String DATA_EVENT_HAND = "data_SB_event_Hand_tests.js";
 
-    String DATA_PERSON_FOOT = "data_SB_person_Foot_SEN.js";
     String DATA_PERSON_HAND = "data_SB_person_Hand_CESSON.js";
-    String DATA_STATS_FOOT = "data_SB_stats_Foot_SEN.js";
-    String DATA_STATS_MATCH = "data_SB_stats_match.js";
     String DATA_STRUCTURE = "data_structures.js";
     String DATA_USERS = "data_users.js";
     String DATA_SANDBOXES_HAND = "data_SB_sandbox_Hand.js";
-    String DATA_SANDBOXES_FOOT = "data_SB_sandbox_Foot.js";
 
     /* Training */
     String DATA_CYCLE = "data_SB_training_cycle.js";

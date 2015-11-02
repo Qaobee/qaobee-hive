@@ -43,7 +43,7 @@ public class SB_PersonTest extends VertxJunitSupport {
     @Test
     public void getListPersonByIdTest() {
 
-        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_FOOT);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -57,9 +57,9 @@ public class SB_PersonTest extends VertxJunitSupport {
         final JsonObject params = new JsonObject();
 
 		/* ListId person */
-        params.putArray(SB_PersonVerticle.PARAM_LIST_ID, new JsonArray(new String[] { "541d3136f61fbf69868c1223", "541d3136f61fbf69868c121f", "541d3136f61fbf69868c1220", "541d3136f61fbf69868c1221",
-                "541d3136f61fbf69868c1226", "541d3136f61fbf69868c1228", "541d3136f61fbf69868c122a", "541d3136f61fbf69868c122c", "541d3136f61fbf69868c1230", "541d3136f61fbf69868c1222",
-                "541d3136f61fbf69868c122f" }));
+        params.putArray(SB_PersonVerticle.PARAM_LIST_ID, new JsonArray(new String[] { "550a05dadb8f8b6e2f51f4db", "550a05e3db8f8b6e2f51f4dc", "550a05e9db8f8b6e2f51f4dd", "550a05f7db8f8b6e2f51f4de",
+                "550a0600db8f8b6e2f51f4df", "550a0606db8f8b6e2f51f4e0", "550a060ddb8f8b6e2f51f4e1", "550a0614db8f8b6e2f51f4e2", "550a061bdb8f8b6e2f51f4e3", "550a0620db8f8b6e2f51f4e4",
+                "550a0620db8f8b6e2f51f4e5" }));
 
 		/* ListId person */
         params.putArray(SB_PersonVerticle.PARAM_LIST_FIELD, new JsonArray(new String[] { "_id", "name", "firstname", "avatar", "status" }));

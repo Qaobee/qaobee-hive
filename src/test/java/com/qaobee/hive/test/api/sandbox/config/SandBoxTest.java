@@ -145,23 +145,4 @@ public class SandBoxTest extends VertxJunitSupport {
         Assert.assertTrue("SandBox not found", result.getString("message").contains("No SandBox found for user id"));
 
     }
-    
-    /**
-     * Retrieve list of sand box for one owner.
-     */
-    @Test
-    public void getListSandBoxByOwnerOk() {
-
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_FOOT, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        User user = generateLoggedUser("54160977d5bd065a1bb1e565");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        final String reply = sendonBus(SB_SandBoxVerticle.GET_LIST_BY_OWNER, req, user.getAccount().getToken());
-        Assert.assertEquals(2, new JsonArray(reply).size());
-
-    }
-
 }

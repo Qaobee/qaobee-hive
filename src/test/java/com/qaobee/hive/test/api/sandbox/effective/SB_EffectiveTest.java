@@ -97,41 +97,6 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     }
 
     /**
-     * Tests of getting a list of all members for one sandbox config
-     */
-    @Test
-    public void getListMembersBySandBoxCfgId() {
-
-        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_FOOT);
-        User user = generateLoggedUser("54160977d5bd065a1bb1e565");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        params.put(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, Collections.singletonList("559d268318e3cb71c60d9649"));
-        req.setParams(params);
-
-
-        final String reply = sendonBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
-        JsonArray result = new JsonArray(reply);
-
-        Assert.assertEquals(2, result.size());
-
-        JsonObject itemOne = result.get(0);
-        JsonArray members = itemOne.getArray("members");
-
-        Assert.assertEquals(24, members.size());
-
-        JsonObject itemTwo = result.get(1);
-        members = itemTwo.getArray("members");
-
-        Assert.assertEquals(23, members.size());
-    }
-
-    /**
      * Tests of getting a list of members without sandbox config id
      */
     @Test
