@@ -34,7 +34,6 @@ import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
-import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -67,7 +66,13 @@ import java.util.*;
 /**
  * The Class SignupVerticle.
  *
- * @author Xavier MARIN         <ul>         <li>resthandler.register : Register a new accunt</li>         <li>resthandler.logintest : Login unicity test for rest request</li>         <li>loginExists : Login unicity test for internal use</li>         <li>resthandler.accountcheck : email validation number check</li>         </ul>
+ * @author Xavier MARIN
+ * <ul>
+ *     <li>resthandler.register : Register a new accunt</li>
+ *     <li>resthandler.logintest : Login unicity test for rest request</li>
+ *     <li>loginExists : Login unicity test for internal use</li>
+ *     <li>resthandler.accountcheck : email validation number check</li>
+ * </ul>
  */
 @DeployableVerticle
 public class SignupVerticle extends AbstractGuiceVerticle {
@@ -585,21 +590,42 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         // Création SB_Person
                         String[] listPersonsId = new String[14];
                         // Coach adjoint
-                        SB_Person person = new SB_Person();
-                        person.setAddress(structureObj.getAddress());
-                        person.setBirthcity(structureObj.getAddress().getCity());
-                        person.setBirthcountry(structureObj.getCountry());
-                        person.setBirthdate(0);
-                        person.setFirstname("Assistant");
-                        person.setGender("gender.male");
-                        person.setName("Coach");
-                        person.setNationality(structureObj.getCountry());
-                        person.setSandboxId(sandboxId);
+                        JsonObject person = new JsonObject();
+                        person.putObject("address", new JsonObject(Json.encode(structureObj.getAddress())));
+                        person.putString("birthCity", structureObj.getAddress().getCity());
+                        person.putObject("birthcountry", new JsonObject(Json.encode(structureObj.getCountry())));
+                        person.putString("nationality", structureObj.getCountry().getLabel());
+                        person.putNumber("birthdate", 0);
+                        person.putString("firstname", "Assistant");
+                        person.putString("name", "Coach");
+                        person.putString("gender", "gender.male");
+                        person.putString("sandboxId", sandboxId);
+                        JsonObject contact = new JsonObject();
+                        contact.putString("email", "");
+                        contact.putString("cellphone", "");
+                        contact.putString("home", "");
+
+                        JsonObject availability = new JsonObject();
+                        availability.putString("value", "available");
+                        availability.putString("cause", "available");
+
+                        JsonObject status = new JsonObject();
+                        status.putObject("availability", availability);
+                        status.putNumber("squadnumber", 0);
+                        status.putNumber("weight", 0);
+                        status.putNumber("height", 0);
+                        status.putString("laterality", "right-handed");
+                        status.putString("stateForm", "good");
+                        status.putString("positionType", "");
+
+                        person.putObject("status", status);
+
                         listPersonsId[0] = mongo.save(person);
                         // Joueurs
-                        for (int i = 1; i < 14; i++) {
-                            person.setFirstname("Numero " + i);
-                            person.setName("Joueur");
+                        for (int i = 1; i <= 14; i++) {
+                            person.putString("firstname", "Numero " + i);
+                            person.putString("name", "Joueur");
+                            person.getObject("status").putNumber("squadnumber", i);
                             listPersonsId[i] = mongo.save(person);
                         }
 
