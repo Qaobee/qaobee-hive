@@ -30,6 +30,8 @@
  */
 //////////////////////////////////////////////////////////
 
+db.getCollection('SB_Stats').remove({"eventId":"e254897f-cf3a-48b8-bed5-a4d4664ab4a4"});
+
 /* 1 */
 db.SB_Stats.insert({
     "_id" : ObjectId("5634ffb8e4b09c0c51697e6a"),
