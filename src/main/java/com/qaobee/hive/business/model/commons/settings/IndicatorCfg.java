@@ -18,157 +18,211 @@
  */
 package com.qaobee.hive.business.model.commons.settings;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
+ * Bean that describes the indicator config.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class IndicatorCfg {
 	
+	/** Internal identifier */
 	private String _id;
-	
+	/** Code */
 	private String code;
-	
+	/** Activity identifier */
 	private String activityId;
-	
+	/** Country identifier */
 	private String countryId;
-	
+	/** Type of indicator */
 	private String indicatorType;
-	
+	/** List of screens */
 	private List<String> listScreen;
-	
+	/** Description */
 	private String description;
-	
+	/** List of fields */
 	private List<IndicatorField> listField;
-	
+	/** List of values */
 	private List<String> listValues;
 
 	/**
-	 * @return the _id
+	 * Returns the internal identifier.
+	 * @return String : id
 	 */
 	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * @param _id the _id to set
+	 * Defines the internal identifier.
+	 * @param _id (String) : id
 	 */
 	public void set_id(String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * @return the code
+	 * Returns the code.
+	 * @return String : code
 	 */
 	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * @param code the code to set
+	 * Defines the code.
+	 * @param code (String) : code
 	 */
 	public void setCode(String code) {
 		this.code = code;
 	}
 
 	/**
-	 * @return the activityId
+	 * Returns the activity ID.
+	 * @return String : activity ID
 	 */
 	public String getActivityId() {
 		return activityId;
 	}
 
 	/**
-	 * @param activityId the activityId to set
+	 * Defines the activity ID.
+	 * @param activityId (String) : activity ID
 	 */
 	public void setActivityId(String activityId) {
 		this.activityId = activityId;
 	}
 
 	/**
-	 * @return the countryId
+	 * Returns the country ID.
+	 * @return String : country ID
 	 */
 	public String getCountryId() {
 		return countryId;
 	}
 
 	/**
-	 * @param countryId the countryId to set
+	 * Defines the country ID.
+	 * @param countryId (String) : country ID
 	 */
 	public void setCountryId(String countryId) {
 		this.countryId = countryId;
 	}
 
 	/**
-	 * @return the indicatorType
+	 * Returns the type of indicator.
+	 * @return String : type
 	 */
 	public String getIndicatorType() {
 		return indicatorType;
 	}
 
 	/**
-	 * @param indicatorType the indicatorType to set
+	 * Defines the type of indicator.
+	 * @param indicatorType (String) : type
 	 */
 	public void setIndicatorType(String indicatorType) {
 		this.indicatorType = indicatorType;
 	}
 
 	/**
-	 * @return the listScreen
+	 * Returns the list of screens.
+	 * @return List(String) : list
 	 */
 	public List<String> getListScreen() {
 		return listScreen;
 	}
 
 	/**
-	 * @param listScreen the listScreen to set
+	 * Defines the list of screens.
+	 * @param listScreen (List(Screen)) : list
 	 */
 	public void setListScreen(List<String> listScreen) {
 		this.listScreen = listScreen;
 	}
+	
+	/**
+	 * Adds a screen to the list.
+	 * @param screen (String) : screen name
+	 */
+	public void addScreen(String screen) {
+		if(listScreen==null) {
+			listScreen = new ArrayList<>();
+		}
+		listScreen.add(screen);
+	}
 
 	/**
-	 * @return the description
+	 * Returns the indicator description.
+	 * @return String : description
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * @param description the description to set
+	 * Defines the indicator description.
+	 * @param description (String) : description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	/**
-	 * @return the listField
+	 * Returns the list of fields.
+	 * @return List(IndicatorField) : list
 	 */
 	public List<IndicatorField> getListField() {
 		return listField;
 	}
 
 	/**
-	 * @param listField the listField to set
+	 * Defines the list of fields.
+	 * @param listField (List(IndicatorField)) : list
 	 */
 	public void setListField(List<IndicatorField> listField) {
 		this.listField = listField;
 	}
+	
+	/**
+	 * Adds a field to the list of fields.
+	 * @param field (IndicatorField) : field 
+	 */
+	public void addField(IndicatorField field) {
+		if(listField==null) {
+			listField = new ArrayList<>();
+		}
+		listField.add(field);
+	}
 
 	/**
-	 * @return the listValues
+	 * Returns the list of values.
+	 * @return List(String) : list
 	 */
 	public List<String> getListValues() {
 		return listValues;
 	}
 
 	/**
-	 * @param listValues the listValues to set
+	 * Defines the list of values.
+	 * @param listValues (List(String)) : list
 	 */
 	public void setListValues(List<String> listValues) {
 		this.listValues = listValues;
 	}
 	
-	
+	/**
+	 * Adds a value to the list.
+	 * @param value (String) : value
+	 */
+	public void addValue(String value) {
+		if(listValues==null) {
+			listValues = new ArrayList<>();
+		}
+		listValues.add(value);
+	}
 }

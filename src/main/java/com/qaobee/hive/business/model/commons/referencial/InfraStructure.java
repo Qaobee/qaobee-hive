@@ -22,103 +22,100 @@ import com.qaobee.hive.business.model.transversal.Address;
 import com.qaobee.hive.business.model.transversal.Audit;
 
 /**
+ * Bean that describes infrastructure.
  * @author cke
- *
  */
 public class InfraStructure {
 
-	/**
-     * The _id.
-     */
-    private String _id;
-
-    /**
-     * The label.
-     */
+	/** Internal identifier */
+    private String _id;    
+    /** Label */
     private String label;
-
-    /**
-     * Address code of the Infrastructure.
-     */
+    /** Address */
     private Address address;
-    
-    /**
-     * Structure of the Infrastructure
-     */
+    /** Structure of the Infrastructure */
     private Structure structure;
-    
     /** audit CRUD object */
 	private Audit audit;
 
 	/**
-	 * @return the _id
+	 * Returns the internal identifier.
+	 * @return String : ID
 	 */
 	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * @param _id the _id to set
+	 * Defines the internal identifier.
+	 * @param _id (String) ; ID
 	 */
 	public void set_id(String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * @return the label
+	 * Returns the label.
+	 * @return String : label
 	 */
 	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * @param label the label to set
+	 * Defines the label.
+	 * @param label (String) : label
 	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
 
 	/**
-	 * @return the address
+	 * Returns the address.
+	 * @return Address : address
 	 */
 	public Address getAddress() {
 		return address;
 	}
 
 	/**
-	 * @param address the address to set
+	 * Defines the address.
+	 * @param address (Address) : address
 	 */
 	public void setAddress(Address address) {
 		this.address = address;
 	}
 
 	/**
-	 * @return the structure
+	 * Returns the structure.
+	 * @return Structure : structure
 	 */
 	public Structure getStructure() {
 		return structure;
 	}
 
 	/**
-	 * @param structure the structure to set
+	 * Defines the structure.
+	 * @param structure (Structure) : structure
 	 */
 	public void setStructure(Structure structure) {
 		this.structure = structure;
 	}
 
 	/**
-	 * @return the audit
+	 * Returns the auit.
+	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
 		return audit;
 	}
 
 	/**
-	 * @param audit the audit to set
+	 * Defines the audit.
+	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
 	}
-    
     
 }

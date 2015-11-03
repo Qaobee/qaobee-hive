@@ -18,55 +18,47 @@
  */
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * The Class Member.
- *
+ * Bean that describes a member.
  * @author Nada Vujanic-Maquin
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Member {
 
-    // Declaration des variables
-    /**
-     * The person.
-     */
+    /** Person ID */
     private String personId;
-
-    /**
-     * The Function.
-     */
+    /** Member role */
     private Role role;
 
-    // Getters and Setters
-
     /**
-     * Gets the person id.
-     *
-     * @return the personId
+     * Returns the person id.
+     * @return String : person ID
      */
-    public final String getPersonId() {
+    public String getPersonId() {
         return personId;
     }
 
     /**
-     * Sets the person id.
-     *
-     * @param personId the personId to set
+     * Defines the person id.
+     * @param personId (String) : person ID
      */
-    public final void setPersonId(final String personId) {
+    public void setPersonId(final String personId) {
         this.personId = personId;
     }
 
     /**
-     * @return the role
+     * Returns the role of the member.
+     * @return Role : role
      */
     public Role getRole() {
         return role;
     }
 
     /**
-     * @param role the role to set
+     * Defines the role of the member.
+     * @param role (Role) : role
      */
     public void setRole(Role role) {
         this.role = role;

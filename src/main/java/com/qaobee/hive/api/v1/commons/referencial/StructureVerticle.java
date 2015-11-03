@@ -210,7 +210,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
         });
         
         /**
-         * @api {get} /api/1/commons/referencial/structure/getList Returns list of structures from criterias
+         * @api {post} /api/1/commons/referencial/structure/getList Returns list of structures from criterias
          * @apiVersion 0.1.0
          * @apiName getList
          * @apiGroup Structure API
@@ -219,8 +219,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiDescription Gets list of structures from criterias from the collection structure in referencial module
          *
          * @apiParam {String} activity The Activity-ID.
-         * @apiParam {String} country Country
-         * @apiParam {String} addressCity The city label
+         * @apiParam {Object} address The address
          *
          * @apiSuccess {Structure}   structure            The Structure found.
          *

@@ -19,167 +19,169 @@
 package com.qaobee.hive.business.model.transversal;
 
 /**
+ * Bean that descripbes how to contact.
  * @author cke
- *
  */
 public class Contact {
 	
-	/** The home. */
+	/** Home phone number */
 	private String home;
-
-	/** The office. */
+	/** Office phone number */
 	private String office;
-
-	/** The cellphone. */
+	/** Cellphone number */
 	private String cellphone;
-
-	/** The email. */
+	/** e-Mail */
 	private String email;
-
-	/** The fax. */
+	/** Fax number */
 	private String fax;
-	
-	/**
-     * The web site.
-     */
+	/** Web site */
     private String webSite;
-
-    /**
-     * The facebook.
-     */
+    /** Facebook account */
     private String facebook;
-
-    /**
-     * The google plus.
-     */
+    /** Google plus account */
     private String googlePlus;
-
-    /**
-     * The twitter.
-     */
+    /** Twitter account */
     private String twitter;
 
 	/**
-	 * @return the webSite
+	 * Returns the web site URL.
+	 * @return String : URL
 	 */
 	public String getWebSite() {
 		return webSite;
 	}
 
 	/**
-	 * @param webSite the webSite to set
+	 * Defines the web site URL.
+	 * @param webSite (String) : URL
 	 */
 	public void setWebSite(String webSite) {
 		this.webSite = webSite;
 	}
 
 	/**
-	 * @return the facebook
+	 * Returns the facebook account.
+	 * @return String : facebook
 	 */
 	public String getFacebook() {
 		return facebook;
 	}
 
 	/**
-	 * @param facebook the facebook to set
+	 * Defines the facebook account.
+	 * @param facebook (Stirng) : facebook
 	 */
 	public void setFacebook(String facebook) {
 		this.facebook = facebook;
 	}
 
 	/**
-	 * @return the googlePlus
+	 * Returns the Google+ account.
+	 * @return String : google+
 	 */
 	public String getGooglePlus() {
 		return googlePlus;
 	}
 
 	/**
-	 * @param googlePlus the googlePlus to set
+	 * Defines the Google+ account.
+	 * @param googlePlus (String) : Google+
 	 */
 	public void setGooglePlus(String googlePlus) {
 		this.googlePlus = googlePlus;
 	}
 
 	/**
-	 * @return the twitter
+	 * Returns the Twitter account.
+	 * @return String : twitter
 	 */
 	public String getTwitter() {
 		return twitter;
 	}
 
 	/**
-	 * @param twitter the twitter to set
+	 * Defines the Twitter account.
+	 * @param twitter (String) : twitter 
 	 */
 	public void setTwitter(String twitter) {
 		this.twitter = twitter;
 	}
 
 	/**
-	 * @return the home
+	 * Returns the home phone number.
+	 * @return String : phone number
 	 */
 	public String getHome() {
 		return home;
 	}
 
 	/**
-	 * @param home the home to set
+	 * Defines the home phone number.
+	 * @param home (String) : phone number
 	 */
 	public void setHome(String home) {
 		this.home = home;
 	}
 
 	/**
-	 * @return the office
+	 * Returns the office phone number.
+	 * @return String : phone number
 	 */
 	public String getOffice() {
 		return office;
 	}
 
 	/**
-	 * @param office the office to set
+	 * Defines the office phone number.
+	 * @param office (String) : phone number
 	 */
 	public void setOffice(String office) {
 		this.office = office;
 	}
 
 	/**
-	 * @return the cellphone
+	 * Returns the cellphone number.
+	 * @return String : phone number
 	 */
 	public String getCellphone() {
 		return cellphone;
 	}
 
 	/**
-	 * @param cellphone the cellphone to set
+	 * Defines the cellphone number.
+	 * @param cellphone (String) : phone number
 	 */
 	public void setCellphone(String cellphone) {
 		this.cellphone = cellphone;
 	}
 
 	/**
-	 * @return the email
+	 * Returns the e-Mail.
+	 * @return String : e-Mail
 	 */
 	public String getEmail() {
 		return email;
 	}
 
 	/**
-	 * @param email the email to set
+	 * Defines the e-Mail.
+	 * @param email (String) : e-Mail
 	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
 	/**
-	 * @return the fax
+	 * Returns the fax number.
+	 * @return String : fax number
 	 */
 	public String getFax() {
 		return fax;
 	}
 
 	/**
-	 * @param fax the fax to set
+	 * Defines the fax number.
+	 * @param fax (String) : fax number
 	 */
 	public void setFax(String fax) {
 		this.fax = fax;

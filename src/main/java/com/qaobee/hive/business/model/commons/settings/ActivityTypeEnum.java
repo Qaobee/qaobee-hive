@@ -20,16 +20,15 @@ package com.qaobee.hive.business.model.commons.settings;
 
 /**
  * Enumeration for activity types.
- *
  * @author Jerome
  */
 public enum ActivityTypeEnum {
 
 	/** The team sport. */
 	TEAM_SPORT("settings.activityType.team"), 
- /** The individual sport. */
+	/** The individual sport. */
 	INDIVIDUAL_SPORT("settings.activityType.individual"), 
- /** The education. */
+	/** The education. */
 	EDUCATION("settings.activityType.education");
 
 	/** Label. */
@@ -37,9 +36,7 @@ public enum ActivityTypeEnum {
 
 	/**
 	 * Constructor.
-	 *
-	 * @param label
-	 *            (String) : label code
+	 * @param label (String) : label code
 	 */
 	ActivityTypeEnum(final String label) {
 		this.label = label;
@@ -47,8 +44,7 @@ public enum ActivityTypeEnum {
 
 	/**
 	 * Gets the label.
-	 *
-	 * @return the label
+	 * @return String : label
 	 */
 	public String getLabel() {
 		return label;

@@ -19,82 +19,68 @@ package com.qaobee.hive.business.model.transversal;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * The Class Habilitation.
- *
+ * Bean that describes habilitation.
  * @author xavier
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Habilitation implements Serializable {
 
-    /**
-     * The Constant serialVersionUID.
-     */
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -961204023798043214L;
 
-    /**
-     * The _id.
-     */
+    /** Internal identifier */
     private String _id;
-
-    /**
-     * The key.
-     */
+    /** Key */
     private String key;
-
-    /**
-     * The description.
-     */
+    /** Description */
     private String description;
 
     /**
-     * Gets the key.
-     *
-     * @return the key
+     * Returns the key.
+     * @return String : key
      */
     public String getKey() {
         return key;
     }
 
     /**
-     * Sets the key.
-     *
-     * @param key the new key
+     * Defines the key.
+     * @param key (String) : key
      */
     public void setKey(final String key) {
         this.key = key;
     }
 
     /**
-     * Gets the description.
-     *
-     * @return the description
+     * Returns the description.
+     * @return String : description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Sets the description.
-     *
-     * @param description the new description
+     * Defines the description.
+     * @param description (String) : description
      */
     public void setDescription(final String description) {
         this.description = description;
     }
 
     /**
-     * Gets the _id.
-     *
-     * @return the _id
+     * Returns the internal identifier.
+     * @return String : ID
      */
     public String get_id() {
         return _id;
     }
 
     /**
-     * Sets the _id.
-     *
-     * @param _id the _id to set
+     * Defines the internal identifier.
+     * @param _id (String) : ID
      */
     public void set_id(final String _id) {
         this._id = _id;

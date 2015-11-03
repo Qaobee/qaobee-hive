@@ -18,8 +18,10 @@
  */
 package com.qaobee.hive.business.model.sandbox.effective;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.transversal.Address;
 import com.qaobee.hive.business.model.transversal.Audit;
@@ -27,294 +29,291 @@ import com.qaobee.hive.business.model.transversal.Contact;
 import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
+ * Bean that describes a SandBox Person.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_Person {
 	
-	/**
-	 * The _id.
-	 */
+	/** Internal identifier */
 	private String _id;
-
-	/**
-	 * The name.
-	 */
+	/** Name */
 	private String name;
-
-	/**
-	 * The firstname.
-	 */
+	/** Firstname */
 	private String firstname;
-
-	/**
-	 * The gender.
-	 */
+	/** Gender */
 	private String gender;
-
-	/**
-	 * The birthdate.
-	 */
+	/** Birthdate */
 	private long birthdate;
-
-	/**
-	 * The birthcity.
-	 */
+	/** Birthcity */
 	private String birthcity;
-
-	/**
-	 * The birthcountry.
-	 */
+	/** Birth country */
 	private Country birthcountry;
-
-	/**
-	 * The nationality.
-	 */
+	/** Nationality */
 	private Country nationality;
-
-	/**
-	 * The address.
-	 */
+	/** Address */
 	private Address address;
-
-	/**
-	 * The contact.
-	 */
+	/** Contact */
 	private Contact contact;
-
-	/**
-	 * The number.
-	 */
+	/** Squad number */
 	private String squadnumber;
-
-	/**
-	 * The avatar.
-	 */
+	/** Avatar */
 	private String avatar;
-
-	/**
-	 * the job of the person
-	 */
+	/** Job of the person */
 	private String job;
-	
-	/** 
-	 * List labels
-	 */
+	/** List of labels */
 	private List<Tag> labels;
-	
-	/** 
-	 * audit CRUD object 
-	 */
+	/** audit CRUD object */
 	private Audit audit;
-	
-	/** Sansdbox ID */
+	/** Sandbox ID */
 	private String sandboxId;
 
 	/**
-	 * @return the _id
+	 * Returns the internal identifier.
+	 * @return String : ID
 	 */
 	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * @param _id the _id to set
+	 * Defines the internal identifier.
+	 * @param _id (String) : ID
 	 */
 	public void set_id(String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * @return the name
+	 * Returns the name.
+	 * @return String : name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @param name the name to set
+	 * Defines the name.
+	 * @param name (String) : name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @return the firstname
+	 * Returns the firstname.
+	 * @return String : firstname
 	 */
 	public String getFirstname() {
 		return firstname;
 	}
 
 	/**
-	 * @param firstname the firstname to set
+	 * Defines the firstname.
+	 * @param firstname (String) : firstname
 	 */
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
 	}
 
 	/**
-	 * @return the gender
+	 * Returns the gender.
+	 * @return String : gender
 	 */
 	public String getGender() {
 		return gender;
 	}
 
 	/**
-	 * @param gender the gender to set
+	 * Defines the gender.
+	 * @param gender (String) : gender
 	 */
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
 	/**
-	 * @return the birthdate
+	 * Returns the birthdate.
+	 * @return long : date
 	 */
 	public long getBirthdate() {
 		return birthdate;
 	}
 
 	/**
-	 * @param birthdate the birthdate to set
+	 * Defines the birthdate.
+	 * @param birthdate (long) : date
 	 */
 	public void setBirthdate(long birthdate) {
 		this.birthdate = birthdate;
 	}
 
 	/**
-	 * @return the birthcity
+	 * Returns the birthcity.
+	 * @return String : city
 	 */
 	public String getBirthcity() {
 		return birthcity;
 	}
 
 	/**
-	 * @param birthcity the birthcity to set
+	 * Defines the birthcity.
+	 * @param birthcity (String) : city
 	 */
 	public void setBirthcity(String birthcity) {
 		this.birthcity = birthcity;
 	}
 
 	/**
-	 * @return the birthcountry
+	 * Returns the birth country.
+	 * @return Country : country
 	 */
 	public Country getBirthcountry() {
 		return birthcountry;
 	}
 
 	/**
-	 * @param birthcountry the birthcountry to set
+	 * Defines the birth country.
+	 * @param birthcountry (Country) : country
 	 */
 	public void setBirthcountry(Country birthcountry) {
 		this.birthcountry = birthcountry;
 	}
 
 	/**
-	 * @return the nationality
+	 * Returns the nationality.
+	 * @return Country : nationality
 	 */
 	public Country getNationality() {
 		return nationality;
 	}
 
 	/**
-	 * @param nationality the nationality to set
+	 * Defines the nationality.
+	 * @param nationality (Country) : nationality
 	 */
 	public void setNationality(Country nationality) {
 		this.nationality = nationality;
 	}
 
 	/**
-	 * @return the address
+	 * Returns the address.
+	 * @return Address : address
 	 */
 	public Address getAddress() {
 		return address;
 	}
 
 	/**
-	 * @param address the address to set
+	 * Defines the address.
+	 * @param address (Address) : address
 	 */
 	public void setAddress(Address address) {
 		this.address = address;
 	}
 
 	/**
-	 * @return the contact
+	 * Returns how to contact the person.
+	 * @return Contact : contact
 	 */
 	public Contact getContact() {
 		return contact;
 	}
 
 	/**
-	 * @param contact the contact to set
+	 * Defines how to contact the person.
+	 * @param contact (Contact) : contact
 	 */
 	public void setContact(Contact contact) {
 		this.contact = contact;
 	}
 
 	/**
-	 * @return the squadnumber
+	 * Returns the squad number.
+	 * @return String : squad number
 	 */
 	public String getSquadnumber() {
 		return squadnumber;
 	}
 
 	/**
-	 * @param squadnumber the squadnumber to set
+	 * Defines the squad number.
+	 * @param squadnumber (String) : squad number
 	 */
 	public void setSquadnumber(String squadnumber) {
 		this.squadnumber = squadnumber;
 	}
 
 	/**
-	 * @return the avatar
+	 * Returns the avatar.
+	 * @return String : avatar
 	 */
 	public String getAvatar() {
 		return avatar;
 	}
 
 	/**
-	 * @param avatar the avatar to set
+	 * Defines the avatar.
+	 * @param avatar (String) : avatar
 	 */
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
 
 	/**
-	 * @return the job
+	 * Returns the job of the person.
+	 * @return String : job
 	 */
 	public String getJob() {
 		return job;
 	}
 
 	/**
-	 * @param job the job to set
+	 * Defines the job of the person.
+	 * @param job (String) : job
 	 */
 	public void setJob(String job) {
 		this.job = job;
 	}
 
 	/**
-	 * @return the labels
+	 * Returns the list of labels.
+	 * @return List(Tag) : list
 	 */
 	public List<Tag> getLabels() {
 		return labels;
 	}
 
 	/**
-	 * @param labels the labels to set
+	 * Defines the list of labels.
+	 * @param labels (List(Tag)) : list
 	 */
 	public void setLabels(List<Tag> labels) {
 		this.labels = labels;
 	}
+	
+	/**
+	 * Adds a label to the list.
+	 * @param label (Tag) : label
+	 */
+	public void addLabel(Tag label) {
+		if(labels==null) {
+			labels = new ArrayList<>();
+		}
+		labels.add(label);
+	}
 
 	/**
-	 * @return the audit
+	 * Returns the audit.
+	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
 		return audit;
 	}
 
 	/**
-	 * @param audit the audit to set
+	 * Defines the audit.
+	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;

@@ -18,380 +18,302 @@
  */
 package com.qaobee.hive.business.model.commons.users.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.transversal.Habilitation;
 
 import java.util.List;
 
 /**
- * The Class Account.
- *
+ * Bean that describes user account.
  * @author cke
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 
-    /**
-     * The _id.
-     */
+    /** Internal identifier */
     private String _id;
-
-    /**
-     * The activationcode.
-     */
+    /** Activation code */
     private String activationCode;
-
-    /**
-     * The activation passwd.
-     */
+    /** Activation password */
     private String activationPasswd;
-
-    /**
-     * The active.
-     */
+    /** Is account active ? */
     private boolean active;
-
-    /**
-     * The expiration date.
-     */
+    /** Expiration date */
     private long expirationDate;
-
-    /**
-     * The first connexion.
-     */
+    /** Is the first connection ? */
     private boolean firstConnexion;
-
-    /**
-     * The login.
-     */
+    /** Login */
     private String login;
-
-    /**
-     * The passwd.
-     */
+    /** Password - String format */
     private String passwd;
-
-    /**
-     * The password.
-     */
+    /** Password - bytes format */
     private byte[] password;
-
-    /**
-     * The salt.
-     */
+    /** Salt */
     private byte[] salt;
-
-    /**
-     * The timestamp.
-     */
+    /** Timestamp */
     private long timestamp;
-
-    /**
-     * The token.
-     */
+    /** Token */
     private String token;
-
-    /**
-     * The token renew date.
-     */
+    /** Token renew date */
     private long tokenRenewDate;
-
-
-    /**
-     * The list plan.
-     */
+    /** List of plans */
     private List<Plan> listPlan;
-
-    /**
-     * The Habilitations.
-     */
+    /** List of habilitations */
     private List<Habilitation> habilitations;
-    /**
-     * The Mobile token.
-     */
+    /** Mobile token */
     private String mobileToken;
 
     /**
-     * Gets the activation code.
-     *
-     * @return the activationcode
+     * Returns the activation code.
+     * @return String : code
      */
-    public final String getActivationCode() {
+    public String getActivationCode() {
         return activationCode;
     }
 
     /**
-     * Sets the activation code.
-     *
-     * @param activationcode the activationcode to set
+     * Defines the activation code.
+     * @param activationcode (String) : code
      */
-    public final void setActivationCode(final String activationcode) {
+    public void setActivationCode(final String activationcode) {
         activationCode = activationcode;
     }
 
     /**
-     * Gets the activation passwd.
-     *
-     * @return the activationPasswd
+     * Returns the activation password.
+     * @return String : password
      */
-    public final String getActivationPasswd() {
+    public String getActivationPasswd() {
         return activationPasswd;
     }
 
     /**
-     * Sets the activation passwd.
-     *
-     * @param activationPasswd the activationPasswd to set
+     * Defines the activation password.
+     * @param activationPasswd (String) : password
      */
-    public final void setActivationPasswd(final String activationPasswd) {
+    public void setActivationPasswd(final String activationPasswd) {
         this.activationPasswd = activationPasswd;
     }
 
     /**
-     * Checks if is active.
-     *
-     * @return the active
+     * Checks if account is active.
+     * @return boolean : true if active
      */
-    public final boolean isActive() {
+    public boolean isActive() {
         return active;
     }
 
     /**
-     * Sets the active.
-     *
-     * @param active the active to set
+     * Defines if the account is active.
+     * @param active (boolean) : true if active
      */
-    public final void setActive(final boolean active) {
+    public void setActive(final boolean active) {
         this.active = active;
     }
 
     /**
-     * Gets the expiration date.
-     *
-     * @return the expirationDate
+     * Returns the expiration date.
+     * @return long : expiration date
      */
-    public final long getExpirationDate() {
+    public long getExpirationDate() {
         return expirationDate;
     }
 
     /**
-     * Sets the expiration date.
-     *
-     * @param expirationDate the expirationDate to set
+     * Defines the expiration date.
+     * @param expirationDate (long) : expiration date
      */
-    public final void setExpirationDate(final long expirationDate) {
+    public void setExpirationDate(final long expirationDate) {
         this.expirationDate = expirationDate;
     }
 
     /**
-     * Checks if is first connexion.
-     *
-     * @return the firstConnexion
+     * Checks if it is the first user connection.
+     * @return boolean : true if first connection 
      */
-    public final boolean isFirstConnexion() {
+    public boolean isFirstConnexion() {
         return firstConnexion;
     }
 
     /**
-     * Sets the first connexion.
-     *
-     * @param firstConnexion the firstConnexion to set
+     * Defines if it is the first user connection.
+     * @param firstConnexion (boolean) : true if first connection
      */
-    public final void setFirstConnexion(final boolean firstConnexion) {
+    public void setFirstConnexion(final boolean firstConnexion) {
         this.firstConnexion = firstConnexion;
     }
 
     /**
-     * Gets the login.
-     *
-     * @return the login
+     * Returns the user login.
+     * @return String : login
      */
-    public final String getLogin() {
+    public String getLogin() {
         return login;
     }
 
     /**
-     * Sets the login.
-     *
-     * @param login the login to set
+     * Defines the user login.
+     * @param login (String) : user login
      */
-    public final void setLogin(final String login) {
+    public void setLogin(final String login) {
         this.login = login;
     }
 
     /**
-     * Gets the passwd.
-     *
-     * @return the passwd
+     * Returns the password in String format.
+     * @return String: password
      */
-    public final String getPasswd() {
+    public String getPasswd() {
         return passwd;
     }
 
     /**
-     * Sets the passwd.
-     *
-     * @param passwd the passwd to set
+     * Defines the password in String format.
+     * @param passwd (String) : password
      */
-    public final void setPasswd(final String passwd) {
+    public void setPasswd(final String passwd) {
         this.passwd = passwd;
     }
 
     /**
-     * Gets the password.
-     *
-     * @return the password
+     * Returns the password in bytes format.
+     * @return byte[] : password
      */
-    public final byte[] getPassword() {
+    public byte[] getPassword() {
         return password;
     }
 
     /**
-     * Sets the password.
-     *
-     * @param password the password to set
+     * Defines the password in bytes format.
+     * @param password (byte[]) : password
      */
-    public final void setPassword(final byte[] password) {
+    public void setPassword(final byte[] password) {
         this.password = password;
     }
 
     /**
-     * Gets the salt.
-     *
-     * @return the salt
+     * Returns the salt.
+     * @return byte[] : salt
      */
-    public final byte[] getSalt() {
+    public byte[] getSalt() {
         return salt;
     }
 
     /**
-     * Sets the salt.
-     *
-     * @param salt the salt to set
+     * Defines the salt.
+     * @param salt (byte[]) : salt
      */
-    public final void setSalt(final byte[] salt) {
+    public void setSalt(final byte[] salt) {
         this.salt = salt;
     }
 
     /**
-     * Gets the timestamp.
-     *
-     * @return the timestamp
+     * Returns the timestamp.
+     * @return long : timestamp
      */
-    public final long getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
     /**
-     * Sets the timestamp.
-     *
-     * @param timestamp the timestamp to set
+     * Defines the timestamp.
+     * @param timestamp (long) : timestamp
      */
-    public final void setTimestamp(final long timestamp) {
+    public void setTimestamp(final long timestamp) {
         this.timestamp = timestamp;
     }
 
     /**
-     * Gets the token.
-     *
-     * @return the token
+     * Returns the token.
+     * @return String : token
      */
-    public final String getToken() {
+    public String getToken() {
         return token;
     }
 
     /**
-     * Sets the token.
-     *
-     * @param token the token to set
+     * Defines the token.
+     * @param token (String) : token
      */
-    public final void setToken(final String token) {
+    public void setToken(final String token) {
         this.token = token;
     }
 
     /**
-     * Gets the token renew date.
-     *
-     * @return the tokenRenewDate
+     * Returns the token renew date.
+     * @return long : date
      */
-    public final long getTokenRenewDate() {
+    public long getTokenRenewDate() {
         return tokenRenewDate;
     }
 
     /**
-     * Sets the token renew date.
-     *
-     * @param tokenRenewDate the tokenRenewDate to set
+     * Defines the token renew date.
+     * @param tokenRenewDate (long) : date
      */
-    public final void setTokenRenewDate(final long tokenRenewDate) {
+    public void setTokenRenewDate(final long tokenRenewDate) {
         this.tokenRenewDate = tokenRenewDate;
     }
 
     /**
-     * Gets the _id.
-     *
-     * @return the _id
+     * Returns the identifier.
+     * @return String : id
      */
     public String get_id() {
         return _id;
     }
 
     /**
-     * Sets the _id.
-     *
-     * @param _id the _id to set
+     * Defines the identifier.
+     * @param _id (String) : id
      */
     public void set_id(final String _id) {
         this._id = _id;
     }
 
     /**
-     * Gets the list plan.
-     *
-     * @return the listPlan
+     * Returns list of plans.
+     * @return List(Plan) : list
      */
-    public final List<Plan> getListPlan() {
+    public List<Plan> getListPlan() {
         return listPlan;
     }
 
     /**
-     * Sets the list plan.
-     *
-     * @param listPlan the listPlan to set
+     * Defines the list of plans.
+     * @param listPlan (List(Plan)) : list
      */
-    public final void setListPlan(List<Plan> listPlan) {
+    public void setListPlan(List<Plan> listPlan) {
         this.listPlan = listPlan;
     }
 
     /**
-     * Gets habilitations.
-     *
-     * @return the habilitations
+     * Returns the list of habilitations.
+     * @return List(Habilitation) : habilitations
      */
     public List<Habilitation> getHabilitations() {
         return habilitations;
     }
 
     /**
-     * Sets habilitations.
-     *
-     * @param habilitations the habilitations
+     * Defines the list of habilitations.
+     * @param habilitations (List(Habilitation)) : habilitations
      */
     public void setHabilitations(List<Habilitation> habilitations) {
         this.habilitations = habilitations;
     }
 
     /**
-     * Gets mobile token.
-     *
-     * @return the mobile token
+     * Returns mobile token.
+     * @return String : token
      */
     public String getMobileToken() {
         return mobileToken;
     }
 
     /**
-     * Sets mobile token.
-     *
-     * @param mobileToken the mobile token
+     * Defines mobile token.
+     * @param mobileToken (String) : token
      */
     public void setMobileToken(String mobileToken) {
         this.mobileToken = mobileToken;

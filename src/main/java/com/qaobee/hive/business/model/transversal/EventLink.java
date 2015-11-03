@@ -1,49 +1,49 @@
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * 
+ * Bean that describes an event link.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EventLink {
 
-	/**
-	 * the link Id
-	 */
+	/** Link identifier */
 	private String linkId;
-
-	/**
-	 * the link Type.
-	 */
+	/** Link type */
 	private String type;
 
 	/**
-	 * @return the linkId
+	 * Returns the link identifier.
+	 * @return String : link ID
 	 */
 	public String getLinkId() {
 		return linkId;
 	}
 
 	/**
-	 * @param linkId the linkId to set
+	 * Defines the link identifier.
+	 * @param linkId (String) : link ID
 	 */
 	public void setLinkId(String linkId) {
 		this.linkId = linkId;
 	}
 
 	/**
-	 * @return the type
+	 * Returns the link type.
+	 * @return String : type
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @param type the type to set
+	 * Defines the link type
+	 * @param type (String) : type
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
-	
 	
 }

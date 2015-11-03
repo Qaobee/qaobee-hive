@@ -19,8 +19,7 @@
 package com.qaobee.hive.business.model.commons.users.account;
 
 /**
- * The Enum LevelPlan.
- *
+ * Enumeration for level plan.
  * @author Xavier Marin
  */
 public enum LevelPlan {

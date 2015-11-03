@@ -18,96 +18,84 @@
  */
 package com.qaobee.hive.business.model.sandbox.effective;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * The Class ShapeCondition.
+ * Bean that describes a shape condition.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ShapeCondition {
 
-	/** The id. */
+	/** Internal identifier */
 	private String _id;
-
-	/** The code. */
+	/** Code */
 	private String code;
-
-	/** The label. */
+	/** Label */
 	private String label;
-
-	/** order list. */
+	/** Order list */
 	private int order;
 
 	/**
-	 * Gets the _id.
-	 *
-	 * @return the _id
+	 * Returns the internal identifier.
+	 * @return String : ID
 	 */
-	public final String get_id() {
+	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * Sets the _id.
-	 *
-	 * @param _id
-	 *            the _id to set
+	 * Defines the internal identifier.
+	 * @param _id (String) : ID
 	 */
-	public final void set_id(String _id) {
+	public void set_id(String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * Gets the code.
-	 *
-	 * @return the code
+	 * Returns the code.
+	 * @return String : code
 	 */
-	public final String getCode() {
+	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * Sets the code.
-	 *
-	 * @param code
-	 *            the code to set
+	 * Defines the code.
+	 * @param code (String) : code
 	 */
-	public final void setCode(String code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 
 	/**
-	 * Gets the label.
-	 *
-	 * @return the label
+	 * Returns the label.
+	 * @return String : label
 	 */
-	public final String getLabel() {
+	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * Sets the label.
-	 *
-	 * @param label
-	 *            the label to set
+	 * Defines the label.
+	 * @param label (String) : label
 	 */
-	public final void setLabel(String label) {
+	public void setLabel(String label) {
 		this.label = label;
 	}
 
 	/**
-	 * Gets the order.
-	 *
-	 * @return the order
+	 * Returns the order.
+	 * @return int : order
 	 */
-	public final int getOrder() {
+	public int getOrder() {
 		return order;
 	}
 
 	/**
-	 * Sets the order.
-	 *
-	 * @param order
-	 *            the order to set
+	 * Defines the order.
+	 * @param order (int) : order
 	 */
-	public final void setOrder(int order) {
+	public void setOrder(int order) {
 		this.order = order;
 	}
 

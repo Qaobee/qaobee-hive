@@ -19,43 +19,32 @@
 
 package com.qaobee.hive.business.model.sandbox.competition;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
- * The Class Championship.
- *
+ * Bean that describes a SandBox championship.
  * @author Nada Vujanic-Maquin
  * @version V1.0
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_Championship {
 
-	// Declaration des variables
-
-	/** Internal identifier. */
+	/** Internal identifier */
 	private String _id;
-
-	/** The label. */
+	/** Label */
 	private String label;
-	
-	/** 
-	 * List labels
-	 */
+	/** List labels */
 	private List<Tag> labels;
-	
-	/** 
-	 * audit CRUD object 
-	 */
+	/** audit CRUD object */
 	private Audit audit;
-
-	// Getters and Setters
 
 	/**
 	 * Returns the internal identifier of the championship.
-	 * 
 	 * @return String : internal identifier
 	 */
 	public String get_id() {
@@ -64,9 +53,7 @@ public class SB_Championship {
 
 	/**
 	 * Defines the internal identifier of the championship.
-	 * 
-	 * @param _id
-	 *            (String) : identifier
+	 * @param _id (String) : identifier
 	 */
 	public void set_id(String _id) {
 		this._id = _id;
@@ -74,7 +61,6 @@ public class SB_Championship {
 
 	/**
 	 * Returns the label of the championship.
-	 *
 	 * @return String : label
 	 */
 	public String getLabel() {
@@ -83,37 +69,50 @@ public class SB_Championship {
 
 	/**
 	 * Defines the label of the championship.
-	 *
-	 * @param label
-	 *            (String) : label
+	 * @param label (String) : label
 	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
 
 	/**
-	 * @return the labels
+	 * Returns the list of labels.
+	 * @return List(Tag) : list
 	 */
 	public List<Tag> getLabels() {
 		return labels;
 	}
 
 	/**
-	 * @param labels the labels to set
+	 * Defines the list of labels.
+	 * @param labels (List(Tag)) : list
 	 */
 	public void setLabels(List<Tag> labels) {
 		this.labels = labels;
 	}
 
 	/**
-	 * @return the audit
+	 * Adds a label.
+	 * @param label (Tag) : label
+	 */
+	public void addLabel(Tag label) {
+		if(labels==null) {
+			labels = new ArrayList<>();
+		}
+		labels.add(label);
+	}
+	
+	/**
+	 * Returns the audit trail.
+	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
 		return audit;
 	}
 
 	/**
-	 * @param audit the audit to set
+	 * Defines the audit trail.
+	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;

@@ -18,142 +18,126 @@
  */
 package com.qaobee.hive.business.model.commons.settings;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * The Class CategoryAge.
- *
+ * Bean that describes the age category.
  * @author cke
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CategoryAge {
 
-	/** The code. */
+	/** Category code */
 	private String code;
 
-	/** The label. */
+	/** Category label. */
 	private String label;
 
-	/** age max. */
+	/** Age max */
 	private int ageMax;
 
-	/** age min. */
+	/** Age min */
 	private int ageMin;
 
-	/** genre category. */
+	/** Genre */
 	private String genre;
 
-	/** order list. */
+	/** Order list */
 	private int order;
 
 	/**
-	 * Gets the code.
-	 *
-	 * @return the code
+	 * Returns the age category code.
+	 * @return String : code
 	 */
 	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * Sets the code.
-	 *
-	 * @param code
-	 *            the new code
+	 * Defines the age category code.
+	 * @param code (String) : code
 	 */
 	public void setCode(final String code) {
 		this.code = code;
 	}
 
 	/**
-	 * Gets the label.
-	 *
-	 * @return the label
+	 * Returns the age category label.
+	 * @return String : label
 	 */
 	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * Sets the label.
-	 *
-	 * @param label
-	 *            the new label
+	 * Defines the age category label.
+	 * @param label (String) : label
 	 */
 	public void setLabel(final String label) {
 		this.label = label;
 	}
 
 	/**
-	 * Gets the age max.
-	 *
-	 * @return the ageMax
+	 * Returns the age max.
+	 * @return int : age max
 	 */
 	public int getAgeMax() {
 		return ageMax;
 	}
 
 	/**
-	 * Sets the age max.
-	 *
-	 * @param ageMax
-	 *            the new age max
+	 * Defines the age max.
+	 * @param ageMax (int) : age max
 	 */
 	public void setAgeMax(final int ageMax) {
 		this.ageMax = ageMax;
 	}
 
 	/**
-	 * Gets the age min.
-	 *
-	 * @return the age min
+	 * Returns the age min.
+	 * @return int : age min
 	 */
 	public int getAgeMin() {
 		return ageMin;
 	}
 
 	/**
-	 * Sets the age min.
-	 *
-	 * @param ageMin
-	 *            the new age min
+	 * Defines the age min.
+	 * @param ageMin (int) : age min
 	 */
 	public void setAgeMin(final int ageMin) {
 		this.ageMin = ageMin;
 	}
 
 	/**
-	 * Gets the genre category.
-	 *
-	 * @return the genre category
+	 * Returns the genre category.
+	 * @return String : genre
 	 */
 	public String getGenre() {
 		return genre;
 	}
 
 	/**
-	 * Sets the genre category.
-	 *
-	 * @param genre
-	 *            the new genre category
+	 * Defines the genre category.
+	 * @param genre (String) : genre
 	 */
 	public void setGenre(final String genre) {
 		this.genre = genre;
 	}
 
 	/**
-	 * Gets the order.
-	 *
-	 * @return the order
+	 * Returns the order in category list.
+	 * @return int : order
 	 */
-	public final int getOrder() {
+	public int getOrder() {
 		return order;
 	}
 
 	/**
-	 * Sets the order.
-	 *
-	 * @param order
-	 *            the order to set
+	 * Defines the order in category list.
+	 * @param order (int) : order
 	 */
-	public final void setOrder(final int order) {
+	public void setOrder(final int order) {
 		this.order = order;
 	}
 

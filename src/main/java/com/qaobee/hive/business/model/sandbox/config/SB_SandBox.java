@@ -18,82 +18,67 @@
  */
 package com.qaobee.hive.business.model.sandbox.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * The type Sand box.
- *
+ * Bean that describes a SandBox.
  * @author cke
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_SandBox {
 
-    /**
-     * The Owner.
-     */
+    /** Owner */
     private String owner;
-
-    /**
-     * The Activity id.
-     */
+    /** Activity id */
     private String activityId;
-
-    /**
-     * The Structure id.
-     */
+    /** Structure id */
     private String structureId;
 
     /**
-     * Gets owner.
-     *
-     * @return the owner
+     * Returns the owner.
+     * @return String : owner
      */
     public String getOwner() {
         return owner;
     }
 
     /**
-     * Sets owner.
-     *
-     * @param owner the owner to set
+     * Defines the owner.
+     * @param owner (String) : owner
      */
     public void setOwner(String owner) {
         this.owner = owner;
     }
 
     /**
-     * Gets activity id.
-     *
-     * @return the activityId
+     * Returns the activity ID.
+     * @return String : activity ID
      */
     public String getActivityId() {
         return activityId;
     }
 
     /**
-     * Sets activity id.
-     *
-     * @param activityId the activityId to set
+     * Defines the activity ID.
+     * @param activityId (String) : activity ID
      */
     public void setActivityId(String activityId) {
         this.activityId = activityId;
     }
 
     /**
-     * Gets structure id.
-     *
-     * @return the structureId
+     * Returns the structure ID.
+     * @return String : structure ID
      */
     public String getStructureId() {
         return structureId;
     }
 
     /**
-     * Sets structure id.
-     *
-     * @param structureId the structureId to set
+     * Defines the structure ID.
+     * @param structureId (String) : structure ID
      */
     public void setStructureId(String structureId) {
         this.structureId = structureId;
     }
-
-
 }

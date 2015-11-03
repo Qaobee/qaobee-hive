@@ -18,98 +18,85 @@
  */
 package com.qaobee.hive.business.model.commons.settings;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * The Class NiveauJeu.
- *
+ * Bean that describes the level game.
  * @author jeremy
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LevelGame {
 
-	/** The id. */
+	/** Internal identifier */
 	private String _id;
-
-	/** The code. */
+	/** Code */
 	private String code;
-
-	/** The label. */
+	/** Label */
 	private String label;
-
-	/** order list. */
+	/** Order list */
 	private int order;
 
 	/**
-	 * Gets the code.
-	 *
-	 * @return the code
+	 * Returns the level game code.
+	 * @return String : code
 	 */
 	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * Sets the code.
-	 *
-	 * @param code
-	 *            the new code
+	 * Defines the level game code.
+	 * @param code (String) : code
 	 */
 	public void setCode(final String code) {
 		this.code = code;
 	}
 
 	/**
-	 * Gets the label.
-	 *
-	 * @return the label
+	 * Returns the level game label.
+	 * @return String : label
 	 */
 	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * Sets the label.
-	 *
-	 * @param label
-	 *            the new label
+	 * Defines the level game label.
+	 * @param label (String) : label
 	 */
 	public void setLabel(final String label) {
 		this.label = label;
 	}
 
 	/**
-	 * Gets the _id.
-	 *
-	 * @return the _id
+	 * Returns the identifier.
+	 * @return String : id
 	 */
 	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * Sets the _id.
-	 *
-	 * @param _id
-	 *            the new _id
+	 * Defines the identifier.
+	 * @param _id (String) : id
 	 */
 	public void set_id(final String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * Gets the order.
-	 *
-	 * @return the order
+	 * Returns the order to show levels game.
+	 * @return int : order
 	 */
-	public final int getOrder() {
+	public int getOrder() {
 		return order;
 	}
 
 	/**
-	 * Sets the order.
-	 *
-	 * @param order
-	 *            the order to set
+	 * Defines the order to show levels game.
+	 * @param order (int) : order
 	 */
-	public final void setOrder(int order) {
+	public void setOrder(int order) {
 		this.order = order;
 	}
 

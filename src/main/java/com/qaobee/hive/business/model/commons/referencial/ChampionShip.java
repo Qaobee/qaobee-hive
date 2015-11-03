@@ -18,8 +18,10 @@
  */
 package com.qaobee.hive.business.model.commons.referencial;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.commons.settings.Season;
@@ -27,183 +29,195 @@ import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
+ * Bean that describes a championship.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ChampionShip {
 	
-	/**
-     * The _id.
-     */
+	/** Internal identifier */
     private String _id;
-    
-    /**
-     * activity of the ChampionShip.
-     */
+    /** Activity */
     private Activity activity;
-
-    
-    /**
-     * Category Age of the ChampionShip
-     */
-    private CategoryAge categoryAge;
-    
-    /**
-     * The code.
-     */
-    private String code;
-    
-    /**
-     * The label of 
-     */
+    /** Age category */
+    private CategoryAge categoryAge; 
+    /** Code */
+    private String code; 
+    /** Label */
     private String label;
-    
-    /**
-     * The list of tags for determinate championShip.
-     */
+    /** List of tags for determinate championShip */
     private List<Tag> tags;
-    
-    /**
-     * The list of journey for a championShip.
-     */
+    /** List of journey for a championShip */
     private List<ChampionShipJourney> journeys;
-    
-    /** 
-     * Season. 
-     */
+    /** Season */
 	private Season season;
-	
-	/** 
-	 * audit CRUD object 
-	 */
+	/** Audit CRUD */
 	private Audit audit;
 
 	/**
-	 * @return the _id
+	 * Returns the internal identifier.
+	 * @return String : ID
 	 */
 	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * @param _id the _id to set
+	 * Defines the internal identifier.
+	 * @param _id (String) : ID
 	 */
 	public void set_id(String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * @return the activity
+	 * Returns the championship activity.
+	 * @return Activity : activity
 	 */
 	public Activity getActivity() {
 		return activity;
 	}
 
 	/**
-	 * @param activity the activity to set
+	 * Defines the championship activity.
+	 * @param activity (Activity) : activity
 	 */
 	public void setActivity(Activity activity) {
 		this.activity = activity;
 	}
 
 	/**
-	 * @return the categoryAge
+	 * Returns the championship age category.
+	 * @return CategoryAge : age category
 	 */
 	public CategoryAge getCategoryAge() {
 		return categoryAge;
 	}
 
 	/**
-	 * @param categoryAge the categoryAge to set
+	 * Defines the championship age category.
+	 * @param categoryAge (CategoryAge) : age category
 	 */
 	public void setCategoryAge(CategoryAge categoryAge) {
 		this.categoryAge = categoryAge;
 	}
 
 	/**
-	 * @return the code
+	 * Returns the championship code.
+	 * @return String : code
 	 */
 	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * @param code the code to set
+	 * Defines the championship code.
+	 * @param code (String) : code
 	 */
 	public void setCode(String code) {
 		this.code = code;
 	}
 
 	/**
-	 * @return the label
+	 * Returns the championship label.
+	 * @return String : label
 	 */
 	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * @param label the label to set
+	 * Defines the championship label.
+	 * @param label (String) : label
 	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
 
 	/**
-	 * @return the tags
+	 * Retuns the list of tags.
+	 * @return List(Tag) : list
 	 */
 	public List<Tag> getTags() {
 		return tags;
 	}
 
 	/**
-	 * @param tags the tags to set
+	 * Defines the list of tags.
+	 * @param tags (List(Tag)) : list
 	 */
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
 
 	/**
-	 * @return the journeys
+	 * Adds a tag to the list.
+	 * @param tag (Tag) : tag to add
+	 */
+	public void addTag(Tag tag) {
+		if(tags==null) {
+			tags = new ArrayList<>();
+		}
+		tags.add(tag);
+	}
+	
+	/**
+	 * Returns the list of journeys.
+	 * @return List(ChampionShipJourney) : list
 	 */
 	public List<ChampionShipJourney> getJourneys() {
 		return journeys;
 	}
 
 	/**
-	 * @param journeys the journeys to set
+	 * Defines the list of journeys.
+	 * @param journeys (List(ChampionShipJourney)) : list
 	 */
 	public void setJourneys(List<ChampionShipJourney> journeys) {
 		this.journeys = journeys;
 	}
+	
+	/**
+	 * Adds a journey to the list.
+	 * @param journey (ChampionShipJourney) : journey
+	 */
+	public void addJourney(ChampionShipJourney journey) {
+		if(journeys==null) {
+			journeys = new ArrayList<>();
+		}
+		journeys.add(journey);
+	}
 
 	/**
-	 * @return the season
+	 * Returns the season.
+	 * @return Season : season
 	 */
 	public Season getSeason() {
 		return season;
 	}
 
 	/**
-	 * @param season the season to set
+	 * Defines the season.
+	 * @param season (Season) : season
 	 */
 	public void setSeason(Season season) {
 		this.season = season;
 	}
 
 	/**
-	 * @return the audit
+	 * Returns the audit.
+	 * @return Audit :  audit
 	 */
 	public Audit getAudit() {
 		return audit;
 	}
 
 	/**
-	 * @param audit the audit to set
+	 * Defines the audit.
+	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
 	}
-	
-	
 
 }

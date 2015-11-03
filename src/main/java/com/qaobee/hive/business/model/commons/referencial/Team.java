@@ -18,149 +18,157 @@
  */
 package com.qaobee.hive.business.model.commons.referencial;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.transversal.Audit;
 
 /**
+ * Bean that describes a team.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Team {
 	
-	// Declaration des variables
-    /**
-     * The _id.
-     */
+    /** Internal identifier */
     private String _id;
-
-    /**
-     * The label.
-     */
+    /** Label */
     private String label;
-
-    /**
-     * activity code of the Team.
-     */
+    /** Activity of the Team */
     private Activity activity;
-    
-    /**
-     * Structure of the Team
-     */
+    /** Structure of the Team */
     private Structure structure;
-    
-    /**
-     * CategoryAge of the Team
-     */
+    /** Age category of the Team */
     private CategoryAge categoryAge;
-    
-    /**
-     * The seasons of the Team
-     */
+    /** List of Seasons */
     private List<TeamSeason> teamSeasons;
-    
     /** audit CRUD object */
 	private Audit audit;
 
 	/**
-	 * @return the _id
+	 * Returns the internal identifier.
+	 * @return String : ID
 	 */
 	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * @param _id the _id to set
+	 * Defines the internal identifier.
+	 * @param _id (String) : ID
 	 */
 	public void set_id(String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * @return the label
+	 * Returns the label.
+	 * @return String : label
 	 */
 	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * @param label the label to set
+	 * Defines the label.
+	 * @param label (String) : label
 	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
 
 	/**
-	 * @return the activity
+	 * Returns the activity.
+	 * @return Activity : activity
 	 */
 	public Activity getActivity() {
 		return activity;
 	}
 
 	/**
-	 * @param activity the activity to set
+	 * Defines the activity.
+	 * @param activity (Activity) : activity
 	 */
 	public void setActivity(Activity activity) {
 		this.activity = activity;
 	}
 
 	/**
-	 * @return the structure
+	 * Returns the structure.
+	 * @return Structure : structure
 	 */
 	public Structure getStructure() {
 		return structure;
 	}
 
 	/**
-	 * @param structure the structure to set
+	 * Defines the structure.
+	 * @param structure (Structure) : structure
 	 */
 	public void setStructure(Structure structure) {
 		this.structure = structure;
 	}
 
 	/**
-	 * @return the categoryAge
+	 * Returns the age category.
+	 * @return CategoryAge : age category
 	 */
 	public CategoryAge getCategoryAge() {
 		return categoryAge;
 	}
 
 	/**
-	 * @param categoryAge the categoryAge to set
+	 * Defines the age category.
+	 * @param categoryAge (CategoryAge) : age category
 	 */
 	public void setCategoryAge(CategoryAge categoryAge) {
 		this.categoryAge = categoryAge;
 	}
 
 	/**
-	 * @return the teamSeasons
+	 * Returns the list of seasons.
+	 * @return List(TeamSeason) : list
 	 */
 	public List<TeamSeason> getTeamSeasons() {
 		return teamSeasons;
 	}
 
 	/**
-	 * @param teamSeasons the teamSeasons to set
+	 * Defines the list of seasons.
+	 * @param teamSeasons (List(TeamSeason)) : list
 	 */
 	public void setTeamSeasons(List<TeamSeason> teamSeasons) {
 		this.teamSeasons = teamSeasons;
 	}
 
 	/**
-	 * @return the audit
+	 * Adds a season to the list.
+	 * @param teamSeason (TeamSeason) : season
+	 */
+	public void addTeamSeason(TeamSeason teamSeason) {
+		if(teamSeasons==null) {
+			teamSeasons = new ArrayList<>();
+		}
+		teamSeasons.add(teamSeason);
+	}
+	
+	/**
+	 * Returns the audit.
+	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
 		return audit;
 	}
 
 	/**
-	 * @param audit the audit to set
+	 * Defines the audit.
+	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
 	}
 	
-
 }

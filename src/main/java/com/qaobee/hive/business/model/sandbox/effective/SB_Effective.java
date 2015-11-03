@@ -22,76 +22,75 @@ package com.qaobee.hive.business.model.sandbox.effective;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Tag;
 
+/**
+ * Bean that describes a SandBox Effective.
+ * @author jerome
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_Effective {
 
 	/** Internal identifier. */
 	private String _id;
-
-	/** the sandbox's id */
+	/** Sandbox's id */
 	private String sandBoxCfgId;
-
-	/** The age category. */
+	/** Age category. */
 	private CategoryAge categoryAge;
-
 	/** List of persons that composed the current group */
 	private List<Member> members;
-	
-	/** 
-	 * List labels
-	 */
+	/** List of labels */
 	private List<Tag> labels;
-	
-	/** 
-	 * audit CRUD object 
-	 */
+	/** audit CRUD object */
 	private Audit audit;
-	
 
 	/**
-	 * @return the _id
+	 * Return the internal identifier.
+	 * @return the _id (String) : ID
 	 */
 	public final String get_id() {
 		return _id;
 	}
 
 	/**
-	 * @param _id
-	 *            the _id to set
+	 * Defines the internal identifier.
+	 * @param _id (String) : ID
 	 */
 	public final void set_id(String _id) {
 		this._id = _id;
 	}
 
-	
-
 	/**
-	 * @return the categoryAge
+	 * Returns the age category.
+	 * @return CategoryAge : age category
 	 */
 	public CategoryAge getCategoryAge() {
 		return categoryAge;
 	}
 
 	/**
-	 * @param categoryAge the categoryAge to set
+	 * Defines the age category.
+	 * @param categoryAge (CategoryAge) : age category
 	 */
 	public void setCategoryAge(CategoryAge categoryAge) {
 		this.categoryAge = categoryAge;
 	}
 
 	/**
-	 * @return the members
+	 * Returns the list of members.
+	 * @return List(Member) : list
 	 */
 	public List<Member> getMembers() {
 		return members;
 	}
 
 	/**
-	 * @param members the members to set
+	 * Defines the list of members.
+	 * @param members (List(Member)) : list
 	 */
 	public void setMembers(List<Member> members) {
 		this.members = members;
@@ -99,7 +98,7 @@ public class SB_Effective {
 	
 	/**
 	 * Adds a member to the effective list.
-	 * @param member
+	 * @param member (Member) : member
 	 */
 	public void addMember(Member member) {
 		if(members==null) {
@@ -109,46 +108,61 @@ public class SB_Effective {
 	}
 
 	/**
-	 * @return the sandBoxCfgId
+	 * Returns the sandbox config ID.
+	 * @return String : ID
 	 */
 	public String getSandBoxCfgId() {
 		return sandBoxCfgId;
 	}
 
 	/**
-	 * @param sandBoxCfgId the sandBoxCfgId to set
+	 * Defines the sandbox cinfig ID.
+	 * @param sandBoxCfgId (String) : ID
 	 */
 	public void setSandBoxCfgId(String sandBoxCfgId) {
 		this.sandBoxCfgId = sandBoxCfgId;
 	}
 
 	/**
-	 * @return the labels
+	 * Returns the list of labels.
+	 * @return List(Tag) : list
 	 */
 	public List<Tag> getLabels() {
 		return labels;
 	}
 
 	/**
-	 * @param labels the labels to set
+	 * Defines the list of labels.
+	 * @param labels (List(Tag)) : list
 	 */
 	public void setLabels(List<Tag> labels) {
 		this.labels = labels;
 	}
+	
+	/**
+	 * Adds a label to the list.
+	 * @param label (Tag) : label
+	 */
+	public void addLabel(Tag label) {
+		if(labels==null) {
+			labels = new ArrayList<>();
+		}
+		labels.add(label);
+	}
 
 	/**
-	 * @return the audit
+	 * Returns the audit.
+	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
 		return audit;
 	}
 
 	/**
-	 * @param audit the audit to set
+	 * Defines the audit.
+	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
 	}
-	
-	
 }

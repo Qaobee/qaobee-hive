@@ -18,55 +18,64 @@
  */
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
+ * Bean that describes a tag.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Tag {
-	
+	/** Internal identifier */
 	private String _id;
-	
+	/** Label */
 	private String label;
-	
+	/** Type */
 	private String type;
 
 	/**
-	 * @return the _id
+	 * Returns the internal identifier.
+	 * @return String : ID
 	 */
 	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * @param _id the _id to set
+	 * Defines the internal identifier.
+	 * @param _id (String) : ID
 	 */
 	public void set_id(String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * @return the label
+	 * Returns the label.
+	 * @return String : label
 	 */
 	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * @param label the label to set
+	 * Defines the label.
+	 * @param label (String) : label
 	 */
 	public void setLabel(String label) {
 		this.label = label;
 	}
 
 	/**
-	 * @return the type
+	 * Returns the type.
+	 * @return String : type
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @param type the type to set
+	 * Defines the type.
+	 * @param type (String) : type
 	 */
 	public void setType(String type) {
 		this.type = type;

@@ -18,57 +18,49 @@
  */
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * The class RoleStr.
- *
+ * Bean that describes a role.
  * @author Nada Vujanic-Maquin
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Role {
 
-    /**
-     * The code.
-     */
+    /** Code */
     private String code;
-
-    /**
-     * The label.
-     */
+    /** Label */
     private String label;
 
     /**
-     * Gets the label.
-     *
-     * @return the label
+     * Returns the label.
+     * @return String : label
      */
-    public final String getLabel() {
+    public String getLabel() {
         return label;
     }
 
     /**
-     * Sets the label.
-     *
-     * @param label the label to set
+     * Defines the label.
+     * @param label (String) : label
      */
-    public final void setLabel(final String label) {
+    public void setLabel(final String label) {
         this.label = label;
     }
 
     /**
-     * Gets the code.
-     *
-     * @return the code
+     * Returns the code.
+     * @return String : code
      */
-    public final String getCode() {
+    public String getCode() {
         return code;
     }
 
     /**
-     * Sets the code.
-     *
-     * @param code the code to set
+     * Defines the code.
+     * @param code (String) : code
      */
-    public final void setCode(final String code) {
+    public void setCode(final String code) {
         this.code = code;
     }
 

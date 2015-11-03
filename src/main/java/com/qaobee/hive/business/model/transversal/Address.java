@@ -21,8 +21,8 @@ package com.qaobee.hive.business.model.transversal;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
+ * Bean that describes an address.
  * @author cke
- *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Address {
@@ -49,104 +49,115 @@ public class Address {
 	private String formatedAddress;
 
 	/**
-	 * @return the place
+	 * Returns the address place.
+	 * @return String : place
 	 */
 	public String getPlace() {
 		return place;
 	}
 
 	/**
-	 * @param place the place to set
+	 * Defines the address place.
+	 * @param String : place 
 	 */
 	public void setPlace(String place) {
 		this.place = place;
 	}
-
 	
 	/**
-	 * @return the city
+	 * Returns the city name.
+	 * @return String : city
 	 */
 	public String getCity() {
 		return city;
 	}
 
 	/**
-	 * @param city the city to set
+	 * Defines the city name.
+	 * @param city (String) : city
 	 */
 	public void setCity(String city) {
 		this.city = city;
 	}
 
 	/**
-	 * @return the country
+	 * Returns the country name/label.
+	 * @return String : country name
 	 */
 	public String getCountry() {
 		return country;
 	}
 
 	/**
-	 * @param country the country to set
+	 * Defines the country name/label.
+	 * @param country (Stirng) : country name
 	 */
 	public void setCountry(String country) {
 		this.country = country;
 	}
 
 	/**
-	 * @return the lat
+	 * Returns the latitude.
+	 * @return double : latitude
 	 */
 	public double getLat() {
 		return lat;
 	}
 
 	/**
-	 * @param lat the lat to set
+	 * Defines the latitude.
+	 * @param lat (double) : lat
 	 */
 	public void setLat(double lat) {
 		this.lat = lat;
 	}
 
 	/**
-	 * @return the lng
+	 * Returns the longitude.
+	 * @return double : longitude
 	 */
 	public double getLng() {
 		return lng;
 	}
 
 	/**
-	 * @param lng the lng to set
+	 * Defines the longitude.
+	 * @param lng (double) : longitude
 	 */
 	public void setLng(double lng) {
 		this.lng = lng;
 	}
 
 	/**
-	 * @return the formatedAddress
+	 * Returns the formated Google address.
+	 * @return String : formated address
 	 */
 	public String getFormatedAddress() {
 		return formatedAddress;
 	}
 
 	/**
-	 * @param formatedAddress the formatedAddress to set
+	 * Defines the formated Google address.
+	 * @param formatedAddress (String) : formated address
 	 */
 	public void setFormatedAddress(String formatedAddress) {
 		this.formatedAddress = formatedAddress;
 	}
 
 	/**
-	 * @return the zipcode
+	 * Returns the city zip code.
+	 * @return String : zip code
 	 */
 	public String getZipcode() {
 		return zipcode;
 	}
 
 	/**
-	 * @param zipcode the zipcode to set
+	 * Defines the city zip code.
+	 * @param zipcode (String) : zip code
 	 */
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
-	
-	
 
 }

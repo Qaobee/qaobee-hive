@@ -19,89 +19,86 @@
 
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * 
+ * Bean that describes a participant.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Participant {
 
-	/**
-	 * the participant Id
-	 */
+	/** Internal identifier */
 	private String id;
-
-	/**
-	 * the participant Type.
-	 */
+	/** Name */
 	private String name;
-	
-	/**
-	 * the StructureId
-	 */
+	/** Structure ID */
 	private String StructureId;
-	
-	/**
-	 * the participant Type.
-	 */
+	/** Participant Type */
 	private String type;
 
 	/**
-	 * @return the id
+	 * Returns the participant identifier.
+	 * @return String : ID
 	 */
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * @param id the id to set
+	 * Defines the participant identifier.
+	 * @param id (String) : ID
 	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * @return the name
+	 * Returns the name.
+	 * @return String : name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @param name the name to set
+	 * Defines the name.
+	 * @param name (String) : name
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @return the structureId
+	 * Returns the Structure identifier.
+	 * @return String : structure ID
 	 */
 	public String getStructureId() {
 		return StructureId;
 	}
 
 	/**
-	 * @param structureId the structureId to set
+	 * Defines the structure identifier.
+	 * @param structureId (String) : structure ID
 	 */
 	public void setStructureId(String structureId) {
 		StructureId = structureId;
 	}
 
 	/**
-	 * @return the type
+	 * Returns the type.
+	 * @return String : type
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @param type the type to set
+	 * Defines the type.
+	 * @param type (String) : type
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
-
-	
 
 }

@@ -18,30 +18,25 @@
  */
 package com.qaobee.hive.business.model.commons.settings;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Class that defines a country.
- *
  * @author Jerome
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
 
-    /**
-     * Internal identifier.
-     */
+    /** Internal identifier */
     private String _id;
 
-    /**
-     * OSCE Code of the country.
-     */
+    /** OSCE Code of the country */
     private int codeOSCE;
 
-    /**
-     * Label code.
-     */
+    /** Label code */
     private String label;
-    /**
-     * The Local.
-     */
+    
+    /** Local */
     private String local;
 
 
@@ -53,7 +48,6 @@ public class Country {
 
     /**
      * Returns the internal identifier.
-     *
      * @return String : id
      */
     public String get_id() {
@@ -62,7 +56,6 @@ public class Country {
 
     /**
      * Defines the internal identifier.
-     *
      * @param _id (String) : id
      */
     public void set_id(final String _id) {
@@ -70,54 +63,48 @@ public class Country {
     }
 
     /**
-     * Gets the oSCE Code of the country.
-     *
-     * @return the oSCE Code of the country
+     * Returns the OSCE Code of the country.
+     * @return int : OSCE Code
      */
     public int getCodeOSCE() {
         return codeOSCE;
     }
 
     /**
-     * Sets the oSCE Code of the country.
-     *
-     * @param codeOSCE the new oSCE Code of the country
+     * Defines the OSCE Code of the country.
+     * @param codeOSCE (int) : OSCE Code
      */
     public void setCodeOSCE(final int codeOSCE) {
         this.codeOSCE = codeOSCE;
     }
 
     /**
-     * Gets the label code.
-     *
-     * @return the label code
+     * Returns the label.
+     * @return String : label
      */
     public String getLabel() {
         return label;
     }
 
     /**
-     * Sets the label code.
-     *
-     * @param label the new label code
+     * Defines the label.
+     * @param label (String) : label
      */
     public void setLabel(final String label) {
         this.label = label;
     }
 
     /**
-     * Gets local.
-     *
-     * @return the local
+     * Returns the local.
+     * @return String : local
      */
     public String getLocal() {
         return local;
     }
 
     /**
-     * Sets local.
-     *
-     * @param local the local
+     * Defines the local.
+     * @param local (String) : local
      */
     public void setLocal(String local) {
         this.local = local;

@@ -20,17 +20,17 @@ package com.qaobee.hive.business.model.sandbox.effective;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
- * The Class Team.
- *
+ * Bean that describes sandbox Team.
  * @author Nada Vujanic-Maquin
  * @version V1.2
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_Team {
 
 	// Declaration of variables
@@ -49,22 +49,15 @@ public class SB_Team {
 	private boolean enable;
 	/** Adversary ? */
 	private boolean adversary;
-	
-	/** 
-	 * List labels
-	 */
+	/** List of labels */
 	private List<Tag> labels;
-	
-	/** 
-	 * audit CRUD object 
-	 */
+	/** audit CRUD object */
 	private Audit audit;
 
 	// Getters and Setters
 
 	/**
 	 * Returns the internal identifier of the team.
-	 * 
 	 * @return String : internal identifier
 	 */
 	public String get_id() {
@@ -73,9 +66,7 @@ public class SB_Team {
 
 	/**
 	 * Defines the internal identifier of the team.
-	 * 
-	 * @param _id
-	 *            (String) : identifier
+	 * @param _id (String) : identifier
 	 */
 	public void set_id(String _id) {
 		this._id = _id;
@@ -83,7 +74,6 @@ public class SB_Team {
 
 	/**
 	 * Returns the label of the team.
-	 *
 	 * @return String : label
 	 */
 	public final String getLabel() {
@@ -92,18 +82,14 @@ public class SB_Team {
 
 	/**
 	 * Defines the label of the team.
-	 *
-	 * @param label
-	 *            (String) : label
+	 * @param label (String) : label
 	 */
 	public final void setLabel(final String label) {
 		this.label = label;
 	}
 
-
 	/**
 	 * Returns the age category associated to the team.
-	 * 
 	 * @return CategoryAge : categoryAge
 	 */
 	public final CategoryAge getCategoryAge() {
@@ -112,66 +98,78 @@ public class SB_Team {
 
 	/**
 	 * Defines the age category associated to the team.
-	 * 
-	 * @param categoryAge
-	 *            (CategoryAge) : categoryAge
+	 * @param categoryAge (CategoryAge) : categoryAge
 	 */
 	public final void setCategoryAge(CategoryAge categoryAge) {
 		this.categoryAge = categoryAge;
 	}
 
 	/**
-	 * @return the sandboxId
+	 * Returns the sandbox ID.
+	 * @return String : ID
 	 */
 	public String getSandboxId() {
 		return sandboxId;
 	}
 
 	/**
-	 * @param sandboxId the sandboxId to set
+	 * Defines the sandbox ID.
+	 * @param sandboxId (String) : ID
 	 */
 	public void setSandboxId(String sandboxId) {
 		this.sandboxId = sandboxId;
 	}
 
 	/**
-	 * @return the labels
+	 * Returns the list of labels.
+	 * @return List(Tag) : list
 	 */
 	public List<Tag> getLabels() {
 		return labels;
 	}
 
 	/**
-	 * @param labels the labels to set
+	 * Defines the list of labels.
+	 * @param labels (List(Tag)) : list
 	 */
 	public void setLabels(List<Tag> labels) {
 		this.labels = labels;
 	}
 
 	/**
-	 * @return the audit
+	 * Returns the audit.
+	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
 		return audit;
 	}
 
 	/**
-	 * @param audit the audit to set
+	 * Defines the audit.
+	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
 	}
 
+	/**
+	 * Returns the effective ID.
+	 * @return String : effective ID
+	 */
 	public String getEffectiveId() {
 		return effectiveId;
 	}
 
+	/**
+	 * Defines the effective ID.
+	 * @param effectiveId (String) : effective ID
+	 */
 	public void setEffectiveId(String effectiveId) {
 		this.effectiveId = effectiveId;
 	}
 
 	/**
-	 * Is the team enable ?
+	 * Checks if the team is enable ?
 	 * @return boolean : true if team enable
 	 */
 	public boolean isEnable() {
@@ -187,7 +185,7 @@ public class SB_Team {
 	}
 
 	/**
-	 * Is the team an adversary ?
+	 * Checks if the team is an adversary ?
 	 * @return boolean : true if adversary
 	 */
 	public boolean isAdversary() {

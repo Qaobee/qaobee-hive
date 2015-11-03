@@ -26,195 +26,171 @@ import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Contact;
 
 /**
- * The Class Structure.
- *
+ * Bean that describes structure.
  * @author Nada Vujanic-Maquin
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Structure {
 
-    // Declaration des variables
-    /** The _id. */
+    /** Internal identifier */
     private String _id;
-    /** The label. */
+    /** Label */
     private String label;
-    /** Structure's Acronym. */
+    /** Structure's Acronym */
     private String acronym;
-    /** activity code of the structure. */
+    /** activity code of the structure */
     private Activity activity;
-    /** The address. */
+    /** Address */
     private Address address;
-    /** The contact. */
+    /** Contact */
     private Contact contact;
-    /** The avatar. */
+    /** Avatar */
     private String avatar;
     /** audit CRUD object */
     private Audit audit;
     /** country of the structure */
     private Country country;
 
-    // Getters and Setters
-
     /**
-     * Gets the _id.
-     *
-     * @return the _id
+     * Returns the internal identifier.
+     * @return String : ID
      */
-    public final String get_id() {
+    public String get_id() {
         return _id;
     }
 
     /**
-     * Sets the _id.
-     *
-     * @param _id the _id to set
+     * Defines the internal identifier.
+     * @param _id (String) : ID
      */
-    public final void set_id(final String _id) {
+    public void set_id(final String _id) {
         this._id = _id;
     }
 
     /**
-     * Gets the label.
-     *
-     * @return the label
+     * Returns the label.
+     * @return String : label
      */
-    public final String getLabel() {
+    public String getLabel() {
         return label;
     }
 
     /**
-     * Sets the label.
-     *
-     * @param label the new label
+     * Defines the label.
+     * @param label (String) : label
      */
-    public final void setLabel(final String label) {
+    public void setLabel(final String label) {
         this.label = label;
     }
 
     /**
-     * Gets the acronym.
-     *
-     * @return the acronym
+     * Returns the acronym.
+     * @return String : acronym
      */
-    public final String getAcronym() {
+    public String getAcronym() {
         return acronym;
     }
 
     /**
-     * Sets the acronym.
-     *
-     * @param acronym the acronym to set
+     * Defines the acronym.
+     * @param acronym (String) : acronym
      */
-    public final void setAcronym(final String acronym) {
+    public void setAcronym(final String acronym) {
         this.acronym = acronym;
     }
 
-
     /**
-     * Gets the avatar.
-     *
-     * @return the avatar
+     * Returns the avatar.
+     * @return String : avatar
      */
-    public final String getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
     /**
-     * Sets the avatar.
-     *
-     * @param avatar the avatar to set
+     * Defines the avatar.
+     * @param avatar (String) : avatar
      */
-    public final void setAvatar(final String avatar) {
+    public void setAvatar(final String avatar) {
         this.avatar = avatar;
     }
 
-
     /**
-     * Gets country.
-     *
-     * @return the country
+     * Returns the country.
+     * @return Country : country
      */
-    public final Country getCountry() {
+    public Country getCountry() {
         return country;
     }
 
     /**
-     * Sets country.
-     *
-     * @param country the country to set
+     * Defines the country.
+     * @param country (Country) : country
      */
-    public final void setCountry(Country country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 
     /**
-     * Gets activity.
-     *
-     * @return the activity
+     * Returns the activity.
+     * @return Activity : activity
      */
     public Activity getActivity() {
         return activity;
     }
 
     /**
-     * Sets activity.
-     *
-     * @param activity the activity to set
+     * Defines the activity.
+     * @param activity (Activity) : activity
      */
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
 
     /**
-     * Gets address.
-     *
-     * @return the address
+     * Returns the address.
+     * @return Address : address
      */
     public Address getAddress() {
         return address;
     }
 
     /**
-     * Sets address.
-     *
-     * @param address the address to set
+     * Defines the address.
+     * @param address (Address) : address
      */
     public void setAddress(Address address) {
         this.address = address;
     }
 
     /**
-     * Gets contact.
-     *
-     * @return the contact
+     * Returns the contact.
+     * @return Contact : contact
      */
     public Contact getContact() {
         return contact;
     }
 
     /**
-     * Sets contact.
-     *
-     * @param contact the contact to set
+     * Defines the contact.
+     * @param contact (Contact) : contact
      */
     public void setContact(Contact contact) {
         this.contact = contact;
     }
 
     /**
-     * Gets audit.
-     *
-     * @return the audit
+     * Returns the audit.
+     * @return Audit : audit
      */
     public Audit getAudit() {
         return audit;
     }
 
     /**
-     * Sets audit.
-     *
-     * @param audit the audit to set
+     * Defines the audit.
+     * @param audit (Audit) : audit
      */
     public void setAudit(Audit audit) {
         this.audit = audit;

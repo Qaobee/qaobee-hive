@@ -20,14 +20,15 @@ package com.qaobee.hive.business.model.commons.settings;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.transversal.Gender;
 import com.qaobee.hive.business.model.transversal.Role;
 
 /**
- * Activity Configuration.
- *
+ * Bean that describes an activity configuration.
  * @author cke
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivityCfg {
 
 	/** Internal identifier. */
@@ -58,76 +59,64 @@ public class ActivityCfg {
 	private List<Role> listRolePlayer;
 
 	/**
-	 * Gets the _id.
-	 *
-	 * @return the _id
+	 * Returns the identifier.
+	 * @return String : identifier
 	 */
 	public final String get_id() {
 		return _id;
 	}
 
 	/**
-	 * Sets the _id.
-	 *
-	 * @param _id
-	 *            the _id to set
+	 * Defines the identifier.
+	 * @param _id (String) : identifier
 	 */
 	public final void set_id(final String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * Gets the list level game.
-	 *
-	 * @return the listLevelGame
+	 * Returns the list of level game.
+	 * @return List(LevelGame) : list of level game
 	 */
 	public final List<LevelGame> getListLevelGame() {
 		return listLevelGame;
 	}
 
 	/**
-	 * Sets the list level game.
-	 *
-	 * @param listLevelGame
-	 *            the listLevelGame to set
+	 * Defines the list of level game.
+	 * @param listLevelGame (List(LevelGame)) :  list of level game
 	 */
 	public final void setListLevelGame(final List<LevelGame> listLevelGame) {
 		this.listLevelGame = listLevelGame;
 	}
 
 	/**
-	 * Gets the list category age.
-	 *
-	 * @return the listCategoryAge
+	 * Returns the list of age categories.
+	 * @return List(CategoryAge) : list
 	 */
 	public final List<CategoryAge> getListCategoryAge() {
 		return listCategoryAge;
 	}
 
 	/**
-	 * Sets the list category age.
-	 *
-	 * @param listCategoryAge
-	 *            the listCategoryAge to set
+	 * Returns the list of age categories.
+	 * @param listCategoryAge (List(CategoryAge)) : list
 	 */
 	public final void setListCategoryAge(final List<CategoryAge> listCategoryAge) {
 		this.listCategoryAge = listCategoryAge;
 	}
 
 	/**
-	 * Gets the list gender.
-	 *
-	 * @return the listGender
+	 * Returns the list of genders.
+	 * @return List(Gender) : list
 	 */
 	public final List<Gender> getListGender() {
 		return listGender;
 	}
 
 	/**
-	 * Sets the list gender.
-	 *
-	 * @param listGender
-	 *            the listGender to set
+	 * Defines the list of genders.
+	 * @param listGender (List(Gender)) : list
 	 */
 	public final void setListGender(final List<Gender> listGender) {
 		this.listGender = listGender;
@@ -135,76 +124,80 @@ public class ActivityCfg {
 	
 
 	/**
-	 * Gets the list license type.
-	 *
-	 * @return the listLicenseType
+	 * Returns the list of types of license.
+	 * @return List(LicenseType) : list
 	 */
 	public final List<LicenseType> getListLicenseType() {
 		return listLicenseType;
 	}
 
 	/**
-	 * Sets the list license type.
-	 *
-	 * @param listLicenseType
-	 *            the listLicenseType to set
+	 * Defines the list of types of license.
+	 * @param listLicenseType (List(LicenseType)) : list
 	 */
 	public final void setListLicenseType(final List<LicenseType> listLicenseType) {
 		this.listLicenseType = listLicenseType;
 	}
 
 	/**
-	 * @return the listRolePlayer
+	 * Returns the list of player roles.
+	 * @return List(Role) : list
 	 */
 	public final List<Role> getListRolePlayer() {
 		return listRolePlayer;
 	}
 
 	/**
-	 * @param listRolePlayer
-	 *            the listRolePlayer to set
+	 * Defines the list of player roles.
+	 * @param listRolePlayer (List(Role)) : list
 	 */
 	public final void setListRolePlayer(List<Role> listRolePlayer) {
 		this.listRolePlayer = listRolePlayer;
 	}
 
 	/**
-	 * @return the season
+	 * Returns the season.
+	 * @return Season : season
 	 */
 	public Season getSeason() {
 		return season;
 	}
 
 	/**
-	 * @param season the season to set
+	 * Defines the season.
+	 * @param season (Season) : season
 	 */
 	public void setSeason(Season season) {
 		this.season = season;
 	}
 
 	/**
-	 * @return the activity
+	 * Returns the activity.
+	 * @return Activity : activity
 	 */
 	public Activity getActivity() {
 		return activity;
 	}
 
 	/**
-	 * @param activity the activity to set
+	 * Defines the activity.
+	 * @param activity (Activity) : activity
 	 */
 	public void setActivity(Activity activity) {
 		this.activity = activity;
 	}
 
 	/**
-	 * @return the country
+	 * Returns the country.
+	 * @return Country : country
 	 */
 	public Country getCountry() {
 		return country;
 	}
 
 	/**
-	 * @param country the country to set
+	 * Defines the country.
+	 * @param country (Country) : country
 	 */
 	public void setCountry(Country country) {
 		this.country = country;

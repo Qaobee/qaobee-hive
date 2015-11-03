@@ -18,226 +18,194 @@
  */
 package com.qaobee.hive.business.model.commons.users.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 
 
 /**
- * The Class Plan.
+ * Bean that describes a plan.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Plan {
 
-	/** Payment Id. */
+	/** Payment Id */
 	private String paymentId;
-
-	/** Level Plan. */
+	/** Level Plan */
 	private LevelPlan levelPlan;
-
-	/** amount paid. */
+	/** amount paid */
 	private long amountPaid;
-
-	/** date Paid. */
+	/** Payment date */
 	private long paidDate;
-
-	/** start period date. */
+	/** Date of start period */
 	private long startPeriodDate;
-
-	/** end Period date. */
+	/** Date of end period */
 	private long endPeriodDate;
-
-	/** Status Payment. */
+	/** Payment status */
 	private String status;
-
-	/** periodicity. */
+	/** Payment periodicity */
 	private String periodicity;
-
-	/** Activity. */
+	/** Activity */
 	private Activity activity;
-
-	private String paiementURL;
+	/** Payment URL */
+	private String paymentURL;
 
 	/**
-	 * Gets the payment id.
-	 *
-	 * @return the paymentId
+	 * Returns the payment id.
+	 * @return String : payment
 	 */
-	public final String getPaymentId() {
+	public String getPaymentId() {
 		return paymentId;
 	}
 
 	/**
-	 * Sets the payment id.
-	 *
-	 * @param paymentId
-	 *            the paymentId to set
+	 * Defines the payment id.
+	 * @param paymentId (String) : id
 	 */
-	public final void setPaymentId(final String paymentId) {
+	public void setPaymentId(final String paymentId) {
 		this.paymentId = paymentId;
 	}
 
 	/**
-	 * Gets the level plan.
-	 *
-	 * @return the levelPlan
+	 * Returns the level plan.
+	 * @return LevelPlan : level plan
 	 */
-	public final LevelPlan getLevelPlan() {
+	public LevelPlan getLevelPlan() {
 		return levelPlan;
 	}
 
 	/**
-	 * Sets the level plan.
-	 *
-	 * @param levelPlan
-	 *            the levelPlan to set
+	 * Defines the level plan.
+	 * @param levelPlan (LevelPlan) : level plan
 	 */
-	public final void setLevelPlan(final LevelPlan levelPlan) {
+	public void setLevelPlan(final LevelPlan levelPlan) {
 		this.levelPlan = levelPlan;
 	}
 
 	/**
-	 * Gets the amount paid.
-	 *
-	 * @return the amountPaid
+	 * Returns the amount paid.
+	 * @return long : amount
 	 */
-	public final long getAmountPaid() {
+	public long getAmountPaid() {
 		return amountPaid;
 	}
 
 	/**
-	 * Sets the amount paid.
-	 *
-	 * @param amountPaid
-	 *            the amountPaid to set
+	 * Defines the amount paid.
+	 * @param amountPaid (long) : amount
 	 */
-	public final void setAmountPaid(final long amountPaid) {
+	public void setAmountPaid(final long amountPaid) {
 		this.amountPaid = amountPaid;
 	}
 
 	/**
-	 * Gets the paid date.
-	 *
-	 * @return the paidDate
+	 * Returns the date of payment.
+	 * @return the paidDate (long) : date
 	 */
-	public final long getPaidDate() {
+	public long getPaidDate() {
 		return paidDate;
 	}
 
 	/**
-	 * Sets the paid date.
-	 *
-	 * @param paidDate
-	 *            the paidDate to set
+	 * Defines the date of payment.
+	 * @param paidDate (long) : date
 	 */
-	public final void setPaidDate(final long paidDate) {
+	public void setPaidDate(final long paidDate) {
 		this.paidDate = paidDate;
 	}
 
 	/**
-	 * Gets the start period date.
-	 *
-	 * @return the startPeriodDate
+	 * Returns the start date for the period.
+	 * @return long : start date
 	 */
-	public final long getStartPeriodDate() {
+	public long getStartPeriodDate() {
 		return startPeriodDate;
 	}
 
 	/**
-	 * Sets the start period date.
-	 *
-	 * @param startPeriodDate
-	 *            the startPeriodDate to set
+	 * Defines the start date for the period.
+	 * @param startPeriodDate (long) : date
 	 */
-	public final void setStartPeriodDate(final long startPeriodDate) {
+	public void setStartPeriodDate(final long startPeriodDate) {
 		this.startPeriodDate = startPeriodDate;
 	}
 
 	/**
-	 * Gets the end period date.
-	 *
-	 * @return the endPeriodDate
+	 * Returns the end date for the period.
+	 * @return long : date
 	 */
-	public final long getEndPeriodDate() {
+	public long getEndPeriodDate() {
 		return endPeriodDate;
 	}
 
 	/**
-	 * Sets the end period date.
-	 *
-	 * @param endPeriodDate
-	 *            the endPeriodDate to set
+	 * Defines the end date for the period.
+	 * @param endPeriodDate (long) : date
 	 */
-	public final void setEndPeriodDate(final long endPeriodDate) {
+	public void setEndPeriodDate(final long endPeriodDate) {
 		this.endPeriodDate = endPeriodDate;
 	}
 
 	/**
-	 * Gets the status.
-	 *
-	 * @return the status
+	 * Returns the status.
+	 * @return String : status
 	 */
-	public final String getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
 	/**
-	 * Sets the status.
-	 *
-	 * @param status
-	 *            the status to set
+	 * Defines the status.
+	 * @param status (String) : status
 	 */
-	public final void setStatus(final String status) {
+	public void setStatus(final String status) {
 		this.status = status;
 	}
 
 	/**
-	 * Gets the periodicity.
-	 *
-	 * @return the periodicity
+	 * Returns the payment periodicity.
+	 * @return String : periodicity
 	 */
-	public final String getPeriodicity() {
+	public String getPeriodicity() {
 		return periodicity;
 	}
 
 	/**
-	 * Sets the periodicity.
-	 *
-	 * @param periodicity
-	 *            the periodicity to set
+	 * Defines the payment periodicity.
+	 * @param periodicity (String) : periodicity
 	 */
-	public final void setPeriodicity(final String periodicity) {
+	public void setPeriodicity(final String periodicity) {
 		this.periodicity = periodicity;
 	}
 
 	/**
-	 * Gets the activity.
-	 *
-	 * @return the activity
+	 * Returns the activity.
+	 * @return Activity : activity
 	 */
-	public final Activity getActivity() {
+	public Activity getActivity() {
 		return activity;
 	}
 
 	/**
-	 * Sets the activity.
-	 *
-	 * @param activity
-	 *            the activity to set
+	 * Defines the activity.
+	 * @param activity (Activity) : activity
 	 */
-	public final void setActivity(final Activity activity) {
+	public void setActivity(final Activity activity) {
 		this.activity = activity;
 	}
 
 	/**
-	 * @return the paiementURL
+	 * Returns the payment URL.
+	 * @return String : URL
 	 */
 	public String getPaiementURL() {
-		return paiementURL;
+		return paymentURL;
 	}
 
 	/**
-	 * @param paiementURL
-	 *            the paiementURL to set
+	 * Defines the payment URL.
+	 * @param paymentURL (String) : URL
 	 */
-	public void setPaiementURL(String paiementURL) {
-		this.paiementURL = paiementURL;
+	public void setPaiementURL(String paymentURL) {
+		this.paymentURL = paymentURL;
 	}
 }

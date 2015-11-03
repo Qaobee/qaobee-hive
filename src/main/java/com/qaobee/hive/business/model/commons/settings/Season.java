@@ -21,36 +21,30 @@ package com.qaobee.hive.business.model.commons.settings;
 import java.util.Calendar;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.transversal.Audit;
 
 /**
  * Class that defines a season.
- *
  * @author Jerome
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Season {
 
 	/** Internal identifier. */
 	private String _id;
-
 	/** label. */
 	private String label;
-
 	/** Code. */
 	private String code;
-
 	/** Start date. */
 	private Long startDate;
-
 	/** End date. */
 	private Long endDate;
-
 	/** Internal id of an activity. */
 	private String activityId;
-
 	/** Internal id of an country. */
 	private String countryId;
-	
 	/** audit CRUD object */
 	private Audit audit;
 
@@ -62,7 +56,6 @@ public class Season {
 
 	/**
 	 * Returns the internal identifier.
-	 *
 	 * @return String : id
 	 */
 	public String get_id() {
@@ -71,113 +64,95 @@ public class Season {
 
 	/**
 	 * Defines the internal identifier.
-	 *
-	 * @param _id
-	 *            (String) : id
+	 * @param _id (String) : id
 	 */
 	public void set_id(final String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * Gets the code.
-	 *
-	 * @return the code
+	 * Returns the season code.
+	 * @return String : code
 	 */
 	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * Sets the code.
-	 *
-	 * @param code
-	 *            the new code
+	 * Defines the season code.
+	 * @param code (String) : code
 	 */
 	public void setCode(final String code) {
 		this.code = code;
 	}
 
 	/**
-	 * Gets the start date.
-	 *
-	 * @return the start date
+	 * Returns the start date.
+	 * @return Long : start date
 	 */
 	public Long getStartDate() {
 		return startDate;
 	}
 
 	/**
-	 * Sets the start date.
-	 *
-	 * @param startDate
-	 *            the new start date
+	 * Defines the start date.
+	 * @param startDate (Long) : start date
 	 */
 	public void setStartDate(final Long startDate) {
 		this.startDate = startDate;
 	}
 
 	/**
-	 * Gets the end date.
-	 *
-	 * @return the end date
+	 * Returns the end date.
+	 * @return Long : end date
 	 */
 	public Long getEndDate() {
 		return endDate;
 	}
 
 	/**
-	 * Sets the end date.
-	 *
-	 * @param endDate
-	 *            the new end date
+	 * Defines the end date.
+	 * @param endDate (Long) : end date
 	 */
 	public void setEndDate(final Long endDate) {
 		this.endDate = endDate;
 	}
 
 	/**
-	 * Gets the internal id of an activity.
-	 *
-	 * @return the internal id of an activity
+	 * Returns the internal id of an activity.
+	 * @return String : activity ID
 	 */
 	public String getActivityId() {
 		return activityId;
 	}
 
 	/**
-	 * Sets the internal id of an activity.
-	 *
-	 * @param activityId
-	 *            the new internal id of an activity
+	 * Defines the internal id of an activity.
+	 * @param activityId (String) : activity ID
 	 */
 	public void setActivityId(final String activityId) {
 		this.activityId = activityId;
 	}
 
 	/**
-	 * Gets the internal id of an country.
-	 *
-	 * @return the internal id of an country
+	 * Returns the internal id of a country.
+	 * @return String : country ID
 	 */
 	public String getCountryId() {
 		return countryId;
 	}
 
 	/**
-	 * Sets the internal id of an country.
-	 *
-	 * @param countryId
-	 *            the new internal id of an country
+	 * Defines the internal id of a country.
+	 * @param countryId (String) : country ID
 	 */
 	public void setCountryId(final String countryId) {
 		this.countryId = countryId;
 	}
 
 	/**
-	 * Gets the years season.
-	 *
-	 * @return the years season
+	 * Returns the years season.
+	 * @return String : years season
 	 */
 	@JsonIgnore
 	public String getYearsSeason() {
@@ -193,32 +168,34 @@ public class Season {
 	}
 
 	/**
-	 * @return the label
+	 * Returns the season label.
+	 * @return String : label
 	 */
-	public final String getLabel() {
+	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * @param label
-	 *            the label to set
+	 * Defines the season label.
+	 * @param label (String) : label
 	 */
-	public final void setLabel(String label) {
+	public void setLabel(String label) {
 		this.label = label;
 	}
 
 	/**
-	 * @return the audit
+	 * Returns the audit.
+	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
 		return audit;
 	}
 
 	/**
-	 * @param audit the audit to set
+	 * Defines the audit.
+	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
 	}
-
 }

@@ -27,329 +27,262 @@ import com.qaobee.hive.business.model.transversal.Contact;
 import java.util.List;
 
 /**
- * The type User.
- *
+ * Bean that describes a user.
  * @author cke
  */
 public class User {
 
-    /**
-     * The _id.
-     */
+    /** Internal identifier */
     private String _id;
-
-    /**
-     * The avatar.
-     */
+    /** Avatar */
     private String avatar;
-
-    /**
-     * The name.
-     */
+    /** Name */
     private String name;
-
-    /**
-     * The firstname.
-     */
+    /** Firstname */
     private String firstname;
-
-    /**
-     * The address.
-     */
+    /** Address */
     private Address address;
-
-    /**
-     * The birthdate.
-     */
+    /** Birthdate */
     private long birthdate;
-
-    /**
-     * The contact.
-     */
+    /** Contact */
     private Contact contact;
-
-    /**
-     * The nationality.
-     */
+    /** Country */
     private Country country;
-
-    /**
-     * The nationality.
-     */
+    /** Nationality */
     private Country nationality;
-
-    /**
-     * The Person account list.
-     */
+    /** Account */
     private Account account;
-
-    /**
-     * The timestamp.
-     */
+    /** Timestamp */
     private long timestamp;
-
-    /**
-     * The gender.
-     */
+    /** Gender */
     private String gender;
-
-    /**
-     * The notifications.
-     */
+    /** List of notifications */
     private List<Notification> notifications;
-    
-    /**
-     * The user's effective by default.
-     */
+    /** User's effective by default */
     private String effectiveDefault;
 
     /**
-     * Gets _ id.
-     *
-     * @return the _id
+     * Returns the internal identifier.
+     * @return String : id
      */
     public String get_id() {
         return _id;
     }
 
     /**
-     * Sets _ id.
-     *
-     * @param _id the _id to set
+     * Defines the internal identifier.
+     * @param String : id
      */
     public void set_id(String _id) {
         this._id = _id;
     }
 
     /**
-     * Gets avatar.
-     *
-     * @return the avatar
+     * Returns the avatar.
+     * @return String : avatar
      */
     public String getAvatar() {
         return avatar;
     }
 
     /**
-     * Sets avatar.
-     *
-     * @param avatar the avatar to set
+     * Defines the avatar.
+     * @param avatar (String) : avatar
      */
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 
     /**
-     * Gets name.
-     *
-     * @return the name
+     * Returns the name of the user.
+     * @return String : name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Sets name.
-     *
-     * @param name the name to set
+     * Defines the name of the user.
+     * @param (String) : name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Gets firstname.
-     *
-     * @return the firstname
+     * Returns the firstname of the user.
+     * @return String : firstname
      */
     public String getFirstname() {
         return firstname;
     }
 
     /**
-     * Sets firstname.
-     *
-     * @param firstname the firstname to set
+     * Defines the firstname of the user.
+     * @param firstname (String) : firstname
      */
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
     /**
-     * Gets address.
-     *
-     * @return the address
+     * Returns the address of the user.
+     * @return Address : address
      */
     public Address getAddress() {
         return address;
     }
 
     /**
-     * Sets address.
-     *
-     * @param address the address to set
+     * Defines the address of the user.
+     * @param address (Address) : address
      */
     public void setAddress(Address address) {
         this.address = address;
     }
 
     /**
-     * Gets contact.
-     *
-     * @return the contact
+     * Returns how to contact the user.
+     * @return Contact : contacts
      */
     public Contact getContact() {
         return contact;
     }
 
     /**
-     * Sets contact.
-     *
-     * @param contact the contact to set
+     * Defines how to contact the user.
+     * @param contact (Contact) : contacts
      */
     public void setContact(Contact contact) {
         this.contact = contact;
     }
 
     /**
-     * Gets country.
-     *
-     * @return the country
+     * Returns the country.
+     * @return Country : country
      */
     public Country getCountry() {
         return country;
     }
 
     /**
-     * Sets country.
-     *
-     * @param country the country to set
+     * Defines the country.
+     * @param country (Country) : country
      */
     public void setCountry(Country country) {
         this.country = country;
     }
 
     /**
-     * Gets account.
-     *
-     * @return the account
+     * Returns user account.
+     * @return Account : user account
      */
     public Account getAccount() {
         return account;
     }
 
     /**
-     * Sets account.
-     *
-     * @param account the account to set
+     * Defines user account.
+     * @param account (Account) : account
      */
     public void setAccount(Account account) {
         this.account = account;
     }
 
     /**
-     * Gets notifications.
-     *
-     * @return the notifications
+     * Returns list of notifications.
+     * @return List(Notification) : list
      */
     public List<Notification> getNotifications() {
         return notifications;
     }
 
     /**
-     * Sets notifications.
-     *
-     * @param notifications the notifications to set
+     * Defines the list of notifications.
+     * @param notifications (List(Notification)) : list
      */
     public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
     }
 
     /**
-     * Gets timestamp.
-     *
-     * @return the timestamp
+     * Returns the timestamp.
+     * @return long : timestamp
      */
     public long getTimestamp() {
         return timestamp;
     }
 
     /**
-     * Sets timestamp.
-     *
-     * @param timestamp the timestamp to set
+     * Defines the timestamp.
+     * @param timestamp (long) : timestamp
      */
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
     /**
-     * Gets gender.
-     *
-     * @return the gender
+     * Returns user gender.
+     * @return String : gender
      */
     public String getGender() {
         return gender;
     }
 
     /**
-     * Sets gender.
-     *
-     * @param gender the gender to set
+     * Defines user gender.
+     * @param gender (String) : gender
      */
     public void setGender(String gender) {
         this.gender = gender;
     }
 
     /**
-     * Gets nationality.
-     *
-     * @return the nationality
+     * Returns user nationality.
+     * @return Country : nationality
      */
     public Country getNationality() {
         return nationality;
     }
 
     /**
-     * Sets nationality.
-     *
-     * @param nationality the nationality to set
+     * Defines user nationality.
+     * @param nationality (Country) : nationality
      */
     public void setNationality(Country nationality) {
         this.nationality = nationality;
     }
 
     /**
-     * Gets birthdate.
-     *
-     * @return the birthdate
+     * Returns birthdate.
+     * @return long : birthdate
      */
     public long getBirthdate() {
         return birthdate;
     }
 
     /**
-     * Sets birthdate.
-     *
-     * @param birthdate the birthdate to set
+     * Defines birthdate.
+     * @param birthdate (long) : birthdate
      */
     public void setBirthdate(long birthdate) {
         this.birthdate = birthdate;
     }
 
 	/**
-	 * @return the effectiveDefault
+	 * Returns the default effective ID.
+	 * @return String : default effective
 	 */
 	public String getEffectiveDefault() {
 		return effectiveDefault;
 	}
 
 	/**
-	 * @param effectiveDefault the effectiveDefault to set
+	 * Defines the default effective ID.
+	 * @param effectiveDefault (String) : default effective
 	 */
 	public void setEffectiveDefault(String effectiveDefault) {
 		this.effectiveDefault = effectiveDefault;
 	}
-
 
 }

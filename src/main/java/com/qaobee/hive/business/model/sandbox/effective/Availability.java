@@ -18,27 +18,32 @@
  */
 package com.qaobee.hive.business.model.sandbox.effective;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
+ * Bean that describes availability.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Availability {
 	
 	/**
-	 * Value of status
-	 * available
-	 * unavailable
-	 * 
+	 * Value of status.<br>
+	 * <ul>
+	 * <li>available</li>
+	 * <li>unavailable</li>
+	 * </ul>
 	 * */
 	private String value;
 
 	/**
-	 * detail value
-	 * 0=available,
-	 * 1=injured,
-	 * 2=suspended,
-	 * 3=uncertain
-	 * 
+	 * Detail value. <br>
+	 * <ul>
+	 * <li>0=available</li>
+	 * <li>1=injured</li>
+	 * <li>2=suspended</li>
+	 * <li>3=uncertain</li>
+	 * </ul>
 	 * */
 	private String cause;
 
@@ -46,42 +51,68 @@ public class Availability {
 	private Long endDate;
 
 	/**
-	 * @return the value
+	 * Returns the value.<br>
+	 * <ul>
+	 * <li>available</li>
+	 * <li>unavailable</li>
+	 * </ul>
+	 * @return String : value
 	 */
 	public String getValue() {
 		return value;
 	}
 
 	/**
-	 * @param value the value to set
+	 * Defines the value.<br>
+	 * <ul>
+	 * <li>available</li>
+	 * <li>unavailable</li>
+	 * </ul>
+	 * @param value (String) : value
 	 */
 	public void setValue(String value) {
 		this.value = value;
 	}
 
 	/**
-	 * @return the cause
+	 * Returns the cause.<br>
+	 * <ul>
+	 * <li>0=available</li>
+	 * <li>1=injured</li>
+	 * <li>2=suspended</li>
+	 * <li>3=uncertain</li>
+	 * </ul>
+	 * @return String : cause
 	 */
 	public String getCause() {
 		return cause;
 	}
 
 	/**
-	 * @param cause the cause to set
+	 * Defines the cause.<br>
+	 * <ul>
+	 * <li>0=available</li>
+	 * <li>1=injured</li>
+	 * <li>2=suspended</li>
+	 * <li>3=uncertain</li>
+	 * </ul>
+	 * @param cause (String) : cause
 	 */
 	public void setCause(String cause) {
 		this.cause = cause;
 	}
 
 	/**
-	 * @return the endDate
+	 * Returns the end date.
+	 * @return Long : date
 	 */
 	public Long getEndDate() {
 		return endDate;
 	}
 
 	/**
-	 * @param endDate the endDate to set
+	 * Defines the end date.
+	 * @param endDate (Long) : date
 	 */
 	public void setEndDate(Long endDate) {
 		this.endDate = endDate;

@@ -19,50 +19,49 @@
 
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * 
+ * Bean that describes an event owner.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EventOwner {
 
-	/**
-	 * the owner Id
-	 */
+	/** Owner identifier */
 	private String ownerId;
-
-	/**
-	 * the owner Type.
-	 */
+	/** Owner type */
 	private String ownerType;
 
 	/**
-	 * @return the ownerId
+	 * Returns the owner identifier.
+	 * @return String : owner ID
 	 */
-	public final String getOwnerId() {
+	public String getOwnerId() {
 		return ownerId;
 	}
 
 	/**
-	 * @param ownerId
-	 *            the ownerId to set
+	 * Defines the owner identifier.
+	 * @param ownerId (String) : owener ID
 	 */
-	public final void setOwnerId(String ownerId) {
+	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
 	}
 
 	/**
-	 * @return the ownerType
+	 * Returns the owner type.
+	 * @return String : type
 	 */
-	public final String getOwnerType() {
+	public String getOwnerType() {
 		return ownerType;
 	}
 
 	/**
-	 * @param ownerType
-	 *            the ownerType to set
+	 * Defines the owner type.
+	 * @param ownerType (String) : type
 	 */
-	public final void setOwnerType(String ownerType) {
+	public void setOwnerType(String ownerType) {
 		this.ownerType = ownerType;
 	}
 

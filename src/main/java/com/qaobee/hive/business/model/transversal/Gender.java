@@ -18,11 +18,13 @@
  */
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * The Class Gender.
- *
+ * Bean that describes a gender.
  * @author xavier
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Gender {
 
 	/** Gender code. */
@@ -35,59 +37,50 @@ public class Gender {
 	private int order;
 
 	/**
-	 * Gets the code.
-	 *
-	 * @return the code
+	 * Returns the gender code.
+	 * @return String : code
 	 */
-	public final String getCode() {
+	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * Sets the code.
-	 *
-	 * @param code
-	 *            the code to set
+	 * Defines the gender code.
+	 * @param code (String) : code
 	 */
-	public final void setCode(final String code) {
+	public void setCode(final String code) {
 		this.code = code;
 	}
 
 	/**
-	 * Gets the label.
-	 *
-	 * @return the label
+	 * Returns the label.
+	 * @return String : label
 	 */
-	public final String getLabel() {
+	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * Sets the label.
-	 *
-	 * @param label
-	 *            the label to set
+	 * Defines the label.
+	 * @param label (String) : label
 	 */
 	public final void setLabel(final String label) {
 		this.label = label;
 	}
 
 	/**
-	 * Gets the order.
-	 *
-	 * @return the order
+	 * Returns the position order to show genders.
+	 * @return int : order
 	 */
-	public final int getOrder() {
+	public int getOrder() {
 		return order;
 	}
 
 	/**
-	 * Sets the order.
-	 *
-	 * @param order
-	 *            the order to set
+	 * Defines the position order to show genders.
+	 * @param order (int) : order
 	 */
-	public final void setOrder(final int order) {
+	public void setOrder(final int order) {
 		this.order = order;
 	}
 

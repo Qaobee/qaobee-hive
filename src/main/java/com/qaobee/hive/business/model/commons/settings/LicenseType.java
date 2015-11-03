@@ -18,55 +18,49 @@
  */
 package com.qaobee.hive.business.model.commons.settings;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * The Class TypeLicence.
- *
+ * Bean that descripbes the type of license.
  * @author jeremy
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LicenseType {
 
-	/** The code. */
+	/** Code */
 	private String code;
-
-	/** The label. */
+	/** Label */
 	private String label;
 
 	/**
-	 * Gets the code.
-	 *
-	 * @return the code
+	 * Returns the license type code.
+	 * @return String : code
 	 */
 	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * Sets the code.
-	 *
-	 * @param code
-	 *            the new code
+	 * Defines the license type code.
+	 * @param code (String) : code
 	 */
 	public void setCode(final String code) {
 		this.code = code;
 	}
 
 	/**
-	 * Gets the label.
-	 *
-	 * @return the label
+	 * Returns the license type label.
+	 * @return String : label
 	 */
 	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * Sets the label.
-	 *
-	 * @param label
-	 *            the new label
+	 * Defines the license type label.
+	 * @param label (String) : label
 	 */
 	public void setLabel(final String label) {
 		this.label = label;
 	}
-
 }

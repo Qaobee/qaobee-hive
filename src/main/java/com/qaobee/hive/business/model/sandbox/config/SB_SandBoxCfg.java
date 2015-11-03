@@ -18,133 +18,121 @@
  */
 package com.qaobee.hive.business.model.sandbox.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.business.model.transversal.Member;
 
-import java.util.List;
-
 /**
- * The type Sand box cfg.
- *
+ * Bean that describes a Sandbox Configuration. 
  * @author cke
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_SandBoxCfg {
 
-    /**
-     * The _ id.
-     */
+    /** Internal identifier */
     private String _id;
-
-    /**
-     * The Structure.
-     */
+    /** Structure */
     private Structure structure;
-
-    /**
-     * The Sand box.
-     */
+    /** The Sand box. */
     private SB_SandBox sandBox;
-
-    /**
-     * The Season.
-     */
+    /** Season */
     private Season season;
-
-    /**
-     * The Members.
-     */
+    /** List of Members */
     private List<Member> members;
 
     /**
-     * Gets _ id.
-     *
-     * @return the _id
+     * Returns the internal identifier.
+     * @return String : ID
      */
     public String get_id() {
         return _id;
     }
 
     /**
-     * Sets _ id.
-     *
-     * @param _id the _id to set
+     * Defines the internal identifier.
+     * @param _id (String) : ID
      */
     public void set_id(String _id) {
         this._id = _id;
     }
 
     /**
-     * Gets season.
-     *
-     * @return the season
+     * Returns the season.
+     * @return Season : season
      */
     public Season getSeason() {
         return season;
     }
 
     /**
-     * Sets season.
-     *
-     * @param season the season to set
+     * Defines the season.
+     * @param season (Season) : season
      */
     public void setSeason(Season season) {
         this.season = season;
     }
 
     /**
-     * Gets sand box.
-     *
-     * @return the sandBox
+     * Returns the sandbox.
+     * @return SB_SandBox : sandbox
      */
     public SB_SandBox getSandBox() {
         return sandBox;
     }
 
     /**
-     * Sets sand box.
-     *
-     * @param sandBox the sandBox to set
+     * Defines the sandbox.
+     * @param sandBox (SB_SandBox) : sandbox
      */
     public void setSandBox(SB_SandBox sandBox) {
         this.sandBox = sandBox;
     }
 
     /**
-     * Gets structure.
-     *
-     * @return the structure
+     * Returns the structure.
+     * @return Structure : structure
      */
     public Structure getStructure() {
         return structure;
     }
 
     /**
-     * Sets structure.
-     *
-     * @param structure the structure to set
+     * Defines the structure.
+     * @param structure (Structure) : structure
      */
     public void setStructure(Structure structure) {
         this.structure = structure;
     }
 
     /**
-     * Gets members.
-     *
-     * @return the members
+     * Returns the list of members.
+     * @return List(Member) : list
      */
     public List<Member> getMembers() {
         return members;
     }
 
     /**
-     * Sets members.
-     *
-     * @param members the members to set
+     * Defines the list of members.
+     * @param members (List(Member)) : list
      */
     public void setMembers(List<Member> members) {
         this.members = members;
     }
 
+    /**
+     * Adds a member to the list.
+     * @param member (Member) : member
+     */
+    public void addMember(Member member) {
+    	if(members==null) {
+    		members = new ArrayList<>();
+    	}
+    	members.add(member);
+    }
 
 }

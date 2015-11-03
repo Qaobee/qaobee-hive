@@ -18,63 +18,70 @@
  */
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.users.User;
 
 /**
+ * Bean that describes audit trail.
  * @author cke
- *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Audit {
 	
-	/** Author. */
+	/** Author */
+	//TODO user en entier ou un smallUser ?
 	private User author;
-
-	/** Create date. */
-	private long datCreate;
-
+	/** Create date */
+	private long dateCreate;
 	/** Update date. */
-	private long datUpdate;
+	private long dateUpdate;
 
 	/**
-	 * @return the author
+	 * Returns the author.
+	 * @return User : author
 	 */
 	public User getAuthor() {
 		return author;
 	}
 
 	/**
-	 * @param author the author to set
+	 * Defines the author.
+	 * @param author (User) : author
 	 */
 	public void setAuthor(User author) {
 		this.author = author;
 	}
 
 	/**
-	 * @return the datCreate
+	 * Returns the creation date.
+	 * @return long : date
 	 */
-	public long getDatCreate() {
-		return datCreate;
+	public long getDateCreate() {
+		return dateCreate;
 	}
 
 	/**
-	 * @param datCreate the datCreate to set
+	 * Defines the creation date.
+	 * @param dateCreate (long) : date
 	 */
-	public void setDatCreate(long datCreate) {
-		this.datCreate = datCreate;
+	public void setDatCreate(long dateCreate) {
+		this.dateCreate = dateCreate;
 	}
 
 	/**
-	 * @return the datUpdate
+	 * Returns the updating date.
+	 * @return long : date
 	 */
 	public long getDatUpdate() {
-		return datUpdate;
+		return dateUpdate;
 	}
 
 	/**
-	 * @param datUpdate the datUpdate to set
+	 * Defines the updating date.
+	 * @param dateUpdate (long) : date
 	 */
-	public void setDatUpdate(long datUpdate) {
-		this.datUpdate = datUpdate;
+	public void setDatUpdate(long dateUpdate) {
+		this.dateUpdate = dateUpdate;
 	}
 
 }

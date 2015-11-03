@@ -18,13 +18,14 @@
  */
 package com.qaobee.hive.business.model.commons.settings;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.transversal.Audit;
 
 /**
  * Class that represents an Activity.
- *
  * @author jerome
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Activity {
 
 	/** Internal identifier. */
@@ -53,7 +54,6 @@ public class Activity {
 
 	/**
 	 * Returns the internal identifier.
-	 *
 	 * @return String : id
 	 */
 	public String get_id() {
@@ -62,56 +62,47 @@ public class Activity {
 
 	/**
 	 * Defines the internal identifier.
-	 *
-	 * @param _id
-	 *            (String) : id
+	 * @param _id (String) : id
 	 */
 	public void set_id(final String _id) {
 		this._id = _id;
 	}
 
 	/**
-	 * Gets the code.
-	 *
-	 * @return the code
+	 * Returns the code.
+	 * @return String : activity code
 	 */
 	public String getCode() {
 		return code;
 	}
 
 	/**
-	 * Sets the code.
-	 *
-	 * @param code
-	 *            the new code
+	 * Defines the code.
+	 * @param code (String) : activity code
 	 */
 	public void setCode(final String code) {
 		this.code = code;
 	}
 
 	/**
-	 * Gets the label.
-	 *
-	 * @return the label
+	 * Returns the label.
+	 * @return String : label
 	 */
 	public String getLabel() {
 		return label;
 	}
 
 	/**
-	 * Sets the label.
-	 *
-	 * @param label
-	 *            the new label
+	 * Defines the label.
+	 * @param label (String) :  label
 	 */
 	public void setLabel(final String label) {
 		this.label = label;
 	}
 
 	/**
-	 * Gets the type of activity.
-	 *
-	 * @return the type of activity
+	 * Returns the type of activity.
+	 * @return ActivityTypeEnum : type of activity
 	 */
 	public ActivityTypeEnum getActivityType() {
 		return activityType;
@@ -119,37 +110,39 @@ public class Activity {
 
 	/**
 	 * Sets the type of activity.
-	 *
-	 * @param activityType
-	 *            the new type of activity
+	 * @param activityType (ActivityTypeEnum) : type of activity
 	 */
 	public void setActivityType(final ActivityTypeEnum activityType) {
 		this.activityType = activityType;
 	}
 
 	/**
-	 * @return the enable
+	 * Returns if the activity is enable.
+	 * @return true if enable 
 	 */
 	public boolean isEnable() {
 		return enable;
 	}
 
 	/**
-	 * @param enable the enable to set
+	 * Defines if the activity is enable.
+	 * @param enable (boolean) : true if enable
 	 */
 	public void setEnable(boolean enable) {
 		this.enable = enable;
 	}
 
 	/**
-	 * @return the audit
+	 * Returns the audit.
+	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
 		return audit;
 	}
 
 	/**
-	 * @param audit the audit to set
+	 * Defines the audit.
+	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
