@@ -48,8 +48,10 @@ public class SB_Person {
 	/** Birthcity */
 	private String birthcity;
 	/** Birth country */
+	// TODO Country or String ?
 	private Country birthcountry;
 	/** Nationality */
+	// TODO Country or String ?
 	private Country nationality;
 	/** Address */
 	private Address address;
