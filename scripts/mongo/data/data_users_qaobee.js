@@ -170,7 +170,7 @@ db.SB_SandBoxCfg.insert({
         "activityId": "ACT-HAND",
         "countryId": "CNTR-250-FR-FRA"
     },
-    "structure": {
+       "structure": {
         "_id": "541168295971d35c1f2d1b5f",
         "label": "CLUB CKE HB",
         "acronym": "CKEHB",
