@@ -1176,6 +1176,20 @@ db.SB_Effective.insert({
                 "code" : "player",
                 "label" : "Joueur"
             }
+        }, 
+        {
+            "personId" : "563d9bcd6f16be326d78b70d",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
+        }, 
+        {
+            "personId" : "563d9f2e6f16be326d78b70e",
+            "role" : {
+                "code" : "player",
+                "label" : "Joueur"
+            }
         }
     ]
 });
