@@ -40,7 +40,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 69,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -57,7 +57,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 70,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -74,7 +74,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 71,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -91,7 +91,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 72,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -108,7 +108,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 73,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -125,7 +125,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 74,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -142,7 +142,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 75,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -159,7 +159,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 76,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -176,7 +176,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 77,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -193,7 +193,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 78,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -210,7 +210,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 79,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -227,7 +227,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 80,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -244,7 +244,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 81,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -261,13 +261,93 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 82,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "timer" : NumberLong(1446305570065),
     "value" : "left-wingman"
+});
+
+db.SB_Stats.insert({
+    "_id" : ObjectId("5634ffb8e4b09c0c51697e6a"),
+    "activityId" : "ACT-HAND",
+    "chrono" : 0,
+    "code" : "substitue",
+    "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
+    "mRowid" : 69,
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "producter" : [ 
+        "b50b3325-fdbd-41bf-bda4-81c827982001"
+    ],
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "timer" : NumberLong(1446305570065),
+    "value" : "1"
+});
+
+db.SB_Stats.insert({
+    "_id" : ObjectId("5634ffb8e4b09c0c51697e6a"),
+    "activityId" : "ACT-HAND",
+    "chrono" : 0,
+    "code" : "substitue",
+    "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
+    "mRowid" : 69,
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
+    "producter" : [ 
+        "b50b3325-fdbd-41bf-bda4-81c827982001"
+    ],
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "timer" : NumberLong(1446305570065),
+    "value" : "1"
+});
+
+db.SB_Stats.insert({
+    "_id" : ObjectId("5634ffb8e4b09c0c51697e6a"),
+    "activityId" : "ACT-HAND",
+    "chrono" : 0,
+    "code" : "substitue",
+    "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
+    "mRowid" : 69,
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
+    "producter" : [ 
+        "b50b3325-fdbd-41bf-bda4-81c827982001"
+    ],
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "timer" : NumberLong(1446305570065),
+    "value" : "1"
+});
+
+db.SB_Stats.insert({
+    "_id" : ObjectId("5634ffb8e4b09c0c51697e6a"),
+    "activityId" : "ACT-HAND",
+    "chrono" : 0,
+    "code" : "substitue",
+    "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
+    "mRowid" : 69,
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
+    "producter" : [ 
+        "b50b3325-fdbd-41bf-bda4-81c827982001"
+    ],
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "timer" : NumberLong(1446305570065),
+    "value" : "1"
+});
+
+db.SB_Stats.insert({
+    "_id" : ObjectId("5634ffb8e4b09c0c51697e6a"),
+    "activityId" : "ACT-HAND",
+    "chrono" : 0,
+    "code" : "substitue",
+    "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
+    "mRowid" : 69,
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "producter" : [ 
+        "b50b3325-fdbd-41bf-bda4-81c827982001"
+    ],
+    "sandboxId" : "561ec20b409937a6b439d4e9",
+    "timer" : NumberLong(1446305570065),
+    "value" : "1"
 });
 
 /* 15 */
@@ -278,7 +358,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 83,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -295,7 +375,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 84,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -312,7 +392,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 85,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -329,7 +409,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 86,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -346,7 +426,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 87,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -363,7 +443,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 88,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -380,7 +460,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 89,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -397,7 +477,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 90,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -414,7 +494,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 91,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -431,7 +511,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 92,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -448,7 +528,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 93,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -465,7 +545,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 94,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -482,7 +562,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 95,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -499,7 +579,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 96,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -516,7 +596,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 97,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -533,7 +613,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 98,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -550,7 +630,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 99,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -567,7 +647,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 100,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -584,7 +664,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 101,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -601,7 +681,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 102,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -618,7 +698,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 103,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -635,7 +715,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 104,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -652,7 +732,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 105,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -669,7 +749,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 106,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -686,7 +766,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 107,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -703,7 +783,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 108,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -720,7 +800,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 109,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -737,7 +817,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 110,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -754,7 +834,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 111,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -771,7 +851,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 112,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -788,7 +868,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 113,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -805,7 +885,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 114,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -822,7 +902,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 115,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -839,7 +919,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 116,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -856,7 +936,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 117,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -873,7 +953,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 118,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -890,7 +970,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 119,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -907,7 +987,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 120,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -924,7 +1004,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 121,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -941,7 +1021,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 122,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -958,7 +1038,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 123,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -975,7 +1055,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 124,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -992,7 +1072,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 125,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1009,7 +1089,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 126,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1026,7 +1106,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 127,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1043,7 +1123,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 128,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1060,7 +1140,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 129,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1077,7 +1157,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 130,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1094,7 +1174,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 131,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1111,7 +1191,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 133,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1128,7 +1208,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 132,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1145,7 +1225,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 134,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1162,7 +1242,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 135,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1179,7 +1259,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 136,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1196,7 +1276,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 137,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1213,7 +1293,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 138,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1230,7 +1310,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 139,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1247,7 +1327,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 140,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1264,7 +1344,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 141,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1281,7 +1361,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 142,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1298,7 +1378,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 143,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1315,7 +1395,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 144,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1332,7 +1412,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 145,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1349,7 +1429,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 146,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1366,7 +1446,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 147,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1383,7 +1463,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 148,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1400,7 +1480,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 149,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1417,7 +1497,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 150,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1434,7 +1514,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 151,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1451,7 +1531,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 152,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1468,7 +1548,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 153,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1485,7 +1565,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 154,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1502,7 +1582,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 155,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1519,7 +1599,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 156,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1536,7 +1616,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 157,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1553,7 +1633,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 158,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1570,7 +1650,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 159,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1587,7 +1667,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 160,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1604,7 +1684,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 161,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1621,7 +1701,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 162,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1638,7 +1718,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 163,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1655,7 +1735,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 164,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1672,7 +1752,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 165,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1689,7 +1769,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 166,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1706,7 +1786,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 167,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1723,7 +1803,7 @@ db.SB_Stats.insert({
     "code" : "forceAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 168,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1740,7 +1820,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 169,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1757,7 +1837,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 170,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1774,7 +1854,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 171,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1791,7 +1871,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 172,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1808,7 +1888,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 173,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1825,7 +1905,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 174,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1842,7 +1922,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 175,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1859,7 +1939,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 176,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1876,7 +1956,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 177,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1893,7 +1973,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 178,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1910,7 +1990,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 179,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1927,7 +2007,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 180,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1944,7 +2024,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 181,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1961,7 +2041,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 182,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1978,7 +2058,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 183,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1995,7 +2075,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 184,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2028,7 +2108,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 186,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2045,7 +2125,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 187,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2062,7 +2142,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 188,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2079,7 +2159,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 189,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2096,7 +2176,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 190,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2113,7 +2193,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 191,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2130,7 +2210,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 192,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2147,7 +2227,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 193,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2164,7 +2244,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 194,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2181,7 +2261,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 195,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2198,7 +2278,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 196,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2215,7 +2295,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 197,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2232,7 +2312,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 198,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2249,7 +2329,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 199,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2266,7 +2346,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 200,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2283,7 +2363,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 201,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2300,7 +2380,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 202,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2317,7 +2397,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 203,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2334,7 +2414,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 204,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2351,7 +2431,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 205,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2368,7 +2448,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 206,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2385,7 +2465,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 207,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2402,7 +2482,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 208,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2419,7 +2499,7 @@ db.SB_Stats.insert({
     "code" : "timeoutThem",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 209,
-    "owner" : "Ploemeur Atlantique Hb",
+    "owner" :  ["Ploemeur Atlantique Hb"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2436,7 +2516,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 210,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2453,7 +2533,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 211,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2470,7 +2550,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 212,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2487,7 +2567,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 213,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2504,7 +2584,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 214,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2521,7 +2601,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 215,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2538,7 +2618,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 216,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2555,7 +2635,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 217,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2572,7 +2652,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 218,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2589,7 +2669,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 219,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2606,7 +2686,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 220,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2623,7 +2703,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 221,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2640,7 +2720,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 222,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2673,7 +2753,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 224,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2690,7 +2770,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 225,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2707,7 +2787,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 226,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2724,7 +2804,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 227,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2741,7 +2821,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 228,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2758,7 +2838,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 229,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2775,7 +2855,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 230,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2792,7 +2872,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 231,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2809,7 +2889,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 232,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2826,7 +2906,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 233,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2843,7 +2923,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 234,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2860,7 +2940,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 235,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2877,7 +2957,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 236,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2894,7 +2974,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 237,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2911,7 +2991,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 238,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2928,7 +3008,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 239,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2945,7 +3025,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 240,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2962,7 +3042,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 241,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2979,7 +3059,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 242,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2996,7 +3076,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 243,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3029,7 +3109,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 245,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3046,7 +3126,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 246,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3063,7 +3143,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 247,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3080,7 +3160,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 248,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3097,7 +3177,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 249,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3114,7 +3194,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 250,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3131,7 +3211,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 251,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3148,7 +3228,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 252,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3165,7 +3245,7 @@ db.SB_Stats.insert({
     "code" : "forceAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 253,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3182,7 +3262,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 254,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3199,7 +3279,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 255,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3216,7 +3296,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 256,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3233,7 +3313,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 257,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3250,7 +3330,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 258,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3267,7 +3347,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 259,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3284,7 +3364,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 260,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3301,7 +3381,7 @@ db.SB_Stats.insert({
     "code" : "marcher",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 261,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3318,7 +3398,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 262,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3335,7 +3415,7 @@ db.SB_Stats.insert({
     "code" : "yellowCard",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 263,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5a1c12af-0fc4-4eb8-a342-216e51bbada8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3352,7 +3432,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 264,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3369,7 +3449,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 265,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3386,7 +3466,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 266,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3403,7 +3483,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 267,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3420,7 +3500,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 268,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3437,7 +3517,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 269,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3454,7 +3534,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 270,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3471,7 +3551,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 271,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3488,7 +3568,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 272,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3505,7 +3585,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 273,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3522,7 +3602,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 274,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3555,7 +3635,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 276,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3572,7 +3652,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 277,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3589,7 +3669,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 278,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3622,7 +3702,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 280,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3639,7 +3719,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 281,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3656,7 +3736,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 282,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3673,7 +3753,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 283,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3690,7 +3770,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 284,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3707,7 +3787,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 285,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3724,7 +3804,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 286,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3741,7 +3821,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 287,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3758,7 +3838,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 288,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3775,7 +3855,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 289,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3792,7 +3872,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 290,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3809,7 +3889,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 291,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3826,7 +3906,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 292,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3843,7 +3923,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 293,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3860,7 +3940,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 294,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3877,7 +3957,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 295,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3894,7 +3974,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 296,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3911,7 +3991,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 297,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3928,7 +4008,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 298,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3945,7 +4025,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 299,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3962,7 +4042,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 300,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3979,7 +4059,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 301,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3996,7 +4076,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 302,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4029,7 +4109,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 304,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4046,7 +4126,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 305,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4063,7 +4143,7 @@ db.SB_Stats.insert({
     "code" : "penaltyObtained",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 306,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4080,7 +4160,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 307,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4097,7 +4177,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 308,
-    "owner" : "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df",
+    "owner" :  ["46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4114,7 +4194,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 309,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4131,7 +4211,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 310,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4148,7 +4228,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 311,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4165,7 +4245,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 312,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4182,7 +4262,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 313,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4199,7 +4279,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 314,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4216,7 +4296,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 315,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4233,7 +4313,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 316,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4250,7 +4330,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 317,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4267,7 +4347,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 318,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4284,7 +4364,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 319,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4301,7 +4381,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 320,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4318,7 +4398,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 321,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4335,7 +4415,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 322,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4352,7 +4432,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 323,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4369,7 +4449,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 324,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4386,7 +4466,7 @@ db.SB_Stats.insert({
     "code" : "timeoutUs",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 325,
-    "owner" : "Ploemeur Atlantique Hb",
+    "owner" :  ["Ploemeur Atlantique Hb"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4403,7 +4483,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 326,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4420,7 +4500,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 327,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4437,7 +4517,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 328,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4470,7 +4550,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 330,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4487,7 +4567,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 331,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4504,7 +4584,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 332,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4521,7 +4601,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 333,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4538,7 +4618,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 334,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4555,7 +4635,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 335,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4572,7 +4652,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 336,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4589,7 +4669,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 337,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4606,7 +4686,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 338,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4623,7 +4703,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 339,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4640,7 +4720,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 340,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4657,7 +4737,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 341,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4674,7 +4754,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 342,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4691,7 +4771,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 343,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4708,7 +4788,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 344,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4725,7 +4805,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 345,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4742,7 +4822,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 346,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4759,7 +4839,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 347,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4776,7 +4856,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 348,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4793,7 +4873,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 349,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4810,7 +4890,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 350,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4827,7 +4907,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 351,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4844,7 +4924,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 352,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4861,7 +4941,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 353,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4878,7 +4958,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 354,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4895,7 +4975,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 355,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4912,7 +4992,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 356,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4929,7 +5009,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 357,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4946,7 +5026,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 358,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4963,7 +5043,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 359,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4980,7 +5060,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 360,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4997,7 +5077,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 361,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5014,7 +5094,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 362,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5031,7 +5111,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 363,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5048,7 +5128,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 364,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5065,7 +5145,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 365,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5082,7 +5162,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 366,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5099,7 +5179,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 367,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5116,7 +5196,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 368,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5133,7 +5213,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 369,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5150,7 +5230,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 370,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5167,7 +5247,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 371,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5184,7 +5264,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 372,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5201,7 +5281,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 373,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5218,7 +5298,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 374,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5235,7 +5315,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 375,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5252,7 +5332,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 376,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5269,7 +5349,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 377,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5286,7 +5366,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 378,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5303,7 +5383,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 379,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5320,7 +5400,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 380,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5337,7 +5417,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 381,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5354,7 +5434,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 382,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5371,7 +5451,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 383,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5388,7 +5468,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 384,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5405,7 +5485,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 385,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5422,7 +5502,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 386,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5439,7 +5519,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 387,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5456,7 +5536,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 388,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5473,7 +5553,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 389,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5490,7 +5570,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 390,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5507,7 +5587,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 391,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5524,7 +5604,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 392,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5541,7 +5621,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 393,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5574,7 +5654,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 395,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5591,7 +5671,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 396,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5608,7 +5688,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 397,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5625,7 +5705,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 398,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5642,7 +5722,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 399,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5675,7 +5755,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 401,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5708,7 +5788,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 403,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5725,7 +5805,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 404,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5742,7 +5822,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 405,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5775,7 +5855,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 407,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5808,7 +5888,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 409,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5825,7 +5905,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 410,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5842,7 +5922,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 411,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5859,7 +5939,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 412,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5876,7 +5956,7 @@ db.SB_Stats.insert({
     "code" : "exclusionTempoObtained",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 413,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5893,7 +5973,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 414,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5910,7 +5990,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 415,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5927,7 +6007,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 416,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5944,7 +6024,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 417,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5961,7 +6041,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 418,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5978,7 +6058,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 419,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5995,7 +6075,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 420,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6012,7 +6092,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 421,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6029,7 +6109,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 422,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6046,7 +6126,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 423,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6063,7 +6143,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 424,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6080,7 +6160,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 425,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6097,7 +6177,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 426,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6114,7 +6194,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 427,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6131,7 +6211,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 428,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6148,7 +6228,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 429,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6165,7 +6245,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 430,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6182,7 +6262,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 431,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6199,7 +6279,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 432,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6216,7 +6296,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 433,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6233,7 +6313,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 434,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6250,7 +6330,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 435,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6267,7 +6347,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 436,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6284,7 +6364,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 437,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6301,7 +6381,7 @@ db.SB_Stats.insert({
     "code" : "forceDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 438,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6318,7 +6398,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 439,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6335,7 +6415,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 440,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6352,7 +6432,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 441,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6369,7 +6449,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 442,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6386,7 +6466,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 443,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6403,7 +6483,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 444,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6420,7 +6500,7 @@ db.SB_Stats.insert({
     "code" : "exclusionTempoObtained",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 445,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6437,7 +6517,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 446,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6454,7 +6534,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 447,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6471,7 +6551,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 448,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6488,7 +6568,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 449,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6505,7 +6585,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 450,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6522,7 +6602,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 451,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6539,7 +6619,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 452,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6556,7 +6636,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 453,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6573,7 +6653,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 454,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6590,7 +6670,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 455,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6607,7 +6687,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 456,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6624,7 +6704,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 457,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6641,7 +6721,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 458,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6658,7 +6738,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 459,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6675,7 +6755,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 460,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6692,7 +6772,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 461,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6709,7 +6789,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 462,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6726,7 +6806,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 463,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6743,7 +6823,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 464,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6760,7 +6840,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 465,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6777,7 +6857,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 466,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6794,7 +6874,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 467,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6811,7 +6891,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 468,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6828,7 +6908,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 469,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6845,7 +6925,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 470,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6862,7 +6942,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 471,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6879,7 +6959,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 472,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6896,7 +6976,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 473,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6913,7 +6993,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 474,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6930,7 +7010,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 475,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6947,7 +7027,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 476,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6964,7 +7044,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 477,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6981,7 +7061,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 478,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6998,7 +7078,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 479,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7015,7 +7095,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 480,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7032,7 +7112,7 @@ db.SB_Stats.insert({
     "code" : "marcher",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 481,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7049,7 +7129,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 482,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7066,7 +7146,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 483,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7083,7 +7163,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 484,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7100,7 +7180,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 485,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7117,7 +7197,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 486,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7134,7 +7214,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 487,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7151,7 +7231,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 488,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7168,7 +7248,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 489,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7185,7 +7265,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 490,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7202,7 +7282,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 491,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7219,7 +7299,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 492,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7236,7 +7316,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 493,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7253,7 +7333,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 494,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7270,7 +7350,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 495,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7303,7 +7383,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 497,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7320,7 +7400,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 498,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7337,7 +7417,7 @@ db.SB_Stats.insert({
     "code" : "shift",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 499,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7354,7 +7434,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 500,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7371,7 +7451,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 501,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7388,7 +7468,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 502,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7405,7 +7485,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 503,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7422,7 +7502,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 504,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7439,7 +7519,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 505,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7456,7 +7536,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 506,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7473,7 +7553,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 507,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7490,7 +7570,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 508,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7507,7 +7587,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 509,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7524,7 +7604,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 510,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7541,7 +7621,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 511,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7558,7 +7638,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 512,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7575,7 +7655,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 513,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7592,7 +7672,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 514,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7609,7 +7689,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 515,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7626,7 +7706,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 516,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7643,7 +7723,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 517,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7660,7 +7740,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 518,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7677,7 +7757,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 519,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7694,7 +7774,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 520,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7711,7 +7791,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 521,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7728,7 +7808,7 @@ db.SB_Stats.insert({
     "code" : "forceDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 522,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7745,7 +7825,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 523,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7762,7 +7842,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 524,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7795,7 +7875,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 526,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7812,7 +7892,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 527,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7829,7 +7909,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 528,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7862,7 +7942,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 530,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7879,7 +7959,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 531,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7896,7 +7976,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 532,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7913,7 +7993,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 533,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7930,7 +8010,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 534,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7947,7 +8027,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 535,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7964,7 +8044,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 536,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7981,7 +8061,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 537,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7998,7 +8078,7 @@ db.SB_Stats.insert({
     "code" : "passDec",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 538,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8015,7 +8095,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 539,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8032,7 +8112,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 540,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8049,7 +8129,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 541,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8066,7 +8146,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 542,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8083,7 +8163,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 543,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8100,7 +8180,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 544,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8117,7 +8197,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 545,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8134,7 +8214,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 546,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8151,7 +8231,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 547,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8168,7 +8248,7 @@ db.SB_Stats.insert({
     "code" : "shift",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 548,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8185,7 +8265,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 549,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8202,7 +8282,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 550,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8219,7 +8299,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 551,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8236,7 +8316,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 552,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8253,7 +8333,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 553,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8270,7 +8350,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 554,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8287,7 +8367,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 555,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8304,7 +8384,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 556,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8321,7 +8401,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 557,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8338,7 +8418,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 558,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8355,7 +8435,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 559,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8372,7 +8452,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 560,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8389,7 +8469,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 561,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8406,7 +8486,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 562,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8423,7 +8503,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 563,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8440,7 +8520,7 @@ db.SB_Stats.insert({
     "code" : "forceDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 564,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8457,7 +8537,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 565,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8474,7 +8554,7 @@ db.SB_Stats.insert({
     "code" : "shift",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 566,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8491,7 +8571,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 567,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8508,7 +8588,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 568,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8525,7 +8605,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 569,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8542,7 +8622,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 570,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8559,7 +8639,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 571,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8576,7 +8656,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 572,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8593,7 +8673,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 573,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8610,7 +8690,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 574,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8627,7 +8707,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 575,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8644,7 +8724,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 576,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8677,7 +8757,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 578,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8694,7 +8774,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 579,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8711,7 +8791,7 @@ db.SB_Stats.insert({
     "code" : "penaltyObtained",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 580,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8728,7 +8808,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 581,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8745,7 +8825,7 @@ db.SB_Stats.insert({
     "code" : "exclusionTempoObtained",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 582,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8762,7 +8842,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 583,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8779,7 +8859,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 584,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8796,7 +8876,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 585,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8813,7 +8893,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 586,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8830,7 +8910,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 587,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8847,7 +8927,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 588,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8864,7 +8944,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 589,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8881,7 +8961,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 590,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8898,7 +8978,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 591,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8915,7 +8995,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 592,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8932,7 +9012,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 593,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8949,7 +9029,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 594,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8966,7 +9046,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 595,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8983,7 +9063,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 596,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9000,7 +9080,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 597,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9017,7 +9097,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 598,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9034,7 +9114,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 599,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9051,7 +9131,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 600,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9068,7 +9148,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 602,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9085,7 +9165,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 601,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9102,7 +9182,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 603,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9119,7 +9199,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 604,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9136,7 +9216,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 605,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9153,7 +9233,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 606,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9170,7 +9250,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 607,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9187,7 +9267,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 608,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9204,7 +9284,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 609,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9221,7 +9301,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 610,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9238,7 +9318,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 611,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "26baf31a-f153-41b0-9e1d-c32cb9e859dd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9255,7 +9335,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 612,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9272,7 +9352,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 613,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9289,7 +9369,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 614,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9306,7 +9386,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 615,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9323,7 +9403,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 616,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9340,7 +9420,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 617,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9357,7 +9437,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 618,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9374,7 +9454,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 619,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9391,7 +9471,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 620,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9408,7 +9488,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 621,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9425,7 +9505,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 622,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9442,7 +9522,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 623,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9459,7 +9539,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 624,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9476,7 +9556,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 625,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9493,7 +9573,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 626,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9526,7 +9606,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 628,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9543,7 +9623,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 629,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9560,7 +9640,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 630,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9577,7 +9657,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 631,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9594,7 +9674,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 632,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9611,7 +9691,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 633,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9628,7 +9708,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 634,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9645,7 +9725,7 @@ db.SB_Stats.insert({
     "code" : "shift",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 635,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9662,7 +9742,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 636,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "cc5d449a-d466-400c-b73f-955c676103ed"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9679,7 +9759,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 637,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9696,7 +9776,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 638,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9713,7 +9793,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 639,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9730,7 +9810,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 640,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9747,7 +9827,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 641,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9764,7 +9844,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 642,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9781,7 +9861,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 643,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9798,7 +9878,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 644,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9815,7 +9895,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 645,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9832,7 +9912,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 646,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9849,7 +9929,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 647,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9866,7 +9946,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 648,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9883,7 +9963,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 649,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9900,7 +9980,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 650,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9917,7 +9997,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 651,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9934,7 +10014,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 652,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9951,7 +10031,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 653,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9968,7 +10048,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 654,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9985,7 +10065,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 655,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10018,7 +10098,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 657,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10035,7 +10115,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 658,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10052,7 +10132,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 659,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10069,7 +10149,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 660,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10086,7 +10166,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 661,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10103,7 +10183,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 662,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10120,7 +10200,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 663,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10137,7 +10217,7 @@ db.SB_Stats.insert({
     "code" : "forceDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 664,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10154,7 +10234,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 665,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10171,7 +10251,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 666,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10204,7 +10284,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 668,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10221,7 +10301,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 669,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10238,7 +10318,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 670,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10255,7 +10335,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 671,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10272,7 +10352,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 672,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10289,7 +10369,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 673,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10306,7 +10386,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 674,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10323,7 +10403,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 675,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10340,7 +10420,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 676,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10357,7 +10437,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 677,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10374,7 +10454,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 678,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10391,7 +10471,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 679,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10408,7 +10488,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 680,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10425,7 +10505,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 681,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10442,7 +10522,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 682,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10459,7 +10539,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 683,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10476,7 +10556,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 684,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10493,7 +10573,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 685,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10510,7 +10590,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 686,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10527,7 +10607,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 687,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10544,7 +10624,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 688,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10561,7 +10641,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 689,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10578,7 +10658,7 @@ db.SB_Stats.insert({
     "code" : "forceDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 690,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10595,7 +10675,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 691,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10612,7 +10692,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 692,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10629,7 +10709,7 @@ db.SB_Stats.insert({
     "code" : "exclusionTempoObtained",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 693,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "5f82c510-2c89-46b0-b87d-d3b59e748615"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10646,7 +10726,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 694,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10663,7 +10743,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 695,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "1ce4591d-74a8-46e9-af80-d633f9344d27"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10680,7 +10760,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 696,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10697,7 +10777,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 697,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10714,7 +10794,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 698,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "1ce4591d-74a8-46e9-af80-d633f9344d27"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10731,7 +10811,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 699,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "1ce4591d-74a8-46e9-af80-d633f9344d27"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10748,7 +10828,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 700,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "1ce4591d-74a8-46e9-af80-d633f9344d27"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10765,7 +10845,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 701,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10782,7 +10862,7 @@ db.SB_Stats.insert({
     "code" : "penaltyObtained",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 702,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "1ce4591d-74a8-46e9-af80-d633f9344d27"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10799,7 +10879,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 703,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10816,7 +10896,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 704,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10833,7 +10913,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 705,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10850,7 +10930,7 @@ db.SB_Stats.insert({
     "code" : "pole",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 706,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10867,7 +10947,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 707,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10884,7 +10964,7 @@ db.SB_Stats.insert({
     "code" : "shootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 708,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10901,7 +10981,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 709,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10918,7 +10998,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 710,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10935,7 +11015,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 711,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10952,7 +11032,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 712,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10969,7 +11049,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 713,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -10986,7 +11066,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 714,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11003,7 +11083,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 715,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11020,7 +11100,7 @@ db.SB_Stats.insert({
     "code" : "outside",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 716,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11037,7 +11117,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 717,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11054,7 +11134,7 @@ db.SB_Stats.insert({
     "code" : "forceDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 718,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "c857c124-79c0-4b6e-8406-f89a26b8426f"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11071,7 +11151,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 719,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11088,7 +11168,7 @@ db.SB_Stats.insert({
     "code" : "forceAtt",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 720,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "ce18d73e-dedf-43e5-8e75-16e0375be349"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11105,7 +11185,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 721,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11122,7 +11202,7 @@ db.SB_Stats.insert({
     "code" : "contre",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 722,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11139,7 +11219,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 723,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11156,7 +11236,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 728,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11173,7 +11253,7 @@ db.SB_Stats.insert({
     "code" : "goalconceded",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 727,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11190,7 +11270,7 @@ db.SB_Stats.insert({
     "code" : "shootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 726,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11207,7 +11287,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 725,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a","playerId": "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11224,7 +11304,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 724,
-    "owner" : {"sandboxId": "561ec20b409937a6b439d4e9","effectiveId": "561ec4d0409937a6b439d4ea", "teamId": "937918db-848e-4a6d-8feb-a7ba6bd60f5a"},
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11241,7 +11321,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 729,
-    "owner" : "5f82c510-2c89-46b0-b87d-d3b59e748615",
+    "owner" :  ["5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11258,7 +11338,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 730,
-    "owner" : "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89",
+    "owner" :  ["07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11275,7 +11355,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 731,
-    "owner" : "1ce4591d-74a8-46e9-af80-d633f9344d27",
+    "owner" :  ["1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11292,7 +11372,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 732,
-    "owner" : "26baf31a-f153-41b0-9e1d-c32cb9e859dd",
+    "owner" :  ["26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11309,7 +11389,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 733,
-    "owner" : "cc5d449a-d466-400c-b73f-955c676103ed",
+    "owner" :  ["cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11326,7 +11406,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 734,
-    "owner" : "c857c124-79c0-4b6e-8406-f89a26b8426f",
+    "owner" :  ["c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11343,7 +11423,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 735,
-    "owner" : "5a1c12af-0fc4-4eb8-a342-216e51bbada8",
+    "owner" :  ["5a1c12af-0fc4-4eb8-a342-216e51bbada8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11360,7 +11440,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 736,
-    "owner" : "941f9d48-45e8-4b2f-b0ce-d33900a92fb8",
+    "owner" :  ["941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11377,7 +11457,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 737,
-    "owner" : "cb1ad24e-6195-4c11-854f-4d7a68a43c6e",
+    "owner" :  ["cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11394,7 +11474,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 738,
-    "owner" : "ce18d73e-dedf-43e5-8e75-16e0375be349",
+    "owner" :  ["ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11411,7 +11491,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 739,
-    "owner" : "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd",
+    "owner" :  ["43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -11428,7 +11508,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
     "mRowid" : 740,
-    "owner" : "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df",
+    "owner" :  ["46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],

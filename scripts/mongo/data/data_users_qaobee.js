@@ -939,6 +939,80 @@ db.SB_Person.insert({
     "sandboxId" : "561ec20b409937a6b439d4e9"
 });
 
+/* 21 */
+db.SB_Person.insert({
+    "_id" : "563d9bcd6f16be326d78b70d",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 23,
+        "weight" : 70,
+        "height" : 173,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "goalkeeper"
+    },
+    "address" : {
+        "formatedAddress" : "1 Rue Duguesclin, Milizac, France",
+        "lat" : 48.4613236,
+        "lng" : -4.5744474,
+        "place" : "1 Rue Duguesclin",
+        "city" : "Milizac",
+        "country" : "France",
+        "zipcode" : "29290"
+    },
+    "contact" : {
+        "email" : "sandesnoues@gmail.com",
+        "cellphone" : "0621733109"
+    },
+    "firstname" : "Kelian",
+    "name" : "Desnoues",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(981932400000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
+/* 22 */
+db.SB_Person.insert({
+    "_id" : "563d9f2e6f16be326d78b70e",
+    "status" : {
+        "availability" : {
+            "value" : "available",
+            "cause" : "available"
+        },
+        "squadnumber" : 24,
+        "weight" : 70,
+        "height" : 173,
+        "laterality" : "Droitier",
+        "stateForm" : "good",
+        "positionType" : "left-backcourt"
+    },
+    "address" : {
+        "formatedAddress" : "480 Chemin du Hildy, Brest, France",
+        "lat" : 48.3664717,
+        "lng" : -4.5379593,
+        "place" : "480 Chemin du Hildy",
+        "city" : "Brest",
+        "country" : "France",
+        "zipcode" : "29200"
+    },
+    "contact" : {
+        "email" : "enrique_mum_gouhey@hotmail.com",
+        "cellphone" : "0683336329"
+    },
+    "firstname" : "Esteban",
+    "name" : "Gouhey",
+    "gender" : "Homme",
+    "birthdate" : NumberLong(1042066800000),
+    "nationality" : "France",
+    "birthCity" : "Brest, France",
+    "sandboxId" : "561ec20b409937a6b439d4e9"
+});
+
 //////////////////////////////////////////////////////////
 /* 
  * Vidage de la collection SB_Effective (CKE)
