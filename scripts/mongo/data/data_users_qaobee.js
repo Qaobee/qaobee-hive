@@ -1212,7 +1212,7 @@ db.SB_Team.insert({
     "label" : "Ploemeur Atlantique Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1222,7 +1222,7 @@ db.SB_Team.insert({
     "label" : "Guingamp Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1232,7 +1232,7 @@ db.SB_Team.insert({
     "label" : "Hb Pays De Vannes",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1242,7 +1242,7 @@ db.SB_Team.insert({
     "label" : "Golfe 56",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1252,7 +1252,7 @@ db.SB_Team.insert({
     "label" : "Cesson Rennes Métropole Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1262,7 +1262,7 @@ db.SB_Team.insert({
     "label" : "Cercle Paul Bert Rennes Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1272,7 +1272,7 @@ db.SB_Team.insert({
     "label" : "Rennes Métropole Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1282,7 +1282,7 @@ db.SB_Team.insert({
     "label" : "Stiren Languidic",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1292,7 +1292,7 @@ db.SB_Team.insert({
     "label" : "Concarneau Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1302,7 +1302,7 @@ db.SB_Team.insert({
     "label" : "Lesneven Hb",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
@@ -1312,10 +1312,14 @@ db.SB_Team.insert({
     "label" : "Hbc Plerin",
     "sandboxId" : "561ec20b409937a6b439d4e9",
     "effectiveId" : "561ec4d0409937a6b439d4ea",
-    "linkTeamId" : ["3c43067f-469f-4369-92f7-82b0be36c1a9"],
+    "linkTeamId" : ["937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "enable" : true,
     "adversary": true
 });
+
+/* 
+ * Alimentation collection SB_Team : CKE
+ */
 
 db.SB_Event.remove({ "owner.sandboxId" : "561ec20b409937a6b439d4e9"});
 
@@ -1348,6 +1352,200 @@ db.SB_Event.insert({"_id" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
             "label" : "Ploemeur Atlantique Hb"
         }
     }
+});
+
+db.SB_Event.insert({
+    "_id" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
+    "activityId" : "ACT-HAND",
+    "owner" : {
+        "sandboxId" : "561ec20b409937a6b439d4e9",
+        "effectiveId" : "561ec4d0409937a6b439d4ea",
+        "teamId" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
+    },
+    "address" : {
+        "formatedAddress" : "Avenue Paul Cézanne, Vannes, France",
+        "lat" : 47.6741354999999984,
+        "lng" : -2.7696065000000001,
+        "place" : "Avenue Paul Cézanne",
+        "city" : "Vannes",
+        "country" : "France",
+        "zipcode" : "56000"
+    },
+    "link" : {
+        "type" : "championship"
+    },
+    "label" : "Journée 6",
+    "startDate" : NumberLong(1446912000000),
+    "participants" : {
+        "teamVisitor" : {
+            "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
+            "label" : "Avenir Du Ponant 1"
+        },
+        "teamHome" : {
+            "id" : "562ba2d4b70fd108e375395e",
+            "label" : "Golfe 56"
+        }
+    }
+});
+
+db.SB_Event.insert({
+    "_id" : "0ca48ff3-ea32-4ea6-bad5-e8619d495f91",
+    "activityId" : "ACT-HAND",
+    "owner" : {
+        "sandboxId" : "561ec20b409937a6b439d4e9",
+        "effectiveId" : "561ec4d0409937a6b439d4ea",
+        "teamId" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
+    },
+    "address" : {
+        "formatedAddress" : "Route de Pen ar Ménez, Locmaria-Plouzané, France",
+        "lat" : 48.3665238999999971,
+        "lng" : -4.6422292999999986,
+        "place" : "undefinedRoute de Pen ar Ménez",
+        "city" : "Locmaria-Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
+    "link" : {
+        "type" : "championship"
+    },
+    "label" : "Journée 7",
+    "startDate" : NumberLong(1447518600000),
+    "participants" : {
+        "teamHome" : {
+            "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
+            "label" : "Avenir Du Ponant 1"
+        },
+        "teamVisitor" : {
+            "id" : "562ba2e3b70fd108e375395f",
+            "label" : "Cesson Rennes Métropole Hb"
+        }
+    }
+});
+
+db.SB_Event.insert({
+    "_id" : "311bb254-dc16-40e0-a86d-b74b9469c039",
+    "activityId" : "ACT-HAND",
+    "owner" : {
+        "sandboxId" : "561ec20b409937a6b439d4e9",
+        "effectiveId" : "561ec4d0409937a6b439d4ea",
+        "teamId" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
+    },
+    "address" : {
+        "formatedAddress" : "Rue Saint-Vincent de Paul, Brest, France",
+        "lat" : 47.1395479999999978,
+        "lng" : -1.3374013000000000,
+        "place" : "undefinedRue Saint-Vincent",
+        "city" : "Le Pallet",
+        "country" : "France",
+        "zipcode" : "44330"
+    },
+    "link" : {
+        "type" : "championship"
+    },
+    "label" : "Journée 8",
+    "startDate" : NumberLong(1448123400000),
+    "participants" : {
+        "teamHome" : {
+            "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
+            "label" : "Avenir Du Ponant 1"
+        },
+        "teamVisitor" : {
+            "id" : "562ba300b70fd108e3753960",
+            "label" : "Cercle Paul Bert Rennes Hb"
+        }
+    }
+});
+                   
+db.SB_Event.insert({
+    "_id" : "5c551ebf-b4ca-45ed-b351-75af2c5838d8",
+    "activityId" : "ACT-HAND",
+    "owner" : {
+        "sandboxId" : "561ec20b409937a6b439d4e9",
+        "effectiveId" : "561ec4d0409937a6b439d4ea",
+        "teamId" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
+    },
+    "address" : {
+        "formatedAddress" : "Le Got, Route de Brest, Le Folgoët, France",
+        "lat" : 48.5563788999999986,
+        "lng" : -4.3416321000000000,
+        "place" : "undefinedRoute de Brest",
+        "city" : "Le Folgoët",
+        "country" : "France",
+        "zipcode" : "29260"
+    },
+    "link" : {
+        "type" : "championship"
+    },
+    "label" : "Journée 9",
+    "startDate" : NumberLong(1449337500000),
+    "participants" : {
+        "teamVisitor" : {
+            "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
+            "label" : "Avenir Du Ponant 1"
+        },
+        "teamHome" : {
+            "id" : "562ba368b70fd108e3753964",
+            "label" : "Lesneven Hb"
+        }
+    }
+});
+
+/* 
+ * Alimentation collection SB_Collecte : CKE
+ */
+db.SB_Collecte.insert({"_id" : "563dc83b95b7575a96ee1dd6",
+    "status" : "done",
+    "eventRef" : {
+        "_id" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
+        "activityId" : "ACT-HAND",
+        "owner" : {
+            "sandboxId" : "561ec20b409937a6b439d4e9",
+            "effectiveId" : "561ec4d0409937a6b439d4ea",
+            "teamId" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
+        },
+        "address" : {
+            "formatedAddress" : "Guilers, France",
+            "lat" : 48.4248430000000027,
+            "lng" : -4.5582410000000007,
+            "city" : "Guilers",
+            "country" : "France"
+        },
+        "link" : {
+            "type" : "championship"
+        },
+        "label" : "Journée 5",
+        "startDate" : NumberLong(1446305400000),
+        "participants" : {
+            "teamHome" : {
+                "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
+                "label" : "Locmaria Hb 1"
+            },
+            "teamVisitor" : {
+                "id" : "5a931b17-63c5-4b1a-be6e-2e5ed8521059",
+                "label" : "Ploemeur Atlantique Hb"
+            }
+        }
+    },
+    "startDate" : NumberLong(1446305400000),
+    "endDate" : NumberLong(1446310800000),
+    "players" : [ 
+        "1ce4591d-74a8-46e9-af80-d633f9344d27",
+        "26baf31a-f153-41b0-9e1d-c32cb9e859dd",
+        "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd",
+        "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df",
+        "5a1c12af-0fc4-4eb8-a342-216e51bbada8",
+        "5f82c510-2c89-46b0-b87d-d3b59e748615",
+        "941f9d48-45e8-4b2f-b0ce-d33900a92fb8",
+        "c857c124-79c0-4b6e-8406-f89a26b8426f",
+        "cb1ad24e-6195-4c11-854f-4d7a68a43c6e",
+        "cc5d449a-d466-400c-b73f-955c676103ed",
+        "ce18d73e-dedf-43e5-8e75-16e0375be349",
+        "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"
+    ],
+    "observers" : [{
+        "userId" : "b50b3325-fdbd-41bf-bda4-81c827982001",
+        "indicators" : ["all"]
+    }]
 });
 
 /*
