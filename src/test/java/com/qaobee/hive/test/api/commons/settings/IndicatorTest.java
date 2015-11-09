@@ -124,7 +124,7 @@ public class IndicatorTest extends VertxJunitSupport {
 		req.setBody(params.encode());
 
 		final String reply = sendonBus(IndicatorVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals(41, new JsonArray(reply).size());
+		Assert.assertEquals(45, new JsonArray(reply).size());
 
 	}
 

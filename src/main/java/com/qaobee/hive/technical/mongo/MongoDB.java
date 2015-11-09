@@ -54,6 +54,16 @@ public interface MongoDB {
      * @throws MongoException the mongo exception
      */
     String update(JsonObject document, Class<?> collection) throws MongoException;
+    
+    /**
+     * Update string.
+     *
+     * @param document   the document
+     * @param collection the collection
+     * @return the string
+     * @throws MongoException the mongo exception
+     */
+    String update(JsonObject document, String collection) throws MongoException;
 
     /**
      * Update a document.
@@ -82,6 +92,17 @@ public interface MongoDB {
      * @throws MongoException can't save
      */
     String save(JsonObject document, Class<?> collection) throws QaobeeException, MongoException;
+    
+    /**
+     * Saves a document in a colection.
+     *
+     * @param document   object to save
+     * @param collection target
+     * @return id string
+     * @throws QaobeeException can't save
+     * @throws MongoException can't save
+     */
+    String save(JsonObject document, String collection) throws QaobeeException, MongoException;
 
     /**
      * Get a document by id.
@@ -92,6 +113,16 @@ public interface MongoDB {
      * @throws QaobeeException not found
      */
     JsonObject getById(String id, Class<?> collection) throws QaobeeException;
+    
+    /**
+     * Get a document by id.
+     *
+     * @param id         the id
+     * @param collection the collection
+     * @return the document
+     * @throws QaobeeException not found
+     */
+    JsonObject getById(String id, String collection) throws QaobeeException;
 
     /**
      * Get a document by id.
@@ -165,8 +196,20 @@ public interface MongoDB {
      * @param collection the collection
      * @return the json array
      */
-// TODO : jro/xke : javadoc
+    // TODO : jro/xke : javadoc
     JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection);
+    
+    /**
+     * Aggregate json array.
+     *
+     * @param field      the field
+     * @param pipeline   the pipeline
+     * @param collection the collection
+     * @return the json array
+     */
+    // TODO : jro/xke : javadoc
+    JsonArray aggregate(String field, List<DBObject> pipeline, String collection);
+
 
     /**
      * Gets db.

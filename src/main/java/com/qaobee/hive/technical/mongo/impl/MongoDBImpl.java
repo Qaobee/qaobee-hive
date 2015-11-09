@@ -214,6 +214,28 @@ public class MongoDBImpl implements MongoDB {
 
         return (String) res.getUpsertedId();
     }
+    
+    /**
+     * Update string.
+     *
+     * @param document   the document
+     * @param collection the collection
+     * @return the string
+     * @throws MongoException the mongo exception
+     */
+    @Override
+    public String update(final JsonObject document, final String collection) throws MongoException {
+        final DBCollection coll = db.getCollection(collection);
+        JsonObject q = new JsonObject();
+        JsonObject set = new JsonObject();
+        q.putString("_id", document.getString("_id"));
+        document.removeField("_id");
+        set.putObject("$set", document);
+        WriteResult res = coll.update(new BasicDBObject(q.toMap()), new BasicDBObject(set.toMap()));
+
+        return (String) res.getUpsertedId(); 
+         
+    }
 
     /**
      * Update string.
@@ -261,6 +283,37 @@ public class MongoDBImpl implements MongoDB {
             throw new QaobeeException(ExceptionCodes.MONGO_ERROR, "Can't save " + document.encode());
         }
     }
+    
+    /**
+     * Saves a document in a colection.
+     *
+     * @param document   object to save
+     * @param collection target
+     * @return id string
+     * @throws QaobeeException can't save
+     * @throws QaobeeException can't save
+     */
+    public String save(final JsonObject document, String collection) throws QaobeeException, MongoException {
+        final DBCollection coll = db.getCollection(collection);
+        String genID;
+        if (document.getField("_id") == null) {
+            genID = UUID.randomUUID().toString();
+            document.putString("_id", genID);
+        } else {
+            genID = document.getField("_id");
+        }
+        final DBObject obj = new BasicDBObject(document.toMap());
+        final WriteResult res = coll.save(obj, getWriteConcern());
+        if (res.getN() > 0) {
+            if (genID != null) {
+                return genID;
+            } else {
+                return (String) res.getUpsertedId();
+            }
+        } else {
+            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, "Can't save " + document.encode());
+        }
+    }
 
     /**
      * Get a document by id.
@@ -274,6 +327,25 @@ public class MongoDBImpl implements MongoDB {
     @SuppressWarnings("unchecked")
     public JsonObject getById(final String id, final Class<?> collection) throws QaobeeException {
         final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id));
+        if (res.count() != 1) {
+            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
+        } else {
+            return new JsonObject(res.next().toMap());
+        }
+    }
+    
+    /**
+     * Get a document by id.
+     *
+     * @param id         the id
+     * @param collection the collection
+     * @return the document
+     * @throws QaobeeException not found
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public JsonObject getById(final String id, final String collection) throws QaobeeException {
+        final DBCursor res = db.getCollection(collection).find(new BasicDBObject("_id", id));
         if (res.count() != 1) {
             throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
         } else {
@@ -432,6 +504,30 @@ public class MongoDBImpl implements MongoDB {
     public JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection) {
         JsonArray res = new JsonArray();
         Iterator<DBObject> it = db.getCollection(collection.getSimpleName()).aggregate(pipeline).results().iterator();
+        while (it.hasNext()) {
+            Object next = it.next();
+            if (next instanceof BasicDBList) {
+                res.addArray(new JsonObject(((BasicDBObject) next).toMap()).asArray());
+            } else {
+                res.addObject(new JsonObject(((BasicDBObject) next).toMap()));
+            }
+        }
+        return res;
+    }
+    
+    /**
+     * Aggregate json array.
+     *
+     * @param field      the field
+     * @param pipeline   the pipeline
+     * @param collection the collection
+     * @return the json array
+     */
+// TODO : JRO : implémente cette partie pour éviter de trimbaler des DBObjects
+    @Override
+    public JsonArray aggregate(String field, List<DBObject> pipeline, String collection) {
+        JsonArray res = new JsonArray();
+        Iterator<DBObject> it = db.getCollection(collection).aggregate(pipeline).results().iterator();
         while (it.hasNext()) {
             Object next = it.next();
             if (next instanceof BasicDBList) {
