@@ -1548,6 +1548,66 @@ db.SB_Collecte.insert({"_id" : "563dc83b95b7575a96ee1dd6",
     }]
 });
 
+/* 
+ * Alimentation collection SB_Collecte : CKE
+ */
+db.SB_Collecte.insert({"_id" : "56410c65446d5807c2732e9d",
+    "status" : "done",
+    "eventRef" : {
+        "_id" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
+        "activityId" : "ACT-HAND",
+        "owner" : {
+            "sandboxId" : "561ec20b409937a6b439d4e9",
+            "effectiveId" : "561ec4d0409937a6b439d4ea",
+            "teamId" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
+        },
+        "address" : {
+            "formatedAddress" : "Avenue Paul Cézanne, Vannes, France",
+            "lat" : 47.6741354999999984,
+            "lng" : -2.7696065000000001,
+            "place" : "Avenue Paul Cézanne",
+            "city" : "Vannes",
+            "country" : "France",
+            "zipcode" : "56000"
+        },
+        "link" : {
+            "type" : "championship"
+        },
+        "label" : "Journée 6",
+        "startDate" : NumberLong(1446912000000),
+        "participants" : {
+            "teamVisitor" : {
+                "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
+                "label" : "Avenir Du Ponant 1"
+            },
+            "teamHome" : {
+                "id" : "562ba2d4b70fd108e375395e",
+                "label" : "Golfe 56"
+            }
+        }
+    },
+    "startDate" : NumberLong(1446912000000),
+    "endDate" : NumberLong(1446916000000),
+    "players" : [
+        "d31d3550-479a-4ee9-8304-84a132202d89",
+        "c0bf7706-f039-46c3-86b2-460930696890",
+        "26baf31a-f153-41b0-9e1d-c32cb9e859dd",
+        "941f9d48-45e8-4b2f-b0ce-d33900a92fb8",
+        "c857c124-79c0-4b6e-8406-f89a26b8426f",
+        "ce18d73e-dedf-43e5-8e75-16e0375be349",
+        "1ce4591d-74a8-46e9-af80-d633f9344d27",
+        "7da59c29-b0c2-440f-8720-a22ed0770950",
+        "cb1ad24e-6195-4c11-854f-4d7a68a43c6e",
+        "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd",
+        "5f82c510-2c89-46b0-b87d-d3b59e748615",
+        "cc5d449a-d466-400c-b73f-955c676103ed"
+    ],
+    "observers" : [{
+        "userId" : "b50b3325-fdbd-41bf-bda4-81c827982001",
+        "indicators" : ["all"]
+    }]
+});
+
 /*
  * Alimentation collection USER : JRO
  */

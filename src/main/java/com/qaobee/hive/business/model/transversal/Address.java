@@ -58,7 +58,7 @@ public class Address {
 
 	/**
 	 * Defines the address place.
-	 * @param String : place 
+	 * @param place String : place 
 	 */
 	public void setPlace(String place) {
 		this.place = place;
@@ -90,7 +90,7 @@ public class Address {
 
 	/**
 	 * Defines the country name/label.
-	 * @param country (Stirng) : country name
+	 * @param country (String) : country name
 	 */
 	public void setCountry(String country) {
 		this.country = country;

@@ -71,7 +71,7 @@ public class User {
 
     /**
      * Defines the internal identifier.
-     * @param String : id
+     * @param _id String : id
      */
     public void set_id(String _id) {
         this._id = _id;
@@ -103,7 +103,7 @@ public class User {
 
     /**
      * Defines the name of the user.
-     * @param (String) : name
+     * @param name (String) : name
      */
     public void setName(String name) {
         this.name = name;

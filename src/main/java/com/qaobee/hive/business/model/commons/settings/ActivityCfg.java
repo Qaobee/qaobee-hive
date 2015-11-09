@@ -172,7 +172,7 @@ public class ActivityCfg {
 
 	/**
 	 * Defines the identifier of the country.
-	 * @param country (String) : country ID
+	 * @param countryId (String) : country ID
 	 */
 	public void setCountryId(String countryId) {
 		this.countryId = countryId;
@@ -282,7 +282,7 @@ public class ActivityCfg {
 	
 	/**
 	 * Adds a status to the list.
-	 * @param role (CommonType) : role
+	 * @param status (CommonType) : role
 	 */
 	public void addAvailabilityStatus(CommonType status) {
 		if(listAvailabilityStatus==null) {
