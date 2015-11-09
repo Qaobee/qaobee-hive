@@ -18,11 +18,13 @@
  */
 package com.qaobee.hive.business.model.commons.settings;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.qaobee.hive.business.model.transversal.Gender;
-import com.qaobee.hive.business.model.transversal.Role;
+import com.qaobee.hive.business.model.transversal.CommonType;
 
 /**
  * Bean that describes an activity configuration.
@@ -33,36 +35,41 @@ public class ActivityCfg {
 
 	/** Internal identifier. */
 	private String _id;
-
-	/** activity. */
-	private Activity activity;
-
+	/** Activity identifier */
+	private String activityId;
 	/** Country Id. */
-	private Country country;
-
-	/** Season. */
-	private Season season;
-
+	private String countryId;
+	/** Start date */
+	private long startDate;
+	/** End date */
+	private long endDate;
+	/** List of position types */
+	private List<CommonType> listPositionType;
 	/** List of Level Game. */
 	private List<LevelGame> listLevelGame;
-
-	/** List of Category Age. */
+	/** List of roles in the structure */
+	private List<CommonType> listRoleStr;
+	/** List of age category */
 	private List<CategoryAge> listCategoryAge;
-
-	/** List of gender. */
-	private List<Gender> listGender;
-
-	/** List of license type. */
-	private List<LicenseType> listLicenseType;
-
-	/** List of roles structure. */
-	private List<Role> listRolePlayer;
-
+	/** List of availability status */
+	private List<CommonType> listAvailabilityStatus;
+	/** List of shape condition status */
+	private List<CommonType> listShapeConditionStatus;
+	/** List of genders */
+	private List<CommonType> listGender;
+	/** List of licenses types*/
+	private List<CommonType> listLicenseType;
+	/** List of event types */
+	private List<CommonType> listEventType;
+	/** Map of parameters for game 
+	 * @see ParametersGame */
+	private Map<String, Object> parametersGame;
+	
 	/**
 	 * Returns the identifier.
 	 * @return String : identifier
 	 */
-	public final String get_id() {
+	public String get_id() {
 		return _id;
 	}
 
@@ -70,7 +77,7 @@ public class ActivityCfg {
 	 * Defines the identifier.
 	 * @param _id (String) : identifier
 	 */
-	public final void set_id(final String _id) {
+	public void set_id(final String _id) {
 		this._id = _id;
 	}
 
@@ -78,7 +85,7 @@ public class ActivityCfg {
 	 * Returns the list of level game.
 	 * @return List(LevelGame) : list of level game
 	 */
-	public final List<LevelGame> getListLevelGame() {
+	public List<LevelGame> getListLevelGame() {
 		return listLevelGame;
 	}
 
@@ -86,7 +93,7 @@ public class ActivityCfg {
 	 * Defines the list of level game.
 	 * @param listLevelGame (List(LevelGame)) :  list of level game
 	 */
-	public final void setListLevelGame(final List<LevelGame> listLevelGame) {
+	public void setListLevelGame(final List<LevelGame> listLevelGame) {
 		this.listLevelGame = listLevelGame;
 	}
 
@@ -94,7 +101,7 @@ public class ActivityCfg {
 	 * Returns the list of age categories.
 	 * @return List(CategoryAge) : list
 	 */
-	public final List<CategoryAge> getListCategoryAge() {
+	public List<CategoryAge> getListCategoryAge() {
 		return listCategoryAge;
 	}
 
@@ -102,105 +109,281 @@ public class ActivityCfg {
 	 * Returns the list of age categories.
 	 * @param listCategoryAge (List(CategoryAge)) : list
 	 */
-	public final void setListCategoryAge(final List<CategoryAge> listCategoryAge) {
+	public void setListCategoryAge(final List<CategoryAge> listCategoryAge) {
 		this.listCategoryAge = listCategoryAge;
 	}
 
 	/**
 	 * Returns the list of genders.
-	 * @return List(Gender) : list
+	 * @return List(CommonType) : list
 	 */
-	public final List<Gender> getListGender() {
+	public List<CommonType> getListGender() {
 		return listGender;
 	}
 
 	/**
 	 * Defines the list of genders.
-	 * @param listGender (List(Gender)) : list
+	 * @param listGender (List(CommonType)) : list
 	 */
-	public final void setListGender(final List<Gender> listGender) {
+	public void setListGender(final List<CommonType> listGender) {
 		this.listGender = listGender;
 	}
 	
 
 	/**
 	 * Returns the list of types of license.
-	 * @return List(LicenseType) : list
+	 * @return List(CommonType) : list
 	 */
-	public final List<LicenseType> getListLicenseType() {
+	public List<CommonType> getListLicenseType() {
 		return listLicenseType;
 	}
 
 	/**
 	 * Defines the list of types of license.
-	 * @param listLicenseType (List(LicenseType)) : list
+	 * @param listLicenseType (List(CommonType)) : list
 	 */
-	public final void setListLicenseType(final List<LicenseType> listLicenseType) {
+	public void setListLicenseType(final List<CommonType> listLicenseType) {
 		this.listLicenseType = listLicenseType;
 	}
 
 	/**
-	 * Returns the list of player roles.
-	 * @return List(Role) : list
+	 * Returns the identifier of activity.
+	 * @return String : activity ID
 	 */
-	public final List<Role> getListRolePlayer() {
-		return listRolePlayer;
+	public String getActivityId() {
+		return activityId;
 	}
 
 	/**
-	 * Defines the list of player roles.
-	 * @param listRolePlayer (List(Role)) : list
+	 * Defines the identifier of activity.
+	 * @param activityId (String) : activity
 	 */
-	public final void setListRolePlayer(List<Role> listRolePlayer) {
-		this.listRolePlayer = listRolePlayer;
+	public void setActivityId(String activityId) {
+		this.activityId = activityId;
 	}
 
 	/**
-	 * Returns the season.
-	 * @return Season : season
+	 * Returns the identifier of the country.
+	 * @return String : country ID
 	 */
-	public Season getSeason() {
-		return season;
+	public String getCountryId() {
+		return countryId;
 	}
 
 	/**
-	 * Defines the season.
-	 * @param season (Season) : season
+	 * Defines the identifier of the country.
+	 * @param country (String) : country ID
 	 */
-	public void setSeason(Season season) {
-		this.season = season;
+	public void setCountryId(String countryId) {
+		this.countryId = countryId;
 	}
 
 	/**
-	 * Returns the activity.
-	 * @return Activity : activity
+	 * Returns the start date.
+	 * @return long : start date
 	 */
-	public Activity getActivity() {
-		return activity;
+	public long getStartDate() {
+		return startDate;
 	}
 
 	/**
-	 * Defines the activity.
-	 * @param activity (Activity) : activity
+	 * Defines the start date.
+	 * @param startDate (long) : start date
 	 */
-	public void setActivity(Activity activity) {
-		this.activity = activity;
+	public void setStartDate(long startDate) {
+		this.startDate = startDate;
 	}
 
 	/**
-	 * Returns the country.
-	 * @return Country : country
+	 * Returns the end date.
+	 * @return long : end date
 	 */
-	public Country getCountry() {
-		return country;
+	public long getEndDate() {
+		return endDate;
 	}
 
 	/**
-	 * Defines the country.
-	 * @param country (Country) : country
+	 * Defines the end date.
+	 * @param endDate (long) : end date
 	 */
-	public void setCountry(Country country) {
-		this.country = country;
+	public void setEndDate(long endDate) {
+		this.endDate = endDate;
+	}
+
+	/**
+	 * Returns the list of position types
+	 * @return List(CommonType) : list
+	 */
+	public List<CommonType> getListPositionType() {
+		return listPositionType;
+	}
+
+	/**
+	 * Defines the list of position types.
+	 * @param listPositionType (List(CommonType)) : list
+	 */
+	public void setListPositionType(List<CommonType> listPositionType) {
+		this.listPositionType = listPositionType;
+	}
+
+	/**
+	 * Adds a position type to the list.
+	 * @param type (CommonType) : type
+	 */
+	public void addPositionType(CommonType type) {
+		if(listPositionType==null) {
+			listPositionType = new ArrayList<>();
+		}
+		listPositionType.add(type);
+	}
+	
+	/**
+	 * Returns a list of roles for the structure.
+	 * @return List(CommonType) : list
+	 */
+	public List<CommonType> getListRoleStr() {
+		return listRoleStr;
+	}
+
+	/**
+	 * Defines the list of roles in the structure.
+	 * @param listRoleStr (List(CommonType)) : list
+	 */
+	public void setListRoleStr(List<CommonType> listRoleStr) {
+		this.listRoleStr = listRoleStr;
+	}
+
+	/**
+	 * Adds a role to the list.
+	 * @param role (CommonType) : role
+	 */
+	public void addRoleStr(CommonType role) {
+		if(listRoleStr==null) {
+			listRoleStr = new ArrayList<>();
+		}
+		listRoleStr.add(role);
+	}
+	
+	/**
+	 * Returns the list of availability status.
+	 * @return List(CommonType) : list
+	 */
+	public List<CommonType> getListAvailabilityStatus() {
+		return listAvailabilityStatus;
+	}
+
+	/**
+	 * Defines the list of availability status.
+	 * @param listAvailabilityStatus (List(CommonType)) : list
+	 */
+	public void setListAvailabilityStatus(List<CommonType> listAvailabilityStatus) {
+		this.listAvailabilityStatus = listAvailabilityStatus;
+	}
+	
+	/**
+	 * Adds a status to the list.
+	 * @param role (CommonType) : role
+	 */
+	public void addAvailabilityStatus(CommonType status) {
+		if(listAvailabilityStatus==null) {
+			listAvailabilityStatus = new ArrayList<>();
+		}
+		listAvailabilityStatus.add(status);
+	}
+
+	/**
+	 * Returns the list of shape condition status.
+	 * @return List(CommonType) : list
+	 */
+	public List<CommonType> getListShapeConditionStatus() {
+		return listShapeConditionStatus;
+	}
+
+	/**
+	 * Defines the list of shape condition status.
+	 * @param listShapeConditionStatus (List(CommonType)) : list
+	 */
+	public void setListShapeConditionStatus(List<CommonType> listShapeConditionStatus) {
+		this.listShapeConditionStatus = listShapeConditionStatus;
+	}
+
+	/**
+	 * Adds a shape condition status to the list.
+	 * @param status (CommonType) : status
+	 */
+	public void addShapeConditionStatus(CommonType status) {
+		if(listShapeConditionStatus==null) {
+			listShapeConditionStatus = new ArrayList<>();
+		}
+		listShapeConditionStatus.add(status);
+	}
+	
+	/**
+	 * Returns the list of event types.
+	 * @return List(CommonType) : list
+	 */
+	public List<CommonType> getListEventType() {
+		return listEventType;
+	}
+
+	/**
+	 * Defines the list of event types.
+	 * @param listEventType (List(CommonType)) : list
+	 */
+	public void setListEventType(List<CommonType> listEventType) {
+		this.listEventType = listEventType;
+	}
+
+	/**
+	 * Adds an event type to the list.
+	 * @param type (CommonType) : event type
+	 */
+	public void addEventType(CommonType type) {
+		if(listEventType==null) {
+			listEventType = new ArrayList<>();
+		}
+		listEventType.add(type);
+	}
+	
+	/**
+	 * Returns the map of game parameters.
+	 * @return Map(String, Object) : map
+	 */
+	public Map<String, Object> getParametersGame() {
+		return parametersGame;
+	}
+
+	/**
+	 * Defines the map of game parameters.
+	 * @param parametersGame (Map(String, Object)) : map
+	 */
+	public void setParametersGame(Map<String, Object> parametersGame) {
+		this.parametersGame = parametersGame;
+	}
+	
+	/**
+	 * Adds a parameter in parameters game collection.
+	 * @param key (String) : key
+	 * @param value (Object) : value
+	 */
+	public void addParameterGame(String key, Object value) {
+		if(parametersGame==null) {
+			parametersGame = new HashMap<>();
+		}
+		parametersGame.put(key, value);
+	}
+	
+	/**
+	 * Returns the object associated to the key in game parameters.
+	 * @param key (String) : key to find the parameter
+	 * @return Object : value
+	 * @see ParametersGame
+	 */
+	public Object getParameterGame(String key) {
+		if(parametersGame==null) {
+			return null;
+		}
+		return parametersGame.get(key);
 	}
 
 }

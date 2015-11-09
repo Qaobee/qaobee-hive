@@ -19,11 +19,14 @@
 package com.qaobee.hive.business.model.commons.settings;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.qaobee.hive.business.model.transversal.CommonType;
 
 /**
  * Bean that descripbes the type of license.
  * @author jeremy
+ * @see CommonType
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LicenseType {
 

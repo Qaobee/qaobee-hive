@@ -23,7 +23,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Bean that describes a gender.
  * @author xavier
+ * @see CommonType
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Gender {
 

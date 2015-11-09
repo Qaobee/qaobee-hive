@@ -18,25 +18,35 @@
  */
 package com.qaobee.hive.business.model.commons.referencial;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.transversal.Address;
 import com.qaobee.hive.business.model.transversal.Audit;
+import com.qaobee.hive.business.model.transversal.GathererBatch;
 
 /**
  * Bean that describes infrastructure.
  * @author cke
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class InfraStructure {
 
 	/** Internal identifier */
-    private String _id;    
+    private String _id;
+    /** Federation identifier */
+    private String idFederation;
+    /** Area size */
+    private String areaSize;
+    /** Area nature */
+    private String areaNature;
     /** Label */
     private String label;
     /** Address */
     private Address address;
-    /** Structure of the Infrastructure */
-    private Structure structure;
+    /** Structure ID */
+    private String structureId;
     /** audit CRUD object */
 	private Audit audit;
+	
 
 	/**
 	 * Returns the internal identifier.
@@ -87,22 +97,6 @@ public class InfraStructure {
 	}
 
 	/**
-	 * Returns the structure.
-	 * @return Structure : structure
-	 */
-	public Structure getStructure() {
-		return structure;
-	}
-
-	/**
-	 * Defines the structure.
-	 * @param structure (Structure) : structure
-	 */
-	public void setStructure(Structure structure) {
-		this.structure = structure;
-	}
-
-	/**
 	 * Returns the auit.
 	 * @return Audit : audit
 	 */
@@ -116,6 +110,70 @@ public class InfraStructure {
 	 */
 	public void setAudit(Audit audit) {
 		this.audit = audit;
+	}
+
+	/**
+	 * Returns federation identifier. 
+	 * @return String : Federation ID
+	 */
+	public String getIdFederation() {
+		return idFederation;
+	}
+
+	/**
+	 * Defines federation identifier.
+	 * @param idFederation (String) : federation ID
+	 */
+	public void setIdFederation(String idFederation) {
+		this.idFederation = idFederation;
+	}
+
+	/**
+	 * Returns area size (00x00).
+	 * @return String : size
+	 */
+	public String getAreaSize() {
+		return areaSize;
+	}
+
+	/**
+	 * Defines area size (00x00).
+	 * @param areaSize (String) : size
+	 */
+	public void setAreaSize(String areaSize) {
+		this.areaSize = areaSize;
+	}
+
+	/**
+	 * Returns area nature.
+	 * @return String : nature
+	 */
+	public String getAreaNature() {
+		return areaNature;
+	}
+
+	/**
+	 * Defines area nature.
+	 * @param areaNature (String) : nature
+	 */
+	public void setAreaNature(String areaNature) {
+		this.areaNature = areaNature;
+	}
+
+	/**
+	 * Returns Qaobee structure identifier.
+	 * @return String : structure ID
+	 */
+	public String getStructureId() {
+		return structureId;
+	}
+
+	/**
+	 * Defines Qaobee structure identifier.
+	 * @param structureId (String) : structure ID
+	 */
+	public void setStructureId(String structureId) {
+		this.structureId = structureId;
 	}
     
 }
