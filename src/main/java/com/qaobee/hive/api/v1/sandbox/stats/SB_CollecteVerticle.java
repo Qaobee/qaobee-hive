@@ -94,7 +94,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
     /**
      * Collecte sandboxId
      */
-    public static final String PARAM_SANDBOX_ID = "sandBoxId";
+    public static final String PARAM_SANDBOX_ID = "sandboxId";
     
     /**
      * Collecte effectiveId

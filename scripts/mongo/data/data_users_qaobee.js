@@ -1518,7 +1518,7 @@ db.SB_Collecte.insert({"_id" : "563dc83b95b7575a96ee1dd6",
         "participants" : {
             "teamHome" : {
                 "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
-                "label" : "Locmaria Hb 1"
+                "label" : "Avenir Du Ponant 1"
             },
             "teamVisitor" : {
                 "id" : "5a931b17-63c5-4b1a-be6e-2e5ed8521059",
