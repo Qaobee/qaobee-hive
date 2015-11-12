@@ -227,6 +227,7 @@ public class Main extends AbstractGuiceVerticle {
                             public void handle(final AsyncResult<Message<String>> message) {
                                 stopTimer(StringUtils.join(wrapper.getPath(), '.'));
                                 if (message.succeeded()) {
+        
                                     final String response = message.result().body();
                                     if (response.startsWith("[") || !response.startsWith("{")) {
                                         enableCors(req);

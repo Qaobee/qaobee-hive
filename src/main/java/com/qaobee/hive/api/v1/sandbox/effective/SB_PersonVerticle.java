@@ -268,7 +268,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
                     project = new BasicDBObject("$project", dbObjectParent);
 
                     List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-                    container.logger().info("getListPerson : " + pipelineAggregation.toString());
+                    container.logger().debug("getListPerson : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, SB_Person.class);
 
