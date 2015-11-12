@@ -112,7 +112,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().info(GET_BY_OWNER+" - SandBox");
+            	container.logger().debug(GET_BY_OWNER+" - SandBox");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -131,7 +131,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" +req.getUser().get_id() +" ,and activityId : "+ params.get(PARAM_ACTIVITY_ID));
                     }
                     JsonObject json = resultJson.get(0);
-                    container.logger().info("SandBox found : " + json.toString());
+                    container.logger().debug("SandBox found : " + json.toString());
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
@@ -169,7 +169,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET_LIST_BY_OWNER, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().info(GET_LIST_BY_OWNER+" - SandBox");
+            	container.logger().debug(GET_LIST_BY_OWNER+" - SandBox");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -190,7 +190,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
                     
                     for (int i = 0; i < resultJson.size(); i++) {
                     	JsonObject json = resultJson.get(i);
-                        container.logger().info("SandBox found : " + json.toString());
+                        container.logger().debug("SandBox found : " + json.toString());
 					}
                     
                     message.reply(resultJson.encode());
@@ -217,7 +217,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(ADD, new Handler<Message<JsonObject>>() {
             @Override
             public void handle(Message<JsonObject> message) {
-            	container.logger().info(ADD + " - SandBox");
+            	container.logger().debug(ADD + " - SandBox");
             	try {
                     final RequestWrapper req = Json.decodeValue(message.body().encode(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());
@@ -257,7 +257,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().info(UPDATE + " - SandBox");
+            	container.logger().debug(UPDATE + " - SandBox");
             	try {
 		        	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 		            utils.testHTTPMetod(Constantes.POST, req.getMethod());

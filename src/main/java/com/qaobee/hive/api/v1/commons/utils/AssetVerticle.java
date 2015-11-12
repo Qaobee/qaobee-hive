@@ -97,7 +97,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
 
                     } else {
                         GridFS img = new GridFS(mongo.getDb(), "Assets");
-                        container.logger().info(mongo.getDb().getMongo().getConnectPoint());
+                        container.logger().debug(mongo.getDb().getMongo().getConnectPoint());
 
                         GridFSInputFile gfsFile = img.createFile(FileUtils.readFileToByteArray(new File(message.body().getString("filename"))));
                         gfsFile.setFilename(message.body().getString("uid"));

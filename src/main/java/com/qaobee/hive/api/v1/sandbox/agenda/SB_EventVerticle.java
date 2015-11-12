@@ -255,11 +255,11 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                         pipelineAggregation = Arrays.asList(match, sort);
                     }
 
-                    container.logger().info("getList : " + pipelineAggregation.toString());
+                    container.logger().debug("getList : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Event.class);
 
-                    container.logger().info(resultJSon.encodePrettily());
+                    container.logger().debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
@@ -355,7 +355,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
 
                     mongo.save(event, SB_Event.class);
                     
-                    container.logger().info("SB_Event updated : " + event.toString());
+                    container.logger().debug("SB_Event updated : " + event.toString());
 
 					/* return */
                     message.reply(event.encode());

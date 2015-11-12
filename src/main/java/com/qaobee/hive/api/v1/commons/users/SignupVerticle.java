@@ -251,7 +251,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         json.removeField("junit");
                         json.removeField("captcha");
                         json.removeField("plan");
-                        container.logger().info(json.encode());
+                        container.logger().debug(json.encode());
                         final User user = Json.decodeValue(json.encode(), User.class);
 
                         // Check user informations
@@ -311,14 +311,14 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                         if (!injunit) {
                                                             vertx.eventBus().publish("mailer.mod", emailReq);
                                                         } else {
-                                                            container.logger().info(emailReq);
+                                                            container.logger().debug(emailReq);
                                                         }
 
                                                         final JsonObject res = new JsonObject();
                                                         try {
                                                             res.putObject("person", mongo.getById(id, User.class));
                                                             res.putString("planId", plan.getPaymentId());
-                                                            container.logger().info(res.encode());
+                                                            container.logger().debug(res.encode());
                                                             message.reply(res.encode());
                                                         } catch (final EncodeException e) {
                                                             container.logger().error(e.getMessage(), e);
@@ -528,7 +528,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                     final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
 
-                    container.logger().info("ID: " + id + ", code:" + activationCode + ", structure: " + structure + ", activity:" + activityId);
+                    container.logger().debug("ID: " + id + ", code:" + activationCode + ", structure: " + structure + ", activity:" + activityId);
 
                     if (user == null) {
                         utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
@@ -576,7 +576,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 //                            	//TODO erreur
 //                            	
 //                            	JsonObject body = new JsonObject(response.body().encode());
-//                            	container.logger().info(body);
+//                            	container.logger().debug(body);
 //                            }
 //                        });
 

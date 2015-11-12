@@ -129,7 +129,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().info(ADD+" - SB_Team");
+            	container.logger().debug(ADD+" - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -165,7 +165,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().info(UPDATE+" - SB_Team");
+            	container.logger().debug(UPDATE+" - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());
@@ -208,7 +208,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().info(GET+" - SB_Team");
+            	container.logger().debug(GET+" - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -224,7 +224,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
 
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_Team.class);
 
-                    container.logger().info("SB_Team found : " + json.toString());
+                    container.logger().debug("SB_Team found : " + json.toString());
 
                     message.reply(json.encode());
 
@@ -262,7 +262,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().info(GET_LIST+" - SB_Team");
+            	container.logger().debug(GET_LIST+" - SB_Team");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters
@@ -286,7 +286,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
                     
                     
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Team.class);
-                    container.logger().info("RETURN : "+resultJson);
+                    container.logger().debug("RETURN : "+resultJson);
 
                     message.reply(resultJson.encode());
                 } catch (final NoSuchMethodException e) {

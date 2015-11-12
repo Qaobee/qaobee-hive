@@ -117,7 +117,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getHandler() - Season");
+                container.logger().debug("getHandler() - Season");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -126,7 +126,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Season.class);
-                    container.logger().info("Season found : " + json.toString());
+                    container.logger().debug("Season found : " + json.toString());
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
@@ -161,7 +161,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getListByActivityHandler() - Season");
+                container.logger().debug("getListByActivityHandler() - Season");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters
@@ -218,7 +218,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getCurrentHandler() - Season");
+                container.logger().debug("getCurrentHandler() - Season");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters

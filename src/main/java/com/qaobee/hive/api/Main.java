@@ -157,7 +157,7 @@ public class Main extends AbstractGuiceVerticle {
                         System.out.println("---->" + filename);
                         request.putString("filename", filename);
                         request.putString("contentType", upload.contentType());
-                        container.logger().info("filename : " + filename);
+                        container.logger().debug("filename : " + filename);
                         FileUtils.deleteQuietly(new File(filename));
 
                         upload.streamToFileSystem(filename);

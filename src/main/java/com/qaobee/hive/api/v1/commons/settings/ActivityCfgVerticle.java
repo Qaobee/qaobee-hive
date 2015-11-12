@@ -101,7 +101,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().info(GET+" - ActivityCfg");
+            	container.logger().debug(GET+" - ActivityCfg");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -136,12 +136,12 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 					// Call to mongo
 					JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, ActivityCfg.class);
 					if (resultJSon == null || resultJSon.size() == 0) {
-						container.logger().info(resultJSon.encodePrettily());
+						container.logger().debug(resultJSon.encodePrettily());
 						throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
 					}
 					
 					JsonObject jsonObject = resultJSon.get(0);
-					container.logger().info(jsonObject.encodePrettily());
+					container.logger().debug(jsonObject.encodePrettily());
 					message.reply(jsonObject.encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
@@ -176,7 +176,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(PARAMS, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().info(PARAMS+" - ActivityCfg");
+            	container.logger().debug(PARAMS+" - ActivityCfg");
                 try {
                 	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 	utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -231,10 +231,10 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 					project = new BasicDBObject("$project", dbObjectParent);
 
 					List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-					container.logger().info("getParamFieldHandler : " + pipelineAggregation.toString());
+					container.logger().debug("getParamFieldHandler : " + pipelineAggregation.toString());
 
 					final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, ActivityCfg.class);
-					container.logger().info(resultJSon.encodePrettily());
+					container.logger().debug(resultJSon.encodePrettily());
 
 					if (resultJSon == null || resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
 						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");

@@ -205,11 +205,11 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
                     List<DBObject> pipelineAggregation;
                     pipelineAggregation = Arrays.asList(match);
 
-                    container.logger().info("getList : " + pipelineAggregation.toString());
+                    container.logger().debug("getList : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, COLLECTION_NAME);
 
-                    container.logger().info(resultJSon.encodePrettily());
+                    container.logger().debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
@@ -257,7 +257,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
                     object.putString("_id", id);
 
 					/* return */
-                    container.logger().info(object.encodePrettily());
+                    container.logger().debug(object.encodePrettily());
                     message.reply(object.encode());
 
                 } catch (final NoSuchMethodException e) {

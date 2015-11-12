@@ -132,7 +132,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("add() - Structure");
+                container.logger().debug("add() - Structure");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -143,7 +143,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     // Insert a structure
                     final String id = mongo.save(params, Structure.class);
 
-                    container.logger().info("Structure added : " + params.toString());
+                    container.logger().debug("Structure added : " + params.toString());
 
                     params.putString("_id", id);
                     message.reply(params.encode());
@@ -186,7 +186,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("get() - Structure");
+                container.logger().debug("get() - Structure");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -194,7 +194,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(params, PARAM_ID);
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Structure.class);
-                    container.logger().info("Structure found : " + json.toString());
+                    container.logger().debug("Structure found : " + json.toString());
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
@@ -231,7 +231,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getList() - Structure");
+                container.logger().debug("getList() - Structure");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -268,11 +268,11 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     /* Pipeline */
                     List<DBObject> pipelineAggregation = Arrays.asList(match);
                     
-                    container.logger().info("getListChampionshipHandler : " + pipelineAggregation.toString());
+                    container.logger().debug("getListChampionshipHandler : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Structure.class);
                     
-                    container.logger().info("Structure found : " + resultJSon.size());
+                    container.logger().debug("Structure found : " + resultJSon.size());
                     message.reply(resultJSon.encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
@@ -315,7 +315,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("update() - Structure");
+                container.logger().debug("update() - Structure");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -326,7 +326,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     // Update a structure
                     mongo.save(params, Structure.class);
 
-                    container.logger().info("Structure updated : " + params.toString());
+                    container.logger().debug("Structure updated : " + params.toString());
 
                     message.reply(params.encode());
 

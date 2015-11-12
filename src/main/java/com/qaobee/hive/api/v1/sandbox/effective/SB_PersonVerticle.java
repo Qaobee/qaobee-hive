@@ -272,7 +272,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
 
                     final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, SB_Person.class);
 
-                    container.logger().info(resultJSon.encodePrettily());
+                    container.logger().debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
@@ -304,7 +304,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info(GET_LIST_SANDBOX+" - Country");
+                container.logger().debug(GET_LIST_SANDBOX+" - Country");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters
