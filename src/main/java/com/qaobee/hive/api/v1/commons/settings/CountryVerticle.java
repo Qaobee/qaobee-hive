@@ -19,6 +19,7 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -54,19 +55,20 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      */
     public static final String GET = Module.VERSION + ".commons.settings.country.get";
     /**
+     * The Constant GET_ALPHA2.
+     */
+    public static final String GET_ALPHA2 = Module.VERSION + ".commons.settings.country.getAlpha2";
+    /**
      * The Constant GET.
      */
     public static final String GET_LIST = Module.VERSION + ".commons.settings.country.getList";
 
 	/* List of parameters */
-    /**
-     * Id of the structure
-     */
-    public static final String PARAM_ID = "_id";
-
-    /**
-     * Label of the structure
-     */
+    /** Id of the structure */
+    public static final String PARAM_ID = "_id";																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				
+    /** Alpha 2 code */
+    public static final String PARAM_ALPHA2 = "alpha2";
+    /** Label of the structure */
     public static final String PARAM_LABEL = "label";
     public static final String PARAM_LOCAL = "local";
   
@@ -76,6 +78,8 @@ public class CountryVerticle extends AbstractGuiceVerticle {
     private MongoDB mongo;
     @Inject
     private Utils utils;
+    @Inject
+    private CountryBusiness countryBusiness;
 
 
     @Override
@@ -123,6 +127,59 @@ public class CountryVerticle extends AbstractGuiceVerticle {
                     container.logger().info("Country found : " + json.toString());
 
                     message.reply(json.encode());
+
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
+        
+        /**
+         * @api {get} /api/1/commons/settings/country/getAlpha2 Read data of an Country
+         * @apiVersion 0.1.0
+         * @apiName get
+         * @apiGroup Country API
+         * @apiPermission all
+         *
+         * @apiDescription get a country to the collection country in settings module
+         *
+         * @apiParam {String} alpha2 Mandatory The Alpha2.
+         *
+         * @apiSuccess {Country}   country            The Country found.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> getAlpha2 = new Handler<Message<String>>() {
+
+            @Override
+            public void handle(final Message<String> message) {
+                container.logger().info("getAlpha2 - Country");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
+
+                    utils.testMandatoryParams(params, PARAM_ALPHA2);
+
+                    // Tests mandatory parameters
+                    if (StringUtils.isBlank(params.get(PARAM_ALPHA2).get(0))) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ALPHA2 + " is mandatory");
+                    }
+
+                    Country country = countryBusiness.getCountryFromAlpha2(params.get(PARAM_ALPHA2).get(0));
+
+                    container.logger().info("Country found : " + Json.encodePrettily(country));
+
+                    message.reply(Json.encode(country));
 
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
@@ -198,6 +255,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          * Handlers registration
 		 */
         vertx.eventBus().registerHandler(GET, get);
+        vertx.eventBus().registerHandler(GET_ALPHA2, getAlpha2);
         vertx.eventBus().registerHandler(GET_LIST, getList);
     }
 
