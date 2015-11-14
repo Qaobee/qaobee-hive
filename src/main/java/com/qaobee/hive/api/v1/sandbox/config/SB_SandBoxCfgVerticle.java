@@ -106,7 +106,7 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {
                     Map<String, List<String>> params = req.getParams();
                     utils.testMandatoryParams(params, PARAM_ID);
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_SandBoxCfg.class);
-                    container.logger().info("SandBoxCfg found : " + json.toString());
+                    container.logger().debug("SandBoxCfg found : " + json.toString());
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
@@ -160,7 +160,7 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBoxCfg defined for sandBox if (" + params.get(PARAM_SANDBOX_ID).get(0) + ")");
                     }
-                    container.logger().info("SandBoxCfg found : " + resultJson.toString());
+                    container.logger().debug("SandBoxCfg found : " + resultJson.toString());
 
                     message.reply(resultJson.encode());
                 } catch (final NoSuchMethodException e) {

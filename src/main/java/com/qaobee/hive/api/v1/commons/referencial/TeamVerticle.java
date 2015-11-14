@@ -110,7 +110,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("add() - Team");
+				container.logger().debug("add() - Team");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -121,7 +121,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 					final String id = mongo.save(params, Team.class);
 					
 					params.putString("_id", id);
-					container.logger().info("Team added : " + params.toString());
+					container.logger().debug("Team added : " + params.toString());
 					
 					message.reply(params.encode());
 					
@@ -163,7 +163,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("get() - Team");
+				container.logger().debug("get() - Team");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -179,7 +179,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 					
 					final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Team.class);
 					
-					container.logger().info("Team found : " + json.toString());
+					container.logger().debug("Team found : " + json.toString());
 					
 					message.reply(json.encode());
 					
@@ -220,7 +220,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().info("update() - Team");
+				container.logger().debug("update() - Team");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -230,7 +230,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 					// Update a team
 					mongo.save(params, Team.class);
 					
-					container.logger().info("Team updated : " + params.toString());
+					container.logger().debug("Team updated : " + params.toString());
 					
 					message.reply(params.encode());
 					

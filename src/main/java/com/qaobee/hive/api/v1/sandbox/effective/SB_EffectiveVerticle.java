@@ -102,7 +102,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info(GET + " - Effective");
+                container.logger().debug(GET + " - Effective");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -111,7 +111,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
 
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_Effective.class);
-                    container.logger().info("Effective found : " + json.toString());
+                    container.logger().debug("Effective found : " + json.toString());
 
                     message.reply(json.encode());
 
@@ -147,7 +147,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info(GET_LIST + " - Effective");
+                container.logger().debug(GET_LIST + " - Effective");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters
@@ -208,7 +208,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info(UPDATE + " - Effective");
+                container.logger().debug(UPDATE + " - Effective");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());
@@ -254,7 +254,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info(ADD + " - Effective");
+                container.logger().debug(ADD + " - Effective");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());

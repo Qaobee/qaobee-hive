@@ -424,8 +424,6 @@ public class MongoDBImpl implements MongoDB {
             query = new BasicDBObject("$and", and);
         }
 
-        LOG.info("findByCriterias -> Query : " + query.toString());
-
         DBCursor res;
         if (fields != null) {
             res = coll.find(query, new BasicDBObject(getMinimal(fields)));

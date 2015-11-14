@@ -205,11 +205,11 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
                     List<DBObject> pipelineAggregation;
                     pipelineAggregation = Arrays.asList(match);
 
-                    container.logger().info("getList : " + pipelineAggregation.toString());
+                    container.logger().debug("getList : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, COLLECTION_NAME);
 
-                    container.logger().info(resultJSon.encodePrettily());
+                    container.logger().debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
@@ -257,6 +257,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
                     object.putString("_id", id);
 
 					/* return */
+                    container.logger().debug(object.encodePrettily());
                     message.reply(object.encode());
 
                 } catch (final NoSuchMethodException e) {
@@ -305,7 +306,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
 
                     mongo.update(object, COLLECTION_NAME);
                     
-                    container.logger().info("SB_Collecte updated : " + object.toString());
+                    container.logger().debug("SB_Collecte updated : " + object.toString());
 
 					/* return */
                     message.reply(object.encode());
@@ -348,8 +349,10 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_ID);
+                    
+                    container.logger().debug("SB_Collecte GET : " + req.getParams().get(PARAM_ID).get(0));
 
-                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), COLLECTION_NAME));
+                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), COLLECTION_NAME).encode());
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());

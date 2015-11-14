@@ -129,7 +129,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().info("getList() - Championship");
+            	container.logger().debug("getList() - Championship");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                 	/*
@@ -184,11 +184,11 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                     /* Pipeline */
                     List<DBObject> pipelineAggregation = Arrays.asList(match);
                     
-                    container.logger().info("getListChampionshipHandler : " + pipelineAggregation.toString());
+                    container.logger().debug("getListChampionshipHandler : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
 
-                    container.logger().info(resultJSon.encodePrettily());
+                    container.logger().debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
                     
                 } catch (final NoSuchMethodException e) {
@@ -228,7 +228,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().info("get() - Championship");
+            	container.logger().debug("get() - Championship");
                 try {
                 	/*
                      * *** Params section ***
@@ -288,7 +288,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().info("add() - Championship");
+            	container.logger().debug("add() - Championship");
                 try {
                 	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 	
@@ -353,7 +353,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().info("update() - Championship");
+            	container.logger().debug("update() - Championship");
                 try {
                 	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 	

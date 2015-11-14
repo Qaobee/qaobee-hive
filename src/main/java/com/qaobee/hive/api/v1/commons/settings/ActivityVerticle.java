@@ -99,7 +99,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("get() - Activity");
+                container.logger().debug("get() - Activity");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -109,13 +109,13 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
                     // Tests mandatory parameters
                     utils.testMandatoryParams(params, PARAM_ID);
                     if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                    	container.logger().info("get() JSON - "+params);
+                    	container.logger().debug("get() JSON - "+params);
                         throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
                     }
 
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Activity.class);
 
-                    container.logger().info("Activity found : " + json.toString());
+                    container.logger().debug("Activity found : " + json.toString());
 
                     message.reply(json.encode());
 
@@ -154,7 +154,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getList() - Activity");
+                container.logger().debug("getList() - Activity");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -162,7 +162,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
                     JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
 
-                    container.logger().info("Activities found : " + resultJson.toString());
+                    container.logger().debug("Activities found : " + resultJson.toString());
 
                     message.reply(resultJson.encode());
 
@@ -199,7 +199,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getListEnable() - Activity");
+                container.logger().debug("getListEnable() - Activity");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -208,7 +208,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
 
-                    container.logger().info("Activities found : " + resultJson.toString());
+                    container.logger().debug("Activities found : " + resultJson.toString());
 
                     message.reply(resultJson.encode());
 

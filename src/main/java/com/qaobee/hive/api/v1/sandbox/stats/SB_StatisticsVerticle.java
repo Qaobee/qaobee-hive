@@ -126,7 +126,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info(GET_STAT_GROUPBY + " - Statistics");
+                container.logger().debug(GET_STAT_GROUPBY + " - Statistics");
 
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -255,11 +255,11 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                         pipelineAggregation = Arrays.asList(match, project, group, sort);
                     }
 
-                    container.logger().info("getStatGroupBy : " + pipelineAggregation.toString());
+                    container.logger().debug("getStatGroupBy : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
 
-                    container.logger().info(resultJSon.encodePrettily());
+                    container.logger().debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
@@ -298,7 +298,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info(GET_LISTDETAIL_VALUES + " - Statistics");
+                container.logger().debug(GET_LISTDETAIL_VALUES + " - Statistics");
 
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -372,11 +372,11 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                         pipelineAggregation = Arrays.asList(match, sort);
                     }
 
-                    container.logger().info("getListDetailValue : " + pipelineAggregation.toString());
+                    container.logger().debug("getListDetailValue : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("timer", pipelineAggregation, SB_Stats.class);
 
-                    container.logger().info(resultJSon.encodePrettily());
+                    container.logger().debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
@@ -412,7 +412,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info(ADD_STAT + " - Statistics");
+                container.logger().debug(ADD_STAT + " - Statistics");
 
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -463,7 +463,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info(ADD_STAT_BULK + " - Statistics");
+                container.logger().debug(ADD_STAT_BULK + " - Statistics");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());

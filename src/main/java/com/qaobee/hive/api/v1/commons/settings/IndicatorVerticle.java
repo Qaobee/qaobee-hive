@@ -132,7 +132,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("get() - Indicator");
+                container.logger().debug("get() - Indicator");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -149,7 +149,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
 
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), IndicatorCfg.class);
 
-                    container.logger().info("Indicator found : " + json.toString());
+                    container.logger().debug("Indicator found : " + json.toString());
 
                     message.reply(json.encode());
 
@@ -196,7 +196,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getList() - Indicator");
+                container.logger().debug("getList() - Indicator");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -247,7 +247,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
 
-                    container.logger().info(resultJSon.encodePrettily());
+                    container.logger().debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {

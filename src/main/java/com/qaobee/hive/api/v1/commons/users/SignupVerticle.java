@@ -262,6 +262,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         json.removeField("junit");
                         json.removeField("captcha");
                         json.removeField("plan");
+
                         final User user = Json.decodeValue(json.encode(), User.class);
 
                         // Check user informations
@@ -328,7 +329,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                         try {
                                                             res.putObject("person", mongo.getById(id, User.class));
                                                             res.putString("planId", plan.getPaymentId());
-                                                            container.logger().info(res.encode());
+                                                            container.logger().debug(res.encode());
                                                             message.reply(res.encode());
                                                         } catch (final EncodeException e) {
                                                             container.logger().error(e.getMessage(), e);
@@ -543,7 +544,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                     final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
 
-                    container.logger().info("ID: " + id + ", code:" + activationCode + ", structure: " + structure + ", activity:" + activityId);
+                    container.logger().debug("ID: " + id + ", code:" + activationCode + ", structure: " + structure + ", activity:" + activityId);
 
                     if (user == null) {
                         utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
@@ -576,13 +577,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         user.setGender(userUpdate.getGender());
                         user.setName(userUpdate.getName());
                         user.setNationality(userUpdate.getNationality());
-
-//                        RequestWrapper reqSB = new RequestWrapper();
-//                        reqSB.setMethod(Constantes.PUT);
-//                        final JsonObject params = new JsonObject();
-//                        params.putObject(SB_SandBoxVerticle.PARAM_USER, jsonUser);
-//                        params.putString(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activityId);
-//                        reqSB.setBody(params.encode());
 
                         // Création Sandbox
                         JsonObject sandbox = new JsonObject();
