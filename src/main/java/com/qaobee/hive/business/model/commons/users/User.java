@@ -18,6 +18,7 @@
  */
 package com.qaobee.hive.business.model.commons.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.commons.users.account.Account;
 import com.qaobee.hive.business.model.commons.users.communication.Notification;
@@ -30,6 +31,7 @@ import java.util.List;
  * Bean that describes a user.
  * @author cke
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     /** Internal identifier */
