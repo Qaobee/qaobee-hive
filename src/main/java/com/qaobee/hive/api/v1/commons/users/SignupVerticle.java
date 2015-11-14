@@ -19,9 +19,25 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
-import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.commons.settings.ActivityBusiness;
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
@@ -34,6 +50,7 @@ import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
+import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -49,19 +66,9 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.*;
 
 /**
  * The Class SignupVerticle.
@@ -102,14 +109,18 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      */
     public static final String FINALIZE_SIGNUP = Module.VERSION + ".commons.users.signup.finalize";
 
-    /**
-     * Parameter ID
-     */
+    /** Parameter ID */
     public static final String PARAM_ID = "id";
-    /**
-     * Parameter CODE
-     */
+    /** Parameter CODE */
     public static final String PARAM_CODE = "code";
+    /** Parameter USER */
+    public static final String PARAM_USER = "user";
+    /** Parameter STRUCTURE */
+    public static final String PARAM_STRUCTURE = "structure";
+    /** Parameter ACTIVITY */
+    public static final String PARAM_ACTIVITY = "activity";
+    /** Parameter Category Age */
+    public static final String PARAM_CATEGORY_AGE = "categoryAge";
 
     // MongoDB driver
     @Inject
@@ -491,8 +502,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     final JsonObject jsonReq = new JsonObject(req.getBody());
 
+                    utils.testMandatoryParams(jsonReq.toMap(), PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE);
+                    
                     // JSon User
-                    final JsonObject jsonUser = jsonReq.getObject("user");
+                    final JsonObject jsonUser = jsonReq.getObject(PARAM_USER);
                     jsonUser.removeField("activity");
 
                     if (jsonUser.containsField("nationality") && jsonUser.getObject("nationality") != null && jsonUser.getObject("nationality").containsField("alpha2")) {
@@ -506,15 +519,15 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
                     final String id = jsonUser.getString("_id");
                     // Code activation
-                    final String activationCode = jsonReq.getString("code");
+                    final String activationCode = jsonReq.getString(PARAM_CODE);
 
                     // JSon Activity
-                    final String activityId = jsonReq.getString("activity");
+                    final String activityId = jsonReq.getString(PARAM_ACTIVITY);
 
                     // JSon Structure
-                    JsonObject structure = jsonReq.getObject("structure");
-                    if (jsonReq.getObject("structure").containsField("_id")) {
-                        structure = mongo.getById(jsonReq.getObject("structure").getString("_id"), Structure.class);
+                    JsonObject structure = jsonReq.getObject(PARAM_STRUCTURE);
+                    if (jsonReq.getObject(PARAM_STRUCTURE).containsField("_id")) {
+                        structure = mongo.getById(jsonReq.getObject(PARAM_STRUCTURE).getString("_id"), Structure.class);
                     } else {
                         Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("country").getString("alpha2"));
                         structure.putObject("country", new JsonObject(Json.encode(country)));
@@ -522,6 +535,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         structure.putObject("activity", new JsonObject(Json.encode(activityBusiness.getActivityFromId(activityId))));
                     }
                     Structure structureObj = Json.decodeValue(structure.encode(), Structure.class);
+                    
+                    // JSon Category Age
+                    JsonObject categoryAge = jsonReq.getObject(PARAM_CATEGORY_AGE);
 
                     // Country
                     final String countryId = jsonReq.getString("country", "CNTR-250-FR-FRA");
@@ -562,23 +578,12 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         user.setName(userUpdate.getName());
                         user.setNationality(userUpdate.getNationality());
 
-                        RequestWrapper reqSB = new RequestWrapper();
-                        reqSB.setMethod(Constantes.PUT);
-                        final JsonObject params = new JsonObject();
-                        params.putObject(SB_SandBoxVerticle.PARAM_USER, jsonUser);
-                        params.putString(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activityId);
-                        reqSB.setBody(params.encode());
-
-//                        // Création de la sandbox
-//                        vertx.eventBus().send(SB_SandBoxVerticle.ADD, Json.encode(reqSB), new Handler<Message<JsonObject>>() {
-//                            @Override
-//                            public void handle(final Message<JsonObject> response) {
-//                            	//TODO erreur
-//                            	
-//                            	JsonObject body = new JsonObject(response.body().encode());
-//                            	container.logger().info(body);
-//                            }
-//                        });
+//                        RequestWrapper reqSB = new RequestWrapper();
+//                        reqSB.setMethod(Constantes.PUT);
+//                        final JsonObject params = new JsonObject();
+//                        params.putObject(SB_SandBoxVerticle.PARAM_USER, jsonUser);
+//                        params.putString(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activityId);
+//                        reqSB.setBody(params.encode());
 
                         // Création Sandbox
                         JsonObject sandbox = new JsonObject();
@@ -620,13 +625,14 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                         person.putObject("status", status);
 
-                        listPersonsId[0] = mongo.save(person);
+                        listPersonsId[0] = mongo.save(person, SB_Person.class);
                         // Joueurs
-                        for (int i = 1; i <= 14; i++) {
+                        for (int i = 1; i < 14; i++) {
+                        	person.removeField("_id");
                             person.putString("firstname", "Numero " + i);
                             person.putString("name", "Joueur");
                             person.getObject("status").putNumber("squadnumber", i);
-                            listPersonsId[i] = mongo.save(person);
+                            listPersonsId[i] = mongo.save(person, SB_Person.class);
                         }
 
                         // Création SandBoxCfg
@@ -682,14 +688,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         sandboxEffective.putString("label", "Defaut");
 
                         // SB_Effective -> categoryAge
-                        // TODO : trouver autre chose -> dès que liste des categoryAge OK, il sera proposé en IHM
-                        JsonObject categoryAge = new JsonObject();
-                        categoryAge.putString("code", "sen");
-                        categoryAge.putString("label", "Senior Gars");
-                        categoryAge.putNumber("ageMax", 150);
-                        categoryAge.putNumber("ageMin", 18);
-                        categoryAge.putString("genre", "Homme");
-                        categoryAge.putNumber("order", 1);
                         sandboxEffective.putObject("categoryAge", categoryAge);
 
                         // SB_Effective -> members
@@ -714,11 +712,12 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         team.setLabel("Mon équipe");
                         team.setEnable(true);
                         team.setAdversary(false);
-                        mongo.save(team);
+                        String homeTeamId = mongo.save(team);
 
                         // Equipe adversaire
                         team.setLabel("Equipe adverse");
                         team.setAdversary(true);
+                        team.setLinkTeamId(homeTeamId);
                         mongo.save(team);
 
                         user.setEffectiveDefault(sandboxEffectiveId);
