@@ -53,6 +53,8 @@ public class SB_Team {
 	private List<Tag> labels;
 	/** audit CRUD object */
 	private Audit audit;
+	/** Link team Id */
+	private String linkTeamId;
 
 	// Getters and Setters
 
@@ -198,6 +200,22 @@ public class SB_Team {
 	 */
 	public void setAdversary(boolean adversary) {
 		this.adversary = adversary;
+	}
+
+	/**
+	 * Returns the Home link team identifier.
+	 * @return String : home team Id
+	 */
+	public String getLinkTeamId() {
+		return linkTeamId;
+	}
+
+	/**
+	 * Defines theHome link team identifier.
+	 * @param linkTeamId (String) : home team id
+	 */
+	public void setLinkTeamId(String linkTeamId) {
+		this.linkTeamId = linkTeamId;
 	}
 
 }
