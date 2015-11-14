@@ -4,6 +4,7 @@
 ## 2015-11-14
 
 ## 2015-11-12
+> + Changelog (*par [Jerome ROUE](jerome.roue@gmail.com) à 09:30 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/abd421c7c97e47583a6e1664ebd4c13faa2c4a6b)*)
 > + Merge branch 'master' of git@gitlab.com:qaobee/qaobee-hive.git (*par [Jerome ROUE](jerome.roue@gmail.com) à 01:17 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/22328a522950be57391c09a9116da6cb6d776fff)*)
 > + merge (*par [Jerome ROUE](jerome.roue@gmail.com) à 01:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/b8f2dca725856dc34649c5fc89f4076335b13dcb)*)
 > + Jsonification des personnes KO : plus de creation, pb sur l'evol linkTeamId, ajout de la categoie age par selection utilisateur (*par [Jerome ROUE](jerome.roue@gmail.com) à 01:08 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/355c233f7a3ce7afce01633870d606e1b8e80893)*)
@@ -76,9 +77,9 @@
 
 ## 2015-10-22
 > + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:13 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/aa3dccdf75e132b6bd83b4296e41651a601a73f1)*)
-> + Correction test SignUp Autorisation '-' dans le login Correction FirstConnection à false qd validation effectuée (*par [Jerome ROUE](jerome.roue@gmail.com) à 11:02 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/106d0f2cfdb741d2820c48c58db3745c67e18af7)*)
 
 ## 2015-10-21
+> + Correction test SignUp Autorisation '-' dans le login Correction FirstConnection à false qd validation effectuée (*par [Jerome ROUE](jerome.roue@gmail.com) à 11:02 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/106d0f2cfdb741d2820c48c58db3745c67e18af7)*)
 > + bug fix signup (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4fe63475de5fb9099ac6776c81a667d3dd26f83e)*)
 > + bug fix signup (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:57 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/b0bcd83c96e6f43f70cf563ac1055bf04df96174)*)
 > + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 18:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/18d3c1b65f4b16e93c35590c816373f0025832b2)*)
