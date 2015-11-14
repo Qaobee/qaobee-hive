@@ -108,7 +108,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("get - Country");
+                container.logger().debug("get - Country");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -124,7 +124,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Country.class);
 
-                    container.logger().info("Country found : " + json.toString());
+                    container.logger().debug("Country found : " + json.toString());
 
                     message.reply(json.encode());
 
@@ -215,7 +215,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getList() - Country");
+                container.logger().debug("getList() - Country");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters

@@ -262,7 +262,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         json.removeField("junit");
                         json.removeField("captcha");
                         json.removeField("plan");
-                        container.logger().info(json.encode());
                         final User user = Json.decodeValue(json.encode(), User.class);
 
                         // Check user informations
@@ -322,7 +321,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                         if (!injunit) {
                                                             vertx.eventBus().publish("mailer.mod", emailReq);
                                                         } else {
-                                                            container.logger().info(emailReq);
+                                                            container.logger().debug(emailReq);
                                                         }
 
                                                         final JsonObject res = new JsonObject();
