@@ -21,8 +21,7 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
 import java.util.List;
 
 /**
- * Circle define an list of friend for an user.
- *
+ * Circle define a list of friends for an user.
  * @author cke
  */
 public class CircleFriend {

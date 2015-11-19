@@ -20,48 +20,42 @@ package com.qaobee.hive.business.model.commons.users.communication;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
- * The Class Notification.
+ * Bean that describes a notification push.
  *
  * @author xavier
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Notification implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5693811404344145826L;
-
-	/** The _id. */
+	/** Internal identifier */
 	private String _id;
-
-	/** The timestamp. */
+	/** Timestamp. */
 	private long timestamp;
-
-	/** The content. */
+	/** Content. */
 	private String content;
-
-	/** The from_user_id. */
+	/** From user _id. */
 	private String from_user_id;
-
-	/** The title. */
+	/** Title. */
 	private String title;
-
-	/** The read. */
+	/** Is read ? */
 	private boolean read;
 
 	/**
-	 * Gets the _id.
-	 *
-	 * @return the _id
+	 * Gets the internal identifier.
+	 * @return String : _id
 	 */
 	public String get_id() {
 		return _id;
 	}
 
 	/**
-	 * Sets the _id.
-	 *
-	 * @param _id
-	 *            the _id to set
+	 * Sets the internal identifier.
+	 * @param _id (String) : _id
 	 */
 	public void set_id(final String _id) {
 		this._id = _id;
@@ -69,8 +63,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Gets the timestamp.
-	 *
-	 * @return the timestamp
+	 * @return long : timestamp
 	 */
 	public long getTimestamp() {
 		return timestamp;
@@ -78,9 +71,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Sets the timestamp.
-	 *
-	 * @param timestamp
-	 *            the new timestamp
+	 * @param timestamp (long) : timestamp
 	 */
 	public void setTimestamp(final long timestamp) {
 		this.timestamp = timestamp;
@@ -88,8 +79,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Gets the content.
-	 *
-	 * @return the content
+	 * @return String : content
 	 */
 	public String getContent() {
 		return content;
@@ -97,47 +87,39 @@ public class Notification implements Serializable {
 
 	/**
 	 * Sets the content.
-	 *
-	 * @param content
-	 *            the new content
+	 * @param content (String) : content
 	 */
 	public void setContent(final String content) {
 		this.content = content;
 	}
 
 	/**
-	 * Gets the from_user_id.
-	 *
-	 * @return the from_user_id
+	 * Gets the "from" user _id.
+	 * @return String : from user _id
 	 */
 	public String getFrom_user_id() {
 		return from_user_id;
 	}
 
 	/**
-	 * Sets the from_user_id.
-	 *
-	 * @param from_user_id
-	 *            the new from_user_id
+	 * Sets the "from" user _id.
+	 * @param from_user_id (String) : from user _id
 	 */
 	public void setFrom_user_id(final String from_user_id) {
 		this.from_user_id = from_user_id;
 	}
 
 	/**
-	 * Checks if is the read.
-	 *
-	 * @return the read
+	 * Checks if notification is read.
+	 * @return boolean : true if read
 	 */
 	public boolean isRead() {
 		return read;
 	}
 
 	/**
-	 * Sets the read.
-	 *
-	 * @param read
-	 *            the new read
+	 * Sets if notification is read.
+	 * @param read (boolean) : true if read
 	 */
 	public void setRead(final boolean read) {
 		this.read = read;
@@ -145,8 +127,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Gets the title.
-	 *
-	 * @return the title
+	 * @return String : title
 	 */
 	public String getTitle() {
 		return title;
@@ -154,9 +135,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Sets the title.
-	 *
-	 * @param title
-	 *            the new title
+	 * @param title (String) : title
 	 */
 	public void setTitle(final String title) {
 		this.title = title;
