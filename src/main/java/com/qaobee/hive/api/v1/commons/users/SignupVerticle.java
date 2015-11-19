@@ -572,7 +572,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         user.setContact(userUpdate.getContact());
                         // TODO : revoir
                         user.setCountry(userUpdate.getNationality());
-                        // user.setEffectiveDefault(null);
                         user.setFirstname(userUpdate.getFirstname());
                         user.setGender(userUpdate.getGender());
                         user.setName(userUpdate.getName());
@@ -696,6 +695,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         }
                         sandboxEffective.putArray("members", listMembers);
                         String sandboxEffectiveId = mongo.save(sandboxEffective, SB_Effective.class);
+                        user.setEffectiveDefault(sandboxEffectiveId);
 
                         // Création SB_Teams
                         // My team
@@ -712,8 +712,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         team.setAdversary(true);
                         team.setLinkTeamId(homeTeamId);
                         mongo.save(team);
+                        
+                        // MàJ du plan FREEMIUM
+                        user.getAccount().getListPlan().get(0).setPaidDate(System.currentTimeMillis());
+                        user.getAccount().getListPlan().get(0).setStatus("paid");;
 
-                        user.setEffectiveDefault(sandboxEffectiveId);
                         mongo.save(user);
                         message.reply(Json.encode(user));
                         utils.sendStatus(true, message);
