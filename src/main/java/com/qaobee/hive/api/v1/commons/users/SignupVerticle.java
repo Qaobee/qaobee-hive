@@ -19,23 +19,6 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.business.commons.settings.ActivityBusiness;
@@ -66,9 +49,19 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.*;
 
 /**
  * The Class SignupVerticle.
@@ -247,19 +240,20 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     final JsonObject json = new JsonObject(req.getBody());
                     final Plan plan = Json.decodeValue(json.getObject("plan").encode(), Plan.class);
 
-                    final boolean injunit = json.getBoolean("junit", false);
+                    final boolean bypassCaptcha = json.getBoolean("junit", json.getBoolean("mobile", false));
                     final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
                     reCaptcha.setPrivateKey(Params.getString("recaptcha.pkey"));
 
                     ReCaptchaResponse reCaptchaResponse = null;
-                    if (!injunit) {
+                    if (!bypassCaptcha) {
                         reCaptchaResponse = reCaptcha
                                 .checkAnswer(Params.getString("recaptcha.site"), json.getObject("captcha").getString("challenge"), json.getObject("captcha").getString("response"));
                     }
-                    if (!injunit && !reCaptchaResponse.isValid()) {
+                    if (!bypassCaptcha && !reCaptchaResponse.isValid()) {
                         utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
                     } else {
                         json.removeField("junit");
+                        json.removeField("mobile");
                         json.removeField("captcha");
                         json.removeField("plan");
 
@@ -319,10 +313,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                         emailReq.putString("body", tplRes);
 
                                                         // Envoi du mail si pas en test jUnit
-                                                        if (!injunit) {
-                                                            vertx.eventBus().publish("mailer.mod", emailReq);
-                                                        } else {
+                                                        if (json.getBoolean("junit", false)) {
                                                             container.logger().debug(emailReq);
+                                                        } else {
+                                                            vertx.eventBus().publish("mailer.mod", emailReq);
                                                         }
 
                                                         final JsonObject res = new JsonObject();
