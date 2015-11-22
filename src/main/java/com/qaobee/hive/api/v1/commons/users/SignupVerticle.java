@@ -607,7 +607,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         status.putNumber("height", 0);
                         status.putString("laterality", "right-handed");
                         status.putString("stateForm", "good");
-                        status.putString("positionType", "");
+                      //  status.putString("positionType", "");
 
                         person.putObject("status", status);
 
