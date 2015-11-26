@@ -48,6 +48,8 @@ public final class MailUtilsImpl implements MailUtils {
         json.putString("message", Messages.getString("mail.account.validation.line.2", locale));
         json.putString("activationlink", Params.getString("site.url") + Params.getString("mail.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationCode());
         json.putString("sig", Messages.getString("mail.account.validation.sig", locale, Params.getString("site.url")));
+        json.putString("assistant", Messages.getString("mail.footer.assistant", locale));
+        json.putString("stayConnected", Messages.getString("mail.footer.stayConnected", locale));
         return json;
     }
 
@@ -68,6 +70,8 @@ public final class MailUtilsImpl implements MailUtils {
         json.putString("message", Messages.getString("mail.account.newpasswd.line.2", locale));
         json.putString("activationlink", Params.getString("site.url") + Params.getString("newpasswd.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationPasswd());
         json.putString("sig", Messages.getString("mail.account.validation.sig", locale, Params.getString("site.url")));
+        json.putString("assistant", Messages.getString("mail.footer.assistant", locale));
+        json.putString("stayConnected", Messages.getString("mail.footer.stayConnected", locale));
         return json;
     }
 
@@ -88,6 +92,8 @@ public final class MailUtilsImpl implements MailUtils {
         json.putString("subheader", "");
         json.putString("message", Messages.getString("mail.payment.line.2", locale, planItem.getAmountPaid()));
         json.putString("sig", Messages.getString("mail.account.validation.sig", locale, Params.getString("site.url")));
+        json.putString("assistant", Messages.getString("mail.footer.assistant", locale));
+        json.putString("stayConnected", Messages.getString("mail.footer.stayConnected", locale));
         return json;
     }
 
@@ -108,6 +114,8 @@ public final class MailUtilsImpl implements MailUtils {
         json.putString("subheader", "");
         json.putString("message", Messages.getString("mail.refund.line.2", locale, planItem.getAmountPaid()));
         json.putString("sig", Messages.getString("mail.account.validation.sig", locale, Params.getString("site.url")));
+        json.putString("assistant", Messages.getString("mail.footer.assistant", locale));
+        json.putString("stayConnected", Messages.getString("mail.footer.stayConnected", locale));
         return json;
     }
 }
