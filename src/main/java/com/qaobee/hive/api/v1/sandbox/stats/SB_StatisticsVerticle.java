@@ -478,7 +478,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     }
 
                     BulkWriteResult resultBulk = bulk.execute();
-                    message.reply(resultBulk.getInsertedCount() + "");
+                    message.reply(new JsonObject().putNumber("count", resultBulk.getInsertedCount()).toString());
 
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
