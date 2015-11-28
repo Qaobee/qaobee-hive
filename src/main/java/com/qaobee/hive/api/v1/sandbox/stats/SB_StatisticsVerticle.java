@@ -29,6 +29,7 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+
 import org.apache.commons.lang3.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
@@ -38,6 +39,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+
 import java.util.*;
 
 /**
@@ -63,7 +65,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
     /** List of Indicator code */
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
     /** Value */
-    public static final String PARAM_VALUE = "value";
+    public static final String PARAM_VALUES = "values";
     /** List of parameters for the indicator */
     public static final String PARAM_LIST_PARAMETERS = "listParams";
     /** List of owners */
@@ -139,19 +141,6 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     // List of owner
                     JsonArray listOwners = params.getArray(PARAM_LIST_OWNERS);
 
-                    // List of parameter values
-                    Map<String, String> mapParams = null;
-                    if (params.containsField(PARAM_LIST_PARAMETERS)) {
-                        mapParams = new HashMap<>();
-                        String[] tabString;
-                        for (Object param : params.getArray(PARAM_LIST_PARAMETERS)) {
-                            tabString = ((String) param).split(":");
-                            if (tabString.length == 2) {
-                                mapParams.put(tabString[0], tabString[1]);
-                            }
-                        }
-                    }
-
                     // Dates
                     Long startDate = params.getLong(PARAM_START_DATE);
                     Long endDate = params.getLong(PARAM_END_DATE);
@@ -172,14 +161,13 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     // - owner
                     dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
                     dbObjectParent.put("owner", dbObjectChild);
-
-                    // - listParams
-                    if (mapParams != null && mapParams.keySet().size() > 0) {
-                        for (String key : mapParams.keySet()) {
-                            dbObjectParent.put(key, mapParams.get(key));
-                        }
+                    
+                    // - values
+                    if (params.containsField(PARAM_VALUES)) {
+                        dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_VALUES));
+                        dbObjectParent.put("value", dbObjectChild);
                     }
-
+                    
                     // - timer
                     DBObject o = new BasicDBObject();
                     o.put("$gte", startDate);
@@ -308,18 +296,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
                     JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
 
-                    // List of parameter values
-                    Map<String, String> mapParams = null;
-                    if (params.containsField(PARAM_LIST_PARAMETERS)) {
-                        mapParams = new HashMap<>();
-                        String[] tabString;
-                        for (Object param : params.getArray(PARAM_LIST_PARAMETERS)) {
-                            tabString = ((String) param).split(":");
-                            if (tabString.length == 2) {
-                                mapParams.put(tabString[0], tabString[1]);
-                            }
-                        }
-                    }
+                    
 
                     JsonArray listOwners = params.getArray(PARAM_LIST_OWNERS);
 
@@ -337,12 +314,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
                     dbObjectParent.put("code", dbObjectChild);
 
-                    // - listParams
-                    if (mapParams != null && mapParams.keySet().size() > 0) {
-                        for (String key : mapParams.keySet()) {
-                            dbObjectParent.put(key, mapParams.get(key));
-                        }
-                    }
+                    
 
                     // - owner
                     dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
@@ -371,10 +343,10 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     } else {
                         pipelineAggregation = Arrays.asList(match, sort);
                     }
-
+                    
                     container.logger().debug("getListDetailValue : " + pipelineAggregation.toString());
 
-                    final JsonArray resultJSon = mongo.aggregate("timer", pipelineAggregation, SB_Stats.class);
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
 
                     container.logger().debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());

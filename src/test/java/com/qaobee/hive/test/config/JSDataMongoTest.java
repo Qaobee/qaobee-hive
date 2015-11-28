@@ -30,6 +30,7 @@ public interface JSDataMongoTest {
     String DATA_PERSON_HAND = "data_SB_person_Hand_CESSON.js";
     String DATA_STRUCTURE = "data_structures.js";
     String DATA_USERS = "data_users.js";
+    String DATA_USER_QAOBEE = "data_users_qaobee.js";
     String DATA_SANDBOXES_HAND = "data_SB_sandbox_Hand.js";
 
     /* Training */
@@ -38,7 +39,8 @@ public interface JSDataMongoTest {
     String DATA_EXERCISE = "data_SB_training_exercise.js";
     String DATA_THEME = "data_SB_training_theme.js";
     
-    String DATA_USER_QAOBEE = "data_users_qaobee.js";
+    /* Stats */
+    String DATA_STAT_HAND = "data_SB_Stats_Hand2.js";
 
     /* SETTINGS */
     String SETTINGS_ACTIVITY = "settings_activity.js";

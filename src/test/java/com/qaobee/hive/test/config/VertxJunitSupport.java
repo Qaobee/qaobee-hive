@@ -394,8 +394,6 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
                                 sb = new StringBuilder(replace);
                             }
                             try {
-                                System.out.println("POPULATE --------------> : scriptMongo : " + scriptMongo);
-                                System.out.println("POPULATE --------------> : insertData : " + sb.toString());
                                 mongo.getDb().doEval(sb.toString());
                             } catch (MongoException e) {
                                 System.out.println(sb.toString());

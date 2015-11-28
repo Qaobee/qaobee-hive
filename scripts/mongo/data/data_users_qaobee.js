@@ -1490,6 +1490,32 @@ db.SB_Event.insert({
     }
 });
 
+b.SB_Event.insert({
+    "_id" : "35d65151-2fe5-48e1-a219-8534412b6bca",
+    "activityId" : "ACT-HAND",
+    "owner" : {
+        "sandboxId" : "561ec20b409937a6b439d4e9",
+        "effectiveId" : "561ec4d0409937a6b439d4ea",
+        "teamId" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
+    },
+    "address" : {},
+    "link" : {
+        "type" : "championship"
+    },
+    "label" : "Journée 10",
+    "startDate" : NumberLong(1449934200000),
+    "participants" : {
+        "teamHome" : {
+            "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
+            "label" : "Locmaria Hb 1"
+        },
+        "teamVisitor" : {
+            "id" : "562ba335b70fd108e3753962",
+            "label" : "Stiren Languidic"
+        }
+    }
+});
+
 /* 
  * Alimentation collection SB_Collecte : CKE
  */
