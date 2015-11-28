@@ -116,7 +116,7 @@ public class ActivityTest extends VertxJunitSupport {
 		req.setParams(params);
 
 		final String reply = sendonBus(ActivityVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals(5, new JsonArray(reply).size());
+		Assert.assertEquals(26, new JsonArray(reply).size());
 	}
 	
 	/**
