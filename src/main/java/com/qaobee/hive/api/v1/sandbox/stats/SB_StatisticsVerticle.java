@@ -67,7 +67,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
     /** Value */
     public static final String PARAM_VALUES = "values";
     /** List of parameters for the indicator */
-    public static final String PARAM_LIST_PARAMETERS = "listParams";
+    public static final String PARAM_LIST_SHOOTSEQID = "listShootSeqId";
     /** List of owners */
     public static final String PARAM_LIST_OWNERS = "listOwners";
     /** Start date */
@@ -168,6 +168,13 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                         dbObjectParent.put("value", dbObjectChild);
                     }
                     
+                    // - shootSeqId
+                    if (params.containsField(PARAM_LIST_SHOOTSEQID)) {
+                        dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_LIST_SHOOTSEQID));
+                        dbObjectParent.put("shootSeqId", dbObjectChild);
+                    }
+                    
+                    
                     // - timer
                     DBObject o = new BasicDBObject();
                     o.put("$gte", startDate);
@@ -176,7 +183,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
                     match = new BasicDBObject("$match", dbObjectParent);
 
-					/* *** $PROJECT section *** */
+					/* *** $PROJECT section *** 
                     dbObjectParent = new BasicDBObject();
                     dbObjectParent.put("owner", "$owner");
                     dbObjectParent.put("code", "$code");
@@ -184,7 +191,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     dbObjectParent.put("value", "$value");
 
                     project = new BasicDBObject("$project", dbObjectParent);
-
+                    */
 					/* *** $GROUP section *** */
                     dbObjectParent = new BasicDBObject();
                     dbObjectChild = new BasicDBObject();
@@ -238,9 +245,9 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     if (params.containsField(PARAM_LIMIT_RESULT)) {
                         int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
                         limit = new BasicDBObject("$limit", limitNumber);
-                        pipelineAggregation = Arrays.asList(match, project, group, sort, limit);
+                        pipelineAggregation = Arrays.asList(match, group, sort, limit);
                     } else {
-                        pipelineAggregation = Arrays.asList(match, project, group, sort);
+                        pipelineAggregation = Arrays.asList(match, group, sort);
                     }
 
                     container.logger().debug("getStatGroupBy : " + pipelineAggregation.toString());
@@ -314,11 +321,15 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
                     dbObjectParent.put("code", dbObjectChild);
 
-                    
-
                     // - owner
                     dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
                     dbObjectParent.put("owner", dbObjectChild);
+                    
+                    // - values
+                    if (params.containsField(PARAM_VALUES)) {
+                        dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_VALUES));
+                        dbObjectParent.put("value", dbObjectChild);
+                    }
 
                     // - timer
                     DBObject o = new BasicDBObject();
