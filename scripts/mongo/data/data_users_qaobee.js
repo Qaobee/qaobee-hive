@@ -1490,7 +1490,7 @@ db.SB_Event.insert({
     }
 });
 
-b.SB_Event.insert({
+db.SB_Event.insert({
     "_id" : "35d65151-2fe5-48e1-a219-8534412b6bca",
     "activityId" : "ACT-HAND",
     "owner" : {
