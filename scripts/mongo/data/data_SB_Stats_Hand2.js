@@ -11345,7 +11345,7 @@ db.SB_Stats.insert({
     "activityId" : "ACT-HAND",
     "attack" : true,
     "chrono" : 142,
-    "code" : "passOk",
+    "code" : "yellowCard",
     "eventId" : "35d65151-2fe5-48e1-a219-8534412b6bca",
     "mRowid" : 133,
     "owner" : [ 

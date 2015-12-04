@@ -1579,6 +1579,18 @@ db.SB_Collecte.insert({"_id" : "563dc83b95b7575a96ee1dd6",
         "userId" : "b50b3325-fdbd-41bf-bda4-81c827982001",
         "indicators" : ["all"]
     }]
+    ,
+    "parametersGame": {
+        "nbMaxPlayers" : 12,
+        "nbMinPlayers" : 4,
+        "nbPeriod" : 2,
+        "periodDuration" : 1500,
+        "nbTimeout" : 3,
+        "timeoutDuration" : 60,
+        "yellowCardMax": 1,
+        "exclusionTempo": 3,
+        "halfTimeDuration": 600
+    }
 });
 
 /* 
@@ -1638,7 +1650,18 @@ db.SB_Collecte.insert({"_id" : "56410c65446d5807c2732e9d",
     "observers" : [{
         "userId" : "b50b3325-fdbd-41bf-bda4-81c827982001",
         "indicators" : ["all"]
-    }]
+    }],
+    "parametersGame": {
+        "nbMaxPlayers" : 12,
+        "nbMinPlayers" : 4,
+        "nbPeriod" : 2,
+        "periodDuration" : 1500,
+        "nbTimeout" : 3,
+        "timeoutDuration" : 60,
+        "yellowCardMax": 1,
+        "exclusionTempo": 3,
+        "halfTimeDuration": 600
+    }
 });
 
 /* 
@@ -1690,7 +1713,18 @@ db.SB_Collecte.insert({"_id" : "565e0f0dbcda594d193e24db",
     "observers" : [{
         "userId" : "b50b3325-fdbd-41bf-bda4-81c827982001",
         "indicators" : ["all"]
-    }]
+    }],
+    "parametersGame": {
+        "nbMaxPlayers" : 12,
+        "nbMinPlayers" : 4,
+        "nbPeriod" : 2,
+        "periodDuration" : 1500,
+        "nbTimeout" : 3,
+        "timeoutDuration" : 60,
+        "yellowCardMax": 1,
+        "exclusionTempo": 3,
+        "halfTimeDuration": 600
+    }
 });
 
 /*
