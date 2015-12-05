@@ -4,8 +4,7 @@
   },
   "pdf": {
     "css": [
-      "web/css/flatty.css",
-      "web/css/qaobee.css"
+
     ]
   },
   "payplug": {

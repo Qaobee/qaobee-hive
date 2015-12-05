@@ -32,6 +32,7 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
@@ -48,11 +49,6 @@ import java.text.DateFormat;
  * The Class ProfileVerticle.
  *
  * @author Xavier MARIN
- *         <ul>
- *         <li>resthandler.prive.profile : Person update</li>
- *         <li>resthandler.prive.profile.pdf : Generate a PDF from the current profile</li>
- *         <li>resthandler.prive.profile.billpdf : Generate a PDF from the bill of the current profile</li>
- *         </ul>
  */
 @DeployableVerticle
 public class ProfileVerticle extends AbstractGuiceVerticle {
@@ -146,7 +142,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Generate a PDF from the current profile
-         * @api {get} /rest/prive/profile/pdf resthandler.prive.profile.pdf
+         * @api {get} /api/1/commons/users/profile/pdf Generate a PDF from the current profile
          * @apiName generatePDFHandler
          * @apiGroup ProfileVerticle
          * @apiSuccess {Object} PDF { "contenttype" : "application/pdf", 'fileserve" : "path to local pdf file" }
@@ -161,7 +157,9 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                     final User user = req.getUser();
 
                     final JsonObject juser = new JsonObject(Json.encode(user));
-                    juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
+                    if(StringUtils.isNoneBlank(user.getAvatar())) {
+                        juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
+                    }
                     juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
                     final JsonObject pdfReq = new JsonObject();
                     pdfReq.putString(PDFVerticle.FILE_NAME, user.getAccount().getLogin());
@@ -178,7 +176,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
 
         /**
          * @apiDescription Generate a PDF from the bill of the current profile
-         * @api {get} /rest/prive/profile/billpdf resthandler.prive.profile.billpdf
+         * @api {get} /api/1/commons/users/profile/billpdf Generate a PDF from the bill of the current profile
          * @apiName generateBillPDFHandler
          * @apiGroup ProfileVerticle
          * @apiParam {String} plan plan type

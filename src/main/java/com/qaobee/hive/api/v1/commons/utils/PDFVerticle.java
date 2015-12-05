@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
  *
  * @author Xavier MARIN
  */
-@DeployableVerticle(config = "pdf")
+@DeployableVerticle(config = "pdf", isWorker = true)
 public class PDFVerticle extends AbstractGuiceVerticle {
 
     /**
