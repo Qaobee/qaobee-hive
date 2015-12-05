@@ -159,6 +159,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
                     final User user = req.getUser();
 
                     final JsonObject juser = new JsonObject();
@@ -188,6 +189,9 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message,e);
                 }
             }
         };
@@ -207,6 +211,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
                     final User user = req.getUser();
                     Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(req.getParams().get("id").get(0)));
 
@@ -242,6 +247,9 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message,e);
                 }
             }
         };
