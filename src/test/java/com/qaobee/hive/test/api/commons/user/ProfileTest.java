@@ -8,10 +8,13 @@ import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by b3605 on 04/12/15.
@@ -64,7 +67,6 @@ public class ProfileTest extends VertxJunitSupport {
      * Generate profile pdf test.
      */
     @Test
-    @Ignore
     public void generateProfilePDFTest() {
         User u = generateLoggedUser();
         final RequestWrapper req = new RequestWrapper();
@@ -72,6 +74,24 @@ public class ProfileTest extends VertxJunitSupport {
         req.setMethod(Constantes.GET);
         req.setUser(u);
         final String reply = sendonBus(ProfileVerticle.GENERATE_PDF, req);
+        JsonObject result = new JsonObject(reply);
+        Assert.assertTrue(result.getString(Main.FILE_SERVE), result.containsField(Main.FILE_SERVE));
+    }
+
+    /**
+     * Generate billing pdf test.
+     */
+    @Test
+    public void generateBillingPDFTest() {
+        User u = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(u);
+        final HashMap<String, List<String>> params = new HashMap<>();
+        params.put("id", Collections.singletonList("0"));
+        req.setParams(params);
+        final String reply = sendonBus(ProfileVerticle.GENERATE_BILL_PDF, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue(result.getString(Main.FILE_SERVE), result.containsField(Main.FILE_SERVE));
     }

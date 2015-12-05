@@ -1,11 +1,10 @@
 /*************************************************************************
- *
  * Qaobee
  * __________________
- *
+ * <p/>
  * [2014] Qaobee
  * All Rights Reserved.
- *
+ * <p/>
  * NOTICE: All information contained here is, and remains
  * the property of Qaobee and its suppliers,
  * if any. The intellectual and technical concepts contained
@@ -18,12 +17,14 @@
  */
 package com.qaobee.hive.api.v1.commons.utils;
 
-import com.lowagie.text.DocumentException;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.tools.MediaReplacedElementFactory;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
@@ -33,19 +34,14 @@ import org.vertx.java.core.json.JsonObject;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.inject.Inject;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.*;
 
 /**
  * The Class PDFVerticle.
  *
  * @author Xavier MARIN
  */
-@DeployableVerticle(config = "pdf", isWorker = true)
+@DeployableVerticle(isWorker = true)
 public class PDFVerticle extends AbstractGuiceVerticle {
 
     /**
@@ -81,57 +77,26 @@ public class PDFVerticle extends AbstractGuiceVerticle {
      * The Constant TEMPLATE_PATH.
      */
     private static final String TEMPLATE_PATH = "pdfTemplates/";
-
-    /**
-     * The token pattern.
-     */
-    private static Pattern tokenPattern = Pattern.compile("\\{([^}]*)\\}");
     @Inject
     private Utils utils;
+    /**
+     * The Cfg.
+     */
+    Configuration cfg = new Configuration();
 
     /**
      * Process.
      *
-     * @param template
-     *            la chaîne de caractère du template
-     * @param params
-     *            l'objet d'allimentation
+     * @param templatePath le path du template
+     * @param params       l'objet d'allimentation
      * @return le template allimenté
      */
-    private String process(final String template, final JsonObject params) {
-        final StringBuffer sb = new StringBuffer();
-        final Matcher myMatcher = tokenPattern.matcher(template);
-        while (myMatcher.find()) {
-            final String field = myMatcher.group(1);
-            myMatcher.appendReplacement(sb, "");
-            sb.append(doParameter(field, params));
-        }
-        myMatcher.appendTail(sb);
-        return sb.toString();
-    }
-
-    /**
-     * Do parameter.
-     *
-     * @param field
-     *            le champ
-     * @param params
-     *            l'objet d'allimentation
-     * @return le champ allimenté
-     */
-    private String doParameter(final String field, final JsonObject params) {
-        if (params.containsField(field)) {
-            final Object o = params.getValue(field);
-            if (o instanceof String) {
-                return params.getString(field);
-            } else if (o instanceof Number) {
-                return String.valueOf(params.getNumber(field));
-            } else {
-                return field;
-            }
-        } else {
-            return field;
-        }
+    private String process(final String templatePath, final JsonObject params) throws IOException, TemplateException {
+        StringWriter out = new StringWriter();
+        cfg.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, TEMPLATE_PATH )));
+        Template template = cfg.getTemplate(templatePath);
+        template.process(params.toMap(), out);
+        return out.getBuffer().toString();
     }
 
     /*
@@ -161,8 +126,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
                         cssStr.append(FileUtils.readFileToString(new File(PathAdjuster.adjust((VertxInternal) vertx, (String) c))));
                     }
                     data.putString("css", cssStr.toString());
-                    final File f = new File(PathAdjuster.adjust((VertxInternal) vertx, TEMPLATE_PATH + message.body().getString(TEMPLATE)));
-                    final String result = process(FileUtils.readFileToString(f), data);
+                    final String result = process(message.body().getString(TEMPLATE), data);
                     final File temp = new File(System.getProperty("java.io.tmpdir") + "/" + message.body().getString(FILE_NAME) + ".pdf");
                     if (temp.exists()) {
                         boolean res = temp.delete();
@@ -177,7 +141,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
                     final JsonObject res = new JsonObject();
                     res.putString(PDF, temp.getAbsolutePath());
                     message.reply(res);
-                } catch (IOException | DocumentException e) {
+                } catch (Exception e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
@@ -185,6 +149,6 @@ public class PDFVerticle extends AbstractGuiceVerticle {
         };
 
         // Handlers declaration
-        vertx.eventBus().registerHandler(PDF, generatePDFHandler);
+        vertx.eventBus().registerHandler(GENERATE_PDF, generatePDFHandler);
     }
 }
