@@ -8,6 +8,7 @@ import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
@@ -63,6 +64,7 @@ public class ProfileTest extends VertxJunitSupport {
      * Generate profile pdf test.
      */
     @Test
+    @Ignore
     public void generateProfilePDFTest() {
         User u = generateLoggedUser();
         final RequestWrapper req = new RequestWrapper();
