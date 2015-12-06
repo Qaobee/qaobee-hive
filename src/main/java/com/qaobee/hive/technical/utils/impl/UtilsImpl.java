@@ -289,6 +289,7 @@ public class UtilsImpl implements Utils {
     @Override
     public User isUserLogged(RequestWrapper request) throws QaobeeException {
         String token = "";
+        if(request.getUser() != null) return request.getUser();
         if (request.getHeaders() != null && request.getHeaders().containsKey("token")) {
             token = request.getHeaders().get("token").get(0);
         }
