@@ -20,7 +20,7 @@
         cp build/libs/hive-0.1.zip ../qaobee-swarn-dist/dist/swarn-mod.zip
         cd ../qaobee-swarn-dist
         git commit -m 'dist' dist/swarn-mod.zip
-        rhc app-tidy hive
+        rhc app-tidy -l contatc@qaobee.com hive
         git push origin master
         cd ../qaobee-hive
         ./scripts/changelog.sh > CHANGELOG.md
