@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+docker run -t --rm -i \
+-e OPENSHIFT_MONGODB_DB_HOST=192.168.60.45 \
+-e OPENSHIFT_MONGODB_DB_PORT=27017 \
+-e OPENSHIFT_MONGODB_DB_PASSWORD=hive \
+-e OPENSHIFT_MONGODB_DB_USERNAME=hive \
+-p 8080:8080 \
+ qaobee-hive:0.0.1
