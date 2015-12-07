@@ -1,5 +1,7 @@
 {
-  "cors": {
+  "runtime" : {
+    "version" : 1
+  },"cors": {
     "enabled": true
   },
   "pdf": {
@@ -14,7 +16,7 @@
   "mongo.persistor": {
     "address": "mongo.db",
     "pool_size": 10,
-    "db_name": "swarn",
+    "db_name": "hive",
     "read_preference": "nearest"
   },
   "mailer.mod": {
