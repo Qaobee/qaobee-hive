@@ -1,19 +1,31 @@
 # CHANGELOG
 ---
 
-## 2015-12-06
+## 2015-12-10
+> + Asana-69246817945888 : QaoBee en Qaobee (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:25 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/93cda250afdfc6591283f52ff1dbdd8c875d2bc0)*)
 
-## 2015-12-05
+## 2015-12-08
+
+## 2015-12-07
+> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e97fe5a6d00e7f1ac8d29082486ac1d30ce115a0)*)
+> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:30 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/27bd48d64c79f328841bc2bd22d2df0f04d4685c)*)
+> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d813f17280c4a20840c7dbcbc62f1e6ccf7d4354)*)
+> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:11 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ded6a8481021f4730fb197c3f3882ef99602faa1)*)
+
+## 2015-12-06
+> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 01:18 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0b5c2b5dd69b9467d0f34eb7cf15a29207408aed)*)
 > + Bug fix test logged user (*par [Xavier MARIN](marin.xavier@gmail.com) à 01:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d1dacdbd50444e41b52c42f597af88a587fb4103)*)
 > + Modification du templating PDF et adaptation sur factures et profil (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:54 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e58bb8ee27a95cb0e736162be5b00fa53451066f)*)
+
+## 2015-12-05
 > + Modification du templating PDF et adaptation sur factures et profil (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:40 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/85f04a6d597ec57589088d51f09cfa1a8c1925af)*)
 > + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 14:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ddd58b6db98d71f12380fba8c34d188bf464a5a1)*)
 > + test foireux mis en stand-by (*par [Xavier MARIN](marin.xavier@gmail.com) à 14:10 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e8dd1bf3d08bef67adb86e245e8a735d1315e947)*)
 > + Gestion du profil utilisateur (*par [Xavier MARIN](marin.xavier@gmail.com) à 13:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3ad53ab26038dcda07fe78a28d26ac115d60ab34)*)
 > + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 13:56 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f135ab5be25a5176e3a24ea4831a282d14acd15a)*)
+> + Divers (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/08ce8826ea3881e21722d46ce5ad1d3690737549)*)
 
 ## 2015-12-04
-> + Divers (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/08ce8826ea3881e21722d46ce5ad1d3690737549)*)
 
 ## 2015-12-03
 > + Gestion du profil utilisateur (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:39 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/09f41885ae16ab4e9a96033ed6eff80a56b4f1e3)*)
@@ -52,14 +64,14 @@
 ## 2015-11-14
 > + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 10:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ed1dcbeb91952bba03ffab0a778715cee0e07e55)*)
 > + Changelog (*par [Jerome ROUE](jerome.roue@gmail.com) à 09:30 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/abd421c7c97e47583a6e1664ebd4c13faa2c4a6b)*)
-
-## 2015-11-12
 > + Merge branch 'master' of git@gitlab.com:qaobee/qaobee-hive.git (*par [Jerome ROUE](jerome.roue@gmail.com) à 01:17 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/22328a522950be57391c09a9116da6cb6d776fff)*)
 > + merge (*par [Jerome ROUE](jerome.roue@gmail.com) à 01:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/b8f2dca725856dc34649c5fc89f4076335b13dcb)*)
 > + Jsonification des personnes KO : plus de creation, pb sur l'evol linkTeamId, ajout de la categoie age par selection utilisateur (*par [Jerome ROUE](jerome.roue@gmail.com) à 01:08 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/355c233f7a3ce7afce01633870d606e1b8e80893)*)
 > + Evolutions ecrans pour récupérer categorie age, et suppression des donnees lors de la deserialisation (*par [Jerome ROUE](jerome.roue@gmail.com) à 01:07 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6757fcd982ab5cd7f0d69f4a21c494fa7c9df4b2)*)
 > + Ajout linkTeamId (*par [Jerome ROUE](jerome.roue@gmail.com) à 01:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ede76fb29eb0655a3120f88fe2bfe3e71a6b95aa)*)
 > + Ajout methode de récupération d'un pays à partir du alpha-2 de Google pour activite (*par [Jerome ROUE](jerome.roue@gmail.com) à 01:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/03397ff10bb365daa8b340f8411b9bbcf2f43327)*)
+
+## 2015-11-12
 > + Suppression log.info (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:52 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/fe6d2227e9e4a2640884ee1569e9cd811cf78837)*)
 > + Bug + suppression Log.info (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:51 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3405ddeddd6531d40024b2c0c73723633046ebfe)*)
 
@@ -77,20 +89,11 @@
 
 ## 2015-11-04
 > + Merge branch 'master' of git@gitlab.com:qaobee/qaobee-hive.git (*par [Jerome ROUE](jerome.roue@gmail.com) à 22:43 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6178c7655fabf6968a04accb06f179ebd2081b85)*)
-
-## 2015-11-02
 > + Utilisation de Country ou String ? (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:57 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/318a16088712d6e1ef4ea7ef114601c0354206e9)*)
 > + Javadoc (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:47 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/c72c49033c0e168992e6a2309d969e667ee4012f)*)
+
+## 2015-11-02
 > + Stats Match Ploemeur (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4c90d68a8b078b20aad2c0d78a588fcd9aaed7bf)*)
 > + Suppression data foot (*par [Christophe Kervella](ch.kervella@gmail.com) à 11:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/745cb4721d559b50502d63cc63eed98916e6f2aa)*)
 > + Merge remote-tracking branch 'origin/master' (*par [Christophe Kervella](ch.kervella@gmail.com) à 10:13 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bb50b708caebb030dc6a3ed6c675cf5bc8b22ca5)*)
 > + Stats Hand (*par [Christophe Kervella](ch.kervella@gmail.com) à 10:13 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/9003df1e6d8dc30e0d91b50afca4940a811939be)*)
-
-## 2015-10-31
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/50796f95f423bfba2dd97e7bcdc8978bfe294978)*)
-
-## 2015-10-29
-
-## 2015-10-27
-> + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:22 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4f4c5ef90467063ab044e263944297e70de70a1f)*)
-> + JSonification joueur (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:22 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/011fa86c4c787da3d8fd7accd196a15e28dfa227)*)
