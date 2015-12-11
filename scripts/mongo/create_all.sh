@@ -16,7 +16,7 @@ echo `pwd`
 echo ' '
 echo '1) Suppression de toutes les collections'
 mongo ${db} --eval "db.getCollectionNames().forEach(function(c) { if (c.indexOf(\"system.\") == -1) db[c].drop(); })"
-mongo ${db} --eval "db.printCollectionStats()" | grep '\(ns\|count\)'
+mongo ${db} --eval "db.printCollectionStats()" | grep '\("ns"\|"count"\)'
 
 echo ' '
 echo '2) Import des fichiers *.js'
@@ -24,7 +24,7 @@ mongo ${db} **/*.js
 
 echo ' '
 echo '3) Verifications'
-mongo ${db} --eval "db.printCollectionStats()" | grep '\(ns\|count\)'
+mongo ${db} --eval "db.printCollectionStats()" | grep '\("ns"\|"count"\)'
 
 
 echo '*************************************'
