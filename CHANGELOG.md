@@ -1,7 +1,15 @@
 # CHANGELOG
 ---
 
+## 2015-12-12
+
+## 2015-12-11
+> + version bump (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:45 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/2120a7dcc9adea3e183010c17b8c77e098bd4075)*)
+> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:43 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bf7f6f790540d035c1c681041cc7416a5e7cc0f4)*)
+> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:41 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6aceabff3a7c51bd0f51444d0c625561cc4b82c0)*)
+
 ## 2015-12-10
+> + Changelog (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:42 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/114931e5b51e3c0176bb969221bba28780980965)*)
 > + Asana-69246817945888 : QaoBee en Qaobee (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:25 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/93cda250afdfc6591283f52ff1dbdd8c875d2bc0)*)
 
 ## 2015-12-08
@@ -86,14 +94,3 @@
 > + MAJ Indicateur Hand + Jeu de donnée (*par [Christophe Kervella](ch.kervella@gmail.com) à 21:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/42c5913961a0cc0213233a376f9d42fd028532fe)*)
 > + Beans (*par [Jerome ROUE](jerome.roue@gmail.com) à 20:27 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3b86b0ce7b1717a5e8de92fdeda6b77d5d1ee34c)*)
 > + Jeu de données avec les infrastructures (*par [Jerome ROUE](jerome.roue@gmail.com) à 20:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/566713b2d601e9b9bd0115310200600f6f646ffa)*)
-
-## 2015-11-04
-> + Merge branch 'master' of git@gitlab.com:qaobee/qaobee-hive.git (*par [Jerome ROUE](jerome.roue@gmail.com) à 22:43 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6178c7655fabf6968a04accb06f179ebd2081b85)*)
-> + Utilisation de Country ou String ? (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:57 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/318a16088712d6e1ef4ea7ef114601c0354206e9)*)
-> + Javadoc (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:47 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/c72c49033c0e168992e6a2309d969e667ee4012f)*)
-
-## 2015-11-02
-> + Stats Match Ploemeur (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4c90d68a8b078b20aad2c0d78a588fcd9aaed7bf)*)
-> + Suppression data foot (*par [Christophe Kervella](ch.kervella@gmail.com) à 11:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/745cb4721d559b50502d63cc63eed98916e6f2aa)*)
-> + Merge remote-tracking branch 'origin/master' (*par [Christophe Kervella](ch.kervella@gmail.com) à 10:13 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bb50b708caebb030dc6a3ed6c675cf5bc8b22ca5)*)
-> + Stats Hand (*par [Christophe Kervella](ch.kervella@gmail.com) à 10:13 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/9003df1e6d8dc30e0d91b50afca4940a811939be)*)
