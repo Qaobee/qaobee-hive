@@ -45,7 +45,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446911672294),
-    "value" : "0"
+    "value" : 0
 });
 
 /* 2 */
@@ -524,7 +524,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c5169825b").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 65,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 149,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -901,7 +901,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c51698272").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 210,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 172,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -1001,7 +1001,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c51698278").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 223,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 178,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -1333,7 +1333,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c5169828c").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 323,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 198,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -1548,7 +1548,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c51698299").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 377,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 211,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -1993,7 +1993,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c516982b4").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 539,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 238,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -2217,7 +2217,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446913114831),
-    "value" : "600"
+    "value" : 600
 });
 
 /* 34 */
@@ -2424,7 +2424,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c516982ce").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 638,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 264,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -2524,7 +2524,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c516982d4").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 671,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 270,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -3203,7 +3203,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c516982fd").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 902,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 311,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -3534,7 +3534,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c51698311").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 994,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 331,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -3854,7 +3854,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446913748366),
-    "value" : "1170"
+    "value" : 1170
 });
 
 /* 33 */
@@ -3980,7 +3980,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c5169832c").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1199,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 358,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -4064,7 +4064,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c51698331").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1231,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 363,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -4453,7 +4453,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446914018752),
-    "value" : "523"
+    "value" : 523
 });
 
 /* 19 */
@@ -4469,7 +4469,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446914028873),
-    "value" : "210"
+    "value" : 210
 });
 
 /* 20 */
@@ -4879,7 +4879,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c51698362").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1497,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 412,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
@@ -4920,7 +4920,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446914953685),
-    "value" : "1498"
+    "value" : 1498
 });
 
 /* 47 */
@@ -5059,7 +5059,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c5169836d").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1505,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 423,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
@@ -5259,7 +5259,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c51698379").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1554,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 435,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
@@ -5359,7 +5359,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c5169837f").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1577,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 441,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
@@ -5575,7 +5575,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c5169838c").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1652,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 454,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
@@ -5809,7 +5809,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c5169839a").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1705,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 468,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
@@ -5928,7 +5928,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c516983a1").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1738,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 475,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
@@ -6165,7 +6165,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446915373809),
-    "value" : "346"
+    "value" : 346
 });
 
 /* 22 */
@@ -6181,7 +6181,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446915376210),
-    "value" : "1846"
+    "value" : 1846
 });
 
 /* 23 */
@@ -6424,7 +6424,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c516983bf").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1911,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 505,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
@@ -6719,7 +6719,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c516983d1").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 1980,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 523,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
@@ -7834,7 +7834,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c51698414").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 2344,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 590,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
@@ -8066,7 +8066,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c51698422").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 2425,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 604,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
@@ -8314,7 +8314,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c51698431").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 2496,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 619,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
@@ -8880,7 +8880,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c51698453").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 2721,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 653,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
@@ -9034,7 +9034,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c5169845c").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 2774,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 662,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
@@ -9660,7 +9660,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6be4b09c0c51698482").valueOf(),
     "activityId" : "ACT-HAND",
     "chrono" : 2970,
-    "code" : "goalconceded",
+    "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 700,
     "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
@@ -9817,7 +9817,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809253),
-    "value" : "290"
+    "value" : 290
 });
 
 /* 42 */
@@ -9833,7 +9833,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809276),
-    "value" : "816"
+    "value" : 816
 });
 
 /* 43 */
@@ -9849,7 +9849,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809294),
-    "value" : "673"
+    "value" : 673
 });
 
 /* 44 */
@@ -9865,7 +9865,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809310),
-    "value" : "290"
+    "value" : 290
 });
 
 /* 45 */
@@ -9881,7 +9881,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809329),
-    "value" : "193"
+    "value" : 193
 });
 
 /* 46 */
@@ -9897,7 +9897,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809345),
-    "value" : "1148"
+    "value" : 1148
 });
 
 /* 47 */
@@ -9913,7 +9913,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809362),
-    "value" : "673"
+    "value" : 673
 });
 
 /* 48 */
@@ -9929,7 +9929,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809376),
-    "value" : "642"
+    "value" : 642
 });
 
 /* 49 */
@@ -9945,7 +9945,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809391),
-    "value" : "642"
+    "value" : 642
 });
 
 /* 50 */
@@ -9961,7 +9961,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809407),
-    "value" : "562"
+    "value" : 562
 });
 
 /* 1 */
@@ -9977,7 +9977,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809422),
-    "value" : "193"
+    "value" : 193
 });
 
 /* 2 */
@@ -9993,240 +9993,8 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1446916809437),
-    "value" : "562"
+    "value" : 562
 });
-
-/* 3 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c51698497").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 721,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976382206),
-    "value" : "3001"
-});
-
-/* 4 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c51698498").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 722,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976382250),
-    "value" : "3001"
-});
-
-/* 5 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c51698499").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 727,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976382351),
-    "value" : "3001"
-});
-
-/* 6 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c5169849a").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 726,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976382334),
-    "value" : "3001"
-});
-
-/* 7 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c5169849b").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 725,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976382316),
-    "value" : "3001"
-});
-
-/* 8 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c5169849c").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 724,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976382297),
-    "value" : "3001"
-});
-
-/* 9 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c5169849d").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 723,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976382272),
-    "value" : "3001"
-});
-
-/* 10 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c5169849e").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 728,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976612657),
-    "value" : "3001"
-});
-
-/* 11 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c5169849f").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 729,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976612841),
-    "value" : "3001"
-});
-
-/* 12 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c516984a0").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 730,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976612864),
-    "value" : "3001"
-});
-
-/* 13 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c516984a1").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 731,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976612886),
-    "value" : "3001"
-});
-
-/* 14 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c516984a2").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 732,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976612912),
-    "value" : "3001"
-});
-
-/* 15 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c516984a3").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 733,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976612933),
-    "value" : "3001"
-});
-
-/* 16 */
-db.SB_Stats.insert({
-    "_id" : ObjectId("563f1c6be4b09c0c516984a4").valueOf(),
-    "activityId" : "ACT-HAND",
-    "chrono" : 3001,
-    "code" : "playTime",
-    "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
-    "mRowid" : 734,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
-    "producter" : [ 
-        "b50b3325-fdbd-41bf-bda4-81c827982001"
-    ],
-    "timer" : NumberLong(1446976612957),
-    "value" : "3001"
-});
-
-
-
-
-
-
-
-
 
 
 /* V0.44 */
@@ -11476,6 +11244,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1448492044876),
+    "value" : "20"
 });
 
 /* 32 */
@@ -11483,7 +11252,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("56563c0ee4b0972ccfb360d0").valueOf(),
     "activityId" : "ACT-HAND",
     "attack" : false,
-    "chrono" : 151,
+    "chrono" : 3001,
     "code" : "playTime",
     "eventId" : "35d65151-2fe5-48e1-a219-8534412b6bca",
     "mRowid" : 139,
@@ -11498,7 +11267,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1448492045037),
-    "value" : "151"
+    "value" : 1510
 });
 
 /* 33 */
@@ -11506,7 +11275,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("56563c0ee4b0972ccfb360d1").valueOf(),
     "activityId" : "ACT-HAND",
     "attack" : false,
-    "chrono" : 151,
+    "chrono" : 3001,
     "code" : "playTime",
     "eventId" : "35d65151-2fe5-48e1-a219-8534412b6bca",
     "mRowid" : 140,
@@ -11521,7 +11290,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1448492045055),
-    "value" : "151"
+    "value" : 1510
 });
 
 /* 34 */
@@ -11529,7 +11298,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("56563c0fe4b0972ccfb360d2").valueOf(),
     "activityId" : "ACT-HAND",
     "attack" : false,
-    "chrono" : 151,
+    "chrono" : 3001,
     "code" : "playTime",
     "eventId" : "35d65151-2fe5-48e1-a219-8534412b6bca",
     "mRowid" : 141,
@@ -11544,7 +11313,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1448492045070),
-    "value" : "151"
+    "value" : 1510
 });
 
 /* 35 */
@@ -11552,7 +11321,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("56563c0fe4b0972ccfb360d3").valueOf(),
     "activityId" : "ACT-HAND",
     "attack" : false,
-    "chrono" : 151,
+    "chrono" : 3001,
     "code" : "playTime",
     "eventId" : "35d65151-2fe5-48e1-a219-8534412b6bca",
     "mRowid" : 142,
@@ -11567,7 +11336,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1448492045089),
-    "value" : "151"
+    "value" : 1510
 });
 
 /* 36 */
@@ -11575,7 +11344,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("56563c0fe4b0972ccfb360d4").valueOf(),
     "activityId" : "ACT-HAND",
     "attack" : false,
-    "chrono" : 151,
+    "chrono" : 3001,
     "code" : "playTime",
     "eventId" : "35d65151-2fe5-48e1-a219-8534412b6bca",
     "mRowid" : 143,
@@ -11590,7 +11359,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1448492045103),
-    "value" : "151"
+    "value" : 1510
 });
 
 /* 37 */
@@ -11598,7 +11367,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("56563c0fe4b0972ccfb360d5").valueOf(),
     "activityId" : "ACT-HAND",
     "attack" : false,
-    "chrono" : 151,
+    "chrono" : 3001,
     "code" : "playTime",
     "eventId" : "35d65151-2fe5-48e1-a219-8534412b6bca",
     "mRowid" : 144,
@@ -11613,7 +11382,7 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1448492045122),
-    "value" : "151"
+    "value" : 1510
 });
 
 /* 38 */
@@ -11621,7 +11390,7 @@ db.SB_Stats.insert({
     "_id" : ObjectId("56563c0fe4b0972ccfb360d6").valueOf(),
     "activityId" : "ACT-HAND",
     "attack" : false,
-    "chrono" : 151,
+    "chrono" : 3001,
     "code" : "playTime",
     "eventId" : "35d65151-2fe5-48e1-a219-8534412b6bca",
     "mRowid" : 145,
@@ -11636,5 +11405,5 @@ db.SB_Stats.insert({
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
     "timer" : NumberLong(1448492045135),
-    "value" : "151"
+    "value" : 1510
 });
