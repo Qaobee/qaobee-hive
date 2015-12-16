@@ -19,19 +19,6 @@
 
 package com.qaobee.hive.api.v1.commons.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-
-import javax.inject.Inject;
-
-import org.apache.commons.io.FileUtils;
-import org.bson.types.ObjectId;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
@@ -45,6 +32,17 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import org.apache.commons.io.FileUtils;
+import org.bson.types.ObjectId;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+
+import javax.inject.Inject;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -148,7 +146,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     utils.testMandatoryParams(message.body().toMap(), "collection", "id");
                     GridFS img = new GridFS(mongo.getDb(), "Assets");
 
-                    if (message.body().getString("collection").equals(SB_Person.class.getSimpleName())) {
+                    if (message.body().getString("collection").equals(SB_Person.class.getSimpleName()) || message.body().getString("collection").equals(User.class.getSimpleName())) {
                         GridFSDBFile imageForOutput = img.findOne(new ObjectId(message.body().getString("id")));
                         if (imageForOutput != null && imageForOutput.getChunkSize() > 0) {
                             ByteArrayOutputStream bos = new ByteArrayOutputStream();
