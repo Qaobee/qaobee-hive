@@ -40,7 +40,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 119,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -56,7 +56,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 120,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -72,7 +72,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 121,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -88,7 +88,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 122,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -104,7 +104,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 123,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -120,7 +120,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 124,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -136,7 +136,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 125,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -152,7 +152,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 126,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -168,7 +168,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 127,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -184,7 +184,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 128,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -200,7 +200,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 129,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -216,7 +216,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 130,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -232,7 +232,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 131,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -248,7 +248,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 132,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -264,7 +264,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 133,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -280,7 +280,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 134,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -296,7 +296,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 135,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -312,7 +312,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 136,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -328,7 +328,7 @@ db.SB_Stats.insert({
     "code" : "holder",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 137,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -344,7 +344,7 @@ db.SB_Stats.insert({
     "code" : "substitue",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 138,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -360,7 +360,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 139,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -376,7 +376,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 140,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -393,7 +393,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 141,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -410,7 +410,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 142,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -427,7 +427,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 143,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -444,7 +444,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 144,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -460,7 +460,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 145,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -476,7 +476,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 146,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -493,7 +493,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 147,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -510,7 +510,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 148,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -527,7 +527,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 149,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -544,7 +544,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 150,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -561,7 +561,7 @@ db.SB_Stats.insert({
     "code" : "passDec",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 151,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -577,7 +577,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 152,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -593,7 +593,7 @@ db.SB_Stats.insert({
     "code" : "duelWon",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 153,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -609,7 +609,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 154,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -625,7 +625,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 155,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -641,7 +641,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 156,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -657,7 +657,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 157,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -673,7 +673,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 158,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -690,7 +690,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 159,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -707,7 +707,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 160,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -724,7 +724,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 161,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -741,7 +741,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 162,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -757,7 +757,7 @@ db.SB_Stats.insert({
     "code" : "zone",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 163,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -773,7 +773,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 164,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -789,7 +789,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 165,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -805,7 +805,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 166,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -821,7 +821,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 167,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -837,7 +837,7 @@ db.SB_Stats.insert({
     "code" : "badPosition",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 168,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -853,7 +853,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 169,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -870,7 +870,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 170,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -887,7 +887,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 171,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -904,7 +904,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 172,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -921,7 +921,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 173,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -937,7 +937,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 174,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -953,7 +953,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 175,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -970,7 +970,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 176,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -987,7 +987,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 177,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1004,7 +1004,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 178,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1021,7 +1021,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 179,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1037,7 +1037,7 @@ db.SB_Stats.insert({
     "code" : "shift",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 180,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1053,7 +1053,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 181,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1070,7 +1070,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 182,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1087,7 +1087,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 183,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1104,7 +1104,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 184,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1121,7 +1121,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 185,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1137,7 +1137,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 186,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1153,7 +1153,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 187,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1169,7 +1169,7 @@ db.SB_Stats.insert({
     "code" : "passDec",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 188,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1185,7 +1185,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 189,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1202,7 +1202,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 190,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1219,7 +1219,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 191,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1236,7 +1236,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 192,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1253,7 +1253,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 193,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1269,7 +1269,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 194,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1285,7 +1285,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 195,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1302,7 +1302,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 196,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1319,7 +1319,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 197,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1336,7 +1336,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 198,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1353,7 +1353,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 199,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1370,7 +1370,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 200,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1387,7 +1387,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 201,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1404,7 +1404,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 202,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1420,7 +1420,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 203,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1436,7 +1436,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 204,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1452,7 +1452,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 205,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1468,7 +1468,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 206,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1484,7 +1484,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 207,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1500,7 +1500,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 208,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1517,7 +1517,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 209,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1534,7 +1534,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 210,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1551,7 +1551,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 211,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1568,7 +1568,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 212,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1585,7 +1585,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 213,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1602,7 +1602,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 214,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1619,7 +1619,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 215,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1635,7 +1635,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 216,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1651,7 +1651,7 @@ db.SB_Stats.insert({
     "code" : "interceptionKo",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 217,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1667,7 +1667,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 218,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1683,7 +1683,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 219,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1699,7 +1699,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 220,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1716,7 +1716,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 221,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1733,7 +1733,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 222,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1750,7 +1750,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 223,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1767,7 +1767,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 224,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1783,7 +1783,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 225,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1799,7 +1799,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 226,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1815,7 +1815,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 227,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1832,7 +1832,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 228,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1849,7 +1849,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 229,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1865,7 +1865,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 230,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1881,7 +1881,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 231,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1897,7 +1897,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 232,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1913,7 +1913,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 233,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1929,7 +1929,7 @@ db.SB_Stats.insert({
     "code" : "badPosition",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 234,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1945,7 +1945,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 235,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1962,7 +1962,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 236,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1979,7 +1979,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 237,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -1996,7 +1996,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 238,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2013,7 +2013,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 239,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2030,7 +2030,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 240,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2047,7 +2047,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 241,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2064,7 +2064,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 242,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2081,7 +2081,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 243,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2097,7 +2097,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 244,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2113,7 +2113,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 245,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2129,7 +2129,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 246,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2146,7 +2146,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 247,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2163,7 +2163,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 248,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2180,7 +2180,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 249,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2196,7 +2196,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 250,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2212,7 +2212,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 251,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2228,7 +2228,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 252,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2244,7 +2244,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 253,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2260,7 +2260,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 254,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2276,7 +2276,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 255,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2292,7 +2292,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 256,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2309,7 +2309,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 257,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2326,7 +2326,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 258,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2343,7 +2343,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 259,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2360,7 +2360,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 260,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2376,7 +2376,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 261,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2393,7 +2393,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 262,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2410,7 +2410,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 263,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2427,7 +2427,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 264,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2444,7 +2444,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 265,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2460,7 +2460,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 266,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2476,7 +2476,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 267,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2493,7 +2493,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 268,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2510,7 +2510,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 269,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2527,7 +2527,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 270,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2544,7 +2544,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 271,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2561,7 +2561,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 272,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2578,7 +2578,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 273,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2595,7 +2595,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 274,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2612,7 +2612,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 275,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2628,7 +2628,7 @@ db.SB_Stats.insert({
     "code" : "timeoutUs",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 276,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "Avenir Du Ponant 1"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "Avenir Du Ponant 1"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2644,7 +2644,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 277,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2660,7 +2660,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 278,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2677,7 +2677,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 279,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2694,7 +2694,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 280,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2711,7 +2711,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 281,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2727,7 +2727,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 282,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2743,7 +2743,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 283,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2759,7 +2759,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 284,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2775,7 +2775,7 @@ db.SB_Stats.insert({
     "code" : "forceAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 285,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2791,7 +2791,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 286,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2807,7 +2807,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 287,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2823,7 +2823,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 288,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2839,7 +2839,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 289,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2856,7 +2856,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 290,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2873,7 +2873,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 291,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2890,7 +2890,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 292,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2907,7 +2907,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 293,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2924,7 +2924,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 294,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2941,7 +2941,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 295,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2958,7 +2958,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 296,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2975,7 +2975,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 297,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -2991,7 +2991,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 298,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3007,7 +3007,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 299,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3023,7 +3023,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 300,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3039,7 +3039,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 301,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3056,7 +3056,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 302,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3073,7 +3073,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 303,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3090,7 +3090,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 304,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3107,7 +3107,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 305,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3123,7 +3123,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 306,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3139,7 +3139,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 307,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3155,7 +3155,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 308,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3172,7 +3172,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 309,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3189,7 +3189,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 310,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3206,7 +3206,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 311,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3223,7 +3223,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 312,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3239,7 +3239,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 313,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3255,7 +3255,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 314,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3271,7 +3271,7 @@ db.SB_Stats.insert({
     "code" : "exclusionTempoObtained",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 315,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3287,7 +3287,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 316,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3304,7 +3304,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 317,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3321,7 +3321,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 318,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3338,7 +3338,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 319,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3354,7 +3354,7 @@ db.SB_Stats.insert({
     "code" : "gameSystem",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 320,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "562ba2d4b70fd108e375395e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "562ba2d4b70fd108e375395e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3370,7 +3370,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 321,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3386,7 +3386,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 322,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3403,7 +3403,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 323,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3420,7 +3420,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 324,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3437,7 +3437,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 325,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3454,7 +3454,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 326,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3470,7 +3470,7 @@ db.SB_Stats.insert({
     "code" : "badPosition",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 327,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3486,7 +3486,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 328,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3503,7 +3503,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 329,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3520,7 +3520,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 330,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3537,7 +3537,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 331,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3554,7 +3554,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 332,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3571,7 +3571,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 333,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3588,7 +3588,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 334,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3605,7 +3605,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 335,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3622,7 +3622,7 @@ db.SB_Stats.insert({
     "code" : "duelWon",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 336,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3638,7 +3638,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 337,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3654,7 +3654,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 338,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3670,7 +3670,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 339,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3686,7 +3686,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 340,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3702,7 +3702,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 341,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3718,7 +3718,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 342,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3734,7 +3734,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 343,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3751,7 +3751,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 344,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3768,7 +3768,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 345,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3785,7 +3785,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 346,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3801,7 +3801,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 347,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3817,7 +3817,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 348,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3833,7 +3833,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 349,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3849,7 +3849,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 350,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3865,7 +3865,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 351,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3881,7 +3881,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 352,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3897,7 +3897,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 353,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3914,7 +3914,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 354,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3931,7 +3931,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 355,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3949,7 +3949,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 356,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3966,7 +3966,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 357,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -3983,7 +3983,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 358,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4000,7 +4000,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 359,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4016,7 +4016,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 360,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4033,7 +4033,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 361,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4050,7 +4050,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 362,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4067,7 +4067,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 363,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4084,7 +4084,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 364,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4101,7 +4101,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 365,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4118,7 +4118,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 366,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4135,7 +4135,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 367,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4152,7 +4152,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 368,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4168,7 +4168,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 369,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4184,7 +4184,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 370,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4200,7 +4200,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 371,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4217,7 +4217,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 372,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4234,7 +4234,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 373,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4251,7 +4251,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 374,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4268,7 +4268,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 375,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4285,7 +4285,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 376,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4302,7 +4302,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 377,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4319,7 +4319,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 378,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4336,7 +4336,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 379,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4352,7 +4352,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 380,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4368,7 +4368,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 381,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4384,7 +4384,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 382,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4400,7 +4400,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 383,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4416,7 +4416,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 384,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4432,7 +4432,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 385,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4448,7 +4448,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 386,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4464,7 +4464,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 387,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4480,7 +4480,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 388,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4496,7 +4496,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 389,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4512,7 +4512,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 390,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4528,7 +4528,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 391,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4545,7 +4545,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 392,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4562,7 +4562,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 393,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4579,7 +4579,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 394,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4596,7 +4596,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 395,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4612,7 +4612,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 396,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4629,7 +4629,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 397,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4646,7 +4646,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 398,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4663,7 +4663,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 399,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4680,7 +4680,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 400,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4697,7 +4697,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 401,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4714,7 +4714,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 402,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4731,7 +4731,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 403,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4748,7 +4748,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 404,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4765,7 +4765,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 405,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4782,7 +4782,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 406,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4799,7 +4799,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 407,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4815,7 +4815,7 @@ db.SB_Stats.insert({
     "code" : "badPosition",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 408,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4831,7 +4831,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 409,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4848,7 +4848,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 410,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4865,7 +4865,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 411,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4882,7 +4882,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 412,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4899,7 +4899,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 413,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4915,7 +4915,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 414,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4931,7 +4931,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 415,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4947,7 +4947,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 416,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4963,7 +4963,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 417,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4979,7 +4979,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 418,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -4995,7 +4995,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 419,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5011,7 +5011,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 420,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5028,7 +5028,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 421,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5045,7 +5045,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 422,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5062,7 +5062,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 423,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5079,7 +5079,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 424,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5096,7 +5096,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 425,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5113,7 +5113,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 426,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5130,7 +5130,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 427,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5147,7 +5147,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 428,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5163,7 +5163,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 429,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5179,7 +5179,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 430,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5195,7 +5195,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 431,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5211,7 +5211,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 432,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5228,7 +5228,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 433,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5245,7 +5245,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 434,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5262,7 +5262,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 435,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5279,7 +5279,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 436,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5295,7 +5295,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 437,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5311,7 +5311,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 438,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5328,7 +5328,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 439,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5345,7 +5345,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 440,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5362,7 +5362,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 441,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5379,7 +5379,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 442,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5395,7 +5395,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 443,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5411,7 +5411,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 444,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5427,7 +5427,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 445,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5444,7 +5444,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 446,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5461,7 +5461,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 447,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5478,7 +5478,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 448,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5495,7 +5495,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 449,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5511,7 +5511,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 450,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5527,7 +5527,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 451,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5544,7 +5544,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 452,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5561,7 +5561,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 453,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5578,7 +5578,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 454,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5595,7 +5595,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 455,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5612,7 +5612,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 456,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5629,7 +5629,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 457,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5646,7 +5646,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 458,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5662,7 +5662,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 459,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5678,7 +5678,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 460,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5694,7 +5694,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 461,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5710,7 +5710,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 462,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5726,7 +5726,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 463,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5743,7 +5743,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 464,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5760,7 +5760,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 465,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5778,7 +5778,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 466,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5795,7 +5795,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 467,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5812,7 +5812,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 468,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5829,7 +5829,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 469,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5846,7 +5846,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 470,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5863,7 +5863,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 471,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5880,7 +5880,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 472,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5897,7 +5897,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 473,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5914,7 +5914,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 474,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5931,7 +5931,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 475,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5948,7 +5948,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 476,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5964,7 +5964,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 477,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5980,7 +5980,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 478,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -5996,7 +5996,7 @@ db.SB_Stats.insert({
     "code" : "contre",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 479,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6012,7 +6012,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 480,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6028,7 +6028,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 481,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6044,7 +6044,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 482,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6060,7 +6060,7 @@ db.SB_Stats.insert({
     "code" : "shift",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 483,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6076,7 +6076,7 @@ db.SB_Stats.insert({
     "code" : "passOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 484,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6093,7 +6093,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 485,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6110,7 +6110,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 486,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6127,7 +6127,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 487,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6144,7 +6144,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 488,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6160,7 +6160,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 489,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6176,7 +6176,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 490,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6192,7 +6192,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 491,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6208,7 +6208,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 492,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6225,7 +6225,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 493,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6242,7 +6242,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 494,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6259,7 +6259,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 495,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6276,7 +6276,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 496,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6293,7 +6293,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 497,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6310,7 +6310,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 498,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6327,7 +6327,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 499,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6344,7 +6344,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 500,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6360,7 +6360,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 501,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6376,7 +6376,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 502,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6393,7 +6393,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 503,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6410,7 +6410,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 504,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6427,7 +6427,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 505,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6444,7 +6444,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 506,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6460,7 +6460,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 507,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6476,7 +6476,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 508,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6492,7 +6492,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 509,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6508,7 +6508,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 510,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6524,7 +6524,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 511,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6540,7 +6540,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 512,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6556,7 +6556,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 513,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6572,7 +6572,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 514,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6588,7 +6588,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 515,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6604,7 +6604,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 516,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6620,7 +6620,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 517,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6636,7 +6636,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 518,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6653,7 +6653,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 519,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6670,7 +6670,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 520,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6688,7 +6688,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 521,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6705,7 +6705,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 522,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6722,7 +6722,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 523,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6739,7 +6739,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 524,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6756,7 +6756,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 525,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6773,7 +6773,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 526,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6790,7 +6790,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 527,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6807,7 +6807,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 528,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6823,7 +6823,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 529,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6839,7 +6839,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 530,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6855,7 +6855,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 531,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6871,7 +6871,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 532,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6887,7 +6887,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 533,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6903,7 +6903,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 534,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6920,7 +6920,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 535,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6937,7 +6937,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 536,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6954,7 +6954,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 537,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6971,7 +6971,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 538,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -6987,7 +6987,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 539,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7004,7 +7004,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 540,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7021,7 +7021,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 541,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7038,7 +7038,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 542,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7055,7 +7055,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 543,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7072,7 +7072,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 544,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7089,7 +7089,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 545,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7106,7 +7106,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 546,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7123,7 +7123,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 547,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7140,7 +7140,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 548,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7157,7 +7157,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 549,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7174,7 +7174,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 550,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7191,7 +7191,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 551,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7208,7 +7208,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 552,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7225,7 +7225,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 553,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7242,7 +7242,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 554,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7259,7 +7259,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 555,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7275,7 +7275,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 556,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7291,7 +7291,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 557,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7307,7 +7307,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 558,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7323,7 +7323,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 559,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7339,7 +7339,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 560,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7355,7 +7355,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 561,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7371,7 +7371,7 @@ db.SB_Stats.insert({
     "code" : "interceptionOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 562,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7387,7 +7387,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 563,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7404,7 +7404,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 564,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7421,7 +7421,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 565,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7438,7 +7438,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 566,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7455,7 +7455,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 567,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7471,7 +7471,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 568,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7487,7 +7487,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 569,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7503,7 +7503,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 570,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7519,7 +7519,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 571,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7536,7 +7536,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 572,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7553,7 +7553,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 573,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7570,7 +7570,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 574,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7587,7 +7587,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 575,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7604,7 +7604,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 576,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7621,7 +7621,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 577,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7638,7 +7638,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 578,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7655,7 +7655,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 579,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7671,7 +7671,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 580,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7687,7 +7687,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 581,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7703,7 +7703,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 582,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7720,7 +7720,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 583,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7737,7 +7737,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 584,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7754,7 +7754,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 585,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7770,7 +7770,7 @@ db.SB_Stats.insert({
     "code" : "duelLoose",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 586,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7786,7 +7786,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 587,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7803,7 +7803,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 588,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7820,7 +7820,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 589,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7837,7 +7837,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 590,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7854,7 +7854,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 591,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7870,7 +7870,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 592,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7886,7 +7886,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 593,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7902,7 +7902,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 594,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7918,7 +7918,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 595,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7935,7 +7935,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 596,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7952,7 +7952,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 597,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7969,7 +7969,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 598,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -7986,7 +7986,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 599,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8002,7 +8002,7 @@ db.SB_Stats.insert({
     "code" : "badPosition",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 600,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8018,7 +8018,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 601,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8035,7 +8035,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 602,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8052,7 +8052,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 603,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8069,7 +8069,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 604,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8086,7 +8086,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 605,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8102,7 +8102,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 606,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8118,7 +8118,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 607,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8134,7 +8134,7 @@ db.SB_Stats.insert({
     "code" : "penaltyObtained",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 608,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8151,7 +8151,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 609,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8168,7 +8168,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 610,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8185,7 +8185,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 611,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8202,7 +8202,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 612,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8218,7 +8218,7 @@ db.SB_Stats.insert({
     "code" : "badPosition",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 613,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8234,7 +8234,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 614,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8250,7 +8250,7 @@ db.SB_Stats.insert({
     "code" : "badPosition",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 615,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8266,7 +8266,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 616,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8283,7 +8283,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 617,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8300,7 +8300,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 618,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8317,7 +8317,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 619,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8334,7 +8334,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 620,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8351,7 +8351,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 621,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8368,7 +8368,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 622,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8385,7 +8385,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 623,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8402,7 +8402,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 624,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8418,7 +8418,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 625,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8434,7 +8434,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 626,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8450,7 +8450,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 627,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8467,7 +8467,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 628,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8484,7 +8484,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 629,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8501,7 +8501,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 630,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8517,7 +8517,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 631,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8533,7 +8533,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 632,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8549,7 +8549,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 633,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8566,7 +8566,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 634,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8583,7 +8583,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 635,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8600,7 +8600,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 636,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8617,7 +8617,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 637,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8634,7 +8634,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 638,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8651,7 +8651,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 639,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8668,7 +8668,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 640,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8685,7 +8685,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 641,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8702,7 +8702,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 642,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8719,7 +8719,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 643,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8736,7 +8736,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 644,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8752,7 +8752,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 645,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8768,7 +8768,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 646,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8784,7 +8784,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 647,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8800,7 +8800,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 648,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8816,7 +8816,7 @@ db.SB_Stats.insert({
     "code" : "exclusionTempoObtained",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 649,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8832,7 +8832,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 650,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8849,7 +8849,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 651,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8866,7 +8866,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 652,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8883,7 +8883,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 653,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8900,7 +8900,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 654,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8917,7 +8917,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 655,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8934,7 +8934,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 656,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8951,7 +8951,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 657,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8968,7 +8968,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 658,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -8985,7 +8985,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 659,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9003,7 +9003,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 660,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9020,7 +9020,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 661,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9037,7 +9037,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 662,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9054,7 +9054,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 663,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9071,7 +9071,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 664,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9088,7 +9088,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 665,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9105,7 +9105,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 666,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9122,7 +9122,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 667,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9138,7 +9138,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 668,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9154,7 +9154,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 669,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9170,7 +9170,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 670,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9186,7 +9186,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 671,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9202,7 +9202,7 @@ db.SB_Stats.insert({
     "code" : "positionType",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 672,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9218,7 +9218,7 @@ db.SB_Stats.insert({
     "code" : "neutralization",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 673,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9234,7 +9234,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 674,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9250,7 +9250,7 @@ db.SB_Stats.insert({
     "code" : "looseball",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 675,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9266,7 +9266,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 676,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9282,7 +9282,7 @@ db.SB_Stats.insert({
     "code" : "exclusionTempoObtained",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 677,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9298,7 +9298,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 678,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9314,7 +9314,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 679,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9330,7 +9330,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 680,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9347,7 +9347,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 681,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9363,7 +9363,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 682,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9379,7 +9379,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 683,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9395,7 +9395,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 684,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9411,7 +9411,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 685,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9428,7 +9428,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 686,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9444,7 +9444,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 687,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9460,7 +9460,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 688,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9476,7 +9476,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 689,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9493,7 +9493,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 690,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9510,7 +9510,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 691,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9527,7 +9527,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 692,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9544,7 +9544,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 693,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9561,7 +9561,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 694,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9578,7 +9578,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 695,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9595,7 +9595,7 @@ db.SB_Stats.insert({
     "code" : "goalScored",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 696,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9612,7 +9612,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 697,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9629,7 +9629,7 @@ db.SB_Stats.insert({
     "code" : "originShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 698,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9646,7 +9646,7 @@ db.SB_Stats.insert({
     "code" : "impactShootDef",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 699,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9663,7 +9663,7 @@ db.SB_Stats.insert({
     "code" : "goalConceded",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 700,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9680,7 +9680,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 701,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9696,7 +9696,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 702,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9713,7 +9713,7 @@ db.SB_Stats.insert({
     "code" : "originShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 703,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9730,7 +9730,7 @@ db.SB_Stats.insert({
     "code" : "impactShootAtt",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 704,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9747,7 +9747,7 @@ db.SB_Stats.insert({
     "code" : "stopOk",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 705,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9764,7 +9764,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 706,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9780,7 +9780,7 @@ db.SB_Stats.insert({
     "code" : "timeAttack",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 707,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9796,7 +9796,7 @@ db.SB_Stats.insert({
     "code" : "timeDefense",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 708,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9812,7 +9812,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 709,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "7da59c29-b0c2-440f-8720-a22ed0770950"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9828,7 +9828,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 710,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "26baf31a-f153-41b0-9e1d-c32cb9e859dd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9844,7 +9844,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 711,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c0bf7706-f039-46c3-86b2-460930696890"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9860,7 +9860,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 712,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cc5d449a-d466-400c-b73f-955c676103ed"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9876,7 +9876,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 713,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "cb1ad24e-6195-4c11-854f-4d7a68a43c6e"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9892,7 +9892,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 714,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9908,7 +9908,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 715,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "1ce4591d-74a8-46e9-af80-d633f9344d27"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9924,7 +9924,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 716,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "c857c124-79c0-4b6e-8406-f89a26b8426f"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9940,7 +9940,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 717,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "5f82c510-2c89-46b0-b87d-d3b59e748615"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9956,7 +9956,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 718,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "d31d3550-479a-4ee9-8304-84a132202d89"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9972,7 +9972,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 719,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "ce18d73e-dedf-43e5-8e75-16e0375be349"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9988,7 +9988,7 @@ db.SB_Stats.insert({
     "code" : "playTime",
     "eventId" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
     "mRowid" : 720,
-    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
+    "owner" : ["561ec20b409937a6b439d4e9", "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", "937918db-848e-4a6d-8feb-a7ba6bd60f5a", "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"],
     "producter" : [ 
         "b50b3325-fdbd-41bf-bda4-81c827982001"
     ],
@@ -9997,7 +9997,12 @@ db.SB_Stats.insert({
 });
 
 
-/* V0.44 */
+/* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 */
+/* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 */
+/* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 */
+/* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 *//* V0.44 */
+
+
 /* 28 */
 db.SB_Stats.insert({
     "_id" : ObjectId("56563c0ee4b0972ccfb3609a").valueOf(),
@@ -10009,7 +10014,7 @@ db.SB_Stats.insert({
     "mRowid" : 85,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "997183a3-a65b-490f-a8c9-15e7c3324c1d",
@@ -10031,7 +10036,7 @@ db.SB_Stats.insert({
     "mRowid" : 86,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10054,7 +10059,7 @@ db.SB_Stats.insert({
     "mRowid" : 87,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"
     ],
@@ -10077,7 +10082,7 @@ db.SB_Stats.insert({
     "mRowid" : 88,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"
     ],
@@ -10100,7 +10105,7 @@ db.SB_Stats.insert({
     "mRowid" : 89,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10124,7 +10129,7 @@ db.SB_Stats.insert({
     "mRowid" : 90,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10148,7 +10153,7 @@ db.SB_Stats.insert({
     "mRowid" : 91,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10172,7 +10177,7 @@ db.SB_Stats.insert({
     "mRowid" : 92,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "53dadaf9-6902-4630-80f0-5de237c4e1d3",
@@ -10195,7 +10200,7 @@ db.SB_Stats.insert({
     "mRowid" : 93,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "f5bc4fad-f873-4590-8471-9f467ccdbc91",
@@ -10217,7 +10222,7 @@ db.SB_Stats.insert({
     "mRowid" : 94,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"
     ],
@@ -10240,7 +10245,7 @@ db.SB_Stats.insert({
     "mRowid" : 95,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "935428c7-9798-46a9-9387-29416b2142f5",
@@ -10262,7 +10267,7 @@ db.SB_Stats.insert({
     "mRowid" : 96,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"
     ],
@@ -10285,7 +10290,7 @@ db.SB_Stats.insert({
     "mRowid" : 97,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"
     ],
@@ -10308,7 +10313,7 @@ db.SB_Stats.insert({
     "mRowid" : 98,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"
     ],
@@ -10331,7 +10336,7 @@ db.SB_Stats.insert({
     "mRowid" : 99,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"
     ],
@@ -10354,7 +10359,7 @@ db.SB_Stats.insert({
     "mRowid" : 100,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10377,7 +10382,7 @@ db.SB_Stats.insert({
     "mRowid" : 101,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10401,7 +10406,7 @@ db.SB_Stats.insert({
     "mRowid" : 102,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10425,7 +10430,7 @@ db.SB_Stats.insert({
     "mRowid" : 103,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10449,7 +10454,7 @@ db.SB_Stats.insert({
     "mRowid" : 104,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "a3dc8dc4-1950-4ddc-aa8b-fca2fca618df",
@@ -10472,7 +10477,7 @@ db.SB_Stats.insert({
     "mRowid" : 105,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"
     ],
@@ -10495,7 +10500,7 @@ db.SB_Stats.insert({
     "mRowid" : 106,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "96977246-318e-4ff6-b6e0-b24af79a5488",
@@ -10517,7 +10522,7 @@ db.SB_Stats.insert({
     "mRowid" : 107,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "c1e56ba6-35ee-4258-94d5-1113e1e3726f",
@@ -10539,7 +10544,7 @@ db.SB_Stats.insert({
     "mRowid" : 108,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10563,7 +10568,7 @@ db.SB_Stats.insert({
     "mRowid" : 109,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10587,7 +10592,7 @@ db.SB_Stats.insert({
     "mRowid" : 110,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10611,7 +10616,7 @@ db.SB_Stats.insert({
     "mRowid" : 111,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "c31f3f0a-59a8-4a62-80e1-80fa899e5c6c",
@@ -10634,7 +10639,7 @@ db.SB_Stats.insert({
     "mRowid" : 112,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"
     ],
@@ -10657,7 +10662,7 @@ db.SB_Stats.insert({
     "mRowid" : 113,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "407426cc-0ad5-41b9-a562-87b82ad46524",
@@ -10679,7 +10684,7 @@ db.SB_Stats.insert({
     "mRowid" : 114,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "03e862ae-35dd-4049-997b-ed480cfeb4bc",
@@ -10701,7 +10706,7 @@ db.SB_Stats.insert({
     "mRowid" : 115,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"
     ],
@@ -10724,7 +10729,7 @@ db.SB_Stats.insert({
     "mRowid" : 116,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"
     ],
@@ -10747,7 +10752,7 @@ db.SB_Stats.insert({
     "mRowid" : 117,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10771,7 +10776,7 @@ db.SB_Stats.insert({
     "mRowid" : 118,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10795,7 +10800,7 @@ db.SB_Stats.insert({
     "mRowid" : 119,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10819,7 +10824,7 @@ db.SB_Stats.insert({
     "mRowid" : 120,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "a6b2d6b4-f351-4cac-8374-0f89f2ba1528",
@@ -10842,7 +10847,7 @@ db.SB_Stats.insert({
     "mRowid" : 121,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"
     ],
@@ -10865,7 +10870,7 @@ db.SB_Stats.insert({
     "mRowid" : 122,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "3c459ee5-1441-49ba-b5eb-55ab8f045822",
@@ -10887,7 +10892,7 @@ db.SB_Stats.insert({
     "mRowid" : 123,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "031dabc9-b64d-45d9-841f-d905a8e27e59",
@@ -10909,7 +10914,7 @@ db.SB_Stats.insert({
     "mRowid" : 124,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"
     ],
@@ -10932,7 +10937,7 @@ db.SB_Stats.insert({
     "mRowid" : 125,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"
     ],
@@ -10955,7 +10960,7 @@ db.SB_Stats.insert({
     "mRowid" : 126,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -10979,7 +10984,7 @@ db.SB_Stats.insert({
     "mRowid" : 127,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -11003,7 +11008,7 @@ db.SB_Stats.insert({
     "mRowid" : 128,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -11027,7 +11032,7 @@ db.SB_Stats.insert({
     "mRowid" : 129,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "55869dba-baf7-41bf-98be-1ee408a21eed",
@@ -11050,7 +11055,7 @@ db.SB_Stats.insert({
     "mRowid" : 130,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "cc5d449a-d466-400c-b73f-955c676103ed"
     ],
@@ -11073,7 +11078,7 @@ db.SB_Stats.insert({
     "mRowid" : 131,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "70b4cb60-abae-4360-86cd-fc23d1f311e9",
@@ -11095,7 +11100,7 @@ db.SB_Stats.insert({
     "mRowid" : 132,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -11118,7 +11123,7 @@ db.SB_Stats.insert({
     "mRowid" : 133,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -11141,7 +11146,7 @@ db.SB_Stats.insert({
     "mRowid" : 134,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -11165,7 +11170,7 @@ db.SB_Stats.insert({
     "mRowid" : 135,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -11189,7 +11194,7 @@ db.SB_Stats.insert({
     "mRowid" : 136,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -11213,7 +11218,7 @@ db.SB_Stats.insert({
     "mRowid" : 137,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "2d7af06b-e5a2-40d1-a719-302cfbac15b4",
@@ -11236,7 +11241,7 @@ db.SB_Stats.insert({
     "mRowid" : 138,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
     ],
     "phaseSeqId" : "a0723098-479b-4642-997a-8057c092d332",
@@ -11258,7 +11263,7 @@ db.SB_Stats.insert({
     "mRowid" : 139,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"
     ],
@@ -11281,7 +11286,7 @@ db.SB_Stats.insert({
     "mRowid" : 140,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "26baf31a-f153-41b0-9e1d-c32cb9e859dd"
     ],
@@ -11304,7 +11309,7 @@ db.SB_Stats.insert({
     "mRowid" : 141,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd"
     ],
@@ -11327,7 +11332,7 @@ db.SB_Stats.insert({
     "mRowid" : 142,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "5f82c510-2c89-46b0-b87d-d3b59e748615"
     ],
@@ -11350,7 +11355,7 @@ db.SB_Stats.insert({
     "mRowid" : 143,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"
     ],
@@ -11373,7 +11378,7 @@ db.SB_Stats.insert({
     "mRowid" : 144,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "cc5d449a-d466-400c-b73f-955c676103ed"
     ],
@@ -11396,7 +11401,7 @@ db.SB_Stats.insert({
     "mRowid" : 145,
     "owner" : [ 
         "561ec20b409937a6b439d4e9", 
-        "561ec4d0409937a6b439d4ea", 
+        "561ec4d0409937a6b439d4ea", "35d65151-2fe5-48e1-a219-8534412b6bca", 
         "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
         "ce18d73e-dedf-43e5-8e75-16e0375be349"
     ],

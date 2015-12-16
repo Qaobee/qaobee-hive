@@ -1632,7 +1632,7 @@ db.SB_Collecte.insert({"_id" : "56410c65446d5807c2732e9d",
         }
     },
     "startDate" : NumberLong(1446912000000),
-    "endDate" : NumberLong(1446916000000),
+    "endDate" : NumberLong(1446916810000),
     "players" : [
         "d31d3550-479a-4ee9-8304-84a132202d89",
         "c0bf7706-f039-46c3-86b2-460930696890",
@@ -1694,8 +1694,8 @@ db.SB_Collecte.insert({"_id" : "565e0f0dbcda594d193e24db",
             }
         }
     },
-    "startDate" : NumberLong(1449934200000),
-    "endDate" : NumberLong(1449944200000),
+    "startDate" : NumberLong(1448491800000),
+    "endDate" : NumberLong(1448492500000),
     "players" : [
         "d31d3550-479a-4ee9-8304-84a132202d89",
         "c0bf7706-f039-46c3-86b2-460930696890",
