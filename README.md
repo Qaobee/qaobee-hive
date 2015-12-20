@@ -28,12 +28,32 @@ API Qaobee
 
 ## Docker
 
+### Construction
+
     ./gradlew -Penv=prod clean build modZip -x test
     docker build -t qaobee-hive .
-    // Exécution en Prod
+
+### Exécution en Prod
+
     docker run --name qswarm-hive -ti -p 8080:8080 -d qaobee-hive
     docker stop qswarm-hive
     
-Et pour une exécution locale : `./run.sh`
+### Exécution locale 
+
+    docker build -t qaobee-hive
+    ./run.sh
+    
+ou
+
+    LOCALHOST=$(docker run --rm --net=host alpine ip route get 8.8.8.8 | awk '{ print $7;  }')
+    echo $LOCALHOST
+    docker run -t --rm -i \
+    -e OPENSHIFT_MONGODB_DB_HOST=mongo \
+    -e OPENSHIFT_MONGODB_DB_PORT=27017 \
+    -e OPENSHIFT_MONGODB_DB_PASSWORD=hive \
+    -e OPENSHIFT_MONGODB_DB_USERNAME=hive \
+    --add-host=mongo:$LOCALHOST \
+    -p 8080:8080 \
+    qaobee-hive:latest
     
     
