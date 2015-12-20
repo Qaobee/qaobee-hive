@@ -30,7 +30,10 @@ API Qaobee
 
     ./gradlew -Penv=prod clean build modZip -x test
     docker build -t qaobee-hive .
+    // Exécution en Prod
     docker run --name qswarm-hive -ti -p 8080:8080 -d qaobee-hive
     docker stop qswarm-hive
+    
+Et pour une exécution locale : `./run.sh`
     
     
