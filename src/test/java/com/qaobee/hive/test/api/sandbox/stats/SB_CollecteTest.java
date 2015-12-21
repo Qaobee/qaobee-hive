@@ -161,8 +161,8 @@ public class SB_CollecteTest extends VertxJunitSupport {
         
         /* list of parameters */
         final JsonObject params = new JsonObject();
-        params.putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1446305390000l);
-        params.putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1446310801000l);
+        params.putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1448491800000l);
+        params.putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1448492500000l);
         params.putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9");
         params.putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
         req.setBody(params.encode());
@@ -187,8 +187,8 @@ public class SB_CollecteTest extends VertxJunitSupport {
         req.setUser(user);
         req.setMethod(Constantes.GET);
         final JsonObject params = new JsonObject();
-        params.putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1446305390000l);
-        params.putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1446310801000l);
+        params.putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1448491800000l);
+        params.putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1448492500000l);
         params.putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9");
         params.putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
         req.setBody(params.encode());
@@ -207,8 +207,8 @@ public class SB_CollecteTest extends VertxJunitSupport {
         req.setUser(user);
         req.setMethod(Constantes.POST);
         final JsonObject params = new JsonObject();
-        params.putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1446305390000l);
-        params.putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1446310801000l);
+        params.putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1448491800000l);
+        params.putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1448492500000l);
         req.setBody(params.encode());
         final String reply = sendonBus(SB_CollecteVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertTrue("getListCollecteWithMissingParametersTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
@@ -224,8 +224,8 @@ public class SB_CollecteTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         final JsonObject params = new JsonObject();
-        params.putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1446305390000l);
-        params.putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1446310801000l);
+        params.putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1448491800000l);
+        params.putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1448492500000l);
         params.putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9");
         params.putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
         req.setBody(params.encode());
@@ -248,7 +248,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         req.setUser(user);
         req.setMethod(Constantes.GET);
         final HashMap<String, List<String>> params = new HashMap<>();
-        params.put(SB_CollecteVerticle.PARAM_ID, Collections.singletonList("563dc83b95b7575a96ee1dd6"));
+        params.put(SB_CollecteVerticle.PARAM_ID, Collections.singletonList("565e0f0dbcda594d193e24db"));
         req.setParams(params);
         final JsonObject reply = new JsonObject(sendonBus(SB_CollecteVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertEquals("getCollecteByIdTest", "done", reply.getString("status"));
