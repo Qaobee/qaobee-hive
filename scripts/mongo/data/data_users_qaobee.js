@@ -1514,82 +1514,12 @@ db.SB_Event.insert({
     "participants" : {
         "teamHome" : {
             "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
-            "label" : "Locmaria Hb 1"
+            "label" : "Avenir Du Ponant 1"
         },
         "teamVisitor" : {
             "id" : "562ba335b70fd108e3753962",
             "label" : "Stiren Languidic"
         }
-    }
-});
-
-/* 
- * Alimentation collection SB_Collecte : CKE
- */
-db.SB_Collecte.insert({"_id" : "563dc83b95b7575a96ee1dd6",
-    "status" : "done",
-    "eventRef" : {
-        "_id" : "e254897f-cf3a-48b8-bed5-a4d4664ab4a4",
-        "activityId" : "ACT-HAND",
-        "owner" : {
-            "sandboxId" : "561ec20b409937a6b439d4e9",
-            "effectiveId" : "561ec4d0409937a6b439d4ea",
-            "teamId" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a"
-        },
-        "address" : {
-            "formatedAddress" : "Guilers, France",
-            "lat" : 48.4248430000000027,
-            "lng" : -4.5582410000000007,
-            "city" : "Guilers",
-            "country" : "France"
-        },
-        "link" : {
-            "type" : "championship"
-        },
-        "label" : "Journée 5",
-        "startDate" : NumberLong(1446305400000),
-        "participants" : {
-            "teamHome" : {
-                "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
-                "label" : "Avenir Du Ponant 1"
-            },
-            "teamVisitor" : {
-                "id" : "5a931b17-63c5-4b1a-be6e-2e5ed8521059",
-                "label" : "Ploemeur Atlantique Hb"
-            }
-        }
-    },
-    "startDate" : NumberLong(1446305400000),
-    "endDate" : NumberLong(1446310800000),
-    "players" : [ 
-        "1ce4591d-74a8-46e9-af80-d633f9344d27",
-        "26baf31a-f153-41b0-9e1d-c32cb9e859dd",
-        "43e62ae5-2a92-4e1a-9b9a-d1a399c096bd",
-        "46bea3c9-a3c0-4f4e-91fc-0bd2797b48df",
-        "5a1c12af-0fc4-4eb8-a342-216e51bbada8",
-        "5f82c510-2c89-46b0-b87d-d3b59e748615",
-        "941f9d48-45e8-4b2f-b0ce-d33900a92fb8",
-        "c857c124-79c0-4b6e-8406-f89a26b8426f",
-        "cb1ad24e-6195-4c11-854f-4d7a68a43c6e",
-        "cc5d449a-d466-400c-b73f-955c676103ed",
-        "ce18d73e-dedf-43e5-8e75-16e0375be349",
-        "07cfa115-6a8e-42b3-8a08-16ce1d7dbd89"
-    ],
-    "observers" : [{
-        "userId" : "b50b3325-fdbd-41bf-bda4-81c827982001",
-        "indicators" : ["all"]
-    }]
-    ,
-    "parametersGame": {
-        "nbMaxPlayers" : 12,
-        "nbMinPlayers" : 4,
-        "nbPeriod" : 2,
-        "periodDuration" : 1500,
-        "nbTimeout" : 3,
-        "timeoutDuration" : 60,
-        "yellowCardMax": 1,
-        "exclusionTempo": 3,
-        "halfTimeDuration": 600
     }
 });
 
@@ -1686,7 +1616,7 @@ db.SB_Collecte.insert({"_id" : "565e0f0dbcda594d193e24db",
         "participants" : {
             "teamHome" : {
                 "id" : "937918db-848e-4a6d-8feb-a7ba6bd60f5a",
-                "label" : "Locmaria Hb 1"
+                "label" : "Avenir Du Ponant 1"
             },
             "teamVisitor" : {
                 "id" : "562ba335b70fd108e3753962",
