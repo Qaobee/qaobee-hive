@@ -28,19 +28,20 @@ API Qaobee
 
 ## Docker
 
-### Construction
+### Construction
 
     ./gradlew -Penv=prod clean build modZip -x test
     docker build -t qaobee-hive .
 
 ### Exécution en Prod
-
+    
     docker run --name qswarm-hive -ti -p 8080:8080 -d qaobee-hive
     docker stop qswarm-hive
     
 ### Exécution locale 
 
-    docker build -t qaobee-hive
+    ./gradlew clean build modZip -x test
+    docker build -t qaobee-hive .
     ./run.sh
     
 ou
