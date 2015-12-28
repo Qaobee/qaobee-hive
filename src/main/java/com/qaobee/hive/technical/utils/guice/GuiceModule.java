@@ -37,6 +37,7 @@ import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
 import com.qaobee.hive.technical.utils.guice.services.impl.FIlesImpl;
 import com.qaobee.hive.technical.utils.impl.*;
+import com.qaobee.payplug.PayPlug;
 import org.vertx.java.core.json.JsonObject;
 
 
@@ -81,10 +82,11 @@ public class GuiceModule extends AbstractModule {
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
         bind(Files.class).to(FIlesImpl.class).in(Singleton.class);
-        
+        bind(PayPlug.class).toInstance(new PayPlug(config.getObject("payplug").encode()));
         // BUSINESS MODULES
         bind(UsersBusiness.class).to(UsersBusinessImpl.class).in(Singleton.class);
         bind(ActivityBusiness.class).to(ActivityBusinessImpl.class).in(Singleton.class);
         bind(CountryBusiness.class).to(CountryBusinessImpl.class).in(Singleton.class);
+
     }
 }
