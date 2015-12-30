@@ -12,11 +12,12 @@
   },
   "payplug": {
     "baseUrl": "api.payplug.com",
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtN4dpK368PEEYKeee7S5\n1m2a8GUFLDAZ/HgRI1H6diYt87gzDPftn1UyW96YuIBed0T0dtl0tuABaIgGeddR\nuo3zfMpkyYWM2D5UHUEMKzEY5WIyaaWoVYJaZU5DWzCiroKcnUJgKm41RL32/CHU\nSFoymxjOOzpvkazbaY+Ql2GYev2QwKAf7lkH91Wp3frjQYXEFIwYnt6ZET8wPUwX\nMdF0hRaZYlaDQrCB2S/+k4Djb8mXqVkJ0qqgItycL05zyysJw/IGMr2zZ5hQSnfN\nCJ+i33ywnoT/qctGgLW4bGuGdTdcbA7VzdxhXtHaAQjuJvrf+twNCQSLCMbZ6pnK\nzQIDAQAB\n-----END PUBLIC KEY-----\n",
-    "privateKey": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAyPPxNgMQb/gme2uW56K3oP7hn1H050HaO0M/JsBGBJQkgN0y\nvqNfnHELqXLRenuU4E+g50+CL0/EArqdDM16lwJecUvS+qu+tyYqO+YZJkbvmKyI\nAZntObp7qLxAIBp3eQkEEHNF0C/MsJGscUlimuUnjUDBqt4CS6RGm5W8Cp/YytJj\nR6hjmoV2/Lg8TsMdeGuls/luB812UAZjgb/LceYssikn3L57O/98PIDHt1RsaFEW\ndNrAeudTBsoUUvZUi53xjxUgL66FuGpfFKHFHZJ2XtLr2YgWMhLQuzkD6++wZrfD\nVrqopX66qNugFDDVDG58W31q2sqh53sQalM+XQIDAQABAoIBAQCpnaXqthlouSca\nI80DBUhDnv+n75Bsphviy7cBKWewM67ACnTrjpCERrLWOvDvlmIqF2wz8dtrvcMv\nnn4zMTkZP0miDaMuLErU4mThnC18LoHL90zxNRCUGoCIAyWJM23GfsKsc+/ocoAu\nRTcthAizv1psEs2lQLDlUeq7Jl7LA3Qcp00o9E/ZfUp899Ij5FdqYw6uOKXGw+QL\n9WzEBLv9AncfNvt1hDz7c1qR6+ZlmzJC5iqSM14DRoCrpvwIVYvsNHXgX35i0wHE\naJ50ALE50wrvXbI5Kd3D37BquvkfeAob8tQeytFIJZLalTPLEzmL2CpOdttTqEAD\nPILlSsQhAoGBAODi3pHcaR3I8mQJ+f4CLNu7zDg2+h8U0FPVCD96o2wAay+kyiLm\nhO8vnFVECXcEQhR6Uq/eG0ixZGigp1xzNX+rgQXcL5us0pjm0+k3HUWmJySdvBz8\n4HKjgybEz3XQflrY7Y7QIP6fIV9fjkAaUUPKNcvd0HHBzWjZyOM0EtSJAoGBAOTB\nZB09pYRoK2Ccqc0x/2HRh4BTuXNfjQxqWnV0AJnWxe+vDM6GxxyCRFSb/7+Aloxr\nJd/S0pbcP0xL13YVLen3PvVUhyR9mGpihFtYP4EpmtzTFX7iOfQ7LJDh1cKTcoL5\n+wUIHI3N5DQZ9qbGzy1f/54oMYjm1+7ZEx20b841AoGATu7yhinh72VnxrtFtuVW\nj220OYr6ccxhbvtYIMfP8omXFar2lBdrU3TXn4n49IBXHU7uFPKViwdQofS5qZZ6\nkaxF5iOpxi9739UtTi9dI+Q02wJOU7JiqXpA/2uXEdgzcXmwsC7XVefO0+X7TP6v\nxWaFSWA62KLYkVPX0f+mGFkCgYB/UnijodVHbid+nZQRJtvrGRFfRrp40d0S5Ps2\nVnujJJyE/JyXMwMOBh98LFvbvfmNbHHnM1ONLkd48tmY2s70Y25CZGrXz6QOyoi6\nwtKN1Jdig4Z6WfZBztHOTjSJGUJqTjL+KPajos56hVz4lL1plv4SjHKNrVbQlTgD\nl5OHZQKBgE1HeK1r4aeZl22T+r4AMB75KcI/Sed+Co/ZjJNSQcqA+judTjBJwDWK\nHCZsrTKn3F6E3FKSgJb60nMeLBGCMSUoTI3KeGmTrnBr381OBoSF9ZIpTfQcUvaf\nA5XZ+M6jR0Zdtx7LCzCALTHykXXbUBOtVRjDP48lGi+nqqk32aGz\n-----END RSA PRIVATE KEY-----",
-    "ipn_url": "http://flufy.hd.free.fr/rest/payment/ipn",
-    "return_url": "http://flufy.hd.free.fr/qaobee.html#/signup/coach/end",
-    "cancel_url": "http://flufy.hd.free.fr/qaobee.html#/signup/coach/cancel"
+    "ipn_url": "http://flufy.hd.free.fr/hive/api/1/commons/users/shipping/ipn",
+    "return_url": "http://flufy.hd.free.fr/qswarm-web/#/signup/coach/end",
+    "cancel_url": "http://flufy.hd.free.fr/qswarm-web/#/signup/coach/cancel",
+    "api_key": "sk_test_d5cdee91ababb9d78cf94603f9620de6",
+    "port": 443,
+    "basePath": "/v1"
   },
   "metrix.mod": {
     "address": "metrix"
