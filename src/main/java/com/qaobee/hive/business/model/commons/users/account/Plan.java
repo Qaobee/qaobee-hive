@@ -69,6 +69,43 @@ public class Plan {
      */
     private String paymentURL;
     private String cardId;
+    private Card cardInfo;
+
+    /**
+     * Gets card info.
+     *
+     * @return the card info
+     */
+    public Card getCardInfo() {
+        return cardInfo;
+    }
+
+    /**
+     * Sets card info.
+     *
+     * @param cardInfo the card info
+     */
+    public void setCardInfo(Card cardInfo) {
+        this.cardInfo = cardInfo;
+    }
+
+    /**
+     * Gets payment url.
+     *
+     * @return the payment url
+     */
+    public String getPaymentURL() {
+        return paymentURL;
+    }
+
+    /**
+     * Sets payment url.
+     *
+     * @param paymentURL the payment url
+     */
+    public void setPaymentURL(String paymentURL) {
+        this.paymentURL = paymentURL;
+    }
 
     /**
      * Gets card id.

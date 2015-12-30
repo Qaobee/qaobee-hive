@@ -127,6 +127,11 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         }
     }
 
+    @AfterClass
+    public static void stopAll() {
+        JunitMongoSingleton.getInstance().getProcess().stop();
+    }
+
     /**
      * Find free port.
      *

@@ -20,6 +20,7 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.shipping.Customer;
 import com.qaobee.hive.business.model.shipping.HostedPayment;
@@ -57,17 +58,10 @@ import java.util.Map;
 // https://groups.google.com/forum/#!topic/vertx/KvtxhkA0wiM
 @DeployableVerticle(isWorker = false)
 public class ShippingVerticle extends AbstractGuiceVerticle {
-    /**
-     * The Constant REGISTER.
-     */
+
     public static final String PAY = Module.VERSION + ".commons.users.shipping.pay";
-    /**
-     * The constant REFUND.
-     */
+    public static final String IPN = Module.VERSION + ".commons.users.shipping.ipn";
     public static final String REFUND = Module.VERSION + ".commons.users.shipping.refund";
-    /**
-     * The constant TRIGGERED_RECURING_PAYMENT.
-     */
     public static final String TRIGGERED_RECURING_PAYMENT = Module.VERSION + ".commons.users.shipping.recuring_payment";
 
     public static final String PARAM_PLAN_ID = "plan_id";
@@ -102,16 +96,80 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 .setHost(config.getString("baseUrl"))
                 .setPort(config.getInteger("port"));
         /**
+         * @apiDescription Get notified by PayPlug when a payment is done
+         * @api {post} /api/1/commons/users/shipping/ipn Get notified by PayPlug when a payment is done
+         * @apiName Payment Notification
+         * @apiGroup Shipping API
+         * @apiParam {object} payment Payment object : see https://gitlab.com/qaobee/com.qaobee.payplug/wikis/notification_url
+         * @apiSuccess {object} status Status
+         */
+        vertx.eventBus().registerHandler(IPN, new Handler<Message<String>>() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(final Message<String> message) {
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    // Check param mandatory
+                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    utils.testMandatoryParams(req.getBody(), "id", "payment_id", "metadata", "hosted_payment");
+                    JsonObject body = new JsonObject(req.getBody());
+                    if (!body.getObject("metadata").containsField("plan_id") || !body.getObject("metadata").containsField("customer_id")) {
+                        throw new IllegalArgumentException("some metadatas are missing");
+                    }
+                    int planId = Integer.parseInt(body.getObject("metadata").getString("plan_id"));
+                    JsonObject user = mongo.getById(body.getObject("metadata").getString("customer_id"), User.class);
+                    switch (body.getString("object")) {
+                        // We only have payments, no refunds ;)
+                        case "payment":
+                            if (body.containsField("is_paid") && body.getBoolean("is_paid")) {
+                                if (user.getObject("account").getArray("listPlan").size() < planId) {
+                                    throw new IllegalArgumentException("some metadatas are wrong");
+                                }
+                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                                        .putString("status", "paid");
+                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                                        .putNumber("paidDate", body.getObject("hosted_payment").getLong("paid_at"));
+                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                                        .putObject("cardInfo", body.getObject("card"));
+                                mongo.save(user, User.class);
+                                utils.sendStatus(true, message);
+                            } else {
+                                // WTF, it's not paid !!! bloody hell !
+                                utils.sendStatus(false, message);
+                            }
+                            break;
+                        default:
+                            utils.sendStatus(false, message);
+
+                    }
+                } catch (final NoSuchMethodException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
+                } catch (QaobeeException e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    container.logger().error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
+
+        /**
          * @apiDescription Do a payment
          * @api {post} /api/1/commons/users/shipping/pay Do a payment
-         * @apiName pay
-         * @apiGroup ShippingVerticle API
+         * @apiName Payment
+         * @apiGroup Shipping API
          * @apiParam {int} plan_id index of the plan in the user's plans list
          * @apiHeader {String} token
-         * @apiSuccess {object} status status with a redirect link if any
-         * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
+         * @apiSuccess {object} status Status with a redirect link if any
          */
         vertx.eventBus().registerHandler(PAY, new Handler<Message<String>>() {
             /*
@@ -162,6 +220,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
                     Map<String, String> metaDatas = new HashMap<>();
                     metaDatas.put("customer_id", req.getUser().get_id());
+                    metaDatas.put("plan_id", String.valueOf(planId));
                     payment.setMetadata(metaDatas);
 
                     payment.setSave_card(true);
