@@ -31,9 +31,6 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Params;
-import com.qaobee.hive.technical.utils.AuthCheck;
-import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -61,21 +58,13 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
     public static final String PAY = Module.VERSION + ".commons.users.shipping.pay";
     public static final String IPN = Module.VERSION + ".commons.users.shipping.ipn";
-    public static final String REFUND = Module.VERSION + ".commons.users.shipping.refund";
     public static final String TRIGGERED_RECURING_PAYMENT = Module.VERSION + ".commons.users.shipping.recuring_payment";
 
     public static final String PARAM_PLAN_ID = "plan_id";
-    // MongoDB driver
     @Inject
     private MongoDB mongo;
     @Inject
-    private MailUtils mailUtils;
-    @Inject
-    private AuthCheck authCheck;
-    @Inject
     private Utils utils;
-    @Inject
-    private PersonUtils personUtils;
     @Inject
     @Named("payplug")
     private JsonObject config;
@@ -265,7 +254,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     request.putHeader("Content-Length", String.valueOf(requestBody.toString().length()));
                     request.write(requestBody.toString());
                     request.end();
-
                 } catch (final NoSuchMethodException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
