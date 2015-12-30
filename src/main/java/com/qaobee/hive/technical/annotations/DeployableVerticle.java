@@ -44,7 +44,7 @@ public @interface DeployableVerticle {
      *
      * @return the boolean
      */
-    boolean isWorker() default false;
+    boolean isWorker() default true;
 
     /**
      * The type Verticle loader.

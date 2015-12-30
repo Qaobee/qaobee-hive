@@ -286,7 +286,10 @@ public class Main extends AbstractGuiceVerticle {
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
         for (final Class<?> restMod : restModules) {
-            promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), config, 1, true));
+            if(restMod.getAnnotation(DeployableVerticle.class).isWorker())
+            promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), config, 2, true));
+            else
+            promises.add(whenContainer.deployVerticle(restMod.getName(), config));
         }
         when.all(promises, new com.englishtown.promises.Runnable<Promise<List<String>, Void>, List<String>>() {
             @Override
@@ -326,6 +329,4 @@ public class Main extends AbstractGuiceVerticle {
         req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
         req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
     }
-
-
 }

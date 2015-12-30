@@ -53,7 +53,8 @@ import java.util.Map;
 /**
  * The type Shipping verticle.
  */
-@DeployableVerticle(isWorker = true)
+// TODO : Ugly hack because of a bug in Vert.X 2, must be in the main thread
+@DeployableVerticle(isWorker = false)
 public class ShippingVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant REGISTER.
@@ -88,6 +89,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     @Named("payplug")
     private JsonObject config;
     private HttpClient client;
+
     /**
      * Start void.
      */
@@ -95,7 +97,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         container.logger().debug(this.getClass().getName() + " started");
-        client= vertx.createHttpClient()
+        client = vertx.createHttpClient()
                 .setSSL(true)
                 .setKeepAlive(true)
                 .setConnectTimeout(10000)
@@ -131,7 +133,10 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     final JsonObject body = new JsonObject(req.getBody());
                     final int planId = body.getInteger(PARAM_PLAN_ID);
                     Payment payment = new Payment();
-                    // TODO : sécuriser en fonction de l'index fourni
+                    if (req.getUser().getAccount().getListPlan().size() <= planId) {
+                        utils.sendError(message, new QaobeeException(ExceptionCodes.INVALID_PARAMETER, planId + " is not present"));
+                        return;
+                    }
                     Plan plan = req.getUser().getAccount().getListPlan().get(planId);
                     int amount = 0;
                     if (Params.containsKey("plan." + plan.getLevelPlan() + ".price")) {
@@ -168,14 +173,11 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     final int finalAmount = amount;
                     HttpClientRequest request = client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
                         public void handle(final HttpClientResponse resp) {
-                            if(resp.statusCode() >= 200 && resp.statusCode() < 400) {
+                            if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
                                 resp.bodyHandler(new Handler<Buffer>() {
                                     public void handle(Buffer buffer) {
-                                        System.out.println(buffer);
                                         // The entire response body has been received
-                                        container.logger().info("The total body received was " + buffer.length() + " bytes for : " + buffer.toString());
                                         JsonObject res = new JsonObject(buffer.toString());
-                                        container.logger().debug(res.encodePrettily());
                                         req.getUser().getAccount().getListPlan().get(planId).setAmountPaid(finalAmount);
                                         req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
                                         req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
@@ -188,9 +190,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                         message.reply(messageResponse.toString());
                                     }
                                 });
-
                             } else {
-                                utils.sendError(message, new QaobeeException(ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " +resp.statusMessage()));
+                                utils.sendError(message, new QaobeeException(ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage()));
                             }
                         }
                     });
