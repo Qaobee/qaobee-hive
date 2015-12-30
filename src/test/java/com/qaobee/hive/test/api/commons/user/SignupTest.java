@@ -28,13 +28,17 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 
 /**
- * @author jerome
+ * The type Signup test.
  *
+ * @author jerome
  */
 public class SignupTest extends VertxJunitSupport {
-	
-	@Test
-    public void registerOk() {
+
+    /**
+     * Register ok test.
+     */
+    @Test
+    public void registerOkTest() {
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
 		
 		final RequestWrapper req = new RequestWrapper();

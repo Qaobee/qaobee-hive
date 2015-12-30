@@ -53,17 +53,14 @@ import java.util.Map;
 /**
  * The type Shipping verticle.
  */
-// TODO : Ugly hack because of a bug in Vert.X 2, must be in the main thread
+// TODO : Ugly hack because of a bug in Vert.X 2.x, must be in the main thread WTF!!
+// https://groups.google.com/forum/#!topic/vertx/KvtxhkA0wiM
 @DeployableVerticle(isWorker = false)
 public class ShippingVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant REGISTER.
      */
     public static final String PAY = Module.VERSION + ".commons.users.shipping.pay";
-    /**
-     * The constant SAVE_CARD.
-     */
-    public static final String SAVE_CARD = Module.VERSION + ".commons.users.shipping.save_card";
     /**
      * The constant REFUND.
      */
@@ -182,12 +179,19 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                         req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
                                         req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
                                         req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
-                                        JsonObject messageResponse = new JsonObject();
-                                        messageResponse.putBoolean("status", true);
-                                        messageResponse.putObject("payment", res);
-                                        req.getUser().getAccount().getListPlan().get(planId).setCardId(res.getString("id"));
+                                        try {
+                                            mongo.save(req.getUser());
+                                            JsonObject messageResponse = new JsonObject();
+                                            messageResponse.putBoolean("status", true);
+                                            messageResponse.putString("payment_url", res.getObject("hosted_payment").getString("payment_url"));
+                                            req.getUser().getAccount().getListPlan().get(planId).setCardId(res.getString("id"));
 
-                                        message.reply(messageResponse.toString());
+                                            message.reply(messageResponse.toString());
+                                        } catch (QaobeeException e) {
+                                            container.logger().error(e.getMessage(), e);
+                                            utils.sendError(message, e);
+                                        }
+
                                     }
                                 });
                             } else {
@@ -208,7 +212,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
                     container.logger().error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     container.logger().error(e.getMessage(), e);
                     utils.sendError(message, e);
