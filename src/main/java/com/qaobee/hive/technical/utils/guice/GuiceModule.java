@@ -37,7 +37,6 @@ import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
 import com.qaobee.hive.technical.utils.guice.services.impl.FIlesImpl;
 import com.qaobee.hive.technical.utils.impl.*;
-import com.qaobee.payplug.PayPlug;
 import org.vertx.java.core.json.JsonObject;
 
 
@@ -68,10 +67,14 @@ public class GuiceModule extends AbstractModule {
     protected void configure() {
         //get the vertx configuration
         JsonObject mongoConfig = config.getObject("mongo.persistor");
+        JsonObject payPlugconfig = config.getObject("payplug");
 
         bind(JsonObject.class)
                 .annotatedWith(Names.named("mongo.persistor"))
                 .toInstance(mongoConfig);
+        bind(JsonObject.class)
+                .annotatedWith(Names.named("payplug"))
+                .toInstance(payPlugconfig);
 
         // TECHNICAL MODULES
         bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);
@@ -82,7 +85,6 @@ public class GuiceModule extends AbstractModule {
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
         bind(Files.class).to(FIlesImpl.class).in(Singleton.class);
-        bind(PayPlug.class).toInstance(new PayPlug(config.getObject("payplug").encode()));
         // BUSINESS MODULES
         bind(UsersBusiness.class).to(UsersBusinessImpl.class).in(Singleton.class);
         bind(ActivityBusiness.class).to(ActivityBusinessImpl.class).in(Singleton.class);

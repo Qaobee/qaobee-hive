@@ -29,42 +29,72 @@ import java.util.List;
 
 /**
  * Bean that describes a user.
+ *
  * @author cke
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
-    /** Internal identifier */
+    /**
+     * Internal identifier
+     */
     private String _id;
-    /** Avatar */
+    /**
+     * Avatar
+     */
     private String avatar;
-    /** Name */
+    /**
+     * Name
+     */
     private String name;
-    /** Firstname */
+    /**
+     * Firstname
+     */
     private String firstname;
-    /** Address */
+    /**
+     * Address
+     */
     private Address address;
-    /** Birthdate */
+    /**
+     * Birthdate
+     */
     private long birthdate;
-    /** Contact */
+    /**
+     * Contact
+     */
     private Contact contact;
-    /** Country */
+    /**
+     * Country
+     */
     private Country country;
-    /** Nationality */
+    /**
+     * Nationality
+     */
     private Country nationality;
-    /** Account */
+    /**
+     * Account
+     */
     private Account account;
-    /** Timestamp */
+    /**
+     * Timestamp
+     */
     private long timestamp;
-    /** Gender */
+    /**
+     * Gender
+     */
     private String gender;
-    /** List of notifications */
+    /**
+     * List of notifications
+     */
     private List<Notification> notifications;
-    /** User's effective by default */
+    /**
+     * User's effective by default
+     */
     private String effectiveDefault;
 
     /**
      * Returns the internal identifier.
+     *
      * @return String : id
      */
     public String get_id() {
@@ -73,6 +103,7 @@ public class User {
 
     /**
      * Defines the internal identifier.
+     *
      * @param _id String : id
      */
     public void set_id(String _id) {
@@ -81,6 +112,7 @@ public class User {
 
     /**
      * Returns the avatar.
+     *
      * @return String : avatar
      */
     public String getAvatar() {
@@ -89,6 +121,7 @@ public class User {
 
     /**
      * Defines the avatar.
+     *
      * @param avatar (String) : avatar
      */
     public void setAvatar(String avatar) {
@@ -97,6 +130,7 @@ public class User {
 
     /**
      * Returns the name of the user.
+     *
      * @return String : name
      */
     public String getName() {
@@ -105,6 +139,7 @@ public class User {
 
     /**
      * Defines the name of the user.
+     *
      * @param name (String) : name
      */
     public void setName(String name) {
@@ -113,6 +148,7 @@ public class User {
 
     /**
      * Returns the firstname of the user.
+     *
      * @return String : firstname
      */
     public String getFirstname() {
@@ -121,6 +157,7 @@ public class User {
 
     /**
      * Defines the firstname of the user.
+     *
      * @param firstname (String) : firstname
      */
     public void setFirstname(String firstname) {
@@ -129,6 +166,7 @@ public class User {
 
     /**
      * Returns the address of the user.
+     *
      * @return Address : address
      */
     public Address getAddress() {
@@ -137,6 +175,7 @@ public class User {
 
     /**
      * Defines the address of the user.
+     *
      * @param address (Address) : address
      */
     public void setAddress(Address address) {
@@ -145,6 +184,7 @@ public class User {
 
     /**
      * Returns how to contact the user.
+     *
      * @return Contact : contacts
      */
     public Contact getContact() {
@@ -153,6 +193,7 @@ public class User {
 
     /**
      * Defines how to contact the user.
+     *
      * @param contact (Contact) : contacts
      */
     public void setContact(Contact contact) {
@@ -161,6 +202,7 @@ public class User {
 
     /**
      * Returns the country.
+     *
      * @return Country : country
      */
     public Country getCountry() {
@@ -169,6 +211,7 @@ public class User {
 
     /**
      * Defines the country.
+     *
      * @param country (Country) : country
      */
     public void setCountry(Country country) {
@@ -177,6 +220,7 @@ public class User {
 
     /**
      * Returns user account.
+     *
      * @return Account : user account
      */
     public Account getAccount() {
@@ -185,6 +229,7 @@ public class User {
 
     /**
      * Defines user account.
+     *
      * @param account (Account) : account
      */
     public void setAccount(Account account) {
@@ -193,6 +238,7 @@ public class User {
 
     /**
      * Returns list of notifications.
+     *
      * @return List(Notification) : list
      */
     public List<Notification> getNotifications() {
@@ -201,6 +247,7 @@ public class User {
 
     /**
      * Defines the list of notifications.
+     *
      * @param notifications (List(Notification)) : list
      */
     public void setNotifications(List<Notification> notifications) {
@@ -209,6 +256,7 @@ public class User {
 
     /**
      * Returns the timestamp.
+     *
      * @return long : timestamp
      */
     public long getTimestamp() {
@@ -217,6 +265,7 @@ public class User {
 
     /**
      * Defines the timestamp.
+     *
      * @param timestamp (long) : timestamp
      */
     public void setTimestamp(long timestamp) {
@@ -225,6 +274,7 @@ public class User {
 
     /**
      * Returns user gender.
+     *
      * @return String : gender
      */
     public String getGender() {
@@ -233,6 +283,7 @@ public class User {
 
     /**
      * Defines user gender.
+     *
      * @param gender (String) : gender
      */
     public void setGender(String gender) {
@@ -241,6 +292,7 @@ public class User {
 
     /**
      * Returns user nationality.
+     *
      * @return Country : nationality
      */
     public Country getNationality() {
@@ -249,6 +301,7 @@ public class User {
 
     /**
      * Defines user nationality.
+     *
      * @param nationality (Country) : nationality
      */
     public void setNationality(Country nationality) {
@@ -257,6 +310,7 @@ public class User {
 
     /**
      * Returns birthdate.
+     *
      * @return long : birthdate
      */
     public long getBirthdate() {
@@ -265,26 +319,29 @@ public class User {
 
     /**
      * Defines birthdate.
+     *
      * @param birthdate (long) : birthdate
      */
     public void setBirthdate(long birthdate) {
         this.birthdate = birthdate;
     }
 
-	/**
-	 * Returns the default effective ID.
-	 * @return String : default effective
-	 */
-	public String getEffectiveDefault() {
-		return effectiveDefault;
-	}
+    /**
+     * Returns the default effective ID.
+     *
+     * @return String : default effective
+     */
+    public String getEffectiveDefault() {
+        return effectiveDefault;
+    }
 
-	/**
-	 * Defines the default effective ID.
-	 * @param effectiveDefault (String) : default effective
-	 */
-	public void setEffectiveDefault(String effectiveDefault) {
-		this.effectiveDefault = effectiveDefault;
-	}
+    /**
+     * Defines the default effective ID.
+     *
+     * @param effectiveDefault (String) : default effective
+     */
+    public void setEffectiveDefault(String effectiveDefault) {
+        this.effectiveDefault = effectiveDefault;
+    }
 
 }

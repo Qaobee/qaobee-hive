@@ -54,7 +54,6 @@ dependencies {
     compile 'org.freemarker:freemarker:2.3.23'
     compile 'net.tanesha.recaptcha4j:recaptcha4j:0.0.7'
     compile 'commons-beanutils:commons-beanutils:1.9.2'
-    compile files('lib/payplug-0.0.1.jar')
     compile 'io.vertx:mod-mailer:2.0.0-final'
     compile 'org.slf4j:slf4j-api:1.7.12'
 

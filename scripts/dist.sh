@@ -8,7 +8,7 @@
     echo -e "Running build"
     echo -e "****************************************************${NC}"
     semver init
-    semver inc patch
+  #  semver inc patch
     tag=$(semver tag)
     ./gradlew -Penv=prod clean build test apidoc javadoc modZip
     STATUS=$?
@@ -32,11 +32,11 @@
         echo -e "${green}****************************************************"
         echo -e "Deployment ok, processing docker : $tag"
         echo -e "****************************************************${NC}"
-        git tag -a $tag -m "$tag"
-        git push origin --tags
-        docker build -t qaobee-hive:$tag .
-        docker tag -f qaobee-hive:$tag tutum.co/giwi/qaobee-hive:$tag
-        docker push tutum.co/giwi/qaobee-hive:$tag
+  #      git tag -a $tag -m "$tag"
+#        git push origin --tags
+#        docker build -t qaobee-hive:$tag .
+#        docker tag -f qaobee-hive:$tag tutum.co/giwi/qaobee-hive:$tag
+#        docker push tutum.co/giwi/qaobee-hive:$tag
         echo -e "${green}****************************************************"
         echo -e "Deploy doc"
         echo -e "****************************************************${NC}"
