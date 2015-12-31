@@ -464,9 +464,7 @@ public class ShippingTest extends VertxJunitSupport {
         card.putNumber("exp_month", 9);
         card.putNumber("exp_year", 2017);
         notifiaction.putObject("card", card);
-        JsonObject hosted_payment = new JsonObject();
-        hosted_payment.putNumber("paid_at", new Date().getTime());
-        notifiaction.putObject("hosted_payment", hosted_payment);
+        notifiaction.putNumber("created_at", new Date().getTime());
         notifiaction.putString("payment_id", plan.getString("paymentId"));
         return notifiaction;
     }
