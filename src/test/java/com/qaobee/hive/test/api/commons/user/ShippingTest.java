@@ -28,17 +28,11 @@ import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 public class ShippingTest extends VertxJunitSupport {
     private ClientAndServer mockServer;
 
-    /**
-     * Init mock server.
-     */
     @Before
     public void initMockServer() {
         mockServer = startClientAndServer(1080);
     }
 
-    /**
-     * Stop mock server.
-     */
     @After
     public void stopMockServer() {
         mockServer.stop();
@@ -56,7 +50,6 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
-
         new MockServerClient("localhost", 1080)
                 .when(
                         HttpRequest.request()
@@ -148,6 +141,17 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -192,6 +196,17 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -228,6 +243,17 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -266,6 +292,17 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -304,6 +341,17 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -342,6 +390,17 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -380,6 +439,17 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -418,6 +488,17 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -456,6 +537,17 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
