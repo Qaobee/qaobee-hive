@@ -189,6 +189,7 @@ public abstract class CrudVerticle<T> extends AbstractGuiceVerticle {
      *
      * @param baseClass  the base class
      * @param childClass the child class
+     * @param <T>        Class
      * @return a list of the raw classes for the actual type arguments.
      */
     public static <T> List<Class<?>> getTypeArguments(Class<T> baseClass, Class<?> childClass) {
