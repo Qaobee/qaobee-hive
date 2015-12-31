@@ -84,12 +84,13 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         super.start();
         container.logger().debug(this.getClass().getName() + " started");
         client = vertx.createHttpClient()
-                .setSSL(true)
                 .setKeepAlive(true)
-                .setConnectTimeout(10000)
-                .setTrustAll(true)
                 .setHost(config.getString("baseUrl"))
                 .setPort(config.getInteger("port"));
+        if(config.getInteger("port") == 443) {
+            client.setSSL(true).setTrustAll(true);
+        }
+
         /**
          * @apiDescription Get notified by PayPlug when a payment is done
          * @api {post} /api/1/commons/users/shipping/ipn Get notified by PayPlug when a payment is done

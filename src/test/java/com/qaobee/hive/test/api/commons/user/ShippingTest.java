@@ -8,16 +8,42 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockserver.client.server.MockServerClient;
+import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.HttpRequest;
+import org.mockserver.model.HttpResponse;
 import org.vertx.java.core.json.JsonObject;
 
 import java.util.Date;
+
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 
 /**
  * The type Shipping test.
  */
 public class ShippingTest extends VertxJunitSupport {
+    private ClientAndServer mockServer;
+
+    /**
+     * Init mock server.
+     */
+    @Before
+    public void initMockServer() {
+        mockServer = startClientAndServer(1080);
+    }
+
+    /**
+     * Stop mock server.
+     */
+    @After
+    public void stopMockServer() {
+        mockServer.stop();
+    }
+
     /**
      * Create payment test.
      */
@@ -30,6 +56,19 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
         req.setBody(request.encode());
+
+        new MockServerClient("localhost", 1080)
+                .when(
+                        HttpRequest.request()
+                                .withMethod("POST")
+                                .withPath("/v1/payments")
+                )
+                .respond(
+                        HttpResponse.response()
+                                .withStatusCode(201)
+                                .withBody(generateMockBody(u, 0))
+                );
+
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -442,30 +481,85 @@ public class ShippingTest extends VertxJunitSupport {
             Assert.fail(e.getMessage());
         }
     }
+
     /**
-     *
      * @param plan plan
-     * @param u user
+     * @param u    user
      * @return a notification object
      */
     private JsonObject buildNotificationRequest(JsonObject plan, User u) {
-        JsonObject notifiaction = new JsonObject();
-        notifiaction.putString("id", "123456");
-        notifiaction.putString("object", "payment");
-        notifiaction.putBoolean("is_paid", true);
+        JsonObject notification = new JsonObject();
+        notification.putString("id", "123456");
+        notification.putString("object", "payment");
+        notification.putBoolean("is_paid", true);
         JsonObject metadata = new JsonObject();
         metadata.putString("customer_id", u.get_id());
         metadata.putString("plan_id", "0");
-        notifiaction.putObject("metadata", metadata);
+        notification.putObject("metadata", metadata);
         JsonObject card = new JsonObject();
         card.putString("last4", "1800");
         card.putString("country", "FR");
         card.putString("brand", "Mastercard");
         card.putNumber("exp_month", 9);
         card.putNumber("exp_year", 2017);
-        notifiaction.putObject("card", card);
-        notifiaction.putNumber("created_at", new Date().getTime());
-        notifiaction.putString("payment_id", plan.getString("paymentId"));
-        return notifiaction;
+        notification.putObject("card", card);
+        notification.putNumber("created_at", new Date().getTime());
+        notification.putString("payment_id", plan.getString("paymentId"));
+        return notification;
+    }
+
+    /**
+     *
+     * @param u User
+     * @param i planId
+     * @return body
+     */
+    private String generateMockBody(User u, int i) {
+        return "{\n" +
+                "  \"amount\": 900,\n" +
+                "  \"amount_refunded\": 0,\n" +
+                "  \"card\": {\n" +
+                "      \"brand\": null,\n" +
+                "      \"country\": null,\n" +
+                "      \"exp_month\": null,\n" +
+                "      \"exp_year\": null,\n" +
+                "      \"id\": null,\n" +
+                "      \"last4\": null\n" +
+                "  },\n" +
+                "  \"created_at\": " + new Date().getTime() + ",\n" +
+                "  \"currency\": \"EUR\",\n" +
+                "  \"customer\": {\n" +
+                "      \"address1\": null,\n" +
+                "      \"address2\": null,\n" +
+                "      \"city\": null,\n" +
+                "      \"country\": null,\n" +
+                "      \"email\": \"" + u.getContact().getEmail() + "\",\n" +
+                "      \"first_name\": \"" + u.getFirstname() + "\",\n" +
+                "      \"last_name\": \"" + u.getName() + "\",\n" +
+                "      \"postcode\": null\n" +
+                "  },\n" +
+                "  \"failure\": null,\n" +
+                "  \"hosted_payment\": {\n" +
+                "      \"cancel_url\": \"" + moduleConfig.getObject("payplug").getString("cancel_url") + "\",\n" +
+                "      \"paid_at\": null,\n" +
+                "      \"payment_url\": \"https://www.payplug.com/pay/test/2DNkjF024bcLFhTn7OBfcc\",\n" +
+                "      \"return_url\": \"" + moduleConfig.getObject("payplug").getString("return_url") + "\"\n" +
+                "  },\n" +
+                "  \"id\": \"pay_2DNkjF024bcLFhTn7OBfcc\",\n" +
+                "  \"is_3ds\": null,\n" +
+                "  \"is_live\": false,\n" +
+                "  \"is_paid\": false,\n" +
+                "  \"is_refunded\": false,\n" +
+                "  \"metadata\": {\n" +
+                "      \"customer_id\": \"" + u.get_id() + "\",\n" +
+                "      \"plan_id\": \"" + i + "\"\n" +
+                "  },\n" +
+                "  \"notification\": {\n" +
+                "      \"response_code\": null,\n" +
+                "      \"url\": \"https://example.net/notifications?id=42710\"\n" +
+                "  },\n" +
+                "  \"object\": \"payment\",\n" +
+                "  \"save_card\": true\n" +
+                "}";
     }
 }

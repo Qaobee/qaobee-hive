@@ -61,6 +61,7 @@ dependencies {
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.46.4'
     testCompile 'junit:junit:4.4'
     testCompile name: 'vertx-junit-annotations-2.1RC2'
+    testCompile 'org.mock-server:mockserver-netty:3.10.1'
 
 }
 task apidoc(type: Exec) {
