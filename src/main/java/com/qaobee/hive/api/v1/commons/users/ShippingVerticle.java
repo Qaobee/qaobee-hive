@@ -281,7 +281,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         /**
          * Periodic timer, each day it runs
          */
-        long timerID = vertx.setPeriodic(1000 *5 /* * 60 * 60 * 24 */, new Handler<Long>() {
+        long timerID = vertx.setPeriodic(1000  * 60 * 60 * 24 , new Handler<Long>() {
             public void handle(Long timerID) {
                 // oh we are ticking each 24h after the startup time
                 // First, let's collect all the guys
