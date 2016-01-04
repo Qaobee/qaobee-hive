@@ -306,8 +306,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 for(int i =0; i < listPlan.size(); i++) {
                     JsonObject plan = listPlan.get(i);
                     // TODO : change paid level plan here
-                    if(plan.getString("levelPlan").equals("PREMIUM")) {
-                        container.logger().info(user.getString("name") + " " + user.getString("firstname") + " : " + plan.getObject("activity").getString("code"));
+                    if(plan.containsField("levelPlan") && plan.getString("levelPlan").equals("PREMIUM")) {
                         switch (plan.getString("periodicity")) {
                             case "monthly" :
                                 // test if we have to make pay him (or her) !
