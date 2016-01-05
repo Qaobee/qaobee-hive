@@ -18,13 +18,13 @@
  */
 package com.qaobee.hive.technical.utils.impl;
 
+import org.vertx.java.core.json.JsonObject;
+
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
-import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.MailUtils;
-import org.vertx.java.core.json.JsonObject;
 
 /**
  * The Class MailDao.
@@ -42,10 +42,11 @@ public final class MailUtilsImpl implements MailUtils {
     public JsonObject generateActivationBody(final User user, final String locale) {
         final JsonObject json = new JsonObject();
         json.putString("title", Messages.getString("mail.account.validation.title", locale));
-        json.putString("desc", Messages.getString("mail.account.validation.line.1", locale, user.getFirstname() + " " + user.getName()));
+        json.putString("salutation", Messages.getString("mail.account.validation.line.1", locale, user.getFirstname() + " " + user.getName()));
+        json.putString("desc", Messages.getString("mail.account.validation.line.2", locale));
         json.putString("header", Messages.getString("mail.account.validation.title", locale));
         json.putString("subheader", "");
-        json.putString("message", Messages.getString("mail.account.validation.line.2", locale));
+        json.putString("message", Messages.getString("mail.account.validation.line.3", locale));
         json.putString("activationlink", Params.getString("site.url") + Params.getString("mail.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationCode());
         json.putString("sig", Messages.getString("mail.account.validation.sig", locale, Params.getString("site.url")));
         json.putString("assistant", Messages.getString("mail.footer.assistant", locale));
