@@ -19,9 +19,6 @@
 
 package com.qaobee.hive.api.v1.commons.users;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
@@ -280,7 +277,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
         /**
          * Periodic timer, each day it runs
-         */
+
         long timerID = vertx.setPeriodic(1000  * 60 * 60 * 24 , new Handler<Long>() {
             public void handle(Long timerID) {
                 // oh we are ticking each 24h after the startup time
@@ -297,7 +294,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 }
             }
         });
-
+         */
         vertx.eventBus().registerHandler(TRIGGERED_RECURING_PAYMENT, new Handler<Message<JsonObject>>() {
             @Override
             public void handle(Message<JsonObject> message) {
