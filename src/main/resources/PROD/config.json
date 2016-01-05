@@ -1,13 +1,12 @@
 {
-  "runtime" : {
-    "version" : 1
-  },"cors": {
+  "runtime": {
+    "version": 1
+  },
+  "cors": {
     "enabled": true
   },
   "pdf": {
     "css": [
-      "web/css/flatty.css",
-      "web/css/qaobee.css"
     ]
   },
   "metrix.mod": {
@@ -20,14 +19,14 @@
     "read_preference": "nearest"
   },
   "payplug": {
-  "baseUrl": "api.payplug.com",
-  "ipn_url": "https://hive.qaobee.com/api/1/commons/users/shipping/ipn",
-  "return_url": "https://www.qaobee.com/qswarm-web/#/signup/coach/end",
-  "cancel_url": "https://www.qaobee.com/#/signup/coach/cancel",
-  "api_key": "sk_live_bdb7dcd46103d08f7fd207d4c982f1aa",
-  "port": 443,
-  "basePath": "/v1"
-}
+    "baseUrl": "api.payplug.com",
+    "ipn_url": "https://hive.qaobee.com/api/1/commons/users/shipping/ipn",
+    "return_url": "https://www.qaobee.com/qswarm-web/#/signup/coach/end",
+    "cancel_url": "https://www.qaobee.com/#/signup/coach/cancel",
+    "api_key": "sk_live_bdb7dcd46103d08f7fd207d4c982f1aa",
+    "port": 443,
+    "basePath": "/v1"
+  },
   "mailer.mod": {
     "test": true,
     "address": "mailer.mod",

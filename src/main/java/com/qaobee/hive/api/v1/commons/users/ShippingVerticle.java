@@ -40,14 +40,11 @@ import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -294,7 +291,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 }
             }
         });
-         */
+
         vertx.eventBus().registerHandler(TRIGGERED_RECURING_PAYMENT, new Handler<Message<JsonObject>>() {
             @Override
             public void handle(Message<JsonObject> message) {
@@ -331,5 +328,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 }
             }
         });
+         */
     }
 }
