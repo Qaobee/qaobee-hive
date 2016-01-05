@@ -1,6 +1,35 @@
 # CHANGELOG
 ---
 
+## 2016-01-05
+
+## 2016-01-04
+> + bugfix (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:18 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d2043bd2008d78ad1baeb875f92c8f8914c8ce0f)*)
+
+## 2016-01-01
+> + bugfix (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:28 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6bb760239b5ef725728748da244132adb83c8248)*)
+> + timer fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:36 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ca08c95d42cb149d0b89b2b5451ab2d3f7389f23)*)
+
+## 2015-12-31
+
+## 2015-12-30
+> + payplug mock server (*par [Xavier MARIN](marin.xavier@gmail.com) à 17:01 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e20922fabed0c4e4d5e3d6f104a02bd1e1d31aed)*)
+> + payplug mock server (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:29 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f1bb36f139095256d978b648ab877eb7d1c221ba)*)
+> + Javadoc fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:14 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/089ad4c637d3cd41556c02f09dc0b01fcc6cd7a1)*)
+> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 01:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f84fbc079180ab126a9581f7b1babb572cd814dc)*)
+> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:59 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a8802023729ef240a2798c59e92ef5e8a2a399c4)*)
+> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1795ce29ee668727b1ed8a8a83bd70edcf30b52c)*)
+> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:55 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/23f6f498180f7e5b987ecdfbe87ec795d309211e)*)
+> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/76b2d8b3d92294e2bf9f26b0d13ccfa9d62f7024)*)
+
+## 2015-12-28
+> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 19:28 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d5400311f7e6f4bc9086bcfccc9634118c8f260e)*)
+> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:08 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/2595ac5eeee5d001c2c2ddab15b98c86c13ce79d)*)
+
+## 2015-12-23
+> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/b60cfeb51ce791395eacefd53afd86b90e9dc8bc)*)
+> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:09 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ac634ba5eeb1186f28166f5452ef5c572d561c76)*)
+
 ## 2015-12-22
 > + docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:38 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a65cc2d8cc78c80aea6c6acfc03de1c365eb72be)*)
 
@@ -54,32 +83,3 @@
 > + Gestion du profil utilisateur (*par [Xavier MARIN](marin.xavier@gmail.com) à 13:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3ad53ab26038dcda07fe78a28d26ac115d60ab34)*)
 > + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 13:56 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f135ab5be25a5176e3a24ea4831a282d14acd15a)*)
 > + Divers (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/08ce8826ea3881e21722d46ce5ad1d3690737549)*)
-
-## 2015-12-03
-> + Gestion du profil utilisateur (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:39 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/09f41885ae16ab4e9a96033ed6eff80a56b4f1e3)*)
-> + Clean sandbox Florent (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:55 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3ab4ab397159563b53838c3bd712920d66b54eab)*)
-
-## 2015-11-29
-> + Jeu de données (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/72ef20844b3fb5ce0008d4254118b63fc0d49e9c)*)
-> + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:23 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/685c5cf4def489f50296dd7a064332fe60a854c3)*)
-
-## 2015-11-28
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 13:33 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/30ac79829cfe54ace56d26c23eee1ee87097b780)*)
-> + efficiently (*par [Christophe Kervella](ch.kervella@gmail.com) à 23:11 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/287ef55648b93fd4f2637ffe6fe9379a15235355)*)
-
-## 2015-11-26
-> + Bug test (*par [Christophe Kervella](ch.kervella@gmail.com) à 16:29 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/cb91bb23d93c1d5517167caa852af14151636208)*)
-> + Test stats (*par [Christophe Kervella](ch.kervella@gmail.com) à 15:31 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/5d23d229dd0bfbc2324c4f3dabc08d5143f577c6)*)
-
-## 2015-11-25
-> + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e5505dc6867868d9ea5c9018815ddd3e5c1cad1d)*)
-> + #68735553189852 : Vérifier upload stats (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/155c2ee701f1f80c42cd91feabf569066fd6532a)*)
-
-## 2015-11-23
-> + Ajout d'activity (*par [Jerome ROUE](jerome.roue@gmail.com) à 22:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/b71520c0d3d2184829360e4165ee5690389c356b)*)
-> + Asana-67167563211484 : Revue du mail d'inscription (*par [Jerome ROUE](jerome.roue@gmail.com) à 22:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/03b2086940480c642f1cb8c7661d06ea01cd0b3b)*)
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:18 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bbef661458a3459eeead53fdeb7f52a3d782c6f8)*)
-
-## 2015-11-22
-> + suppression du poste car posant problème lors de la visualisation (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:40 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4aecd40399c444a0a66dd96eafedd872fcbfb535)*)
-> + Rétablissement du mail d'inscription quand on vient du mobile (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:26 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6447bd196a12d41d3fb2193d89158a4b371d2388)*)
