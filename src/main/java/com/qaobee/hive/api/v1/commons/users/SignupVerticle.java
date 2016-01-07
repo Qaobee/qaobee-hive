@@ -523,7 +523,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     if (jsonReq.getObject(PARAM_STRUCTURE).containsField("_id")) {
                         structure = mongo.getById(jsonReq.getObject(PARAM_STRUCTURE).getString("_id"), Structure.class);
                     } else {
-                        Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("country").getString("alpha2"));
+                        Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("address").getObject("country").getString("alpha2"));
                         structure.putObject("country", new JsonObject(Json.encode(country)));
                         structure.getObject("address").putString("country", country.getLabel());
                         structure.putObject("activity", new JsonObject(Json.encode(activityBusiness.getActivityFromId(activityId))));
