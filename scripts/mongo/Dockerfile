@@ -1,9 +1,7 @@
 FROM centos:centos7
 MAINTAINER Xavier MARIN <marin.xavier@gmail.com>
 # https://github.com/frodenas/docker-mongodb/blob/master/scripts/first_run.sh
-ENV http_proxy http://b3605:zaza1116@proxy.gicm.net:3128
-ENV https_proxy http://b3605:zaza1116@proxy.gicm.net:3128
-RUN echo 'proxy=http://b3605:zaza1116@10.154.30.4:3128' >> /etc/yum.conf
+
 
 RUN yum -y install net-tools
 
