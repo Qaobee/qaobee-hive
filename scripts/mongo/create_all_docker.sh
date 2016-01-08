@@ -2,16 +2,10 @@
 
 echo '****************************************************'
 echo 'Script de creation des collections dans la base Hive'
+echo '    ---> Docker edition                             '
 echo '****************************************************'
 
-export db='hive'
-pathFile='find . -name create_all.sh'
-echo $pathFile
-pathDir='expr match "$pathFile" '\(.*\)\/create_all.sh''
-echo "Change directory to : $pathDir"
-cd $pathDir
-echo `pwd`
-
+export db="hive -u hive -p hive --verbose --port $1"
 echo ' '
 echo '1) Suppression de toutes les collections'
 mongo ${db} --eval "db.getCollectionNames().forEach(function(c) { if (c.indexOf(\"system.\") == -1) db[c].drop(); })"
