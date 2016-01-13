@@ -10,7 +10,7 @@ ADD src/main/resources/PROD/config.json /home/qaobee/conf.json
 ADD build/libs/hive-0.1.zip /home/qaobee/hive-0.1.zip
 
 WORKDIR /home/qaobee
-
+EXPOSE 8080
 RUN export vertx_run_options="-instances 5 -conf /home/qaobee/conf.json"
 RUN export VERTX_OPTS="-XX:PermSize=128m -XX:MaxPermSize=256m -Xms512m -Xmx1g -XX:+UseParallelGC"
 CMD ["vertx", "runzip", "hive-0.1.zip", "-instances", "5", "-conf", "/home/qaobee/conf.json"]
