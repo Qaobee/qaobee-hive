@@ -24,6 +24,8 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
@@ -45,7 +47,7 @@ import java.util.Map;
  * @author xavier
  */
 public abstract class CrudVerticle<T> extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     /**
      * The sorted field.
      */
@@ -101,7 +103,7 @@ public abstract class CrudVerticle<T> extends AbstractGuiceVerticle {
                 utils.testHTTPMetod(Constantes.GET, req.getMethod());
                 message.reply(mongo.findByCriterias(criteria, minimalFields, sortedField, 1, -1, getCollection()).encode());
             } catch (final NoSuchMethodException e) {
-                container.logger().error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
             }
         }
@@ -122,16 +124,16 @@ public abstract class CrudVerticle<T> extends AbstractGuiceVerticle {
                 json.putString("_id", id);
                 message.reply(json.encode());
             } catch (final NoSuchMethodException e) {
-                container.logger().error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
             } catch (final EncodeException e) {
-                container.logger().error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
             } catch (final QaobeeException e) {
-                container.logger().error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 utils.sendError(message, e);
             } catch (final IllegalArgumentException e) {
-                container.logger().error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
             }
         }
@@ -149,7 +151,7 @@ public abstract class CrudVerticle<T> extends AbstractGuiceVerticle {
                 mongo.deleteById(req.getParams().get("id").get(0), getCollection());
                 utils.sendStatus(true, message);
             } catch (final NoSuchMethodException e) {
-                container.logger().error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
             }
         }
@@ -172,13 +174,13 @@ public abstract class CrudVerticle<T> extends AbstractGuiceVerticle {
                 utils.testMandatoryParams(req.getParams(), "id");
                 message.reply(mongo.getById(req.getParams().get("id").get(0), getCollection()).encode());
             } catch (final NoSuchMethodException e) {
-                container.logger().error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
             } catch (final QaobeeException e) {
-                container.logger().error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 utils.sendError(message, e);
             } catch (final IllegalArgumentException e) {
-                container.logger().error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
             }
         }

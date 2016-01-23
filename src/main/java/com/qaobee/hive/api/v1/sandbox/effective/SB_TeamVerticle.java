@@ -30,6 +30,8 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
@@ -48,6 +50,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class SB_TeamVerticle extends AbstractGuiceVerticle {
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     /**
      * Handler to get a set of team
      */
@@ -113,7 +116,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
         /**
          * @apiDescription Add Team
@@ -129,7 +132,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().debug(ADD+" - SB_Team");
+            	LOG.debug(ADD+" - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -140,13 +143,13 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
 					/* return */
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }
@@ -165,7 +168,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().debug(UPDATE+" - SB_Team");
+            	LOG.debug(UPDATE+" - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());
@@ -175,13 +178,13 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
                     json.putString("_id", id);
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }
@@ -208,7 +211,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().debug(GET+" - SB_Team");
+            	LOG.debug(GET+" - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -224,18 +227,18 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
 
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_Team.class);
 
-                    container.logger().debug("SB_Team found : " + json.toString());
+                    LOG.debug("SB_Team found : " + json.toString());
 
                     message.reply(json.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }
@@ -262,7 +265,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().debug(GET_LIST+" - SB_Team");
+            	LOG.debug(GET_LIST+" - SB_Team");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters
@@ -286,14 +289,14 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
                     
                     
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Team.class);
-                    container.logger().debug("RETURN : "+resultJson);
+                    LOG.debug("RETURN : "+resultJson);
 
                     message.reply(resultJson.encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }

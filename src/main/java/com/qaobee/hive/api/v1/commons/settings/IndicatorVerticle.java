@@ -31,6 +31,8 @@ import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -50,7 +52,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class IndicatorVerticle extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     // Declaration des variables finals
     /**
      * The Constant GET.
@@ -109,7 +111,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
         /**
          * @api {get} /api/1/commons/settings/indicator/get Read data of an indicator
@@ -132,7 +134,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("get() - Indicator");
+                LOG.debug("get() - Indicator");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -149,21 +151,21 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
 
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), IndicatorCfg.class);
 
-                    container.logger().debug("Indicator found : " + json.toString());
+                    LOG.debug("Indicator found : " + json.toString());
 
                     message.reply(json.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -196,7 +198,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("getList() - Indicator");
+                LOG.debug("getList() - Indicator");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -247,20 +249,20 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
 
-                    container.logger().debug(resultJSon.encodePrettily());
+                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -331,13 +333,13 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }

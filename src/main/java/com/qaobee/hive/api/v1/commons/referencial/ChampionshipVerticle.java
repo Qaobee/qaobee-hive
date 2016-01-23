@@ -30,6 +30,8 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -37,7 +39,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +49,8 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker=true)
 public class ChampionshipVerticle extends AbstractGuiceVerticle {
-	
-	
+
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
 	/** Handler to get a set of events */
     public static final String GET_LIST 	= Module.VERSION + ".commons.referencial.championship.list";
     /** Handler to add a event. */
@@ -102,7 +104,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
         
         /**
          * @apiDescription retrieve all championships.
@@ -129,7 +131,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().debug("getList() - Championship");
+            	LOG.debug("getList() - Championship");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                 	/*
@@ -175,30 +177,30 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                     	if(mapParticipant.containsKey("type")) {
                     		dbObjectChild.put("participants.type", mapParticipant.get("type"));
                     	}
-                    	dbObjectParent.put("$and", Arrays.asList(dbObjectChild));
+                    	dbObjectParent.put("$and", Collections.singletonList(dbObjectChild));
                     }
                     
 
                     match = new BasicDBObject("$match", dbObjectParent);
 
                     /* Pipeline */
-                    List<DBObject> pipelineAggregation = Arrays.asList(match);
+                    List<DBObject> pipelineAggregation = Collections.singletonList(match);
                     
-                    container.logger().debug("getListChampionshipHandler : " + pipelineAggregation.toString());
+                    LOG.debug("getListChampionshipHandler : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
 
-                    container.logger().debug(resultJSon.encodePrettily());
+                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
                     
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
 
@@ -228,7 +230,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().debug("get() - Championship");
+            	LOG.debug("get() - Championship");
                 try {
                 	/*
                      * *** Params section ***
@@ -243,13 +245,13 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                     message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), ChampionShip.class).encode());
                     
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
 
@@ -288,7 +290,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().debug("add() - Championship");
+            	LOG.debug("add() - Championship");
                 try {
                 	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 	
@@ -307,13 +309,13 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                     message.reply(championship.encode());
                     
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
 
@@ -353,7 +355,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-            	container.logger().debug("update() - Championship");
+            	LOG.debug("update() - Championship");
                 try {
                 	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 	
@@ -371,13 +373,13 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                     message.reply(championship.encode());
                     
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
 

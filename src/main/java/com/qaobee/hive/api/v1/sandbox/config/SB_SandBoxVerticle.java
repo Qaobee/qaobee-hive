@@ -19,18 +19,6 @@
 
 package com.qaobee.hive.api.v1.sandbox.config;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.StringUtils;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
@@ -43,43 +31,42 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The type Sand box cfg verticle.
  */
 @DeployableVerticle(isWorker = true)
 public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
-
-    /** The constant GET. */
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     public static final String GET = Module.VERSION + ".sandbox.config.sandbox.get";
-    /** The constant GET_BY_OWNER. */
     public static final String GET_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getByOwner";
-    /** The constant GET_BY_OWNER. */
     public static final String GET_LIST_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getListByOwner";
-    /** The constant CREATE */
     public static final String ADD = Module.VERSION + ".sandbox.config.sandbox.add";
-    /** The constant UPDATE */
     public static final String UPDATE = Module.VERSION + ".sandbox.config.sandbox.update";
     
     /* Parameters */
-    /** The constant PARAM_ID. */
     public static final String PARAM_ID = "_id";
-    /** The constant PARAM_ID. */
     public static final String PARAM_OWNER_ID = "owner";
-    /** The constant PARAM_ACTIVITY_ID. */
     public static final String PARAM_ACTIVITY_ID = "activityId";
-    /** The constant PARAM_SEASON_ID. */
     public static final String PARAM_SEASON_ID = "seasonId";
-    /** The constant PARAM_USER. */
     public static final String PARAM_USER = "user";
-    /** The constant PARAM_SB_CFG_ID */
     public static final String PARAM_SB_CFG_ID = "sandboxCfgId";
 
     /* Injections */
-    /** The Mongo. */
     @Inject
     private MongoDB mongo;
-    /** The Utils. */
     @Inject
     private Utils utils;
 
@@ -89,7 +76,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
 
         /**
@@ -112,7 +99,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().debug(GET_BY_OWNER+" - SandBox");
+            	LOG.debug(GET_BY_OWNER+" - SandBox");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -131,19 +118,19 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" +req.getUser().get_id() +" ,and activityId : "+ params.get(PARAM_ACTIVITY_ID));
                     }
                     JsonObject json = resultJson.get(0);
-                    container.logger().debug("SandBox found : " + json.toString());
+                    LOG.debug("SandBox found : " + json.toString());
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -169,7 +156,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET_LIST_BY_OWNER, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().debug(GET_LIST_BY_OWNER+" - SandBox");
+            	LOG.debug(GET_LIST_BY_OWNER+" - SandBox");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -190,22 +177,22 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
                     
                     for (int i = 0; i < resultJson.size(); i++) {
                     	JsonObject json = resultJson.get(i);
-                        container.logger().debug("SandBox found : " + json.toString());
+                        LOG.debug("SandBox found : " + json.toString());
 					}
                     
                     message.reply(resultJson.encode());
                     
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -217,7 +204,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(ADD, new Handler<Message<JsonObject>>() {
             @Override
             public void handle(Message<JsonObject> message) {
-            	container.logger().debug(ADD + " - SandBox");
+            	LOG.debug(ADD + " - SandBox");
             	try {
                     final RequestWrapper req = Json.decodeValue(message.body().encode(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());
@@ -239,13 +226,13 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
 //                    utils.sendStatus(true, message);
                     
             	} catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendErrorJ(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -257,7 +244,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().debug(UPDATE + " - SandBox");
+            	LOG.debug(UPDATE + " - SandBox");
             	try {
 		        	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 		            utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -284,16 +271,16 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
 		            mongo.save(sandbox, SB_SandBox.class);
 		            
             	} catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }

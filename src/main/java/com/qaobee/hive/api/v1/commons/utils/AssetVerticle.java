@@ -34,6 +34,8 @@ import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import org.apache.commons.io.FileUtils;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -50,22 +52,11 @@ import java.io.IOException;
  */
 @DeployableVerticle
 public class AssetVerticle extends AbstractGuiceVerticle {
-    /**
-     * The Constant ADD.
-     */
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     public static final String ADD = "asset.add";
-    /**
-     * The constant GET.
-     */
     public static final String GET = "asset.get";
-    /**
-     * The Mongo.
-     */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
 
@@ -75,7 +66,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
         /*
          * TODO
 		 */
@@ -95,7 +86,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
 
                     } else {
                         GridFS img = new GridFS(mongo.getDb(), "Assets");
-                        container.logger().debug(mongo.getDb().getMongo().getConnectPoint());
+                        LOG.debug(mongo.getDb().getMongo().getConnectPoint());
 
                         GridFSInputFile gfsFile = img.createFile(FileUtils.readFileToByteArray(new File(message.body().getString("filename"))));
                         gfsFile.setFilename(message.body().getString("uid"));
@@ -127,7 +118,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     FileUtils.deleteQuietly(new File(message.body().getString("filename")));
                     message.reply(resp);
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     resp.putNumber("statusCode", ExceptionCodes.INVALID_PARAMETER.getCode());
                     resp.putString("message", e.getMessage());
                     FileUtils.deleteQuietly(new File(message.body().getString("filename")));
@@ -167,7 +158,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     resp.putString("message", e.getMessage());
                     message.reply(resp);
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     resp.putNumber("statusCode", ExceptionCodes.INVALID_PARAMETER.getCode());
                     resp.putString("message", e.getMessage());
                     message.reply(resp);

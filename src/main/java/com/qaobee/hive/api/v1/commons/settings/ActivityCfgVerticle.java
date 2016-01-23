@@ -19,9 +19,6 @@
 
 package com.qaobee.hive.api.v1.commons.settings;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
@@ -35,8 +32,9 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -44,20 +42,23 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The type Activity cfg verticle.
  */
 @DeployableVerticle(isWorker = true)
 public class ActivityCfgVerticle extends AbstractGuiceVerticle {
+	public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     /**
      * The constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.activitycfg.get";
-    
+
     /** Handler for getting parameters list. */
 	public final static String PARAMS = Module.VERSION + ".commons.settings.activitycfg.params";
-	
+
 	/* List of parameters */
 	/** List of parameters */
 	public static final String PARAM_FIELD_LIST = "paramFieldList";
@@ -67,7 +68,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 	public static final String PARAM_ACTIVITY_ID = "activityId";
 	/** Country Id */
 	public static final String PARAM_COUNTRY_ID = "countryId";
-	
+
     /**
      * The Mongo.
      */
@@ -85,7 +86,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
         /**
          * @apiDescription Fetch ActivityCfg
@@ -101,7 +102,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().debug(GET+" - ActivityCfg");
+            	LOG.debug(GET+" - ActivityCfg");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -117,7 +118,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Country id is blank or null");
 					}
 					// Reference Date
-					Long dateRef = null;
+					Long dateRef;
 					if (StringUtils.isBlank(req.getParams().get(PARAM_DATE).get(0))) {
 						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is blank or null");
 					}
@@ -136,29 +137,31 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 					// Call to mongo
 					JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, ActivityCfg.class);
 					if (resultJSon == null || resultJSon.size() == 0) {
-						container.logger().debug(resultJSon.encodePrettily());
-						throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
+                        if (resultJSon != null) {
+                            LOG.debug(resultJSon.encodePrettily());
+                        }
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
 					}
-					
+
 					JsonObject jsonObject = resultJSon.get(0);
-					container.logger().debug(jsonObject.encodePrettily());
+					LOG.debug(jsonObject.encodePrettily());
 					message.reply(jsonObject.encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
-        
+
         /**
          * @apiDescription retrieve a list of value for one parameter ActivityCfg
          * @api {post} /api/1/commons/settings/activitycfg/params params ActivityCfg
@@ -176,7 +179,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(PARAMS, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	container.logger().debug(PARAMS+" - ActivityCfg");
+            	LOG.debug(PARAMS+" - ActivityCfg");
                 try {
                 	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 	utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -193,7 +196,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Country id is blank or null");
 					}
 					// Reference Date
-					Long dateRef = null;
+					Long dateRef;
 					if (StringUtils.isBlank(req.getParams().get(PARAM_DATE).get(0))) {
 						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is blank or null");
 					}
@@ -231,10 +234,10 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 					project = new BasicDBObject("$project", dbObjectParent);
 
 					List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-					container.logger().debug("getParamFieldHandler : " + pipelineAggregation.toString());
+					LOG.debug("getParamFieldHandler : " + pipelineAggregation.toString());
 
 					final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, ActivityCfg.class);
-					container.logger().debug(resultJSon.encodePrettily());
+					LOG.debug(resultJSon.encodePrettily());
 
 					if (resultJSon == null || resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
 						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");
@@ -243,13 +246,13 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 					message.reply(((JsonObject) resultJSon.get(0)).getArray(paramField).encode());
 
 				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
 				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
 				} catch (final QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, e);
 				}
             }

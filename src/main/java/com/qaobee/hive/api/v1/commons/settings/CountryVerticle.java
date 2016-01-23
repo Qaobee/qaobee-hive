@@ -31,6 +31,8 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -48,7 +50,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class CountryVerticle extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     // Declaration des variables finals
     /**
      * The Constant GET.
@@ -85,7 +87,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
         /**
          * @api {get} /api/1/commons/settings/country/get Read data of an Country
@@ -108,7 +110,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("get - Country");
+                LOG.debug("get - Country");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -124,18 +126,18 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Country.class);
 
-                    container.logger().debug("Country found : " + json.toString());
+                    LOG.debug("Country found : " + json.toString());
 
                     message.reply(json.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }
@@ -162,7 +164,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().info("getAlpha2 - Country");
+                LOG.info("getAlpha2 - Country");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -177,18 +179,18 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
                     Country country = countryBusiness.getCountryFromAlpha2(params.get(PARAM_ALPHA2).get(0));
 
-                    container.logger().info("Country found : " + Json.encodePrettily(country));
+                    LOG.info("Country found : " + Json.encodePrettily(country));
 
                     message.reply(Json.encode(country));
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }
@@ -215,7 +217,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("getList() - Country");
+                LOG.debug("getList() - Country");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters
@@ -223,7 +225,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
                     Map<String, List<String>> params = req.getParams();
                     utils.testMandatoryParams(params, PARAM_LOCAL);
                     
-                    Map<String, Object> criterias = new HashMap<String, Object>();
+                    Map<String, Object> criterias = new HashMap<>();
                     criterias.put(PARAM_LOCAL, params.get(PARAM_LOCAL).get(0));
                     
                     String label = "undefined";
@@ -242,10 +244,10 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
                     message.reply(resultJson.encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }

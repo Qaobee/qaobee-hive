@@ -34,6 +34,8 @@ import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
@@ -55,7 +57,7 @@ import java.util.Map;
 // https://groups.google.com/forum/#!topic/vertx/KvtxhkA0wiM
 @DeployableVerticle(isWorker = false)
 public class ShippingVerticle extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     public static final String PAY = Module.VERSION + ".commons.users.shipping.pay";
     public static final String IPN = Module.VERSION + ".commons.users.shipping.ipn";
     public static final String TRIGGERED_RECURING_PAYMENT = "inner.recuring_payment";
@@ -76,7 +78,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
         client = vertx.createHttpClient()
                 .setKeepAlive(true)
                 .setHost(config.getString("baseUrl"))
@@ -138,16 +140,16 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
                     }
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -238,7 +240,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
                                             message.reply(messageResponse.toString());
                                         } catch (QaobeeException e) {
-                                            container.logger().error(e.getMessage(), e);
+                                            LOG.error(e.getMessage(), e);
                                             utils.sendError(message, e);
                                         }
 
@@ -252,21 +254,21 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     request.putHeader("Authorization", "Bearer " + config.getString("api_key")).putHeader("Content-Type", "application/json");
                     JsonObject requestBody = new JsonObject(Json.encode(payment));
                     requestBody.removeField("payment_method");
-                    container.logger().info(requestBody);
+                    LOG.info(requestBody.encode());
                     request.putHeader("Content-Length", String.valueOf(requestBody.toString().length()));
                     request.write(requestBody.toString());
                     request.end();
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -285,7 +287,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
                 DBObject query = new BasicDBObject("account.listPlan",fields);
                 DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
-                container.logger().info(result.size());
+                LOG.info(result.size());
                 while(result.hasNext()) {
                     vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, new JsonObject(result.next().toString()));
                 }

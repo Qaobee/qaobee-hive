@@ -51,6 +51,8 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
@@ -76,7 +78,7 @@ import java.util.*;
  */
 @DeployableVerticle
 public class SignupVerticle extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     /**
      * The Constant REGISTER.
      */
@@ -141,7 +143,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
         /**
          * @apiDescription Test the existence of a username in the db
@@ -206,7 +208,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         }
                     }
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 }
             }
@@ -284,7 +286,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                             }
                                             plan.setPaymentId(UUID.randomUUID().toString());
                                             plan.setStatus("open");
-                                            plan.setAmountPaid(Long.parseLong(Params.getString("plan." + plan.getLevelPlan().name() + ".price")) / 100l);
+                                            plan.setAmountPaid(Long.parseLong(Params.getString("plan." + plan.getLevelPlan().name() + ".price")) / 100L);
                                             plan.setStartPeriodDate(System.currentTimeMillis());
                                             // Si on vient du mobile, on connait le plan, mais pas par le web
                                             if (plan.getActivity() != null) {
@@ -314,7 +316,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                                                         // Envoi du mail si pas en test jUnit
                                                         if (json.getBoolean("junit", false)) {
-                                                            container.logger().debug(emailReq);
+                                                            LOG.debug(emailReq.encode());
                                                         } else {
                                                             vertx.eventBus().publish("mailer.mod", emailReq);
                                                         }
@@ -323,26 +325,26 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                         try {
                                                             res.putObject("person", mongo.getById(id, User.class));
                                                             res.putString("planId", plan.getPaymentId());
-                                                            container.logger().debug(res.encode());
+                                                            LOG.debug(res.encode());
                                                             message.reply(res.encode());
                                                         } catch (final EncodeException e) {
-                                                            container.logger().error(e.getMessage(), e);
+                                                            LOG.error(e.getMessage(), e);
                                                             utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                                                         } catch (final QaobeeException e) {
-                                                            container.logger().error(e.getMessage(), e);
+                                                            LOG.error(e.getMessage(), e);
                                                             utils.sendError(message, e);
                                                         }
                                                     }
                                                 });
                                             }
                                         } catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
-                                            container.logger().error(e.getMessage(), e);
+                                            LOG.error(e.getMessage(), e);
                                             utils.sendError(message, ExceptionCodes.PASSWD_EXCEPTION, e.getMessage());
                                         } catch (final EncodeException e) {
-                                            container.logger().error(e.getMessage(), e);
+                                            LOG.error(e.getMessage(), e);
                                             utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                                         } catch (final QaobeeException e) {
-                                            container.logger().error(e.getMessage(), e);
+                                            LOG.error(e.getMessage(), e);
                                             utils.sendError(message, e);
                                         }
                                     }
@@ -351,13 +353,13 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         }
                     }
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MAIL_EXCEPTION, e.getMessage());
                 }
             }
@@ -397,13 +399,13 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     }
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 }
             }
@@ -457,13 +459,13 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     }
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 }
             }
@@ -538,7 +540,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                     final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
 
-                    container.logger().debug("ID: " + id + ", code:" + activationCode + ", structure: " + structure + ", activity:" + activityId);
+                    LOG.debug("ID: " + id + ", code:" + activationCode + ", structure: " + structure + ", activity:" + activityId);
 
                     if (user == null) {
                         utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
@@ -709,7 +711,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         
                         // MàJ du plan FREEMIUM
                         user.getAccount().getListPlan().get(0).setPaidDate(System.currentTimeMillis());
-                        user.getAccount().getListPlan().get(0).setStatus("paid");;
+                        user.getAccount().getListPlan().get(0).setStatus("paid");
 
                         mongo.save(user);
                         message.reply(Json.encode(user));
@@ -717,16 +719,16 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     }
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }

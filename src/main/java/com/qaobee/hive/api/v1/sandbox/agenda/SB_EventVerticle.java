@@ -17,18 +17,6 @@
  */
 package com.qaobee.hive.api.v1.sandbox.agenda;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
@@ -41,6 +29,18 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The type Event verticle.
@@ -49,22 +49,10 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
  */
 @DeployableVerticle
 public class SB_EventVerticle extends AbstractGuiceVerticle {
-
-    /**
-     * Handler to get a set of events
-     */
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     public static final String GET_LIST = Module.VERSION + ".sandbox.agenda.event.list";
-    /**
-     * Handler to add a event.
-     */
     public static final String ADD = Module.VERSION + ".sandbox.agenda.event.add";
-    /**
-     * Handler to get a particular event from its ID.
-     */
     public static final String GET = Module.VERSION + ".sandbox.agenda.event.get";
-    /**
-     * Handler to update a event.
-     */
     public static final String UPDATE = Module.VERSION + ".sandbox.agenda.event.update";
 
 	/* List of parameters */
@@ -159,7 +147,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
         
         /**
          * @apiDescription retrieve all events for one or  many owner
@@ -255,24 +243,24 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                         pipelineAggregation = Arrays.asList(match, sort);
                     }
 
-                    container.logger().debug("getList : " + pipelineAggregation.toString());
+                    LOG.debug("getList : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Event.class);
 
-                    container.logger().debug(resultJSon.encodePrettily());
+                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -310,19 +298,19 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     message.reply(event.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message,e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -355,25 +343,25 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
 
                     mongo.save(event, SB_Event.class);
                     
-                    container.logger().debug("SB_Event updated : " + event.toString());
+                    LOG.debug("SB_Event updated : " + event.toString());
 
 					/* return */
                     message.reply(event.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message,e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -401,16 +389,16 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
 
                     message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_Event.class).encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }

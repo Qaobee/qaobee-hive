@@ -18,19 +18,6 @@
  */
 package com.qaobee.hive.api.v1.commons.referencial;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -46,6 +33,19 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Module commons - referencial - Structure.
@@ -62,7 +62,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 
 @DeployableVerticle(isWorker = true)
 public class StructureVerticle extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     /* List of handlers */
     /** The Constant ADD. */
     public static final String ADD = Module.VERSION + ".commons.referencial.structure.add";
@@ -103,7 +103,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
         /**
          * @api {post} /api/1/commons/referencial/structure/add Add structure
@@ -132,7 +132,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("add() - Structure");
+                LOG.debug("add() - Structure");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -143,22 +143,22 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     // Insert a structure
                     final String id = mongo.save(params, Structure.class);
 
-                    container.logger().debug("Structure added : " + params.toString());
+                    LOG.debug("Structure added : " + params.toString());
 
                     params.putString("_id", id);
                     message.reply(params.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (final EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 }
             }
@@ -186,7 +186,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("get() - Structure");
+                LOG.debug("get() - Structure");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -194,16 +194,16 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(params, PARAM_ID);
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Structure.class);
-                    container.logger().debug("Structure found : " + json.toString());
+                    LOG.debug("Structure found : " + json.toString());
                     message.reply(json.encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }
@@ -231,7 +231,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("getList() - Structure");
+                LOG.debug("getList() - Structure");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -266,22 +266,22 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     match = new BasicDBObject("$match", dbObjectParent);
                     
                     /* Pipeline */
-                    List<DBObject> pipelineAggregation = Arrays.asList(match);
+                    List<DBObject> pipelineAggregation = Collections.singletonList(match);
                     
-                    container.logger().debug("getListChampionshipHandler : " + pipelineAggregation.toString());
+                    LOG.debug("getListChampionshipHandler : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Structure.class);
                     
-                    container.logger().debug("Structure found : " + resultJSon.size());
+                    LOG.debug("Structure found : " + resultJSon.size());
                     message.reply(resultJSon.encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }
@@ -315,7 +315,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("update() - Structure");
+                LOG.debug("update() - Structure");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -326,21 +326,21 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     // Update a structure
                     mongo.save(params, Structure.class);
 
-                    container.logger().debug("Structure updated : " + params.toString());
+                    LOG.debug("Structure updated : " + params.toString());
 
                     message.reply(params.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (final EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 }
             }

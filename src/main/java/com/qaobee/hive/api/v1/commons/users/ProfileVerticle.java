@@ -32,6 +32,8 @@ import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
@@ -52,7 +54,7 @@ import java.text.DateFormat;
  */
 @DeployableVerticle
 public class ProfileVerticle extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     /**
      * The Constant UPDATE.
      */
@@ -89,6 +91,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final AsyncResult<Message<JsonObject>> pdfResp) {
                 if (pdfResp.failed()) {
+                    LOG.error(pdfResp.cause().getMessage(), pdfResp.cause());
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
                 } else {
                     final JsonObject json = new JsonObject();
@@ -109,7 +112,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
 
         /**
@@ -133,13 +136,13 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                     mongo.save(p, User.class);
                     message.reply(p.encode());
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.PASSWD_EXCEPTION, e.getMessage());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -187,10 +190,10 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
 
                     vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message,e);
                 }
             }
@@ -245,10 +248,10 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
 
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message,e);
                 }
             }
@@ -271,7 +274,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                     mongo.save(jsonperson, User.class);
                     message.reply(jsonperson);
                 } catch (final EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
                     utils.sendError(message, e);

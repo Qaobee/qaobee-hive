@@ -55,7 +55,10 @@ dependencies {
     compile 'net.tanesha.recaptcha4j:recaptcha4j:0.0.7'
     compile 'commons-beanutils:commons-beanutils:1.9.2'
     compile 'io.vertx:mod-mailer:2.0.0-final'
-    compile 'org.slf4j:slf4j-api:1.7.12'
+
+    compile group: 'org.slf4j', name:'slf4j-api', version: '1.7.2'
+    compile group: 'ch.qos.logback', name:'logback-classic', version: '1.0.9'
+    compile group: 'ch.qos.logback', name:'logback-core', version: '1.0.9'
 
 
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.46.4'

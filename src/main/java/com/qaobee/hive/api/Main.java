@@ -31,6 +31,8 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Future;
 import org.vertx.java.core.Handler;
@@ -56,19 +58,9 @@ import java.util.*;
  * @author Xavier.Marin
  */
 public class Main extends AbstractGuiceVerticle {
-
-    /**
-     * The Constant FILE_SERVE.
-     */
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     public static final String FILE_SERVE = "fileserve";
-    /**
-     * The Constant CONTENT_TYPE.
-     */
     public static final String CONTENT_TYPE = "contenttype";
-
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
 
@@ -80,7 +72,7 @@ public class Main extends AbstractGuiceVerticle {
     @Override
     public void start(final Future<Void> startedResult) {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
         final Map<String, String> envs = container.env();
         final JsonObject config = container.config();
         if (envs.containsKey("OPENSHIFT_MONGODB_DB_HOST")) {
@@ -146,7 +138,7 @@ public class Main extends AbstractGuiceVerticle {
                 final File dir = new File(datadir + "/upload");
                 if (!dir.exists()) {
                     boolean res = dir.mkdirs();
-                    container.logger().debug("Creating " + dir.getAbsolutePath() + " result : " + res);
+                    LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
                 }
                 request.putString("datadir", datadir);
                 req.expectMultiPart(true);
@@ -157,7 +149,7 @@ public class Main extends AbstractGuiceVerticle {
                         System.out.println("---->" + filename);
                         request.putString("filename", filename);
                         request.putString("contentType", upload.contentType());
-                        container.logger().debug("filename : " + filename);
+                        LOG.debug("filename : " + filename);
                         FileUtils.deleteQuietly(new File(filename));
 
                         upload.streamToFileSystem(filename);
@@ -214,7 +206,7 @@ public class Main extends AbstractGuiceVerticle {
                         path = path.subList(3, path.size());
                         wrapper.setPath(path);
                         startTimer(StringUtils.join(wrapper.getPath(), '.'));
-                        container.logger().debug(path);
+                        LOG.debug(path.toString());
                         // Remontée de métriques : nombre de requêtes
                         final JsonObject json = new JsonObject();
                         json.putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'));
@@ -227,7 +219,7 @@ public class Main extends AbstractGuiceVerticle {
                             public void handle(final AsyncResult<Message<String>> message) {
                                 stopTimer(StringUtils.join(wrapper.getPath(), '.'));
                                 if (message.succeeded()) {
-        
+
                                     final String response = message.result().body();
                                     if (response.startsWith("[") || !response.startsWith("{")) {
                                         enableCors(req);
@@ -256,7 +248,7 @@ public class Main extends AbstractGuiceVerticle {
                                 } else {
                                     final ReplyException ex = (ReplyException) message.cause();
                                     enableCors(req);
-                                    container.logger().error(ex.getMessage(), ex);
+                                    LOG.error(ex.getMessage(), ex);
                                     if (ex.failureCode() > 0) {
                                         req.response().setStatusCode(ex.failureCode());
                                     }
@@ -305,14 +297,14 @@ public class Main extends AbstractGuiceVerticle {
                 }
                 server.listen(port, ip);
 
-                container.logger().info("The http server is started");
+                LOG.info("The http server is started");
                 startedResult.setResult(null);
                 return null;
             }
         }, new Runnable<Promise<List<String>, Void>, Value<List<String>>>() {
             @Override
             public Promise<List<String>, Void> run(final Value<List<String>> value) {
-                container.logger().error(value.error.getMessage());
+                LOG.error(value.error.getMessage());
                 return null;
             }
         });

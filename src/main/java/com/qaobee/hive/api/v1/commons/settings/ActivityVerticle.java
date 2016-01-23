@@ -29,6 +29,8 @@ import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
@@ -45,7 +47,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class ActivityVerticle extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     // Declaration des variables finals
     /**
      * The Constant GET.
@@ -76,7 +78,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
         /**
          * @api {get} /api/v1/commons/settings/activity/get Read data of an Activity
@@ -99,7 +101,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("get() - Activity");
+                LOG.debug("get() - Activity");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -109,27 +111,27 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
                     // Tests mandatory parameters
                     utils.testMandatoryParams(params, PARAM_ID);
                     if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                    	container.logger().debug("get() JSON - "+params);
+                    	LOG.debug("get() JSON - "+params);
                         throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
                     }
 
                     final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Activity.class);
 
-                    container.logger().debug("Activity found : " + json.toString());
+                    LOG.debug("Activity found : " + json.toString());
 
                     message.reply(json.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -154,7 +156,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("getList() - Activity");
+                LOG.debug("getList() - Activity");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -162,18 +164,18 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
                     JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
 
-                    container.logger().debug("Activities found : " + resultJson.toString());
+                    LOG.debug("Activities found : " + resultJson.toString());
 
                     message.reply(resultJson.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
 //                } catch (QaobeeException e) {
-//                    container.logger().error(e.getMessage(), e);
+//                    LOG.error(e.getMessage(), e);
 //                    utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -199,7 +201,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug("getListEnable() - Activity");
+                LOG.debug("getListEnable() - Activity");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -208,15 +210,15 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
 
-                    container.logger().debug("Activities found : " + resultJson.toString());
+                    LOG.debug("Activities found : " + resultJson.toString());
 
                     message.reply(resultJson.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }

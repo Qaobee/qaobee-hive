@@ -23,6 +23,8 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import freemarker.template.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.file.impl.PathAdjuster;
@@ -45,30 +47,11 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class TemplatesVerticle extends AbstractGuiceVerticle {
-
-    /**
-     * The Constant DATA.
-     */
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     public static final String DATA = "data";
-
-    /**
-     * The Constant TEMPLATE.
-     */
     public static final String TEMPLATE = "template";
-
-    /**
-     * The Constant TEMPLATE_PATH.
-     */
     private static final String TEMPLATE_PATH = "mailTemplates";
-
-    /**
-     * The Constant TEMPLATE_GENERATE.
-     */
     public static final String TEMPLATE_GENERATE = "template.generate";
-
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
 
@@ -78,15 +61,15 @@ public class TemplatesVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
-        final Configuration cfg = new Configuration();
+        final Configuration cfg = new Configuration(new Version("2.3.23"));
 
         // Where do we load the templates from:
         try {
             cfg.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, TEMPLATE_PATH)));
         } catch (final IOException e) {
-            container.logger().error(e);
+            LOG.error(e.getMessage(), e);
         }
 
         // Some other recommended settings:
@@ -117,7 +100,7 @@ public class TemplatesVerticle extends AbstractGuiceVerticle {
 
                     message.reply(res);
                 } catch (IOException | TemplateException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }

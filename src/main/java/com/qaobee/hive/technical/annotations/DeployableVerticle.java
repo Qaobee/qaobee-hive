@@ -58,7 +58,6 @@ public @interface DeployableVerticle {
          */
         public static Set<Class<?>> scanPackage(String packageName) {
             Reflections reflections = new Reflections(packageName);
-            Set<Class<?>> test = reflections.getSubTypesOf(Object.class);
             return reflections.getTypesAnnotatedWith(DeployableVerticle.class);
         }
     }

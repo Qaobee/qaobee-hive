@@ -18,18 +18,6 @@
  */
 package com.qaobee.hive.api.v1.sandbox.stats;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
@@ -41,6 +29,18 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author cke
@@ -48,7 +48,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
  */
 @DeployableVerticle(isWorker = true)
 public class SB_CollecteVerticle extends AbstractGuiceVerticle {
-	
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
 	/** Collection name*/
 	public static final String COLLECTION_NAME = "SB_Collecte";
 	
@@ -133,7 +133,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
         
         /**
          * @apiDescription retrieve all documents collecte
@@ -203,26 +203,26 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
 
 					/* *** $limit section *** */
                     List<DBObject> pipelineAggregation;
-                    pipelineAggregation = Arrays.asList(match);
+                    pipelineAggregation = Collections.singletonList(match);
 
-                    container.logger().debug("getList : " + pipelineAggregation.toString());
+                    LOG.debug("getList : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, COLLECTION_NAME);
 
-                    container.logger().debug(resultJSon.encodePrettily());
+                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -257,23 +257,23 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
                     object.putString("_id", id);
 
 					/* return */
-                    container.logger().debug(object.encodePrettily());
+                    LOG.debug(object.encodePrettily());
                     message.reply(object.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message,e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -306,25 +306,25 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
 
                     mongo.update(object, COLLECTION_NAME);
                     
-                    container.logger().debug("SB_Collecte updated : " + object.toString());
+                    LOG.debug("SB_Collecte updated : " + object.toString());
 
 					/* return */
                     message.reply(object.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message,e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -350,20 +350,20 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_ID);
                     
-                    container.logger().debug("SB_Collecte GET : " + req.getParams().get(PARAM_ID).get(0));
+                    LOG.debug("SB_Collecte GET : " + req.getParams().get(PARAM_ID).get(0));
 
                     message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), COLLECTION_NAME).encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }

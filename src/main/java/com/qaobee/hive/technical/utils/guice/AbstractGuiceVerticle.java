@@ -32,17 +32,9 @@ import org.vertx.java.platform.Verticle;
  * The type Abstract guice verticle.
  */
 public class AbstractGuiceVerticle extends Verticle {
-    /**
-     * The When.
-     */
+
     protected When<String, Void> when;
-    /**
-     * The When event bus.
-     */
     protected WhenEventBus whenEventBus;
-    /**
-     * The When container.
-     */
     protected DefaultWhenContainer whenContainer;
 
     /**

@@ -19,20 +19,18 @@
 
 package com.qaobee.hive.technical.utils.guice.provides;
 
-import java.net.UnknownHostException;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.inject.Named;
-
-import org.vertx.java.core.json.JsonObject;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
+import org.vertx.java.core.json.JsonObject;
+
+import javax.inject.Named;
+import java.net.UnknownHostException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by xavier on 09/11/14.
+ * The type Mongo provider.
  */
 public class MongoProvider implements Provider<MongoDB> {
 	@Inject

@@ -31,6 +31,8 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
@@ -48,7 +50,7 @@ import java.util.*;
  */
 @DeployableVerticle(isWorker = true)
 public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     /** Handler for average rate for one or many indicator and for one or many person, group by PARAM_LIST_GROUPBY */
     public static final String GET_STAT_GROUPBY = Module.VERSION + ".sandbox.stats.statistics.getStatGroupBy";
 
@@ -97,7 +99,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
 
         /**
          * @api {post} /api/1/sandbox/stats/statistics/getStatGroupBy
@@ -128,7 +130,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug(GET_STAT_GROUPBY + " - Statistics");
+                LOG.debug(GET_STAT_GROUPBY + " - Statistics");
 
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -250,18 +252,18 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                         pipelineAggregation = Arrays.asList(match, group, sort);
                     }
 
-                    container.logger().debug("getStatGroupBy : " + pipelineAggregation.toString());
+                    LOG.debug("getStatGroupBy : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
 
-                    container.logger().debug(resultJSon.encodePrettily());
+                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 }
             }
@@ -293,7 +295,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug(GET_LISTDETAIL_VALUES + " - Statistics");
+                LOG.debug(GET_LISTDETAIL_VALUES + " - Statistics");
 
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -355,18 +357,18 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                         pipelineAggregation = Arrays.asList(match, sort);
                     }
                     
-                    container.logger().debug("getListDetailValue : " + pipelineAggregation.toString());
+                    LOG.debug("getListDetailValue : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
 
-                    container.logger().debug(resultJSon.encodePrettily());
+                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 }
             }
@@ -395,7 +397,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug(ADD_STAT + " - Statistics");
+                LOG.debug(ADD_STAT + " - Statistics");
 
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -413,13 +415,13 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     message.reply(Json.encode(stats));
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
                 }
             }
@@ -446,7 +448,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                container.logger().debug(ADD_STAT_BULK + " - Statistics");
+                LOG.debug(ADD_STAT_BULK + " - Statistics");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());
@@ -464,13 +466,13 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     message.reply(new JsonObject().putNumber("count", resultBulk.getInsertedCount()).toString());
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }

@@ -30,6 +30,8 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.EncodeException;
@@ -47,7 +49,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class TeamVerticle extends AbstractGuiceVerticle {
-	
+	public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
 	// Declaration des variables finals
 	/** The Constant ADD. */
 	public static final String ADD = Module.VERSION + ".commons.referencial.team.add";
@@ -85,7 +87,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 	@Override
 	public void start() {
 		super.start();
-		container.logger().debug(this.getClass().getName() + " started");
+		LOG.debug(this.getClass().getName() + " started");
 
 		/**
 		 * @api {post} /api/1/commons/referencial/team/add Add team
@@ -110,7 +112,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().debug("add() - Team");
+				LOG.debug("add() - Team");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -121,21 +123,21 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 					final String id = mongo.save(params, Team.class);
 					
 					params.putString("_id", id);
-					container.logger().debug("Team added : " + params.toString());
+					LOG.debug("Team added : " + params.toString());
 					
 					message.reply(params.encode());
 					
 				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
 				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
 				} catch (final EncodeException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
 				} catch (final QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
 				}
 			}
@@ -163,7 +165,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().debug("get() - Team");
+				LOG.debug("get() - Team");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -179,18 +181,18 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 					
 					final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Team.class);
 					
-					container.logger().debug("Team found : " + json.toString());
+					LOG.debug("Team found : " + json.toString());
 					
 					message.reply(json.encode());
 					
 				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
 				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
 				} catch (QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, e);
 				}
 			}
@@ -220,7 +222,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 			
 			@Override
 			public void handle(final Message<String> message) {
-				container.logger().debug("update() - Team");
+				LOG.debug("update() - Team");
 				try {
 					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 					utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -230,21 +232,21 @@ public class TeamVerticle extends AbstractGuiceVerticle {
 					// Update a team
 					mongo.save(params, Team.class);
 					
-					container.logger().debug("Team updated : " + params.toString());
+					LOG.debug("Team updated : " + params.toString());
 					
 					message.reply(params.encode());
 					
 				} catch (final NoSuchMethodException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
 				} catch (final IllegalArgumentException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
 				} catch (final EncodeException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
 				} catch (final QaobeeException e) {
-					container.logger().error(e.getMessage(), e);
+					LOG.error(e.getMessage(), e);
 					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
 				}
 			}

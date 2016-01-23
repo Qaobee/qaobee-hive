@@ -43,6 +43,8 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.eventbus.ReplyException;
@@ -60,7 +62,7 @@ import java.util.UUID;
  */
 @DeployableVerticle(isWorker = true)
 public class UserVerticle extends AbstractGuiceVerticle {
-
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     /** The Constant LOGIN. */
     public static final String LOGIN = Module.VERSION + ".commons.users.user.login";
     /** The constant LOGIN_BY_TOKEN. */
@@ -112,7 +114,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
         
         /**
          * @apiDescription Login user
@@ -144,7 +146,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
                     if (StringUtils.isBlank(infos.getString(PARAM_LOGIN)) || StringUtils.isBlank(infos.getString(PARAM_PWD))) {
                         final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
-                        container.logger().error(e.getMessage(), e);
+                        LOG.error(e.getMessage(), e);
                         utils.sendError(message, e);
                     } else {
                         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN)).get(), null, null, 0, 0, User.class);
@@ -158,7 +160,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             final byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(infos.getString(PARAM_PWD), user.getAccount().getSalt());
                             if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
                                 final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
-                                container.logger().error(e.getMessage(), e);
+                                LOG.error(e.getMessage(), e);
                                 utils.sendError(message, e);
                             } else {
                                 if (user.getAccount().isActive()) {
@@ -181,13 +183,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
                     }
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -222,19 +224,19 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         final JsonObject jsonperson = res.get(0);
                         final User user = Json.decodeValue(jsonperson.encode(), User.class);
                         user.getAccount().setToken(null);
-                        user.getAccount().setTokenRenewDate(0l);
+                        user.getAccount().setTokenRenewDate(0L);
                         user.getAccount().setMobileToken(null);
                         mongo.save(user);
                         utils.sendStatus(true, message);
                     }
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -266,7 +268,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN)).get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
                         final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", req.getLocale()));
-                        container.logger().error(e.getMessage(), e);
+                        LOG.error(e.getMessage(), e);
                         utils.sendError(message, e);
                     } else {
                         final JsonObject jsonperson = res.get(0);
@@ -297,13 +299,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     }
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -339,13 +341,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         utils.sendStatus(false, message);
                     }
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -394,13 +396,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         }
                     }
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -437,13 +439,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     message.reply(jUser.toString());
                     utils.sendStatus(true, message);
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -496,13 +498,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             });
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -532,13 +534,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     message.reply(mongo.getById(req.getParams().get("id").get(0), User.class).encode());
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
@@ -575,7 +577,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     final JsonArray res = mongo.findByCriterias(cb.get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
                         final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
-                        container.logger().error(e.getMessage(), e);
+                        LOG.error(e.getMessage(), e);
                         utils.sendError(message, e);
                     } else {
                         // we take the first one (should be only one)
@@ -585,14 +587,14 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
                         mongo.save(user);
                         String result = Json.encode(user);
-                        container.logger().debug(result);
+                        LOG.debug(result);
                         message.reply(result);
                     }
                 } catch (final IllegalArgumentException | NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }

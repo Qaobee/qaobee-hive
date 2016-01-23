@@ -25,7 +25,10 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.Version;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.file.impl.PathAdjuster;
@@ -43,46 +46,17 @@ import java.io.*;
  */
 @DeployableVerticle(isWorker = true)
 public class PDFVerticle extends AbstractGuiceVerticle {
-
-    /**
-     * The Constant GENERATE_PDF.
-     */
+    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
     public static final String GENERATE_PDF = "pdf.generate";
-    /**
-     * The Constant DATA.
-     */
     public static final String DATA = "data";
-
-    /**
-     * The Constant TEMPLATE.
-     */
     public static final String TEMPLATE = "template";
-
-    /**
-     * The Constant FILE_NAME.
-     */
     public static final String FILE_NAME = "filename";
-
-    /**
-     * The Constant PDF.
-     */
     public static final String PDF = "pdf";
-
-    /**
-     * The Constant CONTENT_TYPE.
-     */
     public static final String CONTENT_TYPE = "application/pdf";
-
-    /**
-     * The Constant TEMPLATE_PATH.
-     */
     private static final String TEMPLATE_PATH = "pdfTemplates/";
     @Inject
     private Utils utils;
-    /**
-     * The Cfg.
-     */
-    Configuration cfg = new Configuration();
+    Configuration cfg = new Configuration(new Version("2.3.23"));
 
     /**
      * Process.
@@ -109,7 +83,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        container.logger().debug(this.getClass().getName() + " started");
+        LOG.debug(this.getClass().getName() + " started");
         final Handler<Message<JsonObject>> generatePDFHandler = new Handler<Message<JsonObject>>() {
             @Override
             public void handle(final Message<JsonObject> message) {
@@ -130,7 +104,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
                     final File temp = new File(System.getProperty("java.io.tmpdir") + "/" + message.body().getString(FILE_NAME) + ".pdf");
                     if (temp.exists()) {
                         boolean res = temp.delete();
-                        container.logger().debug(res);
+                        LOG.debug(String.valueOf(res));
                     }
                     final OutputStream os = new FileOutputStream(temp);
                     final ITextRenderer renderer = new ITextRenderer();
@@ -142,7 +116,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
                     res.putString(PDF, temp.getAbsolutePath());
                     message.reply(res);
                 } catch (Exception e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
