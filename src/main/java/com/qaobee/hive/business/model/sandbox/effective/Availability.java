@@ -51,6 +51,20 @@ public class Availability {
 	private Long endDate;
 
 	/**
+	 * Constructor without parameter.
+	 */
+	public Availability() {
+	}
+	
+	/**
+	 * Constructor.
+	 */
+	public Availability(String value, String cause) {
+		this.value = value;
+		this.cause = cause;
+	}
+	
+	/**
 	 * Returns the value.<br>
 	 * <ul>
 	 * <li>available</li>

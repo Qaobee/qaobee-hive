@@ -42,6 +42,13 @@ public class Contact {
     private String googlePlus;
     /** Twitter account */
     private String twitter;
+    
+    public Contact() {
+    	home = "";
+    	cellphone = "";
+    	office = "";
+    	email = "";
+    }
 
 	/**
 	 * Returns the web site URL.

@@ -27,12 +27,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_SandBox {
 
+	/** Identifier */
+	private String _id;
     /** Owner */
     private String owner;
     /** Activity id */
     private String activityId;
-    /** Structure id */
-    private String structureId;
+    /** Sandbox Cfg ID */
+    private String sandboxCfgId;
 
     /**
      * Returns the owner.
@@ -67,18 +69,34 @@ public class SB_SandBox {
     }
 
     /**
-     * Returns the structure ID.
-     * @return String : structure ID
+     * Returns the sandbox identifier.
+     * @return String : identifier
      */
-    public String getStructureId() {
-        return structureId;
-    }
+	public String get_id() {
+		return _id;
+	}
 
-    /**
-     * Defines the structure ID.
-     * @param structureId (String) : structure ID
-     */
-    public void setStructureId(String structureId) {
-        this.structureId = structureId;
-    }
+	/**
+	 * Defines the sandbox identifier.
+	 * @param _id (String) : identifier
+	 */
+	public void set_id(String _id) {
+		this._id = _id;
+	}
+
+	/**
+	 * Returns the sandbox config ID.
+	 * @return String : sandbox config ID
+	 */
+	public String getSandboxCfgId() {
+		return sandboxCfgId;
+	}
+
+	/**
+	 * Defines the sandbox config ID.
+	 * @param sandboxCfgId (String) : sandbox config ID
+	 */
+	public void setSandboxCfgId(String sandboxCfgId) {
+		this.sandboxCfgId = sandboxCfgId;
+	}
 }

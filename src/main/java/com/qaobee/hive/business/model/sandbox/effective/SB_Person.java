@@ -26,6 +26,7 @@ import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.transversal.Address;
 import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Contact;
+import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
@@ -57,8 +58,8 @@ public class SB_Person {
 	private Address address;
 	/** Contact */
 	private Contact contact;
-	/** Squad number */
-	private String squadnumber;
+	/** Status */
+	private Status status;
 	/** Avatar */
 	private String avatar;
 	/** Job of the person */
@@ -231,22 +232,6 @@ public class SB_Person {
 	}
 
 	/**
-	 * Returns the squad number.
-	 * @return String : squad number
-	 */
-	public String getSquadnumber() {
-		return squadnumber;
-	}
-
-	/**
-	 * Defines the squad number.
-	 * @param squadnumber (String) : squad number
-	 */
-	public void setSquadnumber(String squadnumber) {
-		this.squadnumber = squadnumber;
-	}
-
-	/**
 	 * Returns the avatar.
 	 * @return String : avatar
 	 */
@@ -335,6 +320,22 @@ public class SB_Person {
 	 */
 	public void setSandboxId(String sandboxId) {
 		this.sandboxId = sandboxId;
+	}
+
+	/**
+	 * Returns the status.
+	 * @return Status : bean that describes the status
+	 */
+	public Status getStatus() {
+		return status;
+	}
+
+	/**
+	 * Defines the status.
+	 * @param status (Status) : bean that describes the status
+	 */
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 }

@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
+import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.business.model.transversal.Member;
 
@@ -35,6 +36,8 @@ public class SB_SandBoxCfg {
 
     /** Internal identifier */
     private String _id;
+    /** Activity */
+    private Activity activity;
     /** Structure */
     private Structure structure;
     /** The Sand box. */
@@ -134,5 +137,21 @@ public class SB_SandBoxCfg {
     	}
     	members.add(member);
     }
+
+    /**
+     * Returns the activity.
+     * @return Activity : bean that describes activity
+     */
+	public Activity getActivity() {
+		return activity;
+	}
+
+	/**
+	 * Defines the activity.
+	 * @param activity (Activity) : bean that describes the activity
+	 */
+	public void setActivity(Activity activity) {
+		this.activity = activity;
+	}
 
 }

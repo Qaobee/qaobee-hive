@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Member;
-import com.qaobee.hive.business.model.transversal.Tag;
 
 /**
  * Bean that describes a SandBox Effective.
@@ -43,8 +42,8 @@ public class SB_Effective {
 	private CategoryAge categoryAge;
 	/** List of persons that composed the current group */
 	private List<Member> members;
-	/** List of labels */
-	private List<Tag> labels;
+	/** Label of the effective */
+	private String label;
 	/** audit CRUD object */
 	private Audit audit;
 
@@ -124,30 +123,19 @@ public class SB_Effective {
 	}
 
 	/**
-	 * Returns the list of labels.
-	 * @return List(Tag) : list
+	 * Returns the label.
+	 * @return String : label
 	 */
-	public List<Tag> getLabels() {
-		return labels;
+	public String getLabel() {
+		return label;
 	}
 
 	/**
-	 * Defines the list of labels.
-	 * @param labels (List(Tag)) : list
+	 * Defines the label.
+	 * @param labels (String) : label
 	 */
-	public void setLabels(List<Tag> labels) {
-		this.labels = labels;
-	}
-	
-	/**
-	 * Adds a label to the list.
-	 * @param label (Tag) : label
-	 */
-	public void addLabel(Tag label) {
-		if(labels==null) {
-			labels = new ArrayList<>();
-		}
-		labels.add(label);
+	public void setLabels(String label) {
+		this.label = label;
 	}
 
 	/**

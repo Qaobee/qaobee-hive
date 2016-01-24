@@ -18,11 +18,13 @@
  */
 package com.qaobee.hive.business.model.transversal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Bean that describes a role.
  * @author Nada Vujanic-Maquin
  */
-@Deprecated  
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Role {
 
     /** Code */
@@ -32,6 +34,22 @@ public class Role {
     /** Order in list */
     private int order;
 
+    /**
+     * Constructor without parameter.
+     */
+    public Role() {
+    }
+    
+    /**
+     * Constructor.
+     * @param code (String) : code
+     * @param label (String) : label
+     */
+    public Role(String code, String label) {
+    	this.code = code;
+    	this.label = label;
+    }
+    
     /**
      * Returns the label.
      * @return String : label
