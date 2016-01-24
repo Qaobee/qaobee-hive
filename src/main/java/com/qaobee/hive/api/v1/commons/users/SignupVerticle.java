@@ -504,16 +504,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     final JsonObject jsonUser = jsonReq.getObject(PARAM_USER);
                     jsonUser.removeField("activity");
 
-                    if (jsonUser.containsField("nationality") && jsonUser.getObject("nationality") != null && jsonUser.getObject("nationality").containsField("alpha2")) {
-                        Country countryNationality = countryBusiness.getCountryFromAlpha2(jsonUser.getObject("nationality").getString("alpha2"));
-                        if (countryNationality != null) {
-                            jsonUser.removeField("nationality");
-                            jsonUser.putObject("nationality", new JsonObject(Json.encode(countryNationality)));
-                        }
-                    }
-
+                    // Converts jSon to Bean (extra parameters are ignored)
                     User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
                     final String id = jsonUser.getString("_id");
+                    
                     // Code activation
                     final String activationCode = jsonReq.getString(PARAM_CODE);
 
@@ -571,7 +565,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         user.setFirstname(userUpdate.getFirstname());
                         user.setGender(userUpdate.getGender());
                         user.setName(userUpdate.getName());
-                        user.setNationality(userUpdate.getNationality());
+                        user.setAddress(userUpdate.getAddress());
 
                         // Création Sandbox
                         JsonObject sandbox = new JsonObject();
@@ -581,7 +575,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         sandbox.putString("_id", sandboxId);
 
                         // Création SB_Person
-                        String[] listPersonsId = new String[14];
+                        String[] listPersonsId = new String[13];
                         // Coach adjoint
                         JsonObject person = new JsonObject();
                         person.putObject("address", new JsonObject(Json.encode(structureObj.getAddress())));
@@ -614,12 +608,17 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         person.putObject("status", status);
 
                         listPersonsId[0] = mongo.save(person, SB_Person.class);
+                        // TODO : avoir la liste des postes depuis l'activity config
+                        String[] tabPositionTypes = {"goalkeeper", "goalkeeper", "left-wingman", "left-wingman", "right-wingman", "right-wingman", 
+                        		"pivot", "center-backcourt", "left-backcourt", "left-backcourt", "right-backcourt", "right-backcourt"};
+                        
                         // Joueurs
-                        for (int i = 1; i < 14; i++) {
+                        for (int i = 1; i < 13; i++) {
                         	person.removeField("_id");
                             person.putString("firstname", "Numero " + i);
                             person.putString("name", "Joueur");
                             person.getObject("status").putNumber("squadnumber", i);
+                            person.getObject("status").putString("positionType", tabPositionTypes[i-1]);
                             listPersonsId[i] = mongo.save(person, SB_Person.class);
                         }
 
@@ -683,7 +682,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         role = new JsonObject();
                         role.putString("code", "player");
                         role.putString("label", "Joueur");
-                        for (int i = 1; i < 14; i++) {
+                        for (int i = 1; i < listPersonsId.length; i++) {
                             member = new JsonObject();
                             member.putString("personId", listPersonsId[i]);
                             member.putObject("role", role);
