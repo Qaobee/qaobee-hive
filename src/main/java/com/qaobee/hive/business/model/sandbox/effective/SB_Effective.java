@@ -132,9 +132,9 @@ public class SB_Effective {
 
 	/**
 	 * Defines the label.
-	 * @param labels (String) : label
+	 * @param label (String) : label
 	 */
-	public void setLabels(String label) {
+	public void setLabel(String label) {
 		this.label = label;
 	}
 

@@ -19,6 +19,22 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 
+import java.util.Collections;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.eventbus.ReplyException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Base64;
+import org.vertx.java.core.json.impl.Json;
+
 import com.englishtown.promises.Promise;
 import com.englishtown.promises.Runnable;
 import com.qaobee.hive.api.v1.Module;
@@ -40,22 +56,9 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Base64;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.util.Collections;
-import java.util.UUID;
 
 /**
  * The type User verticle.
@@ -81,6 +84,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
     public static final String META = Module.VERSION + ".commons.users.user.meta";
     /** The Constant USER_INFO */
     public static final String USER_INFO = Module.VERSION + ".commons.users.user.user";
+    /** The Constant USER_BY_LOGIN */
+    public static final String USER_BY_LOGIN = Module.VERSION + ".commons.users.user.userByLogin";
     
     /* List of parameters */
     /** User login */
@@ -533,6 +538,54 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
                     message.reply(mongo.getById(req.getParams().get("id").get(0), User.class).encode());
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (final Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
+        
+        /**
+         * @apiDescription Fetch user information by its Login
+         * @api {get} /api/1/commons/users/user/user Fetch user by login
+         * @apiVersion 0.1.0
+         * @apiName getUserByLoginhandler
+         * @apiGroup User API
+         * @apiParam {String} login
+         * @apiError HTTP_ERROR wrong request method
+         * @apiError NOT_LOGGED invalid token
+         */
+        vertx.eventBus().registerHandler(USER_BY_LOGIN, new Handler<Message<String>>() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(final Message<String> message) {
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isLoggedAndAdmin(req);
+                    // Creation of request
+					CriteriaBuilder criterias = new CriteriaBuilder();
+					criterias.add("account.login", req.getParams().get("login").get(0));
+					JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
+					if(jsonArray==null || jsonArray.size()==0) {
+						utils.sendError(message, ExceptionCodes.DB_NO_ROW_RETURNED, "Login inconnu");
+						return;
+					}
+					if(jsonArray.size()>1) {
+						utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné");
+						return;
+					}
+                    message.reply(jsonArray.get(0).toString());
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());

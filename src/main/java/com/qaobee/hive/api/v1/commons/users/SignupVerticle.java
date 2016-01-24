@@ -635,7 +635,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         SB_SandBoxCfg sb_SandBoxCfg = new SB_SandBoxCfg();
                         
                         sb_SandBoxCfg.setActivity(activityBusiness.getActivityFromId(activityId));
-                        sb_SandBoxCfg.setSandBox(sb_SandBox);
+                        sb_SandBoxCfg.setSandbox(sb_SandBox);
                         sb_SandBoxCfg.setStructure(structureObj);
                         // Search Season
                         {
@@ -673,7 +673,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         // Création Sandbox Effective
                         SB_Effective sb_Effective = new SB_Effective();
                         sb_Effective.setSandBoxCfgId(sb_SandBoxCfg.get_id());
-                        sb_Effective.setLabels("Defaut");
+                        sb_Effective.setLabel("Defaut");
                         sb_Effective.setCategoryAge((CategoryAge)Json.decodeValue(categoryAge.encode(), CategoryAge.class));
                         
                         // SB_Effective -> members

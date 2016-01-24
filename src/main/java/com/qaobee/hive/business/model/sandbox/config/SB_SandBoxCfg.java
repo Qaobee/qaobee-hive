@@ -41,7 +41,7 @@ public class SB_SandBoxCfg {
     /** Structure */
     private Structure structure;
     /** The Sand box. */
-    private SB_SandBox sandBox;
+    private SB_SandBox sandbox;
     /** Season */
     private Season season;
     /** List of Members */
@@ -83,16 +83,16 @@ public class SB_SandBoxCfg {
      * Returns the sandbox.
      * @return SB_SandBox : sandbox
      */
-    public SB_SandBox getSandBox() {
-        return sandBox;
+    public SB_SandBox getSandbox() {
+        return sandbox;
     }
 
     /**
      * Defines the sandbox.
      * @param sandBox (SB_SandBox) : sandbox
      */
-    public void setSandBox(SB_SandBox sandBox) {
-        this.sandBox = sandBox;
+    public void setSandbox(SB_SandBox sandbox) {
+        this.sandbox = sandbox;
     }
 
     /**
