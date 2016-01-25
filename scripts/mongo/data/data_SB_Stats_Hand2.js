@@ -48,6 +48,29 @@ db.SB_Stats.insert({
     "value" : 0
 });
 
+/* 5 */
+db.SB_Stats.insert({
+    "_id" : ObjectId("56563c0ee4b0972ccfb360b5").valueOf(),
+    "activityId" : "ACT-HAND",
+    "attack" : false,
+    "chrono" : 77,
+    "code" : "yellowCard",
+    "eventId" : "35d65151-2fe5-48e1-a219-8534412b6bca",
+    "mRowid" : 112,
+    "owner" : [ 
+        "561ec20b409937a6b439d4e9", 
+        "561ec4d0409937a6b439d4ea", "59bb6da2-b9d2-4453-856d-52a0fb98eac1", 
+        "937918db-848e-4a6d-8feb-a7ba6bd60f5a", 
+        "941f9d48-45e8-4b2f-b0ce-d33900a92fb8"
+    ],
+    "phaseSeqId" : "407426cc-0ad5-41b9-a562-87b82ad46524",
+    "producter" : [ 
+        "b50b3325-fdbd-41bf-bda4-81c827982001"
+    ],
+    "timer" : NumberLong(1446911672294),
+    "value" : "1"
+});
+
 /* 2 */
 db.SB_Stats.insert({
     "_id" : ObjectId("563f1c6ae4b09c0c5169823e").valueOf(),
