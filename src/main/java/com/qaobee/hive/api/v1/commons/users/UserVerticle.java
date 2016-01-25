@@ -336,6 +336,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     final String id = req.getParams().get("id").get(0);
                     final String code = req.getParams().get("code").get(0);
                     JsonObject jsonUser = mongo.getById(id, User.class);
+                    // User not found
+                    if(jsonUser==null) {
+                    	utils.sendStatus(false, message);
+                    }
+                    
                     final User user = Json.decodeValue(jsonUser.encode(), User.class);
                     if (code.equals(user.getAccount().getActivationPasswd())) {
                         final JsonObject jsonResp = new JsonObject();
@@ -343,6 +348,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         jsonResp.putObject("user", mongo.getById(id, User.class));
                         message.reply(jsonResp.encode());
                     } else {
+                    	// Code doesn't match
                         utils.sendStatus(false, message);
                     }
                 } catch (final NoSuchMethodException e) {
