@@ -348,4 +348,19 @@ public class UtilsImpl implements Utils {
         }
         return user;
     }
+
+	
+	@Override
+	public long randomDate(int yearOldMin, int yearOldMax) {
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(new Date());
+		if(yearOldMin >= yearOldMax) {
+			calendar.add(GregorianCalendar.YEAR, -1 * yearOldMin);
+		} else {
+			calendar.add(GregorianCalendar.YEAR, -1 * ((int)Math.round(Math.random()* (yearOldMax - yearOldMin)) + yearOldMin));
+		}
+		calendar.set(GregorianCalendar.DAY_OF_YEAR, (int)Math.round(Math.random()* 365));
+		
+		return calendar.getTimeInMillis();
+	}
 }

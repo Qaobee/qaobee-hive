@@ -22,6 +22,7 @@ package com.qaobee.hive.api.v1.commons.users;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,8 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.business.commons.settings.ActivityBusiness;
@@ -45,6 +48,7 @@ import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
+import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.commons.settings.Season;
@@ -545,6 +549,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     
                     // JSon Category Age
                     JsonObject categoryAge = jsonReq.getObject(PARAM_CATEGORY_AGE);
+                    CategoryAge categoryAgeObj = (CategoryAge)Json.decodeValue(categoryAge.encode(), CategoryAge.class);
 
                     // Country
                     final String countryId = jsonReq.getString("country", "CNTR-250-FR-FRA");
@@ -590,45 +595,61 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         sb_SandBox.setOwner(user.get_id());
                         sb_SandBox.set_id(mongo.save(sb_SandBox));
 
+                        JsonArray tabParametersSignup = null;
+                        try {
+                        	DBObject match, project;
+                        	// $MATCH section
+                            BasicDBObject dbObjectParent = new BasicDBObject();
+                            dbObjectParent.put("activityId", activityId);
+                            dbObjectParent.put("countryId", countryId);
+                            match = new BasicDBObject("$match", dbObjectParent);
+                            // $PROJECT section
+        					dbObjectParent = new BasicDBObject();
+        					dbObjectParent.put("_id", 0);
+        					dbObjectParent.put("parametersSignup", 1);
+        					project = new BasicDBObject("$project", dbObjectParent);
+        					List<DBObject> pipelineAggregation = Arrays.asList(match, project);
+        					tabParametersSignup = mongo.aggregate("parametersSignup", pipelineAggregation, ActivityCfg.class);
+                        } catch(Exception e) {
+                        	
+                        }
+                        
                         // Création SB_Person
-                        String[] listPersonsId = new String[13];
-                        // Coach adjoint
-                        SB_Person sb_person = new SB_Person();
-                        sb_person.setAddress(structureObj.getAddress());
-                        sb_person.setBirthcity(structureObj.getAddress().getCity());
-                        sb_person.setBirthcountry(structureObj.getCountry());
-                        sb_person.setNationality(structureObj.getCountry());
-                        sb_person.setBirthdate(0);
-                        sb_person.setFirstname("Assistant");
-                        sb_person.setName("Coach");
-                        sb_person.setGender("gender.male");
-                        sb_person.setSandboxId(sb_SandBox.get_id());
-                        
-                        sb_person.setContact(new Contact());
-                        
-                        Status status = new Status();
-                        status.setAvailability(new Availability("available", "available"));
-                        status.setHeight(0);
-                        status.setLaterality("right-handed");
-                        status.setPositionType("");
-                        status.setSquadnumber(0);
-                        status.setStateForm("good");
-                        status.setWeight(0);
-                        sb_person.setStatus(status);
-
-                        listPersonsId[0] = mongo.save(sb_person);
-
-                        // TODO : avoir la liste des postes depuis l'activity config
-                        String[] tabPositionTypes = {"goalkeeper", "goalkeeper", "left-wingman", "left-wingman", "right-wingman", "right-wingman", 
-                        		"pivot", "center-backcourt", "left-backcourt", "left-backcourt", "right-backcourt", "right-backcourt"};
-                        
-                        // Joueurs
-                        for (int i = 1; i < 13; i++) {
-                        	sb_person.setFirstname("Numero " + i);
-                        	sb_person.setName("Joueur");
-                        	sb_person.getStatus().setSquadnumber(i);
-                        	sb_person.getStatus().setPositionType(tabPositionTypes[i-1]);
-                            listPersonsId[i] = mongo.save(sb_person);
+                        List<String> listPersonsId = new ArrayList<>();
+                        if(tabParametersSignup!=null && tabParametersSignup.size()>0) {
+                        	JsonObject parametersSignup = (JsonObject) tabParametersSignup.get(0);
+                        	if(parametersSignup.containsField("parametersSignup") && parametersSignup.getObject("parametersSignup").containsField("players")) {
+                        		JsonArray tabPlayers = parametersSignup.getObject("parametersSignup").getArray("players");
+                        		
+                        		for(int i=0; i<tabPlayers.size(); i++) {
+                        			JsonObject player = tabPlayers.get(i);
+                        			for(int qte=0; qte < player.getInteger("quantity", 0); qte++) {
+                        				SB_Person sb_person = new SB_Person();
+                        				sb_person.setFirstname("Numero " + (listPersonsId.size() + 1));
+                                    	sb_person.setName("Joueur");
+                                        sb_person.setBirthcity(structureObj.getAddress().getCity());
+                                        sb_person.setBirthcountry(structureObj.getCountry());
+                                        sb_person.setBirthdate(utils.randomDate(categoryAgeObj.getAgeMin(), 
+                                        		categoryAgeObj.getAgeMax()>65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
+                                        sb_person.setNationality(structureObj.getCountry());
+                                        sb_person.setGender(categoryAgeObj.getGenre());
+                                        sb_person.setSandboxId(sb_SandBox.get_id());
+                                        sb_person.setContact(new Contact());
+                                        
+                                        Status status = new Status();
+                                        status.setAvailability(new Availability("available", "available"));
+                                        status.setHeight((int)Math.round(Math.random()*30)+150);
+                                        status.setLaterality(Math.random()>0.5?"right-handed":"left-handed");
+                                        status.setStateForm("good");
+                                        status.setWeight((int)Math.round(Math.random()*20)+70);
+                                        sb_person.setStatus(status);
+                                    	
+                                    	sb_person.getStatus().setSquadnumber(listPersonsId.size() + 1);
+                                    	sb_person.getStatus().setPositionType(player.getString("positionType"));
+                                    	listPersonsId.add(mongo.save(sb_person));
+                        			}
+                        		}
+                        	}
                         }
 
                         // Création SandBoxCfg
@@ -657,12 +678,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                             }
                         }
                         
-                        // SB_Cfg -> Members
-                        Member member = new Member();
-                        member.setPersonId(listPersonsId[0]);
-                        member.setRole(new Role("acoach", "Coach Adjoint"));
-                        sb_SandBoxCfg.addMember(member);
-
                         // Sauvegarde SB_Cfg
                         sb_SandBoxCfg.set_id(mongo.save(sb_SandBoxCfg));
 
@@ -674,13 +689,13 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         SB_Effective sb_Effective = new SB_Effective();
                         sb_Effective.setSandBoxCfgId(sb_SandBoxCfg.get_id());
                         sb_Effective.setLabel("Defaut");
-                        sb_Effective.setCategoryAge((CategoryAge)Json.decodeValue(categoryAge.encode(), CategoryAge.class));
+                        sb_Effective.setCategoryAge(categoryAgeObj);
                         
                         // SB_Effective -> members
-                        for (int i = 1; i < listPersonsId.length; i++) {
-                        	member = new Member();
+                        for (String playerId : listPersonsId) {
+                        	Member member = new Member();
                             member.setRole(new Role("player", "Joueur"));
-                            member.setPersonId(listPersonsId[i]);
+                            member.setPersonId(playerId);
                         	sb_Effective.addMember(member);
                         }
                         sb_Effective.set_id(mongo.save(sb_Effective));

@@ -666,5 +666,29 @@ db.ActivityCfg.insert({
         "yellowCardMax": 1,
         "exclusionTempo": 3,
         "halfTimeDuration": 600
+    },
+    "parametersSignup" : {
+    	"players" : [{
+    		"positionType" : "goalkeeper",
+    		"quantity" : NumberInt(2)
+    	}, {
+    		"positionType" : "left-wingman",
+    		"quantity" : NumberInt(2)
+    	}, {
+    		"positionType" : "right-wingman",
+    		"quantity" : NumberInt(2)
+    	}, {
+    		"positionType" : "pivot",
+    		"quantity" : NumberInt(1)
+    	}, {
+    		"positionType" : "center-backcourt",
+    		"quantity" : NumberInt(1)
+    	}, {
+    		"positionType" : "left-backcourt",
+    		"quantity" : NumberInt(2)
+    	}, {
+    		"positionType" : "right-backcourt",
+    		"quantity" : NumberInt(2)
+    	}]
     }
 }); 
