@@ -58,6 +58,8 @@ public class Availability {
 	
 	/**
 	 * Constructor.
+	 * @param value (String) : availability value
+	 * @param cause (String) : availability cause
 	 */
 	public Availability(String value, String cause) {
 		this.value = value;

@@ -89,7 +89,7 @@ public class SB_SandBoxCfg {
 
     /**
      * Defines the sandbox.
-     * @param sandBox (SB_SandBox) : sandbox
+     * @param sandbox (SB_SandBox) : sandbox
      */
     public void setSandbox(SB_SandBox sandbox) {
         this.sandbox = sandbox;
