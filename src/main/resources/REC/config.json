@@ -1,0 +1,44 @@
+{
+  "runtime": {
+    "version": 1
+  },
+  "cors": {
+    "enabled": true
+  },
+  "pdf": {
+    "css": [
+    ]
+  },
+  "metrix.mod": {
+    "address": "metrix"
+  },
+  "mongo.persistor": {
+    "address": "mongo.db",
+    "pool_size": 10,
+    "db_name": "hive",
+    "read_preference": "nearest"
+  },
+  "payplug": {
+    "baseUrl": "api.payplug.com",
+    "ipn_url": "https://hive-qaobee.rhcloud.com/api/1/commons/users/shipping/ipn",
+    "return_url": "https://rec.qaobee.com/qswarm-web/#/signup/coach/end",
+    "cancel_url": "https://rec.qaobee.com/#/signup/coach/cancel",
+    "api_key": "sk_live_bdb7dcd46103d08f7fd207d4c982f1aa",
+    "port": 443,
+    "basePath": "/v1"
+  },
+  "mailer.mod": {
+    "test": true,
+    "address": "mailer.mod",
+    "host": "ssl0.ovh.net",
+    "port": 465,
+    "ssl": true,
+    "auth": true,
+    "username": "contact@qaobee.com",
+    "password": "qaobee29",
+    "content_type": "text/html",
+    "sendTimeout": 5000,
+    "debug": true,
+    "debugAddress": "logger"
+  }
+}
