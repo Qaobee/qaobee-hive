@@ -53,7 +53,15 @@ db.User.insert({
     "avatar" : null,
     "name" : "Kervella",
     "firstname" : "Christophe",
-    "address" : null,
+    "address" : {
+        "formatedAddress" : "45 Allée Parc ar Groas, Plouzané, France",
+        "lat" : 48.3771823000000012,
+        "lng" : -4.6230722000000002,
+        "place" : "45 Allée Parc ar Groas",
+        "city" : "Plouzané",
+        "country" : "France",
+        "zipcode" : "29280"
+    },
     "birthdate" : 0,
     "contact" : {
         "home" : null,
@@ -106,7 +114,7 @@ db.User.insert({
         "mobileToken" : null
     },
     "timestamp" : NumberLong(1444854317672),
-    "gender" : null,
+    "gender" : "gender.male",
     "notifications" : null,
     "effectiveDefault" : "561ec4d0409937a6b439d4ea"
 });
