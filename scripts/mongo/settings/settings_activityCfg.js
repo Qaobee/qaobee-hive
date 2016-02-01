@@ -30,76 +30,6 @@ db.ActivityCfg.insert({
     "startDate" : NumberLong(-2208992400000),
     /* End : 31/12/2199*/
     "endDate" : NumberLong(7258028400000),
-    "caracteristicsPerson" : [{
-        "positionType" : ["forward", "midfielder", "defender"],
-        "physicalFolder" : [
-            { key:"explosive", value: NumberInt(3)},
-            { key:"speed", value: NumberInt(3)},
-            { key:"traction", value: NumberInt(3)},
-            { key:"verticaljump", value: NumberInt(3)},
-            { key:"endurance", value: NumberInt(3)},
-            { key:"equilibrium", value: NumberInt(3)},
-            { key:"strenght", value: NumberInt(3)},
-            { key:"nimbleness", value: NumberInt(3)}
-        ],
-        "technicalFolder" : [
-            { key:"pass", value: NumberInt(3)},
-            { key:"center", value: NumberInt(3)},
-            { key:"corner", value: NumberInt(3)},
-            { key:"freekick", value: NumberInt(3)},
-            { key:"penalty", value: NumberInt(3)},
-            { key:"shoot", value: NumberInt(3)},
-            { key:"dribble", value: NumberInt(3)},
-            { key:"tacle", value: NumberInt(3)}
-        ],
-        "mentalFolder" : [
-            { key:"aggressiveness", value: NumberInt(3)},
-            { key:"anticipation", value: NumberInt(3)},
-            { key:"concentration", value: NumberInt(3)},
-            { key:"altruism", value: NumberInt(3)},
-            { key:"courage", value: NumberInt(3)},
-            { key:"creativity", value: NumberInt(3)},
-            { key:"motivation", value: NumberInt(3)},
-            { key:"self-control", value: NumberInt(3)},
-            { key:"leadership", value: NumberInt(3)},
-            { key:"professionalism", value: NumberInt(3)}
-        ]
-    },
-        {
-            "positionType" : ["goalkeeper"],
-            "physicalFolder" : [
-                { key:"explosive", value: NumberInt(3)},
-                { key:"speed", value: NumberInt(3)},
-                { key:"traction", value: NumberInt(3)},
-                { key:"verticaljump", value: NumberInt(3)},
-                { key:"endurance", value: NumberInt(3)},
-                { key:"equilibrium", value: NumberInt(3)},
-                { key:"strenght", value: NumberInt(3)},
-                { key:"nimbleness", value: NumberInt(3)}
-            ],
-            "technicalFolder" : [
-                { key:"pass", value: NumberInt(3)},
-                { key:"center", value: NumberInt(3)},
-                { key:"corner", value: NumberInt(3)},
-                { key:"freekick", value: NumberInt(3)},
-                { key:"penalty", value: NumberInt(3)},
-                { key:"shoot", value: NumberInt(3)},
-                { key:"dribble", value: NumberInt(3)},
-                { key:"tacle", value: NumberInt(3)}
-            ],
-            "mentalFolder" : [
-                { key:"aggressiveness", value: NumberInt(3)},
-                { key:"anticipation", value: NumberInt(3)},
-                { key:"concentration", value: NumberInt(3)},
-                { key:"altruism", value: NumberInt(3)},
-                { key:"courage", value: NumberInt(3)},
-                { key:"creativity", value: NumberInt(3)},
-                { key:"motivation", value: NumberInt(3)},
-                { key:"self-control", value: NumberInt(3)},
-                { key:"leadership", value: NumberInt(3)},
-                { key:"professionalism", value: NumberInt(3)}
-            ]
-        }],
     "listPositionType" : [ {
         "code" : "forward",
         "label" : "Attaquant",
@@ -259,6 +189,19 @@ db.ActivityCfg.insert({
         "label" : "Mixte",
         "order" : NumberInt(3)
     } ],
+    "listLaterality" : [ {
+        "code" : "lateralityR",
+        "label" : "Droitier",
+        "order" : NumberInt(1)
+    }, {
+        "code" : "lateralityL",
+        "label" : "Gaucher",
+        "order" : NumberInt(2)
+    }, {
+        "code" : "lateralityA",
+        "label" : "Ambidextre",
+        "order" : NumberInt(3)
+    } ],
     "listTypeLicense" : [ {
         "code" : "A",
         "label" : "Dirigeant",
@@ -311,6 +254,21 @@ db.ActivityCfg.insert({
         "yellowCardMax": 2,
         "exclusionTempo": 0,
         "halfTimeDuration": 600
+    },
+    "parametersSignup" : {
+    	"players" : [{
+    		"positionType" : "goalkeeper",
+    		"quantity" : NumberInt(2)
+    	}, {
+    		"positionType" : "defender",
+    		"quantity" : NumberInt(5)
+    	}, {
+    		"positionType" : "midfielder",
+    		"quantity" : NumberInt(5)
+    	}, {
+    		"positionType" : "forward",
+    		"quantity" : NumberInt(5)
+    	}]
     }
 });
 
@@ -326,76 +284,6 @@ db.ActivityCfg.insert({
     "startDate" : NumberLong(-2208992400000),
     /* End : 31/12/2199*/
     "endDate" : NumberLong(7258028400000),
-    "caracteristicsPerson" : [{
-	        "positionType" : ["pivot", "center-backcourt", "left-backcourt", "right-backcourt", "left-wingman", "right-wingman"],
-	        "physicalFolder" : [
-	            { key:"explosive", value: NumberInt(3)},
-	            { key:"speed", value: NumberInt(3)},
-	            { key:"traction", value: NumberInt(3)},
-	            { key:"verticaljump", value: NumberInt(3)},
-	            { key:"endurance", value: NumberInt(3)},
-	            { key:"equilibrium", value: NumberInt(3)},
-	            { key:"strenght", value: NumberInt(3)},
-	            { key:"nimbleness", value: NumberInt(3)}
-	        ],
-	        "technicalFolder" : [
-	            { key:"pass", value: NumberInt(3)},
-	            { key:"center", value: NumberInt(3)},
-	            { key:"corner", value: NumberInt(3)},
-	            { key:"freekick", value: NumberInt(3)},
-	            { key:"penalty", value: NumberInt(3)},
-	            { key:"shoot", value: NumberInt(3)},
-	            { key:"dribble", value: NumberInt(3)},
-	            { key:"tacle", value: NumberInt(3)}
-	        ],
-	        "mentalFolder" : [
-	            { key:"aggressiveness", value: NumberInt(3)},
-	            { key:"anticipation", value: NumberInt(3)},
-	            { key:"concentration", value: NumberInt(3)},
-	            { key:"altruism", value: NumberInt(3)},
-	            { key:"courage", value: NumberInt(3)},
-	            { key:"creativity", value: NumberInt(3)},
-	            { key:"motivation", value: NumberInt(3)},
-	            { key:"self-control", value: NumberInt(3)},
-	            { key:"leadership", value: NumberInt(3)},
-	            { key:"professionalism", value: NumberInt(3)}
-	        ]
-	    },
-        {
-            "positionType" : ["goalkeeper"],
-            "physicalFolder" : [
-                { key:"explosive", value: NumberInt(3)},
-                { key:"speed", value: NumberInt(3)},
-                { key:"traction", value: NumberInt(3)},
-                { key:"verticaljump", value: NumberInt(3)},
-                { key:"endurance", value: NumberInt(3)},
-                { key:"equilibrium", value: NumberInt(3)},
-                { key:"strenght", value: NumberInt(3)},
-                { key:"nimbleness", value: NumberInt(3)}
-            ],
-            "technicalFolder" : [
-                { key:"pass", value: NumberInt(3)},
-                { key:"center", value: NumberInt(3)},
-                { key:"corner", value: NumberInt(3)},
-                { key:"freekick", value: NumberInt(3)},
-                { key:"penalty", value: NumberInt(3)},
-                { key:"shoot", value: NumberInt(3)},
-                { key:"dribble", value: NumberInt(3)},
-                { key:"tacle", value: NumberInt(3)}
-            ],
-            "mentalFolder" : [
-                { key:"aggressiveness", value: NumberInt(3)},
-                { key:"anticipation", value: NumberInt(3)},
-                { key:"concentration", value: NumberInt(3)},
-                { key:"altruism", value: NumberInt(3)},
-                { key:"courage", value: NumberInt(3)},
-                { key:"creativity", value: NumberInt(3)},
-                { key:"motivation", value: NumberInt(3)},
-                { key:"self-control", value: NumberInt(3)},
-                { key:"leadership", value: NumberInt(3)},
-                { key:"professionalism", value: NumberInt(3)}
-            ]
-    }],
     "listPositionType" : [ {
         "code" : "left-wingman",
         "label" : "Ailier Gauche",
@@ -608,6 +496,19 @@ db.ActivityCfg.insert({
     }, {
         "code" : "mixte",
         "label" : "Mixte",
+        "order" : NumberInt(3)
+    } ],
+    "listLaterality" : [ {
+        "code" : "lateralityR",
+        "label" : "Droitier",
+        "order" : NumberInt(1)
+    }, {
+        "code" : "lateralityL",
+        "label" : "Gaucher",
+        "order" : NumberInt(2)
+    }, {
+        "code" : "lateralityA",
+        "label" : "Ambidextre",
         "order" : NumberInt(3)
     } ],
     "listTypeLicense" : [ {
