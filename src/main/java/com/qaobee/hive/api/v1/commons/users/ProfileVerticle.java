@@ -27,6 +27,7 @@ import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -79,7 +80,8 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     private Utils utils;
     @Inject
     private PersonUtils personUtils;
-
+    @Inject
+    private PasswordEncryptionService passwordEncryptionService;
     /**
      * Get a message handler
      *
@@ -131,19 +133,30 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    JsonObject u = new JsonObject(req.getBody());
                     final User user = Json.decodeValue(req.getBody(), User.class);
-                    final JsonObject p = new JsonObject(Json.encode(personUtils.prepareUpsert(user)));
-                    mongo.save(p, User.class);
-                    message.reply(p.encode());
+                    if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
+                        final byte[] salt = passwordEncryptionService.generateSalt();
+                        user.getAccount().setSalt(salt);
+                        user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
+                        user.getAccount().setPasswd(null);
+                        u.putObject("account", new JsonObject(Json.encode(user.getAccount())));
+                    } else {
+                        JsonObject p = mongo.getById(user.get_id(), User.class.getSimpleName());
+                        u.putObject("account", p.getObject("account"));
+                    }
+
+                    mongo.save(u, User.class.getSimpleName());
+                    message.reply(u.encode());
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.PASSWD_EXCEPTION, e.getMessage());
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final QaobeeException e) {
+                } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                    utils.sendError(message, e);
                 }
             }
         };
