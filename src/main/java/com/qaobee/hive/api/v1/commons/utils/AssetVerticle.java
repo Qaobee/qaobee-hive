@@ -146,7 +146,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                             resp.putString("Content-Length", Integer.toString(asset.length));
                             resp.putBinary("asset", asset);
                         } else {
-                            byte[] asset = FileUtils.readFileToByteArray(new File("web/imgs/user.png"));
+                            byte[] asset = FileUtils.readFileToByteArray(new File("web/user.png"));
                             resp.putString("Content-Length", Integer.toString(asset.length));
                             resp.putBinary("asset", asset);
                         }

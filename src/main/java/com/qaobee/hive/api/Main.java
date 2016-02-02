@@ -58,7 +58,8 @@ import java.util.*;
  * @author Xavier.Marin
  */
 public class Main extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    public static Logger LOG = LoggerFactory.getLogger(new Object() {
+    }.getClass().getEnclosingClass());
     public static final String FILE_SERVE = "fileserve";
     public static final String CONTENT_TYPE = "contenttype";
     @Inject
@@ -151,11 +152,11 @@ public class Main extends AbstractGuiceVerticle {
                         request.putString("contentType", upload.contentType());
                         LOG.debug("filename : " + filename);
                         FileUtils.deleteQuietly(new File(filename));
-
                         upload.streamToFileSystem(filename);
                         upload.endHandler(new Handler<Void>() {
                             @Override
                             public void handle(Void event) {
+                                upload.pause();
                                 eb.send(AssetVerticle.ADD, request, new Handler<Message<JsonObject>>() {
                                     @Override
                                     public void handle(Message<JsonObject> message) {
@@ -278,10 +279,10 @@ public class Main extends AbstractGuiceVerticle {
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
         for (final Class<?> restMod : restModules) {
-            if(restMod.getAnnotation(DeployableVerticle.class).isWorker())
-            promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), config, 2, true));
+            if (restMod.getAnnotation(DeployableVerticle.class).isWorker())
+                promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), config, 2, true));
             else
-            promises.add(whenContainer.deployVerticle(restMod.getName(), config));
+                promises.add(whenContainer.deployVerticle(restMod.getName(), config));
         }
         when.all(promises, new com.englishtown.promises.Runnable<Promise<List<String>, Void>, List<String>>() {
             @Override
