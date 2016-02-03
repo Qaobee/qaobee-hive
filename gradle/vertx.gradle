@@ -117,6 +117,10 @@ task copyMod( type:Copy, dependsOn: 'classes', description: 'Assemble the module
         from 'src/main/resources/PROD'
         into "build/mods/$moduleName"
     }
+    if(environment == 'rec') {
+        from 'src/main/resources/REC'
+        into "build/mods/$moduleName"
+    }
 }
 
 task modZip( type: Zip, dependsOn: 'pullInDeps', description: 'Package the module .zip file') {
