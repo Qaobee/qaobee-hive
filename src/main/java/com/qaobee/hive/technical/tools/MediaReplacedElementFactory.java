@@ -85,12 +85,10 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
                 final byte[] bytes = IOUtils.toByteArray(input);
                 final Image image = Image.getInstance(bytes);
                 final FSImage fsImage = new ITextFSImage(image);
-                if (fsImage != null) {
-                    if (cssWidth != -1 || cssHeight != -1) {
-                        fsImage.scale(cssWidth, cssHeight);
-                    }
-                    return new ITextImageElement(fsImage);
+                if (cssWidth != -1 || cssHeight != -1) {
+                    fsImage.scale(cssWidth, cssHeight);
                 }
+                return new ITextImageElement(fsImage);
             } catch (final Exception e) {
                 throw new RuntimeException("There was a problem trying to read a template embedded graphic.", e);
             } finally {
