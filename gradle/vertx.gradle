@@ -22,7 +22,6 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: "jacoco"
 
-
 def cpSeparator = System.getProperty("path.separator")
 
 // We  have to explicitly load props from the user home dir - on CI we set
@@ -84,7 +83,6 @@ buildscript {
         classpath "io.vertx:vertx-core:$vertxVersion"
         classpath "io.vertx:vertx-platform:$vertxVersion"
         classpath "io.vertx:vertx-hazelcast:$vertxVersion"
-
         // Extra classpath for Vert.x
 
         // Users can be Vert.x platform classpath files (e.g. langs.properties) in either src/main/platform_lib
@@ -262,3 +260,4 @@ plugins.withType(IdeaPlugin) {
         }
     }
 }
+
