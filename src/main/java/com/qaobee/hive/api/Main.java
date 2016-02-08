@@ -58,8 +58,7 @@ import java.util.*;
  * @author Xavier.Marin
  */
 public class Main extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() {
-    }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
     public static final String FILE_SERVE = "fileserve";
     public static final String CONTENT_TYPE = "contenttype";
     @Inject

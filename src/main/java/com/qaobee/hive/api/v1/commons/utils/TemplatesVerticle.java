@@ -47,7 +47,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class TemplatesVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(TemplatesVerticle.class);
     public static final String DATA = "data";
     public static final String TEMPLATE = "template";
     private static final String TEMPLATE_PATH = "mailTemplates";

@@ -312,8 +312,8 @@ public class UtilsImpl implements Utils {
             if (Constantes.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
                 userToSave.putString("account.token", null);
                 user.getAccount().setToken(null);
-                userToSave.putNumber("account.tokenRenewDate", 0l);
-                user.getAccount().setTokenRenewDate(0l);
+                userToSave.putNumber("account.tokenRenewDate", 0L);
+                user.getAccount().setTokenRenewDate(0L);
             } else {
                 long connectionTime = System.currentTimeMillis();
                 userToSave.putNumber("account.tokenRenewDate", connectionTime);

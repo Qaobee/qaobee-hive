@@ -19,22 +19,6 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 
-import java.util.Collections;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Base64;
-import org.vertx.java.core.json.impl.Json;
-
 import com.englishtown.promises.Promise;
 import com.englishtown.promises.Runnable;
 import com.qaobee.hive.api.v1.Module;
@@ -56,60 +40,111 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.eventbus.ReplyException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Base64;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.Collections;
+import java.util.UUID;
 
 /**
  * The type User verticle.
  */
 @DeployableVerticle(isWorker = true)
 public class UserVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
-    /** The Constant LOGIN. */
+    private static final Logger LOG = LoggerFactory.getLogger(UserVerticle.class);
+    /**
+     * The Constant LOGIN.
+     */
     public static final String LOGIN = Module.VERSION + ".commons.users.user.login";
-    /** The constant LOGIN_BY_TOKEN. */
+    /**
+     * The constant LOGIN_BY_TOKEN.
+     */
     public static final String LOGIN_BY_TOKEN = Module.VERSION + ".commons.users.user.sso";
-    /** The Constant LOGOUT. */
+    /**
+     * The Constant LOGOUT.
+     */
     public static final String LOGOUT = Module.VERSION + ".commons.users.user.logout";
-    /** The Constant PASSWD_RENEW. */
+    /**
+     * The Constant PASSWD_RENEW.
+     */
     public static final String PASSWD_RENEW = Module.VERSION + ".commons.users.user.newpasswd";
-    /** The Constant PASSWD_RENEW_CHK. */
+    /**
+     * The Constant PASSWD_RENEW_CHK.
+     */
     public static final String PASSWD_RENEW_CHK = Module.VERSION + ".commons.users.user.passwdcheck";
-    /** The Constant PASSWD_RESET. */
+    /**
+     * The Constant PASSWD_RESET.
+     */
     public static final String PASSWD_RESET = Module.VERSION + ".commons.users.user.resetPasswd";
-    /** The Constant CURRENT. */
+    /**
+     * The Constant CURRENT.
+     */
     public static final String CURRENT = Module.VERSION + ".commons.users.user.current";
-    /** The Constant META. */
+    /**
+     * The Constant META.
+     */
     public static final String META = Module.VERSION + ".commons.users.user.meta";
-    /** The Constant USER_INFO */
+    /**
+     * The Constant USER_INFO
+     */
     public static final String USER_INFO = Module.VERSION + ".commons.users.user.user";
-    /** The Constant USER_BY_LOGIN */
+    /**
+     * The Constant USER_BY_LOGIN
+     */
     public static final String USER_BY_LOGIN = Module.VERSION + ".commons.users.user.userByLogin";
     
     /* List of parameters */
-    /** User login */
+    /**
+     * User login
+     */
     public static final String PARAM_LOGIN = "login";
-    /** The constant PARAM_COUNTRY_ID. */
+    /**
+     * The constant PARAM_COUNTRY_ID.
+     */
     public static final String PARAM_COUNTRY_ID = "country";
-    /** User password */
+    /**
+     * User password
+     */
     public static final String PARAM_PWD = "password";
-    /** The constant MOBILE_TOKEN. */
+    /**
+     * The constant MOBILE_TOKEN.
+     */
     public static final String MOBILE_TOKEN = "mobileToken";
 
-    /** The Mongo. */
+    /**
+     * The Mongo.
+     */
     @Inject
     private MongoDB mongo;
-    /** The Mail utils. */
+    /**
+     * The Mail utils.
+     */
     @Inject
     private MailUtils mailUtils;
-    /** The Utils. */
+    /**
+     * The Utils.
+     */
     @Inject
     private Utils utils;
-    /** The Password encryption service. */
+    /**
+     * The Password encryption service.
+     */
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
-    /** The Person utils. */
+    /**
+     * The Person utils.
+     */
     @Inject
     private PersonUtils personUtils;
 
@@ -120,7 +155,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        
+
         /**
          * @apiDescription Login user
          * @api {post} /api/1/commons/users/user/login Login user
@@ -337,19 +372,22 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     final String code = req.getParams().get("code").get(0);
                     JsonObject jsonUser = mongo.getById(id, User.class);
                     // User not found
-                    if(jsonUser==null) {
-                    	utils.sendStatus(false, message);
-                    }
-                    
-                    final User user = Json.decodeValue(jsonUser.encode(), User.class);
-                    if (code.equals(user.getAccount().getActivationPasswd())) {
-                        final JsonObject jsonResp = new JsonObject();
-                        jsonResp.putBoolean("status", true);
-                        jsonResp.putObject("user", mongo.getById(id, User.class));
-                        message.reply(jsonResp.encode());
-                    } else {
-                    	// Code doesn't match
+                    if (jsonUser == null) {
                         utils.sendStatus(false, message);
+                    }
+
+                    final User user;
+                    if (jsonUser != null) {
+                        user = Json.decodeValue(jsonUser.encode(), User.class);
+                        if (code.equals(user.getAccount().getActivationPasswd())) {
+                            final JsonObject jsonResp = new JsonObject();
+                            jsonResp.putBoolean("status", true);
+                            jsonResp.putObject("user", mongo.getById(id, User.class));
+                            message.reply(jsonResp.encode());
+                        } else {
+                            // Code doesn't match
+                            utils.sendStatus(false, message);
+                        }
                     }
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
@@ -556,7 +594,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 }
             }
         });
-        
+
         /**
          * @apiDescription Fetch user information by its Login
          * @api {get} /api/1/commons/users/user/user Fetch user by login
@@ -580,17 +618,17 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isLoggedAndAdmin(req);
                     // Creation of request
-					CriteriaBuilder criterias = new CriteriaBuilder();
-					criterias.add("account.login", req.getParams().get("login").get(0));
-					JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
-					if(jsonArray==null || jsonArray.size()==0) {
-						utils.sendError(message, ExceptionCodes.DB_NO_ROW_RETURNED, "Login inconnu");
-						return;
-					}
-					if(jsonArray.size()>1) {
-						utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné");
-						return;
-					}
+                    CriteriaBuilder criterias = new CriteriaBuilder();
+                    criterias.add("account.login", req.getParams().get("login").get(0));
+                    JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
+                    if (jsonArray == null || jsonArray.size() == 0) {
+                        utils.sendError(message, ExceptionCodes.DB_NO_ROW_RETURNED, "Login inconnu");
+                        return;
+                    }
+                    if (jsonArray.size() > 1) {
+                        utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné");
+                        return;
+                    }
                     message.reply(jsonArray.get(0).toString());
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);

@@ -28,7 +28,6 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
-import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -55,7 +54,7 @@ import java.text.DateFormat;
  */
 @DeployableVerticle
 public class ProfileVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileVerticle.class);
     /**
      * The Constant UPDATE.
      */
@@ -78,8 +77,6 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     private MongoDB mongo;
     @Inject
     private Utils utils;
-    @Inject
-    private PersonUtils personUtils;
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
     /**

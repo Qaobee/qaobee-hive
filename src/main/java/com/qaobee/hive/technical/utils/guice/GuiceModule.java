@@ -35,7 +35,7 @@ import com.qaobee.hive.technical.tools.PasswordEncryptionServiceImpl;
 import com.qaobee.hive.technical.utils.*;
 import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
-import com.qaobee.hive.technical.utils.guice.services.impl.FIlesImpl;
+import com.qaobee.hive.technical.utils.guice.services.impl.FilesImpl;
 import com.qaobee.hive.technical.utils.impl.*;
 import org.vertx.java.core.json.JsonObject;
 
@@ -84,7 +84,7 @@ public class GuiceModule extends AbstractModule {
         bind(PersonUtils.class).to(PersonUtilsImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
-        bind(Files.class).to(FIlesImpl.class).in(Singleton.class);
+        bind(Files.class).to(FilesImpl.class).in(Singleton.class);
         // BUSINESS MODULES
         bind(UsersBusiness.class).to(UsersBusinessImpl.class).in(Singleton.class);
         bind(ActivityBusiness.class).to(ActivityBusinessImpl.class).in(Singleton.class);

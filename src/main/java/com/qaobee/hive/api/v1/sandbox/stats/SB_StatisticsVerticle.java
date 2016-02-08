@@ -50,7 +50,7 @@ import java.util.*;
  */
 @DeployableVerticle(isWorker = true)
 public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(SB_StatisticsVerticle.class);
     /** Handler for average rate for one or many indicator and for one or many person, group by PARAM_LIST_GROUPBY */
     public static final String GET_STAT_GROUPBY = Module.VERSION + ".sandbox.stats.statistics.getStatGroupBy";
 

@@ -47,7 +47,7 @@ import java.util.Map;
  * @author xavier
  */
 public abstract class CrudVerticle<T> extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(CrudVerticle.class);
     /**
      * The sorted field.
      */

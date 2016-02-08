@@ -50,24 +50,34 @@ import java.util.List;
  */
 @DeployableVerticle(isWorker = true)
 public class ActivityCfgVerticle extends AbstractGuiceVerticle {
-	public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractGuiceVerticle.class);
     /**
      * The constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.activitycfg.get";
 
-    /** Handler for getting parameters list. */
-	public final static String PARAMS = Module.VERSION + ".commons.settings.activitycfg.params";
+    /**
+     * Handler for getting parameters list.
+     */
+    public final static String PARAMS = Module.VERSION + ".commons.settings.activitycfg.params";
 
 	/* List of parameters */
-	/** List of parameters */
-	public static final String PARAM_FIELD_LIST = "paramFieldList";
-	/** Reference date */
-	public static final String PARAM_DATE = "date";
-	/** Activity code */
-	public static final String PARAM_ACTIVITY_ID = "activityId";
-	/** Country Id */
-	public static final String PARAM_COUNTRY_ID = "countryId";
+    /**
+     * List of parameters
+     */
+    public static final String PARAM_FIELD_LIST = "paramFieldList";
+    /**
+     * Reference date
+     */
+    public static final String PARAM_DATE = "date";
+    /**
+     * Activity code
+     */
+    public static final String PARAM_ACTIVITY_ID = "activityId";
+    /**
+     * Country Id
+     */
+    public static final String PARAM_COUNTRY_ID = "countryId";
 
     /**
      * The Mongo.
@@ -102,50 +112,50 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	LOG.debug(GET+" - ActivityCfg");
+                LOG.debug(GET + " - ActivityCfg");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE);
-					// Activity ID
-					String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
-					if (StringUtils.isBlank(activityId)) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Activity id is blank or null");
-					}
-					// Country ID
-					String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
-					if (StringUtils.isBlank(countryId)) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Country id is blank or null");
-					}
-					// Reference Date
-					Long dateRef;
-					if (StringUtils.isBlank(req.getParams().get(PARAM_DATE).get(0))) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is blank or null");
-					}
-					try {
-						dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
-					} catch (NumberFormatException e) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
-					}
+                    utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE);
+                    // Activity ID
+                    String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
+                    if (StringUtils.isBlank(activityId)) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Activity id is blank or null");
+                    }
+                    // Country ID
+                    String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
+                    if (StringUtils.isBlank(countryId)) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Country id is blank or null");
+                    }
+                    // Reference Date
+                    Long dateRef;
+                    if (StringUtils.isBlank(req.getParams().get(PARAM_DATE).get(0))) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is blank or null");
+                    }
+                    try {
+                        dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
+                    } catch (NumberFormatException e) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
+                    }
 
-					// Creation of request
-					CriteriaBuilder criterias = new CriteriaBuilder();
-					criterias.add("activityId", activityId);
-					criterias.add("countryId", countryId);
-					criterias.between("startDate", "endDate", dateRef);
+                    // Creation of request
+                    CriteriaBuilder criterias = new CriteriaBuilder();
+                    criterias.add("activityId", activityId);
+                    criterias.add("countryId", countryId);
+                    criterias.between("startDate", "endDate", dateRef);
 
-					// Call to mongo
-					JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, ActivityCfg.class);
-					if (resultJSon == null || resultJSon.size() == 0) {
+                    // Call to mongo
+                    JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, ActivityCfg.class);
+                    if (resultJSon == null || resultJSon.size() == 0) {
                         if (resultJSon != null) {
                             LOG.debug(resultJSon.encodePrettily());
                         }
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
-					}
+                    }
 
-					JsonObject jsonObject = resultJSon.get(0);
-					LOG.debug(jsonObject.encodePrettily());
-					message.reply(jsonObject.encode());
+                    JsonObject jsonObject = resultJSon.get(0);
+                    LOG.debug(jsonObject.encodePrettily());
+                    message.reply(jsonObject.encode());
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -179,82 +189,82 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(PARAMS, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-            	LOG.debug(PARAMS+" - ActivityCfg");
+                LOG.debug(PARAMS + " - ActivityCfg");
                 try {
-                	final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                	utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST);
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST);
 
-					// Activity ID
-					String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
-					if (StringUtils.isBlank(activityId)) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Activity id is blank or null");
-					}
-					// Country ID
-					String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
-					if (StringUtils.isBlank(countryId)) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Country id is blank or null");
-					}
-					// Reference Date
-					Long dateRef;
-					if (StringUtils.isBlank(req.getParams().get(PARAM_DATE).get(0))) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is blank or null");
-					}
-					try {
-						dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
-					} catch (NumberFormatException e) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
-					}
-					// Parameter Field List Name
-					String paramField = req.getParams().get(PARAM_FIELD_LIST).get(0);
-					if (StringUtils.isBlank(paramField)) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Param field list is blank or null");
-					}
+                    // Activity ID
+                    String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
+                    if (StringUtils.isBlank(activityId)) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Activity id is blank or null");
+                    }
+                    // Country ID
+                    String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
+                    if (StringUtils.isBlank(countryId)) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Country id is blank or null");
+                    }
+                    // Reference Date
+                    Long dateRef;
+                    if (StringUtils.isBlank(req.getParams().get(PARAM_DATE).get(0))) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is blank or null");
+                    }
+                    try {
+                        dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
+                    } catch (NumberFormatException e) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
+                    }
+                    // Parameter Field List Name
+                    String paramField = req.getParams().get(PARAM_FIELD_LIST).get(0);
+                    if (StringUtils.isBlank(paramField)) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Param field list is blank or null");
+                    }
 
-					DBObject match, project;
-					BasicDBObject dbObjectParent;
+                    DBObject match, project;
+                    BasicDBObject dbObjectParent;
 
-					// $MATCH section
-					dbObjectParent = new BasicDBObject();
+                    // $MATCH section
+                    dbObjectParent = new BasicDBObject();
 
-					// - activityId
-					dbObjectParent.put("activityId", activityId);
-					// - countryId
-					dbObjectParent.put("countryId", countryId);
-					// - date between start and end dates
-					dbObjectParent.put("startDate", new BasicDBObject("$lte", dateRef));
-					dbObjectParent.put("endDate", new BasicDBObject("$gte", dateRef));
+                    // - activityId
+                    dbObjectParent.put("activityId", activityId);
+                    // - countryId
+                    dbObjectParent.put("countryId", countryId);
+                    // - date between start and end dates
+                    dbObjectParent.put("startDate", new BasicDBObject("$lte", dateRef));
+                    dbObjectParent.put("endDate", new BasicDBObject("$gte", dateRef));
 
-					match = new BasicDBObject("$match", dbObjectParent);
+                    match = new BasicDBObject("$match", dbObjectParent);
 
-					// $PROJECT section
-					dbObjectParent = new BasicDBObject();
-					dbObjectParent.put("_id", 0);
-					dbObjectParent.put(paramField, 1);
-					project = new BasicDBObject("$project", dbObjectParent);
+                    // $PROJECT section
+                    dbObjectParent = new BasicDBObject();
+                    dbObjectParent.put("_id", 0);
+                    dbObjectParent.put(paramField, 1);
+                    project = new BasicDBObject("$project", dbObjectParent);
 
-					List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-					LOG.debug("getParamFieldHandler : " + pipelineAggregation.toString());
+                    List<DBObject> pipelineAggregation = Arrays.asList(match, project);
+                    LOG.debug("getParamFieldHandler : " + pipelineAggregation.toString());
 
-					final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, ActivityCfg.class);
-					LOG.debug(resultJSon.encodePrettily());
+                    final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, ActivityCfg.class);
+                    LOG.debug(resultJSon.encodePrettily());
 
-					if (resultJSon == null || resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");
-					}
+                    if (resultJSon == null || resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");
+                    }
 
-					message.reply(((JsonObject) resultJSon.get(0)).getArray(paramField).encode());
+                    message.reply(((JsonObject) resultJSon.get(0)).getArray(paramField).encode());
 
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (final QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (final QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
             }
         });
     }

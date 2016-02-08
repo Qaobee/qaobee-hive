@@ -52,7 +52,7 @@ import java.io.IOException;
  */
 @DeployableVerticle
 public class AssetVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(AssetVerticle.class);
     public static final String ADD = "asset.add";
     public static final String GET = "asset.get";
     @Inject

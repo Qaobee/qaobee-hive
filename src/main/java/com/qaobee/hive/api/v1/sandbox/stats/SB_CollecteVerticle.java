@@ -48,7 +48,7 @@ import java.util.List;
  */
 @DeployableVerticle(isWorker = true)
 public class SB_CollecteVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(SB_CollecteVerticle.class);
 	/** Collection name*/
 	public static final String COLLECTION_NAME = "SB_Collecte";
 	

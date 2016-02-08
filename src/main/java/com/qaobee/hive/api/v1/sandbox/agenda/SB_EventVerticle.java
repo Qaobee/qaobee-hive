@@ -49,7 +49,7 @@ import java.util.List;
  */
 @DeployableVerticle
 public class SB_EventVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(SB_EventVerticle.class);
     public static final String GET_LIST = Module.VERSION + ".sandbox.agenda.event.list";
     public static final String ADD = Module.VERSION + ".sandbox.agenda.event.add";
     public static final String GET = Module.VERSION + ".sandbox.agenda.event.get";

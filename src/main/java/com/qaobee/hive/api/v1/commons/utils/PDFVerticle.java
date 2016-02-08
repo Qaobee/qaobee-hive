@@ -46,7 +46,7 @@ import java.io.*;
  */
 @DeployableVerticle(isWorker = true)
 public class PDFVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(PDFVerticle.class);
     public static final String GENERATE_PDF = "pdf.generate";
     public static final String DATA = "data";
     public static final String TEMPLATE = "template";

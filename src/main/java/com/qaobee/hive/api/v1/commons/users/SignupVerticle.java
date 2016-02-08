@@ -19,26 +19,6 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
@@ -47,11 +27,7 @@ import com.qaobee.hive.business.commons.settings.ActivityBusiness;
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
-import com.qaobee.hive.business.model.commons.settings.Activity;
-import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
-import com.qaobee.hive.business.model.commons.settings.CategoryAge;
-import com.qaobee.hive.business.model.commons.settings.Country;
-import com.qaobee.hive.business.model.commons.settings.Season;
+import com.qaobee.hive.business.model.commons.settings.*;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
@@ -78,24 +54,36 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.*;
 
 /**
  * The Class SignupVerticle.
  *
  * @author Xavier MARIN
- * <ul>
- *     <li>resthandler.register : Register a new accunt</li>
- *     <li>resthandler.logintest : Login unicity test for rest request</li>
- *     <li>loginExists : Login unicity test for internal use</li>
- *     <li>resthandler.accountcheck : email validation number check</li>
- * </ul>
+ *         <ul>
+ *         <li>resthandler.register : Register a new accunt</li>
+ *         <li>resthandler.logintest : Login unicity test for rest request</li>
+ *         <li>loginExists : Login unicity test for internal use</li>
+ *         <li>resthandler.accountcheck : email validation number check</li>
+ *         </ul>
  */
 @DeployableVerticle
 public class SignupVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(SignupVerticle.class);
     /**
      * The Constant REGISTER.
      */
@@ -121,27 +109,49 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      */
     public static final String FINALIZE_SIGNUP = Module.VERSION + ".commons.users.signup.finalize";
 
-    /** Parameter ID */
+    /**
+     * Parameter ID
+     */
     public static final String PARAM_ID = "id";
-    /** Parameter CODE */
+    /**
+     * Parameter CODE
+     */
     public static final String PARAM_CODE = "code";
-    /** Parameter USER */
+    /**
+     * Parameter USER
+     */
     public static final String PARAM_USER = "user";
-    /** Parameter STRUCTURE */
+    /**
+     * Parameter STRUCTURE
+     */
     public static final String PARAM_STRUCTURE = "structure";
-    /** Parameter ACTIVITY */
+    /**
+     * Parameter ACTIVITY
+     */
     public static final String PARAM_ACTIVITY = "activity";
-    /** Parameter Category Age */
+    /**
+     * Parameter Category Age
+     */
     public static final String PARAM_CATEGORY_AGE = "categoryAge";
-    /** Parameter Mobile */
+    /**
+     * Parameter Mobile
+     */
     public static final String PARAM_MOBILE = "mobile";
-    /** Parameter Captcha */
+    /**
+     * Parameter Captcha
+     */
     public static final String PARAM_CAPTCHA = "captcha";
-    /** Parameter jUnit */
+    /**
+     * Parameter jUnit
+     */
     public static final String PARAM_JUNIT = "junit";
-    /** Parameter Login */
+    /**
+     * Parameter Login
+     */
     public static final String PARAM_LOGIN = "login";
-    /** Parameter Plan */
+    /**
+     * Parameter Plan
+     */
     public static final String PARAM_PLAN = "plan";
 
     // MongoDB driver
@@ -268,7 +278,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                     // Gets JSon request
                     final JsonObject json = new JsonObject(req.getBody());
-                    
+
                     // Captcha management
                     final boolean bypassCaptcha = json.getBoolean(PARAM_JUNIT, json.getBoolean(PARAM_MOBILE, false));
                     final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
@@ -284,7 +294,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
                         return;
                     }
-                    
+
                     final User user = Json.decodeValue(json.encode(), User.class);
 
                     // Check user informations
@@ -520,7 +530,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     final JsonObject jsonReq = new JsonObject(req.getBody());
 
                     utils.testMandatoryParams(jsonReq.toMap(), PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE);
-                    
+
                     // JSon User
                     final JsonObject jsonUser = jsonReq.getObject(PARAM_USER);
 //                    jsonUser.removeField("activity");
@@ -528,7 +538,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     // Converts jSon to Bean (extra parameters are ignored)
                     User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
                     userUpdate.set_id(jsonUser.getString("_id"));
-                    
+
                     // Code activation
                     final String activationCode = jsonReq.getString(PARAM_CODE);
 
@@ -546,10 +556,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         structure.putObject("activity", new JsonObject(Json.encode(activityBusiness.getActivityFromId(activityId))));
                     }
                     Structure structureObj = Json.decodeValue(structure.encode(), Structure.class);
-                    
+
                     // JSon Category Age
                     JsonObject categoryAge = jsonReq.getObject(PARAM_CATEGORY_AGE);
-                    CategoryAge categoryAgeObj = (CategoryAge)Json.decodeValue(categoryAge.encode(), CategoryAge.class);
+                    CategoryAge categoryAgeObj = Json.decodeValue(categoryAge.encode(), CategoryAge.class);
 
                     // Country
                     final String countryId = jsonReq.getString("country", "CNTR-250-FR-FRA");
@@ -597,71 +607,71 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                         JsonArray tabParametersSignup = null;
                         try {
-                        	DBObject match, project;
-                        	// $MATCH section
+                            DBObject match, project;
+                            // $MATCH section
                             BasicDBObject dbObjectParent = new BasicDBObject();
                             dbObjectParent.put("activityId", activityId);
                             dbObjectParent.put("countryId", countryId);
                             match = new BasicDBObject("$match", dbObjectParent);
                             // $PROJECT section
-        					dbObjectParent = new BasicDBObject();
-        					dbObjectParent.put("_id", 0);
-        					dbObjectParent.put("parametersSignup", 1);
-        					project = new BasicDBObject("$project", dbObjectParent);
-        					List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-        					tabParametersSignup = mongo.aggregate("parametersSignup", pipelineAggregation, ActivityCfg.class);
-                        } catch(Exception e) {
-                        	
+                            dbObjectParent = new BasicDBObject();
+                            dbObjectParent.put("_id", 0);
+                            dbObjectParent.put("parametersSignup", 1);
+                            project = new BasicDBObject("$project", dbObjectParent);
+                            List<DBObject> pipelineAggregation = Arrays.asList(match, project);
+                            tabParametersSignup = mongo.aggregate("parametersSignup", pipelineAggregation, ActivityCfg.class);
+                        } catch (Exception e) {
+                            LOG.error(e.getMessage(), e);
                         }
-                        
+
                         // Création SB_Person
                         List<String> listPersonsId = new ArrayList<>();
-                        if(tabParametersSignup!=null && tabParametersSignup.size()>0) {
-                        	JsonObject parametersSignup = (JsonObject) tabParametersSignup.get(0);
-                        	if(parametersSignup.containsField("parametersSignup") && parametersSignup.getObject("parametersSignup").containsField("players")) {
-                        		JsonArray tabPlayers = parametersSignup.getObject("parametersSignup").getArray("players");
-                        		
-                        		for(int i=0; i<tabPlayers.size(); i++) {
-                        			JsonObject player = tabPlayers.get(i);
-                        			for(int qte=0; qte < player.getInteger("quantity", 0); qte++) {
-                        				SB_Person sb_person = new SB_Person();
-                        				sb_person.setFirstname("Numero " + (listPersonsId.size() + 1));
-                                    	sb_person.setName("Joueur");
+                        if (tabParametersSignup != null && tabParametersSignup.size() > 0) {
+                            JsonObject parametersSignup = tabParametersSignup.get(0);
+                            if (parametersSignup.containsField("parametersSignup") && parametersSignup.getObject("parametersSignup").containsField("players")) {
+                                JsonArray tabPlayers = parametersSignup.getObject("parametersSignup").getArray("players");
+
+                                for (int i = 0; i < tabPlayers.size(); i++) {
+                                    JsonObject player = tabPlayers.get(i);
+                                    for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
+                                        SB_Person sb_person = new SB_Person();
+                                        sb_person.setFirstname("Numero " + (listPersonsId.size() + 1));
+                                        sb_person.setName("Joueur");
                                         sb_person.setBirthcity(structureObj.getAddress().getCity());
                                         sb_person.setBirthcountry(structureObj.getCountry());
-                                        sb_person.setBirthdate(utils.randomDate(categoryAgeObj.getAgeMin(), 
-                                        		categoryAgeObj.getAgeMax()>65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
+                                        sb_person.setBirthdate(utils.randomDate(categoryAgeObj.getAgeMin(),
+                                                categoryAgeObj.getAgeMax() > 65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
                                         sb_person.setNationality(structureObj.getCountry());
                                         sb_person.setGender(categoryAgeObj.getGenre());
                                         sb_person.setSandboxId(sb_SandBox.get_id());
                                         sb_person.setContact(new Contact());
-                                        
+
                                         Status status = new Status();
                                         status.setAvailability(new Availability("available", "available"));
-                                        status.setHeight((int)Math.round(Math.random()*30)+150);
-                                        status.setLaterality(Math.random()>0.5?"right-handed":"left-handed");
+                                        status.setHeight((int) Math.round(Math.random() * 30) + 150);
+                                        status.setLaterality(Math.random() > 0.5 ? "right-handed" : "left-handed");
                                         status.setStateForm("good");
-                                        status.setWeight((int)Math.round(Math.random()*20)+70);
+                                        status.setWeight((int) Math.round(Math.random() * 20) + 70);
                                         sb_person.setStatus(status);
-                                    	
-                                    	sb_person.getStatus().setSquadnumber(listPersonsId.size() + 1);
-                                    	sb_person.getStatus().setPositionType(player.getString("positionType"));
-                                    	listPersonsId.add(mongo.save(sb_person));
-                        			}
-                        		}
-                        	}
+
+                                        sb_person.getStatus().setSquadnumber(listPersonsId.size() + 1);
+                                        sb_person.getStatus().setPositionType(player.getString("positionType"));
+                                        listPersonsId.add(mongo.save(sb_person));
+                                    }
+                                }
+                            }
                         }
 
                         // Création SandBoxCfg
                         SB_SandBoxCfg sb_SandBoxCfg = new SB_SandBoxCfg();
-                        
+
                         sb_SandBoxCfg.setActivity(activityBusiness.getActivityFromId(activityId));
                         sb_SandBoxCfg.setSandbox(sb_SandBox);
                         sb_SandBoxCfg.setStructure(structureObj);
                         // Search Season
                         {
-                        	Map<String, Object> criterias = new HashMap<>();
-                        	criterias.put("activityId", activityId);
+                            Map<String, Object> criterias = new HashMap<>();
+                            criterias.put("activityId", activityId);
                             criterias.put("countryId", countryId);
                             JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
 
@@ -672,12 +682,12 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                             for (int i = 0; i < resultJson.size(); i++) {
                                 JsonObject s = resultJson.get(i);
                                 if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
-                                    sb_SandBoxCfg.setSeason((Season)Json.decodeValue(Json.encode(s), Season.class));
+                                    sb_SandBoxCfg.setSeason((Season) Json.decodeValue(Json.encode(s), Season.class));
                                     break;
                                 }
                             }
                         }
-                        
+
                         // Sauvegarde SB_Cfg
                         sb_SandBoxCfg.set_id(mongo.save(sb_SandBoxCfg));
 
@@ -690,13 +700,13 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         sb_Effective.setSandBoxCfgId(sb_SandBoxCfg.get_id());
                         sb_Effective.setLabel("Defaut");
                         sb_Effective.setCategoryAge(categoryAgeObj);
-                        
+
                         // SB_Effective -> members
                         for (String playerId : listPersonsId) {
-                        	Member member = new Member();
+                            Member member = new Member();
                             member.setRole(new Role("player", "Joueur"));
                             member.setPersonId(playerId);
-                        	sb_Effective.addMember(member);
+                            sb_Effective.addMember(member);
                         }
                         sb_Effective.set_id(mongo.save(sb_Effective));
                         user.setEffectiveDefault(sb_Effective.get_id());
@@ -716,7 +726,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         team.setAdversary(true);
                         team.setLinkTeamId(homeTeamId);
                         mongo.save(team);
-                        
+
                         // MàJ du plan FREEMIUM
                         user.getAccount().getListPlan().get(0).setPaidDate(System.currentTimeMillis());
                         user.getAccount().getListPlan().get(0).setStatus("paid");

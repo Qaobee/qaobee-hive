@@ -47,7 +47,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class SeasonVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(SeasonVerticle.class);
     // Declaration des variables finals
     /**
      * The Constant GET.

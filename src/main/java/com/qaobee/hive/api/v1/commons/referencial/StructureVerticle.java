@@ -62,7 +62,7 @@ import java.util.Map;
 
 @DeployableVerticle(isWorker = true)
 public class StructureVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(StructureVerticle.class);
     /* List of handlers */
     /** The Constant ADD. */
     public static final String ADD = Module.VERSION + ".commons.referencial.structure.add";

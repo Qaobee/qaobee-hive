@@ -50,7 +50,7 @@ import java.util.Map;
 @DeployableVerticle(isWorker=true)
 public class ChampionshipVerticle extends AbstractGuiceVerticle {
 
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractGuiceVerticle.class);
 	/** Handler to get a set of events */
     public static final String GET_LIST 	= Module.VERSION + ".commons.referencial.championship.list";
     /** Handler to add a event. */

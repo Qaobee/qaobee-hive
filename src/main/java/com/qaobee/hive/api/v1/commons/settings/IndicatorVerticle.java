@@ -52,7 +52,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class IndicatorVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(IndicatorVerticle.class);
     // Declaration des variables finals
     /**
      * The Constant GET.

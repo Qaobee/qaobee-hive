@@ -49,7 +49,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class TeamVerticle extends AbstractGuiceVerticle {
-	public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+	private static final Logger LOG = LoggerFactory.getLogger(TeamVerticle.class);
 	// Declaration des variables finals
 	/** The Constant ADD. */
 	public static final String ADD = Module.VERSION + ".commons.referencial.team.add";

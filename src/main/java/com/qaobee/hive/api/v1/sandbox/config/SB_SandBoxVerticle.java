@@ -49,7 +49,7 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = true)
 public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxVerticle.class);
     public static final String GET = Module.VERSION + ".sandbox.config.sandbox.get";
     public static final String GET_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getByOwner";
     public static final String GET_LIST_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getListByOwner";

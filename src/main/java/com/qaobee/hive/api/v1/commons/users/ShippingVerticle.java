@@ -57,7 +57,7 @@ import java.util.Map;
 // https://groups.google.com/forum/#!topic/vertx/KvtxhkA0wiM
 @DeployableVerticle(isWorker = false)
 public class ShippingVerticle extends AbstractGuiceVerticle {
-    public static Logger LOG = LoggerFactory.getLogger(new Object() { }.getClass().getEnclosingClass());
+    private static final Logger LOG = LoggerFactory.getLogger(ShippingVerticle.class);
     public static final String PAY = Module.VERSION + ".commons.users.shipping.pay";
     public static final String IPN = Module.VERSION + ".commons.users.shipping.ipn";
     public static final String TRIGGERED_RECURING_PAYMENT = "inner.recuring_payment";
@@ -83,7 +83,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 .setKeepAlive(true)
                 .setHost(config.getString("baseUrl"))
                 .setPort(config.getInteger("port"));
-        if(config.getInteger("port") == 443) {
+        if (config.getInteger("port") == 443) {
             client.setSSL(true).setTrustAll(true);
         }
 
@@ -277,58 +277,57 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         /**
          * Periodic timer, each day it runs
 
-        long timerID = vertx.setPeriodic(1000  * 60 * 60 * 24 , new Handler<Long>() {
-            public void handle(Long timerID) {
-                // oh we are ticking each 24h after the startup time
-                // First, let's collect all the guys
-                DBObject statusQuery = new BasicDBObject("status", "paid");
-                // TODO : change paid level plan here
-                statusQuery.put("levelPlan", "PREMIUM");
-                DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
-                DBObject query = new BasicDBObject("account.listPlan",fields);
-                DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
-                LOG.info(result.size());
-                while(result.hasNext()) {
-                    vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, new JsonObject(result.next().toString()));
-                }
-            }
-        });
+         long timerID = vertx.setPeriodic(1000  * 60 * 60 * 24 , new Handler<Long>() {
+         public void handle(Long timerID) {
+         // oh we are ticking each 24h after the startup time
+         // First, let's collect all the guys
+         DBObject statusQuery = new BasicDBObject("status", "paid");
+         // TODO : change paid level plan here
+         statusQuery.put("levelPlan", "PREMIUM");
+         DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
+         DBObject query = new BasicDBObject("account.listPlan",fields);
+         DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
+         LOG.info(result.size());
+         while(result.hasNext()) {
+         vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, new JsonObject(result.next().toString()));
+         }
+         }
+         });
 
-        vertx.eventBus().registerHandler(TRIGGERED_RECURING_PAYMENT, new Handler<Message<JsonObject>>() {
-            @Override
-            public void handle(Message<JsonObject> message) {
-                JsonObject user = message.body();
-                JsonArray listPlan = user.getObject("account").getArray("listPlan");
-                for(int i =0; i < listPlan.size(); i++) {
-                    JsonObject plan = listPlan.get(i);
-                    // TODO : change paid level plan here
-                    if(plan.containsField("levelPlan") && plan.getString("levelPlan").equals("PREMIUM")) {
-                        switch (plan.getString("periodicity")) {
-                            case "monthly" :
-                                // test if we have to make pay him (or her) !
-                                long paidDate = plan.getLong("paidDate");
-                                Calendar initialPaidDate = Calendar.getInstance();
-                                initialPaidDate.setTime(new Date(paidDate));
-                                Calendar now = Calendar.getInstance();
-                                now.setTime(new Date());
-                                // test if we are the last day of the next month following the last fee
-                                if(now.get(Calendar.MONTH) > initialPaidDate.get(Calendar.MONTH)
-                                        && now.get(Calendar.DAY_OF_MONTH) == now.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-                                    // 1- Trigger payment
-                                    // 1.1- Verify card expiry
-                                    // 1.1.1- if expired -> send a mail with a new payment url (first payment process)
-                                    // 1.1.2- else :
-                                    // 1.2- process a payment with the card id
+         vertx.eventBus().registerHandler(TRIGGERED_RECURING_PAYMENT, new Handler<Message<JsonObject>>() {
+        @Override public void handle(Message<JsonObject> message) {
+        JsonObject user = message.body();
+        JsonArray listPlan = user.getObject("account").getArray("listPlan");
+        for(int i =0; i < listPlan.size(); i++) {
+        JsonObject plan = listPlan.get(i);
+        // TODO : change paid level plan here
+        if(plan.containsField("levelPlan") && plan.getString("levelPlan").equals("PREMIUM")) {
+        switch (plan.getString("periodicity")) {
+        case "monthly" :
+        // test if we have to make pay him (or her) !
+        long paidDate = plan.getLong("paidDate");
+        Calendar initialPaidDate = Calendar.getInstance();
+        initialPaidDate.setTime(new Date(paidDate));
+        Calendar now = Calendar.getInstance();
+        now.setTime(new Date());
+        // test if we are the last day of the next month following the last fee
+        if(now.get(Calendar.MONTH) > initialPaidDate.get(Calendar.MONTH)
+        && now.get(Calendar.DAY_OF_MONTH) == now.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+        // 1- Trigger payment
+        // 1.1- Verify card expiry
+        // 1.1.1- if expired -> send a mail with a new payment url (first payment process)
+        // 1.1.2- else :
+        // 1.2- process a payment with the card id
 
-                                    // 2- send an email
+        // 2- send an email
 
-                                    // 3- generate a fee
-                                }
-                        }
-                    }
+        // 3- generate a fee
+        }
+        }
+        }
 
-                }
-            }
+        }
+        }
         });
          */
     }
