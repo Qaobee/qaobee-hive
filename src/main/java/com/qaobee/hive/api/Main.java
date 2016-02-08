@@ -76,10 +76,11 @@ public class Main extends AbstractGuiceVerticle {
         final Map<String, String> envs = container.env();
         final JsonObject config = container.config();
         if (envs.containsKey("OPENSHIFT_MONGODB_DB_HOST")) {
-            config.getObject("mongo.persistor").putString("host", envs.get("OPENSHIFT_MONGODB_DB_HOST"));
-            config.getObject("mongo.persistor").putNumber("port", Integer.parseInt(envs.get("OPENSHIFT_MONGODB_DB_PORT")));
-            config.getObject("mongo.persistor").putString("password", envs.get("OPENSHIFT_MONGODB_DB_PASSWORD"));
-            config.getObject("mongo.persistor").putString("username", envs.get("OPENSHIFT_MONGODB_DB_USERNAME"));
+            JsonObject mongopersistor = config.getObject("mongo.persistor");
+            mongopersistor.putString("host", envs.get("OPENSHIFT_MONGODB_DB_HOST"));
+            mongopersistor.putNumber("port", Integer.parseInt(envs.get("OPENSHIFT_MONGODB_DB_PORT")));
+            mongopersistor.putString("password", envs.get("OPENSHIFT_MONGODB_DB_PASSWORD"));
+            mongopersistor.putString("username", envs.get("OPENSHIFT_MONGODB_DB_USERNAME"));
         }
         final HttpServer server = vertx.createHttpServer();
         final RouteMatcher rm = new RouteMatcher();
@@ -145,8 +146,14 @@ public class Main extends AbstractGuiceVerticle {
                 req.uploadHandler(new Handler<HttpServerFileUpload>() {
                     @Override
                     public void handle(final HttpServerFileUpload upload) {
-                        final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
-                        System.out.println("---->" + filename);
+                        final String filename = new StringBuilder()
+                                .append(dir.getAbsolutePath())
+                                .append("/")
+                                .append(req.params().get("uid"))
+                                .append(".")
+                                .append(FilenameUtils.getExtension(upload.filename()))
+                                .toString();
+                        LOG.debug("---->" + filename);
                         request.putString("filename", filename);
                         request.putString("contentType", upload.contentType());
                         LOG.debug("filename : " + filename);
@@ -169,10 +176,7 @@ public class Main extends AbstractGuiceVerticle {
                     }
                 });
             }
-        });
-
-        // Cors
-        rm.optionsWithRegEx(".*", new Handler<HttpServerRequest>() {
+        }).optionsWithRegEx(".*", new Handler<HttpServerRequest>() {
             @Override
             public void handle(final HttpServerRequest req) {
                 if (config.getObject("cors").getBoolean("enabled", false)) {
@@ -181,6 +185,8 @@ public class Main extends AbstractGuiceVerticle {
                 req.response().end();
             }
         });
+
+        // Cors
 
         rm.get("/", new Handler<HttpServerRequest>() {
             @Override
