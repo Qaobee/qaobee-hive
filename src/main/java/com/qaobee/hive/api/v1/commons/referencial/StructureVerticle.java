@@ -248,7 +248,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                      * *** Aggregat section ***
 					 */
                     DBObject match;
-                    BasicDBObject dbObjectParent, dbObjectChild;
+                    BasicDBObject dbObjectParent;
 
 					/* *** $MACTH section *** */
                     dbObjectParent = new BasicDBObject();
