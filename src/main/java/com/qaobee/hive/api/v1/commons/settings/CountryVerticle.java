@@ -46,6 +46,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The type Country verticle.
+ *
  * @author cke
  */
 @DeployableVerticle(isWorker = true)
@@ -66,14 +68,23 @@ public class CountryVerticle extends AbstractGuiceVerticle {
     public static final String GET_LIST = Module.VERSION + ".commons.settings.country.getList";
 
 	/* List of parameters */
-    /** Id of the structure */
-    public static final String PARAM_ID = "_id";																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				
-    /** Alpha 2 code */
+    /**
+     * Id of the structure
+     */
+    public static final String PARAM_ID = "_id";
+    /**
+     * Alpha 2 code
+     */
     public static final String PARAM_ALPHA2 = "alpha2";
-    /** Label of the structure */
+    /**
+     * Label of the structure
+     */
     public static final String PARAM_LABEL = "label";
+    /**
+     * The constant PARAM_LOCAL.
+     */
     public static final String PARAM_LOCAL = "local";
-  
+
 
     /* Injections */
     @Inject
@@ -142,7 +153,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
                 }
             }
         };
-        
+
         /**
          * @api {get} /api/1/commons/settings/country/getAlpha2 Read data of an Country
          * @apiVersion 0.1.0
@@ -224,18 +235,18 @@ public class CountryVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     Map<String, List<String>> params = req.getParams();
                     utils.testMandatoryParams(params, PARAM_LOCAL);
-                    
+
                     Map<String, Object> criterias = new HashMap<>();
                     criterias.put(PARAM_LOCAL, params.get(PARAM_LOCAL).get(0));
-                    
+
                     String label = "undefined";
 
                     // label
                     if (params.get(PARAM_LABEL) != null && !StringUtils.isBlank(params.get(PARAM_LABEL).get(0))) {
-                    	label = params.get(PARAM_LABEL).get(0);
-                    	criterias.put(PARAM_LABEL, label);
-                    } 
-                    
+                        label = params.get(PARAM_LABEL).get(0);
+                        criterias.put(PARAM_LABEL, label);
+                    }
+
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Country.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
