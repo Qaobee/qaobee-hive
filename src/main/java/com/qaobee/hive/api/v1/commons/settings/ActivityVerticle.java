@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The type Activity verticle.
+ *
  * @author cke
  */
 @DeployableVerticle(isWorker = true)
