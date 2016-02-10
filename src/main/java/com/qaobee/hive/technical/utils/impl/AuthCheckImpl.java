@@ -33,15 +33,6 @@ import java.util.regex.Matcher;
  */
 public final class AuthCheckImpl implements AuthCheck {
 
-
-    /**
-     * Permet de vérifier une adresse e-mail.
-     *
-     * @param email  the email
-     * @param locale the locale
-     * @return valid or not
-     * @throws QaobeeException the qaobee exception
-     */
     @Override
     public boolean testEmail(final String email, final String locale) throws QaobeeException {
         if (!validate(email.replaceAll("\\[at\\]", "@"))) {
@@ -59,7 +50,7 @@ public final class AuthCheckImpl implements AuthCheck {
      * @param emailStr the email str
      * @return true, if successful
      */
-    private boolean validate(final String emailStr) {
+    private static boolean validate(final String emailStr) {
         final Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.find();
     }
