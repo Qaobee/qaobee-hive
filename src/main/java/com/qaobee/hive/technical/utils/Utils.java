@@ -112,14 +112,14 @@ public interface Utils {
      * @return formated date
      */
     String formatDate(long timestamp, int dateStyle, int timeStyle, String locale);
-    
+
     /**
-     * Sets a random date between 2 years old. 
+     * Sets a random date between 2 years old.
      * @param yearOldMin	min year from today
      * @param yearOldMax	max year from today
      * @return timestamp
      */
-    long randomDate(int yearOldMin, int yearOldMax); 
+    long randomDate(int yearOldMin, int yearOldMax);
 
     /**
      * Recherche dans un JsonArray d'un JsonObject en fonction de la clef.
