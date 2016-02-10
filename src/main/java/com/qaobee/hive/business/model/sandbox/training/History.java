@@ -19,10 +19,13 @@
 
 package com.qaobee.hive.business.model.sandbox.training;
 
-import java.util.Date;
-
 import com.qaobee.hive.business.model.commons.users.User;
 
+import java.util.Date;
+
+/**
+ * The type History.
+ */
 public class History {
 	/**
 	 * The author.
@@ -38,6 +41,8 @@ public class History {
 	private String historyType;
 
 	/**
+	 * Gets date.
+	 *
 	 * @return the date
 	 */
 	public Date getDate() {
@@ -45,16 +50,18 @@ public class History {
 	}
 
 	/**
-	 * @param date
-	 *            the date to set
+	 * Sets date.
+	 *
+	 * @param date the date to set
 	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
-	
 
 	/**
+	 * Gets history type.
+	 *
 	 * @return the historyType
 	 */
 	public String getHistoryType() {
@@ -62,14 +69,17 @@ public class History {
 	}
 
 	/**
-	 * @param historyType
-	 *            the historyType to set
+	 * Sets history type.
+	 *
+	 * @param historyType the historyType to set
 	 */
 	public void setHistoryType(String historyType) {
 		this.historyType = historyType;
 	}
 
 	/**
+	 * Gets author.
+	 *
 	 * @return the author
 	 */
 	public User getAuthor() {
@@ -77,6 +87,8 @@ public class History {
 	}
 
 	/**
+	 * Sets author.
+	 *
 	 * @param author the author to set
 	 */
 	public void setAuthor(User author) {

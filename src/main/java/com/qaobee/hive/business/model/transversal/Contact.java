@@ -20,6 +20,7 @@ package com.qaobee.hive.business.model.transversal;
 
 /**
  * Bean that descripbes how to contact.
+ *
  * @author cke
  */
 public class Contact {
@@ -42,8 +43,11 @@ public class Contact {
     private String googlePlus;
     /** Twitter account */
     private String twitter;
-    
-    public Contact() {
+
+	/**
+	 * Instantiates a new Contact.
+	 */
+	public Contact() {
     	home = "";
     	cellphone = "";
     	office = "";
@@ -52,6 +56,7 @@ public class Contact {
 
 	/**
 	 * Returns the web site URL.
+	 *
 	 * @return String : URL
 	 */
 	public String getWebSite() {
@@ -60,6 +65,7 @@ public class Contact {
 
 	/**
 	 * Defines the web site URL.
+	 *
 	 * @param webSite (String) : URL
 	 */
 	public void setWebSite(String webSite) {
@@ -68,6 +74,7 @@ public class Contact {
 
 	/**
 	 * Returns the facebook account.
+	 *
 	 * @return String : facebook
 	 */
 	public String getFacebook() {
@@ -76,6 +83,7 @@ public class Contact {
 
 	/**
 	 * Defines the facebook account.
+	 *
 	 * @param facebook (Stirng) : facebook
 	 */
 	public void setFacebook(String facebook) {
@@ -84,6 +92,7 @@ public class Contact {
 
 	/**
 	 * Returns the Google+ account.
+	 *
 	 * @return String : google+
 	 */
 	public String getGooglePlus() {
@@ -92,6 +101,7 @@ public class Contact {
 
 	/**
 	 * Defines the Google+ account.
+	 *
 	 * @param googlePlus (String) : Google+
 	 */
 	public void setGooglePlus(String googlePlus) {
@@ -100,6 +110,7 @@ public class Contact {
 
 	/**
 	 * Returns the Twitter account.
+	 *
 	 * @return String : twitter
 	 */
 	public String getTwitter() {
@@ -108,7 +119,8 @@ public class Contact {
 
 	/**
 	 * Defines the Twitter account.
-	 * @param twitter (String) : twitter 
+	 *
+	 * @param twitter (String) : twitter
 	 */
 	public void setTwitter(String twitter) {
 		this.twitter = twitter;
@@ -116,6 +128,7 @@ public class Contact {
 
 	/**
 	 * Returns the home phone number.
+	 *
 	 * @return String : phone number
 	 */
 	public String getHome() {
@@ -124,6 +137,7 @@ public class Contact {
 
 	/**
 	 * Defines the home phone number.
+	 *
 	 * @param home (String) : phone number
 	 */
 	public void setHome(String home) {
@@ -132,6 +146,7 @@ public class Contact {
 
 	/**
 	 * Returns the office phone number.
+	 *
 	 * @return String : phone number
 	 */
 	public String getOffice() {
@@ -140,6 +155,7 @@ public class Contact {
 
 	/**
 	 * Defines the office phone number.
+	 *
 	 * @param office (String) : phone number
 	 */
 	public void setOffice(String office) {
@@ -148,6 +164,7 @@ public class Contact {
 
 	/**
 	 * Returns the cellphone number.
+	 *
 	 * @return String : phone number
 	 */
 	public String getCellphone() {
@@ -156,6 +173,7 @@ public class Contact {
 
 	/**
 	 * Defines the cellphone number.
+	 *
 	 * @param cellphone (String) : phone number
 	 */
 	public void setCellphone(String cellphone) {
@@ -164,6 +182,7 @@ public class Contact {
 
 	/**
 	 * Returns the e-Mail.
+	 *
 	 * @return String : e-Mail
 	 */
 	public String getEmail() {
@@ -172,6 +191,7 @@ public class Contact {
 
 	/**
 	 * Defines the e-Mail.
+	 *
 	 * @param email (String) : e-Mail
 	 */
 	public void setEmail(String email) {
@@ -180,6 +200,7 @@ public class Contact {
 
 	/**
 	 * Returns the fax number.
+	 *
 	 * @return String : fax number
 	 */
 	public String getFax() {
@@ -188,6 +209,7 @@ public class Contact {
 
 	/**
 	 * Defines the fax number.
+	 *
 	 * @param fax (String) : fax number
 	 */
 	public void setFax(String fax) {
