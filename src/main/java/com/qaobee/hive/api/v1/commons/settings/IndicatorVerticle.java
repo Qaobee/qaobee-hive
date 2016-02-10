@@ -214,8 +214,10 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                     JsonArray screen = params.getArray(PARAM_SCREEN);
 
 
-                    DBObject match, project;
-                    BasicDBObject dbObjectParent, dbObjectChild;
+                    DBObject match;
+                    DBObject project;
+                    BasicDBObject dbObjectParent;
+                    BasicDBObject dbObjectChild;
 
                     // $MATCH section
                     dbObjectParent = new BasicDBObject();
@@ -310,7 +312,8 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                     JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
 
                     DBObject match;
-                    BasicDBObject dbObjectParent, dbObjectChild;
+                    BasicDBObject dbObjectParent;
+                    BasicDBObject dbObjectChild;
 
                     // $MATCH section
                     dbObjectParent = new BasicDBObject();

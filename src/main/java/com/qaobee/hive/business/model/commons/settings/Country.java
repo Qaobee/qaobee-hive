@@ -22,48 +22,53 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Class that defines a country.
+ *
  * @author Jerome
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
 
-    /** Internal identifier */
-    private String _id;
-
-    /** OSCE Code of the country */
-    private int codeOSCE;
-
-    /** Label code */
-    private String label;
-    
-    /** Local */
-    private String local;
-
+    /**
+     * Internal identifier
+     */
+    private String _id;// NOSONAR
 
     /**
-     * Constructor.
+     * OSCE Code of the country
      */
-    public Country() {
-    }
+    private int codeOSCE;
+
+    /**
+     * Label code
+     */
+    private String label;
+
+    /**
+     * Local
+     */
+    private String local;
 
     /**
      * Returns the internal identifier.
+     *
      * @return String : id
      */
-    public String get_id() {
+    public String get_id() {// NOSONAR
         return _id;
     }
 
     /**
      * Defines the internal identifier.
+     *
      * @param _id (String) : id
      */
-    public void set_id(final String _id) {
+    public void set_id(final String _id) {// NOSONAR
         this._id = _id;
     }
 
     /**
      * Returns the OSCE Code of the country.
+     *
      * @return int : OSCE Code
      */
     public int getCodeOSCE() {
@@ -72,6 +77,7 @@ public class Country {
 
     /**
      * Defines the OSCE Code of the country.
+     *
      * @param codeOSCE (int) : OSCE Code
      */
     public void setCodeOSCE(final int codeOSCE) {
@@ -80,6 +86,7 @@ public class Country {
 
     /**
      * Returns the label.
+     *
      * @return String : label
      */
     public String getLabel() {
@@ -88,6 +95,7 @@ public class Country {
 
     /**
      * Defines the label.
+     *
      * @param label (String) : label
      */
     public void setLabel(final String label) {
@@ -96,6 +104,7 @@ public class Country {
 
     /**
      * Returns the local.
+     *
      * @return String : local
      */
     public String getLocal() {
@@ -104,6 +113,7 @@ public class Country {
 
     /**
      * Defines the local.
+     *
      * @param local (String) : local
      */
     public void setLocal(String local) {

@@ -22,63 +22,67 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Bean tha describes a field to an indicator.
+ *
  * @author cke
  * @see IndicatorCfg
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IndicatorField {
-	
-	/** Name of the field */
-	private String name;
-	/** Type of field */
-	private String type;
-	
-	/**
-	 * Constructor.
-	 */
-	public IndicatorField() {
-	}
-	
-	/**
-	 * Constructor with parameters.
-	 * @param name (String) : name
-	 * @param type (String) : type
-	 */
-	public IndicatorField(String name, String type) {
-		this.name = name;
-		this.type = type;
-	}
 
-	/**
-	 * Returns the name of the field.
-	 * @return String : name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * Name of the field
+     */
+    private String name;
+    /**
+     * Type of field
+     */
+    private String type;
 
-	/**
-	 * Defines the name of the field.
-	 * @param name (String) : name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * Constructor with parameters.
+     *
+     * @param name (String) : name
+     * @param type (String) : type
+     */
+    public IndicatorField(String name, String type) {
+        this.name = name;
+        this.type = type;
+    }
 
-	/**
-	 * Returns the type of field.
-	 * @return String : type
-	 */
-	public String getType() {
-		return type;
-	}
+    /**
+     * Returns the name of the field.
+     *
+     * @return String : name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Defines the type of field.
-	 * @param type (String) : type
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * Defines the name of the field.
+     *
+     * @param name (String) : name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Returns the type of field.
+     *
+     * @return String : type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Defines the type of field.
+     *
+     * @param type (String) : type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 
 }
