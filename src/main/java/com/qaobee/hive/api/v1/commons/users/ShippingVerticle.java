@@ -221,9 +221,11 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
                     final int finalAmount = amount;
                     HttpClientRequest request = client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
+                        @Override
                         public void handle(final HttpClientResponse resp) {
                             if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
                                 resp.bodyHandler(new Handler<Buffer>() {
+                                    @Override
                                     public void handle(Buffer buffer) {
                                         // The entire response body has been received
                                         JsonObject res = new JsonObject(buffer.toString());
@@ -231,7 +233,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                         req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
                                         req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
                                         req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
-                                        try {
+                                        try { // NOSONAR
                                             mongo.save(req.getUser());
                                             JsonObject messageResponse = new JsonObject();
                                             messageResponse.putBoolean("status", true);

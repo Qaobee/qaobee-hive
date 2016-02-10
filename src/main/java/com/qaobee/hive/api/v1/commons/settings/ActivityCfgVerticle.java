@@ -59,7 +59,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
     /**
      * Handler for getting parameters list.
      */
-    public final static String PARAMS = Module.VERSION + ".commons.settings.activitycfg.params";
+    public static final String PARAMS = Module.VERSION + ".commons.settings.activitycfg.params";
 
 	/* List of parameters */
     /**
@@ -132,11 +132,8 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                     if (StringUtils.isBlank(req.getParams().get(PARAM_DATE).get(0))) {
                         throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is blank or null");
                     }
-                    try {
-                        dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
-                    } catch (NumberFormatException e) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
-                    }
+                    dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
+
 
                     // Creation of request
                     CriteriaBuilder criterias = new CriteriaBuilder();
@@ -156,6 +153,10 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                     JsonObject jsonObject = resultJSon.get(0);
                     LOG.debug(jsonObject.encodePrettily());
                     message.reply(jsonObject.encode());
+
+                } catch (NumberFormatException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -210,18 +211,15 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                     if (StringUtils.isBlank(req.getParams().get(PARAM_DATE).get(0))) {
                         throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is blank or null");
                     }
-                    try {
-                        dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
-                    } catch (NumberFormatException e) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
-                    }
+                    dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
                     // Parameter Field List Name
                     String paramField = req.getParams().get(PARAM_FIELD_LIST).get(0);
                     if (StringUtils.isBlank(paramField)) {
                         throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Param field list is blank or null");
                     }
 
-                    DBObject match, project;
+                    DBObject match;
+                    DBObject project;
                     BasicDBObject dbObjectParent;
 
                     // $MATCH section
@@ -255,6 +253,9 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 
                     message.reply(((JsonObject) resultJSon.get(0)).getArray(paramField).encode());
 
+                } catch (NumberFormatException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());

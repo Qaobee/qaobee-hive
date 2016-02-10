@@ -18,25 +18,24 @@
  */
 package com.qaobee.hive.business.commons.settings.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author jerome
+ * The type Country business.
  *
+ * @author jerome
  */
 public class CountryBusinessImpl implements CountryBusiness {
 
-	private static Map<String, Country> mapCountry = null;
+	private Map<String, Country> mapCountry = null;
 	
 	@Inject
 	private MongoDB mongo;
@@ -65,5 +64,4 @@ public class CountryBusinessImpl implements CountryBusiness {
 			}
 		}
 	}
-
 }

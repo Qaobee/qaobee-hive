@@ -86,7 +86,18 @@ public class Main extends AbstractGuiceVerticle {
         final RouteMatcher rm = new RouteMatcher();
         final EventBus eb = vertx.eventBus();
 
-
+        /**
+         * @api {get} /file/:collection/:id  Get an asset from a collection
+         * @apiVersion 0.1.0
+         * @apiName Get asset
+         * @apiGroup Main API
+         * @apiPermission all
+         *
+         * @apiDescription Get an asset from a collection
+         *
+         * @apiParam {String} collection Mandatory The collection.
+         * @apiParam {String} id Mandatory The Asset-ID.
+         */
         rm.get("/file/:collection/:id", new Handler<HttpServerRequest>() {
             @Override
             public void handle(final HttpServerRequest req) {
@@ -109,14 +120,16 @@ public class Main extends AbstractGuiceVerticle {
             }
         });
         /**
-         * @apiDescription Update d'un user avec son avatar
-         * @api {post} /file/avatar file.avatar
-         * @apiName file/:collection/:field/:uid
+         * @apiDescription Put an asset in a collection
+         * @api {post} /file/:collection/:field/:uid
+         * @apiName Post asset
          * @apiGroup Main
-         * @apiParam {String} uid user id
-         * @apiparam {File} file avatar
-         * @apiHeader {String} token
-         * @apiSuccess {Object} obj
+         * @apiParam {String} collection collection
+         * @apiparam {String} field field
+         * @apiparam {String} token token
+         * @apiparam {String} locale locale
+         * @apiparam {String} uid document id
+         *
          * @apiError NOT_LOGGED user not logged
          */
         rm.post("/file/:collection/:field/:uid", new Handler<HttpServerRequest>() {

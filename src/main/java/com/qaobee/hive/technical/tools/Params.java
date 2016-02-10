@@ -18,6 +18,9 @@
  */
 package com.qaobee.hive.technical.tools;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -26,42 +29,39 @@ import java.util.ResourceBundle;
  */
 public final class Params {
 
-	/** The Constant BUNDLE_NAME. */
-	private static final String BUNDLE_NAME = "params"; //$NON-NLS-1$
+    private static final Logger LOG = LoggerFactory.getLogger(Params.class);
+    private static final String BUNDLE_NAME = "params"; //$NON-NLS-1$
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-	/** The Constant RESOURCE_BUNDLE. */
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+    /**
+     * Instantiates a new params.
+     */
+    private Params() {
+        // vide
+    }
 
-	/**
-	 * Instantiates a new params.
-	 */
-	private Params() {
-		// vide
-	}
+    /**
+     * Gets the string.
+     *
+     * @param key the key
+     * @return the string
+     */
+    public static String getString(final String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (final MissingResourceException e) {
+            LOG.warn(e.getMessage(), e);
+            return '!' + key + '!';
+        }
+    }
 
-	/**
-	 * Gets the string.
-	 *
-	 * @param key
-	 *            the key
-	 * @return the string
-	 */
-	public static String getString(final String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (final MissingResourceException e) {
-			return '!' + key + '!';
-		}
-	}
-
-	/**
-	 * Contains key.
-	 *
-	 * @param key
-	 *            the key
-	 * @return if found
-	 */
-	public static boolean containsKey(final String key) {
-		return RESOURCE_BUNDLE.containsKey(key);
-	}
+    /**
+     * Contains key.
+     *
+     * @param key the key
+     * @return if found
+     */
+    public static boolean containsKey(final String key) {
+        return RESOURCE_BUNDLE.containsKey(key);
+    }
 }

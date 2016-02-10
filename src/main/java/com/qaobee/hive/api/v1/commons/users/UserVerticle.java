@@ -63,60 +63,22 @@ import java.util.UUID;
 @DeployableVerticle(isWorker = true)
 public class UserVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(UserVerticle.class);
-    /**
-     * The Constant LOGIN.
-     */
+
     public static final String LOGIN = Module.VERSION + ".commons.users.user.login";
-    /**
-     * The constant LOGIN_BY_TOKEN.
-     */
     public static final String LOGIN_BY_TOKEN = Module.VERSION + ".commons.users.user.sso";
-    /**
-     * The Constant LOGOUT.
-     */
     public static final String LOGOUT = Module.VERSION + ".commons.users.user.logout";
-    /**
-     * The Constant PASSWD_RENEW.
-     */
     public static final String PASSWD_RENEW = Module.VERSION + ".commons.users.user.newpasswd";
-    /**
-     * The Constant PASSWD_RENEW_CHK.
-     */
     public static final String PASSWD_RENEW_CHK = Module.VERSION + ".commons.users.user.passwdcheck";
-    /**
-     * The Constant PASSWD_RESET.
-     */
     public static final String PASSWD_RESET = Module.VERSION + ".commons.users.user.resetPasswd";
-    /**
-     * The Constant CURRENT.
-     */
     public static final String CURRENT = Module.VERSION + ".commons.users.user.current";
-    /**
-     * The Constant META.
-     */
     public static final String META = Module.VERSION + ".commons.users.user.meta";
-    /**
-     * The Constant USER_INFO
-     */
     public static final String USER_INFO = Module.VERSION + ".commons.users.user.user";
-    /**
-     * The Constant USER_BY_LOGIN
-     */
     public static final String USER_BY_LOGIN = Module.VERSION + ".commons.users.user.userByLogin";
     
     /* List of parameters */
-    /**
-     * User login
-     */
     public static final String PARAM_LOGIN = "login";
-    /**
-     * The constant PARAM_COUNTRY_ID.
-     */
     public static final String PARAM_COUNTRY_ID = "country";
-    /**
-     * User password
-     */
-    public static final String PARAM_PWD = "password";
+    public static final String PARAM_PWD = "password"; // NOSONAR
     /**
      * The constant MOBILE_TOKEN.
      */

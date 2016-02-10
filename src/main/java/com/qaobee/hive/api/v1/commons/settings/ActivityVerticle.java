@@ -160,20 +160,12 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
-//                    utils.isUserLogged(req);
-
                     JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
-
                     LOG.debug("Activities found : " + resultJson.toString());
-
                     message.reply(resultJson.encode());
-
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-//                } catch (QaobeeException e) {
-//                    LOG.error(e.getMessage(), e);
-//                    utils.sendError(message, e);
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());

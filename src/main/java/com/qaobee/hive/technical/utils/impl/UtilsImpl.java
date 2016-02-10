@@ -31,6 +31,8 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
 import org.imgscalr.Scalr.Mode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.MultiMap;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.eventbus.ReplyException;
@@ -53,36 +55,17 @@ import java.util.*;
  * @author Xavier MARIN
  */
 public class UtilsImpl implements Utils {
-    /**
-     * The Mongo.
-     */
+    private static final Logger LOG = LoggerFactory.getLogger(UtilsImpl.class);
     @Inject
     private MongoDB mongo;
-    /**
-     * The Habilit utils.
-     */
     @Inject
     private HabilitUtils habilitUtils;
 
-    /**
-     * Send error.
-     *
-     * @param message the message
-     * @param ex      the ex
-     * @param info    the info
-     */
     @Override
     public void sendError(final Message<String> message, final ExceptionCodes ex, final String info) {
         message.fail(ex.getCode(), Json.encode(new QaobeeException(message.body(), ex, info)));
     }
 
-    /**
-     * Test http metod.
-     *
-     * @param allowed méthode accèptée
-     * @param tested  méthode testée
-     * @throws NoSuchMethodException si les deux ne correspondent pas
-     */
     @Override
     public void testHTTPMetod(final String allowed, final String tested) throws NoSuchMethodException {
         if (!allowed.equals(tested)) {
@@ -90,12 +73,6 @@ public class UtilsImpl implements Utils {
         }
     }
 
-    /**
-     * To map.
-     *
-     * @param multiMap the multi map
-     * @return the map
-     */
     @Override
     public Map<String, List<String>> toMap(final MultiMap multiMap) {
         final Map<String, List<String>> map = new HashMap<>();
@@ -105,56 +82,25 @@ public class UtilsImpl implements Utils {
         return map;
     }
 
-    /**
-     * Send error.
-     *
-     * @param message un message
-     * @param e       une exception
-     */
     @Override
     public void sendError(final Message<String> message, final QaobeeException e) {
         message.fail(e.getCode().getCode(), Json.encode(e));
     }
 
-    /**
-     * Send error.
-     *
-     * @param message the message
-     * @param e       the e
-     */
     @Override
     public void sendError(Message<String> message, ReplyException e) {
         JsonObject ex = new JsonObject(e.getMessage());
         sendError(message, ExceptionCodes.valueOf(ex.getString("code", ExceptionCodes.INTERNAL_ERROR.name())), ex.getString("message", "Internal Error"));
     }
 
-    /**
-     * Send error j.
-     *
-     * @param message un message
-     * @param code    une erreur
-     * @param error   un libellé d'erreur
-     */
     @Override
     public void sendErrorJ(final Message<JsonObject> message, final ExceptionCodes code, final String error) {
         message.fail(code.getCode(), error);
-
     }
 
-    /**
-     * Save and resize image.
-     *
-     * @param source   fichier source
-     * @param dest     fichier de destination
-     * @param width    largeur
-     * @param height   hauteur
-     * @param isSquare carrée
-     * @throws IOException une erreur d'IO
-     */
     @Override
     public void saveAndResizeImage(final File source, final String dest, final int width, final int height, final boolean isSquare) throws IOException {
         final BufferedImage originalImage = ImageIO.read(source);
-
         final BufferedImage targetImage;
         if (isSquare) {
             final BufferedImage tmpTargetImage;
@@ -170,32 +116,16 @@ public class UtilsImpl implements Utils {
         final File fDest = new File(dest);
         if (!fDest.getParentFile().exists()) {
             boolean mkdirs = fDest.getParentFile().mkdirs();
+            LOG.info("res : " + mkdirs);
         }
         ImageIO.write(targetImage, "PNG", fDest);
     }
 
-    /**
-     * Format date.
-     *
-     * @param timestamp unix timestamp
-     * @param dateStyle the date style
-     * @param timeStyle the time style
-     * @param locale    the locale
-     * @return formated date
-     */
     @Override
     public String formatDate(final long timestamp, final int dateStyle, final int timeStyle, final String locale) {
         return DateFormat.getDateTimeInstance(dateStyle, dateStyle, new Locale(locale.split(",")[0].split("-")[0])).format(new Date(timestamp * 1000));
     }
 
-    /**
-     * Recherche dans un JsonArray d'un JsonObject en fonction de la clef.
-     *
-     * @param key   clef de recherche
-     * @param value valeur recherchée
-     * @param res   JsonArray à parcourir
-     * @return l 'objet trouvé, null sinon
-     */
     @Override
     public JsonObject find(final String key, final String value, final JsonArray res) {
         for (int i = 0; i < res.size(); i++) {
@@ -207,12 +137,6 @@ public class UtilsImpl implements Utils {
         return null;
     }
 
-    /**
-     * renvoie une réponse Json de type status.
-     *
-     * @param b       le résultat d'une opération
-     * @param message le message sur le bus
-     */
     @Override
     public void sendStatus(final boolean b, final Message<String> message) {
         final JsonObject jsonResp = new JsonObject();
@@ -221,12 +145,6 @@ public class UtilsImpl implements Utils {
 
     }
 
-    /**
-     * Send status json.
-     *
-     * @param b       the b
-     * @param message the message
-     */
     @Override
     public void sendStatusJson(final boolean b, final Message<JsonObject> message) {
         final JsonObject jsonResp = new JsonObject();
@@ -235,26 +153,18 @@ public class UtilsImpl implements Utils {
 
     }
 
-    /**
-     * Test mandatory params.
-     *
-     * @param map    the map
-     * @param fields the fields
-     * @throws IllegalArgumentException the illegal argument exception
-     */
     @Override
-    public void testMandatoryParams(Map<String, ?> map, String... fields) throws IllegalArgumentException {
+    public void testMandatoryParams(Map<String, ?> map, String... fields)  {
         final List<String> missingFields = new ArrayList<>();
         if (map == null) {
             map = new HashMap<>();
         }
-
         for (final String field : fields) {
             if (!map.containsKey(field) || map.get(field) == null) {
                 missingFields.add(field);
-            } else if ((map.get(field) instanceof List && 
+            } else if ((map.get(field) instanceof List &&
             				((((List<?>) map.get(field)).isEmpty()) || (StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0)))))
-                    || (map.get(field) instanceof String && StringUtils.isBlank(((String) map.get(field))))) {
+                    || (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field)))) {
                 missingFields.add(field);
             }
         }
@@ -264,32 +174,20 @@ public class UtilsImpl implements Utils {
         }
     }
 
-    /**
-     * Test mandatory params.
-     *
-     * @param body   the body
-     * @param fields the fields
-     * @throws IllegalArgumentException the illegal argument exception
-     */
     @Override
-    public void testMandatoryParams(String body, final String... fields) throws IllegalArgumentException {
+    public void testMandatoryParams(String body, final String... fields) {
         if (null == body) {
             body = "{}";
         }
         testMandatoryParams(new JsonObject(body).toMap(), fields);
     }
 
-    /**
-     * Is user logged.
-     *
-     * @param request the request
-     * @return the User
-     * @throws QaobeeException the qaobee exception
-     */
     @Override
     public User isUserLogged(RequestWrapper request) throws QaobeeException {
         String token = "";
-        if(request.getUser() != null) return request.getUser();
+        if(request.getUser() != null) {
+            return request.getUser();
+        }
         if (request.getHeaders() != null && request.getHeaders().containsKey("token")) {
             token = request.getHeaders().get("token").get(0);
         }
@@ -328,18 +226,12 @@ public class UtilsImpl implements Utils {
                 request.setUser(user);
                 return user;
             } catch (final EncodeException e) {
+                LOG.error(e.getMessage(), e);
                 throw new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e.getMessage());
             }
         }
     }
 
-    /**
-     * Is logged and admin.
-     *
-     * @param request the request
-     * @return the user
-     * @throws QaobeeException the qaobee exception
-     */
     @Override
     public User isLoggedAndAdmin(RequestWrapper request) throws QaobeeException {
         User user = isUserLogged(request);

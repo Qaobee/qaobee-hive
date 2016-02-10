@@ -19,9 +19,7 @@
 package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.business.model.commons.users.User;
-import org.apache.commons.lang3.SerializationUtils;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,46 +29,14 @@ import java.util.Map;
  *
  * @author Xavier.Marin
  */
-public class RequestWrapper implements Serializable {
+public class RequestWrapper {
 
-    /**
-     * The Constant serialVersionUID.
-     */
-    private static final long serialVersionUID = 3895794648152512848L;
-
-    /**
-     * The path.
-     */
     private List<String> path;
-
-    /**
-     * The headers.
-     */
     private Map<String, List<String>> headers;
-
-    /**
-     * The params.
-     */
     private Map<String, List<String>> params;
-
-    /**
-     * The body.
-     */
     private String body;
-
-    /**
-     * The method.
-     */
     private String method;
-
-    /**
-     * The locale.
-     */
     private String locale;
-
-    /**
-     * the current person *.
-     */
     private User user;
 
     /**
@@ -115,7 +81,9 @@ public class RequestWrapper implements Serializable {
      * @return the params
      */
     public Map<String, List<String>> getParams() {
-        if(params == null) params = new HashMap<>();
+        if (params == null) {
+            params = new HashMap<>();
+        }
         return params;
     }
 
@@ -198,18 +166,6 @@ public class RequestWrapper implements Serializable {
      */
     public void setUser(final User user) {
         this.user = user;
-    }
-
-    /**
-     * Clone request wrapper.
-     *
-     * @return the request wrapper
-     * @throws CloneNotSupportedException the clone not supported exception
-     */
-    @Override
-    public RequestWrapper clone() throws CloneNotSupportedException {
-        super.clone();
-        return (RequestWrapper) SerializationUtils.clone(this);
     }
 
     /**

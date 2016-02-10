@@ -23,6 +23,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Named;
@@ -33,6 +35,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * The type Mongo provider.
  */
 public class MongoProvider implements Provider<MongoDB> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(MongoProvider.class);
 	@Inject
 	@Named("mongo.persistor")
 	private JsonObject config;
@@ -45,7 +49,7 @@ public class MongoProvider implements Provider<MongoDB> {
 			try {
 				mongo = new MongoDBImpl(config);
 			} catch (UnknownHostException e) {
-				e.printStackTrace();
+				LOG.error(e.getMessage(), e);
 			}
 		}
 		return mongo;

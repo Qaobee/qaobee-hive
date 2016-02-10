@@ -21,10 +21,17 @@ package com.qaobee.hive.business.commons.settings;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 
 /**
- * @author jerome
+ * The interface Activity business.
  *
+ * @author jerome
  */
 public interface ActivityBusiness {
 
+	/**
+	 * Gets activity from id.
+	 *
+	 * @param id the id
+	 * @return the activity from id
+	 */
 	Activity getActivityFromId(String id);
 }

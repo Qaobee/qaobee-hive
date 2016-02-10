@@ -24,6 +24,8 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.guice.services.Files;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
@@ -33,6 +35,8 @@ import java.io.ByteArrayOutputStream;
  * The type Files.
  */
 public class FilesImpl implements Files {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FilesImpl.class);
     @Inject
     private MongoDB db;
 
@@ -44,10 +48,10 @@ public class FilesImpl implements Files {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             imageForOutput.writeTo(bos);
             return bos.toByteArray();
-        } catch (Exception exp) {
-            // empty
+        } catch (Exception e) {
+            LOG.warn(e.getMessage(), e);
         }
-        return null;
+        return new byte[] {};
     }
 
     @Override

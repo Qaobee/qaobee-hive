@@ -29,7 +29,7 @@ public final class Constantes {
 	public static final long TIMEOUT = 10000L;
 
 	/** The Constant DEFAULT_SESSION_TIMEOUT. */
-	public static final long DEFAULT_SESSION_TIMEOUT = 30 * 60 * 1000;
+	public static final long DEFAULT_SESSION_TIMEOUT = 30L * 60L * 1000L;
 
 	/** The Constant GET. */
 	public static final String GET = "GET";
@@ -45,6 +45,9 @@ public final class Constantes {
 
 	/** The Constant ADMIN_HABILIT. */
 	public static final String ADMIN_HABILIT = "admin_qaobee";
+
+	public static final String MESSAGE = "message";
+	public static final String STATUS_CODE = "statusCode";
 
 	/**
 	 * Instantiates a new constantes.

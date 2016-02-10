@@ -73,13 +73,6 @@ public class PDFVerticle extends AbstractGuiceVerticle {
         return out.getBuffer().toString();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.vertx.java.platform.Verticle#start()
-     *
-     * {template : <template file in src/main/resources/pdfTemplates/>, data : <data>, filename : <File name> } return { pdf : <path to file>}
-     */
     @Override
     public void start() {
         super.start();

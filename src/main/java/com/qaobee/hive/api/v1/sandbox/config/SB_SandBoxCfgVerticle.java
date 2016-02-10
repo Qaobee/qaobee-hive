@@ -46,7 +46,7 @@ import java.util.Map;
  * The type Sand box cfg verticle.
  */
 @DeployableVerticle(isWorker = true)
-public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {
+public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxCfgVerticle.class);
     public static final String GET = Module.VERSION + ".sandbox.config.sandboxCfg.get";
     public static final String GETLIST = Module.VERSION + ".sandbox.config.sandboxCfg.getList";
@@ -123,18 +123,10 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
                     Map<String, List<String>> params = req.getParams();
-                    //TODO : ID season ? pas SeasonCode ?
-//                    utils.testMandatoryParams(params, PARAM_SANDBOX_ID, PARAM_SEASON_ID);
                     utils.testMandatoryParams(params, PARAM_SANDBOX_ID);
 
                     Map<String, Object> criterias = new HashMap<>();
                     criterias.put("sandbox._id", params.get(PARAM_SANDBOX_ID).get(0));
-
-                    // label
-//                    if (StringUtils.isNotBlank(params.get(PARAM_SEASON_ID).get(0))) {
-//                        criterias.put("season._id", params.get(PARAM_SEASON_ID).get(0));
-//                    }
-
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_SandBoxCfg.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
