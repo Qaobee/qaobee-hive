@@ -23,7 +23,6 @@ import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
@@ -40,10 +39,9 @@ public interface MongoDB {
      *
      * @param o object to save
      * @return id string
-     * @throws EncodeException can't encode
      * @throws QaobeeException can't save
      */
-    String save(Object o) throws EncodeException, QaobeeException;
+    String save(Object o) throws QaobeeException;
 
     /**
      * Update string.
@@ -53,8 +51,8 @@ public interface MongoDB {
      * @return the string
      * @throws MongoException the mongo exception
      */
-    String update(JsonObject document, Class<?> collection) throws MongoException;
-    
+    String update(JsonObject document, Class<?> collection);
+
     /**
      * Update string.
      *
@@ -63,24 +61,18 @@ public interface MongoDB {
      * @return the string
      * @throws MongoException the mongo exception
      */
-    String update(JsonObject document, String collection) throws MongoException;
+    String update(JsonObject document, String collection) ;
 
     /**
      * Update a document.
      *
      * @param query      (JSonObject) : The selection criteria for the update.
-     * @param set        (JSonObject) : The modifications to apply.(need to have a
-     *                   {
-     *                   "$set" :
-     *                   {
-     *                   ...
-     *                   }
-     *                   }
+     * @param set        (JSonObject) : The modifications to apply.(need to have a                   {                   "$set" :                   {                   ...                   }                   }
      * @param collection (Class) : collection to update
-     * @return string
+     * @return string string
      * @throws MongoException the mongo exception
      */
-    String update(JsonObject query, JsonObject set, Class<?> collection) throws MongoException;
+    String update(JsonObject query, JsonObject set, Class<?> collection) ;
 
     /**
      * Saves a document in a colection.
@@ -89,20 +81,17 @@ public interface MongoDB {
      * @param collection target
      * @return id string
      * @throws QaobeeException can't save
-     * @throws MongoException can't save
      */
-    String save(JsonObject document, Class<?> collection) throws QaobeeException, MongoException;
-    
+    String save(JsonObject document, Class<?> collection) throws QaobeeException;
+
     /**
      * Saves a document in a colection.
      *
      * @param document   object to save
      * @param collection target
      * @return id string
-     * @throws QaobeeException can't save
-     * @throws MongoException can't save
      */
-    String save(JsonObject document, String collection) throws QaobeeException, MongoException;
+    String save(JsonObject document, String collection);
 
     /**
      * Get a document by id.
@@ -113,7 +102,7 @@ public interface MongoDB {
      * @throws QaobeeException not found
      */
     JsonObject getById(String id, Class<?> collection) throws QaobeeException;
-    
+
     /**
      * Get a document by id.
      *
@@ -154,11 +143,11 @@ public interface MongoDB {
     /**
      * Find document by criteria with minimal fields and a sort order.
      *
-     * @param criteria (Map(String, Object))	: criteria
-     * @param fields (List(String)) 			: fields to include (null if all fields)
-     * @param sort (String)						: sort field (null if no sort)
-     * @param order (int)						: sort order
-     * @param limit (int)						: limit (0 if no limit)
+     * @param criteria   (Map(String, Object))	: criteria
+     * @param fields     (List(String)) 			: fields to include (null if all fields)
+     * @param sort       (String)						: sort field (null if no sort)
+     * @param order      (int)						: sort order
+     * @param limit      (int)						: limit (0 if no limit)
      * @param collection (Class)				: collection
      * @return JsonArray : an array
      */
@@ -196,9 +185,8 @@ public interface MongoDB {
      * @param collection the collection
      * @return the json array
      */
-    // TODO : jro/xke : javadoc
     JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection);
-    
+
     /**
      * Aggregate json array.
      *
@@ -207,7 +195,6 @@ public interface MongoDB {
      * @param collection the collection
      * @return the json array
      */
-    // TODO : jro/xke : javadoc
     JsonArray aggregate(String field, List<DBObject> pipeline, String collection);
 
 
