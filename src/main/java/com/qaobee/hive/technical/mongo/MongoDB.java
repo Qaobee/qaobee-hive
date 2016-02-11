@@ -91,7 +91,7 @@ public interface MongoDB {
      * @param collection target
      * @return id string
      */
-    String save(JsonObject document, String collection);
+    String save(JsonObject document, String collection) throws QaobeeException;
 
     /**
      * Get a document by id.
