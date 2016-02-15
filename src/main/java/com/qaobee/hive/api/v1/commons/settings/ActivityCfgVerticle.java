@@ -245,9 +245,12 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                     LOG.debug("getParamFieldHandler : " + pipelineAggregation.toString());
 
                     final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, ActivityCfg.class);
+                    if (resultJSon == null) {
+                        throw new QaobeeException(ExceptionCodes.MONGO_ERROR, "Resultset for field '" + paramField + "' is null (" + activityId + "/" + countryId + "/" + dateRef + ")");
+                    }
+                    
                     LOG.debug(resultJSon.encodePrettily());
-
-                    if (resultJSon == null || resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
+                    if (resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
                         throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");
                     }
 
