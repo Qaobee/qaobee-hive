@@ -33,7 +33,7 @@ import com.qaobee.hive.business.model.transversal.Audit;
 public class StructureCfg {
 	
 	/** Internal identifier */
-    private String _id;
+    private String _id; // NOSONAR
     /** Structure */
     private Structure structure;   
 	/** Season */
@@ -49,7 +49,7 @@ public class StructureCfg {
 	 * Returns the internal identifier.
 	 * @return String : ID
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -57,7 +57,7 @@ public class StructureCfg {
 	 * Defines the internal identifier.
 	 * @param _id (String) : ID
 	 */
-	public void set_id(String _id) {
+	public void set_id(String _id) { // NOSONAR
 		this._id = _id;
 	}
 

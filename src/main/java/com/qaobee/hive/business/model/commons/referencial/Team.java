@@ -34,7 +34,7 @@ import com.qaobee.hive.business.model.transversal.Audit;
 public class Team {
 	
     /** Internal identifier */
-    private String _id;
+    private String _id; // NOSONAR
     /** Label */
     private String label;
     /** Activity of the Team */
@@ -52,7 +52,7 @@ public class Team {
 	 * Returns the internal identifier.
 	 * @return String : ID
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -60,7 +60,7 @@ public class Team {
 	 * Defines the internal identifier.
 	 * @param _id (String) : ID
 	 */
-	public void set_id(String _id) {
+	public void set_id(String _id) { // NOSONAR
 		this._id = _id;
 	}
 

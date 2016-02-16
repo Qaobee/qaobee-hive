@@ -31,7 +31,7 @@ import java.util.List;
 public class Account {
 
     /** Internal identifier */
-    private String _id;
+    private String _id; // NOSONAR
     /** Activation code */
     private String activationCode;
     /** Activation password */
@@ -259,7 +259,7 @@ public class Account {
      * Returns the identifier.
      * @return String : id
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -267,7 +267,7 @@ public class Account {
      * Defines the identifier.
      * @param _id (String) : id
      */
-    public void set_id(final String _id) {
+    public void set_id(final String _id) { // NOSONAR
         this._id = _id;
     }
 

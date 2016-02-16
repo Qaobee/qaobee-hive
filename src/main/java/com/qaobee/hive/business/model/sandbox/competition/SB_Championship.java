@@ -32,10 +32,10 @@ import com.qaobee.hive.business.model.transversal.Tag;
  * @version V1.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_Championship {
+public class SB_Championship { // NOSONAR
 
 	/** Internal identifier */
-	private String _id;
+	private String _id; // NOSONAR
 	/** Label */
 	private String label;
 	/** List labels */
@@ -47,7 +47,7 @@ public class SB_Championship {
 	 * Returns the internal identifier of the championship.
 	 * @return String : internal identifier
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -55,7 +55,7 @@ public class SB_Championship {
 	 * Defines the internal identifier of the championship.
 	 * @param _id (String) : identifier
 	 */
-	public void set_id(String _id) {
+	public void set_id(String _id) { // NOSONAR
 		this._id = _id;
 	}
 

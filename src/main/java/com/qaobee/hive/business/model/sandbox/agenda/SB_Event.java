@@ -34,12 +34,12 @@ import java.util.List;
  * @author cke
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_Event {
+public class SB_Event { // NOSONAR
 
     /**
      * Internal identifier
      */
-    private String _id;
+    private String _id; // NOSONAR
     /**
      * Age category
      */
@@ -98,7 +98,7 @@ public class SB_Event {
      *
      * @return String : ID
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -107,7 +107,7 @@ public class SB_Event {
      *
      * @param _id (String) : ID
      */
-    public void set_id(String _id) {
+    public void set_id(String _id) { // NOSONAR
         this._id = _id;
     }
 

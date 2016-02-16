@@ -26,7 +26,7 @@ import java.io.File;
  *
  * @author Mohamed EL MARZGIOUI
  */
-public class SB_Exercise extends TrainingAbstract {
+public class SB_Exercise extends TrainingAbstract { // NOSONAR
 
 	/** Objective. */
 	private String objective;

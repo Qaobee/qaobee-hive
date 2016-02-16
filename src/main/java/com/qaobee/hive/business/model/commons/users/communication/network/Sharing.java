@@ -30,7 +30,7 @@ import com.qaobee.hive.business.model.commons.users.User;
 public class Sharing {
 
 	/** The _id. */
-	private String _id;
+	private String _id; // NOSONAR
 
 	/** Sharing's user. */
 	private User user;
@@ -52,7 +52,7 @@ public class Sharing {
 	 *
 	 * @return the _id
 	 */
-	public final String get_id() {
+	public final String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -62,7 +62,7 @@ public class Sharing {
 	 * @param _id
 	 *            the _id to set
 	 */
-	public final void set_id(final String _id) {
+	public final void set_id(final String _id) { // NOSONAR
 		this._id = _id;
 	}
 

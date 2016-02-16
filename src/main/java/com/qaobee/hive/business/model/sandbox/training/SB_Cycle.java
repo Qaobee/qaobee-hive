@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * The Class Cycle.
  */
-public class SB_Cycle extends TrainingAbstract {
+public class SB_Cycle extends TrainingAbstract { // NOSONAR
 
 	/** Session's list. */
 	private List<SB_Session> sessionList;

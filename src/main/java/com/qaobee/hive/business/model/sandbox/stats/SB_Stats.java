@@ -28,10 +28,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author cke | Jerome
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_Stats {
+public class SB_Stats { // NOSONAR
 
     /** Internal identifier */
-    private String _id;
+    private String _id; // NOSONAR
     /** Code */
     private String code;
     /** Chrono */
@@ -55,7 +55,7 @@ public class SB_Stats {
      * Returns the internal identifier.
      * @return String : ID
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -63,7 +63,7 @@ public class SB_Stats {
      * Defines the internal identifier.
      * @param _id (String) : ID
      */
-    public void set_id(String _id) {
+    public void set_id(String _id) { // NOSONAR
         this._id = _id;
     }
 

@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class BlogPost {
 
 	/** The _id. */
-	private String _id;
+	private String _id; // NOSONAR
 	/** The timestamp. */
 	private long timestamp;
 	/** The title. */
@@ -108,7 +108,7 @@ public class BlogPost {
 	 * Gets the _id.
 	 * @return String : _id
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -116,7 +116,7 @@ public class BlogPost {
 	 * Sets the _id.
 	 * @param _id (String) : _id
 	 */
-	public void set_id(final String _id) {
+	public void set_id(final String _id) { // NOSONAR
 		this._id = _id;
 	}
 

@@ -38,6 +38,7 @@ public class Role {
      * Constructor without parameter.
      */
     public Role() {
+        // Declare a constructor without any initialization
     }
     
     /**

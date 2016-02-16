@@ -33,7 +33,7 @@ import com.qaobee.hive.business.model.transversal.Tag;
 public class TrainingAbstract {
 
 	/** The _id. */
-	private String _id;
+	private String _id; // NOSONAR
 
 	/** label. */
 	private String label;
@@ -82,7 +82,7 @@ public class TrainingAbstract {
 	 *
 	 * @return the _id
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -92,7 +92,7 @@ public class TrainingAbstract {
 	 * @param _id
 	 *            the _id to set
 	 */
-	public void set_id(final String _id) {
+	public void set_id(final String _id) { // NOSONAR
 		this._id = _id;
 	}
 

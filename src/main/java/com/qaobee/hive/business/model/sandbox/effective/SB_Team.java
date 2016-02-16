@@ -31,12 +31,12 @@ import com.qaobee.hive.business.model.transversal.Tag;
  * @version V1.2
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_Team {
+public class SB_Team { // NOSONAR
 
 	// Declaration of variables
 
 	/** Internal identifier. */
-	private String _id;
+	private String _id; // NOSONAR
 	/** The label. */
 	private String label;
 	/** The age category. */
@@ -62,7 +62,7 @@ public class SB_Team {
 	 * Returns the internal identifier of the team.
 	 * @return String : internal identifier
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -70,7 +70,7 @@ public class SB_Team {
 	 * Defines the internal identifier of the team.
 	 * @param _id (String) : identifier
 	 */
-	public void set_id(String _id) {
+	public void set_id(String _id) { // NOSONAR
 		this._id = _id;
 	}
 

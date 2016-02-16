@@ -38,7 +38,7 @@ public class User {
     /**
      * Internal identifier
      */
-    private String _id;
+    private String _id; // NOSONAR
     /**
      * Avatar
      */
@@ -97,7 +97,7 @@ public class User {
      *
      * @return String : id
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -106,7 +106,7 @@ public class User {
      *
      * @param _id String : id
      */
-    public void set_id(String _id) {
+    public void set_id(String _id) { // NOSONAR
         this._id = _id;
     }
 

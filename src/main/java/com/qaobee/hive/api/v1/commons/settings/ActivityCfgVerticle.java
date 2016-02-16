@@ -61,7 +61,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAMS = Module.VERSION + ".commons.settings.activitycfg.params";
 
-	/* List of parameters */
+    /* List of parameters */
     /**
      * List of parameters
      */
@@ -134,7 +134,6 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                     }
                     dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
 
-
                     // Creation of request
                     CriteriaBuilder criterias = new CriteriaBuilder();
                     criterias.add("activityId", activityId);
@@ -180,7 +179,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
          * @apiName params
          * @apiGroup ActivityCfg API
          * @apiParam {String} activityId Activity Id
-         * @apiParam {String} countryId  Country Id
+         * @apiParam {String} countryId Country Id
          * @apiParam {long} date the current date
          * @apiParam {String} paramFieldList the list of value
          * @apiError HTTP_ERROR wrong request method
@@ -248,7 +247,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                     if (resultJSon == null) {
                         throw new QaobeeException(ExceptionCodes.MONGO_ERROR, "Resultset for field '" + paramField + "' is null (" + activityId + "/" + countryId + "/" + dateRef + ")");
                     }
-                    
+
                     LOG.debug(resultJSon.encodePrettily());
                     if (resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
                         throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");

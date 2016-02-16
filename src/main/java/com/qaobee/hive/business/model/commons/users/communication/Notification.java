@@ -33,7 +33,7 @@ public class Notification implements Serializable {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -5693811404344145826L;
 	/** Internal identifier */
-	private String _id;
+	private String _id; // NOSONAR
 	/** Timestamp. */
 	private long timestamp;
 	/** Content. */
@@ -49,7 +49,7 @@ public class Notification implements Serializable {
 	 * Gets the internal identifier.
 	 * @return String : _id
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -57,7 +57,7 @@ public class Notification implements Serializable {
 	 * Sets the internal identifier.
 	 * @param _id (String) : _id
 	 */
-	public void set_id(final String _id) {
+	public void set_id(final String _id) { // NOSONAR
 		this._id = _id;
 	}
 

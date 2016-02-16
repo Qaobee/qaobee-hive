@@ -38,7 +38,7 @@ import com.qaobee.hive.business.model.transversal.Participant;
 public class Event {
 
 	/** Internal identifier */
-	private String _id;
+	private String _id; // NOSONAR
 	/** Age category */
 	private CategoryAge categoryAge;
 	/** Season */
@@ -66,7 +66,7 @@ public class Event {
 	 * Returns the internal identifier.
 	 * @return String : id
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -74,7 +74,7 @@ public class Event {
 	 * Defines the internal identifier.
 	 * @param _id (String) : id
 	 */
-	public void set_id(String _id) {
+	public void set_id(String _id) { // NOSONAR
 		this._id = _id;
 	}
 

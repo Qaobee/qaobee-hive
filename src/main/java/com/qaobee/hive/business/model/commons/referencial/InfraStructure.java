@@ -21,7 +21,6 @@ package com.qaobee.hive.business.model.commons.referencial;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.transversal.Address;
 import com.qaobee.hive.business.model.transversal.Audit;
-import com.qaobee.hive.business.model.transversal.GathererBatch;
 
 /**
  * Bean that describes infrastructure.
@@ -31,7 +30,7 @@ import com.qaobee.hive.business.model.transversal.GathererBatch;
 public class InfraStructure {
 
 	/** Internal identifier */
-    private String _id;
+    private String _id; // NOSONAR
     /** Federation identifier */
     private String idFederation;
     /** Area size */
@@ -52,7 +51,7 @@ public class InfraStructure {
 	 * Returns the internal identifier.
 	 * @return String : ID
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -60,7 +59,7 @@ public class InfraStructure {
 	 * Defines the internal identifier.
 	 * @param _id (String) ; ID
 	 */
-	public void set_id(String _id) {
+	public void set_id(String _id) { // NOSONAR
 		this._id = _id;
 	}
 

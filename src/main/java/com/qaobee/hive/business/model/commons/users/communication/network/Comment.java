@@ -27,7 +27,7 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
 public class Comment {
 
 	/** The _id. */
-	private String _id;
+	private String _id; // NOSONAR
 
 	/** Author Id. */
 	private String authorId;
@@ -49,7 +49,7 @@ public class Comment {
 	 *
 	 * @return the _id
 	 */
-	public final String get_id() {
+	public final String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -59,7 +59,7 @@ public class Comment {
 	 * @param _id
 	 *            the _id to set
 	 */
-	public final void set_id(final String _id) {
+	public final void set_id(final String _id) { // NOSONAR
 		this._id = _id;
 	}
 

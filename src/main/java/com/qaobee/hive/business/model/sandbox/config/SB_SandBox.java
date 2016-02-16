@@ -25,10 +25,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author cke
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_SandBox {
+public class SB_SandBox { // NOSONAR
 
 	/** Identifier */
-	private String _id;
+	private String _id; // NOSONAR
     /** Owner */
     private String owner;
     /** Activity id */
@@ -72,7 +72,7 @@ public class SB_SandBox {
      * Returns the sandbox identifier.
      * @return String : identifier
      */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -80,7 +80,7 @@ public class SB_SandBox {
 	 * Defines the sandbox identifier.
 	 * @param _id (String) : identifier
 	 */
-	public void set_id(String _id) {
+	public void set_id(String _id) { // NOSONAR
 		this._id = _id;
 	}
 

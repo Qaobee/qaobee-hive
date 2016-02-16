@@ -36,7 +36,7 @@ import com.qaobee.hive.business.model.transversal.Tag;
 public class ChampionShip {
 	
 	/** Internal identifier */
-    private String _id;
+    private String _id; // NOSONAR
     /** Activity */
     private Activity activity;
     /** Age category */
@@ -58,7 +58,7 @@ public class ChampionShip {
 	 * Returns the internal identifier.
 	 * @return String : ID
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -66,7 +66,7 @@ public class ChampionShip {
 	 * Defines the internal identifier.
 	 * @param _id (String) : ID
 	 */
-	public void set_id(String _id) {
+	public void set_id(String _id) { // NOSONAR
 		this._id = _id;
 	}
 

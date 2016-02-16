@@ -34,10 +34,10 @@ import com.qaobee.hive.business.model.transversal.Tag;
  * @author cke
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_Person {
+public class SB_Person { // NOSONAR
 	
 	/** Internal identifier */
-	private String _id;
+	private String _id; // NOSONAR
 	/** Name */
 	private String name;
 	/** Firstname */
@@ -75,7 +75,7 @@ public class SB_Person {
 	 * Returns the internal identifier.
 	 * @return String : ID
 	 */
-	public String get_id() {
+	public String get_id() { // NOSONAR
 		return _id;
 	}
 
@@ -83,7 +83,7 @@ public class SB_Person {
 	 * Defines the internal identifier.
 	 * @param _id (String) : ID
 	 */
-	public void set_id(String _id) {
+	public void set_id(String _id) { // NOSONAR
 		this._id = _id;
 	}
 

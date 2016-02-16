@@ -34,7 +34,7 @@ import com.qaobee.hive.business.model.transversal.Contact;
 public class Structure {
 
     /** Internal identifier */
-    private String _id;
+    private String _id; // NOSONAR
     /** Label */
     private String label;
     /** Structure's Acronym */
@@ -56,7 +56,7 @@ public class Structure {
      * Returns the internal identifier.
      * @return String : ID
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -64,7 +64,7 @@ public class Structure {
      * Defines the internal identifier.
      * @param _id (String) : ID
      */
-    public void set_id(final String _id) {
+    public void set_id(final String _id) { // NOSONAR
         this._id = _id;
     }
 

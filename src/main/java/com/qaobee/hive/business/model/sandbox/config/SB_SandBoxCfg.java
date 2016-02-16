@@ -32,10 +32,10 @@ import com.qaobee.hive.business.model.transversal.Member;
  * @author cke
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_SandBoxCfg {
+public class SB_SandBoxCfg { // NOSONAR
 
     /** Internal identifier */
-    private String _id;
+    private String _id; // NOSONAR
     /** Activity */
     private Activity activity;
     /** Structure */
@@ -51,7 +51,7 @@ public class SB_SandBoxCfg {
      * Returns the internal identifier.
      * @return String : ID
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -59,7 +59,7 @@ public class SB_SandBoxCfg {
      * Defines the internal identifier.
      * @param _id (String) : ID
      */
-    public void set_id(String _id) {
+    public void set_id(String _id) { // NOSONAR
         this._id = _id;
     }
 
