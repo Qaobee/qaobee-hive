@@ -5,7 +5,6 @@ import java.util.Map;
 
 /**
  * The type Payment.
- * <p/>
  * https://www.payplug.com/docs/api/?powershell#the-payment-object
  */
 public class Payment {
