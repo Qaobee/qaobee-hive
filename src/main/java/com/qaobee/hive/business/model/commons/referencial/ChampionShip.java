@@ -1,15 +1,14 @@
 /*************************************************************************
- * 
  * Qaobee
  * __________________
- * 
+ * <p/>
  * [2015] Qaobee
  * All Rights Reserved.
- * 
+ * <p/>
  * NOTICE:  All information contained here is, and remains
  * the property of Qaobee and its suppliers,
  * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may 
+ * here are proprietary to Qaobee and its suppliers and may
  * be covered by U.S. and Foreign Patents, patents in process,
  * and are protected by trade secret or copyright law.
  * Dissemination of this information or reproduction of this material
@@ -18,9 +17,6 @@
  */
 package com.qaobee.hive.business.model.commons.referencial;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
@@ -28,28 +24,30 @@ import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Tag;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Bean that describes a championship.
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ChampionShip {
-	
+@JsonIgnoreProperties(ignoreUnknown = true) public class ChampionShip {
+
 	/** Internal identifier */
-    private String _id; // NOSONAR
-    /** Activity */
-    private Activity activity;
-    /** Age category */
-    private CategoryAge categoryAge; 
-    /** Code */
-    private String code; 
-    /** Label */
-    private String label;
-    /** List of tags for determinate championShip */
-    private List<Tag> tags;
-    /** List of journey for a championShip */
-    private List<ChampionShipJourney> journeys;
-    /** Season */
+	private String _id; // NOSONAR
+	/** Activity */
+	private Activity activity;
+	/** Age category */
+	private CategoryAge categoryAge;
+	/** Code */
+	private String code;
+	/** Label */
+	private String label;
+	/** List of tags for determinate championShip */
+	private List<Tag> tags;
+	/** List of journey for a championShip */
+	private List<ChampionShipJourney> journeys;
+	/** Season */
 	private Season season;
 	/** Audit CRUD */
 	private Audit audit;
@@ -155,12 +153,12 @@ public class ChampionShip {
 	 * @param tag (Tag) : tag to add
 	 */
 	public void addTag(Tag tag) {
-		if(tags==null) {
+		if (tags == null) {
 			tags = new ArrayList<>();
 		}
 		tags.add(tag);
 	}
-	
+
 	/**
 	 * Returns the list of journeys.
 	 * @return List(ChampionShipJourney) : list
@@ -176,13 +174,13 @@ public class ChampionShip {
 	public void setJourneys(List<ChampionShipJourney> journeys) {
 		this.journeys = journeys;
 	}
-	
+
 	/**
 	 * Adds a journey to the list.
 	 * @param journey (ChampionShipJourney) : journey
 	 */
 	public void addJourney(ChampionShipJourney journey) {
-		if(journeys==null) {
+		if (journeys == null) {
 			journeys = new ArrayList<>();
 		}
 		journeys.add(journey);

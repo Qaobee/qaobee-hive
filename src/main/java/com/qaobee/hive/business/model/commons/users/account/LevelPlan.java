@@ -20,14 +20,21 @@ package com.qaobee.hive.business.model.commons.users.account;
 
 /**
  * Enumeration for level plan.
+ *
  * @author Xavier Marin
  */
 public enum LevelPlan {
-	
-	/** The demo. */
-	DEMO, 
-	/** the freemium. */
-	FREEMIUM, 
-	/** The premium. */
+
+	/**
+	 * The demo.
+	 */
+	DEMO,
+	/**
+	 * the freemium.
+	 */
+	FREEMIUM,
+	/**
+	 * The premium.
+	 */
 	PREMIUM
 }

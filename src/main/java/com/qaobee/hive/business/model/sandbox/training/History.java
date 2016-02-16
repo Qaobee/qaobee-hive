@@ -58,7 +58,6 @@ public class History {
 		this.date = date;
 	}
 
-
 	/**
 	 * Gets history type.
 	 *

@@ -22,34 +22,49 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Bean that describes an address.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Address {
-	
-	/** The place. */
+@JsonIgnoreProperties(ignoreUnknown = true) public class Address {
+
+	/**
+	 * The place.
+	 */
 	private String place;
 
-	/** The zipcode. */
+	/**
+	 * The zipcode.
+	 */
 	private String zipcode;
 
-	/** The city. */
+	/**
+	 * The city.
+	 */
 	private String city;
 
-	/** The country. */
+	/**
+	 * The country.
+	 */
 	private String country;
 
-	/** latitude *. */
+	/**
+	 * latitude *.
+	 */
 	private double lat;
 
-	/** longitude *. */
+	/**
+	 * longitude *.
+	 */
 	private double lng;
 
-	/** The formated address. */
+	/**
+	 * The formated address.
+	 */
 	private String formatedAddress;
 
 	/**
 	 * Returns the address place.
+	 *
 	 * @return String : place
 	 */
 	public String getPlace() {
@@ -58,14 +73,16 @@ public class Address {
 
 	/**
 	 * Defines the address place.
-	 * @param place String : place 
+	 *
+	 * @param place String : place
 	 */
 	public void setPlace(String place) {
 		this.place = place;
 	}
-	
+
 	/**
 	 * Returns the city name.
+	 *
 	 * @return String : city
 	 */
 	public String getCity() {
@@ -74,6 +91,7 @@ public class Address {
 
 	/**
 	 * Defines the city name.
+	 *
 	 * @param city (String) : city
 	 */
 	public void setCity(String city) {
@@ -82,6 +100,7 @@ public class Address {
 
 	/**
 	 * Returns the country name/label.
+	 *
 	 * @return String : country name
 	 */
 	public String getCountry() {
@@ -90,6 +109,7 @@ public class Address {
 
 	/**
 	 * Defines the country name/label.
+	 *
 	 * @param country (String) : country name
 	 */
 	public void setCountry(String country) {
@@ -98,6 +118,7 @@ public class Address {
 
 	/**
 	 * Returns the latitude.
+	 *
 	 * @return double : latitude
 	 */
 	public double getLat() {
@@ -106,6 +127,7 @@ public class Address {
 
 	/**
 	 * Defines the latitude.
+	 *
 	 * @param lat (double) : lat
 	 */
 	public void setLat(double lat) {
@@ -114,6 +136,7 @@ public class Address {
 
 	/**
 	 * Returns the longitude.
+	 *
 	 * @return double : longitude
 	 */
 	public double getLng() {
@@ -122,6 +145,7 @@ public class Address {
 
 	/**
 	 * Defines the longitude.
+	 *
 	 * @param lng (double) : longitude
 	 */
 	public void setLng(double lng) {
@@ -130,6 +154,7 @@ public class Address {
 
 	/**
 	 * Returns the formated Google address.
+	 *
 	 * @return String : formated address
 	 */
 	public String getFormatedAddress() {
@@ -138,6 +163,7 @@ public class Address {
 
 	/**
 	 * Defines the formated Google address.
+	 *
 	 * @param formatedAddress (String) : formated address
 	 */
 	public void setFormatedAddress(String formatedAddress) {
@@ -146,6 +172,7 @@ public class Address {
 
 	/**
 	 * Returns the city zip code.
+	 *
 	 * @return String : zip code
 	 */
 	public String getZipcode() {
@@ -154,6 +181,7 @@ public class Address {
 
 	/**
 	 * Defines the city zip code.
+	 *
 	 * @param zipcode (String) : zip code
 	 */
 	public void setZipcode(String zipcode) {

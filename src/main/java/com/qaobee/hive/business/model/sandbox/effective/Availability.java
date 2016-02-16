@@ -22,18 +22,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Bean that describes availability.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Availability {
-	
+@JsonIgnoreProperties(ignoreUnknown = true) public class Availability {
+
 	/**
 	 * Value of status.<br>
 	 * <ul>
 	 * <li>available</li>
 	 * <li>unavailable</li>
 	 * </ul>
-	 * */
+	 */
 	private String value;
 
 	/**
@@ -44,10 +44,12 @@ public class Availability {
 	 * <li>2=suspended</li>
 	 * <li>3=uncertain</li>
 	 * </ul>
-	 * */
+	 */
 	private String cause;
 
-	/** End date of status */
+	/**
+	 * End date of status
+	 */
 	private Long endDate;
 
 	/**
@@ -55,9 +57,10 @@ public class Availability {
 	 */
 	public Availability() {
 	}
-	
+
 	/**
 	 * Constructor.
+	 *
 	 * @param value (String) : availability value
 	 * @param cause (String) : availability cause
 	 */
@@ -65,13 +68,14 @@ public class Availability {
 		this.value = value;
 		this.cause = cause;
 	}
-	
+
 	/**
 	 * Returns the value.<br>
 	 * <ul>
 	 * <li>available</li>
 	 * <li>unavailable</li>
 	 * </ul>
+	 *
 	 * @return String : value
 	 */
 	public String getValue() {
@@ -84,6 +88,7 @@ public class Availability {
 	 * <li>available</li>
 	 * <li>unavailable</li>
 	 * </ul>
+	 *
 	 * @param value (String) : value
 	 */
 	public void setValue(String value) {
@@ -98,6 +103,7 @@ public class Availability {
 	 * <li>2=suspended</li>
 	 * <li>3=uncertain</li>
 	 * </ul>
+	 *
 	 * @return String : cause
 	 */
 	public String getCause() {
@@ -112,6 +118,7 @@ public class Availability {
 	 * <li>2=suspended</li>
 	 * <li>3=uncertain</li>
 	 * </ul>
+	 *
 	 * @param cause (String) : cause
 	 */
 	public void setCause(String cause) {
@@ -120,6 +127,7 @@ public class Availability {
 
 	/**
 	 * Returns the end date.
+	 *
 	 * @return Long : date
 	 */
 	public Long getEndDate() {
@@ -128,6 +136,7 @@ public class Availability {
 
 	/**
 	 * Defines the end date.
+	 *
 	 * @param endDate (Long) : date
 	 */
 	public void setEndDate(Long endDate) {

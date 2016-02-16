@@ -23,29 +23,40 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
  */
 public enum SharingScopeEnum {
 
-	/** Public scope. */
+	/**
+	 * Public scope.
+	 */
 	PUBLIC("transverse.networks.sharingscope.public"),
 
-	/** Private scope. */
+	/**
+	 * Private scope.
+	 */
 	PRIVATE("transverse.networks.sharingscope.private"),
 
-	/** Circle scope. */
+	/**
+	 * Circle scope.
+	 */
 	CIRCLE("transverse.networks.sharingscope.circle"),
 
-	/** Staff scope. */
+	/**
+	 * Staff scope.
+	 */
 	STAFF("transverse.networks.sharingscope.staff"),
 
-	/** Club scope. */
+	/**
+	 * Club scope.
+	 */
 	CLUB("transverse.networks.sharingscope.club");
 
-	/** scope. */
+	/**
+	 * scope.
+	 */
 	private String scope;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param scope
-	 *            (String) : scope in i18n
+	 * @param scope (String) : scope in i18n
 	 */
 	SharingScopeEnum(final String scope) {
 		this.scope = scope;

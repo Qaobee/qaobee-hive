@@ -1,15 +1,14 @@
 /*************************************************************************
- * 
  * Qaobee
  * __________________
- * 
+ * <p/>
  * [2015] Qaobee
  * All Rights Reserved.
- * 
+ * <p/>
  * NOTICE:  All information contained here is, and remains
  * the property of Qaobee and its suppliers,
  * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may 
+ * here are proprietary to Qaobee and its suppliers and may
  * be covered by U.S. and Foreign Patents, patents in process,
  * and are protected by trade secret or copyright law.
  * Dissemination of this information or reproduction of this material
@@ -26,26 +25,24 @@ import com.qaobee.hive.business.model.transversal.Audit;
  * Bean that describes infrastructure.
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class InfraStructure {
+@JsonIgnoreProperties(ignoreUnknown = true) public class InfraStructure {
 
 	/** Internal identifier */
-    private String _id; // NOSONAR
-    /** Federation identifier */
-    private String idFederation;
-    /** Area size */
-    private String areaSize;
-    /** Area nature */
-    private String areaNature;
-    /** Label */
-    private String label;
-    /** Address */
-    private Address address;
-    /** Structure ID */
-    private String structureId;
-    /** audit CRUD object */
+	private String _id; // NOSONAR
+	/** Federation identifier */
+	private String idFederation;
+	/** Area size */
+	private String areaSize;
+	/** Area nature */
+	private String areaNature;
+	/** Label */
+	private String label;
+	/** Address */
+	private Address address;
+	/** Structure ID */
+	private String structureId;
+	/** audit CRUD object */
 	private Audit audit;
-	
 
 	/**
 	 * Returns the internal identifier.
@@ -174,5 +171,5 @@ public class InfraStructure {
 	public void setStructureId(String structureId) {
 		this.structureId = structureId;
 	}
-    
+
 }

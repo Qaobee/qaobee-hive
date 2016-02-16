@@ -25,40 +25,40 @@ package com.qaobee.hive.business.model.commons.settings;
  */
 public enum ActivityTypeEnum {
 
-    /**
-     * The team sport.
-     */
-    TEAM_SPORT("settings.activityType.team"),
-    /**
-     * The individual sport.
-     */
-    INDIVIDUAL_SPORT("settings.activityType.individual"),
-    /**
-     * The education.
-     */
-    EDUCATION("settings.activityType.education");
+	/**
+	 * The team sport.
+	 */
+	TEAM_SPORT("settings.activityType.team"),
+	/**
+	 * The individual sport.
+	 */
+	INDIVIDUAL_SPORT("settings.activityType.individual"),
+	/**
+	 * The education.
+	 */
+	EDUCATION("settings.activityType.education");
 
-    /**
-     * Label.
-     */
-    private String label;
+	/**
+	 * Label.
+	 */
+	private String label;
 
-    /**
-     * Constructor.
-     *
-     * @param label (String) : label code
-     */
-    ActivityTypeEnum(final String label) {
-        this.label = label;
-    }
+	/**
+	 * Constructor.
+	 *
+	 * @param label (String) : label code
+	 */
+	ActivityTypeEnum(final String label) {
+		this.label = label;
+	}
 
-    /**
-     * Gets the label.
-     *
-     * @return String : label
-     */
-    public String getLabel() {
-        return label;
-    }
+	/**
+	 * Gets the label.
+	 *
+	 * @return String : label
+	 */
+	public String getLabel() {
+		return label;
+	}
 
 }

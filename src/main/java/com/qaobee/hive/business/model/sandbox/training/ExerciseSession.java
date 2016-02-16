@@ -25,10 +25,14 @@ package com.qaobee.hive.business.model.sandbox.training;
  */
 public class ExerciseSession extends TrainingAbstract {
 
-	/** order number. */
+	/**
+	 * order number.
+	 */
 	private int orderNumber;
 
-	/** Exercice */
+	/**
+	 * Exercice
+	 */
 	private SB_Exercise exercise;
 
 	/**
@@ -39,8 +43,7 @@ public class ExerciseSession extends TrainingAbstract {
 	}
 
 	/**
-	 * @param exercise
-	 *            the exercise to set
+	 * @param exercise the exercise to set
 	 */
 	public void setExercise(SB_Exercise exercise) {
 		this.exercise = exercise;
@@ -58,8 +61,7 @@ public class ExerciseSession extends TrainingAbstract {
 	/**
 	 * Sets the order number.
 	 *
-	 * @param orderNumber
-	 *            the new order number
+	 * @param orderNumber the new order number
 	 */
 	public final void setOrderNumber(final int orderNumber) {
 		this.orderNumber = orderNumber;

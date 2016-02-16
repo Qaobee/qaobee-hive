@@ -33,43 +33,42 @@ import org.vertx.java.platform.Verticle;
  */
 public class AbstractGuiceVerticle extends Verticle {
 
-    protected When<String, Void> when;
-    protected WhenEventBus whenEventBus;
-    protected DefaultWhenContainer whenContainer;
+	protected When<String, Void> when;
+	protected WhenEventBus whenEventBus;
+	protected DefaultWhenContainer whenContainer;
 
-    /**
-     * Start void.
-     */
-    @Override
-    public void start() {
-        Injector injector = Guice.createInjector(new GuiceModule(container.config()));
-        injector.injectMembers(this);
-        when = new When<>();
-        whenEventBus = new DefaultWhenEventBus(vertx, container);
-        whenContainer = new DefaultWhenContainer(container);
-    }
+	/**
+	 * Start void.
+	 */
+	@Override public void start() {
+		Injector injector = Guice.createInjector(new GuiceModule(container.config()));
+		injector.injectMembers(this);
+		when = new When<>();
+		whenEventBus = new DefaultWhenEventBus(vertx, container);
+		whenContainer = new DefaultWhenContainer(container);
+	}
 
-    /**
-     * Start timer for response time (<a href="http://metrics.codahale.com/getting-started/#timers">Reference</a>).
-     *
-     * @param name timer's name
-     */
-    protected void startTimer(final String name) {
-        final JsonObject metric = new JsonObject();
-        metric.putString("name", "timer." + name);
-        metric.putString("action", "start");
-        vertx.eventBus().send("metrix", metric);
-    }
+	/**
+	 * Start timer for response time (<a href="http://metrics.codahale.com/getting-started/#timers">Reference</a>).
+	 *
+	 * @param name timer's name
+	 */
+	protected void startTimer(final String name) {
+		final JsonObject metric = new JsonObject();
+		metric.putString("name", "timer." + name);
+		metric.putString("action", "start");
+		vertx.eventBus().send("metrix", metric);
+	}
 
-    /**
-     * stop time (<a href="http://metrics.codahale.com/getting-started/#timers">Reference</a>).
-     *
-     * @param name timer's name
-     */
-    protected void stopTimer(final String name) {
-        final JsonObject metric = new JsonObject();
-        metric.putString("name", "timer." + name);
-        metric.putString("action", "stop");
-        vertx.eventBus().send("metrix", metric);
-    }
+	/**
+	 * stop time (<a href="http://metrics.codahale.com/getting-started/#timers">Reference</a>).
+	 *
+	 * @param name timer's name
+	 */
+	protected void stopTimer(final String name) {
+		final JsonObject metric = new JsonObject();
+		metric.putString("name", "timer." + name);
+		metric.putString("action", "stop");
+		vertx.eventBus().send("metrix", metric);
+	}
 }

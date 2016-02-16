@@ -22,20 +22,29 @@ import java.util.List;
 
 /**
  * Circle define a list of friends for an user.
+ *
  * @author cke
  */
 public class CircleFriend {
 
-	/** The _id. */
+	/**
+	 * The _id.
+	 */
 	private String _id; // NOSONAR
 
-	/** label. */
+	/**
+	 * label.
+	 */
 	private String label;
 
-	/** Create date. */
+	/**
+	 * Create date.
+	 */
 	private long datCreate;
 
-	/** Sharing list Member. */
+	/**
+	 * Sharing list Member.
+	 */
 	private List<String> sharingListMembers;
 
 	/**
@@ -50,8 +59,7 @@ public class CircleFriend {
 	/**
 	 * Sets the _id.
 	 *
-	 * @param _id
-	 *            the _id to set
+	 * @param _id the _id to set
 	 */
 	public final void set_id(final String _id) { // NOSONAR
 		this._id = _id;
@@ -69,8 +77,7 @@ public class CircleFriend {
 	/**
 	 * Sets the dat create.
 	 *
-	 * @param datCreate
-	 *            the datCreate to set
+	 * @param datCreate the datCreate to set
 	 */
 	public final void setDatCreate(final long datCreate) {
 		this.datCreate = datCreate;
@@ -88,8 +95,7 @@ public class CircleFriend {
 	/**
 	 * Sets the sharing list members.
 	 *
-	 * @param sharingListMembers
-	 *            the sharingListMembers to set
+	 * @param sharingListMembers the sharingListMembers to set
 	 */
 	public final void setSharingListMembers(final List<String> sharingListMembers) {
 		this.sharingListMembers = sharingListMembers;
@@ -107,8 +113,7 @@ public class CircleFriend {
 	/**
 	 * Sets the label.
 	 *
-	 * @param label
-	 *            the label to set
+	 * @param label the label to set
 	 */
 	public void setLabel(final String label) {
 		this.label = label;

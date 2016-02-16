@@ -27,7 +27,9 @@ import java.util.List;
  */
 public class SB_Session extends TrainingAbstract { // NOSONAR
 
-	/** List exerciseSession. */
+	/**
+	 * List exerciseSession.
+	 */
 	private List<ExerciseSession> exerciseSessionList;
 
 	/**
@@ -38,8 +40,7 @@ public class SB_Session extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param exerciseSessionList
-	 *            the exerciseSessionList to set
+	 * @param exerciseSessionList the exerciseSessionList to set
 	 */
 	public void setExerciseSessionList(List<ExerciseSession> exerciseSessionList) {
 		this.exerciseSessionList = exerciseSessionList;

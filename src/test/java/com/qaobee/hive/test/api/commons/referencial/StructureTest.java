@@ -33,15 +33,13 @@ import java.util.List;
 
 /**
  * @author cke
- *
  */
 public class StructureTest extends VertxJunitSupport {
-	
+
 	/**
 	 * Tests getHandler for StructureVerticle
 	 */
-	@Test
-	public void getObjectByIdOk() {
+	@Test public void getObjectByIdOk() {
 
 		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
@@ -53,25 +51,24 @@ public class StructureTest extends VertxJunitSupport {
 		req.setMethod(Constantes.GET);
 
 		final HashMap<String, List<String>> params = new HashMap<>();
-		
+
 		// id
 		params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
 		req.setParams(params);
 
 		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
 		JsonObject result = new JsonObject(reply);
-		
+
 		String label = result.getString("label");
-		
+
 		Assert.assertEquals("Dunkerque Handball", label);
 	}
-	
+
 	/**
 	 * Tests getHandler for StructureVerticle
 	 * with missing mandatory fields
 	 */
-	@Test
-	public void getObjectByIdKo() {
+	@Test public void getObjectByIdKo() {
 
 		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
@@ -83,24 +80,23 @@ public class StructureTest extends VertxJunitSupport {
 		req.setMethod(Constantes.GET);
 
 		final HashMap<String, List<String>> params = new HashMap<>();
-		
+
 		JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-		
+
 		// id
 		params.put(StructureVerticle.PARAM_ID, Collections.singletonList(""));
 		req.setParams(params);
-		
+
 		resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
 		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
 	}
-	
+
 	/**
 	 * Tests updateHandler for StructureVerticle
 	 */
-	@Test
-	public void getUpdateOk() {
+	@Test public void getUpdateOk() {
 
 		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
@@ -119,13 +115,13 @@ public class StructureTest extends VertxJunitSupport {
 
 		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
 		JsonObject result = new JsonObject(reply);
-		
+
 		String label = result.getString("label");
 		Assert.assertEquals("Dunkerque Handball", label);
 		
 		/* Update object */
 		req.setMethod(Constantes.POST);
-		
+
 		result.putString("label", "newValue");
 		req.setBody(result.encode());
 
@@ -133,15 +129,14 @@ public class StructureTest extends VertxJunitSupport {
 		JsonObject result2 = new JsonObject(reply2);
 		label = result2.getString("label");
 		Assert.assertEquals("newValue", label);
-		
+
 	}
-	
+
 	/**
 	 * Tests updateHandler for StructureVerticle
 	 * with missing mandatory fields
 	 */
-	@Test
-	public void getUpdateKo() {
+	@Test public void getUpdateKo() {
 
 		populate(POPULATE_ONLY, DATA_STRUCTURE);
 
@@ -160,13 +155,13 @@ public class StructureTest extends VertxJunitSupport {
 
 		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
 		JsonObject result = new JsonObject(reply);
-		
+
 		String label = result.getString("label");
 		Assert.assertEquals("Dunkerque Handball", label);
 		
 		/* Update object */
 		req.setMethod(Constantes.POST);
-		
+
 		result.putString("label", "newValue");
 		result.putObject("country", null);
 		req.setBody(result.encode());
@@ -174,13 +169,12 @@ public class StructureTest extends VertxJunitSupport {
 		final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.UPDATE, req, user.getAccount().getToken()));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
 	}
-	
+
 	/**
 	 * Tests addHandler for StructureVerticle
 	 */
-	@Test
-	public void getAddOk() {
-		
+	@Test public void getAddOk() {
+
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 		
@@ -198,21 +192,20 @@ public class StructureTest extends VertxJunitSupport {
 		params.putString("acronym", "acronymValue");
 		params.putObject(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
 		params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", user));
-		
+
 		req.setBody(params.encode());
 
 		final JsonObject result = new JsonObject(sendonBus(StructureVerticle.ADD, req, user.getAccount().getToken()));
 		String id = result.getString("_id");
 		Assert.assertNotNull(id);
 	}
-	
+
 	/**
 	 * Tests addHandler for StructureVerticle
 	 * with missing mandatory fields
 	 */
-	@Test
-	public void getAddKo() {
-		
+	@Test public void getAddKo() {
+
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 
 		/* User simulation connection */
@@ -234,5 +227,4 @@ public class StructureTest extends VertxJunitSupport {
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
 	}
 
-	
 }

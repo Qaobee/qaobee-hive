@@ -23,22 +23,31 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Bean that describes a participant.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Participant {
+@JsonIgnoreProperties(ignoreUnknown = true) public class Participant {
 
-	/** Internal identifier */
+	/**
+	 * Internal identifier
+	 */
 	private String id;
-	/** Name */
+	/**
+	 * Name
+	 */
 	private String name;
-	/** Structure ID */
+	/**
+	 * Structure ID
+	 */
 	private String StructureId;
-	/** Participant Type */
+	/**
+	 * Participant Type
+	 */
 	private String type;
 
 	/**
 	 * Returns the participant identifier.
+	 *
 	 * @return String : ID
 	 */
 	public String getId() {
@@ -47,6 +56,7 @@ public class Participant {
 
 	/**
 	 * Defines the participant identifier.
+	 *
 	 * @param id (String) : ID
 	 */
 	public void setId(String id) {
@@ -55,6 +65,7 @@ public class Participant {
 
 	/**
 	 * Returns the name.
+	 *
 	 * @return String : name
 	 */
 	public String getName() {
@@ -63,6 +74,7 @@ public class Participant {
 
 	/**
 	 * Defines the name.
+	 *
 	 * @param name (String) : name
 	 */
 	public void setName(String name) {
@@ -71,6 +83,7 @@ public class Participant {
 
 	/**
 	 * Returns the Structure identifier.
+	 *
 	 * @return String : structure ID
 	 */
 	public String getStructureId() {
@@ -79,6 +92,7 @@ public class Participant {
 
 	/**
 	 * Defines the structure identifier.
+	 *
 	 * @param structureId (String) : structure ID
 	 */
 	public void setStructureId(String structureId) {
@@ -87,6 +101,7 @@ public class Participant {
 
 	/**
 	 * Returns the type.
+	 *
 	 * @return String : type
 	 */
 	public String getType() {
@@ -95,6 +110,7 @@ public class Participant {
 
 	/**
 	 * Defines the type.
+	 *
 	 * @param type (String) : type
 	 */
 	public void setType(String type) {

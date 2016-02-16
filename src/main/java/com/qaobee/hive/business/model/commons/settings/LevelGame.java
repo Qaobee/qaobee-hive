@@ -25,96 +25,95 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author jeremy
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class LevelGame {
+@JsonIgnoreProperties(ignoreUnknown = true) public class LevelGame {
 
-    /**
-     * Internal identifier
-     */
-    private String _id;// NOSONAR
-    /**
-     * Code
-     */
-    private String code;
-    /**
-     * Label
-     */
-    private String label;
-    /**
-     * Order list
-     */
-    private int order;
+	/**
+	 * Internal identifier
+	 */
+	private String _id;// NOSONAR
+	/**
+	 * Code
+	 */
+	private String code;
+	/**
+	 * Label
+	 */
+	private String label;
+	/**
+	 * Order list
+	 */
+	private int order;
 
-    /**
-     * Returns the level game code.
-     *
-     * @return String : code
-     */
-    public String getCode() {
-        return code;
-    }
+	/**
+	 * Returns the level game code.
+	 *
+	 * @return String : code
+	 */
+	public String getCode() {
+		return code;
+	}
 
-    /**
-     * Defines the level game code.
-     *
-     * @param code (String) : code
-     */
-    public void setCode(final String code) {
-        this.code = code;
-    }
+	/**
+	 * Defines the level game code.
+	 *
+	 * @param code (String) : code
+	 */
+	public void setCode(final String code) {
+		this.code = code;
+	}
 
-    /**
-     * Returns the level game label.
-     *
-     * @return String : label
-     */
-    public String getLabel() {
-        return label;
-    }
+	/**
+	 * Returns the level game label.
+	 *
+	 * @return String : label
+	 */
+	public String getLabel() {
+		return label;
+	}
 
-    /**
-     * Defines the level game label.
-     *
-     * @param label (String) : label
-     */
-    public void setLabel(final String label) {
-        this.label = label;
-    }
+	/**
+	 * Defines the level game label.
+	 *
+	 * @param label (String) : label
+	 */
+	public void setLabel(final String label) {
+		this.label = label;
+	}
 
-    /**
-     * Returns the identifier.
-     *
-     * @return String : id
-     */
-    public String get_id() {// NOSONAR
-        return _id;
-    }
+	/**
+	 * Returns the identifier.
+	 *
+	 * @return String : id
+	 */
+	public String get_id() {// NOSONAR
+		return _id;
+	}
 
-    /**
-     * Defines the identifier.
-     *
-     * @param _id (String) : id
-     */
-    public void set_id(final String _id) {// NOSONAR
-        this._id = _id;
-    }
+	/**
+	 * Defines the identifier.
+	 *
+	 * @param _id (String) : id
+	 */
+	public void set_id(final String _id) {// NOSONAR
+		this._id = _id;
+	}
 
-    /**
-     * Returns the order to show levels game.
-     *
-     * @return int : order
-     */
-    public int getOrder() {
-        return order;
-    }
+	/**
+	 * Returns the order to show levels game.
+	 *
+	 * @return int : order
+	 */
+	public int getOrder() {
+		return order;
+	}
 
-    /**
-     * Defines the order to show levels game.
-     *
-     * @param order (int) : order
-     */
-    public void setOrder(int order) {
-        this.order = order;
-    }
+	/**
+	 * Defines the order to show levels game.
+	 *
+	 * @param order (int) : order
+	 */
+	public void setOrder(int order) {
+		this.order = order;
+	}
 
 }

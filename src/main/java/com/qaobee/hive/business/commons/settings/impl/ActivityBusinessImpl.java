@@ -34,31 +34,29 @@ import java.util.Map;
  */
 public class ActivityBusinessImpl implements ActivityBusiness {
 
-    private Map<String, Activity> mapActivity = null;
+	private Map<String, Activity> mapActivity = null;
 
-    @Inject
-    private MongoDB mongo;
+	@Inject private MongoDB mongo;
 
-    @Override
-    public Activity getActivityFromId(String id) {
-        if (mapActivity == null) {
-            getActivities();
-        }
-        if (mapActivity == null) {
-            return null;
-        }
-        return mapActivity.get(id);
-    }
+	@Override public Activity getActivityFromId(String id) {
+		if (mapActivity == null) {
+			getActivities();
+		}
+		if (mapActivity == null) {
+			return null;
+		}
+		return mapActivity.get(id);
+	}
 
-    private void getActivities() {
-        JsonArray resultJson = mongo.findAll(null, null, -1, 0, Activity.class);
-        if (resultJson != null && resultJson.size() > 0) {
-            Activity activity;
-            mapActivity = new HashMap<>();
-            for (int i = 0; i < resultJson.size(); i++) {
-                activity = Json.decodeValue(resultJson.get(i).toString(), Activity.class);
-                mapActivity.put(activity.get_id(), activity);
-            }
-        }
-    }
+	private void getActivities() {
+		JsonArray resultJson = mongo.findAll(null, null, -1, 0, Activity.class);
+		if (resultJson != null && resultJson.size() > 0) {
+			Activity activity;
+			mapActivity = new HashMap<>();
+			for (int i = 0; i < resultJson.size(); i++) {
+				activity = Json.decodeValue(resultJson.get(i).toString(), Activity.class);
+				mapActivity.put(activity.get_id(), activity);
+			}
+		}
+	}
 }

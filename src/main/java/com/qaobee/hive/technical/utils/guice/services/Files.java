@@ -23,19 +23,19 @@ package com.qaobee.hive.technical.utils.guice.services;
  * The interface Files.
  */
 public interface Files {
-    /**
-     * Get byte [ ].
-     *
-     * @param name the name
-     * @return the byte [ ]
-     */
-    byte[] get(String name);
+	/**
+	 * Get byte [ ].
+	 *
+	 * @param name the name
+	 * @return the byte [ ]
+	 */
+	byte[] get(String name);
 
-    /**
-     * Put.
-     *
-     * @param data the data
-     * @param name the name
-     */
-    void put(byte[] data, String name);
+	/**
+	 * Put.
+	 *
+	 * @param data the data
+	 * @param name the name
+	 */
+	void put(byte[] data, String name);
 }

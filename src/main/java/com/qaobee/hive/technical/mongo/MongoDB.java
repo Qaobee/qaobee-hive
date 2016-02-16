@@ -34,174 +34,173 @@ import java.util.Map;
  */
 public interface MongoDB {
 
-    /**
-     * Save string.
-     *
-     * @param o object to save
-     * @return id string
-     * @throws QaobeeException can't save
-     */
-    String save(Object o) throws QaobeeException;
+	/**
+	 * Save string.
+	 *
+	 * @param o object to save
+	 * @return id string
+	 * @throws QaobeeException can't save
+	 */
+	String save(Object o) throws QaobeeException;
 
-    /**
-     * Update string.
-     *
-     * @param document   the document
-     * @param collection the collection
-     * @return the string
-     * @throws MongoException the mongo exception
-     */
-    String update(JsonObject document, Class<?> collection);
+	/**
+	 * Update string.
+	 *
+	 * @param document   the document
+	 * @param collection the collection
+	 * @return the string
+	 * @throws MongoException the mongo exception
+	 */
+	String update(JsonObject document, Class<?> collection);
 
-    /**
-     * Update string.
-     *
-     * @param document   the document
-     * @param collection the collection
-     * @return the string
-     * @throws MongoException the mongo exception
-     */
-    String update(JsonObject document, String collection) ;
+	/**
+	 * Update string.
+	 *
+	 * @param document   the document
+	 * @param collection the collection
+	 * @return the string
+	 * @throws MongoException the mongo exception
+	 */
+	String update(JsonObject document, String collection);
 
-    /**
-     * Update a document.
-     *
-     * @param query      (JSonObject) : The selection criteria for the update.
-     * @param set        (JSonObject) : The modifications to apply.(need to have a                   {                   "$set" :                   {                   ...                   }                   }
-     * @param collection (Class) : collection to update
-     * @return string string
-     * @throws MongoException the mongo exception
-     */
-    String update(JsonObject query, JsonObject set, Class<?> collection) ;
+	/**
+	 * Update a document.
+	 *
+	 * @param query      (JSonObject) : The selection criteria for the update.
+	 * @param set        (JSonObject) : The modifications to apply.(need to have a                   {                   "$set" :                   {                   ...                   }                   }
+	 * @param collection (Class) : collection to update
+	 * @return string string
+	 * @throws MongoException the mongo exception
+	 */
+	String update(JsonObject query, JsonObject set, Class<?> collection);
 
-    /**
-     * Saves a document in a colection.
-     *
-     * @param document   object to save
-     * @param collection target
-     * @return id string
-     * @throws QaobeeException can't save
-     */
-    String save(JsonObject document, Class<?> collection) throws QaobeeException;
+	/**
+	 * Saves a document in a colection.
+	 *
+	 * @param document   object to save
+	 * @param collection target
+	 * @return id string
+	 * @throws QaobeeException can't save
+	 */
+	String save(JsonObject document, Class<?> collection) throws QaobeeException;
 
-    /**
-     * Saves a document in a colection.
-     *
-     * @param document   object to save
-     * @param collection target
-     * @return id string
-     */
-    String save(JsonObject document, String collection) throws QaobeeException;
+	/**
+	 * Saves a document in a colection.
+	 *
+	 * @param document   object to save
+	 * @param collection target
+	 * @return id string
+	 */
+	String save(JsonObject document, String collection) throws QaobeeException;
 
-    /**
-     * Get a document by id.
-     *
-     * @param id         the id
-     * @param collection the collection
-     * @return the document
-     * @throws QaobeeException not found
-     */
-    JsonObject getById(String id, Class<?> collection) throws QaobeeException;
+	/**
+	 * Get a document by id.
+	 *
+	 * @param id         the id
+	 * @param collection the collection
+	 * @return the document
+	 * @throws QaobeeException not found
+	 */
+	JsonObject getById(String id, Class<?> collection) throws QaobeeException;
 
-    /**
-     * Get a document by id.
-     *
-     * @param id         the id
-     * @param collection the collection
-     * @return the document
-     * @throws QaobeeException not found
-     */
-    JsonObject getById(String id, String collection) throws QaobeeException;
+	/**
+	 * Get a document by id.
+	 *
+	 * @param id         the id
+	 * @param collection the collection
+	 * @return the document
+	 * @throws QaobeeException not found
+	 */
+	JsonObject getById(String id, String collection) throws QaobeeException;
 
-    /**
-     * Get a document by id.
-     *
-     * @param id         the id
-     * @param collection the collection
-     * @param minimal    fields to retrieve
-     * @return the document
-     * @throws QaobeeException not found
-     */
-    JsonObject getById(String id, Class<?> collection, List<String> minimal) throws QaobeeException;
+	/**
+	 * Get a document by id.
+	 *
+	 * @param id         the id
+	 * @param collection the collection
+	 * @param minimal    fields to retrieve
+	 * @return the document
+	 * @throws QaobeeException not found
+	 */
+	JsonObject getById(String id, Class<?> collection, List<String> minimal) throws QaobeeException;
 
-    /**
-     * Gets the minimal.
-     *
-     * @param minimal minimal list of fields to retrieve
-     * @return a map
-     */
-    Map<String, Boolean> getMinimal(List<String> minimal);
+	/**
+	 * Gets the minimal.
+	 *
+	 * @param minimal minimal list of fields to retrieve
+	 * @return a map
+	 */
+	Map<String, Boolean> getMinimal(List<String> minimal);
 
-    /**
-     * Remove a document from a collection.
-     *
-     * @param id         document id
-     * @param collection the collection
-     */
-    void deleteById(String id, Class<?> collection);
+	/**
+	 * Remove a document from a collection.
+	 *
+	 * @param id         document id
+	 * @param collection the collection
+	 */
+	void deleteById(String id, Class<?> collection);
 
-    /**
-     * Find document by criteria with minimal fields and a sort order.
-     *
-     * @param criteria   (Map(String, Object))	: criteria
-     * @param fields     (List(String)) 			: fields to include (null if all fields)
-     * @param sort       (String)						: sort field (null if no sort)
-     * @param order      (int)						: sort order
-     * @param limit      (int)						: limit (0 if no limit)
-     * @param collection (Class)				: collection
-     * @return JsonArray : an array
-     */
-    JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, Class<?> collection);
+	/**
+	 * Find document by criteria with minimal fields and a sort order.
+	 *
+	 * @param criteria   (Map(String, Object))	: criteria
+	 * @param fields     (List(String)) 			: fields to include (null if all fields)
+	 * @param sort       (String)						: sort field (null if no sort)
+	 * @param order      (int)						: sort order
+	 * @param limit      (int)						: limit (0 if no limit)
+	 * @param collection (Class)				: collection
+	 * @return JsonArray : an array
+	 */
+	JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, Class<?> collection);
 
-    /**
-     * Find all documents with minimal fields and a sort order.
-     *
-     * @param fields     fields to include
-     * @param sort       sort field
-     * @param order      sort order
-     * @param limit      limit
-     * @param collection collection
-     * @return an array
-     */
-    JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection);
+	/**
+	 * Find all documents with minimal fields and a sort order.
+	 *
+	 * @param fields     fields to include
+	 * @param sort       sort field
+	 * @param order      sort order
+	 * @param limit      limit
+	 * @param collection collection
+	 * @return an array
+	 */
+	JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection);
 
-    /**
-     * Find by in clause.
-     *
-     * @param in         the in
-     * @param sort       the sort
-     * @param order      the order
-     * @param limit      the limit
-     * @param collection the collection
-     * @return the json array
-     */
-    JsonArray findByInClause(List<String> in, String sort, int order, int limit, Class<?> collection);
+	/**
+	 * Find by in clause.
+	 *
+	 * @param in         the in
+	 * @param sort       the sort
+	 * @param order      the order
+	 * @param limit      the limit
+	 * @param collection the collection
+	 * @return the json array
+	 */
+	JsonArray findByInClause(List<String> in, String sort, int order, int limit, Class<?> collection);
 
-    /**
-     * Aggregate json array.
-     *
-     * @param field      the field
-     * @param pipeline   the pipeline
-     * @param collection the collection
-     * @return the json array
-     */
-    JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection);
+	/**
+	 * Aggregate json array.
+	 *
+	 * @param field      the field
+	 * @param pipeline   the pipeline
+	 * @param collection the collection
+	 * @return the json array
+	 */
+	JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection);
 
-    /**
-     * Aggregate json array.
-     *
-     * @param field      the field
-     * @param pipeline   the pipeline
-     * @param collection the collection
-     * @return the json array
-     */
-    JsonArray aggregate(String field, List<DBObject> pipeline, String collection);
+	/**
+	 * Aggregate json array.
+	 *
+	 * @param field      the field
+	 * @param pipeline   the pipeline
+	 * @param collection the collection
+	 * @return the json array
+	 */
+	JsonArray aggregate(String field, List<DBObject> pipeline, String collection);
 
-
-    /**
-     * Gets db.
-     *
-     * @return the db
-     */
-    DB getDb();
+	/**
+	 * Gets db.
+	 *
+	 * @return the db
+	 */
+	DB getDb();
 }

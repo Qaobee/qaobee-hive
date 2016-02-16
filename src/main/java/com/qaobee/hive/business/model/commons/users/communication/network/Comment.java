@@ -26,22 +26,34 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
 
 public class Comment {
 
-	/** The _id. */
+	/**
+	 * The _id.
+	 */
 	private String _id; // NOSONAR
 
-	/** Author Id. */
+	/**
+	 * Author Id.
+	 */
 	private String authorId;
 
-	/** Create date. */
+	/**
+	 * Create date.
+	 */
 	private long datCreate;
 
-	/** Content. */
+	/**
+	 * Content.
+	 */
 	private String Content;
 
-	/** Content max size. */
+	/**
+	 * Content max size.
+	 */
 	private int ContentMaxsize;
 
-	/** Comment's status. */
+	/**
+	 * Comment's status.
+	 */
 	private CommentStatusEnum commentStatus;
 
 	/**
@@ -56,8 +68,7 @@ public class Comment {
 	/**
 	 * Sets the _id.
 	 *
-	 * @param _id
-	 *            the _id to set
+	 * @param _id the _id to set
 	 */
 	public final void set_id(final String _id) { // NOSONAR
 		this._id = _id;
@@ -75,8 +86,7 @@ public class Comment {
 	/**
 	 * Sets the create date.
 	 *
-	 * @param datCreate
-	 *            the new create date
+	 * @param datCreate the new create date
 	 */
 	public final void setDatCreate(final long datCreate) {
 		this.datCreate = datCreate;
@@ -94,8 +104,7 @@ public class Comment {
 	/**
 	 * Sets the content.
 	 *
-	 * @param content
-	 *            the new content
+	 * @param content the new content
 	 */
 	public final void setContent(final String content) {
 		Content = content;
@@ -113,8 +122,7 @@ public class Comment {
 	/**
 	 * Sets the content maxsize.
 	 *
-	 * @param contentMaxsize
-	 *            the new content maxsize
+	 * @param contentMaxsize the new content maxsize
 	 */
 	public final void setContentMaxsize(final int contentMaxsize) {
 		ContentMaxsize = contentMaxsize;
@@ -132,8 +140,7 @@ public class Comment {
 	/**
 	 * Sets the comment's status.
 	 *
-	 * @param commentStatus
-	 *            the new comment's status
+	 * @param commentStatus the new comment's status
 	 */
 	public final void setCommentStatus(final CommentStatusEnum commentStatus) {
 		this.commentStatus = commentStatus;
@@ -147,8 +154,7 @@ public class Comment {
 	}
 
 	/**
-	 * @param authorId
-	 *            the authorId to set
+	 * @param authorId the authorId to set
 	 */
 	public void setAuthorId(String authorId) {
 		this.authorId = authorId;

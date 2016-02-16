@@ -22,26 +22,39 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Bean that describes a blog post.
+ *
  * @author Xavier MARIN
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class BlogPost {
+@JsonIgnoreProperties(ignoreUnknown = true) public class BlogPost {
 
-	/** The _id. */
+	/**
+	 * The _id.
+	 */
 	private String _id; // NOSONAR
-	/** The timestamp. */
+	/**
+	 * The timestamp.
+	 */
 	private long timestamp;
-	/** The title. */
+	/**
+	 * The title.
+	 */
 	private String title;
-	/** The exerp. */
+	/**
+	 * The exerp.
+	 */
 	private String exerp;
-	/** The content. */
+	/**
+	 * The content.
+	 */
 	private String content;
-	/** The user_id. */
+	/**
+	 * The user_id.
+	 */
 	private String user_id;
 
 	/**
 	 * Gets the timestamp.
+	 *
 	 * @return long : timestamp
 	 */
 	public long getTimestamp() {
@@ -50,6 +63,7 @@ public class BlogPost {
 
 	/**
 	 * Defines the timestamp.
+	 *
 	 * @param timestamp (long) : timestamp
 	 */
 	public void setTimestamp(final long timestamp) {
@@ -58,6 +72,7 @@ public class BlogPost {
 
 	/**
 	 * Gets the title.
+	 *
 	 * @return String : title
 	 */
 	public String getTitle() {
@@ -66,6 +81,7 @@ public class BlogPost {
 
 	/**
 	 * Sets the title.
+	 *
 	 * @param title (String) : title
 	 */
 	public void setTitle(final String title) {
@@ -74,6 +90,7 @@ public class BlogPost {
 
 	/**
 	 * Gets the exerp.
+	 *
 	 * @return String : exerp
 	 */
 	public String getExerp() {
@@ -82,6 +99,7 @@ public class BlogPost {
 
 	/**
 	 * Sets the exerp.
+	 *
 	 * @param exerp (String) :  exerp
 	 */
 	public void setExerp(final String exerp) {
@@ -90,6 +108,7 @@ public class BlogPost {
 
 	/**
 	 * Gets the content of the post.
+	 *
 	 * @return String : content
 	 */
 	public String getContent() {
@@ -98,6 +117,7 @@ public class BlogPost {
 
 	/**
 	 * Sets the content of the post.
+	 *
 	 * @param content (String) : content
 	 */
 	public void setContent(final String content) {
@@ -106,6 +126,7 @@ public class BlogPost {
 
 	/**
 	 * Gets the _id.
+	 *
 	 * @return String : _id
 	 */
 	public String get_id() { // NOSONAR
@@ -114,6 +135,7 @@ public class BlogPost {
 
 	/**
 	 * Sets the _id.
+	 *
 	 * @param _id (String) : _id
 	 */
 	public void set_id(final String _id) { // NOSONAR
@@ -122,6 +144,7 @@ public class BlogPost {
 
 	/**
 	 * Gets the user _id.
+	 *
 	 * @return String : user identifier
 	 */
 	public String getUser_id() {
@@ -130,6 +153,7 @@ public class BlogPost {
 
 	/**
 	 * Sets the user _id.
+	 *
 	 * @param user_id (String) : user identifier
 	 */
 	public void setUser_id(final String user_id) {

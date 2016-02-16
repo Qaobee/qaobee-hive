@@ -25,98 +25,97 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author Jerome
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Country {
+@JsonIgnoreProperties(ignoreUnknown = true) public class Country {
 
-    /**
-     * Internal identifier
-     */
-    private String _id;// NOSONAR
+	/**
+	 * Internal identifier
+	 */
+	private String _id;// NOSONAR
 
-    /**
-     * OSCE Code of the country
-     */
-    private int codeOSCE;
+	/**
+	 * OSCE Code of the country
+	 */
+	private int codeOSCE;
 
-    /**
-     * Label code
-     */
-    private String label;
+	/**
+	 * Label code
+	 */
+	private String label;
 
-    /**
-     * Local
-     */
-    private String local;
+	/**
+	 * Local
+	 */
+	private String local;
 
-    /**
-     * Returns the internal identifier.
-     *
-     * @return String : id
-     */
-    public String get_id() {// NOSONAR
-        return _id;
-    }
+	/**
+	 * Returns the internal identifier.
+	 *
+	 * @return String : id
+	 */
+	public String get_id() {// NOSONAR
+		return _id;
+	}
 
-    /**
-     * Defines the internal identifier.
-     *
-     * @param _id (String) : id
-     */
-    public void set_id(final String _id) {// NOSONAR
-        this._id = _id;
-    }
+	/**
+	 * Defines the internal identifier.
+	 *
+	 * @param _id (String) : id
+	 */
+	public void set_id(final String _id) {// NOSONAR
+		this._id = _id;
+	}
 
-    /**
-     * Returns the OSCE Code of the country.
-     *
-     * @return int : OSCE Code
-     */
-    public int getCodeOSCE() {
-        return codeOSCE;
-    }
+	/**
+	 * Returns the OSCE Code of the country.
+	 *
+	 * @return int : OSCE Code
+	 */
+	public int getCodeOSCE() {
+		return codeOSCE;
+	}
 
-    /**
-     * Defines the OSCE Code of the country.
-     *
-     * @param codeOSCE (int) : OSCE Code
-     */
-    public void setCodeOSCE(final int codeOSCE) {
-        this.codeOSCE = codeOSCE;
-    }
+	/**
+	 * Defines the OSCE Code of the country.
+	 *
+	 * @param codeOSCE (int) : OSCE Code
+	 */
+	public void setCodeOSCE(final int codeOSCE) {
+		this.codeOSCE = codeOSCE;
+	}
 
-    /**
-     * Returns the label.
-     *
-     * @return String : label
-     */
-    public String getLabel() {
-        return label;
-    }
+	/**
+	 * Returns the label.
+	 *
+	 * @return String : label
+	 */
+	public String getLabel() {
+		return label;
+	}
 
-    /**
-     * Defines the label.
-     *
-     * @param label (String) : label
-     */
-    public void setLabel(final String label) {
-        this.label = label;
-    }
+	/**
+	 * Defines the label.
+	 *
+	 * @param label (String) : label
+	 */
+	public void setLabel(final String label) {
+		this.label = label;
+	}
 
-    /**
-     * Returns the local.
-     *
-     * @return String : local
-     */
-    public String getLocal() {
-        return local;
-    }
+	/**
+	 * Returns the local.
+	 *
+	 * @return String : local
+	 */
+	public String getLocal() {
+		return local;
+	}
 
-    /**
-     * Defines the local.
-     *
-     * @param local (String) : local
-     */
-    public void setLocal(String local) {
-        this.local = local;
-    }
+	/**
+	 * Defines the local.
+	 *
+	 * @param local (String) : local
+	 */
+	public void setLocal(String local) {
+		this.local = local;
+	}
 }

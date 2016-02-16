@@ -25,13 +25,19 @@ import java.util.List;
  */
 public class SB_Cycle extends TrainingAbstract { // NOSONAR
 
-	/** Session's list. */
+	/**
+	 * Session's list.
+	 */
 	private List<SB_Session> sessionList;
 
-	/** Session's start date. */
+	/**
+	 * Session's start date.
+	 */
 	private long startDate;
 
-	/** Session's end date. */
+	/**
+	 * Session's end date.
+	 */
 	private long endDate;
 
 	/**
@@ -42,8 +48,7 @@ public class SB_Cycle extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param sessionList
-	 *            the sessionList to set
+	 * @param sessionList the sessionList to set
 	 */
 	public void setSessionList(List<SB_Session> sessionList) {
 		this.sessionList = sessionList;
@@ -57,8 +62,7 @@ public class SB_Cycle extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param startDate
-	 *            the startDate to set
+	 * @param startDate the startDate to set
 	 */
 	public void setStartDate(long startDate) {
 		this.startDate = startDate;
@@ -72,8 +76,7 @@ public class SB_Cycle extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param endDate
-	 *            the endDate to set
+	 * @param endDate the endDate to set
 	 */
 	public void setEndDate(long endDate) {
 		this.endDate = endDate;

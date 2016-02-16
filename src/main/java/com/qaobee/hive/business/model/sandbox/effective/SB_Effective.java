@@ -19,36 +19,49 @@
 
 package com.qaobee.hive.business.model.sandbox.effective;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Member;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Bean that describes a SandBox Effective.
+ *
  * @author jerome
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_Effective { // NOSONAR
+@JsonIgnoreProperties(ignoreUnknown = true) public class SB_Effective { // NOSONAR
 
-	/** Internal identifier. */
+	/**
+	 * Internal identifier.
+	 */
 	private String _id; // NOSONAR
-	/** Sandbox's id */
+	/**
+	 * Sandbox's id
+	 */
 	private String sandBoxCfgId;
-	/** Age category. */
+	/**
+	 * Age category.
+	 */
 	private CategoryAge categoryAge;
-	/** List of persons that composed the current group */
+	/**
+	 * List of persons that composed the current group
+	 */
 	private List<Member> members;
-	/** Label of the effective */
+	/**
+	 * Label of the effective
+	 */
 	private String label;
-	/** audit CRUD object */
+	/**
+	 * audit CRUD object
+	 */
 	private Audit audit;
 
 	/**
 	 * Return the internal identifier.
+	 *
 	 * @return the _id (String) : ID
 	 */
 	public final String get_id() { // NOSONAR
@@ -57,6 +70,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Defines the internal identifier.
+	 *
 	 * @param _id (String) : ID
 	 */
 	public final void set_id(String _id) { // NOSONAR
@@ -65,6 +79,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Returns the age category.
+	 *
 	 * @return CategoryAge : age category
 	 */
 	public CategoryAge getCategoryAge() {
@@ -73,6 +88,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Defines the age category.
+	 *
 	 * @param categoryAge (CategoryAge) : age category
 	 */
 	public void setCategoryAge(CategoryAge categoryAge) {
@@ -81,6 +97,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Returns the list of members.
+	 *
 	 * @return List(Member) : list
 	 */
 	public List<Member> getMembers() {
@@ -89,18 +106,20 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Defines the list of members.
+	 *
 	 * @param members (List(Member)) : list
 	 */
 	public void setMembers(List<Member> members) {
 		this.members = members;
 	}
-	
+
 	/**
 	 * Adds a member to the effective list.
+	 *
 	 * @param member (Member) : member
 	 */
 	public void addMember(Member member) {
-		if(members==null) {
+		if (members == null) {
 			members = new ArrayList<Member>();
 		}
 		members.add(member);
@@ -108,6 +127,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Returns the sandbox config ID.
+	 *
 	 * @return String : ID
 	 */
 	public String getSandBoxCfgId() {
@@ -116,6 +136,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Defines the sandbox cinfig ID.
+	 *
 	 * @param sandBoxCfgId (String) : ID
 	 */
 	public void setSandBoxCfgId(String sandBoxCfgId) {
@@ -124,6 +145,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Returns the label.
+	 *
 	 * @return String : label
 	 */
 	public String getLabel() {
@@ -132,6 +154,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Defines the label.
+	 *
 	 * @param label (String) : label
 	 */
 	public void setLabel(String label) {
@@ -140,6 +163,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Returns the audit.
+	 *
 	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
@@ -148,6 +172,7 @@ public class SB_Effective { // NOSONAR
 
 	/**
 	 * Defines the audit.
+	 *
 	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {

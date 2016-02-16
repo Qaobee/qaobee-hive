@@ -23,23 +23,30 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
  */
 public enum CommentStatusEnum {
 
-	/** Public scope. */
+	/**
+	 * Public scope.
+	 */
 	PUBLIC("transverse.networks.comment.status.public"),
 
-	/** Blocked scope. */
+	/**
+	 * Blocked scope.
+	 */
 	BOCKED("transverse.networks.comment.status.blocked"),
 
-	/** Deleted status. */
+	/**
+	 * Deleted status.
+	 */
 	DELETED("transverse.networks.comment.status.deleted");
 
-	/** status. */
+	/**
+	 * status.
+	 */
 	private String status;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param status
-	 *            (String) : status in i18n
+	 * @param status (String) : status in i18n
 	 */
 	CommentStatusEnum(final String status) {
 		this.status = status;

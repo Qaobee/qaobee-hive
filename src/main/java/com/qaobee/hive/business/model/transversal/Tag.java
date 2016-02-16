@@ -1,15 +1,14 @@
 /*************************************************************************
- * 
  * Qaobee
  * __________________
- * 
+ * <p/>
  * [2015] Qaobee
  * All Rights Reserved.
- * 
+ * <p/>
  * NOTICE:  All information contained here is, and remains
  * the property of Qaobee and its suppliers,
  * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may 
+ * here are proprietary to Qaobee and its suppliers and may
  * be covered by U.S. and Foreign Patents, patents in process,
  * and are protected by trade secret or copyright law.
  * Dissemination of this information or reproduction of this material
@@ -22,19 +21,26 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Bean that describes a tag.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Tag {
-	/** Internal identifier */
+@JsonIgnoreProperties(ignoreUnknown = true) public class Tag {
+	/**
+	 * Internal identifier
+	 */
 	private String _id;
-	/** Label */
+	/**
+	 * Label
+	 */
 	private String label;
-	/** Type */
+	/**
+	 * Type
+	 */
 	private String type;
 
 	/**
 	 * Returns the internal identifier.
+	 *
 	 * @return String : ID
 	 */
 	public String get_id() {
@@ -43,6 +49,7 @@ public class Tag {
 
 	/**
 	 * Defines the internal identifier.
+	 *
 	 * @param _id (String) : ID
 	 */
 	public void set_id(String _id) {
@@ -51,6 +58,7 @@ public class Tag {
 
 	/**
 	 * Returns the label.
+	 *
 	 * @return String : label
 	 */
 	public String getLabel() {
@@ -59,6 +67,7 @@ public class Tag {
 
 	/**
 	 * Defines the label.
+	 *
 	 * @param label (String) : label
 	 */
 	public void setLabel(String label) {
@@ -67,6 +76,7 @@ public class Tag {
 
 	/**
 	 * Returns the type.
+	 *
 	 * @return String : type
 	 */
 	public String getType() {
@@ -75,6 +85,7 @@ public class Tag {
 
 	/**
 	 * Defines the type.
+	 *
 	 * @param type (String) : type
 	 */
 	public void setType(String type) {

@@ -23,46 +23,45 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import org.vertx.java.core.json.JsonObject;
 
-
 /**
  * The interface Mail utils.
  */
 public interface MailUtils {
-    /**
-     * Generate activation body.
-     *
-     * @param user the person
-     * @param locale the locale language
-     * @return the json object
-     */
-    JsonObject generateActivationBody(User user, String locale);
+	/**
+	 * Generate activation body.
+	 *
+	 * @param user   the person
+	 * @param locale the locale language
+	 * @return the json object
+	 */
+	JsonObject generateActivationBody(User user, String locale);
 
-    /**
-     * Generate newpasswd body.
-     *
-     * @param user the u
-     * @param locale the locale
-     * @return the json object
-     */
-    JsonObject generateNewpasswdBody(User user, String locale);
+	/**
+	 * Generate newpasswd body.
+	 *
+	 * @param user   the u
+	 * @param locale the locale
+	 * @return the json object
+	 */
+	JsonObject generateNewpasswdBody(User user, String locale);
 
-    /**
-     * Generate email body for payment confirmation.
-     *
-     * @param user the person
-     * @param locale the locale
-     * @param planItem plan
-     * @return body json object
-     */
-    JsonObject generatePaymentBody(User user, String locale, Plan planItem);
+	/**
+	 * Generate email body for payment confirmation.
+	 *
+	 * @param user     the person
+	 * @param locale   the locale
+	 * @param planItem plan
+	 * @return body json object
+	 */
+	JsonObject generatePaymentBody(User user, String locale, Plan planItem);
 
-    /**
-     * Generate mail body for refunding.
-     *
-     * @param user person
-     * @param locale locale
-     * @param planItem plan
-     * @return body json object
-     */
-    JsonObject generateRefoundBody(User user, String locale, Plan planItem);
+	/**
+	 * Generate mail body for refunding.
+	 *
+	 * @param user     person
+	 * @param locale   locale
+	 * @param planItem plan
+	 * @return body json object
+	 */
+	JsonObject generateRefoundBody(User user, String locale, Plan planItem);
 }

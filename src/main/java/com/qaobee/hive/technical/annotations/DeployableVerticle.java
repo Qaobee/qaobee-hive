@@ -18,7 +18,6 @@
  */
 package com.qaobee.hive.technical.annotations;
 
-
 import org.reflections.Reflections;
 
 import java.lang.annotation.Documented;
@@ -29,37 +28,35 @@ import java.util.Set;
 /**
  * The interface Deployable verticle.
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-public @interface DeployableVerticle {
-    /**
-     * Config string.
-     *
-     * @return the string
-     */
-    String config() default "";
+@Documented @Retention(RetentionPolicy.RUNTIME) public @interface DeployableVerticle {
+	/**
+	 * Config string.
+	 *
+	 * @return the string
+	 */
+	String config() default "";
 
-    /**
-     * Is worker.
-     *
-     * @return the boolean
-     */
-    boolean isWorker() default true;
+	/**
+	 * Is worker.
+	 *
+	 * @return the boolean
+	 */
+	boolean isWorker() default true;
 
-    /**
-     * The type Verticle loader.
-     */
-    class VerticleLoader {
-        /**
-         * Scan package.
-         *
-         * @param packageName the package name
-         * @return the set
-         */
-        public static Set<Class<?>> scanPackage(String packageName) {
-            Reflections reflections = new Reflections(packageName);
-            return reflections.getTypesAnnotatedWith(DeployableVerticle.class);
-        }
-    }
+	/**
+	 * The type Verticle loader.
+	 */
+	class VerticleLoader {
+		/**
+		 * Scan package.
+		 *
+		 * @param packageName the package name
+		 * @return the set
+		 */
+		public static Set<Class<?>> scanPackage(String packageName) {
+			Reflections reflections = new Reflections(packageName);
+			return reflections.getTypesAnnotatedWith(DeployableVerticle.class);
+		}
+	}
 }
 

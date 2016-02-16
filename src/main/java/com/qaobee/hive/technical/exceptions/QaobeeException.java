@@ -25,35 +25,43 @@ package com.qaobee.hive.technical.exceptions;
  */
 public class QaobeeException extends Exception {
 
-	/** The Constant serialVersionUID. */
+	/**
+	 * The Constant serialVersionUID.
+	 */
 	private static final long serialVersionUID = 3702929307917485614L;
 
-	/** The code. */
+	/**
+	 * The code.
+	 */
 	private ExceptionCodes code;
 
-	/** The json context. */
+	/**
+	 * The json context.
+	 */
 	private String jsonContext = "";
 
-	/** The timestamp. */
+	/**
+	 * The timestamp.
+	 */
 	private long timestamp = System.currentTimeMillis();
 
-	/** The report. */
+	/**
+	 * The report.
+	 */
 	private boolean report = false;
 
-	/** The error. */
+	/**
+	 * The error.
+	 */
 	private boolean error = true;
 
 	/**
 	 * Instantiates a new qaobee exception.
 	 *
-	 * @param report
-	 *            the report
-	 * @param jsonContext
-	 *            the json context
-	 * @param code
-	 *            the code
-	 * @param message
-	 *            the message
+	 * @param report      the report
+	 * @param jsonContext the json context
+	 * @param code        the code
+	 * @param message     the message
 	 */
 	public QaobeeException(final boolean report, final String jsonContext, final ExceptionCodes code, final String message) {
 		super(message);
@@ -65,10 +73,8 @@ public class QaobeeException extends Exception {
 	/**
 	 * Instantiates a new qaobee exception.
 	 *
-	 * @param code
-	 *            the code
-	 * @param message
-	 *            the message
+	 * @param code    the code
+	 * @param message the message
 	 */
 	public QaobeeException(final ExceptionCodes code, final String message) {
 		super(message);
@@ -78,12 +84,9 @@ public class QaobeeException extends Exception {
 	/**
 	 * Instantiates a new qaobee exception.
 	 *
-	 * @param jsonContext
-	 *            the json context
-	 * @param code
-	 *            the code
-	 * @param message
-	 *            the message
+	 * @param jsonContext the json context
+	 * @param code        the code
+	 * @param message     the message
 	 */
 	public QaobeeException(final String jsonContext, final ExceptionCodes code, final String message) {
 		super(message);
@@ -101,12 +104,30 @@ public class QaobeeException extends Exception {
 	}
 
 	/**
+	 * Sets the code.
+	 *
+	 * @param code the new code
+	 */
+	public void setCode(final ExceptionCodes code) {
+		this.code = code;
+	}
+
+	/**
 	 * Gets the json context.
 	 *
 	 * @return the json context
 	 */
 	public String getJsonContext() {
 		return jsonContext;
+	}
+
+	/**
+	 * Sets the json context.
+	 *
+	 * @param jsonContext the new json context
+	 */
+	public void setJsonContext(final String jsonContext) {
+		this.jsonContext = jsonContext;
 	}
 
 	/**
@@ -119,12 +140,30 @@ public class QaobeeException extends Exception {
 	}
 
 	/**
+	 * Sets the timestamp.
+	 *
+	 * @param timestamp the new timestamp
+	 */
+	public void setTimestamp(final long timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	/**
 	 * Checks if is the error.
 	 *
 	 * @return the error
 	 */
 	public boolean isError() {
 		return error;
+	}
+
+	/**
+	 * Sets the error.
+	 *
+	 * @param error the new error
+	 */
+	public void setError(final boolean error) {
+		this.error = error;
 	}
 
 	/**
@@ -137,52 +176,11 @@ public class QaobeeException extends Exception {
 	}
 
 	/**
-	 * Sets the code.
-	 *
-	 * @param code
-	 *            the new code
-	 */
-	public void setCode(final ExceptionCodes code) {
-		this.code = code;
-	}
-
-	/**
-	 * Sets the error.
-	 *
-	 * @param error
-	 *            the new error
-	 */
-	public void setError(final boolean error) {
-		this.error = error;
-	}
-
-	/**
-	 * Sets the json context.
-	 *
-	 * @param jsonContext
-	 *            the new json context
-	 */
-	public void setJsonContext(final String jsonContext) {
-		this.jsonContext = jsonContext;
-	}
-
-	/**
 	 * Sets the report.
 	 *
-	 * @param report
-	 *            the new report
+	 * @param report the new report
 	 */
 	public void setReport(final boolean report) {
 		this.report = report;
-	}
-
-	/**
-	 * Sets the timestamp.
-	 *
-	 * @param timestamp
-	 *            the new timestamp
-	 */
-	public void setTimestamp(final long timestamp) {
-		this.timestamp = timestamp;
 	}
 }

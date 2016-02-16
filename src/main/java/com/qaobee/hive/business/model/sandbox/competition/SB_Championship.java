@@ -19,32 +19,41 @@
 
 package com.qaobee.hive.business.model.sandbox.competition;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Tag;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Bean that describes a SandBox championship.
+ *
  * @author Nada Vujanic-Maquin
  * @version V1.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_Championship { // NOSONAR
+@JsonIgnoreProperties(ignoreUnknown = true) public class SB_Championship { // NOSONAR
 
-	/** Internal identifier */
+	/**
+	 * Internal identifier
+	 */
 	private String _id; // NOSONAR
-	/** Label */
+	/**
+	 * Label
+	 */
 	private String label;
-	/** List labels */
+	/**
+	 * List labels
+	 */
 	private List<Tag> labels;
-	/** audit CRUD object */
+	/**
+	 * audit CRUD object
+	 */
 	private Audit audit;
 
 	/**
 	 * Returns the internal identifier of the championship.
+	 *
 	 * @return String : internal identifier
 	 */
 	public String get_id() { // NOSONAR
@@ -53,6 +62,7 @@ public class SB_Championship { // NOSONAR
 
 	/**
 	 * Defines the internal identifier of the championship.
+	 *
 	 * @param _id (String) : identifier
 	 */
 	public void set_id(String _id) { // NOSONAR
@@ -61,6 +71,7 @@ public class SB_Championship { // NOSONAR
 
 	/**
 	 * Returns the label of the championship.
+	 *
 	 * @return String : label
 	 */
 	public String getLabel() {
@@ -69,6 +80,7 @@ public class SB_Championship { // NOSONAR
 
 	/**
 	 * Defines the label of the championship.
+	 *
 	 * @param label (String) : label
 	 */
 	public void setLabel(String label) {
@@ -77,6 +89,7 @@ public class SB_Championship { // NOSONAR
 
 	/**
 	 * Returns the list of labels.
+	 *
 	 * @return List(Tag) : list
 	 */
 	public List<Tag> getLabels() {
@@ -85,6 +98,7 @@ public class SB_Championship { // NOSONAR
 
 	/**
 	 * Defines the list of labels.
+	 *
 	 * @param labels (List(Tag)) : list
 	 */
 	public void setLabels(List<Tag> labels) {
@@ -93,17 +107,19 @@ public class SB_Championship { // NOSONAR
 
 	/**
 	 * Adds a label.
+	 *
 	 * @param label (Tag) : label
 	 */
 	public void addLabel(Tag label) {
-		if(labels==null) {
+		if (labels == null) {
 			labels = new ArrayList<>();
 		}
 		labels.add(label);
 	}
-	
+
 	/**
 	 * Returns the audit trail.
+	 *
 	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
@@ -112,6 +128,7 @@ public class SB_Championship { // NOSONAR
 
 	/**
 	 * Defines the audit trail.
+	 *
 	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {

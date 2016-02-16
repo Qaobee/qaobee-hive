@@ -20,30 +20,44 @@ package com.qaobee.hive.technical.constantes;
 
 /**
  * The Class Constantes.
- * 
+ *
  * @author Xavier Marin Constantes transverses à Swarn
  */
 public final class Constantes {
 
-	/** The Constant TIMEOUT. */
+	/**
+	 * The Constant TIMEOUT.
+	 */
 	public static final long TIMEOUT = 10000L;
 
-	/** The Constant DEFAULT_SESSION_TIMEOUT. */
+	/**
+	 * The Constant DEFAULT_SESSION_TIMEOUT.
+	 */
 	public static final long DEFAULT_SESSION_TIMEOUT = 30L * 60L * 1000L;
 
-	/** The Constant GET. */
+	/**
+	 * The Constant GET.
+	 */
 	public static final String GET = "GET";
 
-	/** The Constant POST. */
+	/**
+	 * The Constant POST.
+	 */
 	public static final String POST = "POST";
 
-	/** The Constant PUT. */
+	/**
+	 * The Constant PUT.
+	 */
 	public static final String PUT = "PUT";
 
-	/** The Constant DELETE. */
+	/**
+	 * The Constant DELETE.
+	 */
 	public static final String DELETE = "DELETE";
 
-	/** The Constant ADMIN_HABILIT. */
+	/**
+	 * The Constant ADMIN_HABILIT.
+	 */
 	public static final String ADMIN_HABILIT = "admin_qaobee";
 
 	public static final String MESSAGE = "message";

@@ -18,29 +18,29 @@
  */
 package com.qaobee.hive.technical.mongo;
 
+import com.mongodb.BasicDBObject;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mongodb.BasicDBObject;
-
 /**
  * The Class CriteriaBuilder.
- * 
+ *
  * @author xavier
  */
 public class CriteriaBuilder {
 
-	/** The map. */
+	/**
+	 * The map.
+	 */
 	private final Map<String, Object> map = new HashMap<String, Object>();
 
 	/**
 	 * Adds the a search criteria.
-	 * 
-	 * @param key
-	 *            search key
-	 * @param value
-	 *            searched value
+	 *
+	 * @param key   search key
+	 * @param value searched value
 	 * @return a criteria
 	 */
 	public CriteriaBuilder add(final String key, final Object value) {
@@ -50,11 +50,9 @@ public class CriteriaBuilder {
 
 	/**
 	 * Adds a criteria with regexp condition.
-	 * 
-	 * @param key
-	 *            (String) : search key
-	 * @param value
-	 *            (String) : searched value
+	 *
+	 * @param key   (String) : search key
+	 * @param value (String) : searched value
 	 * @return CriteriaBuilder : a criteria
 	 */
 	public CriteriaBuilder addRegExp(final String key, final String value) {
@@ -66,7 +64,7 @@ public class CriteriaBuilder {
 
 	/**
 	 * Gets the map.
-	 * 
+	 *
 	 * @return a criteria map
 	 */
 	public Map<String, Object> get() {
@@ -74,13 +72,9 @@ public class CriteriaBuilder {
 	}
 
 	/**
-	 * 
-	 * @param floor
-	 *            key of the min
-	 * @param ceil
-	 *            key of the max
-	 * @param value
-	 *            value to test
+	 * @param floor key of the min
+	 * @param ceil  key of the max
+	 * @param value value to test
 	 * @return a criteria
 	 */
 	public CriteriaBuilder between(final String floor, final String ceil, long value) {
@@ -91,11 +85,9 @@ public class CriteriaBuilder {
 
 	/**
 	 * Creates a "$in" criteria.
-	 * 
-	 * @param key
-	 *            (String) : field to apply the criteria
-	 * @param values
-	 *            (String...) : values desired
+	 *
+	 * @param key    (String) : field to apply the criteria
+	 * @param values (String...) : values desired
 	 * @return CriteriaBuilder
 	 */
 	public CriteriaBuilder in(final String key, final String... values) {

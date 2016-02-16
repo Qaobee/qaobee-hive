@@ -20,54 +20,89 @@ package com.qaobee.hive.technical.exceptions;
 
 /**
  * The Enum ExceptionCodes.
- * 
+ *
  * @author Xavier Marin
  */
 public enum ExceptionCodes {
 
-	/** The http error. */
+	/**
+	 * The http error.
+	 */
 	HTTP_ERROR(405),
-	/** The non active. */
+	/**
+	 * The non active.
+	 */
 	NON_ACTIVE(403),
-	/** The passwd exception. */
+	/**
+	 * The passwd exception.
+	 */
 	PASSWD_EXCEPTION(500),
-	/** The bad format. */
+	/**
+	 * The bad format.
+	 */
 	BAD_FORMAT(503),
-	/** The mandatory field. */
+	/**
+	 * The mandatory field.
+	 */
 	MANDATORY_FIELD(400),
-	/** The bad login. */
+	/**
+	 * The bad login.
+	 */
 	BAD_LOGIN(401),
-	/** The mail exception. */
+	/**
+	 * The mail exception.
+	 */
 	MAIL_EXCEPTION(505),
-	/** The not logged. */
+	/**
+	 * The not logged.
+	 */
 	NOT_LOGGED(401),
-	/** The not admin. */
+	/**
+	 * The not admin.
+	 */
 	NOT_ADMIN(401),
-	/** internal error. */
+	/**
+	 * internal error.
+	 */
 	INTERNAL_ERROR(500),
-	/** Invalid parameter. */
+	/**
+	 * Invalid parameter.
+	 */
 	INVALID_PARAMETER(400),
-	/** The mongo error. */
+	/**
+	 * The mongo error.
+	 */
 	MONGO_ERROR(500),
-	/** The non unique login. */
+	/**
+	 * The non unique login.
+	 */
 	NON_UNIQUE_LOGIN(400),
-	/** The captcha exception. */
+	/**
+	 * The captcha exception.
+	 */
 	CAPTCHA_EXCEPTION(400),
-	/** The json exception. */
+	/**
+	 * The json exception.
+	 */
 	JSON_EXCEPTION(500),
-	/** No document returned by request */
+	/**
+	 * No document returned by request
+	 */
 	DB_NO_ROW_RETURNED(500),
-	/** Business Error */
+	/**
+	 * Business Error
+	 */
 	BUSINESS_ERROR(200);
 
-	/** The code. */
+	/**
+	 * The code.
+	 */
 	private int code;
 
 	/**
 	 * Instantiates a new exception codes.
-	 * 
-	 * @param code
-	 *            the code
+	 *
+	 * @param code the code
 	 */
 	ExceptionCodes(final int code) {
 		this.code = code;
@@ -75,7 +110,7 @@ public enum ExceptionCodes {
 
 	/**
 	 * Gets the code.
-	 * 
+	 *
 	 * @return the code
 	 */
 	public int getCode() {
@@ -84,9 +119,8 @@ public enum ExceptionCodes {
 
 	/**
 	 * Sets the code.
-	 * 
-	 * @param code
-	 *            the new code
+	 *
+	 * @param code the new code
 	 */
 	public void setCode(final int code) {
 		this.code = code;

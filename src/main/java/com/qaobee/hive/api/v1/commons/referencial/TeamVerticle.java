@@ -27,7 +27,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,6 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-
 import java.util.List;
 import java.util.Map;
 
@@ -47,229 +45,216 @@ import java.util.Map;
  *
  * @author cke
  */
-@DeployableVerticle(isWorker = true)
-public class TeamVerticle extends AbstractGuiceVerticle {
-    private static final Logger LOG = LoggerFactory.getLogger(TeamVerticle.class);
-    // Declaration des variables finals
-    /**
-     * The Constant ADD.
-     */
-    public static final String ADD = Module.VERSION + ".commons.referencial.team.add";
-    /**
-     * The Constant GET.
-     */
-    public static final String GET = Module.VERSION + ".commons.referencial.team.get";
-    /**
-     * The Constant UPDATE.
-     */
-    public static final String UPDATE = Module.VERSION + ".commons.referencial.team.update";
+@DeployableVerticle(isWorker = true) public class TeamVerticle extends AbstractGuiceVerticle {
+	/**
+	 * The Constant ADD.
+	 */
+	public static final String ADD = Module.VERSION + ".commons.referencial.team.add";
+	// Declaration des variables finals
+	/**
+	 * The Constant GET.
+	 */
+	public static final String GET = Module.VERSION + ".commons.referencial.team.get";
+	/**
+	 * The Constant UPDATE.
+	 */
+	public static final String UPDATE = Module.VERSION + ".commons.referencial.team.update";
+	/**
+	 * Id of the team
+	 */
+	public static final String PARAM_ID = "_id";
 
 	/* List of parameters */
-    /**
-     * Id of the team
-     */
-    public static final String PARAM_ID = "_id";
+	/**
+	 * Label of the team
+	 */
+	public static final String PARAM_LABEL = "label";
+	/**
+	 * activity of the team
+	 */
+	public static final String PARAM_ACTIVITY = "activity";
+	/**
+	 * Team sandboxId
+	 */
+	public static final String PARAM_SANBOXID = "sandboxId";
+	/**
+	 * Team effectiveId
+	 */
+	public static final String PARAM_EFFECTIVEID = "effectiveId";
+	private static final Logger LOG = LoggerFactory.getLogger(TeamVerticle.class);
+	/* Injections */
+	@Inject private MongoDB mongo;
+	@Inject private Utils utils;
 
-    /**
-     * Label of the team
-     */
-    public static final String PARAM_LABEL = "label";
+	@Override public void start() {
+		super.start();
+		LOG.debug(this.getClass().getName() + " started");
 
-    /**
-     * activity of the team
-     */
-    public static final String PARAM_ACTIVITY = "activity";
+		/**
+		 * @api {post} /api/1/commons/referencial/team/add Add team
+		 * @apiVersion 0.1.0
+		 * @apiName add
+		 * @apiGroup Team API
+		 * @apiPermission all
+		 *
+		 * @apiDescription Add team to the collection team in referencial module
+		 *
+		 * @apiParam {String} label Mandatory The Team label.
+		 * @apiParam {Activity} activity Mandatory The Team activity.
+		 * @apiParam {Country} country Mandatory The Team country
+		 *
+		 * @apiSuccess {Team}   team            The Team added with the id.
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+		final Handler<Message<String>> add = new Handler<Message<String>>() {
 
-    /**
-     * Team sandboxId
-     */
-    public static final String PARAM_SANBOXID = "sandboxId";
-    /**
-     * Team effectiveId
-     */
-    public static final String PARAM_EFFECTIVEID = "effectiveId";
+			@Override public void handle(final Message<String> message) {
+				LOG.debug("add() - Team");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.POST, req.getMethod());
+					final JsonObject params = new JsonObject(req.getBody());
+					utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID);
 
-    /* Injections */
-    @Inject
-    private MongoDB mongo;
-    @Inject
-    private Utils utils;
+					// Insert a team
+					final String id = mongo.save(params, Team.class);
 
+					params.putString("_id", id);
+					LOG.debug("Team added : " + params.toString());
 
-    @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
+					message.reply(params.encode());
 
-        /**
-         * @api {post} /api/1/commons/referencial/team/add Add team
-         * @apiVersion 0.1.0
-         * @apiName add
-         * @apiGroup Team API
-         * @apiPermission all
-         *
-         * @apiDescription Add team to the collection team in referencial module
-         *
-         * @apiParam {String} label Mandatory The Team label.
-         * @apiParam {Activity} activity Mandatory The Team activity.
-         * @apiParam {Country} country Mandatory The Team country
-         *
-         * @apiSuccess {Team}   team            The Team added with the id.
-         *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
-         */
-        final Handler<Message<String>> add = new Handler<Message<String>>() {
+				} catch (final NoSuchMethodException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final IllegalArgumentException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+				} catch (final EncodeException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+				} catch (final QaobeeException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+				}
+			}
+		};
 
-            @Override
-            public void handle(final Message<String> message) {
-                LOG.debug("add() - Team");
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    final JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID);
+		/**
+		 * @api {get} /api/1/commons/referencial/team/get Read data of a Team
+		 * @apiVersion 0.1.0
+		 * @apiName get
+		 * @apiGroup Team API
+		 * @apiPermission all
+		 *
+		 * @apiDescription get a team to the collection team in referencial module
+		 *
+		 * @apiParam {String} id The Team-ID.
+		 *
+		 * @apiSuccess {Team}   team            The Team found.
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+		final Handler<Message<String>> get = new Handler<Message<String>>() {
 
-                    // Insert a team
-                    final String id = mongo.save(params, Team.class);
+			@Override public void handle(final Message<String> message) {
+				LOG.debug("get() - Team");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.GET, req.getMethod());
+					Map<String, List<String>> params = req.getParams();
 
-                    params.putString("_id", id);
-                    LOG.debug("Team added : " + params.toString());
+					utils.testMandatoryParams(params, PARAM_ID);
 
-                    message.reply(params.encode());
+					// Tests mandatory parameters
+					utils.testMandatoryParams(params, PARAM_ID);
+					if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
+						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
+					}
 
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
-                }
-            }
-        };
+					final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Team.class);
 
+					LOG.debug("Team found : " + json.toString());
 
-        /**
-         * @api {get} /api/1/commons/referencial/team/get Read data of a Team
-         * @apiVersion 0.1.0
-         * @apiName get
-         * @apiGroup Team API
-         * @apiPermission all
-         *
-         * @apiDescription get a team to the collection team in referencial module
-         *
-         * @apiParam {String} id The Team-ID.
-         *
-         * @apiSuccess {Team}   team            The Team found.
-         *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
-         */
-        final Handler<Message<String>> get = new Handler<Message<String>>() {
+					message.reply(json.encode());
 
-            @Override
-            public void handle(final Message<String> message) {
-                LOG.debug("get() - Team");
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
+				} catch (final NoSuchMethodException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final IllegalArgumentException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+				} catch (QaobeeException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, e);
+				}
+			}
+		};
 
-                    utils.testMandatoryParams(params, PARAM_ID);
+		/**
+		 * @api {post} /api/1/commons/referencial/team/update
+		 * @apiVersion 0.1.0
+		 * @apiName update
+		 * @apiGroup Team API
+		 * @apiPermission all
+		 *
+		 * @apiDescription Update a Team to the collection Team in referencial module
+		 *
+		 * @apiParam {String} _id Mandatory The Team ID.
+		 * @apiParam {String} label Mandatory The Team label.
+		 * @apiParam {Activity} activity Mandatory The Team activity.
+		 * @apiParam {Country} country Mandatory The Team country
+		 *
+		 * @apiSuccess {Team}   team            The Team updated.
+		 *
+		 * @apiError HTTP_ERROR Bad request
+		 * @apiError MONGO_ERROR Error on DB request
+		 * @apiError INVALID_PARAMETER Parameters not found
+		 */
+		final Handler<Message<String>> update = new Handler<Message<String>>() {
 
-                    // Tests mandatory parameters
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
-                    }
+			@Override public void handle(final Message<String> message) {
+				LOG.debug("update() - Team");
+				try {
+					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+					utils.testHTTPMetod(Constantes.POST, req.getMethod());
+					final JsonObject params = new JsonObject(req.getBody());
+					utils.testMandatoryParams(params.toMap(), PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID);
 
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Team.class);
+					// Update a team
+					mongo.save(params, Team.class);
 
-                    LOG.debug("Team found : " + json.toString());
+					LOG.debug("Team updated : " + params.toString());
 
-                    message.reply(json.encode());
+					message.reply(params.encode());
 
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        };
-
-        /**
-         * @api {post} /api/1/commons/referencial/team/update
-         * @apiVersion 0.1.0
-         * @apiName update
-         * @apiGroup Team API
-         * @apiPermission all
-         *
-         * @apiDescription Update a Team to the collection Team in referencial module
-         *
-         * @apiParam {String} _id Mandatory The Team ID.
-         * @apiParam {String} label Mandatory The Team label.
-         * @apiParam {Activity} activity Mandatory The Team activity.
-         * @apiParam {Country} country Mandatory The Team country
-         *
-         * @apiSuccess {Team}   team            The Team updated.
-         *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
-         */
-        final Handler<Message<String>> update = new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                LOG.debug("update() - Team");
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    final JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID);
-
-                    // Update a team
-                    mongo.save(params, Team.class);
-
-                    LOG.debug("Team updated : " + params.toString());
-
-                    message.reply(params.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
-                }
-            }
-        };
+				} catch (final NoSuchMethodException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+				} catch (final IllegalArgumentException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+				} catch (final EncodeException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+				} catch (final QaobeeException e) {
+					LOG.error(e.getMessage(), e);
+					utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+				}
+			}
+		};
 
 		/*
 		 * Handlers registration
 		 */
-        vertx.eventBus().registerHandler(ADD, add);
-        vertx.eventBus().registerHandler(GET, get);
-        vertx.eventBus().registerHandler(UPDATE, update);
-    }
+		vertx.eventBus().registerHandler(ADD, add);
+		vertx.eventBus().registerHandler(GET, get);
+		vertx.eventBus().registerHandler(UPDATE, update);
+	}
 
 }

@@ -37,14 +37,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MongoProvider implements Provider<MongoDB> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MongoProvider.class);
-	@Inject
-	@Named("mongo.persistor")
-	private JsonObject config;
-	private MongoDB mongo;
 	private final AtomicBoolean mongoInitialized = new AtomicBoolean(false);
+	@Inject @Named("mongo.persistor") private JsonObject config;
+	private MongoDB mongo;
 
-	@Override
-	public MongoDB get() {
+	@Override public MongoDB get() {
 		if (!mongoInitialized.getAndSet(true)) {
 			try {
 				mongo = new MongoDBImpl(config);

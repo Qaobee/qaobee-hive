@@ -32,316 +32,315 @@ import java.util.List;
  *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+@JsonIgnoreProperties(ignoreUnknown = true) public class User {
 
-    /**
-     * Internal identifier
-     */
-    private String _id; // NOSONAR
-    /**
-     * Avatar
-     */
-    private String avatar;
-    /**
-     * Name
-     */
-    private String name;
-    /**
-     * Firstname
-     */
-    private String firstname;
-    /**
-     * Address
-     */
-    private Address address;
-    /**
-     * Birthdate
-     */
-    private long birthdate;
-    /**
-     * Contact
-     */
-    private Contact contact;
-    /**
-     * Country
-     */
-    private Country country;
-    /**
-     * Nationality
-     */
-    private Country nationality;
-    /**
-     * Account
-     */
-    private Account account;
-    /**
-     * Timestamp
-     */
-    private long timestamp;
-    /**
-     * Gender
-     */
-    private String gender;
-    /**
-     * List of notifications
-     */
-    private List<Notification> notifications;
-    /**
-     * User's effective by default
-     */
-    private String effectiveDefault;
+	/**
+	 * Internal identifier
+	 */
+	private String _id; // NOSONAR
+	/**
+	 * Avatar
+	 */
+	private String avatar;
+	/**
+	 * Name
+	 */
+	private String name;
+	/**
+	 * Firstname
+	 */
+	private String firstname;
+	/**
+	 * Address
+	 */
+	private Address address;
+	/**
+	 * Birthdate
+	 */
+	private long birthdate;
+	/**
+	 * Contact
+	 */
+	private Contact contact;
+	/**
+	 * Country
+	 */
+	private Country country;
+	/**
+	 * Nationality
+	 */
+	private Country nationality;
+	/**
+	 * Account
+	 */
+	private Account account;
+	/**
+	 * Timestamp
+	 */
+	private long timestamp;
+	/**
+	 * Gender
+	 */
+	private String gender;
+	/**
+	 * List of notifications
+	 */
+	private List<Notification> notifications;
+	/**
+	 * User's effective by default
+	 */
+	private String effectiveDefault;
 
-    /**
-     * Returns the internal identifier.
-     *
-     * @return String : id
-     */
-    public String get_id() { // NOSONAR
-        return _id;
-    }
+	/**
+	 * Returns the internal identifier.
+	 *
+	 * @return String : id
+	 */
+	public String get_id() { // NOSONAR
+		return _id;
+	}
 
-    /**
-     * Defines the internal identifier.
-     *
-     * @param _id String : id
-     */
-    public void set_id(String _id) { // NOSONAR
-        this._id = _id;
-    }
+	/**
+	 * Defines the internal identifier.
+	 *
+	 * @param _id String : id
+	 */
+	public void set_id(String _id) { // NOSONAR
+		this._id = _id;
+	}
 
-    /**
-     * Returns the avatar.
-     *
-     * @return String : avatar
-     */
-    public String getAvatar() {
-        return avatar;
-    }
+	/**
+	 * Returns the avatar.
+	 *
+	 * @return String : avatar
+	 */
+	public String getAvatar() {
+		return avatar;
+	}
 
-    /**
-     * Defines the avatar.
-     *
-     * @param avatar (String) : avatar
-     */
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
+	/**
+	 * Defines the avatar.
+	 *
+	 * @param avatar (String) : avatar
+	 */
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
 
-    /**
-     * Returns the name of the user.
-     *
-     * @return String : name
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * Returns the name of the user.
+	 *
+	 * @return String : name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Defines the name of the user.
-     *
-     * @param name (String) : name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+	/**
+	 * Defines the name of the user.
+	 *
+	 * @param name (String) : name
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * Returns the firstname of the user.
-     *
-     * @return String : firstname
-     */
-    public String getFirstname() {
-        return firstname;
-    }
+	/**
+	 * Returns the firstname of the user.
+	 *
+	 * @return String : firstname
+	 */
+	public String getFirstname() {
+		return firstname;
+	}
 
-    /**
-     * Defines the firstname of the user.
-     *
-     * @param firstname (String) : firstname
-     */
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
+	/**
+	 * Defines the firstname of the user.
+	 *
+	 * @param firstname (String) : firstname
+	 */
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
 
-    /**
-     * Returns the address of the user.
-     *
-     * @return Address : address
-     */
-    public Address getAddress() {
-        return address;
-    }
+	/**
+	 * Returns the address of the user.
+	 *
+	 * @return Address : address
+	 */
+	public Address getAddress() {
+		return address;
+	}
 
-    /**
-     * Defines the address of the user.
-     *
-     * @param address (Address) : address
-     */
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+	/**
+	 * Defines the address of the user.
+	 *
+	 * @param address (Address) : address
+	 */
+	public void setAddress(Address address) {
+		this.address = address;
+	}
 
-    /**
-     * Returns how to contact the user.
-     *
-     * @return Contact : contacts
-     */
-    public Contact getContact() {
-        return contact;
-    }
+	/**
+	 * Returns how to contact the user.
+	 *
+	 * @return Contact : contacts
+	 */
+	public Contact getContact() {
+		return contact;
+	}
 
-    /**
-     * Defines how to contact the user.
-     *
-     * @param contact (Contact) : contacts
-     */
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
+	/**
+	 * Defines how to contact the user.
+	 *
+	 * @param contact (Contact) : contacts
+	 */
+	public void setContact(Contact contact) {
+		this.contact = contact;
+	}
 
-    /**
-     * Returns the country.
-     *
-     * @return Country : country
-     */
-    public Country getCountry() {
-        return country;
-    }
+	/**
+	 * Returns the country.
+	 *
+	 * @return Country : country
+	 */
+	public Country getCountry() {
+		return country;
+	}
 
-    /**
-     * Defines the country.
-     *
-     * @param country (Country) : country
-     */
-    public void setCountry(Country country) {
-        this.country = country;
-    }
+	/**
+	 * Defines the country.
+	 *
+	 * @param country (Country) : country
+	 */
+	public void setCountry(Country country) {
+		this.country = country;
+	}
 
-    /**
-     * Returns user account.
-     *
-     * @return Account : user account
-     */
-    public Account getAccount() {
-        return account;
-    }
+	/**
+	 * Returns user account.
+	 *
+	 * @return Account : user account
+	 */
+	public Account getAccount() {
+		return account;
+	}
 
-    /**
-     * Defines user account.
-     *
-     * @param account (Account) : account
-     */
-    public void setAccount(Account account) {
-        this.account = account;
-    }
+	/**
+	 * Defines user account.
+	 *
+	 * @param account (Account) : account
+	 */
+	public void setAccount(Account account) {
+		this.account = account;
+	}
 
-    /**
-     * Returns list of notifications.
-     *
-     * @return List(Notification) : list
-     */
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
+	/**
+	 * Returns list of notifications.
+	 *
+	 * @return List(Notification) : list
+	 */
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
 
-    /**
-     * Defines the list of notifications.
-     *
-     * @param notifications (List(Notification)) : list
-     */
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    }
+	/**
+	 * Defines the list of notifications.
+	 *
+	 * @param notifications (List(Notification)) : list
+	 */
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
 
-    /**
-     * Returns the timestamp.
-     *
-     * @return long : timestamp
-     */
-    public long getTimestamp() {
-        return timestamp;
-    }
+	/**
+	 * Returns the timestamp.
+	 *
+	 * @return long : timestamp
+	 */
+	public long getTimestamp() {
+		return timestamp;
+	}
 
-    /**
-     * Defines the timestamp.
-     *
-     * @param timestamp (long) : timestamp
-     */
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
+	/**
+	 * Defines the timestamp.
+	 *
+	 * @param timestamp (long) : timestamp
+	 */
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
 
-    /**
-     * Returns user gender.
-     *
-     * @return String : gender
-     */
-    public String getGender() {
-        return gender;
-    }
+	/**
+	 * Returns user gender.
+	 *
+	 * @return String : gender
+	 */
+	public String getGender() {
+		return gender;
+	}
 
-    /**
-     * Defines user gender.
-     *
-     * @param gender (String) : gender
-     */
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
+	/**
+	 * Defines user gender.
+	 *
+	 * @param gender (String) : gender
+	 */
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
 
-    /**
-     * Returns user nationality.
-     *
-     * @return Country : nationality
-     */
-    public Country getNationality() {
-        return nationality;
-    }
+	/**
+	 * Returns user nationality.
+	 *
+	 * @return Country : nationality
+	 */
+	public Country getNationality() {
+		return nationality;
+	}
 
-    /**
-     * Defines user nationality.
-     *
-     * @param nationality (Country) : nationality
-     */
-    public void setNationality(Country nationality) {
-        this.nationality = nationality;
-    }
+	/**
+	 * Defines user nationality.
+	 *
+	 * @param nationality (Country) : nationality
+	 */
+	public void setNationality(Country nationality) {
+		this.nationality = nationality;
+	}
 
-    /**
-     * Returns birthdate.
-     *
-     * @return long : birthdate
-     */
-    public long getBirthdate() {
-        return birthdate;
-    }
+	/**
+	 * Returns birthdate.
+	 *
+	 * @return long : birthdate
+	 */
+	public long getBirthdate() {
+		return birthdate;
+	}
 
-    /**
-     * Defines birthdate.
-     *
-     * @param birthdate (long) : birthdate
-     */
-    public void setBirthdate(long birthdate) {
-        this.birthdate = birthdate;
-    }
+	/**
+	 * Defines birthdate.
+	 *
+	 * @param birthdate (long) : birthdate
+	 */
+	public void setBirthdate(long birthdate) {
+		this.birthdate = birthdate;
+	}
 
-    /**
-     * Returns the default effective ID.
-     *
-     * @return String : default effective
-     */
-    public String getEffectiveDefault() {
-        return effectiveDefault;
-    }
+	/**
+	 * Returns the default effective ID.
+	 *
+	 * @return String : default effective
+	 */
+	public String getEffectiveDefault() {
+		return effectiveDefault;
+	}
 
-    /**
-     * Defines the default effective ID.
-     *
-     * @param effectiveDefault (String) : default effective
-     */
-    public void setEffectiveDefault(String effectiveDefault) {
-        this.effectiveDefault = effectiveDefault;
-    }
+	/**
+	 * Defines the default effective ID.
+	 *
+	 * @param effectiveDefault (String) : default effective
+	 */
+	public void setEffectiveDefault(String effectiveDefault) {
+		this.effectiveDefault = effectiveDefault;
+	}
 
 }

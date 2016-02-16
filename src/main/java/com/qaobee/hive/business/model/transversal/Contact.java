@@ -24,35 +24,53 @@ package com.qaobee.hive.business.model.transversal;
  * @author cke
  */
 public class Contact {
-	
-	/** Home phone number */
+
+	/**
+	 * Home phone number
+	 */
 	private String home;
-	/** Office phone number */
+	/**
+	 * Office phone number
+	 */
 	private String office;
-	/** Cellphone number */
+	/**
+	 * Cellphone number
+	 */
 	private String cellphone;
-	/** e-Mail */
+	/**
+	 * e-Mail
+	 */
 	private String email;
-	/** Fax number */
+	/**
+	 * Fax number
+	 */
 	private String fax;
-	/** Web site */
-    private String webSite;
-    /** Facebook account */
-    private String facebook;
-    /** Google plus account */
-    private String googlePlus;
-    /** Twitter account */
-    private String twitter;
+	/**
+	 * Web site
+	 */
+	private String webSite;
+	/**
+	 * Facebook account
+	 */
+	private String facebook;
+	/**
+	 * Google plus account
+	 */
+	private String googlePlus;
+	/**
+	 * Twitter account
+	 */
+	private String twitter;
 
 	/**
 	 * Instantiates a new Contact.
 	 */
 	public Contact() {
-    	home = "";
-    	cellphone = "";
-    	office = "";
-    	email = "";
-    }
+		home = "";
+		cellphone = "";
+		office = "";
+		email = "";
+	}
 
 	/**
 	 * Returns the web site URL.

@@ -18,36 +18,40 @@
  */
 package com.qaobee.hive.technical.mongo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class creates a complex query for mongo with $and and $elemMatch criterias.
- * 
+ *
  * @author Jerome
  */
 public class InternalQueryBuilder {
 
-	/** List of elements used in LIFO mode. */
+	/**
+	 * List of elements used in LIFO mode.
+	 */
 	private List<Object> listElements = new ArrayList<Object>();
-	
-	/** Current element in which add are made. */
+
+	/**
+	 * Current element in which add are made.
+	 */
 	private Object currentElement;
-	
-	/** First element of the list. */
+
+	/**
+	 * First element of the list.
+	 */
 	private Object firstElement;
 
 	/**
 	 * Adds a criteria / constraint.
-	 * 
-	 * @param key
-	 *            (String) : key in the mongo document
-	 * @param value
-	 *            (String) : value for the constraint
+	 *
+	 * @param key   (String) : key in the mongo document
+	 * @param value (String) : value for the constraint
 	 */
 	public void addCriteria(String key, String value) {
 		Criteria crit = new Criteria(key, value);
@@ -60,13 +64,10 @@ public class InternalQueryBuilder {
 
 	/**
 	 * Adds a criteria / constraint.
-	 * 
-	 * @param key
-	 *            (String) : key in the mongo document
-	 * @param operator
-	 *            (String) : operator to apply to the constraint (operator starting with $ like $gt)
-	 * @param value
-	 *            (String) : value for the constraint
+	 *
+	 * @param key      (String) : key in the mongo document
+	 * @param operator (String) : operator to apply to the constraint (operator starting with $ like $gt)
+	 * @param value    (String) : value for the constraint
 	 */
 	public void addCriteria(String key, String operator, String value) {
 		Criteria crit = new Criteria(key, operator, value);
@@ -86,9 +87,8 @@ public class InternalQueryBuilder {
 
 	/**
 	 * Adds an "$elemMatch" element in the query and places it as the active element on which operations are made.
-	 * 
-	 * @param key
-	 *            (String) : key of embedded document on which further criterias are made
+	 *
+	 * @param key (String) : key of embedded document on which further criterias are made
 	 */
 	public void addAndStartElmenMatchElement(String key) {
 		startElement(new ElemMatchElement(key));
@@ -96,9 +96,8 @@ public class InternalQueryBuilder {
 
 	/**
 	 * Adds the new element in the LIFO list and shifts the current element to this.
-	 * 
-	 * @param newElement
-	 *            (Object) : new element to start
+	 *
+	 * @param newElement (Object) : new element to start
 	 */
 	private void startElement(Object newElement) {
 		// Adds the new element to current if it is set
@@ -141,7 +140,7 @@ public class InternalQueryBuilder {
 
 	/**
 	 * Generates the query for mongo with MongoAPI objects.
-	 * 
+	 *
 	 * @return DBObject : query in mongo objects
 	 */
 	public DBObject generateDBObject() {
@@ -162,19 +161,20 @@ public class InternalQueryBuilder {
 
 	/**
 	 * Class that represents a "$and" element in the query.
-	 * 
+	 *
 	 * @author jerome
 	 */
 	private class AndElement {
-		
-		/** List of elements in the "And" criteria. */
+
+		/**
+		 * List of elements in the "And" criteria.
+		 */
 		private List<Object> listAnd = new ArrayList<Object>();
 
 		/**
 		 * Adds an element in the "And" list.
-		 * 
-		 * @param element
-		 *            (Object) : element to add
+		 *
+		 * @param element (Object) : element to add
 		 */
 		private void addElementInAnd(Object element) {
 			listAnd.add(element);
@@ -182,7 +182,7 @@ public class InternalQueryBuilder {
 
 		/**
 		 * Generates the query for mongo with MongoAPI objects.
-		 * 
+		 *
 		 * @return BasicDBObject : part of the query in mongo objects
 		 */
 		private BasicDBObject generateDBObject() {
@@ -208,22 +208,25 @@ public class InternalQueryBuilder {
 
 	/**
 	 * Class that represents a "$and" element in the query.
-	 * 
+	 *
 	 * @author jerome
 	 */
 	private class ElemMatchElement {
-		
-		/** List of elements in the "ElemMatch" criteria. */
+
+		/**
+		 * List of elements in the "ElemMatch" criteria.
+		 */
 		private List<Object> listElemMatch = new ArrayList<Object>();
-		
-		/** Key of the embedded document in which the "ElemMatch" is applied to. */
+
+		/**
+		 * Key of the embedded document in which the "ElemMatch" is applied to.
+		 */
 		private String key;
 
 		/**
 		 * Constructor.
-		 * 
-		 * @param key
-		 *            (String) : name of the embedded document
+		 *
+		 * @param key (String) : name of the embedded document
 		 */
 		private ElemMatchElement(String key) {
 			this.key = key;
@@ -231,9 +234,8 @@ public class InternalQueryBuilder {
 
 		/**
 		 * Adds an element in the "ElemMatch" list.
-		 * 
-		 * @param element
-		 *            (Object) : element to add
+		 *
+		 * @param element (Object) : element to add
 		 */
 		private void addElementInElemMatch(Object element) {
 			listElemMatch.add(element);
@@ -241,7 +243,7 @@ public class InternalQueryBuilder {
 
 		/**
 		 * Generates the query for mongo with MongoAPI objects.
-		 * 
+		 *
 		 * @return BasicDBObject : part of the query in mongo objects
 		 */
 		private BasicDBObject generateDBObject() {
@@ -263,27 +265,31 @@ public class InternalQueryBuilder {
 
 	/**
 	 * Class that represents a criteria in an "And" or "ElemMatch" unit.
-	 * 
+	 *
 	 * @author jerome
 	 */
 	private class Criteria {
-		
-		/** Key that represents the field in the Mongo Document. */
+
+		/**
+		 * Key that represents the field in the Mongo Document.
+		 */
 		private String key;
-		
-		/** Operator with $ to apply on the value constraint. */
+
+		/**
+		 * Operator with $ to apply on the value constraint.
+		 */
 		private String operator;
-		
-		/** Value of the field in the Mongo Document. */
+
+		/**
+		 * Value of the field in the Mongo Document.
+		 */
 		private String value;
 
 		/**
 		 * Constructor.
 		 *
-		 * @param key
-		 *            (String) : name of the field
-		 * @param value
-		 *            (String) : constraint
+		 * @param key   (String) : name of the field
+		 * @param value (String) : constraint
 		 */
 		public Criteria(String key, String value) {
 			this.key = key;
@@ -293,12 +299,9 @@ public class InternalQueryBuilder {
 		/**
 		 * Constructor.
 		 *
-		 * @param key
-		 *            (String) : name of the field
-		 * @param operator
-		 *            (String) : operator with $ to apply to the constraint value
-		 * @param value
-		 *            (String) : constraint
+		 * @param key      (String) : name of the field
+		 * @param operator (String) : operator with $ to apply to the constraint value
+		 * @param value    (String) : constraint
 		 */
 		public Criteria(String key, String operator, String value) {
 			this.key = key;

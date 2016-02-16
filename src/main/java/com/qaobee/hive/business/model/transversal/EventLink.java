@@ -4,18 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Bean that describes an event link.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class EventLink {
+@JsonIgnoreProperties(ignoreUnknown = true) public class EventLink {
 
-	/** Link identifier */
+	/**
+	 * Link identifier
+	 */
 	private String linkId;
-	/** Link type */
+	/**
+	 * Link type
+	 */
 	private String type;
 
 	/**
 	 * Returns the link identifier.
+	 *
 	 * @return String : link ID
 	 */
 	public String getLinkId() {
@@ -24,6 +29,7 @@ public class EventLink {
 
 	/**
 	 * Defines the link identifier.
+	 *
 	 * @param linkId (String) : link ID
 	 */
 	public void setLinkId(String linkId) {
@@ -32,6 +38,7 @@ public class EventLink {
 
 	/**
 	 * Returns the link type.
+	 *
 	 * @return String : type
 	 */
 	public String getType() {
@@ -40,10 +47,11 @@ public class EventLink {
 
 	/**
 	 * Defines the link type
+	 *
 	 * @param type (String) : type
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 }

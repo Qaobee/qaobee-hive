@@ -1,15 +1,14 @@
 /*************************************************************************
- * 
  * Qaobee
  * __________________
- * 
+ * <p/>
  * [2015] Qaobee
  * All Rights Reserved.
- * 
+ * <p/>
  * NOTICE:  All information contained here is, and remains
  * the property of Qaobee and its suppliers,
  * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may 
+ * here are proprietary to Qaobee and its suppliers and may
  * be covered by U.S. and Foreign Patents, patents in process,
  * and are protected by trade secret or copyright law.
  * Dissemination of this information or reproduction of this material
@@ -18,34 +17,33 @@
  */
 package com.qaobee.hive.business.model.commons.referencial;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.transversal.Audit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Bean that describes a team.
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Team {
-	
-    /** Internal identifier */
-    private String _id; // NOSONAR
-    /** Label */
-    private String label;
-    /** Activity of the Team */
-    private Activity activity;
-    /** Structure of the Team */
-    private Structure structure;
-    /** Age category of the Team */
-    private CategoryAge categoryAge;
-    /** List of Seasons */
-    private List<TeamSeason> teamSeasons;
-    /** audit CRUD object */
+@JsonIgnoreProperties(ignoreUnknown = true) public class Team {
+
+	/** Internal identifier */
+	private String _id; // NOSONAR
+	/** Label */
+	private String label;
+	/** Activity of the Team */
+	private Activity activity;
+	/** Structure of the Team */
+	private Structure structure;
+	/** Age category of the Team */
+	private CategoryAge categoryAge;
+	/** List of Seasons */
+	private List<TeamSeason> teamSeasons;
+	/** audit CRUD object */
 	private Audit audit;
 
 	/**
@@ -149,12 +147,12 @@ public class Team {
 	 * @param teamSeason (TeamSeason) : season
 	 */
 	public void addTeamSeason(TeamSeason teamSeason) {
-		if(teamSeasons==null) {
+		if (teamSeasons == null) {
 			teamSeasons = new ArrayList<>();
 		}
 		teamSeasons.add(teamSeason);
 	}
-	
+
 	/**
 	 * Returns the audit.
 	 * @return Audit : audit
@@ -170,5 +168,5 @@ public class Team {
 	public void setAudit(Audit audit) {
 		this.audit = audit;
 	}
-	
+
 }

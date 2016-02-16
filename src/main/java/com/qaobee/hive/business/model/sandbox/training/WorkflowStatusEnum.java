@@ -23,26 +23,35 @@ package com.qaobee.hive.business.model.sandbox.training;
  */
 public enum WorkflowStatusEnum {
 
-	/** In progress status. */
+	/**
+	 * In progress status.
+	 */
 	INPROGRESS("education.status.inprogress"),
 
-	/** submitted status. */
+	/**
+	 * submitted status.
+	 */
 	SUBMITTED("education.status.submitted"),
 
-	/** Validate status. */
+	/**
+	 * Validate status.
+	 */
 	VALIDATED("education.status.validated"),
 
-	/** Cancelled status. */
+	/**
+	 * Cancelled status.
+	 */
 	CANCELLED("education.status.cancelled");
 
-	/** workflowStatus. */
+	/**
+	 * workflowStatus.
+	 */
 	private String workflowStatus;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param workflowStatus
-	 *            (String) : workflowStatus in i18n
+	 * @param workflowStatus (String) : workflowStatus in i18n
 	 */
 	WorkflowStatusEnum(final String workflowStatus) {
 		this.workflowStatus = workflowStatus;

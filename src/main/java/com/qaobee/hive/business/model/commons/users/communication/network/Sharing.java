@@ -18,9 +18,9 @@
  */
 package com.qaobee.hive.business.model.commons.users.communication.network;
 
-import java.util.List;
-
 import com.qaobee.hive.business.model.commons.users.User;
+
+import java.util.List;
 
 /**
  * The Class Sharing.
@@ -29,22 +29,34 @@ import com.qaobee.hive.business.model.commons.users.User;
  */
 public class Sharing {
 
-	/** The _id. */
+	/**
+	 * The _id.
+	 */
 	private String _id; // NOSONAR
 
-	/** Sharing's user. */
+	/**
+	 * Sharing's user.
+	 */
 	private User user;
 
-	/** Create date. */
+	/**
+	 * Create date.
+	 */
 	private long datCreate;
 
-	/** Sharing's scope. */
+	/**
+	 * Sharing's scope.
+	 */
 	private SharingScopeEnum sharingScope;
 
-	/** Sharing's list Member. */
+	/**
+	 * Sharing's list Member.
+	 */
 	private List<User> sharingListMembers;
 
-	/** Sharing's circle of friends of author. */
+	/**
+	 * Sharing's circle of friends of author.
+	 */
 	private List<CircleFriend> sharingCircle;
 
 	/**
@@ -59,8 +71,7 @@ public class Sharing {
 	/**
 	 * Sets the _id.
 	 *
-	 * @param _id
-	 *            the _id to set
+	 * @param _id the _id to set
 	 */
 	public final void set_id(final String _id) { // NOSONAR
 		this._id = _id;
@@ -78,8 +89,7 @@ public class Sharing {
 	/**
 	 * Sets the create date.
 	 *
-	 * @param datCreate
-	 *            the new create date
+	 * @param datCreate the new create date
 	 */
 	public final void setDatCreate(final long datCreate) {
 		this.datCreate = datCreate;
@@ -97,8 +107,7 @@ public class Sharing {
 	/**
 	 * Sets the sharing's list Member.
 	 *
-	 * @param sharingListMembers
-	 *            the new sharing's list Member
+	 * @param sharingListMembers the new sharing's list Member
 	 */
 	public final void setSharingListMembers(final List<User> sharingListMembers) {
 		this.sharingListMembers = sharingListMembers;
@@ -130,8 +139,7 @@ public class Sharing {
 	/**
 	 * Sets the sharing's circle of friends of author.
 	 *
-	 * @param sharingCircle
-	 *            the new sharing's circle of friends of author
+	 * @param sharingCircle the new sharing's circle of friends of author
 	 */
 	public final void setSharingCircle(final List<CircleFriend> sharingCircle) {
 		this.sharingCircle = sharingCircle;
@@ -149,8 +157,7 @@ public class Sharing {
 	/**
 	 * Sets the sharing's scope.
 	 *
-	 * @param sharingScope
-	 *            the new sharing's scope
+	 * @param sharingScope the new sharing's scope
 	 */
 	public final void setSharingScope(final SharingScopeEnum sharingScope) {
 		this.sharingScope = sharingScope;

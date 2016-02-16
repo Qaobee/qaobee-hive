@@ -23,20 +23,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Bean that describes a shape condition.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ShapeCondition {
+@JsonIgnoreProperties(ignoreUnknown = true) public class ShapeCondition {
 
-	/** Internal identifier */
+	/**
+	 * Internal identifier
+	 */
 	private String _id;
-	/** Code */
+	/**
+	 * Code
+	 */
 	private String code;
-	/** Label */
+	/**
+	 * Label
+	 */
 	private String label;
-	/** Order list */
+	/**
+	 * Order list
+	 */
 	private int order;
 
 	/**
 	 * Returns the internal identifier.
+	 *
 	 * @return String : ID
 	 */
 	public String get_id() {
@@ -45,6 +53,7 @@ public class ShapeCondition {
 
 	/**
 	 * Defines the internal identifier.
+	 *
 	 * @param _id (String) : ID
 	 */
 	public void set_id(String _id) {
@@ -53,6 +62,7 @@ public class ShapeCondition {
 
 	/**
 	 * Returns the code.
+	 *
 	 * @return String : code
 	 */
 	public String getCode() {
@@ -61,6 +71,7 @@ public class ShapeCondition {
 
 	/**
 	 * Defines the code.
+	 *
 	 * @param code (String) : code
 	 */
 	public void setCode(String code) {
@@ -69,6 +80,7 @@ public class ShapeCondition {
 
 	/**
 	 * Returns the label.
+	 *
 	 * @return String : label
 	 */
 	public String getLabel() {
@@ -77,6 +89,7 @@ public class ShapeCondition {
 
 	/**
 	 * Defines the label.
+	 *
 	 * @param label (String) : label
 	 */
 	public void setLabel(String label) {
@@ -85,6 +98,7 @@ public class ShapeCondition {
 
 	/**
 	 * Returns the order.
+	 *
 	 * @return int : order
 	 */
 	public int getOrder() {
@@ -93,6 +107,7 @@ public class ShapeCondition {
 
 	/**
 	 * Defines the order.
+	 *
 	 * @param order (int) : order
 	 */
 	public void setOrder(int order) {

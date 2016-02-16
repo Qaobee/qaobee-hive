@@ -18,61 +18,90 @@
  */
 package com.qaobee.hive.business.model.sandbox.effective;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.qaobee.hive.business.model.commons.settings.Country;
+import com.qaobee.hive.business.model.transversal.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.qaobee.hive.business.model.commons.settings.Country;
-import com.qaobee.hive.business.model.transversal.Address;
-import com.qaobee.hive.business.model.transversal.Audit;
-import com.qaobee.hive.business.model.transversal.Contact;
-import com.qaobee.hive.business.model.transversal.Status;
-import com.qaobee.hive.business.model.transversal.Tag;
-
 /**
  * Bean that describes a SandBox Person.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class SB_Person { // NOSONAR
-	
-	/** Internal identifier */
+@JsonIgnoreProperties(ignoreUnknown = true) public class SB_Person { // NOSONAR
+
+	/**
+	 * Internal identifier
+	 */
 	private String _id; // NOSONAR
-	/** Name */
+	/**
+	 * Name
+	 */
 	private String name;
-	/** Firstname */
+	/**
+	 * Firstname
+	 */
 	private String firstname;
-	/** Gender */
+	/**
+	 * Gender
+	 */
 	private String gender;
-	/** Birthdate */
+	/**
+	 * Birthdate
+	 */
 	private long birthdate;
-	/** Birthcity */
+	/**
+	 * Birthcity
+	 */
 	private String birthcity;
-	/** Birth country */
+	/**
+	 * Birth country
+	 */
 	// TODO Country or String ?
 	private Country birthcountry;
-	/** Nationality */
+	/**
+	 * Nationality
+	 */
 	// TODO Country or String ?
 	private Country nationality;
-	/** Address */
+	/**
+	 * Address
+	 */
 	private Address address;
-	/** Contact */
+	/**
+	 * Contact
+	 */
 	private Contact contact;
-	/** Status */
+	/**
+	 * Status
+	 */
 	private Status status;
-	/** Avatar */
+	/**
+	 * Avatar
+	 */
 	private String avatar;
-	/** Job of the person */
+	/**
+	 * Job of the person
+	 */
 	private String job;
-	/** List of labels */
+	/**
+	 * List of labels
+	 */
 	private List<Tag> labels;
-	/** audit CRUD object */
+	/**
+	 * audit CRUD object
+	 */
 	private Audit audit;
-	/** Sandbox ID */
+	/**
+	 * Sandbox ID
+	 */
 	private String sandboxId;
 
 	/**
 	 * Returns the internal identifier.
+	 *
 	 * @return String : ID
 	 */
 	public String get_id() { // NOSONAR
@@ -81,6 +110,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the internal identifier.
+	 *
 	 * @param _id (String) : ID
 	 */
 	public void set_id(String _id) { // NOSONAR
@@ -89,6 +119,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the name.
+	 *
 	 * @return String : name
 	 */
 	public String getName() {
@@ -97,6 +128,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the name.
+	 *
 	 * @param name (String) : name
 	 */
 	public void setName(String name) {
@@ -105,6 +137,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the firstname.
+	 *
 	 * @return String : firstname
 	 */
 	public String getFirstname() {
@@ -113,6 +146,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the firstname.
+	 *
 	 * @param firstname (String) : firstname
 	 */
 	public void setFirstname(String firstname) {
@@ -121,6 +155,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the gender.
+	 *
 	 * @return String : gender
 	 */
 	public String getGender() {
@@ -129,6 +164,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the gender.
+	 *
 	 * @param gender (String) : gender
 	 */
 	public void setGender(String gender) {
@@ -137,6 +173,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the birthdate.
+	 *
 	 * @return long : date
 	 */
 	public long getBirthdate() {
@@ -145,6 +182,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the birthdate.
+	 *
 	 * @param birthdate (long) : date
 	 */
 	public void setBirthdate(long birthdate) {
@@ -153,6 +191,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the birthcity.
+	 *
 	 * @return String : city
 	 */
 	public String getBirthcity() {
@@ -161,6 +200,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the birthcity.
+	 *
 	 * @param birthcity (String) : city
 	 */
 	public void setBirthcity(String birthcity) {
@@ -169,6 +209,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the birth country.
+	 *
 	 * @return Country : country
 	 */
 	public Country getBirthcountry() {
@@ -177,6 +218,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the birth country.
+	 *
 	 * @param birthcountry (Country) : country
 	 */
 	public void setBirthcountry(Country birthcountry) {
@@ -185,6 +227,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the nationality.
+	 *
 	 * @return Country : nationality
 	 */
 	public Country getNationality() {
@@ -193,6 +236,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the nationality.
+	 *
 	 * @param nationality (Country) : nationality
 	 */
 	public void setNationality(Country nationality) {
@@ -201,6 +245,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the address.
+	 *
 	 * @return Address : address
 	 */
 	public Address getAddress() {
@@ -209,6 +254,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the address.
+	 *
 	 * @param address (Address) : address
 	 */
 	public void setAddress(Address address) {
@@ -217,6 +263,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns how to contact the person.
+	 *
 	 * @return Contact : contact
 	 */
 	public Contact getContact() {
@@ -225,6 +272,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines how to contact the person.
+	 *
 	 * @param contact (Contact) : contact
 	 */
 	public void setContact(Contact contact) {
@@ -233,6 +281,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the avatar.
+	 *
 	 * @return String : avatar
 	 */
 	public String getAvatar() {
@@ -241,6 +290,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the avatar.
+	 *
 	 * @param avatar (String) : avatar
 	 */
 	public void setAvatar(String avatar) {
@@ -249,6 +299,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the job of the person.
+	 *
 	 * @return String : job
 	 */
 	public String getJob() {
@@ -257,6 +308,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the job of the person.
+	 *
 	 * @param job (String) : job
 	 */
 	public void setJob(String job) {
@@ -265,6 +317,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the list of labels.
+	 *
 	 * @return List(Tag) : list
 	 */
 	public List<Tag> getLabels() {
@@ -273,18 +326,20 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the list of labels.
+	 *
 	 * @param labels (List(Tag)) : list
 	 */
 	public void setLabels(List<Tag> labels) {
 		this.labels = labels;
 	}
-	
+
 	/**
 	 * Adds a label to the list.
+	 *
 	 * @param label (Tag) : label
 	 */
 	public void addLabel(Tag label) {
-		if(labels==null) {
+		if (labels == null) {
 			labels = new ArrayList<>();
 		}
 		labels.add(label);
@@ -292,6 +347,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the audit.
+	 *
 	 * @return Audit : audit
 	 */
 	public Audit getAudit() {
@@ -300,6 +356,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the audit.
+	 *
 	 * @param audit (Audit) : audit
 	 */
 	public void setAudit(Audit audit) {
@@ -308,6 +365,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the sandbox ID.
+	 *
 	 * @return String : _id
 	 */
 	public String getSandboxId() {
@@ -316,6 +374,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the sandbox ID.
+	 *
 	 * @param sandboxId (String) : _id
 	 */
 	public void setSandboxId(String sandboxId) {
@@ -324,6 +383,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Returns the status.
+	 *
 	 * @return Status : bean that describes the status
 	 */
 	public Status getStatus() {
@@ -332,6 +392,7 @@ public class SB_Person { // NOSONAR
 
 	/**
 	 * Defines the status.
+	 *
 	 * @param status (Status) : bean that describes the status
 	 */
 	public void setStatus(Status status) {

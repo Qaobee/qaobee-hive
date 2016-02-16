@@ -1,15 +1,14 @@
 /*************************************************************************
- * 
  * Qaobee
  * __________________
- * 
+ * <p/>
  * [2015] Qaobee
  * All Rights Reserved.
- * 
+ * <p/>
  * NOTICE:  All information contained here is, and remains
  * the property of Qaobee and its suppliers,
  * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may 
+ * here are proprietary to Qaobee and its suppliers and may
  * be covered by U.S. and Foreign Patents, patents in process,
  * and are protected by trade secret or copyright law.
  * Dissemination of this information or reproduction of this material
@@ -18,24 +17,23 @@
  */
 package com.qaobee.hive.business.model.commons.referencial;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.business.model.transversal.Audit;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Bean that describes the structure configuration.
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class StructureCfg {
-	
+@JsonIgnoreProperties(ignoreUnknown = true) public class StructureCfg {
+
 	/** Internal identifier */
-    private String _id; // NOSONAR
-    /** Structure */
-    private Structure structure;   
+	private String _id; // NOSONAR
+	/** Structure */
+	private Structure structure;
 	/** Season */
 	private Season season;
 	/** List of teams */
@@ -108,13 +106,13 @@ public class StructureCfg {
 	public void setTeams(List<Team> teams) {
 		this.teams = teams;
 	}
-	
+
 	/**
 	 * Adds a team to the list.
 	 * @param team (Team) : team
 	 */
 	public void addTeam(Team team) {
-		if(teams==null) {
+		if (teams == null) {
 			teams = new ArrayList<>();
 		}
 		teams.add(team);
@@ -141,12 +139,12 @@ public class StructureCfg {
 	 * @param infraStructure (InfraStructure) : infra
 	 */
 	public void addInfraStructure(InfraStructure infraStructure) {
-		if(infraStructures==null) {
+		if (infraStructures == null) {
 			infraStructures = new ArrayList<>();
 		}
 		infraStructures.add(infraStructure);
 	}
-	
+
 	/**
 	 * Returns the audit.
 	 * @return Audit : audit
@@ -162,5 +160,5 @@ public class StructureCfg {
 	public void setAudit(Audit audit) {
 		this.audit = audit;
 	}
-	
+
 }

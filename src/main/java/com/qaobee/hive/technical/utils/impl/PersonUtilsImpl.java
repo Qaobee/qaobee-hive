@@ -34,22 +34,17 @@ import java.util.UUID;
  * @author xavier
  */
 public final class PersonUtilsImpl implements PersonUtils {
-	@Inject
-	private PasswordEncryptionService passwordEncryptionService;
+	@Inject private PasswordEncryptionService passwordEncryptionService;
 
 	/**
 	 * Prepare upsert.
 	 *
-	 * @param user
-	 *            a user
+	 * @param user a user
 	 * @return a prepared person for upsert
-	 * @throws NoSuchAlgorithmException
-	 *             password encoding problem
-	 * @throws InvalidKeySpecException
-	 *             password encoding problem
+	 * @throws NoSuchAlgorithmException password encoding problem
+	 * @throws InvalidKeySpecException  password encoding problem
 	 */
-	@Override
-	public User prepareUpsert(final User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	@Override public User prepareUpsert(final User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
 			final byte[] salt = passwordEncryptionService.generateSalt();
 			user.getAccount().setSalt(salt);

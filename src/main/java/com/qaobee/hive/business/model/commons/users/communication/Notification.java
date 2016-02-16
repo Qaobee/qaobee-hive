@@ -18,35 +18,49 @@
  */
 package com.qaobee.hive.business.model.commons.users.communication;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 
 /**
  * Bean that describes a notification push.
  *
  * @author xavier
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Notification implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true) public class Notification implements Serializable {
 
-	/** The Constant serialVersionUID. */
+	/**
+	 * The Constant serialVersionUID.
+	 */
 	private static final long serialVersionUID = -5693811404344145826L;
-	/** Internal identifier */
+	/**
+	 * Internal identifier
+	 */
 	private String _id; // NOSONAR
-	/** Timestamp. */
+	/**
+	 * Timestamp.
+	 */
 	private long timestamp;
-	/** Content. */
+	/**
+	 * Content.
+	 */
 	private String content;
-	/** From user _id. */
+	/**
+	 * From user _id.
+	 */
 	private String from_user_id;
-	/** Title. */
+	/**
+	 * Title.
+	 */
 	private String title;
-	/** Is read ? */
+	/**
+	 * Is read ?
+	 */
 	private boolean read;
 
 	/**
 	 * Gets the internal identifier.
+	 *
 	 * @return String : _id
 	 */
 	public String get_id() { // NOSONAR
@@ -55,6 +69,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Sets the internal identifier.
+	 *
 	 * @param _id (String) : _id
 	 */
 	public void set_id(final String _id) { // NOSONAR
@@ -63,6 +78,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Gets the timestamp.
+	 *
 	 * @return long : timestamp
 	 */
 	public long getTimestamp() {
@@ -71,6 +87,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Sets the timestamp.
+	 *
 	 * @param timestamp (long) : timestamp
 	 */
 	public void setTimestamp(final long timestamp) {
@@ -79,6 +96,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Gets the content.
+	 *
 	 * @return String : content
 	 */
 	public String getContent() {
@@ -87,6 +105,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Sets the content.
+	 *
 	 * @param content (String) : content
 	 */
 	public void setContent(final String content) {
@@ -95,6 +114,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Gets the "from" user _id.
+	 *
 	 * @return String : from user _id
 	 */
 	public String getFrom_user_id() {
@@ -103,6 +123,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Sets the "from" user _id.
+	 *
 	 * @param from_user_id (String) : from user _id
 	 */
 	public void setFrom_user_id(final String from_user_id) {
@@ -111,6 +132,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Checks if notification is read.
+	 *
 	 * @return boolean : true if read
 	 */
 	public boolean isRead() {
@@ -119,6 +141,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Sets if notification is read.
+	 *
 	 * @param read (boolean) : true if read
 	 */
 	public void setRead(final boolean read) {
@@ -127,6 +150,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Gets the title.
+	 *
 	 * @return String : title
 	 */
 	public String getTitle() {
@@ -135,6 +159,7 @@ public class Notification implements Serializable {
 
 	/**
 	 * Sets the title.
+	 *
 	 * @param title (String) : title
 	 */
 	public void setTitle(final String title) {

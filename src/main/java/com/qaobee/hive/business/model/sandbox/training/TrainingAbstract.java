@@ -18,8 +18,6 @@
  */
 package com.qaobee.hive.business.model.sandbox.training;
 
-import java.util.List;
-
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.communication.network.Comment;
@@ -27,47 +25,71 @@ import com.qaobee.hive.business.model.commons.users.communication.network.Sharin
 import com.qaobee.hive.business.model.transversal.Audit;
 import com.qaobee.hive.business.model.transversal.Tag;
 
+import java.util.List;
+
 /**
  * The Class TrainingAbstract.
  */
 public class TrainingAbstract {
 
-	/** The _id. */
+	/**
+	 * The _id.
+	 */
 	private String _id; // NOSONAR
 
-	/** label. */
+	/**
+	 * label.
+	 */
 	private String label;
 
-	/** History. */
+	/**
+	 * History.
+	 */
 	private User author;
 
-	/** Create date. */
+	/**
+	 * Create date.
+	 */
 	private long datCreate;
 
-	/** Age category. */
+	/**
+	 * Age category.
+	 */
 	private CategoryAge categoryAge;
 
-	/** Duration of session. */
+	/**
+	 * Duration of session.
+	 */
 	private long duration;
 
-	/** Status. */
+	/**
+	 * Status.
+	 */
 	private WorkflowStatusEnum wkflStatus;
 
-	/** Comment's list. */
+	/**
+	 * Comment's list.
+	 */
 	private List<Comment> commentList;
 
-	/** Sharing. */
+	/**
+	 * Sharing.
+	 */
 	private Sharing sharing;
 
-	/** History. */
-	private List<History> historyList;
-	
 	/**
-     * The list of tags for object.
-     */
-    private List<Tag> tags;
-	
-	/** audit CRUD object */
+	 * History.
+	 */
+	private List<History> historyList;
+
+	/**
+	 * The list of tags for object.
+	 */
+	private List<Tag> tags;
+
+	/**
+	 * audit CRUD object
+	 */
 	private Audit audit;
 
 	/**
@@ -89,8 +111,7 @@ public class TrainingAbstract {
 	/**
 	 * Sets the _id.
 	 *
-	 * @param _id
-	 *            the _id to set
+	 * @param _id the _id to set
 	 */
 	public void set_id(final String _id) { // NOSONAR
 		this._id = _id;
@@ -108,8 +129,7 @@ public class TrainingAbstract {
 	/**
 	 * Sets the label.
 	 *
-	 * @param label
-	 *            the new label
+	 * @param label the new label
 	 */
 	public void setLabel(final String label) {
 		this.label = label;
@@ -125,8 +145,7 @@ public class TrainingAbstract {
 	/**
 	 * Sets the age category.
 	 *
-	 * @param categoryAge
-	 *            the new age category
+	 * @param categoryAge the new age category
 	 */
 	public void setCategoryAge(final CategoryAge categoryAge) {
 		this.categoryAge = categoryAge;
@@ -144,8 +163,7 @@ public class TrainingAbstract {
 	/**
 	 * Sets the duration of session.
 	 *
-	 * @param duration
-	 *            the new duration of session
+	 * @param duration the new duration of session
 	 */
 	public void setDuration(final long duration) {
 		this.duration = duration;
@@ -163,8 +181,7 @@ public class TrainingAbstract {
 	/**
 	 * Sets the status.
 	 *
-	 * @param wkflStatus
-	 *            the new status
+	 * @param wkflStatus the new status
 	 */
 	public void setWkflStatus(final WorkflowStatusEnum wkflStatus) {
 		this.wkflStatus = wkflStatus;
@@ -182,8 +199,7 @@ public class TrainingAbstract {
 	/**
 	 * Sets the comment's list.
 	 *
-	 * @param commentList
-	 *            the new comment's list
+	 * @param commentList the new comment's list
 	 */
 	public final void setCommentList(final List<Comment> commentList) {
 		this.commentList = commentList;
@@ -201,8 +217,7 @@ public class TrainingAbstract {
 	/**
 	 * Sets the sharing.
 	 *
-	 * @param sharing
-	 *            the new sharing
+	 * @param sharing the new sharing
 	 */
 	public final void setSharing(final Sharing sharing) {
 		this.sharing = sharing;
@@ -216,8 +231,7 @@ public class TrainingAbstract {
 	}
 
 	/**
-	 * @param datCreate
-	 *            the datCreate to set
+	 * @param datCreate the datCreate to set
 	 */
 	public void setDatCreate(long datCreate) {
 		this.datCreate = datCreate;
@@ -231,8 +245,7 @@ public class TrainingAbstract {
 	}
 
 	/**
-	 * @param historyList
-	 *            the historyList to set
+	 * @param historyList the historyList to set
 	 */
 	public void setHistoryList(List<History> historyList) {
 		this.historyList = historyList;

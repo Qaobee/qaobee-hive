@@ -1,15 +1,14 @@
 /*************************************************************************
- * 
  * Qaobee
  * __________________
- * 
+ * <p/>
  * [2015] Qaobee
  * All Rights Reserved.
- * 
+ * <p/>
  * NOTICE:  All information contained here is, and remains
  * the property of Qaobee and its suppliers,
  * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may 
+ * here are proprietary to Qaobee and its suppliers and may
  * be covered by U.S. and Foreign Patents, patents in process,
  * and are protected by trade secret or copyright law.
  * Dissemination of this information or reproduction of this material
@@ -23,21 +22,28 @@ import com.qaobee.hive.business.model.commons.users.User;
 
 /**
  * Bean that describes audit trail.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Audit {
-	
-	/** Author */
+@JsonIgnoreProperties(ignoreUnknown = true) public class Audit {
+
+	/**
+	 * Author
+	 */
 	//TODO user en entier ou un smallUser ?
 	private User author;
-	/** Create date */
+	/**
+	 * Create date
+	 */
 	private long dateCreate;
-	/** Update date. */
+	/**
+	 * Update date.
+	 */
 	private long dateUpdate;
 
 	/**
 	 * Returns the author.
+	 *
 	 * @return User : author
 	 */
 	public User getAuthor() {
@@ -46,6 +52,7 @@ public class Audit {
 
 	/**
 	 * Defines the author.
+	 *
 	 * @param author (User) : author
 	 */
 	public void setAuthor(User author) {
@@ -54,6 +61,7 @@ public class Audit {
 
 	/**
 	 * Returns the creation date.
+	 *
 	 * @return long : date
 	 */
 	public long getDateCreate() {
@@ -62,6 +70,7 @@ public class Audit {
 
 	/**
 	 * Defines the creation date.
+	 *
 	 * @param dateCreate (long) : date
 	 */
 	public void setDatCreate(long dateCreate) {
@@ -70,6 +79,7 @@ public class Audit {
 
 	/**
 	 * Returns the updating date.
+	 *
 	 * @return long : date
 	 */
 	public long getDatUpdate() {
@@ -78,6 +88,7 @@ public class Audit {
 
 	/**
 	 * Defines the updating date.
+	 *
 	 * @param dateUpdate (long) : date
 	 */
 	public void setDatUpdate(long dateUpdate) {

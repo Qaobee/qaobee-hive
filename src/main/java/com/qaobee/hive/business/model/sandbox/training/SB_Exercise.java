@@ -28,17 +28,33 @@ import java.io.File;
  */
 public class SB_Exercise extends TrainingAbstract { // NOSONAR
 
-	/** Objective. */
+	/**
+	 * Objective.
+	 */
 	private String objective;
 
-	/** setting Up. */
+	/**
+	 * setting Up.
+	 */
 	private String settingUp;
 
-	/** Execution's variables . */
+	/**
+	 * Execution's variables .
+	 */
 	private String executionVariables;
 
-	/** File . */
+	/**
+	 * File .
+	 */
 	private File file;
+	/**
+	 * instructions.
+	 */
+	private String instructions;
+	/**
+	 * criteria of success.
+	 */
+	private String criteriaSuccess;
 
 	/**
 	 * @return the file
@@ -48,8 +64,7 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param file
-	 *            the file to set
+	 * @param file the file to set
 	 */
 	public void setFile(File file) {
 		this.file = file;
@@ -63,8 +78,7 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param objective
-	 *            the objective to set
+	 * @param objective the objective to set
 	 */
 	public void setObjective(String objective) {
 		this.objective = objective;
@@ -78,8 +92,7 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param settingUp
-	 *            the settingUp to set
+	 * @param settingUp the settingUp to set
 	 */
 	public void setSettingUp(String settingUp) {
 		this.settingUp = settingUp;
@@ -93,8 +106,7 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param executionVariables
-	 *            the executionVariables to set
+	 * @param executionVariables the executionVariables to set
 	 */
 	public void setExecutionVariables(String executionVariables) {
 		this.executionVariables = executionVariables;
@@ -108,8 +120,7 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param instructions
-	 *            the instructions to set
+	 * @param instructions the instructions to set
 	 */
 	public void setInstructions(String instructions) {
 		this.instructions = instructions;
@@ -123,17 +134,10 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
 	}
 
 	/**
-	 * @param criteriaSuccess
-	 *            the criteriaSuccess to set
+	 * @param criteriaSuccess the criteriaSuccess to set
 	 */
 	public void setCriteriaSuccess(String criteriaSuccess) {
 		this.criteriaSuccess = criteriaSuccess;
 	}
-
-	/** instructions. */
-	private String instructions;
-
-	/** criteria of success. */
-	private String criteriaSuccess;
 
 }

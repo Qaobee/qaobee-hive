@@ -35,15 +35,13 @@ import java.util.Map;
 
 /**
  * @author cke
- *
  */
 public class ActivityTest extends VertxJunitSupport {
-	
+
 	/**
 	 * Tests getHandler for ActivityVerticle
 	 */
-	@Test
-	public void getObjectByIdOk() {
+	@Test public void getObjectByIdOk() {
 
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 
@@ -53,25 +51,24 @@ public class ActivityTest extends VertxJunitSupport {
 		req.setMethod(Constantes.GET);
 
 		final Map<String, List<String>> params = new HashMap<>();
-		
+
 		// id
 		params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
 		req.setParams(params);
 
 		final String reply = sendonBus(ActivityVerticle.GET, req);
 		JsonObject result = new JsonObject(reply);
-		
+
 		String label = result.getString("label");
-		
+
 		Assert.assertEquals("commons.settings.activity.handball", label);
 	}
-	
+
 	/**
 	 * Tests getHandler for ActivityVerticle
 	 * with missing mandatory fields
 	 */
-	@Test
-	public void getObjectByIdKo() {
+	@Test public void getObjectByIdKo() {
 
 		/* User simulation connection */
 		User user = generateLoggedUser();
@@ -84,21 +81,20 @@ public class ActivityTest extends VertxJunitSupport {
 
 		JsonObject resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
 		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-		
+
 		// id
 		params.put(ActivityVerticle.PARAM_ID, Collections.singletonList(""));
 		req.setParams(params);
-		
+
 		resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
 		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
 	}
-	
+
 	/**
 	 * Tests getListHandler for ActivityVerticle
 	 */
-	@Test
-	public void getListOk() {
+	@Test public void getListOk() {
 
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 
@@ -110,7 +106,7 @@ public class ActivityTest extends VertxJunitSupport {
 		req.setMethod(Constantes.GET);
 
 		final Map<String, List<String>> params = new HashMap<>();
-		
+
 		// id
 		params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
 		req.setParams(params);
@@ -118,12 +114,11 @@ public class ActivityTest extends VertxJunitSupport {
 		final String reply = sendonBus(ActivityVerticle.GET_LIST, req, user.getAccount().getToken());
 		Assert.assertEquals(26, new JsonArray(reply).size());
 	}
-	
+
 	/**
 	 * Tests getListEnableHandler for ActivityVerticle
 	 */
-	@Test
-	public void getListEnableOk() {
+	@Test public void getListEnableOk() {
 
 		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 
@@ -135,7 +130,7 @@ public class ActivityTest extends VertxJunitSupport {
 		req.setMethod(Constantes.GET);
 
 		final Map<String, List<String>> params = new HashMap<>();
-		
+
 		// id
 		params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
 		req.setParams(params);

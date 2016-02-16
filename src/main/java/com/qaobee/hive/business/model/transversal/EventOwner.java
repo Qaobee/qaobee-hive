@@ -23,18 +23,23 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Bean that describes an event owner.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class EventOwner {
+@JsonIgnoreProperties(ignoreUnknown = true) public class EventOwner {
 
-	/** Owner identifier */
+	/**
+	 * Owner identifier
+	 */
 	private String ownerId;
-	/** Owner type */
+	/**
+	 * Owner type
+	 */
 	private String ownerType;
 
 	/**
 	 * Returns the owner identifier.
+	 *
 	 * @return String : owner ID
 	 */
 	public String getOwnerId() {
@@ -43,6 +48,7 @@ public class EventOwner {
 
 	/**
 	 * Defines the owner identifier.
+	 *
 	 * @param ownerId (String) : owener ID
 	 */
 	public void setOwnerId(String ownerId) {
@@ -51,6 +57,7 @@ public class EventOwner {
 
 	/**
 	 * Returns the owner type.
+	 *
 	 * @return String : type
 	 */
 	public String getOwnerType() {
@@ -59,6 +66,7 @@ public class EventOwner {
 
 	/**
 	 * Defines the owner type.
+	 *
 	 * @param ownerType (String) : type
 	 */
 	public void setOwnerType(String ownerType) {
