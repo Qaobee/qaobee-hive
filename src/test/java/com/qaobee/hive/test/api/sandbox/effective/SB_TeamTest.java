@@ -35,174 +35,178 @@ import java.util.Map;
 
 /**
  * @author cke
- *
  */
 public class SB_TeamTest extends VertxJunitSupport {
 
-	/**
-	 * Tests of getting a list of my teams for sandbox and effective
-	 */
-	@Test public void getMyTeamsList() {
+    /**
+     * Tests of getting a list of my teams for sandbox and effective
+     */
+    @Test
+    public void getMyTeamsList() {
 
-		populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
-		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
-		req.setUser(user);
-
-		/* list of parameters */
-		final Map<String, List<String>> params = new HashMap<>();
-
-		params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-		params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, Collections.singletonList("550b31f925da07681592db23"));
-		params.put(SB_TeamVerticle.PARAM_ENABLE, Collections.singletonList("true"));
-		params.put(SB_TeamVerticle.PARAM_ADVERSARY, Collections.singletonList("false"));
-
-		req.setParams(params);
-
-		final String reply = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
-		JsonArray result = new JsonArray(reply);
-
-		Assert.assertEquals(1, result.size());
-
-		JsonObject team = result.get(0);
-		Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
-	}
-
-	/**
-	 * Tests of getting a list of my adversaries for sandbox and effective
-	 */
-	@Test public void getMyAdversaryTeamsList() {
-
-		populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
-		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
-		req.setUser(user);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
 
 		/* list of parameters */
-		final Map<String, List<String>> params = new HashMap<>();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-		params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, Collections.singletonList("550b31f925da07681592db23"));
-		params.put(SB_TeamVerticle.PARAM_ENABLE, Collections.singletonList("true"));
-		params.put(SB_TeamVerticle.PARAM_ADVERSARY, Collections.singletonList("true"));
+        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
+        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, Collections.singletonList("550b31f925da07681592db23"));
+        params.put(SB_TeamVerticle.PARAM_ENABLE, Collections.singletonList("true"));
+        params.put(SB_TeamVerticle.PARAM_ADVERSARY, Collections.singletonList("false"));
 
-		req.setParams(params);
+        req.setParams(params);
 
-		final String reply = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
-		JsonArray result = new JsonArray(reply);
+        final String reply = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
+        JsonArray result = new JsonArray(reply);
 
-		Assert.assertEquals(7, result.size());
+        Assert.assertEquals(1, result.size());
 
-		JsonObject team = result.get(0);
-		Assert.assertEquals("Nantes HBC", team.getString("label"));
+        JsonObject team = result.get(0);
+        Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
+    }
 
-		params.put(SB_TeamVerticle.PARAM_LINK_TEAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
+    /**
+     * Tests of getting a list of my adversaries for sandbox and effective
+     */
+    @Test
+    public void getMyAdversaryTeamsList() {
 
-		final String reply2 = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
-		JsonArray result2 = new JsonArray(reply2);
-
-		Assert.assertEquals(6, result2.size());
-	}
-
-	/**
-	 * Tests of getting a  team by Id
-	 */
-	@Test public void getByIdOk() {
-
-		populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
-		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
-		req.setUser(user);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
 
 		/* list of parameters */
-		final Map<String, List<String>> params = new HashMap<>();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		params.put(SB_TeamVerticle.PARAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
+        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
+        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, Collections.singletonList("550b31f925da07681592db23"));
+        params.put(SB_TeamVerticle.PARAM_ENABLE, Collections.singletonList("true"));
+        params.put(SB_TeamVerticle.PARAM_ADVERSARY, Collections.singletonList("true"));
 
-		req.setParams(params);
+        req.setParams(params);
 
-		final String reply = sendonBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
-		JsonObject team = new JsonObject(reply);
-		Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
+        final String reply = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
+        JsonArray result = new JsonArray(reply);
 
-	}
+        Assert.assertEquals(7, result.size());
 
-	/**
-	 * Tests of getting a  team by Id
-	 */
-	@Test public void addTeam() {
+        JsonObject team = result.get(0);
+        Assert.assertEquals("Nantes HBC", team.getString("label"));
 
-		populate(POPULATE_ONLY, DATA_USERS);
-		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.POST);
-		req.setUser(user);
+        params.put(SB_TeamVerticle.PARAM_LINK_TEAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
 
-		final JsonObject params = new JsonObject();
-		params.putString(SB_EventVerticle.PARAM_LABEL, "TheNewTeam");
-		params.putString(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
-		params.putString(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
-		params.putBoolean(SB_TeamVerticle.PARAM_ENABLE, true);
-		params.putBoolean(SB_TeamVerticle.PARAM_ADVERSARY, true);
+        final String reply2 = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
+        JsonArray result2 = new JsonArray(reply2);
 
-		req.setBody(params.encode());
-		final JsonObject team = new JsonObject(sendonBus(SB_TeamVerticle.ADD, req, user.getAccount().getToken()));
-		System.out.println(team);
-		Assert.assertNotNull("id is null", team.getString("_id"));
-		Assert.assertEquals("TheNewTeam", team.getString("label"));
+        Assert.assertEquals(6, result2.size());
+    }
 
-	}
+    /**
+     * Tests of getting a  team by Id
+     */
+    @Test
+    public void getByIdOk() {
 
-	/**
-	 * Tests of getting a  team by Id
-	 */
-	@Test public void updateTeam() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
 
-		populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
-		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
-		req.setUser(user);
+		/* list of parameters */
+        final Map<String, List<String>> params = new HashMap<>();
+
+        params.put(SB_TeamVerticle.PARAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
+
+        req.setParams(params);
+
+        final String reply = sendonBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
+        JsonObject team = new JsonObject(reply);
+        Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
+
+    }
+
+    /**
+     * Tests of getting a  team by Id
+     */
+    @Test
+    public void addTeam() {
+
+        populate(POPULATE_ONLY, DATA_USERS);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.POST);
+        req.setUser(user);
+
+        final JsonObject params = new JsonObject();
+        params.putString(SB_EventVerticle.PARAM_LABEL, "TheNewTeam");
+        params.putString(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
+        params.putString(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
+        params.putBoolean(SB_TeamVerticle.PARAM_ENABLE, true);
+        params.putBoolean(SB_TeamVerticle.PARAM_ADVERSARY, true);
+
+        req.setBody(params.encode());
+        final JsonObject team = new JsonObject(sendonBus(SB_TeamVerticle.ADD, req, user.getAccount().getToken()));
+        System.out.println(team);
+        Assert.assertNotNull("id is null", team.getString("_id"));
+        Assert.assertEquals("TheNewTeam", team.getString("label"));
+
+    }
+
+    /**
+     * Tests of getting a  team by Id
+     */
+    @Test
+    public void updateTeam() {
+
+        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
 
 		/* lget team */
-		final Map<String, List<String>> params = new HashMap<>();
-		params.put(SB_TeamVerticle.PARAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
-		req.setParams(params);
+        final Map<String, List<String>> params = new HashMap<>();
+        params.put(SB_TeamVerticle.PARAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
+        req.setParams(params);
 
-		final String reply = sendonBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
-		JsonObject team = new JsonObject(reply);
-		Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
+        final String reply = sendonBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
+        JsonObject team = new JsonObject(reply);
+        Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
 
         /* Update team */
-		req.setMethod(Constantes.PUT);
-		team.putBoolean(SB_TeamVerticle.PARAM_ENABLE, false);
-		req.setBody(team.encode());
-		sendonBus(SB_TeamVerticle.UPDATE, req, user.getAccount().getToken());
+        req.setMethod(Constantes.PUT);
+        team.putBoolean(SB_TeamVerticle.PARAM_ENABLE, false);
+        req.setBody(team.encode());
+        sendonBus(SB_TeamVerticle.UPDATE, req, user.getAccount().getToken());
         
         /* list of parameters */
-		req.setMethod(Constantes.GET);
-		final Map<String, List<String>> param2s = new HashMap<>();
+        req.setMethod(Constantes.GET);
+        final Map<String, List<String>> param2s = new HashMap<>();
 
-		param2s.put(SB_TeamVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-		param2s.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, Collections.singletonList("550b31f925da07681592db23"));
-		param2s.put(SB_TeamVerticle.PARAM_ENABLE, Collections.singletonList("true"));
-		param2s.put(SB_TeamVerticle.PARAM_ADVERSARY, Collections.singletonList("false"));
+        param2s.put(SB_TeamVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
+        param2s.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, Collections.singletonList("550b31f925da07681592db23"));
+        param2s.put(SB_TeamVerticle.PARAM_ENABLE, Collections.singletonList("true"));
+        param2s.put(SB_TeamVerticle.PARAM_ADVERSARY, Collections.singletonList("false"));
 
-		req.setParams(param2s);
+        req.setParams(param2s);
 
-		final String reply2 = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
-		JsonArray result = new JsonArray(reply2);
+        final String reply2 = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
+        JsonArray result = new JsonArray(reply2);
 
-		Assert.assertEquals(0, result.size());
+        Assert.assertEquals(0, result.size());
 
-	}
+    }
 
 }

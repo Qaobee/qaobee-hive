@@ -31,50 +31,50 @@ import java.util.ResourceBundle;
  */
 public final class Messages {
 
-	private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
-	private static final Logger LOG = LoggerFactory.getLogger(Messages.class);
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+    private static final String BUNDLE_NAME = "messages"; //$NON-NLS-1$
+    private static final Logger LOG = LoggerFactory.getLogger(Messages.class);
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-	/**
-	 * Instantiates a new messages.
-	 */
-	private Messages() {
-		// empty
-	}
+    /**
+     * Instantiates a new messages.
+     */
+    private Messages() {
+        // empty
+    }
 
-	/**
-	 * Gets the string.
-	 *
-	 * @param key the key
-	 * @return the string
-	 */
-	public static String getString(final String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (final MissingResourceException e) {
-			LOG.warn(e.getMessage(), e);
-			return '!' + key + '!';
-		}
-	}
+    /**
+     * Gets the string.
+     *
+     * @param key the key
+     * @return the string
+     */
+    public static String getString(final String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (final MissingResourceException e) {
+            LOG.warn(e.getMessage(), e);
+            return '!' + key + '!';
+        }
+    }
 
-	/**
-	 * Gets the string.
-	 *
-	 * @param key    the key
-	 * @param locale the locale
-	 * @param params the params
-	 * @return the string
-	 */
-	public static String getString(final String key, final String locale, final Object... params) {
-		try {
-			if (params.length > 0) {
-				return MessageFormat.format(ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0])).getString(key), params);
-			} else {
-				return ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0])).getString(key);
-			}
-		} catch (final MissingResourceException e) {
-			LOG.warn(e.getMessage(), e);
-			return '!' + key + '!';
-		}
-	}
+    /**
+     * Gets the string.
+     *
+     * @param key    the key
+     * @param locale the locale
+     * @param params the params
+     * @return the string
+     */
+    public static String getString(final String key, final String locale, final Object... params) {
+        try {
+            if (params.length > 0) {
+                return MessageFormat.format(ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0])).getString(key), params);
+            } else {
+                return ResourceBundle.getBundle(BUNDLE_NAME, Locale.forLanguageTag(locale.split(",")[0])).getString(key);
+            }
+        } catch (final MissingResourceException e) {
+            LOG.warn(e.getMessage(), e);
+            return '!' + key + '!';
+        }
+    }
 }

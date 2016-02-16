@@ -29,193 +29,233 @@ import java.util.List;
 
 /**
  * Bean that describes a championship.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class ChampionShip {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ChampionShip {
 
-	/** Internal identifier */
-	private String _id; // NOSONAR
-	/** Activity */
-	private Activity activity;
-	/** Age category */
-	private CategoryAge categoryAge;
-	/** Code */
-	private String code;
-	/** Label */
-	private String label;
-	/** List of tags for determinate championShip */
-	private List<Tag> tags;
-	/** List of journey for a championShip */
-	private List<ChampionShipJourney> journeys;
-	/** Season */
-	private Season season;
-	/** Audit CRUD */
-	private Audit audit;
+    /**
+     * Internal identifier
+     */
+    private String _id; // NOSONAR
+    /**
+     * Activity
+     */
+    private Activity activity;
+    /**
+     * Age category
+     */
+    private CategoryAge categoryAge;
+    /**
+     * Code
+     */
+    private String code;
+    /**
+     * Label
+     */
+    private String label;
+    /**
+     * List of tags for determinate championShip
+     */
+    private List<Tag> tags;
+    /**
+     * List of journey for a championShip
+     */
+    private List<ChampionShipJourney> journeys;
+    /**
+     * Season
+     */
+    private Season season;
+    /**
+     * Audit CRUD
+     */
+    private Audit audit;
 
-	/**
-	 * Returns the internal identifier.
-	 * @return String : ID
-	 */
-	public String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : ID
+     */
+    public String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 * @param _id (String) : ID
-	 */
-	public void set_id(String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : ID
+     */
+    public void set_id(String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the championship activity.
-	 * @return Activity : activity
-	 */
-	public Activity getActivity() {
-		return activity;
-	}
+    /**
+     * Returns the championship activity.
+     *
+     * @return Activity : activity
+     */
+    public Activity getActivity() {
+        return activity;
+    }
 
-	/**
-	 * Defines the championship activity.
-	 * @param activity (Activity) : activity
-	 */
-	public void setActivity(Activity activity) {
-		this.activity = activity;
-	}
+    /**
+     * Defines the championship activity.
+     *
+     * @param activity (Activity) : activity
+     */
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
-	/**
-	 * Returns the championship age category.
-	 * @return CategoryAge : age category
-	 */
-	public CategoryAge getCategoryAge() {
-		return categoryAge;
-	}
+    /**
+     * Returns the championship age category.
+     *
+     * @return CategoryAge : age category
+     */
+    public CategoryAge getCategoryAge() {
+        return categoryAge;
+    }
 
-	/**
-	 * Defines the championship age category.
-	 * @param categoryAge (CategoryAge) : age category
-	 */
-	public void setCategoryAge(CategoryAge categoryAge) {
-		this.categoryAge = categoryAge;
-	}
+    /**
+     * Defines the championship age category.
+     *
+     * @param categoryAge (CategoryAge) : age category
+     */
+    public void setCategoryAge(CategoryAge categoryAge) {
+        this.categoryAge = categoryAge;
+    }
 
-	/**
-	 * Returns the championship code.
-	 * @return String : code
-	 */
-	public String getCode() {
-		return code;
-	}
+    /**
+     * Returns the championship code.
+     *
+     * @return String : code
+     */
+    public String getCode() {
+        return code;
+    }
 
-	/**
-	 * Defines the championship code.
-	 * @param code (String) : code
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
+    /**
+     * Defines the championship code.
+     *
+     * @param code (String) : code
+     */
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	/**
-	 * Returns the championship label.
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the championship label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the championship label.
-	 * @param label (String) : label
-	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the championship label.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Retuns the list of tags.
-	 * @return List(Tag) : list
-	 */
-	public List<Tag> getTags() {
-		return tags;
-	}
+    /**
+     * Retuns the list of tags.
+     *
+     * @return List(Tag) : list
+     */
+    public List<Tag> getTags() {
+        return tags;
+    }
 
-	/**
-	 * Defines the list of tags.
-	 * @param tags (List(Tag)) : list
-	 */
-	public void setTags(List<Tag> tags) {
-		this.tags = tags;
-	}
+    /**
+     * Defines the list of tags.
+     *
+     * @param tags (List(Tag)) : list
+     */
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 
-	/**
-	 * Adds a tag to the list.
-	 * @param tag (Tag) : tag to add
-	 */
-	public void addTag(Tag tag) {
-		if (tags == null) {
-			tags = new ArrayList<>();
-		}
-		tags.add(tag);
-	}
+    /**
+     * Adds a tag to the list.
+     *
+     * @param tag (Tag) : tag to add
+     */
+    public void addTag(Tag tag) {
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
+        tags.add(tag);
+    }
 
-	/**
-	 * Returns the list of journeys.
-	 * @return List(ChampionShipJourney) : list
-	 */
-	public List<ChampionShipJourney> getJourneys() {
-		return journeys;
-	}
+    /**
+     * Returns the list of journeys.
+     *
+     * @return List(ChampionShipJourney) : list
+     */
+    public List<ChampionShipJourney> getJourneys() {
+        return journeys;
+    }
 
-	/**
-	 * Defines the list of journeys.
-	 * @param journeys (List(ChampionShipJourney)) : list
-	 */
-	public void setJourneys(List<ChampionShipJourney> journeys) {
-		this.journeys = journeys;
-	}
+    /**
+     * Defines the list of journeys.
+     *
+     * @param journeys (List(ChampionShipJourney)) : list
+     */
+    public void setJourneys(List<ChampionShipJourney> journeys) {
+        this.journeys = journeys;
+    }
 
-	/**
-	 * Adds a journey to the list.
-	 * @param journey (ChampionShipJourney) : journey
-	 */
-	public void addJourney(ChampionShipJourney journey) {
-		if (journeys == null) {
-			journeys = new ArrayList<>();
-		}
-		journeys.add(journey);
-	}
+    /**
+     * Adds a journey to the list.
+     *
+     * @param journey (ChampionShipJourney) : journey
+     */
+    public void addJourney(ChampionShipJourney journey) {
+        if (journeys == null) {
+            journeys = new ArrayList<>();
+        }
+        journeys.add(journey);
+    }
 
-	/**
-	 * Returns the season.
-	 * @return Season : season
-	 */
-	public Season getSeason() {
-		return season;
-	}
+    /**
+     * Returns the season.
+     *
+     * @return Season : season
+     */
+    public Season getSeason() {
+        return season;
+    }
 
-	/**
-	 * Defines the season.
-	 * @param season (Season) : season
-	 */
-	public void setSeason(Season season) {
-		this.season = season;
-	}
+    /**
+     * Defines the season.
+     *
+     * @param season (Season) : season
+     */
+    public void setSeason(Season season) {
+        this.season = season;
+    }
 
-	/**
-	 * Returns the audit.
-	 * @return Audit :  audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * Returns the audit.
+     *
+     * @return Audit :  audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * Defines the audit.
-	 * @param audit (Audit) : audit
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * Defines the audit.
+     *
+     * @param audit (Audit) : audit
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 
 }

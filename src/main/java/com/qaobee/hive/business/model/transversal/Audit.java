@@ -25,74 +25,75 @@ import com.qaobee.hive.business.model.commons.users.User;
  *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class Audit {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Audit {
 
-	/**
-	 * Author
-	 */
-	//TODO user en entier ou un smallUser ?
-	private User author;
-	/**
-	 * Create date
-	 */
-	private long dateCreate;
-	/**
-	 * Update date.
-	 */
-	private long dateUpdate;
+    /**
+     * Author
+     */
+    //TODO user en entier ou un smallUser ?
+    private User author;
+    /**
+     * Create date
+     */
+    private long dateCreate;
+    /**
+     * Update date.
+     */
+    private long dateUpdate;
 
-	/**
-	 * Returns the author.
-	 *
-	 * @return User : author
-	 */
-	public User getAuthor() {
-		return author;
-	}
+    /**
+     * Returns the author.
+     *
+     * @return User : author
+     */
+    public User getAuthor() {
+        return author;
+    }
 
-	/**
-	 * Defines the author.
-	 *
-	 * @param author (User) : author
-	 */
-	public void setAuthor(User author) {
-		this.author = author;
-	}
+    /**
+     * Defines the author.
+     *
+     * @param author (User) : author
+     */
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
-	/**
-	 * Returns the creation date.
-	 *
-	 * @return long : date
-	 */
-	public long getDateCreate() {
-		return dateCreate;
-	}
+    /**
+     * Returns the creation date.
+     *
+     * @return long : date
+     */
+    public long getDateCreate() {
+        return dateCreate;
+    }
 
-	/**
-	 * Defines the creation date.
-	 *
-	 * @param dateCreate (long) : date
-	 */
-	public void setDatCreate(long dateCreate) {
-		this.dateCreate = dateCreate;
-	}
+    /**
+     * Defines the creation date.
+     *
+     * @param dateCreate (long) : date
+     */
+    public void setDatCreate(long dateCreate) {
+        this.dateCreate = dateCreate;
+    }
 
-	/**
-	 * Returns the updating date.
-	 *
-	 * @return long : date
-	 */
-	public long getDatUpdate() {
-		return dateUpdate;
-	}
+    /**
+     * Returns the updating date.
+     *
+     * @return long : date
+     */
+    public long getDatUpdate() {
+        return dateUpdate;
+    }
 
-	/**
-	 * Defines the updating date.
-	 *
-	 * @param dateUpdate (long) : date
-	 */
-	public void setDatUpdate(long dateUpdate) {
-		this.dateUpdate = dateUpdate;
-	}
+    /**
+     * Defines the updating date.
+     *
+     * @param dateUpdate (long) : date
+     */
+    public void setDatUpdate(long dateUpdate) {
+        this.dateUpdate = dateUpdate;
+    }
 
 }

@@ -26,95 +26,96 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class Participant {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Participant {
 
-	/**
-	 * Internal identifier
-	 */
-	private String id;
-	/**
-	 * Name
-	 */
-	private String name;
-	/**
-	 * Structure ID
-	 */
-	private String StructureId;
-	/**
-	 * Participant Type
-	 */
-	private String type;
+    /**
+     * Internal identifier
+     */
+    private String id;
+    /**
+     * Name
+     */
+    private String name;
+    /**
+     * Structure ID
+     */
+    private String StructureId;
+    /**
+     * Participant Type
+     */
+    private String type;
 
-	/**
-	 * Returns the participant identifier.
-	 *
-	 * @return String : ID
-	 */
-	public String getId() {
-		return id;
-	}
+    /**
+     * Returns the participant identifier.
+     *
+     * @return String : ID
+     */
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * Defines the participant identifier.
-	 *
-	 * @param id (String) : ID
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
+    /**
+     * Defines the participant identifier.
+     *
+     * @param id (String) : ID
+     */
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * Returns the name.
-	 *
-	 * @return String : name
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * Returns the name.
+     *
+     * @return String : name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Defines the name.
-	 *
-	 * @param name (String) : name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * Defines the name.
+     *
+     * @param name (String) : name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Returns the Structure identifier.
-	 *
-	 * @return String : structure ID
-	 */
-	public String getStructureId() {
-		return StructureId;
-	}
+    /**
+     * Returns the Structure identifier.
+     *
+     * @return String : structure ID
+     */
+    public String getStructureId() {
+        return StructureId;
+    }
 
-	/**
-	 * Defines the structure identifier.
-	 *
-	 * @param structureId (String) : structure ID
-	 */
-	public void setStructureId(String structureId) {
-		StructureId = structureId;
-	}
+    /**
+     * Defines the structure identifier.
+     *
+     * @param structureId (String) : structure ID
+     */
+    public void setStructureId(String structureId) {
+        StructureId = structureId;
+    }
 
-	/**
-	 * Returns the type.
-	 *
-	 * @return String : type
-	 */
-	public String getType() {
-		return type;
-	}
+    /**
+     * Returns the type.
+     *
+     * @return String : type
+     */
+    public String getType() {
+        return type;
+    }
 
-	/**
-	 * Defines the type.
-	 *
-	 * @param type (String) : type
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * Defines the type.
+     *
+     * @param type (String) : type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 
 }

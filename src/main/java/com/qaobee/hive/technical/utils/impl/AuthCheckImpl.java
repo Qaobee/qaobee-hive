@@ -33,25 +33,26 @@ import java.util.regex.Matcher;
  */
 public final class AuthCheckImpl implements AuthCheck {
 
-	/**
-	 * Validate.
-	 *
-	 * @param emailStr the email str
-	 * @return true, if successful
-	 */
-	private static boolean validate(final String emailStr) {
-		final Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
-		return matcher.find();
-	}
+    /**
+     * Validate.
+     *
+     * @param emailStr the email str
+     * @return true, if successful
+     */
+    private static boolean validate(final String emailStr) {
+        final Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
+        return matcher.find();
+    }
 
-	@Override public boolean testEmail(final String email, final String locale) throws QaobeeException {
-		if (!validate(email.replaceAll("\\[at\\]", "@"))) {
-			throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("email.bad.format", locale));
-		}
-		if (StringUtils.isBlank(email)) {
-			throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("email.required", locale));
-		}
-		return true;
-	}
+    @Override
+    public boolean testEmail(final String email, final String locale) throws QaobeeException {
+        if (!validate(email.replaceAll("\\[at\\]", "@"))) {
+            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("email.bad.format", locale));
+        }
+        if (StringUtils.isBlank(email)) {
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("email.required", locale));
+        }
+        return true;
+    }
 
 }

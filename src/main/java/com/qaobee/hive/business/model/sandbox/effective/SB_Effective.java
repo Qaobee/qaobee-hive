@@ -32,150 +32,151 @@ import java.util.List;
  *
  * @author jerome
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class SB_Effective { // NOSONAR
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SB_Effective { // NOSONAR
 
-	/**
-	 * Internal identifier.
-	 */
-	private String _id; // NOSONAR
-	/**
-	 * Sandbox's id
-	 */
-	private String sandBoxCfgId;
-	/**
-	 * Age category.
-	 */
-	private CategoryAge categoryAge;
-	/**
-	 * List of persons that composed the current group
-	 */
-	private List<Member> members;
-	/**
-	 * Label of the effective
-	 */
-	private String label;
-	/**
-	 * audit CRUD object
-	 */
-	private Audit audit;
+    /**
+     * Internal identifier.
+     */
+    private String _id; // NOSONAR
+    /**
+     * Sandbox's id
+     */
+    private String sandBoxCfgId;
+    /**
+     * Age category.
+     */
+    private CategoryAge categoryAge;
+    /**
+     * List of persons that composed the current group
+     */
+    private List<Member> members;
+    /**
+     * Label of the effective
+     */
+    private String label;
+    /**
+     * audit CRUD object
+     */
+    private Audit audit;
 
-	/**
-	 * Return the internal identifier.
-	 *
-	 * @return the _id (String) : ID
-	 */
-	public final String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Return the internal identifier.
+     *
+     * @return the _id (String) : ID
+     */
+    public final String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 *
-	 * @param _id (String) : ID
-	 */
-	public final void set_id(String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : ID
+     */
+    public final void set_id(String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the age category.
-	 *
-	 * @return CategoryAge : age category
-	 */
-	public CategoryAge getCategoryAge() {
-		return categoryAge;
-	}
+    /**
+     * Returns the age category.
+     *
+     * @return CategoryAge : age category
+     */
+    public CategoryAge getCategoryAge() {
+        return categoryAge;
+    }
 
-	/**
-	 * Defines the age category.
-	 *
-	 * @param categoryAge (CategoryAge) : age category
-	 */
-	public void setCategoryAge(CategoryAge categoryAge) {
-		this.categoryAge = categoryAge;
-	}
+    /**
+     * Defines the age category.
+     *
+     * @param categoryAge (CategoryAge) : age category
+     */
+    public void setCategoryAge(CategoryAge categoryAge) {
+        this.categoryAge = categoryAge;
+    }
 
-	/**
-	 * Returns the list of members.
-	 *
-	 * @return List(Member) : list
-	 */
-	public List<Member> getMembers() {
-		return members;
-	}
+    /**
+     * Returns the list of members.
+     *
+     * @return List(Member) : list
+     */
+    public List<Member> getMembers() {
+        return members;
+    }
 
-	/**
-	 * Defines the list of members.
-	 *
-	 * @param members (List(Member)) : list
-	 */
-	public void setMembers(List<Member> members) {
-		this.members = members;
-	}
+    /**
+     * Defines the list of members.
+     *
+     * @param members (List(Member)) : list
+     */
+    public void setMembers(List<Member> members) {
+        this.members = members;
+    }
 
-	/**
-	 * Adds a member to the effective list.
-	 *
-	 * @param member (Member) : member
-	 */
-	public void addMember(Member member) {
-		if (members == null) {
-			members = new ArrayList<Member>();
-		}
-		members.add(member);
-	}
+    /**
+     * Adds a member to the effective list.
+     *
+     * @param member (Member) : member
+     */
+    public void addMember(Member member) {
+        if (members == null) {
+            members = new ArrayList<Member>();
+        }
+        members.add(member);
+    }
 
-	/**
-	 * Returns the sandbox config ID.
-	 *
-	 * @return String : ID
-	 */
-	public String getSandBoxCfgId() {
-		return sandBoxCfgId;
-	}
+    /**
+     * Returns the sandbox config ID.
+     *
+     * @return String : ID
+     */
+    public String getSandBoxCfgId() {
+        return sandBoxCfgId;
+    }
 
-	/**
-	 * Defines the sandbox cinfig ID.
-	 *
-	 * @param sandBoxCfgId (String) : ID
-	 */
-	public void setSandBoxCfgId(String sandBoxCfgId) {
-		this.sandBoxCfgId = sandBoxCfgId;
-	}
+    /**
+     * Defines the sandbox cinfig ID.
+     *
+     * @param sandBoxCfgId (String) : ID
+     */
+    public void setSandBoxCfgId(String sandBoxCfgId) {
+        this.sandBoxCfgId = sandBoxCfgId;
+    }
 
-	/**
-	 * Returns the label.
-	 *
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the label.
-	 *
-	 * @param label (String) : label
-	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the label.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the audit.
-	 *
-	 * @return Audit : audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * Returns the audit.
+     *
+     * @return Audit : audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * Defines the audit.
-	 *
-	 * @param audit (Audit) : audit
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * Defines the audit.
+     *
+     * @param audit (Audit) : audit
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 }

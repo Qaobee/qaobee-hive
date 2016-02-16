@@ -25,51 +25,52 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author Nada Vujanic-Maquin
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class Member {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Member {
 
-	/**
-	 * Person ID
-	 */
-	private String personId;
-	/**
-	 * Member role
-	 */
-	private Role role;
+    /**
+     * Person ID
+     */
+    private String personId;
+    /**
+     * Member role
+     */
+    private Role role;
 
-	/**
-	 * Returns the person id.
-	 *
-	 * @return String : person ID
-	 */
-	public String getPersonId() {
-		return personId;
-	}
+    /**
+     * Returns the person id.
+     *
+     * @return String : person ID
+     */
+    public String getPersonId() {
+        return personId;
+    }
 
-	/**
-	 * Defines the person id.
-	 *
-	 * @param personId (String) : person ID
-	 */
-	public void setPersonId(final String personId) {
-		this.personId = personId;
-	}
+    /**
+     * Defines the person id.
+     *
+     * @param personId (String) : person ID
+     */
+    public void setPersonId(final String personId) {
+        this.personId = personId;
+    }
 
-	/**
-	 * Returns the role of the member.
-	 *
-	 * @return Role : role
-	 */
-	public Role getRole() {
-		return role;
-	}
+    /**
+     * Returns the role of the member.
+     *
+     * @return Role : role
+     */
+    public Role getRole() {
+        return role;
+    }
 
-	/**
-	 * Defines the role of the member.
-	 *
-	 * @param role (Role) : role
-	 */
-	public void setRole(Role role) {
-		this.role = role;
-	}
+    /**
+     * Defines the role of the member.
+     *
+     * @param role (Role) : role
+     */
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
 }

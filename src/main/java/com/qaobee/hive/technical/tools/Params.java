@@ -29,39 +29,39 @@ import java.util.ResourceBundle;
  */
 public final class Params {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Params.class);
-	private static final String BUNDLE_NAME = "params"; //$NON-NLS-1$
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+    private static final Logger LOG = LoggerFactory.getLogger(Params.class);
+    private static final String BUNDLE_NAME = "params"; //$NON-NLS-1$
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-	/**
-	 * Instantiates a new params.
-	 */
-	private Params() {
-		// vide
-	}
+    /**
+     * Instantiates a new params.
+     */
+    private Params() {
+        // vide
+    }
 
-	/**
-	 * Gets the string.
-	 *
-	 * @param key the key
-	 * @return the string
-	 */
-	public static String getString(final String key) {
-		try {
-			return RESOURCE_BUNDLE.getString(key);
-		} catch (final MissingResourceException e) {
-			LOG.warn(e.getMessage(), e);
-			return '!' + key + '!';
-		}
-	}
+    /**
+     * Gets the string.
+     *
+     * @param key the key
+     * @return the string
+     */
+    public static String getString(final String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (final MissingResourceException e) {
+            LOG.warn(e.getMessage(), e);
+            return '!' + key + '!';
+        }
+    }
 
-	/**
-	 * Contains key.
-	 *
-	 * @param key the key
-	 * @return if found
-	 */
-	public static boolean containsKey(final String key) {
-		return RESOURCE_BUNDLE.containsKey(key);
-	}
+    /**
+     * Contains key.
+     *
+     * @param key the key
+     * @return if found
+     */
+    public static boolean containsKey(final String key) {
+        return RESOURCE_BUNDLE.containsKey(key);
+    }
 }

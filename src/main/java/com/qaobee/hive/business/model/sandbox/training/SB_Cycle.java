@@ -25,61 +25,61 @@ import java.util.List;
  */
 public class SB_Cycle extends TrainingAbstract { // NOSONAR
 
-	/**
-	 * Session's list.
-	 */
-	private List<SB_Session> sessionList;
+    /**
+     * Session's list.
+     */
+    private List<SB_Session> sessionList;
 
-	/**
-	 * Session's start date.
-	 */
-	private long startDate;
+    /**
+     * Session's start date.
+     */
+    private long startDate;
 
-	/**
-	 * Session's end date.
-	 */
-	private long endDate;
+    /**
+     * Session's end date.
+     */
+    private long endDate;
 
-	/**
-	 * @return the sessionList
-	 */
-	public List<SB_Session> getSessionList() {
-		return sessionList;
-	}
+    /**
+     * @return the sessionList
+     */
+    public List<SB_Session> getSessionList() {
+        return sessionList;
+    }
 
-	/**
-	 * @param sessionList the sessionList to set
-	 */
-	public void setSessionList(List<SB_Session> sessionList) {
-		this.sessionList = sessionList;
-	}
+    /**
+     * @param sessionList the sessionList to set
+     */
+    public void setSessionList(List<SB_Session> sessionList) {
+        this.sessionList = sessionList;
+    }
 
-	/**
-	 * @return the startDate
-	 */
-	public long getStartDate() {
-		return startDate;
-	}
+    /**
+     * @return the startDate
+     */
+    public long getStartDate() {
+        return startDate;
+    }
 
-	/**
-	 * @param startDate the startDate to set
-	 */
-	public void setStartDate(long startDate) {
-		this.startDate = startDate;
-	}
+    /**
+     * @param startDate the startDate to set
+     */
+    public void setStartDate(long startDate) {
+        this.startDate = startDate;
+    }
 
-	/**
-	 * @return the endDate
-	 */
-	public long getEndDate() {
-		return endDate;
-	}
+    /**
+     * @return the endDate
+     */
+    public long getEndDate() {
+        return endDate;
+    }
 
-	/**
-	 * @param endDate the endDate to set
-	 */
-	public void setEndDate(long endDate) {
-		this.endDate = endDate;
-	}
+    /**
+     * @param endDate the endDate to set
+     */
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
+    }
 
 }

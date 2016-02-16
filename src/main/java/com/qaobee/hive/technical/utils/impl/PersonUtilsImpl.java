@@ -34,31 +34,33 @@ import java.util.UUID;
  * @author xavier
  */
 public final class PersonUtilsImpl implements PersonUtils {
-	@Inject private PasswordEncryptionService passwordEncryptionService;
+    @Inject
+    private PasswordEncryptionService passwordEncryptionService;
 
-	/**
-	 * Prepare upsert.
-	 *
-	 * @param user a user
-	 * @return a prepared person for upsert
-	 * @throws NoSuchAlgorithmException password encoding problem
-	 * @throws InvalidKeySpecException  password encoding problem
-	 */
-	@Override public User prepareUpsert(final User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
-			final byte[] salt = passwordEncryptionService.generateSalt();
-			user.getAccount().setSalt(salt);
-			user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
-			user.getAccount().setPasswd(null);
-		}
-		if (StringUtils.isBlank(user.getAccount().getActivationCode())) {
-			final String activationcode = UUID.randomUUID().toString().replaceAll("-", "");
-			user.getAccount().setActivationCode(activationcode);
-			user.getAccount().setActive(false);
-			user.getAccount().setFirstConnexion(true);
-			user.setTimestamp(System.currentTimeMillis());
-			user.set_id(null);
-		}
-		return user;
-	}
+    /**
+     * Prepare upsert.
+     *
+     * @param user a user
+     * @return a prepared person for upsert
+     * @throws NoSuchAlgorithmException password encoding problem
+     * @throws InvalidKeySpecException  password encoding problem
+     */
+    @Override
+    public User prepareUpsert(final User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
+            final byte[] salt = passwordEncryptionService.generateSalt();
+            user.getAccount().setSalt(salt);
+            user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
+            user.getAccount().setPasswd(null);
+        }
+        if (StringUtils.isBlank(user.getAccount().getActivationCode())) {
+            final String activationcode = UUID.randomUUID().toString().replaceAll("-", "");
+            user.getAccount().setActivationCode(activationcode);
+            user.getAccount().setActive(false);
+            user.getAccount().setFirstConnexion(true);
+            user.setTimestamp(System.currentTimeMillis());
+            user.set_id(null);
+        }
+        return user;
+    }
 }

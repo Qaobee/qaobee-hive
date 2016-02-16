@@ -25,144 +25,145 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class CategoryAge {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CategoryAge {
 
-	/**
-	 * Category code
-	 */
-	private String code;
+    /**
+     * Category code
+     */
+    private String code;
 
-	/**
-	 * Category label.
-	 */
-	private String label;
+    /**
+     * Category label.
+     */
+    private String label;
 
-	/**
-	 * Age max
-	 */
-	private int ageMax;
+    /**
+     * Age max
+     */
+    private int ageMax;
 
-	/**
-	 * Age min
-	 */
-	private int ageMin;
+    /**
+     * Age min
+     */
+    private int ageMin;
 
-	/**
-	 * Genre
-	 */
-	private String genre;
+    /**
+     * Genre
+     */
+    private String genre;
 
-	/**
-	 * Order list
-	 */
-	private int order;
+    /**
+     * Order list
+     */
+    private int order;
 
-	/**
-	 * Returns the age category code.
-	 *
-	 * @return String : code
-	 */
-	public String getCode() {
-		return code;
-	}
+    /**
+     * Returns the age category code.
+     *
+     * @return String : code
+     */
+    public String getCode() {
+        return code;
+    }
 
-	/**
-	 * Defines the age category code.
-	 *
-	 * @param code (String) : code
-	 */
-	public void setCode(final String code) {
-		this.code = code;
-	}
+    /**
+     * Defines the age category code.
+     *
+     * @param code (String) : code
+     */
+    public void setCode(final String code) {
+        this.code = code;
+    }
 
-	/**
-	 * Returns the age category label.
-	 *
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the age category label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the age category label.
-	 *
-	 * @param label (String) : label
-	 */
-	public void setLabel(final String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the age category label.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(final String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the age max.
-	 *
-	 * @return int : age max
-	 */
-	public int getAgeMax() {
-		return ageMax;
-	}
+    /**
+     * Returns the age max.
+     *
+     * @return int : age max
+     */
+    public int getAgeMax() {
+        return ageMax;
+    }
 
-	/**
-	 * Defines the age max.
-	 *
-	 * @param ageMax (int) : age max
-	 */
-	public void setAgeMax(final int ageMax) {
-		this.ageMax = ageMax;
-	}
+    /**
+     * Defines the age max.
+     *
+     * @param ageMax (int) : age max
+     */
+    public void setAgeMax(final int ageMax) {
+        this.ageMax = ageMax;
+    }
 
-	/**
-	 * Returns the age min.
-	 *
-	 * @return int : age min
-	 */
-	public int getAgeMin() {
-		return ageMin;
-	}
+    /**
+     * Returns the age min.
+     *
+     * @return int : age min
+     */
+    public int getAgeMin() {
+        return ageMin;
+    }
 
-	/**
-	 * Defines the age min.
-	 *
-	 * @param ageMin (int) : age min
-	 */
-	public void setAgeMin(final int ageMin) {
-		this.ageMin = ageMin;
-	}
+    /**
+     * Defines the age min.
+     *
+     * @param ageMin (int) : age min
+     */
+    public void setAgeMin(final int ageMin) {
+        this.ageMin = ageMin;
+    }
 
-	/**
-	 * Returns the genre category.
-	 *
-	 * @return String : genre
-	 */
-	public String getGenre() {
-		return genre;
-	}
+    /**
+     * Returns the genre category.
+     *
+     * @return String : genre
+     */
+    public String getGenre() {
+        return genre;
+    }
 
-	/**
-	 * Defines the genre category.
-	 *
-	 * @param genre (String) : genre
-	 */
-	public void setGenre(final String genre) {
-		this.genre = genre;
-	}
+    /**
+     * Defines the genre category.
+     *
+     * @param genre (String) : genre
+     */
+    public void setGenre(final String genre) {
+        this.genre = genre;
+    }
 
-	/**
-	 * Returns the order in category list.
-	 *
-	 * @return int : order
-	 */
-	public int getOrder() {
-		return order;
-	}
+    /**
+     * Returns the order in category list.
+     *
+     * @return int : order
+     */
+    public int getOrder() {
+        return order;
+    }
 
-	/**
-	 * Defines the order in category list.
-	 *
-	 * @param order (int) : order
-	 */
-	public void setOrder(final int order) {
-		this.order = order;
-	}
+    /**
+     * Defines the order in category list.
+     *
+     * @param order (int) : order
+     */
+    public void setOrder(final int order) {
+        this.order = order;
+    }
 
 }

@@ -48,215 +48,223 @@ import java.util.Map;
  *
  * @author cke
  */
-@DeployableVerticle(isWorker = true) public class CountryVerticle extends AbstractGuiceVerticle {
-	/**
-	 * The Constant GET.
-	 */
-	public static final String GET = Module.VERSION + ".commons.settings.country.get";
-	// Declaration des variables finals
-	/**
-	 * The Constant GET_ALPHA2.
-	 */
-	public static final String GET_ALPHA2 = Module.VERSION + ".commons.settings.country.getAlpha2";
-	/**
-	 * The Constant GET.
-	 */
-	public static final String GET_LIST = Module.VERSION + ".commons.settings.country.getList";
-	/**
-	 * Id of the structure
-	 */
-	public static final String PARAM_ID = "_id";
+@DeployableVerticle(isWorker = true)
+public class CountryVerticle extends AbstractGuiceVerticle {
+    /**
+     * The Constant GET.
+     */
+    public static final String GET = Module.VERSION + ".commons.settings.country.get";
+    // Declaration des variables finals
+    /**
+     * The Constant GET_ALPHA2.
+     */
+    public static final String GET_ALPHA2 = Module.VERSION + ".commons.settings.country.getAlpha2";
+    /**
+     * The Constant GET.
+     */
+    public static final String GET_LIST = Module.VERSION + ".commons.settings.country.getList";
+    /**
+     * Id of the structure
+     */
+    public static final String PARAM_ID = "_id";
 
 	/* List of parameters */
-	/**
-	 * Alpha 2 code
-	 */
-	public static final String PARAM_ALPHA2 = "alpha2";
-	/**
-	 * Label of the structure
-	 */
-	public static final String PARAM_LABEL = "label";
-	/**
-	 * The constant PARAM_LOCAL.
-	 */
-	public static final String PARAM_LOCAL = "local";
-	private static final Logger LOG = LoggerFactory.getLogger(CountryVerticle.class);
-	/* Injections */
-	@Inject private MongoDB mongo;
-	@Inject private Utils utils;
-	@Inject private CountryBusiness countryBusiness;
+    /**
+     * Alpha 2 code
+     */
+    public static final String PARAM_ALPHA2 = "alpha2";
+    /**
+     * Label of the structure
+     */
+    public static final String PARAM_LABEL = "label";
+    /**
+     * The constant PARAM_LOCAL.
+     */
+    public static final String PARAM_LOCAL = "local";
+    private static final Logger LOG = LoggerFactory.getLogger(CountryVerticle.class);
+    /* Injections */
+    @Inject
+    private MongoDB mongo;
+    @Inject
+    private Utils utils;
+    @Inject
+    private CountryBusiness countryBusiness;
 
-	@Override public void start() {
-		super.start();
-		LOG.debug(this.getClass().getName() + " started");
+    @Override
+    public void start() {
+        super.start();
+        LOG.debug(this.getClass().getName() + " started");
 
-		/**
-		 * @api {get} /api/1/commons/settings/country/get Read data of an Country
-		 * @apiVersion 0.1.0
-		 * @apiName get
-		 * @apiGroup Country API
-		 * @apiPermission all
-		 *
-		 * @apiDescription get a country to the collection country in settings module
-		 *
-		 * @apiParam {String} id Mandatory The Country-ID.
-		 *
-		 * @apiSuccess {Country}   country            The Country found.
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> get = new Handler<Message<String>>() {
+        /**
+         * @api {get} /api/1/commons/settings/country/get Read data of an Country
+         * @apiVersion 0.1.0
+         * @apiName get
+         * @apiGroup Country API
+         * @apiPermission all
+         *
+         * @apiDescription get a country to the collection country in settings module
+         *
+         * @apiParam {String} id Mandatory The Country-ID.
+         *
+         * @apiSuccess {Country}   country            The Country found.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> get = new Handler<Message<String>>() {
 
-			@Override public void handle(final Message<String> message) {
-				LOG.debug("get - Country");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					Map<String, List<String>> params = req.getParams();
+            @Override
+            public void handle(final Message<String> message) {
+                LOG.debug("get - Country");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
 
-					utils.testMandatoryParams(params, PARAM_ID);
+                    utils.testMandatoryParams(params, PARAM_ID);
 
-					// Tests mandatory parameters
-					utils.testMandatoryParams(params, PARAM_ID);
-					if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
-					}
+                    // Tests mandatory parameters
+                    utils.testMandatoryParams(params, PARAM_ID);
+                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
+                    }
 
-					final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Country.class);
+                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Country.class);
 
-					LOG.debug("Country found : " + json.toString());
+                    LOG.debug("Country found : " + json.toString());
 
-					message.reply(json.encode());
+                    message.reply(json.encode());
 
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
-		/**
-		 * @api {get} /api/1/commons/settings/country/getAlpha2 Read data of an Country
-		 * @apiVersion 0.1.0
-		 * @apiName get
-		 * @apiGroup Country API
-		 * @apiPermission all
-		 *
-		 * @apiDescription get a country to the collection country in settings module
-		 *
-		 * @apiParam {String} alpha2 Mandatory The Alpha2.
-		 *
-		 * @apiSuccess {Country}   country            The Country found.
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> getAlpha2 = new Handler<Message<String>>() {
+        /**
+         * @api {get} /api/1/commons/settings/country/getAlpha2 Read data of an Country
+         * @apiVersion 0.1.0
+         * @apiName get
+         * @apiGroup Country API
+         * @apiPermission all
+         *
+         * @apiDescription get a country to the collection country in settings module
+         *
+         * @apiParam {String} alpha2 Mandatory The Alpha2.
+         *
+         * @apiSuccess {Country}   country            The Country found.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> getAlpha2 = new Handler<Message<String>>() {
 
-			@Override public void handle(final Message<String> message) {
-				LOG.info("getAlpha2 - Country");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					Map<String, List<String>> params = req.getParams();
+            @Override
+            public void handle(final Message<String> message) {
+                LOG.info("getAlpha2 - Country");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
 
-					utils.testMandatoryParams(params, PARAM_ALPHA2);
+                    utils.testMandatoryParams(params, PARAM_ALPHA2);
 
-					// Tests mandatory parameters
-					if (StringUtils.isBlank(params.get(PARAM_ALPHA2).get(0))) {
-						throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ALPHA2 + " is mandatory");
-					}
+                    // Tests mandatory parameters
+                    if (StringUtils.isBlank(params.get(PARAM_ALPHA2).get(0))) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ALPHA2 + " is mandatory");
+                    }
 
-					Country country = countryBusiness.getCountryFromAlpha2(params.get(PARAM_ALPHA2).get(0));
+                    Country country = countryBusiness.getCountryFromAlpha2(params.get(PARAM_ALPHA2).get(0));
 
-					LOG.info("Country found : " + Json.encodePrettily(country));
+                    LOG.info("Country found : " + Json.encodePrettily(country));
 
-					message.reply(Json.encode(country));
+                    message.reply(Json.encode(country));
 
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
-		/**
-		 * @api {get} /api/1/commons/settings/country/getList Read data of an Country
-		 * @apiVersion 0.1.0
-		 * @apiName getList
-		 * @apiGroup Country API
-		 * @apiPermission all
-		 *
-		 * @apiDescription get a list of countries to the collection Country in settings module
-		 *
-		 * @apiParam {String} label Optional The Country label.
-		 *
-		 * @apiSuccess {List}   countries            The list of countries found.
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		final Handler<Message<String>> getList = new Handler<Message<String>>() {
+        /**
+         * @api {get} /api/1/commons/settings/country/getList Read data of an Country
+         * @apiVersion 0.1.0
+         * @apiName getList
+         * @apiGroup Country API
+         * @apiPermission all
+         *
+         * @apiDescription get a list of countries to the collection Country in settings module
+         *
+         * @apiParam {String} label Optional The Country label.
+         *
+         * @apiSuccess {List}   countries            The list of countries found.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        final Handler<Message<String>> getList = new Handler<Message<String>>() {
 
-			@Override public void handle(final Message<String> message) {
-				LOG.debug("getList() - Country");
-				final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-				try {
-					// Tests on method and parameters
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					Map<String, List<String>> params = req.getParams();
-					utils.testMandatoryParams(params, PARAM_LOCAL);
+            @Override
+            public void handle(final Message<String> message) {
+                LOG.debug("getList() - Country");
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    // Tests on method and parameters
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_LOCAL);
 
-					Map<String, Object> criterias = new HashMap<>();
-					criterias.put(PARAM_LOCAL, params.get(PARAM_LOCAL).get(0));
+                    Map<String, Object> criterias = new HashMap<>();
+                    criterias.put(PARAM_LOCAL, params.get(PARAM_LOCAL).get(0));
 
-					String label = "undefined";
+                    String label = "undefined";
 
-					// label
-					if (params.get(PARAM_LABEL) != null && !StringUtils.isBlank(params.get(PARAM_LABEL).get(0))) {
-						label = params.get(PARAM_LABEL).get(0);
-						criterias.put(PARAM_LABEL, label);
-					}
+                    // label
+                    if (params.get(PARAM_LABEL) != null && !StringUtils.isBlank(params.get(PARAM_LABEL).get(0))) {
+                        label = params.get(PARAM_LABEL).get(0);
+                        criterias.put(PARAM_LABEL, label);
+                    }
 
-					JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Country.class);
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Country.class);
 
-					if (resultJson == null || resultJson.size() == 0) {
-						throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No Country defined for (" + label + ")");
-					}
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No Country defined for (" + label + ")");
+                    }
 
-					message.reply(resultJson.encode());
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
+                    message.reply(resultJson.encode());
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
 		/*
-		 * Handlers registration
+         * Handlers registration
 		 */
-		vertx.eventBus().registerHandler(GET, get);
-		vertx.eventBus().registerHandler(GET_ALPHA2, getAlpha2);
-		vertx.eventBus().registerHandler(GET_LIST, getList);
-	}
+        vertx.eventBus().registerHandler(GET, get);
+        vertx.eventBus().registerHandler(GET_ALPHA2, getAlpha2);
+        vertx.eventBus().registerHandler(GET_LIST, getList);
+    }
 
 }

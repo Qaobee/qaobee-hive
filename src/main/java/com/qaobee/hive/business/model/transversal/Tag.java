@@ -24,72 +24,73 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class Tag {
-	/**
-	 * Internal identifier
-	 */
-	private String _id;
-	/**
-	 * Label
-	 */
-	private String label;
-	/**
-	 * Type
-	 */
-	private String type;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Tag {
+    /**
+     * Internal identifier
+     */
+    private String _id;
+    /**
+     * Label
+     */
+    private String label;
+    /**
+     * Type
+     */
+    private String type;
 
-	/**
-	 * Returns the internal identifier.
-	 *
-	 * @return String : ID
-	 */
-	public String get_id() {
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : ID
+     */
+    public String get_id() {
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 *
-	 * @param _id (String) : ID
-	 */
-	public void set_id(String _id) {
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : ID
+     */
+    public void set_id(String _id) {
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the label.
-	 *
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the label.
-	 *
-	 * @param label (String) : label
-	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the label.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the type.
-	 *
-	 * @return String : type
-	 */
-	public String getType() {
-		return type;
-	}
+    /**
+     * Returns the type.
+     *
+     * @return String : type
+     */
+    public String getType() {
+        return type;
+    }
 
-	/**
-	 * Defines the type.
-	 *
-	 * @param type (String) : type
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * Defines the type.
+     *
+     * @param type (String) : type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
 
 }

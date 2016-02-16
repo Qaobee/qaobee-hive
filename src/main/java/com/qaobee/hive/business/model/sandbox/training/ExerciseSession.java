@@ -25,46 +25,46 @@ package com.qaobee.hive.business.model.sandbox.training;
  */
 public class ExerciseSession extends TrainingAbstract {
 
-	/**
-	 * order number.
-	 */
-	private int orderNumber;
+    /**
+     * order number.
+     */
+    private int orderNumber;
 
-	/**
-	 * Exercice
-	 */
-	private SB_Exercise exercise;
+    /**
+     * Exercice
+     */
+    private SB_Exercise exercise;
 
-	/**
-	 * @return the exercise
-	 */
-	public SB_Exercise getExercise() {
-		return exercise;
-	}
+    /**
+     * @return the exercise
+     */
+    public SB_Exercise getExercise() {
+        return exercise;
+    }
 
-	/**
-	 * @param exercise the exercise to set
-	 */
-	public void setExercise(SB_Exercise exercise) {
-		this.exercise = exercise;
-	}
+    /**
+     * @param exercise the exercise to set
+     */
+    public void setExercise(SB_Exercise exercise) {
+        this.exercise = exercise;
+    }
 
-	/**
-	 * Gets the order number.
-	 *
-	 * @return the order number
-	 */
-	public final int getOrderNumber() {
-		return orderNumber;
-	}
+    /**
+     * Gets the order number.
+     *
+     * @return the order number
+     */
+    public final int getOrderNumber() {
+        return orderNumber;
+    }
 
-	/**
-	 * Sets the order number.
-	 *
-	 * @param orderNumber the new order number
-	 */
-	public final void setOrderNumber(final int orderNumber) {
-		this.orderNumber = orderNumber;
-	}
+    /**
+     * Sets the order number.
+     *
+     * @param orderNumber the new order number
+     */
+    public final void setOrderNumber(final int orderNumber) {
+        this.orderNumber = orderNumber;
+    }
 
 }

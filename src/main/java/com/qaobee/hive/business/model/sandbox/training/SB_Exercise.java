@@ -28,116 +28,116 @@ import java.io.File;
  */
 public class SB_Exercise extends TrainingAbstract { // NOSONAR
 
-	/**
-	 * Objective.
-	 */
-	private String objective;
+    /**
+     * Objective.
+     */
+    private String objective;
 
-	/**
-	 * setting Up.
-	 */
-	private String settingUp;
+    /**
+     * setting Up.
+     */
+    private String settingUp;
 
-	/**
-	 * Execution's variables .
-	 */
-	private String executionVariables;
+    /**
+     * Execution's variables .
+     */
+    private String executionVariables;
 
-	/**
-	 * File .
-	 */
-	private File file;
-	/**
-	 * instructions.
-	 */
-	private String instructions;
-	/**
-	 * criteria of success.
-	 */
-	private String criteriaSuccess;
+    /**
+     * File .
+     */
+    private File file;
+    /**
+     * instructions.
+     */
+    private String instructions;
+    /**
+     * criteria of success.
+     */
+    private String criteriaSuccess;
 
-	/**
-	 * @return the file
-	 */
-	public File getFile() {
-		return file;
-	}
+    /**
+     * @return the file
+     */
+    public File getFile() {
+        return file;
+    }
 
-	/**
-	 * @param file the file to set
-	 */
-	public void setFile(File file) {
-		this.file = file;
-	}
+    /**
+     * @param file the file to set
+     */
+    public void setFile(File file) {
+        this.file = file;
+    }
 
-	/**
-	 * @return the objective
-	 */
-	public String getObjective() {
-		return objective;
-	}
+    /**
+     * @return the objective
+     */
+    public String getObjective() {
+        return objective;
+    }
 
-	/**
-	 * @param objective the objective to set
-	 */
-	public void setObjective(String objective) {
-		this.objective = objective;
-	}
+    /**
+     * @param objective the objective to set
+     */
+    public void setObjective(String objective) {
+        this.objective = objective;
+    }
 
-	/**
-	 * @return the settingUp
-	 */
-	public String getSettingUp() {
-		return settingUp;
-	}
+    /**
+     * @return the settingUp
+     */
+    public String getSettingUp() {
+        return settingUp;
+    }
 
-	/**
-	 * @param settingUp the settingUp to set
-	 */
-	public void setSettingUp(String settingUp) {
-		this.settingUp = settingUp;
-	}
+    /**
+     * @param settingUp the settingUp to set
+     */
+    public void setSettingUp(String settingUp) {
+        this.settingUp = settingUp;
+    }
 
-	/**
-	 * @return the executionVariables
-	 */
-	public String getExecutionVariables() {
-		return executionVariables;
-	}
+    /**
+     * @return the executionVariables
+     */
+    public String getExecutionVariables() {
+        return executionVariables;
+    }
 
-	/**
-	 * @param executionVariables the executionVariables to set
-	 */
-	public void setExecutionVariables(String executionVariables) {
-		this.executionVariables = executionVariables;
-	}
+    /**
+     * @param executionVariables the executionVariables to set
+     */
+    public void setExecutionVariables(String executionVariables) {
+        this.executionVariables = executionVariables;
+    }
 
-	/**
-	 * @return the instructions
-	 */
-	public String getInstructions() {
-		return instructions;
-	}
+    /**
+     * @return the instructions
+     */
+    public String getInstructions() {
+        return instructions;
+    }
 
-	/**
-	 * @param instructions the instructions to set
-	 */
-	public void setInstructions(String instructions) {
-		this.instructions = instructions;
-	}
+    /**
+     * @param instructions the instructions to set
+     */
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
 
-	/**
-	 * @return the criteriaSuccess
-	 */
-	public String getCriteriaSuccess() {
-		return criteriaSuccess;
-	}
+    /**
+     * @return the criteriaSuccess
+     */
+    public String getCriteriaSuccess() {
+        return criteriaSuccess;
+    }
 
-	/**
-	 * @param criteriaSuccess the criteriaSuccess to set
-	 */
-	public void setCriteriaSuccess(String criteriaSuccess) {
-		this.criteriaSuccess = criteriaSuccess;
-	}
+    /**
+     * @param criteriaSuccess the criteriaSuccess to set
+     */
+    public void setCriteriaSuccess(String criteriaSuccess) {
+        this.criteriaSuccess = criteriaSuccess;
+    }
 
 }

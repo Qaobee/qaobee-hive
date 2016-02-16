@@ -26,138 +26,138 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
 
 public class Comment {
 
-	/**
-	 * The _id.
-	 */
-	private String _id; // NOSONAR
+    /**
+     * The _id.
+     */
+    private String _id; // NOSONAR
 
-	/**
-	 * Author Id.
-	 */
-	private String authorId;
+    /**
+     * Author Id.
+     */
+    private String authorId;
 
-	/**
-	 * Create date.
-	 */
-	private long datCreate;
+    /**
+     * Create date.
+     */
+    private long datCreate;
 
-	/**
-	 * Content.
-	 */
-	private String Content;
+    /**
+     * Content.
+     */
+    private String Content;
 
-	/**
-	 * Content max size.
-	 */
-	private int ContentMaxsize;
+    /**
+     * Content max size.
+     */
+    private int ContentMaxsize;
 
-	/**
-	 * Comment's status.
-	 */
-	private CommentStatusEnum commentStatus;
+    /**
+     * Comment's status.
+     */
+    private CommentStatusEnum commentStatus;
 
-	/**
-	 * Gets the _id.
-	 *
-	 * @return the _id
-	 */
-	public final String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Gets the _id.
+     *
+     * @return the _id
+     */
+    public final String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Sets the _id.
-	 *
-	 * @param _id the _id to set
-	 */
-	public final void set_id(final String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Sets the _id.
+     *
+     * @param _id the _id to set
+     */
+    public final void set_id(final String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Gets the create date.
-	 *
-	 * @return the create date
-	 */
-	public final long getDatCreate() {
-		return datCreate;
-	}
+    /**
+     * Gets the create date.
+     *
+     * @return the create date
+     */
+    public final long getDatCreate() {
+        return datCreate;
+    }
 
-	/**
-	 * Sets the create date.
-	 *
-	 * @param datCreate the new create date
-	 */
-	public final void setDatCreate(final long datCreate) {
-		this.datCreate = datCreate;
-	}
+    /**
+     * Sets the create date.
+     *
+     * @param datCreate the new create date
+     */
+    public final void setDatCreate(final long datCreate) {
+        this.datCreate = datCreate;
+    }
 
-	/**
-	 * Gets the content.
-	 *
-	 * @return the content
-	 */
-	public final String getContent() {
-		return Content;
-	}
+    /**
+     * Gets the content.
+     *
+     * @return the content
+     */
+    public final String getContent() {
+        return Content;
+    }
 
-	/**
-	 * Sets the content.
-	 *
-	 * @param content the new content
-	 */
-	public final void setContent(final String content) {
-		Content = content;
-	}
+    /**
+     * Sets the content.
+     *
+     * @param content the new content
+     */
+    public final void setContent(final String content) {
+        Content = content;
+    }
 
-	/**
-	 * Gets the content maxsize.
-	 *
-	 * @return the content maxsize
-	 */
-	public final int getContentMaxsize() {
-		return ContentMaxsize;
-	}
+    /**
+     * Gets the content maxsize.
+     *
+     * @return the content maxsize
+     */
+    public final int getContentMaxsize() {
+        return ContentMaxsize;
+    }
 
-	/**
-	 * Sets the content maxsize.
-	 *
-	 * @param contentMaxsize the new content maxsize
-	 */
-	public final void setContentMaxsize(final int contentMaxsize) {
-		ContentMaxsize = contentMaxsize;
-	}
+    /**
+     * Sets the content maxsize.
+     *
+     * @param contentMaxsize the new content maxsize
+     */
+    public final void setContentMaxsize(final int contentMaxsize) {
+        ContentMaxsize = contentMaxsize;
+    }
 
-	/**
-	 * Gets the comment's status.
-	 *
-	 * @return the comment's status
-	 */
-	public final CommentStatusEnum getCommentStatus() {
-		return commentStatus;
-	}
+    /**
+     * Gets the comment's status.
+     *
+     * @return the comment's status
+     */
+    public final CommentStatusEnum getCommentStatus() {
+        return commentStatus;
+    }
 
-	/**
-	 * Sets the comment's status.
-	 *
-	 * @param commentStatus the new comment's status
-	 */
-	public final void setCommentStatus(final CommentStatusEnum commentStatus) {
-		this.commentStatus = commentStatus;
-	}
+    /**
+     * Sets the comment's status.
+     *
+     * @param commentStatus the new comment's status
+     */
+    public final void setCommentStatus(final CommentStatusEnum commentStatus) {
+        this.commentStatus = commentStatus;
+    }
 
-	/**
-	 * @return the authorId
-	 */
-	public String getAuthorId() {
-		return authorId;
-	}
+    /**
+     * @return the authorId
+     */
+    public String getAuthorId() {
+        return authorId;
+    }
 
-	/**
-	 * @param authorId the authorId to set
-	 */
-	public void setAuthorId(String authorId) {
-		this.authorId = authorId;
-	}
+    /**
+     * @param authorId the authorId to set
+     */
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
+    }
 
 }

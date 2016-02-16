@@ -25,16 +25,16 @@ package com.qaobee.hive.business.model.commons.users.account;
  */
 public enum LevelPlan {
 
-	/**
-	 * The demo.
-	 */
-	DEMO,
-	/**
-	 * the freemium.
-	 */
-	FREEMIUM,
-	/**
-	 * The premium.
-	 */
-	PREMIUM
+    /**
+     * The demo.
+     */
+    DEMO,
+    /**
+     * the freemium.
+     */
+    FREEMIUM,
+    /**
+     * The premium.
+     */
+    PREMIUM
 }

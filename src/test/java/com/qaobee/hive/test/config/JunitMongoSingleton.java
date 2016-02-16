@@ -37,81 +37,81 @@ import java.io.IOException;
  */
 public class JunitMongoSingleton {
 
-	/**
-	 * The mongod executable.
-	 */
-	private static MongodExecutable mongodExecutable = null;
+    /**
+     * The mongod executable.
+     */
+    private static MongodExecutable mongodExecutable = null;
 
-	/**
-	 * The starter.
-	 */
-	private static MongodStarter starter = MongodStarter.getDefaultInstance();
+    /**
+     * The starter.
+     */
+    private static MongodStarter starter = MongodStarter.getDefaultInstance();
 
-	/**
-	 * The process.
-	 */
-	private MongodProcess process;
+    /**
+     * The process.
+     */
+    private MongodProcess process;
 
-	/**
-	 * Instantiates a new junit mongo singleton.
-	 */
-	private JunitMongoSingleton() {
-		//
-	}
+    /**
+     * Instantiates a new junit mongo singleton.
+     */
+    private JunitMongoSingleton() {
+        //
+    }
 
-	/**
-	 * Gets the single instance of JunitMongoSingleton.
-	 *
-	 * @return the instance
-	 */
-	public static JunitMongoSingleton getInstance() {
-		return JunitMongoSingletonHolder.INSTANCE;
-	}
+    /**
+     * Gets the single instance of JunitMongoSingleton.
+     *
+     * @return the instance
+     */
+    public static JunitMongoSingleton getInstance() {
+        return JunitMongoSingletonHolder.INSTANCE;
+    }
 
-	/**
-	 * Start server.
-	 *
-	 * @param config the config
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public void startServer(JsonObject config) throws IOException {
-		System.out.println("testing process : " + process);
-		if (process == null || !process.isProcessRunning()) {
-			System.out.println("Running mongod");
-			int port = config.getObject("mongo.persistor").getInteger("port");
-			IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.V2_4).net(new Net(port, Network.localhostIsIPv6())).build();
-			mongodExecutable = starter.prepare(mongodConfig);
-			setProcess(mongodExecutable.start());
-		}
-	}
+    /**
+     * Start server.
+     *
+     * @param config the config
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public void startServer(JsonObject config) throws IOException {
+        System.out.println("testing process : " + process);
+        if (process == null || !process.isProcessRunning()) {
+            System.out.println("Running mongod");
+            int port = config.getObject("mongo.persistor").getInteger("port");
+            IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.V2_4).net(new Net(port, Network.localhostIsIPv6())).build();
+            mongodExecutable = starter.prepare(mongodConfig);
+            setProcess(mongodExecutable.start());
+        }
+    }
 
-	/**
-	 * Gets the process.
-	 *
-	 * @return the process
-	 */
-	public MongodProcess getProcess() {
-		return process;
-	}
+    /**
+     * Gets the process.
+     *
+     * @return the process
+     */
+    public MongodProcess getProcess() {
+        return process;
+    }
 
-	/**
-	 * Sets the process.
-	 *
-	 * @param process the process to set
-	 */
-	public void setProcess(MongodProcess process) {
-		this.process = process;
-	}
+    /**
+     * Sets the process.
+     *
+     * @param process the process to set
+     */
+    public void setProcess(MongodProcess process) {
+        this.process = process;
+    }
 
-	/**
-	 * Holder.
-	 */
-	private static class JunitMongoSingletonHolder {
+    /**
+     * Holder.
+     */
+    private static class JunitMongoSingletonHolder {
 
-		/**
-		 * unique instance *.
-		 */
-		private static final JunitMongoSingleton INSTANCE = new JunitMongoSingleton();
-	}
+        /**
+         * unique instance *.
+         */
+        private static final JunitMongoSingleton INSTANCE = new JunitMongoSingleton();
+    }
 
 }

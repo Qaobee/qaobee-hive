@@ -27,23 +27,23 @@ import java.util.List;
  */
 public class SB_Session extends TrainingAbstract { // NOSONAR
 
-	/**
-	 * List exerciseSession.
-	 */
-	private List<ExerciseSession> exerciseSessionList;
+    /**
+     * List exerciseSession.
+     */
+    private List<ExerciseSession> exerciseSessionList;
 
-	/**
-	 * @return the exerciseSessionList
-	 */
-	public List<ExerciseSession> getExerciseSessionList() {
-		return exerciseSessionList;
-	}
+    /**
+     * @return the exerciseSessionList
+     */
+    public List<ExerciseSession> getExerciseSessionList() {
+        return exerciseSessionList;
+    }
 
-	/**
-	 * @param exerciseSessionList the exerciseSessionList to set
-	 */
-	public void setExerciseSessionList(List<ExerciseSession> exerciseSessionList) {
-		this.exerciseSessionList = exerciseSessionList;
-	}
+    /**
+     * @param exerciseSessionList the exerciseSessionList to set
+     */
+    public void setExerciseSessionList(List<ExerciseSession> exerciseSessionList) {
+        this.exerciseSessionList = exerciseSessionList;
+    }
 
 }

@@ -26,51 +26,52 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class EventOwner {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class EventOwner {
 
-	/**
-	 * Owner identifier
-	 */
-	private String ownerId;
-	/**
-	 * Owner type
-	 */
-	private String ownerType;
+    /**
+     * Owner identifier
+     */
+    private String ownerId;
+    /**
+     * Owner type
+     */
+    private String ownerType;
 
-	/**
-	 * Returns the owner identifier.
-	 *
-	 * @return String : owner ID
-	 */
-	public String getOwnerId() {
-		return ownerId;
-	}
+    /**
+     * Returns the owner identifier.
+     *
+     * @return String : owner ID
+     */
+    public String getOwnerId() {
+        return ownerId;
+    }
 
-	/**
-	 * Defines the owner identifier.
-	 *
-	 * @param ownerId (String) : owener ID
-	 */
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
+    /**
+     * Defines the owner identifier.
+     *
+     * @param ownerId (String) : owener ID
+     */
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
 
-	/**
-	 * Returns the owner type.
-	 *
-	 * @return String : type
-	 */
-	public String getOwnerType() {
-		return ownerType;
-	}
+    /**
+     * Returns the owner type.
+     *
+     * @return String : type
+     */
+    public String getOwnerType() {
+        return ownerType;
+    }
 
-	/**
-	 * Defines the owner type.
-	 *
-	 * @param ownerType (String) : type
-	 */
-	public void setOwnerType(String ownerType) {
-		this.ownerType = ownerType;
-	}
+    /**
+     * Defines the owner type.
+     *
+     * @param ownerType (String) : type
+     */
+    public void setOwnerType(String ownerType) {
+        this.ownerType = ownerType;
+    }
 
 }

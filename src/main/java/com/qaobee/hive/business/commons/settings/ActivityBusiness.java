@@ -26,11 +26,11 @@ import com.qaobee.hive.business.model.commons.settings.Activity;
  */
 public interface ActivityBusiness {
 
-	/**
-	 * Gets activity from id.
-	 *
-	 * @param id the id
-	 * @return the activity from id
-	 */
-	Activity getActivityFromId(String id);
+    /**
+     * Gets activity from id.
+     *
+     * @param id the id
+     * @return the activity from id
+     */
+    Activity getActivityFromId(String id);
 }

@@ -28,21 +28,22 @@ import com.qaobee.hive.technical.utils.HabilitUtils;
  */
 public final class HabilitUtilsImpl implements HabilitUtils {
 
-	/**
-	 * Checks for habilitation.
-	 *
-	 * @param u   The person
-	 * @param key Habilitation key
-	 * @return true si le user la possède
-	 */
-	@Override public boolean hasHabilitation(final User u, final String key) {
-		if (u.getAccount().getHabilitations() != null) {
-			for (final Habilitation h : u.getAccount().getHabilitations()) {
-				if (key.equals(h.getKey())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    /**
+     * Checks for habilitation.
+     *
+     * @param u   The person
+     * @param key Habilitation key
+     * @return true si le user la possède
+     */
+    @Override
+    public boolean hasHabilitation(final User u, final String key) {
+        if (u.getAccount().getHabilitations() != null) {
+            for (final Habilitation h : u.getAccount().getHabilitations()) {
+                if (key.equals(h.getKey())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

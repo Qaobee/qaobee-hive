@@ -26,11 +26,11 @@ import com.qaobee.hive.business.model.commons.settings.Country;
  */
 public interface CountryBusiness {
 
-	/**
-	 * Gets country from alpha 2.
-	 *
-	 * @param alpha2 the alpha 2
-	 * @return the country from alpha 2
-	 */
-	Country getCountryFromAlpha2(String alpha2);
+    /**
+     * Gets country from alpha 2.
+     *
+     * @param alpha2 the alpha 2
+     * @return the country from alpha 2
+     */
+    Country getCountryFromAlpha2(String alpha2);
 }

@@ -28,13 +28,13 @@ import java.security.spec.InvalidKeySpecException;
  * The interface Person utils.
  */
 public interface PersonUtils {
-	/**
-	 * Prepare upsert.
-	 *
-	 * @param u a user
-	 * @return a prepared person for upsert
-	 * @throws NoSuchAlgorithmException the no such algorithm exception
-	 * @throws InvalidKeySpecException  the invalid key spec exception
-	 */
-	User prepareUpsert(User u) throws NoSuchAlgorithmException, InvalidKeySpecException;
+    /**
+     * Prepare upsert.
+     *
+     * @param u a user
+     * @return a prepared person for upsert
+     * @throws NoSuchAlgorithmException the no such algorithm exception
+     * @throws InvalidKeySpecException  the invalid key spec exception
+     */
+    User prepareUpsert(User u) throws NoSuchAlgorithmException, InvalidKeySpecException;
 }

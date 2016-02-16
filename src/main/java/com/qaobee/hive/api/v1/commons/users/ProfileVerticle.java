@@ -52,240 +52,250 @@ import java.text.DateFormat;
  *
  * @author Xavier MARIN
  */
-@DeployableVerticle public class ProfileVerticle extends AbstractGuiceVerticle {
-	/**
-	 * The Constant UPDATE.
-	 */
-	public static final String UPDATE = Module.VERSION + ".commons.users.profile";
-	/**
-	 * The Constant GENERATE_PDF.
-	 */
-	public static final String GENERATE_PDF = Module.VERSION + ".commons.users.profile.pdf";
-	/**
-	 * The Constant GENERATE_BILL_PDF.
-	 */
-	public static final String GENERATE_BILL_PDF = Module.VERSION + ".commons.users.profile.billpdf";
-	/**
-	 * The Constant UPDATE_AVATAR.
-	 */
-	public static final String UPDATE_AVATAR = "user.update.avatar";
-	private static final Logger LOG = LoggerFactory.getLogger(ProfileVerticle.class);
-	/* Injections */
-	@Inject private MongoDB mongo;
-	@Inject private Utils utils;
-	@Inject private PasswordEncryptionService passwordEncryptionService;
+@DeployableVerticle
+public class ProfileVerticle extends AbstractGuiceVerticle {
+    /**
+     * The Constant UPDATE.
+     */
+    public static final String UPDATE = Module.VERSION + ".commons.users.profile";
+    /**
+     * The Constant GENERATE_PDF.
+     */
+    public static final String GENERATE_PDF = Module.VERSION + ".commons.users.profile.pdf";
+    /**
+     * The Constant GENERATE_BILL_PDF.
+     */
+    public static final String GENERATE_BILL_PDF = Module.VERSION + ".commons.users.profile.billpdf";
+    /**
+     * The Constant UPDATE_AVATAR.
+     */
+    public static final String UPDATE_AVATAR = "user.update.avatar";
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileVerticle.class);
+    /* Injections */
+    @Inject
+    private MongoDB mongo;
+    @Inject
+    private Utils utils;
+    @Inject
+    private PasswordEncryptionService passwordEncryptionService;
 
-	/**
-	 * Get a message handler
-	 *
-	 * @param message Vertx message
-	 * @return handler
-	 */
-	private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
-		return new Handler<AsyncResult<Message<JsonObject>>>() {
-			@Override public void handle(final AsyncResult<Message<JsonObject>> pdfResp) {
-				if (pdfResp.failed()) {
-					LOG.error(pdfResp.cause().getMessage(), pdfResp.cause());
-					utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
-				} else {
-					final JsonObject json = new JsonObject();
-					json.putString(Main.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE);
-					json.putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF));
-					message.reply(json.encode());
-				}
-			}
-		};
+    /**
+     * Get a message handler
+     *
+     * @param message Vertx message
+     * @return handler
+     */
+    private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
+        return new Handler<AsyncResult<Message<JsonObject>>>() {
+            @Override
+            public void handle(final AsyncResult<Message<JsonObject>> pdfResp) {
+                if (pdfResp.failed()) {
+                    LOG.error(pdfResp.cause().getMessage(), pdfResp.cause());
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
+                } else {
+                    final JsonObject json = new JsonObject();
+                    json.putString(Main.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE);
+                    json.putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF));
+                    message.reply(json.encode());
+                }
+            }
+        };
 
-	}
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.vertx.java.platform.Verticle#start()
-	 */
-	@Override public void start() {
-		super.start();
-		LOG.debug(this.getClass().getName() + " started");
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.vertx.java.platform.Verticle#start()
+     */
+    @Override
+    public void start() {
+        super.start();
+        LOG.debug(this.getClass().getName() + " started");
 
-		/**
-		 * @apiDescription User update
-		 * @api {post} /api/1/commons/users/profile update user
-		 * @apiName updateUserHandler
-		 * @apiGroup ProfileVerticle
-		 * @apiParam {Object} User com.qaobee.hive.business.model.commons.users.User
-		 * @apiSuccess {Object} User com.qaobee.hive.business.model.commons.users.User
-		 * @apiError PASSWD_EXCEPTION Password exception
-		 * @apiError HTTP_ERROR wrong request's method
-		 */
-		final Handler<Message<String>> updateUserHandler = new Handler<Message<String>>() {
-			@Override public void handle(final Message<String> message) {
-				final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-				try {
-					utils.testHTTPMetod(Constantes.POST, req.getMethod());
-					JsonObject u = new JsonObject(req.getBody());
-					final User user = Json.decodeValue(req.getBody(), User.class);
-					if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
-						final byte[] salt = passwordEncryptionService.generateSalt();
-						user.getAccount().setSalt(salt);
-						user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
-						user.getAccount().setPasswd(null);
-						u.putObject("account", new JsonObject(Json.encode(user.getAccount())));
-					} else {
-						JsonObject p = mongo.getById(user.get_id(), User.class.getSimpleName());
-						u.putObject("account", p.getObject("account"));
-					}
+        /**
+         * @apiDescription User update
+         * @api {post} /api/1/commons/users/profile update user
+         * @apiName updateUserHandler
+         * @apiGroup ProfileVerticle
+         * @apiParam {Object} User com.qaobee.hive.business.model.commons.users.User
+         * @apiSuccess {Object} User com.qaobee.hive.business.model.commons.users.User
+         * @apiError PASSWD_EXCEPTION Password exception
+         * @apiError HTTP_ERROR wrong request's method
+         */
+        final Handler<Message<String>> updateUserHandler = new Handler<Message<String>>() {
+            @Override
+            public void handle(final Message<String> message) {
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    JsonObject u = new JsonObject(req.getBody());
+                    final User user = Json.decodeValue(req.getBody(), User.class);
+                    if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
+                        final byte[] salt = passwordEncryptionService.generateSalt();
+                        user.getAccount().setSalt(salt);
+                        user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
+                        user.getAccount().setPasswd(null);
+                        u.putObject("account", new JsonObject(Json.encode(user.getAccount())));
+                    } else {
+                        JsonObject p = mongo.getById(user.get_id(), User.class.getSimpleName());
+                        u.putObject("account", p.getObject("account"));
+                    }
 
-					mongo.save(u, User.class.getSimpleName());
-					message.reply(u.encode());
-				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.PASSWD_EXCEPTION, e.getMessage());
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
+                    mongo.save(u, User.class.getSimpleName());
+                    message.reply(u.encode());
+                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.PASSWD_EXCEPTION, e.getMessage());
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
-		/**
-		 * @apiDescription Generate a PDF from the current profile
-		 * @api {get} /api/1/commons/users/profile/pdf Generate a PDF from the current profile
-		 * @apiName generatePDFHandler
-		 * @apiGroup ProfileVerticle
-		 * @apiSuccess {Object} PDF { "contenttype" : "application/pdf", 'fileserve" : "path to local pdf file" }
-		 * @apiError HTTP_ERROR wrong request's method
-		 */
-		final Handler<Message<String>> generatePDFHandler = new Handler<Message<String>>() {
-			@Override public void handle(final Message<String> message) {
-				final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-				try {
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.isUserLogged(req);
-					final User user = req.getUser();
+        /**
+         * @apiDescription Generate a PDF from the current profile
+         * @api {get} /api/1/commons/users/profile/pdf Generate a PDF from the current profile
+         * @apiName generatePDFHandler
+         * @apiGroup ProfileVerticle
+         * @apiSuccess {Object} PDF { "contenttype" : "application/pdf", 'fileserve" : "path to local pdf file" }
+         * @apiError HTTP_ERROR wrong request's method
+         */
+        final Handler<Message<String>> generatePDFHandler = new Handler<Message<String>>() {
+            @Override
+            public void handle(final Message<String> message) {
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
+                    final User user = req.getUser();
 
-					final JsonObject juser = new JsonObject();
-					if (StringUtils.isNoneBlank(user.getAvatar())) {
-						juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
-					}
-					juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-					if (user.getAddress() != null) {
-						if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-							juser.putString("address", user.getAddress().getFormatedAddress());
-						} else {
-							juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
-						}
-					}
-					juser.putString("firstname", user.getFirstname());
-					juser.putString("name", user.getName());
-					juser.putString("username", user.getAccount().getLogin());
-					juser.putString("phoneNumber", user.getContact().getHome());
-					juser.putString("email", user.getContact().getEmail());
+                    final JsonObject juser = new JsonObject();
+                    if (StringUtils.isNoneBlank(user.getAvatar())) {
+                        juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
+                    }
+                    juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
+                    if (user.getAddress() != null) {
+                        if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
+                            juser.putString("address", user.getAddress().getFormatedAddress());
+                        } else {
+                            juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
+                        }
+                    }
+                    juser.putString("firstname", user.getFirstname());
+                    juser.putString("name", user.getName());
+                    juser.putString("username", user.getAccount().getLogin());
+                    juser.putString("phoneNumber", user.getContact().getHome());
+                    juser.putString("email", user.getContact().getEmail());
 
-					final JsonObject pdfReq = new JsonObject();
-					pdfReq.putString(PDFVerticle.FILE_NAME, user.getAccount().getLogin());
-					pdfReq.putString(PDFVerticle.TEMPLATE, "profile/profile.ftl");
-					pdfReq.putObject(PDFVerticle.DATA, juser);
+                    final JsonObject pdfReq = new JsonObject();
+                    pdfReq.putString(PDFVerticle.FILE_NAME, user.getAccount().getLogin());
+                    pdfReq.putString(PDFVerticle.TEMPLATE, "profile/profile.ftl");
+                    pdfReq.putObject(PDFVerticle.DATA, juser);
 
-					vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
+                    vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
-		/**
-		 * @apiDescription Generate a PDF from the bill of the current profile
-		 * @api {get} /api/1/commons/users/profile/billpdf?id= Generate a PDF from the bill of the current profile
-		 * @apiName generateBillPDFHandler
-		 * @apiGroup ProfileVerticle
-		 * @apiParam {String} plan plan type
-		 * @apiSuccess {Object} PDF { "contenttype" : "application/pdf", 'fileserve" : "path to local pdf file" }
-		 * @apiError HTTP_ERROR wrong request's method
-		 */
-		final Handler<Message<String>> generateBillPDFHandler = new Handler<Message<String>>() {
-			@Override public void handle(final Message<String> message) {
-				final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-				try {
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.isUserLogged(req);
-					final User user = req.getUser();
-					Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(req.getParams().get("id").get(0)));
+        /**
+         * @apiDescription Generate a PDF from the bill of the current profile
+         * @api {get} /api/1/commons/users/profile/billpdf?id= Generate a PDF from the bill of the current profile
+         * @apiName generateBillPDFHandler
+         * @apiGroup ProfileVerticle
+         * @apiParam {String} plan plan type
+         * @apiSuccess {Object} PDF { "contenttype" : "application/pdf", 'fileserve" : "path to local pdf file" }
+         * @apiError HTTP_ERROR wrong request's method
+         */
+        final Handler<Message<String>> generateBillPDFHandler = new Handler<Message<String>>() {
+            @Override
+            public void handle(final Message<String> message) {
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
+                    final User user = req.getUser();
+                    Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(req.getParams().get("id").get(0)));
 
-					final JsonObject juser = new JsonObject();
-					if (StringUtils.isNoneBlank(user.getAvatar())) {
-						juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
-					}
-					juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-					if (user.getAddress() != null) {
-						if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-							juser.putString("address", user.getAddress().getFormatedAddress());
-						} else {
-							juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
-						}
-					}
-					juser.putString("firstname", user.getFirstname());
-					juser.putString("name", user.getName());
-					juser.putString("username", user.getAccount().getLogin());
-					juser.putString("phoneNumber", user.getContact().getHome());
-					juser.putString("email", user.getContact().getEmail());
-					juser.putString("paidDate", utils.formatDate(planItem.getPaidDate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-					juser.putString("paymentId", planItem.getPaymentId());
-					juser.putString("plan", planItem.getLevelPlan().name());
-					juser.putString("amountPaid", String.valueOf(planItem.getAmountPaid()));
+                    final JsonObject juser = new JsonObject();
+                    if (StringUtils.isNoneBlank(user.getAvatar())) {
+                        juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
+                    }
+                    juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
+                    if (user.getAddress() != null) {
+                        if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
+                            juser.putString("address", user.getAddress().getFormatedAddress());
+                        } else {
+                            juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
+                        }
+                    }
+                    juser.putString("firstname", user.getFirstname());
+                    juser.putString("name", user.getName());
+                    juser.putString("username", user.getAccount().getLogin());
+                    juser.putString("phoneNumber", user.getContact().getHome());
+                    juser.putString("email", user.getContact().getEmail());
+                    juser.putString("paidDate", utils.formatDate(planItem.getPaidDate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
+                    juser.putString("paymentId", planItem.getPaymentId());
+                    juser.putString("plan", planItem.getLevelPlan().name());
+                    juser.putString("amountPaid", String.valueOf(planItem.getAmountPaid()));
 
-					final JsonObject pdfReq = new JsonObject();
-					pdfReq.putString(PDFVerticle.FILE_NAME, planItem.getPaymentId() + "-Qaobee");
-					pdfReq.putString(PDFVerticle.TEMPLATE, "billing/bill.ftl");
-					pdfReq.putObject(PDFVerticle.DATA, juser);
-					vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
+                    final JsonObject pdfReq = new JsonObject();
+                    pdfReq.putString(PDFVerticle.FILE_NAME, planItem.getPaymentId() + "-Qaobee");
+                    pdfReq.putString(PDFVerticle.TEMPLATE, "billing/bill.ftl");
+                    pdfReq.putObject(PDFVerticle.DATA, juser);
+                    vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
 
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				}
-			}
-		};
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
-		// Update a person's avatar
-		final Handler<Message<String>> updateAvatar = new Handler<Message<String>>() {
-			/*
-			 * (non-Javadoc)
-			 *
-			 * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-			 */
-			@Override public void handle(final Message<String> message) {
-				final JsonObject req = new JsonObject(message.body());
-				JsonObject jsonperson;
-				try {
-					jsonperson = mongo.getById(req.getString("uid"), User.class);
-					jsonperson.putString("avatar", req.getString("filename"));
-					mongo.save(jsonperson, User.class);
-					message.reply(jsonperson);
-				} catch (final EncodeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-				} catch (QaobeeException e) {
-					utils.sendError(message, e);
-				}
-			}
-		};
+        // Update a person's avatar
+        final Handler<Message<String>> updateAvatar = new Handler<Message<String>>() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
+             */
+            @Override
+            public void handle(final Message<String> message) {
+                final JsonObject req = new JsonObject(message.body());
+                JsonObject jsonperson;
+                try {
+                    jsonperson = mongo.getById(req.getString("uid"), User.class);
+                    jsonperson.putString("avatar", req.getString("filename"));
+                    mongo.save(jsonperson, User.class);
+                    message.reply(jsonperson);
+                } catch (final EncodeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+                } catch (QaobeeException e) {
+                    utils.sendError(message, e);
+                }
+            }
+        };
 
 		/*
-		 * handlers registration
+         * handlers registration
 		 */
-		vertx.eventBus().registerHandler(UPDATE, updateUserHandler);
-		vertx.eventBus().registerHandler(GENERATE_PDF, generatePDFHandler);
-		vertx.eventBus().registerHandler(GENERATE_BILL_PDF, generateBillPDFHandler);
-		vertx.eventBus().registerHandler(UPDATE_AVATAR, updateAvatar);
-	}
+        vertx.eventBus().registerHandler(UPDATE, updateUserHandler);
+        vertx.eventBus().registerHandler(GENERATE_PDF, generatePDFHandler);
+        vertx.eventBus().registerHandler(GENERATE_BILL_PDF, generateBillPDFHandler);
+        vertx.eventBus().registerHandler(UPDATE_AVATAR, updateAvatar);
+    }
 }

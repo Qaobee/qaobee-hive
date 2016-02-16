@@ -50,129 +50,135 @@ import java.io.IOException;
 /**
  * The type Asset verticle.
  */
-@DeployableVerticle public class AssetVerticle extends AbstractGuiceVerticle {
-	public static final String ADD = "asset.add";
-	public static final String GET = "asset.get";
-	private static final Logger LOG = LoggerFactory.getLogger(AssetVerticle.class);
-	@Inject private MongoDB mongo;
-	@Inject private Utils utils;
+@DeployableVerticle
+public class AssetVerticle extends AbstractGuiceVerticle {
+    public static final String ADD = "asset.add";
+    public static final String GET = "asset.get";
+    private static final Logger LOG = LoggerFactory.getLogger(AssetVerticle.class);
+    @Inject
+    private MongoDB mongo;
+    @Inject
+    private Utils utils;
 
-	/**
-	 * Start void.
-	 */
-	@Override public void start() {
-		super.start();
-		LOG.debug(this.getClass().getName() + " started");
-		/**
-		 * Add an asset
-		 *
-		 * <pre>{
-		 *  uid User id
-		 *  token
-		 *  filename
-		 *  collection
-		 *  field
-		 *  contentType
-		 *  }</pre>
-		 */
-		final Handler<Message<JsonObject>> addAssetHandler = new Handler<Message<JsonObject>>() {
-			@Override public void handle(final Message<JsonObject> message) {
-				JsonObject resp = new JsonObject();
-				try {
-					utils.testMandatoryParams(message.body().toMap(), "uid", "token", "filename", "collection", "field", "contentType");
-					final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString("token")).get(), null, null, 0, 0, User.class);
+    /**
+     * Start void.
+     */
+    @Override
+    public void start() {
+        super.start();
+        LOG.debug(this.getClass().getName() + " started");
+        /**
+         * Add an asset
+         *
+         * <pre>{
+         *  uid User id
+         *  token
+         *  filename
+         *  collection
+         *  field
+         *  contentType
+         *  }</pre>
+         */
+        final Handler<Message<JsonObject>> addAssetHandler = new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(final Message<JsonObject> message) {
+                JsonObject resp = new JsonObject();
+                try {
+                    utils.testMandatoryParams(message.body().toMap(), "uid", "token", "filename", "collection", "field", "contentType");
+                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString("token")).get(), null, null, 0, 0, User.class);
 
-					if (res.size() != 1) {
-						FileUtils.deleteQuietly(new File(message.body().getString("filename")));
-						resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.NOT_LOGGED.getCode()).putString(Constantes.MESSAGE, Messages.getString("not.logged", message.body().getString("locale")));
-					} else {
-						GridFS img = new GridFS(mongo.getDb(), "Assets");
-						LOG.debug(mongo.getDb().getMongo().getConnectPoint());
+                    if (res.size() != 1) {
+                        FileUtils.deleteQuietly(new File(message.body().getString("filename")));
+                        resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.NOT_LOGGED.getCode()).putString(Constantes.MESSAGE, Messages.getString("not.logged", message.body().getString("locale")));
+                    } else {
+                        GridFS img = new GridFS(mongo.getDb(), "Assets");
+                        LOG.debug(mongo.getDb().getMongo().getConnectPoint());
 
-						GridFSInputFile gfsFile = img.createFile(FileUtils.readFileToByteArray(new File(message.body().getString("filename"))));
-						gfsFile.setFilename(message.body().getString("uid"));
-						BasicDBObject meta = new BasicDBObject();
-						meta.append("uid", message.body().getString("uid"));
-						gfsFile.setMetaData(meta);
-						gfsFile.setContentType(message.body().getString("contentType"));
-						gfsFile.save();
+                        GridFSInputFile gfsFile = img.createFile(FileUtils.readFileToByteArray(new File(message.body().getString("filename"))));
+                        gfsFile.setFilename(message.body().getString("uid"));
+                        BasicDBObject meta = new BasicDBObject();
+                        meta.append("uid", message.body().getString("uid"));
+                        gfsFile.setMetaData(meta);
+                        gfsFile.setContentType(message.body().getString("contentType"));
+                        gfsFile.save();
 
-						JsonObject personToSave = new JsonObject();
-						personToSave.putString("_id", message.body().getString("uid"));
-						personToSave.putString(message.body().getString("field"), gfsFile.getId().toString());
+                        JsonObject personToSave = new JsonObject();
+                        personToSave.putString("_id", message.body().getString("uid"));
+                        personToSave.putString(message.body().getString("field"), gfsFile.getId().toString());
 
-						if ("SB_Person".equals(message.body().getString("collection"))) {
-							mongo.update(personToSave, SB_Person.class);
-						} else {
-							mongo.update(personToSave, User.class);
-						}
+                        if ("SB_Person".equals(message.body().getString("collection"))) {
+                            mongo.update(personToSave, SB_Person.class);
+                        } else {
+                            mongo.update(personToSave, User.class);
+                        }
 
-						resp.putNumber(Constantes.STATUS_CODE, 200);
-						resp.putString(Constantes.MESSAGE, personToSave.encode());
+                        resp.putNumber(Constantes.STATUS_CODE, 200);
+                        resp.putString(Constantes.MESSAGE, personToSave.encode());
 
-						FileUtils.deleteQuietly(new File(message.body().getString("filename")));
-						message.reply(resp);
-					}
-				} catch (IOException e) {
-					LOG.error(e.getMessage(), e);
-					resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
-					resp.putString(Constantes.MESSAGE, e.getMessage());
-					FileUtils.deleteQuietly(new File(message.body().getString("filename")));
-					message.reply(resp);
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
-					resp.putString(Constantes.MESSAGE, e.getMessage());
-					FileUtils.deleteQuietly(new File(message.body().getString("filename")));
-					message.reply(resp);
-				}
-			}
-		};
-		/**
-		 * Get an asset
-		 *
-		 * <pre>{
-		 *  id
-		 *  collection
-		 *  }</pre>
-		 */
-		final Handler<Message<JsonObject>> getAssetHandler = new Handler<Message<JsonObject>>() {
-			@Override public void handle(final Message<JsonObject> message) {
-				JsonObject resp = new JsonObject();
-				try {
-					utils.testMandatoryParams(message.body().toMap(), "collection", "id");
-					GridFS img = new GridFS(mongo.getDb(), "Assets");
+                        FileUtils.deleteQuietly(new File(message.body().getString("filename")));
+                        message.reply(resp);
+                    }
+                } catch (IOException e) {
+                    LOG.error(e.getMessage(), e);
+                    resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
+                    resp.putString(Constantes.MESSAGE, e.getMessage());
+                    FileUtils.deleteQuietly(new File(message.body().getString("filename")));
+                    message.reply(resp);
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
+                    resp.putString(Constantes.MESSAGE, e.getMessage());
+                    FileUtils.deleteQuietly(new File(message.body().getString("filename")));
+                    message.reply(resp);
+                }
+            }
+        };
+        /**
+         * Get an asset
+         *
+         * <pre>{
+         *  id
+         *  collection
+         *  }</pre>
+         */
+        final Handler<Message<JsonObject>> getAssetHandler = new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(final Message<JsonObject> message) {
+                JsonObject resp = new JsonObject();
+                try {
+                    utils.testMandatoryParams(message.body().toMap(), "collection", "id");
+                    GridFS img = new GridFS(mongo.getDb(), "Assets");
 
-					if (SB_Person.class.getSimpleName().equals(message.body().getString("collection")) || message.body().getString("collection").equals(User.class.getSimpleName())) {
-						GridFSDBFile imageForOutput = img.findOne(new ObjectId(message.body().getString("id")));
-						if (imageForOutput != null && imageForOutput.getChunkSize() > 0) {
-							ByteArrayOutputStream bos = new ByteArrayOutputStream();
-							imageForOutput.writeTo(bos);
-							byte[] asset = bos.toByteArray();
-							resp.putString("Content-Length", Integer.toString(asset.length));
-							resp.putBinary("asset", asset);
-						} else {
-							byte[] asset = FileUtils.readFileToByteArray(new File("web/user.png"));
-							resp.putString("Content-Length", Integer.toString(asset.length));
-							resp.putBinary("asset", asset);
-						}
-						message.reply(resp);
-					}
-				} catch (IOException e) {
-					LOG.error(e.getMessage(), e);
-					resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
-					resp.putString(Constantes.MESSAGE, e.getMessage());
-					message.reply(resp);
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
-					resp.putString(Constantes.MESSAGE, e.getMessage());
-					message.reply(resp);
-				}
-			}
-		};
-		// Handlers declaration
-		vertx.eventBus().registerHandler(GET, getAssetHandler);
-		vertx.eventBus().registerHandler(ADD, addAssetHandler);
-	}
+                    if (SB_Person.class.getSimpleName().equals(message.body().getString("collection")) || message.body().getString("collection").equals(User.class.getSimpleName())) {
+                        GridFSDBFile imageForOutput = img.findOne(new ObjectId(message.body().getString("id")));
+                        if (imageForOutput != null && imageForOutput.getChunkSize() > 0) {
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            imageForOutput.writeTo(bos);
+                            byte[] asset = bos.toByteArray();
+                            resp.putString("Content-Length", Integer.toString(asset.length));
+                            resp.putBinary("asset", asset);
+                        } else {
+                            byte[] asset = FileUtils.readFileToByteArray(new File("web/user.png"));
+                            resp.putString("Content-Length", Integer.toString(asset.length));
+                            resp.putBinary("asset", asset);
+                        }
+                        message.reply(resp);
+                    }
+                } catch (IOException e) {
+                    LOG.error(e.getMessage(), e);
+                    resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
+                    resp.putString(Constantes.MESSAGE, e.getMessage());
+                    message.reply(resp);
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
+                    resp.putString(Constantes.MESSAGE, e.getMessage());
+                    message.reply(resp);
+                }
+            }
+        };
+        // Handlers declaration
+        vertx.eventBus().registerHandler(GET, getAssetHandler);
+        vertx.eventBus().registerHandler(ADD, addAssetHandler);
+    }
 }

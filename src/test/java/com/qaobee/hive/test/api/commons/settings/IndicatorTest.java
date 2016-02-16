@@ -37,90 +37,92 @@ import java.util.Map;
 
 /**
  * @author cke
- *
  */
 public class IndicatorTest extends VertxJunitSupport {
 
-	/**
-	 * Tests getHandler for IndicatorVerticle
-	 */
-	@Test public void getObjectByIdOk() {
+    /**
+     * Tests getHandler for IndicatorVerticle
+     */
+    @Test
+    public void getObjectByIdOk() {
 
-		populate(POPULATE_ONLY, SETTINGS_INDICATOR);
-
-		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
-
-		final Map<String, List<String>> params = new HashMap<>();
-
-		// id
-		params.put(IndicatorVerticle.PARAM_ID, Collections.singletonList("559a9294889089a442f3d464"));
-		req.setParams(params);
-
-		final String reply = sendonBus(IndicatorVerticle.GET, req, user.getAccount().getToken());
-		JsonObject result = new JsonObject(reply);
-
-		String label = result.getString("code");
-
-		Assert.assertEquals("hightPerson", label);
-	}
-
-	/**
-	 * Tests getHandler for IndicatorVerticle
-	 * with missing mandatory fields
-	 */
-	@Test public void getObjectByIdKo() {
+        populate(POPULATE_ONLY, SETTINGS_INDICATOR);
 
 		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
 
-		final Map<String, List<String>> params = new HashMap<>();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		JsonObject resultUpdate = new JsonObject(sendonBus(IndicatorVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+        // id
+        params.put(IndicatorVerticle.PARAM_ID, Collections.singletonList("559a9294889089a442f3d464"));
+        req.setParams(params);
 
-		// id
-		params.put(SeasonVerticle.PARAM_ID, Collections.singletonList(""));
-		req.setParams(params);
+        final String reply = sendonBus(IndicatorVerticle.GET, req, user.getAccount().getToken());
+        JsonObject result = new JsonObject(reply);
 
-		resultUpdate = new JsonObject(sendonBus(IndicatorVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+        String label = result.getString("code");
 
-	}
+        Assert.assertEquals("hightPerson", label);
+    }
 
-	/**
-	 * Tests getList for IndicatorVerticle
-	 */
-	@Test public void getListOk() {
-		populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+    /**
+     * Tests getHandler for IndicatorVerticle
+     * with missing mandatory fields
+     */
+    @Test
+    public void getObjectByIdKo() {
 
 		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.POST);
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
 
-		final JsonObject params = new JsonObject();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		// Aggregat
+        JsonObject resultUpdate = new JsonObject(sendonBus(IndicatorVerticle.GET, req, user.getAccount().getToken()));
+        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
-		params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-		params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
-		params.putArray(IndicatorVerticle.PARAM_SCREEN, new JsonArray(new String[] { "COLLECTE" }));
-		req.setBody(params.encode());
+        // id
+        params.put(SeasonVerticle.PARAM_ID, Collections.singletonList(""));
+        req.setParams(params);
 
-		final String reply = sendonBus(IndicatorVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals(45, new JsonArray(reply).size());
+        resultUpdate = new JsonObject(sendonBus(IndicatorVerticle.GET, req, user.getAccount().getToken()));
+        Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
-	}
+    }
+
+    /**
+     * Tests getList for IndicatorVerticle
+     */
+    @Test
+    public void getListOk() {
+        populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+
+		/* User simulation connection */
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.POST);
+
+        final JsonObject params = new JsonObject();
+
+        // Aggregat
+
+        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
+        params.putArray(IndicatorVerticle.PARAM_SCREEN, new JsonArray(new String[]{"COLLECTE"}));
+        req.setBody(params.encode());
+
+        final String reply = sendonBus(IndicatorVerticle.GET_LIST, req, user.getAccount().getToken());
+        Assert.assertEquals(45, new JsonArray(reply).size());
+
+    }
 
 }

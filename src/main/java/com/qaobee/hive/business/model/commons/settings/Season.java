@@ -29,199 +29,201 @@ import java.util.Calendar;
  *
  * @author Jerome
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class Season {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Season {
 
-	/**
-	 * Internal identifier.
-	 */
-	private String _id; // NOSONAR
-	/**
-	 * label.
-	 */
-	private String label;
-	/**
-	 * Code.
-	 */
-	private String code;
-	/**
-	 * Start date.
-	 */
-	private Long startDate;
-	/**
-	 * End date.
-	 */
-	private Long endDate;
-	/**
-	 * Internal id of an activity.
-	 */
-	private String activityId;
-	/**
-	 * Internal id of an country.
-	 */
-	private String countryId;
-	/**
-	 * audit CRUD object
-	 */
-	private Audit audit;
+    /**
+     * Internal identifier.
+     */
+    private String _id; // NOSONAR
+    /**
+     * label.
+     */
+    private String label;
+    /**
+     * Code.
+     */
+    private String code;
+    /**
+     * Start date.
+     */
+    private Long startDate;
+    /**
+     * End date.
+     */
+    private Long endDate;
+    /**
+     * Internal id of an activity.
+     */
+    private String activityId;
+    /**
+     * Internal id of an country.
+     */
+    private String countryId;
+    /**
+     * audit CRUD object
+     */
+    private Audit audit;
 
-	/**
-	 * Returns the internal identifier.
-	 *
-	 * @return String : id
-	 */
-	public String get_id() {// NOSONAR
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : id
+     */
+    public String get_id() {// NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 *
-	 * @param _id (String) : id
-	 */
-	public void set_id(final String _id) {// NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : id
+     */
+    public void set_id(final String _id) {// NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the season code.
-	 *
-	 * @return String : code
-	 */
-	public String getCode() {
-		return code;
-	}
+    /**
+     * Returns the season code.
+     *
+     * @return String : code
+     */
+    public String getCode() {
+        return code;
+    }
 
-	/**
-	 * Defines the season code.
-	 *
-	 * @param code (String) : code
-	 */
-	public void setCode(final String code) {
-		this.code = code;
-	}
+    /**
+     * Defines the season code.
+     *
+     * @param code (String) : code
+     */
+    public void setCode(final String code) {
+        this.code = code;
+    }
 
-	/**
-	 * Returns the start date.
-	 *
-	 * @return Long : start date
-	 */
-	public Long getStartDate() {
-		return startDate;
-	}
+    /**
+     * Returns the start date.
+     *
+     * @return Long : start date
+     */
+    public Long getStartDate() {
+        return startDate;
+    }
 
-	/**
-	 * Defines the start date.
-	 *
-	 * @param startDate (Long) : start date
-	 */
-	public void setStartDate(final Long startDate) {
-		this.startDate = startDate;
-	}
+    /**
+     * Defines the start date.
+     *
+     * @param startDate (Long) : start date
+     */
+    public void setStartDate(final Long startDate) {
+        this.startDate = startDate;
+    }
 
-	/**
-	 * Returns the end date.
-	 *
-	 * @return Long : end date
-	 */
-	public Long getEndDate() {
-		return endDate;
-	}
+    /**
+     * Returns the end date.
+     *
+     * @return Long : end date
+     */
+    public Long getEndDate() {
+        return endDate;
+    }
 
-	/**
-	 * Defines the end date.
-	 *
-	 * @param endDate (Long) : end date
-	 */
-	public void setEndDate(final Long endDate) {
-		this.endDate = endDate;
-	}
+    /**
+     * Defines the end date.
+     *
+     * @param endDate (Long) : end date
+     */
+    public void setEndDate(final Long endDate) {
+        this.endDate = endDate;
+    }
 
-	/**
-	 * Returns the internal id of an activity.
-	 *
-	 * @return String : activity ID
-	 */
-	public String getActivityId() {
-		return activityId;
-	}
+    /**
+     * Returns the internal id of an activity.
+     *
+     * @return String : activity ID
+     */
+    public String getActivityId() {
+        return activityId;
+    }
 
-	/**
-	 * Defines the internal id of an activity.
-	 *
-	 * @param activityId (String) : activity ID
-	 */
-	public void setActivityId(final String activityId) {
-		this.activityId = activityId;
-	}
+    /**
+     * Defines the internal id of an activity.
+     *
+     * @param activityId (String) : activity ID
+     */
+    public void setActivityId(final String activityId) {
+        this.activityId = activityId;
+    }
 
-	/**
-	 * Returns the internal id of a country.
-	 *
-	 * @return String : country ID
-	 */
-	public String getCountryId() {
-		return countryId;
-	}
+    /**
+     * Returns the internal id of a country.
+     *
+     * @return String : country ID
+     */
+    public String getCountryId() {
+        return countryId;
+    }
 
-	/**
-	 * Defines the internal id of a country.
-	 *
-	 * @param countryId (String) : country ID
-	 */
-	public void setCountryId(final String countryId) {
-		this.countryId = countryId;
-	}
+    /**
+     * Defines the internal id of a country.
+     *
+     * @param countryId (String) : country ID
+     */
+    public void setCountryId(final String countryId) {
+        this.countryId = countryId;
+    }
 
-	/**
-	 * Returns the years season.
-	 *
-	 * @return String : years season
-	 */
-	@JsonIgnore public String getYearsSeason() {
-		final Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(startDate);
-		final int startYear = cal.get(Calendar.YEAR);
-		cal.setTimeInMillis(endDate);
-		final int endYear = cal.get(Calendar.YEAR);
-		if (startYear == endYear) {
-			return String.valueOf(startYear);
-		}
-		return startYear + "-" + endYear;
-	}
+    /**
+     * Returns the years season.
+     *
+     * @return String : years season
+     */
+    @JsonIgnore
+    public String getYearsSeason() {
+        final Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(startDate);
+        final int startYear = cal.get(Calendar.YEAR);
+        cal.setTimeInMillis(endDate);
+        final int endYear = cal.get(Calendar.YEAR);
+        if (startYear == endYear) {
+            return String.valueOf(startYear);
+        }
+        return startYear + "-" + endYear;
+    }
 
-	/**
-	 * Returns the season label.
-	 *
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the season label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the season label.
-	 *
-	 * @param label (String) : label
-	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the season label.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the audit.
-	 *
-	 * @return Audit : audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * Returns the audit.
+     *
+     * @return Audit : audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * Defines the audit.
-	 *
-	 * @param audit (Audit) : audit
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * Defines the audit.
+     *
+     * @param audit (Audit) : audit
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 }

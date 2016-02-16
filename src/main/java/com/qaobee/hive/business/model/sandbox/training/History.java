@@ -27,71 +27,71 @@ import java.util.Date;
  * The type History.
  */
 public class History {
-	/**
-	 * The author.
-	 */
-	private User author;
-	/**
-	 * The date.
-	 */
-	private Date date;
-	/**
-	 * The date.
-	 */
-	private String historyType;
+    /**
+     * The author.
+     */
+    private User author;
+    /**
+     * The date.
+     */
+    private Date date;
+    /**
+     * The date.
+     */
+    private String historyType;
 
-	/**
-	 * Gets date.
-	 *
-	 * @return the date
-	 */
-	public Date getDate() {
-		return date;
-	}
+    /**
+     * Gets date.
+     *
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
 
-	/**
-	 * Sets date.
-	 *
-	 * @param date the date to set
-	 */
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    /**
+     * Sets date.
+     *
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
-	/**
-	 * Gets history type.
-	 *
-	 * @return the historyType
-	 */
-	public String getHistoryType() {
-		return historyType;
-	}
+    /**
+     * Gets history type.
+     *
+     * @return the historyType
+     */
+    public String getHistoryType() {
+        return historyType;
+    }
 
-	/**
-	 * Sets history type.
-	 *
-	 * @param historyType the historyType to set
-	 */
-	public void setHistoryType(String historyType) {
-		this.historyType = historyType;
-	}
+    /**
+     * Sets history type.
+     *
+     * @param historyType the historyType to set
+     */
+    public void setHistoryType(String historyType) {
+        this.historyType = historyType;
+    }
 
-	/**
-	 * Gets author.
-	 *
-	 * @return the author
-	 */
-	public User getAuthor() {
-		return author;
-	}
+    /**
+     * Gets author.
+     *
+     * @return the author
+     */
+    public User getAuthor() {
+        return author;
+    }
 
-	/**
-	 * Sets author.
-	 *
-	 * @param author the author to set
-	 */
-	public void setAuthor(User author) {
-		this.author = author;
-	}
+    /**
+     * Sets author.
+     *
+     * @param author the author to set
+     */
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
 }

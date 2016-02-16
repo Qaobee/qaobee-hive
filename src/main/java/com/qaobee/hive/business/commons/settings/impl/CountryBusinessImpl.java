@@ -34,31 +34,33 @@ import java.util.Map;
  */
 public class CountryBusinessImpl implements CountryBusiness {
 
-	private Map<String, Country> mapCountry = null;
+    private Map<String, Country> mapCountry = null;
 
-	@Inject private MongoDB mongo;
+    @Inject
+    private MongoDB mongo;
 
-	@Override public Country getCountryFromAlpha2(String alpha2) {
-		if (mapCountry == null) {
-			getCountries();
-		}
-		if (mapCountry == null) {
-			return null;
-		}
-		return mapCountry.get(alpha2);
-	}
+    @Override
+    public Country getCountryFromAlpha2(String alpha2) {
+        if (mapCountry == null) {
+            getCountries();
+        }
+        if (mapCountry == null) {
+            return null;
+        }
+        return mapCountry.get(alpha2);
+    }
 
-	private void getCountries() {
-		JsonArray resultJson = mongo.findAll(null, null, -1, 0, Country.class);
-		if (resultJson != null && resultJson.size() > 0) {
-			Country country;
-			String[] tabId;
-			mapCountry = new HashMap<>();
-			for (int i = 0; i < resultJson.size(); i++) {
-				country = Json.decodeValue(resultJson.get(i).toString(), Country.class);
-				tabId = country.get_id().split("-");
-				mapCountry.put(tabId[2], country);
-			}
-		}
-	}
+    private void getCountries() {
+        JsonArray resultJson = mongo.findAll(null, null, -1, 0, Country.class);
+        if (resultJson != null && resultJson.size() > 0) {
+            Country country;
+            String[] tabId;
+            mapCountry = new HashMap<>();
+            for (int i = 0; i < resultJson.size(); i++) {
+                country = Json.decodeValue(resultJson.get(i).toString(), Country.class);
+                tabId = country.get_id().split("-");
+                mapCountry.put(tabId[2], country);
+            }
+        }
+    }
 }

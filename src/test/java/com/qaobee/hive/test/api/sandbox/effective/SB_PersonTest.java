@@ -39,54 +39,56 @@ import java.util.Map;
  */
 public class SB_PersonTest extends VertxJunitSupport {
 
-	@Test public void getListPersonByIdTest() {
+    @Test
+    public void getListPersonByIdTest() {
 
-		populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
-		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
-		req.setUser(user);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
 
 		/* test based on script mongo */
-		req.setMethod(Constantes.POST);
+        req.setMethod(Constantes.POST);
 
 		/* list of parameters */
-		final JsonObject params = new JsonObject();
+        final JsonObject params = new JsonObject();
 
 		/* ListId person */
-		params.putArray(SB_PersonVerticle.PARAM_LIST_ID, new JsonArray(
-				new String[] { "550a05dadb8f8b6e2f51f4db", "550a05e3db8f8b6e2f51f4dc", "550a05e9db8f8b6e2f51f4dd", "550a05f7db8f8b6e2f51f4de", "550a0600db8f8b6e2f51f4df", "550a0606db8f8b6e2f51f4e0",
-						"550a060ddb8f8b6e2f51f4e1", "550a0614db8f8b6e2f51f4e2", "550a061bdb8f8b6e2f51f4e3", "550a0620db8f8b6e2f51f4e4", "550a0620db8f8b6e2f51f4e5" }));
+        params.putArray(SB_PersonVerticle.PARAM_LIST_ID, new JsonArray(
+                new String[]{"550a05dadb8f8b6e2f51f4db", "550a05e3db8f8b6e2f51f4dc", "550a05e9db8f8b6e2f51f4dd", "550a05f7db8f8b6e2f51f4de", "550a0600db8f8b6e2f51f4df", "550a0606db8f8b6e2f51f4e0",
+                        "550a060ddb8f8b6e2f51f4e1", "550a0614db8f8b6e2f51f4e2", "550a061bdb8f8b6e2f51f4e3", "550a0620db8f8b6e2f51f4e4", "550a0620db8f8b6e2f51f4e5"}));
 
 		/* ListId person */
-		params.putArray(SB_PersonVerticle.PARAM_LIST_FIELD, new JsonArray(new String[] { "_id", "name", "firstname", "avatar", "status" }));
-		req.setBody(params.encode());
+        params.putArray(SB_PersonVerticle.PARAM_LIST_FIELD, new JsonArray(new String[]{"_id", "name", "firstname", "avatar", "status"}));
+        req.setBody(params.encode());
 
 		/* Call to verticle */
-		final String reply = sendonBus(SB_PersonVerticle.GET_LIST, req, user.getAccount().getToken());
-		Assert.assertEquals(11, new JsonArray(reply).size());
+        final String reply = sendonBus(SB_PersonVerticle.GET_LIST, req, user.getAccount().getToken());
+        Assert.assertEquals(11, new JsonArray(reply).size());
 
-	}
+    }
 
-	@Test public void getListPersonSandboxTest() {
+    @Test
+    public void getListPersonSandboxTest() {
 
-		populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
-		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
-		req.setUser(user);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
 
-		final Map<String, List<String>> params = new HashMap<>();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		// id
-		params.put(SB_PersonVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-		req.setParams(params);
+        // id
+        params.put(SB_PersonVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
+        req.setParams(params);
 
 		/* Call to verticle */
-		final String reply = sendonBus(SB_PersonVerticle.GET_LIST_SANDBOX, req, user.getAccount().getToken());
-		Assert.assertEquals(17, new JsonArray(reply).size());
+        final String reply = sendonBus(SB_PersonVerticle.GET_LIST_SANDBOX, req, user.getAccount().getToken());
+        Assert.assertEquals(17, new JsonArray(reply).size());
 
-	}
+    }
 }

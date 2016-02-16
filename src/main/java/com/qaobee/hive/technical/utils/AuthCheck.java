@@ -27,18 +27,18 @@ import java.util.regex.Pattern;
  * The interface Auth check.
  */
 public interface AuthCheck {
-	/**
-	 * The Constant VALID_EMAIL_ADDRESS_REGEX.
-	 */
-	Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    /**
+     * The Constant VALID_EMAIL_ADDRESS_REGEX.
+     */
+    Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
-	/**
-	 * Permet de vérifier une adresse e-mail.
-	 *
-	 * @param email  the email
-	 * @param locale the locale
-	 * @return valid or not
-	 * @throws QaobeeException the qaobee exception
-	 */
-	boolean testEmail(String email, String locale) throws QaobeeException;
+    /**
+     * Permet de vérifier une adresse e-mail.
+     *
+     * @param email  the email
+     * @param locale the locale
+     * @return valid or not
+     * @throws QaobeeException the qaobee exception
+     */
+    boolean testEmail(String email, String locale) throws QaobeeException;
 }

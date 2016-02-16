@@ -25,49 +25,49 @@ package com.qaobee.hive.technical.constantes;
  */
 public final class Constantes {
 
-	/**
-	 * The Constant TIMEOUT.
-	 */
-	public static final long TIMEOUT = 10000L;
+    /**
+     * The Constant TIMEOUT.
+     */
+    public static final long TIMEOUT = 10000L;
 
-	/**
-	 * The Constant DEFAULT_SESSION_TIMEOUT.
-	 */
-	public static final long DEFAULT_SESSION_TIMEOUT = 30L * 60L * 1000L;
+    /**
+     * The Constant DEFAULT_SESSION_TIMEOUT.
+     */
+    public static final long DEFAULT_SESSION_TIMEOUT = 30L * 60L * 1000L;
 
-	/**
-	 * The Constant GET.
-	 */
-	public static final String GET = "GET";
+    /**
+     * The Constant GET.
+     */
+    public static final String GET = "GET";
 
-	/**
-	 * The Constant POST.
-	 */
-	public static final String POST = "POST";
+    /**
+     * The Constant POST.
+     */
+    public static final String POST = "POST";
 
-	/**
-	 * The Constant PUT.
-	 */
-	public static final String PUT = "PUT";
+    /**
+     * The Constant PUT.
+     */
+    public static final String PUT = "PUT";
 
-	/**
-	 * The Constant DELETE.
-	 */
-	public static final String DELETE = "DELETE";
+    /**
+     * The Constant DELETE.
+     */
+    public static final String DELETE = "DELETE";
 
-	/**
-	 * The Constant ADMIN_HABILIT.
-	 */
-	public static final String ADMIN_HABILIT = "admin_qaobee";
+    /**
+     * The Constant ADMIN_HABILIT.
+     */
+    public static final String ADMIN_HABILIT = "admin_qaobee";
 
-	public static final String MESSAGE = "message";
-	public static final String STATUS_CODE = "statusCode";
+    public static final String MESSAGE = "message";
+    public static final String STATUS_CODE = "statusCode";
 
-	/**
-	 * Instantiates a new constantes.
-	 */
-	private Constantes() {
-		// empty
-	}
+    /**
+     * Instantiates a new constantes.
+     */
+    private Constantes() {
+        // empty
+    }
 
 }

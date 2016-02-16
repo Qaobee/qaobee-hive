@@ -45,61 +45,65 @@ import java.util.Map;
  *
  * @author Xavier MARIN
  */
-@DeployableVerticle(isWorker = true) public class TemplatesVerticle extends AbstractGuiceVerticle {
-	public static final String DATA = "data";
-	public static final String TEMPLATE = "template";
-	public static final String TEMPLATE_GENERATE = "template.generate";
-	private static final Logger LOG = LoggerFactory.getLogger(TemplatesVerticle.class);
-	private static final String TEMPLATE_PATH = "mailTemplates";
-	@Inject private Utils utils;
+@DeployableVerticle(isWorker = true)
+public class TemplatesVerticle extends AbstractGuiceVerticle {
+    public static final String DATA = "data";
+    public static final String TEMPLATE = "template";
+    public static final String TEMPLATE_GENERATE = "template.generate";
+    private static final Logger LOG = LoggerFactory.getLogger(TemplatesVerticle.class);
+    private static final String TEMPLATE_PATH = "mailTemplates";
+    @Inject
+    private Utils utils;
 
-	/**
-	 * Start void.
-	 */
-	@Override public void start() {
-		super.start();
-		LOG.debug(this.getClass().getName() + " started");
+    /**
+     * Start void.
+     */
+    @Override
+    public void start() {
+        super.start();
+        LOG.debug(this.getClass().getName() + " started");
 
-		final Configuration cfg = new Configuration(new Version("2.3.23"));
+        final Configuration cfg = new Configuration(new Version("2.3.23"));
 
-		// Where do we load the templates from:
-		try {
-			cfg.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, TEMPLATE_PATH)));
-		} catch (final IOException e) {
-			LOG.error(e.getMessage(), e);
-		}
+        // Where do we load the templates from:
+        try {
+            cfg.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, TEMPLATE_PATH)));
+        } catch (final IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
 
-		// Some other recommended settings:
-		cfg.setIncompatibleImprovements(new Version(2, 3, 20));
-		cfg.setDefaultEncoding("UTF-8");
-		cfg.setLocale(Locale.US);
-		cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        // Some other recommended settings:
+        cfg.setIncompatibleImprovements(new Version(2, 3, 20));
+        cfg.setDefaultEncoding("UTF-8");
+        cfg.setLocale(Locale.US);
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 
-		vertx.eventBus().registerHandler(TEMPLATE_GENERATE, new Handler<Message<JsonObject>>() {
-			@Override public void handle(final Message<JsonObject> message) {
-				final Map<String, Object> input = new HashMap<>();
+        vertx.eventBus().registerHandler(TEMPLATE_GENERATE, new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(final Message<JsonObject> message) {
+                final Map<String, Object> input = new HashMap<>();
 
-				try {
-					if (!message.body().containsField(DATA) || !message.body().containsField(TEMPLATE)) {
-						message.fail(ExceptionCodes.MANDATORY_FIELD.getCode(), "wrong json format");
-						return;
-					}
-					final JsonObject data = message.body().getObject(DATA);
+                try {
+                    if (!message.body().containsField(DATA) || !message.body().containsField(TEMPLATE)) {
+                        message.fail(ExceptionCodes.MANDATORY_FIELD.getCode(), "wrong json format");
+                        return;
+                    }
+                    final JsonObject data = message.body().getObject(DATA);
 
-					input.putAll(data.toMap());
-					final Writer writer = new StringWriter();
-					final Template template = cfg.getTemplate(message.body().getString(TEMPLATE));
-					template.process(input, writer);
-					final JsonObject res = new JsonObject();
-					final String resTpl = writer.toString();
-					res.putString("result", resTpl);
+                    input.putAll(data.toMap());
+                    final Writer writer = new StringWriter();
+                    final Template template = cfg.getTemplate(message.body().getString(TEMPLATE));
+                    template.process(input, writer);
+                    final JsonObject res = new JsonObject();
+                    final String resTpl = writer.toString();
+                    res.putString("result", resTpl);
 
-					message.reply(res);
-				} catch (IOException | TemplateException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-				}
-			}
-		});
-	}
+                    message.reply(res);
+                } catch (IOException | TemplateException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
+    }
 }

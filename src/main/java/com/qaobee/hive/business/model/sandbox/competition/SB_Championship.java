@@ -32,107 +32,108 @@ import java.util.List;
  * @author Nada Vujanic-Maquin
  * @version V1.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class SB_Championship { // NOSONAR
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SB_Championship { // NOSONAR
 
-	/**
-	 * Internal identifier
-	 */
-	private String _id; // NOSONAR
-	/**
-	 * Label
-	 */
-	private String label;
-	/**
-	 * List labels
-	 */
-	private List<Tag> labels;
-	/**
-	 * audit CRUD object
-	 */
-	private Audit audit;
+    /**
+     * Internal identifier
+     */
+    private String _id; // NOSONAR
+    /**
+     * Label
+     */
+    private String label;
+    /**
+     * List labels
+     */
+    private List<Tag> labels;
+    /**
+     * audit CRUD object
+     */
+    private Audit audit;
 
-	/**
-	 * Returns the internal identifier of the championship.
-	 *
-	 * @return String : internal identifier
-	 */
-	public String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Returns the internal identifier of the championship.
+     *
+     * @return String : internal identifier
+     */
+    public String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier of the championship.
-	 *
-	 * @param _id (String) : identifier
-	 */
-	public void set_id(String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier of the championship.
+     *
+     * @param _id (String) : identifier
+     */
+    public void set_id(String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the label of the championship.
-	 *
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the label of the championship.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the label of the championship.
-	 *
-	 * @param label (String) : label
-	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the label of the championship.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the list of labels.
-	 *
-	 * @return List(Tag) : list
-	 */
-	public List<Tag> getLabels() {
-		return labels;
-	}
+    /**
+     * Returns the list of labels.
+     *
+     * @return List(Tag) : list
+     */
+    public List<Tag> getLabels() {
+        return labels;
+    }
 
-	/**
-	 * Defines the list of labels.
-	 *
-	 * @param labels (List(Tag)) : list
-	 */
-	public void setLabels(List<Tag> labels) {
-		this.labels = labels;
-	}
+    /**
+     * Defines the list of labels.
+     *
+     * @param labels (List(Tag)) : list
+     */
+    public void setLabels(List<Tag> labels) {
+        this.labels = labels;
+    }
 
-	/**
-	 * Adds a label.
-	 *
-	 * @param label (Tag) : label
-	 */
-	public void addLabel(Tag label) {
-		if (labels == null) {
-			labels = new ArrayList<>();
-		}
-		labels.add(label);
-	}
+    /**
+     * Adds a label.
+     *
+     * @param label (Tag) : label
+     */
+    public void addLabel(Tag label) {
+        if (labels == null) {
+            labels = new ArrayList<>();
+        }
+        labels.add(label);
+    }
 
-	/**
-	 * Returns the audit trail.
-	 *
-	 * @return Audit : audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * Returns the audit trail.
+     *
+     * @return Audit : audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * Defines the audit trail.
-	 *
-	 * @param audit (Audit) : audit
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * Defines the audit trail.
+     *
+     * @param audit (Audit) : audit
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 
 }

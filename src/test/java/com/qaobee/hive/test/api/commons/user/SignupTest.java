@@ -32,49 +32,50 @@ import org.vertx.java.core.json.JsonObject;
  */
 public class SignupTest extends VertxJunitSupport {
 
-	/**
-	 * Register ok test.
-	 */
-	@Test public void registerOkTest() {
-		populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+    /**
+     * Register ok test.
+     */
+    @Test
+    public void registerOkTest() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
 
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.PUT);
-		final JsonObject params = new JsonObject();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.PUT);
+        final JsonObject params = new JsonObject();
 
-		// Account
-		JsonObject jsonObject = new JsonObject();
-		jsonObject.putString("login", "loginTest");
-		jsonObject.putString("passwd", "passwdTest");
-		params.putObject("account", jsonObject);
+        // Account
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.putString("login", "loginTest");
+        jsonObject.putString("passwd", "passwdTest");
+        params.putObject("account", jsonObject);
 
-		// Contact
-		jsonObject = new JsonObject();
-		jsonObject.putString("email", "prenom.nom@fai.pays");
-		params.putObject("contact", jsonObject);
+        // Contact
+        jsonObject = new JsonObject();
+        jsonObject.putString("email", "prenom.nom@fai.pays");
+        params.putObject("contact", jsonObject);
 
-		// Plan
-		jsonObject = new JsonObject();
-		jsonObject.putString("levelPlan", "FREEMIUM");
-		JsonObject objChild = new JsonObject();
-		objChild.putString("_id", "ACT-HAND");
-		jsonObject.putObject("activity", objChild);
-		params.putObject("plan", jsonObject);
+        // Plan
+        jsonObject = new JsonObject();
+        jsonObject.putString("levelPlan", "FREEMIUM");
+        JsonObject objChild = new JsonObject();
+        objChild.putString("_id", "ACT-HAND");
+        jsonObject.putObject("activity", objChild);
+        params.putObject("plan", jsonObject);
 
-		// Nom & Prénom
-		params.putString("firstname", "Prenom");
-		params.putString("name", "NOM");
+        // Nom & Prénom
+        params.putString("firstname", "Prenom");
+        params.putString("name", "NOM");
 
-		//jUnit
-		params.putBoolean("junit", true);
+        //jUnit
+        params.putBoolean("junit", true);
 
-		req.setBody(params.encode());
-		final String reply = sendonBus(SignupVerticle.REGISTER, req);
-		JsonObject result = new JsonObject(reply);
+        req.setBody(params.encode());
+        final String reply = sendonBus(SignupVerticle.REGISTER, req);
+        JsonObject result = new JsonObject(reply);
 
-		Assert.assertNotNull(result.getObject("person"));
-		Assert.assertNotNull(result.getObject("person").getString("_id"));
-	}
+        Assert.assertNotNull(result.getObject("person"));
+        Assert.assertNotNull(result.getObject("person").getString("_id"));
+    }
 
 }

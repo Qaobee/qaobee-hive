@@ -24,72 +24,73 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author jerome
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class CommonType {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CommonType {
 
-	/**
-	 * Code
-	 */
-	private String code;
-	/**
-	 * Label
-	 */
-	private String label;
-	/**
-	 * Order in list
-	 */
-	private int order;
+    /**
+     * Code
+     */
+    private String code;
+    /**
+     * Label
+     */
+    private String label;
+    /**
+     * Order in list
+     */
+    private int order;
 
-	/**
-	 * Returns the label.
-	 *
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the label.
-	 *
-	 * @param label (String) : label
-	 */
-	public void setLabel(final String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the label.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(final String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the code.
-	 *
-	 * @return String : code
-	 */
-	public String getCode() {
-		return code;
-	}
+    /**
+     * Returns the code.
+     *
+     * @return String : code
+     */
+    public String getCode() {
+        return code;
+    }
 
-	/**
-	 * Defines the code.
-	 *
-	 * @param code (String) : code
-	 */
-	public void setCode(final String code) {
-		this.code = code;
-	}
+    /**
+     * Defines the code.
+     *
+     * @param code (String) : code
+     */
+    public void setCode(final String code) {
+        this.code = code;
+    }
 
-	/**
-	 * Returns order in role list.
-	 *
-	 * @return int : order
-	 */
-	public int getOrder() {
-		return order;
-	}
+    /**
+     * Returns order in role list.
+     *
+     * @return int : order
+     */
+    public int getOrder() {
+        return order;
+    }
 
-	/**
-	 * Defines order in role list.
-	 *
-	 * @param order (int) : order
-	 */
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    /**
+     * Defines order in role list.
+     *
+     * @param order (int) : order
+     */
+    public void setOrder(int order) {
+        this.order = order;
+    }
 }

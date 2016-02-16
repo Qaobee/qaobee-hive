@@ -25,162 +25,162 @@ package com.qaobee.hive.technical.exceptions;
  */
 public class QaobeeException extends Exception {
 
-	/**
-	 * The Constant serialVersionUID.
-	 */
-	private static final long serialVersionUID = 3702929307917485614L;
+    /**
+     * The Constant serialVersionUID.
+     */
+    private static final long serialVersionUID = 3702929307917485614L;
 
-	/**
-	 * The code.
-	 */
-	private ExceptionCodes code;
+    /**
+     * The code.
+     */
+    private ExceptionCodes code;
 
-	/**
-	 * The json context.
-	 */
-	private String jsonContext = "";
+    /**
+     * The json context.
+     */
+    private String jsonContext = "";
 
-	/**
-	 * The timestamp.
-	 */
-	private long timestamp = System.currentTimeMillis();
+    /**
+     * The timestamp.
+     */
+    private long timestamp = System.currentTimeMillis();
 
-	/**
-	 * The report.
-	 */
-	private boolean report = false;
+    /**
+     * The report.
+     */
+    private boolean report = false;
 
-	/**
-	 * The error.
-	 */
-	private boolean error = true;
+    /**
+     * The error.
+     */
+    private boolean error = true;
 
-	/**
-	 * Instantiates a new qaobee exception.
-	 *
-	 * @param report      the report
-	 * @param jsonContext the json context
-	 * @param code        the code
-	 * @param message     the message
-	 */
-	public QaobeeException(final boolean report, final String jsonContext, final ExceptionCodes code, final String message) {
-		super(message);
-		setJsonContext(jsonContext);
-		setCode(code);
-		setReport(report);
-	}
+    /**
+     * Instantiates a new qaobee exception.
+     *
+     * @param report      the report
+     * @param jsonContext the json context
+     * @param code        the code
+     * @param message     the message
+     */
+    public QaobeeException(final boolean report, final String jsonContext, final ExceptionCodes code, final String message) {
+        super(message);
+        setJsonContext(jsonContext);
+        setCode(code);
+        setReport(report);
+    }
 
-	/**
-	 * Instantiates a new qaobee exception.
-	 *
-	 * @param code    the code
-	 * @param message the message
-	 */
-	public QaobeeException(final ExceptionCodes code, final String message) {
-		super(message);
-		setCode(code);
-	}
+    /**
+     * Instantiates a new qaobee exception.
+     *
+     * @param code    the code
+     * @param message the message
+     */
+    public QaobeeException(final ExceptionCodes code, final String message) {
+        super(message);
+        setCode(code);
+    }
 
-	/**
-	 * Instantiates a new qaobee exception.
-	 *
-	 * @param jsonContext the json context
-	 * @param code        the code
-	 * @param message     the message
-	 */
-	public QaobeeException(final String jsonContext, final ExceptionCodes code, final String message) {
-		super(message);
-		setJsonContext(jsonContext);
-		setCode(code);
-	}
+    /**
+     * Instantiates a new qaobee exception.
+     *
+     * @param jsonContext the json context
+     * @param code        the code
+     * @param message     the message
+     */
+    public QaobeeException(final String jsonContext, final ExceptionCodes code, final String message) {
+        super(message);
+        setJsonContext(jsonContext);
+        setCode(code);
+    }
 
-	/**
-	 * Gets the code.
-	 *
-	 * @return the code
-	 */
-	public ExceptionCodes getCode() {
-		return code;
-	}
+    /**
+     * Gets the code.
+     *
+     * @return the code
+     */
+    public ExceptionCodes getCode() {
+        return code;
+    }
 
-	/**
-	 * Sets the code.
-	 *
-	 * @param code the new code
-	 */
-	public void setCode(final ExceptionCodes code) {
-		this.code = code;
-	}
+    /**
+     * Sets the code.
+     *
+     * @param code the new code
+     */
+    public void setCode(final ExceptionCodes code) {
+        this.code = code;
+    }
 
-	/**
-	 * Gets the json context.
-	 *
-	 * @return the json context
-	 */
-	public String getJsonContext() {
-		return jsonContext;
-	}
+    /**
+     * Gets the json context.
+     *
+     * @return the json context
+     */
+    public String getJsonContext() {
+        return jsonContext;
+    }
 
-	/**
-	 * Sets the json context.
-	 *
-	 * @param jsonContext the new json context
-	 */
-	public void setJsonContext(final String jsonContext) {
-		this.jsonContext = jsonContext;
-	}
+    /**
+     * Sets the json context.
+     *
+     * @param jsonContext the new json context
+     */
+    public void setJsonContext(final String jsonContext) {
+        this.jsonContext = jsonContext;
+    }
 
-	/**
-	 * Gets the timestamp.
-	 *
-	 * @return the timestamp
-	 */
-	public long getTimestamp() {
-		return timestamp;
-	}
+    /**
+     * Gets the timestamp.
+     *
+     * @return the timestamp
+     */
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-	/**
-	 * Sets the timestamp.
-	 *
-	 * @param timestamp the new timestamp
-	 */
-	public void setTimestamp(final long timestamp) {
-		this.timestamp = timestamp;
-	}
+    /**
+     * Sets the timestamp.
+     *
+     * @param timestamp the new timestamp
+     */
+    public void setTimestamp(final long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	/**
-	 * Checks if is the error.
-	 *
-	 * @return the error
-	 */
-	public boolean isError() {
-		return error;
-	}
+    /**
+     * Checks if is the error.
+     *
+     * @return the error
+     */
+    public boolean isError() {
+        return error;
+    }
 
-	/**
-	 * Sets the error.
-	 *
-	 * @param error the new error
-	 */
-	public void setError(final boolean error) {
-		this.error = error;
-	}
+    /**
+     * Sets the error.
+     *
+     * @param error the new error
+     */
+    public void setError(final boolean error) {
+        this.error = error;
+    }
 
-	/**
-	 * Checks if is the report.
-	 *
-	 * @return the report
-	 */
-	public boolean isReport() {
-		return report;
-	}
+    /**
+     * Checks if is the report.
+     *
+     * @return the report
+     */
+    public boolean isReport() {
+        return report;
+    }
 
-	/**
-	 * Sets the report.
-	 *
-	 * @param report the new report
-	 */
-	public void setReport(final boolean report) {
-		this.report = report;
-	}
+    /**
+     * Sets the report.
+     *
+     * @param report the new report
+     */
+    public void setReport(final boolean report) {
+        this.report = report;
+    }
 }

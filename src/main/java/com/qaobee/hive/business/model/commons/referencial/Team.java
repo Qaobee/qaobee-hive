@@ -27,146 +27,177 @@ import java.util.List;
 
 /**
  * Bean that describes a team.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class Team {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Team {
 
-	/** Internal identifier */
-	private String _id; // NOSONAR
-	/** Label */
-	private String label;
-	/** Activity of the Team */
-	private Activity activity;
-	/** Structure of the Team */
-	private Structure structure;
-	/** Age category of the Team */
-	private CategoryAge categoryAge;
-	/** List of Seasons */
-	private List<TeamSeason> teamSeasons;
-	/** audit CRUD object */
-	private Audit audit;
+    /**
+     * Internal identifier
+     */
+    private String _id; // NOSONAR
+    /**
+     * Label
+     */
+    private String label;
+    /**
+     * Activity of the Team
+     */
+    private Activity activity;
+    /**
+     * Structure of the Team
+     */
+    private Structure structure;
+    /**
+     * Age category of the Team
+     */
+    private CategoryAge categoryAge;
+    /**
+     * List of Seasons
+     */
+    private List<TeamSeason> teamSeasons;
+    /**
+     * audit CRUD object
+     */
+    private Audit audit;
 
-	/**
-	 * Returns the internal identifier.
-	 * @return String : ID
-	 */
-	public String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : ID
+     */
+    public String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 * @param _id (String) : ID
-	 */
-	public void set_id(String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : ID
+     */
+    public void set_id(String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the label.
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the label.
-	 * @param label (String) : label
-	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the label.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the activity.
-	 * @return Activity : activity
-	 */
-	public Activity getActivity() {
-		return activity;
-	}
+    /**
+     * Returns the activity.
+     *
+     * @return Activity : activity
+     */
+    public Activity getActivity() {
+        return activity;
+    }
 
-	/**
-	 * Defines the activity.
-	 * @param activity (Activity) : activity
-	 */
-	public void setActivity(Activity activity) {
-		this.activity = activity;
-	}
+    /**
+     * Defines the activity.
+     *
+     * @param activity (Activity) : activity
+     */
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
-	/**
-	 * Returns the structure.
-	 * @return Structure : structure
-	 */
-	public Structure getStructure() {
-		return structure;
-	}
+    /**
+     * Returns the structure.
+     *
+     * @return Structure : structure
+     */
+    public Structure getStructure() {
+        return structure;
+    }
 
-	/**
-	 * Defines the structure.
-	 * @param structure (Structure) : structure
-	 */
-	public void setStructure(Structure structure) {
-		this.structure = structure;
-	}
+    /**
+     * Defines the structure.
+     *
+     * @param structure (Structure) : structure
+     */
+    public void setStructure(Structure structure) {
+        this.structure = structure;
+    }
 
-	/**
-	 * Returns the age category.
-	 * @return CategoryAge : age category
-	 */
-	public CategoryAge getCategoryAge() {
-		return categoryAge;
-	}
+    /**
+     * Returns the age category.
+     *
+     * @return CategoryAge : age category
+     */
+    public CategoryAge getCategoryAge() {
+        return categoryAge;
+    }
 
-	/**
-	 * Defines the age category.
-	 * @param categoryAge (CategoryAge) : age category
-	 */
-	public void setCategoryAge(CategoryAge categoryAge) {
-		this.categoryAge = categoryAge;
-	}
+    /**
+     * Defines the age category.
+     *
+     * @param categoryAge (CategoryAge) : age category
+     */
+    public void setCategoryAge(CategoryAge categoryAge) {
+        this.categoryAge = categoryAge;
+    }
 
-	/**
-	 * Returns the list of seasons.
-	 * @return List(TeamSeason) : list
-	 */
-	public List<TeamSeason> getTeamSeasons() {
-		return teamSeasons;
-	}
+    /**
+     * Returns the list of seasons.
+     *
+     * @return List(TeamSeason) : list
+     */
+    public List<TeamSeason> getTeamSeasons() {
+        return teamSeasons;
+    }
 
-	/**
-	 * Defines the list of seasons.
-	 * @param teamSeasons (List(TeamSeason)) : list
-	 */
-	public void setTeamSeasons(List<TeamSeason> teamSeasons) {
-		this.teamSeasons = teamSeasons;
-	}
+    /**
+     * Defines the list of seasons.
+     *
+     * @param teamSeasons (List(TeamSeason)) : list
+     */
+    public void setTeamSeasons(List<TeamSeason> teamSeasons) {
+        this.teamSeasons = teamSeasons;
+    }
 
-	/**
-	 * Adds a season to the list.
-	 * @param teamSeason (TeamSeason) : season
-	 */
-	public void addTeamSeason(TeamSeason teamSeason) {
-		if (teamSeasons == null) {
-			teamSeasons = new ArrayList<>();
-		}
-		teamSeasons.add(teamSeason);
-	}
+    /**
+     * Adds a season to the list.
+     *
+     * @param teamSeason (TeamSeason) : season
+     */
+    public void addTeamSeason(TeamSeason teamSeason) {
+        if (teamSeasons == null) {
+            teamSeasons = new ArrayList<>();
+        }
+        teamSeasons.add(teamSeason);
+    }
 
-	/**
-	 * Returns the audit.
-	 * @return Audit : audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * Returns the audit.
+     *
+     * @return Audit : audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * Defines the audit.
-	 * @param audit (Audit) : audit
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * Defines the audit.
+     *
+     * @param audit (Audit) : audit
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 
 }

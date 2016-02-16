@@ -23,72 +23,76 @@ import java.util.List;
  */
 public class ProfileTest extends VertxJunitSupport {
 
-	/**
-	 * Update profile with common data test.
-	 */
-	@Test public void updateProfileWithCommonDataTest() {
-		User u = generateLoggedUser();
-		u.setGender("androgyn");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.POST);
-		req.setBody(Json.encode(u));
-		final String reply = sendonBus(ProfileVerticle.UPDATE, req);
-		JsonObject result = new JsonObject(reply);
-		Assert.assertEquals(u.getName(), result.getString("name"));
-		Assert.assertEquals(u.getGender(), result.getString("gender"));
-	}
+    /**
+     * Update profile with common data test.
+     */
+    @Test
+    public void updateProfileWithCommonDataTest() {
+        User u = generateLoggedUser();
+        u.setGender("androgyn");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.POST);
+        req.setBody(Json.encode(u));
+        final String reply = sendonBus(ProfileVerticle.UPDATE, req);
+        JsonObject result = new JsonObject(reply);
+        Assert.assertEquals(u.getName(), result.getString("name"));
+        Assert.assertEquals(u.getGender(), result.getString("gender"));
+    }
 
-	/**
-	 * Update profile with password change test.
-	 */
-	@Test public void updateProfileWithPasswordChangeTest() {
-		User u = generateLoggedUser();
-		u.getAccount().setPasswd("toto");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.POST);
-		req.setBody(Json.encode(u));
-		final String reply = sendonBus(ProfileVerticle.UPDATE, req);
-		JsonObject result = new JsonObject(reply);
-		Assert.assertEquals(u.getName(), result.getString("name"));
-		final JsonObject params = new JsonObject();
-		params.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
-		params.putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
-		req.setBody(params.encode());
-		final String reply2 = sendonBus(UserVerticle.LOGIN, req);
-		JsonObject result2 = new JsonObject(reply2);
-		Assert.assertEquals(u.getName(), result2.getString("name"));
-	}
+    /**
+     * Update profile with password change test.
+     */
+    @Test
+    public void updateProfileWithPasswordChangeTest() {
+        User u = generateLoggedUser();
+        u.getAccount().setPasswd("toto");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.POST);
+        req.setBody(Json.encode(u));
+        final String reply = sendonBus(ProfileVerticle.UPDATE, req);
+        JsonObject result = new JsonObject(reply);
+        Assert.assertEquals(u.getName(), result.getString("name"));
+        final JsonObject params = new JsonObject();
+        params.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
+        params.putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+        req.setBody(params.encode());
+        final String reply2 = sendonBus(UserVerticle.LOGIN, req);
+        JsonObject result2 = new JsonObject(reply2);
+        Assert.assertEquals(u.getName(), result2.getString("name"));
+    }
 
-	/**
-	 * Generate profile pdf test.
-	 */
-	@Test public void generateProfilePDFTest() {
-		User u = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
-		req.setUser(u);
-		final String reply = sendonBus(ProfileVerticle.GENERATE_PDF, req);
-		JsonObject result = new JsonObject(reply);
-		Assert.assertTrue(result.getString(Main.FILE_SERVE), result.containsField(Main.FILE_SERVE));
-	}
+    /**
+     * Generate profile pdf test.
+     */
+    @Test
+    public void generateProfilePDFTest() {
+        User u = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(u);
+        final String reply = sendonBus(ProfileVerticle.GENERATE_PDF, req);
+        JsonObject result = new JsonObject(reply);
+        Assert.assertTrue(result.getString(Main.FILE_SERVE), result.containsField(Main.FILE_SERVE));
+    }
 
-	/**
-	 * Generate billing pdf test.
-	 */
-	@Test public void generateBillingPDFTest() {
-		User u = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
-		req.setUser(u);
-		final HashMap<String, List<String>> params = new HashMap<>();
-		params.put("id", Collections.singletonList("0"));
-		req.setParams(params);
-		final String reply = sendonBus(ProfileVerticle.GENERATE_BILL_PDF, req);
-		JsonObject result = new JsonObject(reply);
-		Assert.assertTrue(result.getString(Main.FILE_SERVE), result.containsField(Main.FILE_SERVE));
-	}
+    /**
+     * Generate billing pdf test.
+     */
+    @Test
+    public void generateBillingPDFTest() {
+        User u = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(u);
+        final HashMap<String, List<String>> params = new HashMap<>();
+        params.put("id", Collections.singletonList("0"));
+        req.setParams(params);
+        final String reply = sendonBus(ProfileVerticle.GENERATE_BILL_PDF, req);
+        JsonObject result = new JsonObject(reply);
+        Assert.assertTrue(result.getString(Main.FILE_SERVE), result.containsField(Main.FILE_SERVE));
+    }
 }

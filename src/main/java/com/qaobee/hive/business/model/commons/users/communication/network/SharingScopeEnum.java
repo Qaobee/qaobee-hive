@@ -23,52 +23,52 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
  */
 public enum SharingScopeEnum {
 
-	/**
-	 * Public scope.
-	 */
-	PUBLIC("transverse.networks.sharingscope.public"),
+    /**
+     * Public scope.
+     */
+    PUBLIC("transverse.networks.sharingscope.public"),
 
-	/**
-	 * Private scope.
-	 */
-	PRIVATE("transverse.networks.sharingscope.private"),
+    /**
+     * Private scope.
+     */
+    PRIVATE("transverse.networks.sharingscope.private"),
 
-	/**
-	 * Circle scope.
-	 */
-	CIRCLE("transverse.networks.sharingscope.circle"),
+    /**
+     * Circle scope.
+     */
+    CIRCLE("transverse.networks.sharingscope.circle"),
 
-	/**
-	 * Staff scope.
-	 */
-	STAFF("transverse.networks.sharingscope.staff"),
+    /**
+     * Staff scope.
+     */
+    STAFF("transverse.networks.sharingscope.staff"),
 
-	/**
-	 * Club scope.
-	 */
-	CLUB("transverse.networks.sharingscope.club");
+    /**
+     * Club scope.
+     */
+    CLUB("transverse.networks.sharingscope.club");
 
-	/**
-	 * scope.
-	 */
-	private String scope;
+    /**
+     * scope.
+     */
+    private String scope;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param scope (String) : scope in i18n
-	 */
-	SharingScopeEnum(final String scope) {
-		this.scope = scope;
-	}
+    /**
+     * Constructor.
+     *
+     * @param scope (String) : scope in i18n
+     */
+    SharingScopeEnum(final String scope) {
+        this.scope = scope;
+    }
 
-	/**
-	 * Gets the scope.
-	 *
-	 * @return the scope
-	 */
-	public String getScope() {
-		return scope;
-	}
+    /**
+     * Gets the scope.
+     *
+     * @return the scope
+     */
+    public String getScope() {
+        return scope;
+    }
 
 }

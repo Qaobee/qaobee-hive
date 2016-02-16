@@ -25,94 +25,95 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class SB_SandBox { // NOSONAR
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SB_SandBox { // NOSONAR
 
-	/**
-	 * Identifier
-	 */
-	private String _id; // NOSONAR
-	/**
-	 * Owner
-	 */
-	private String owner;
-	/**
-	 * Activity id
-	 */
-	private String activityId;
-	/**
-	 * Sandbox Cfg ID
-	 */
-	private String sandboxCfgId;
+    /**
+     * Identifier
+     */
+    private String _id; // NOSONAR
+    /**
+     * Owner
+     */
+    private String owner;
+    /**
+     * Activity id
+     */
+    private String activityId;
+    /**
+     * Sandbox Cfg ID
+     */
+    private String sandboxCfgId;
 
-	/**
-	 * Returns the owner.
-	 *
-	 * @return String : owner
-	 */
-	public String getOwner() {
-		return owner;
-	}
+    /**
+     * Returns the owner.
+     *
+     * @return String : owner
+     */
+    public String getOwner() {
+        return owner;
+    }
 
-	/**
-	 * Defines the owner.
-	 *
-	 * @param owner (String) : owner
-	 */
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
+    /**
+     * Defines the owner.
+     *
+     * @param owner (String) : owner
+     */
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
-	/**
-	 * Returns the activity ID.
-	 *
-	 * @return String : activity ID
-	 */
-	public String getActivityId() {
-		return activityId;
-	}
+    /**
+     * Returns the activity ID.
+     *
+     * @return String : activity ID
+     */
+    public String getActivityId() {
+        return activityId;
+    }
 
-	/**
-	 * Defines the activity ID.
-	 *
-	 * @param activityId (String) : activity ID
-	 */
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+    /**
+     * Defines the activity ID.
+     *
+     * @param activityId (String) : activity ID
+     */
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
 
-	/**
-	 * Returns the sandbox identifier.
-	 *
-	 * @return String : identifier
-	 */
-	public String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Returns the sandbox identifier.
+     *
+     * @return String : identifier
+     */
+    public String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the sandbox identifier.
-	 *
-	 * @param _id (String) : identifier
-	 */
-	public void set_id(String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the sandbox identifier.
+     *
+     * @param _id (String) : identifier
+     */
+    public void set_id(String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the sandbox config ID.
-	 *
-	 * @return String : sandbox config ID
-	 */
-	public String getSandboxCfgId() {
-		return sandboxCfgId;
-	}
+    /**
+     * Returns the sandbox config ID.
+     *
+     * @return String : sandbox config ID
+     */
+    public String getSandboxCfgId() {
+        return sandboxCfgId;
+    }
 
-	/**
-	 * Defines the sandbox config ID.
-	 *
-	 * @param sandboxCfgId (String) : sandbox config ID
-	 */
-	public void setSandboxCfgId(String sandboxCfgId) {
-		this.sandboxCfgId = sandboxCfgId;
-	}
+    /**
+     * Defines the sandbox config ID.
+     *
+     * @param sandboxCfgId (String) : sandbox config ID
+     */
+    public void setSandboxCfgId(String sandboxCfgId) {
+        this.sandboxCfgId = sandboxCfgId;
+    }
 }

@@ -32,265 +32,265 @@ import java.util.List;
  */
 public class TrainingAbstract {
 
-	/**
-	 * The _id.
-	 */
-	private String _id; // NOSONAR
+    /**
+     * The _id.
+     */
+    private String _id; // NOSONAR
 
-	/**
-	 * label.
-	 */
-	private String label;
+    /**
+     * label.
+     */
+    private String label;
 
-	/**
-	 * History.
-	 */
-	private User author;
+    /**
+     * History.
+     */
+    private User author;
 
-	/**
-	 * Create date.
-	 */
-	private long datCreate;
+    /**
+     * Create date.
+     */
+    private long datCreate;
 
-	/**
-	 * Age category.
-	 */
-	private CategoryAge categoryAge;
+    /**
+     * Age category.
+     */
+    private CategoryAge categoryAge;
 
-	/**
-	 * Duration of session.
-	 */
-	private long duration;
+    /**
+     * Duration of session.
+     */
+    private long duration;
 
-	/**
-	 * Status.
-	 */
-	private WorkflowStatusEnum wkflStatus;
+    /**
+     * Status.
+     */
+    private WorkflowStatusEnum wkflStatus;
 
-	/**
-	 * Comment's list.
-	 */
-	private List<Comment> commentList;
+    /**
+     * Comment's list.
+     */
+    private List<Comment> commentList;
 
-	/**
-	 * Sharing.
-	 */
-	private Sharing sharing;
+    /**
+     * Sharing.
+     */
+    private Sharing sharing;
 
-	/**
-	 * History.
-	 */
-	private List<History> historyList;
+    /**
+     * History.
+     */
+    private List<History> historyList;
 
-	/**
-	 * The list of tags for object.
-	 */
-	private List<Tag> tags;
+    /**
+     * The list of tags for object.
+     */
+    private List<Tag> tags;
 
-	/**
-	 * audit CRUD object
-	 */
-	private Audit audit;
+    /**
+     * audit CRUD object
+     */
+    private Audit audit;
 
-	/**
-	 * Instantiates a new education abstract.
-	 */
-	public TrainingAbstract() {
-		super();
-	}
+    /**
+     * Instantiates a new education abstract.
+     */
+    public TrainingAbstract() {
+        super();
+    }
 
-	/**
-	 * Gets the _id.
-	 *
-	 * @return the _id
-	 */
-	public String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Gets the _id.
+     *
+     * @return the _id
+     */
+    public String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Sets the _id.
-	 *
-	 * @param _id the _id to set
-	 */
-	public void set_id(final String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Sets the _id.
+     *
+     * @param _id the _id to set
+     */
+    public void set_id(final String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Gets the label.
-	 *
-	 * @return the label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Gets the label.
+     *
+     * @return the label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Sets the label.
-	 *
-	 * @param label the new label
-	 */
-	public void setLabel(final String label) {
-		this.label = label;
-	}
+    /**
+     * Sets the label.
+     *
+     * @param label the new label
+     */
+    public void setLabel(final String label) {
+        this.label = label;
+    }
 
-	/**
-	 * @return the categoryAge
-	 */
-	public CategoryAge getCategoryAge() {
-		return categoryAge;
-	}
+    /**
+     * @return the categoryAge
+     */
+    public CategoryAge getCategoryAge() {
+        return categoryAge;
+    }
 
-	/**
-	 * Sets the age category.
-	 *
-	 * @param categoryAge the new age category
-	 */
-	public void setCategoryAge(final CategoryAge categoryAge) {
-		this.categoryAge = categoryAge;
-	}
+    /**
+     * Sets the age category.
+     *
+     * @param categoryAge the new age category
+     */
+    public void setCategoryAge(final CategoryAge categoryAge) {
+        this.categoryAge = categoryAge;
+    }
 
-	/**
-	 * Gets the duration of session.
-	 *
-	 * @return the duration of session
-	 */
-	public long getDuration() {
-		return duration;
-	}
+    /**
+     * Gets the duration of session.
+     *
+     * @return the duration of session
+     */
+    public long getDuration() {
+        return duration;
+    }
 
-	/**
-	 * Sets the duration of session.
-	 *
-	 * @param duration the new duration of session
-	 */
-	public void setDuration(final long duration) {
-		this.duration = duration;
-	}
+    /**
+     * Sets the duration of session.
+     *
+     * @param duration the new duration of session
+     */
+    public void setDuration(final long duration) {
+        this.duration = duration;
+    }
 
-	/**
-	 * Gets the status.
-	 *
-	 * @return the status
-	 */
-	public WorkflowStatusEnum getWkflStatus() {
-		return wkflStatus;
-	}
+    /**
+     * Gets the status.
+     *
+     * @return the status
+     */
+    public WorkflowStatusEnum getWkflStatus() {
+        return wkflStatus;
+    }
 
-	/**
-	 * Sets the status.
-	 *
-	 * @param wkflStatus the new status
-	 */
-	public void setWkflStatus(final WorkflowStatusEnum wkflStatus) {
-		this.wkflStatus = wkflStatus;
-	}
+    /**
+     * Sets the status.
+     *
+     * @param wkflStatus the new status
+     */
+    public void setWkflStatus(final WorkflowStatusEnum wkflStatus) {
+        this.wkflStatus = wkflStatus;
+    }
 
-	/**
-	 * Gets the comment's list.
-	 *
-	 * @return the comment's list
-	 */
-	public final List<Comment> getCommentList() {
-		return commentList;
-	}
+    /**
+     * Gets the comment's list.
+     *
+     * @return the comment's list
+     */
+    public final List<Comment> getCommentList() {
+        return commentList;
+    }
 
-	/**
-	 * Sets the comment's list.
-	 *
-	 * @param commentList the new comment's list
-	 */
-	public final void setCommentList(final List<Comment> commentList) {
-		this.commentList = commentList;
-	}
+    /**
+     * Sets the comment's list.
+     *
+     * @param commentList the new comment's list
+     */
+    public final void setCommentList(final List<Comment> commentList) {
+        this.commentList = commentList;
+    }
 
-	/**
-	 * Gets the sharing.
-	 *
-	 * @return the sharing
-	 */
-	public final Sharing getSharing() {
-		return sharing;
-	}
+    /**
+     * Gets the sharing.
+     *
+     * @return the sharing
+     */
+    public final Sharing getSharing() {
+        return sharing;
+    }
 
-	/**
-	 * Sets the sharing.
-	 *
-	 * @param sharing the new sharing
-	 */
-	public final void setSharing(final Sharing sharing) {
-		this.sharing = sharing;
-	}
+    /**
+     * Sets the sharing.
+     *
+     * @param sharing the new sharing
+     */
+    public final void setSharing(final Sharing sharing) {
+        this.sharing = sharing;
+    }
 
-	/**
-	 * @return the datCreate
-	 */
-	public long getDatCreate() {
-		return datCreate;
-	}
+    /**
+     * @return the datCreate
+     */
+    public long getDatCreate() {
+        return datCreate;
+    }
 
-	/**
-	 * @param datCreate the datCreate to set
-	 */
-	public void setDatCreate(long datCreate) {
-		this.datCreate = datCreate;
-	}
+    /**
+     * @param datCreate the datCreate to set
+     */
+    public void setDatCreate(long datCreate) {
+        this.datCreate = datCreate;
+    }
 
-	/**
-	 * @return the historyList
-	 */
-	public List<History> getHistoryList() {
-		return historyList;
-	}
+    /**
+     * @return the historyList
+     */
+    public List<History> getHistoryList() {
+        return historyList;
+    }
 
-	/**
-	 * @param historyList the historyList to set
-	 */
-	public void setHistoryList(List<History> historyList) {
-		this.historyList = historyList;
-	}
+    /**
+     * @param historyList the historyList to set
+     */
+    public void setHistoryList(List<History> historyList) {
+        this.historyList = historyList;
+    }
 
-	/**
-	 * @return the author
-	 */
-	public User getAuthor() {
-		return author;
-	}
+    /**
+     * @return the author
+     */
+    public User getAuthor() {
+        return author;
+    }
 
-	/**
-	 * @param author the author to set
-	 */
-	public void setAuthor(User author) {
-		this.author = author;
-	}
+    /**
+     * @param author the author to set
+     */
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
-	/**
-	 * @return the audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * @return the audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * @param audit the audit to set
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * @param audit the audit to set
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 
-	/**
-	 * @return the tags
-	 */
-	public List<Tag> getTags() {
-		return tags;
-	}
+    /**
+     * @return the tags
+     */
+    public List<Tag> getTags() {
+        return tags;
+    }
 
-	/**
-	 * @param tags the tags to set
-	 */
-	public void setTags(List<Tag> tags) {
-		this.tags = tags;
-	}
+    /**
+     * @param tags the tags to set
+     */
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 
 }

@@ -24,13 +24,13 @@ package com.qaobee.hive.business.model.commons.settings;
  */
 public interface ParametersGame {
 
-	String NB_MAX_PLAYERS = "nbMaxPlayers";
-	String NB_MIN_PLAYERS = "nbMinPlayers";
-	String NB_PERIODS = "nbPeriods";
-	String PERIODE_DURATION = "periodDuration";
-	String NB_TIMEOUT = "nbTimeout";
-	String TIMEOUT_DURATION = "timeoutDuration";
-	String YELLOW_CARDS_MAX = "yellowCardsMax";
-	String EXCLUSION_TEMPO = "exclusionTempo";
-	String HALF_TIME_DURATION = "halfTimeDuration";
+    String NB_MAX_PLAYERS = "nbMaxPlayers";
+    String NB_MIN_PLAYERS = "nbMinPlayers";
+    String NB_PERIODS = "nbPeriods";
+    String PERIODE_DURATION = "periodDuration";
+    String NB_TIMEOUT = "nbTimeout";
+    String TIMEOUT_DURATION = "timeoutDuration";
+    String YELLOW_CARDS_MAX = "yellowCardsMax";
+    String EXCLUSION_TEMPO = "exclusionTempo";
+    String HALF_TIME_DURATION = "halfTimeDuration";
 }

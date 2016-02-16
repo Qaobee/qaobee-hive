@@ -46,214 +46,221 @@ import java.util.Map;
  *
  * @author cke
  */
-@DeployableVerticle(isWorker = true) public class SeasonVerticle extends AbstractGuiceVerticle {
-	/**
-	 * The Constant GET.
-	 */
-	public static final String GET = Module.VERSION + ".commons.settings.season.get";
-	// Declaration des variables finals
-	/**
-	 * The Constant GET_LIST_BY_ACTIVITY.
-	 */
-	public static final String GET_LIST_BY_ACTIVITY = Module.VERSION + ".commons.settings.season.getListByActivity";
-	/**
-	 * The constant GET_CURRENT.
-	 */
-	public static final String GET_CURRENT = Module.VERSION + ".commons.settings.season.current";
-	/**
-	 * Id of the season
-	 */
-	public static final String PARAM_ID = "_id";
+@DeployableVerticle(isWorker = true)
+public class SeasonVerticle extends AbstractGuiceVerticle {
+    /**
+     * The Constant GET.
+     */
+    public static final String GET = Module.VERSION + ".commons.settings.season.get";
+    // Declaration des variables finals
+    /**
+     * The Constant GET_LIST_BY_ACTIVITY.
+     */
+    public static final String GET_LIST_BY_ACTIVITY = Module.VERSION + ".commons.settings.season.getListByActivity";
+    /**
+     * The constant GET_CURRENT.
+     */
+    public static final String GET_CURRENT = Module.VERSION + ".commons.settings.season.current";
+    /**
+     * Id of the season
+     */
+    public static final String PARAM_ID = "_id";
 
 	/* List of parameters */
-	/**
-	 * Activity ID
-	 */
-	public static final String PARAM_ACTIVITY_ID = "activityId";
-	/**
-	 * Country ID
-	 */
-	public static final String PARAM_COUNTRY_ID = "countryId";
-	/**
-	 * Reference date
-	 */
-	public static final String PARAM_DATE = "date";
-	private static final Logger LOG = LoggerFactory.getLogger(SeasonVerticle.class);
-	/**
-	 * The Mongo.
-	 */
+    /**
+     * Activity ID
+     */
+    public static final String PARAM_ACTIVITY_ID = "activityId";
+    /**
+     * Country ID
+     */
+    public static final String PARAM_COUNTRY_ID = "countryId";
+    /**
+     * Reference date
+     */
+    public static final String PARAM_DATE = "date";
+    private static final Logger LOG = LoggerFactory.getLogger(SeasonVerticle.class);
+    /**
+     * The Mongo.
+     */
 /* Injections */
-	@Inject private MongoDB mongo;
-	/**
-	 * The Utils.
-	 */
-	@Inject private Utils utils;
+    @Inject
+    private MongoDB mongo;
+    /**
+     * The Utils.
+     */
+    @Inject
+    private Utils utils;
 
-	/**
-	 * Start void.
-	 */
-	@Override public void start() {
-		super.start();
-		LOG.debug(this.getClass().getName() + " started");
+    /**
+     * Start void.
+     */
+    @Override
+    public void start() {
+        super.start();
+        LOG.debug(this.getClass().getName() + " started");
 
-		/**
-		 * @apiDescription get a season to the collection season in settings module
-		 * @api {get} /api/1/commons/settings/season/get Get season by id
-		 * @apiVersion 0.1.0
-		 * @apiName getHandler
-		 * @apiGroup Season API
-		 * @apiParam {String} _id Mandatory The season Id.
-		 * @apiSuccess {Season} the object found
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError INTERNAL_ERROR internal error
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
+        /**
+         * @apiDescription get a season to the collection season in settings module
+         * @api {get} /api/1/commons/settings/season/get Get season by id
+         * @apiVersion 0.1.0
+         * @apiName getHandler
+         * @apiGroup Season API
+         * @apiParam {String} _id Mandatory The season Id.
+         * @apiSuccess {Season} the object found
+         * @apiError HTTP_ERROR Bad request
+         * @apiError INTERNAL_ERROR internal error
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
 
-			@Override public void handle(final Message<String> message) {
-				LOG.debug("getHandler() - Season");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					Map<String, List<String>> params = req.getParams();
-					utils.testMandatoryParams(params, PARAM_ID);
-					utils.isUserLogged(req);
+            @Override
+            public void handle(final Message<String> message) {
+                LOG.debug("getHandler() - Season");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_ID);
+                    utils.isUserLogged(req);
 
-					final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Season.class);
-					LOG.debug("Season found : " + json.toString());
-					message.reply(json.encode());
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				} catch (Exception e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-				}
-			}
-		});
+                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Season.class);
+                    LOG.debug("Season found : " + json.toString());
+                    message.reply(json.encode());
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
 
-		/**
-		 * @apiDescription Retrieve all seasons for one activity and one country
-		 * @api {get} /api/1/commons/settings/season/getListByActivity Retrieve all seasons
-		 * @apiVersion 0.1.0
-		 * @apiName getListByActivityHandler
-		 * @apiParam activityId Activity Id
-		 * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
-		 * @apiGroup Season API
-		 * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError INTERNAL_ERROR internal error
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		vertx.eventBus().registerHandler(GET_LIST_BY_ACTIVITY, new Handler<Message<String>>() {
+        /**
+         * @apiDescription Retrieve all seasons for one activity and one country
+         * @api {get} /api/1/commons/settings/season/getListByActivity Retrieve all seasons
+         * @apiVersion 0.1.0
+         * @apiName getListByActivityHandler
+         * @apiParam activityId Activity Id
+         * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
+         * @apiGroup Season API
+         * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
+         * @apiError HTTP_ERROR Bad request
+         * @apiError INTERNAL_ERROR internal error
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        vertx.eventBus().registerHandler(GET_LIST_BY_ACTIVITY, new Handler<Message<String>>() {
 
-			@Override public void handle(final Message<String> message) {
-				LOG.debug("getListByActivityHandler() - Season");
-				final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-				try {
-					// Tests on method and parameters
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID);
-					utils.isUserLogged(req);
+            @Override
+            public void handle(final Message<String> message) {
+                LOG.debug("getListByActivityHandler() - Season");
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    // Tests on method and parameters
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID);
+                    utils.isUserLogged(req);
 
-					// Activity ID
-					String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
-					// Country ID
-					String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
-					// Creation of the request
-					Map<String, Object> criterias = new HashMap<>();
-					criterias.put("activityId", activityId);
-					criterias.put("countryId", countryId);
+                    // Activity ID
+                    String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
+                    // Country ID
+                    String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
+                    // Creation of the request
+                    Map<String, Object> criterias = new HashMap<>();
+                    criterias.put("activityId", activityId);
+                    criterias.put("countryId", countryId);
 
-					JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
 
-					if (resultJson == null || resultJson.size() == 0) {
-						throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
-					}
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
+                    }
 
-					message.reply(resultJson.encode());
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (final QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				} catch (Exception e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-				}
-			}
-		});
+                    message.reply(resultJson.encode());
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (final QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
 
-		/**
-		 * @apiDescription Retrieve current season for one activity and one country
-		 * @api {get} /api/1/commons/settings/season/current Retrieve current seasons
-		 * @apiVersion 0.1.0
-		 * @apiName getCurrentHandler
-		 * @apiGroup Season API
-		 * @apiParam activityId Activity Id
-		 * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
-		 * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError INTERNAL_ERROR internal error
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		vertx.eventBus().registerHandler(GET_CURRENT, new Handler<Message<String>>() {
+        /**
+         * @apiDescription Retrieve current season for one activity and one country
+         * @api {get} /api/1/commons/settings/season/current Retrieve current seasons
+         * @apiVersion 0.1.0
+         * @apiName getCurrentHandler
+         * @apiGroup Season API
+         * @apiParam activityId Activity Id
+         * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
+         * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
+         * @apiError HTTP_ERROR Bad request
+         * @apiError INTERNAL_ERROR internal error
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        vertx.eventBus().registerHandler(GET_CURRENT, new Handler<Message<String>>() {
 
-			@Override public void handle(final Message<String> message) {
-				LOG.debug("getCurrentHandler() - Season");
-				final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-				try {
-					// Tests on method and parameters
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID);
-					utils.isUserLogged(req);
+            @Override
+            public void handle(final Message<String> message) {
+                LOG.debug("getCurrentHandler() - Season");
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                try {
+                    // Tests on method and parameters
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.testMandatoryParams(req.getParams(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID);
+                    utils.isUserLogged(req);
 
-					// Activity ID
-					String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
-					// Country ID
-					String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
-					// Creation of the request
-					Map<String, Object> criterias = new HashMap<>();
-					criterias.put("activityId", activityId);
-					criterias.put("countryId", countryId);
-					JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
-					long currentDate = System.currentTimeMillis();
-					if (resultJson == null || resultJson.size() == 0) {
-						throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
-					}
-					for (int i = 0; i < resultJson.size(); i++) {
-						JsonObject s = resultJson.get(i);
-						if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
-							message.reply(s.encode());
-							return;
-						}
-					}
-					message.reply(new JsonObject().encode());
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (final QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				} catch (Exception e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-				}
-			}
-		});
-	}
+                    // Activity ID
+                    String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
+                    // Country ID
+                    String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
+                    // Creation of the request
+                    Map<String, Object> criterias = new HashMap<>();
+                    criterias.put("activityId", activityId);
+                    criterias.put("countryId", countryId);
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
+                    long currentDate = System.currentTimeMillis();
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
+                    }
+                    for (int i = 0; i < resultJson.size(); i++) {
+                        JsonObject s = resultJson.get(i);
+                        if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
+                            message.reply(s.encode());
+                            return;
+                        }
+                    }
+                    message.reply(new JsonObject().encode());
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (final QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
+    }
 
 }

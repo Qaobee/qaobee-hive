@@ -40,58 +40,60 @@ import java.util.Map;
  */
 public class SandBoxCfgTest extends VertxJunitSupport {
 
-	/**
-	 * Retrieve sand box config by id.
-	 */
-	@Test public void retrieveSandBoxConfigById() {
+    /**
+     * Retrieve sand box config by id.
+     */
+    @Test
+    public void retrieveSandBoxConfigById() {
 
-		// SandBoxCfg._id
-		String id = "558b0fc0bd2e39cdab651e21";
+        // SandBoxCfg._id
+        String id = "558b0fc0bd2e39cdab651e21";
 
-		populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
-		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
-		req.setUser(user);
-		final Map<String, List<String>> params = new HashMap<>();
-		params.put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(id));
-		req.setParams(params);
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
+        req.setUser(user);
+        final Map<String, List<String>> params = new HashMap<>();
+        params.put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(id));
+        req.setParams(params);
 
-		final String reply = sendonBus(SB_SandBoxCfgVerticle.GET, req, user.getAccount().getToken());
-		JsonObject result = new JsonObject(reply);
-		Assert.assertEquals(id, result.getString("_id"));
-		Assert.assertEquals(user.get_id(), result.getObject("sandbox").getString("owner"));
+        final String reply = sendonBus(SB_SandBoxCfgVerticle.GET, req, user.getAccount().getToken());
+        JsonObject result = new JsonObject(reply);
+        Assert.assertEquals(id, result.getString("_id"));
+        Assert.assertEquals(user.get_id(), result.getObject("sandbox").getString("owner"));
 
-	}
+    }
 
-	/**
-	 * Retrieve sand box config by sand box id.
-	 */
-	@Test public void retrieveSandBoxConfigBySandBoxId() {
+    /**
+     * Retrieve sand box config by sand box id.
+     */
+    @Test
+    public void retrieveSandBoxConfigBySandBoxId() {
 
-		populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-		User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
 
-		user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-		try {
-			mongo.save(user);
+        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+        try {
+            mongo.save(user);
 
-			final RequestWrapper req = new RequestWrapper();
-			req.setLocale(LOCALE);
-			req.setMethod(Constantes.GET);
-			req.setUser(user);
-			final Map<String, List<String>> params = new HashMap<>();
-			params.put(SB_SandBoxCfgVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-			params.put(SB_SandBoxCfgVerticle.PARAM_SEASON_ID, Collections.singletonList("558b0ceaf9285df5b7553fc6"));
-			req.setParams(params);
+            final RequestWrapper req = new RequestWrapper();
+            req.setLocale(LOCALE);
+            req.setMethod(Constantes.GET);
+            req.setUser(user);
+            final Map<String, List<String>> params = new HashMap<>();
+            params.put(SB_SandBoxCfgVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
+            params.put(SB_SandBoxCfgVerticle.PARAM_SEASON_ID, Collections.singletonList("558b0ceaf9285df5b7553fc6"));
+            req.setParams(params);
 
-			final String reply = sendonBus(SB_SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());
-			JsonArray result = new JsonArray(reply);
-			Assert.assertEquals(1, result.size());
+            final String reply = sendonBus(SB_SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());
+            JsonArray result = new JsonArray(reply);
+            Assert.assertEquals(1, result.size());
 
-		} catch (QaobeeException e) {
-			Assert.fail(e.getMessage());
-		}
-	}
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
 }

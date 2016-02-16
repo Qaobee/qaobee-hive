@@ -34,32 +34,33 @@ import org.vertx.java.core.json.JsonObject;
  */
 public class SB_StatsTest extends VertxJunitSupport {
 
-	/**
-	 * Gets list event test.
-	 */
-	@Test public void getListDetailValuesTest() {
+    /**
+     * Gets list event test.
+     */
+    @Test
+    public void getListDetailValuesTest() {
 
-		populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);
+        populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);
 
-		//First Add an event
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.POST);
+        //First Add an event
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.POST);
 
         /* list of parameters */
-		final JsonObject params = new JsonObject();
-		params.putNumber(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000l);
-		params.putNumber(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000l);
-		params.putArray(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[] { "originShootAtt" }));
-		params.putArray(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray(new String[] { "5f82c510-2c89-46b0-b87d-d3b59e748615" }));
+        final JsonObject params = new JsonObject();
+        params.putNumber(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000l);
+        params.putNumber(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000l);
+        params.putArray(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[]{"originShootAtt"}));
+        params.putArray(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray(new String[]{"5f82c510-2c89-46b0-b87d-d3b59e748615"}));
 
-		req.setBody(params.encode());
+        req.setBody(params.encode());
 
-		final String reply = sendonBus(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES, req, user.getAccount().getToken());
-		Assert.assertEquals("getListDetailValues", 10, new JsonArray(reply).size());
+        final String reply = sendonBus(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES, req, user.getAccount().getToken());
+        Assert.assertEquals("getListDetailValues", 10, new JsonArray(reply).size());
 
-	}
+    }
 
 }

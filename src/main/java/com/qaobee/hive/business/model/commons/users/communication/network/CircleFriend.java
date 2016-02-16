@@ -27,96 +27,96 @@ import java.util.List;
  */
 public class CircleFriend {
 
-	/**
-	 * The _id.
-	 */
-	private String _id; // NOSONAR
+    /**
+     * The _id.
+     */
+    private String _id; // NOSONAR
 
-	/**
-	 * label.
-	 */
-	private String label;
+    /**
+     * label.
+     */
+    private String label;
 
-	/**
-	 * Create date.
-	 */
-	private long datCreate;
+    /**
+     * Create date.
+     */
+    private long datCreate;
 
-	/**
-	 * Sharing list Member.
-	 */
-	private List<String> sharingListMembers;
+    /**
+     * Sharing list Member.
+     */
+    private List<String> sharingListMembers;
 
-	/**
-	 * Gets the _id.
-	 *
-	 * @return the _id
-	 */
-	public final String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Gets the _id.
+     *
+     * @return the _id
+     */
+    public final String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Sets the _id.
-	 *
-	 * @param _id the _id to set
-	 */
-	public final void set_id(final String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Sets the _id.
+     *
+     * @param _id the _id to set
+     */
+    public final void set_id(final String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Gets the dat create.
-	 *
-	 * @return the datCreate
-	 */
-	public final long getDatCreate() {
-		return datCreate;
-	}
+    /**
+     * Gets the dat create.
+     *
+     * @return the datCreate
+     */
+    public final long getDatCreate() {
+        return datCreate;
+    }
 
-	/**
-	 * Sets the dat create.
-	 *
-	 * @param datCreate the datCreate to set
-	 */
-	public final void setDatCreate(final long datCreate) {
-		this.datCreate = datCreate;
-	}
+    /**
+     * Sets the dat create.
+     *
+     * @param datCreate the datCreate to set
+     */
+    public final void setDatCreate(final long datCreate) {
+        this.datCreate = datCreate;
+    }
 
-	/**
-	 * Gets the sharing list members.
-	 *
-	 * @return the sharingListMembers
-	 */
-	public final List<String> getSharingListMembers() {
-		return sharingListMembers;
-	}
+    /**
+     * Gets the sharing list members.
+     *
+     * @return the sharingListMembers
+     */
+    public final List<String> getSharingListMembers() {
+        return sharingListMembers;
+    }
 
-	/**
-	 * Sets the sharing list members.
-	 *
-	 * @param sharingListMembers the sharingListMembers to set
-	 */
-	public final void setSharingListMembers(final List<String> sharingListMembers) {
-		this.sharingListMembers = sharingListMembers;
-	}
+    /**
+     * Sets the sharing list members.
+     *
+     * @param sharingListMembers the sharingListMembers to set
+     */
+    public final void setSharingListMembers(final List<String> sharingListMembers) {
+        this.sharingListMembers = sharingListMembers;
+    }
 
-	/**
-	 * Gets the label.
-	 *
-	 * @return the label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Gets the label.
+     *
+     * @return the label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Sets the label.
-	 *
-	 * @param label the label to set
-	 */
-	public void setLabel(final String label) {
-		this.label = label;
-	}
+    /**
+     * Sets the label.
+     *
+     * @param label the label to set
+     */
+    public void setLabel(final String label) {
+        this.label = label;
+    }
 
 }

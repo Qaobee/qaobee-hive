@@ -37,97 +37,101 @@ import java.util.Map;
  */
 public class CountryTest extends VertxJunitSupport {
 
-	/**
-	 * Tests get for CountryVerticle
-	 */
-	@Test public void getObjectByIdOk() {
+    /**
+     * Tests get for CountryVerticle
+     */
+    @Test
+    public void getObjectByIdOk() {
 
-		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 
 		/* test based on script mongo */
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
 
-		final Map<String, List<String>> params = new HashMap<>();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		// id
-		params.put(CountryVerticle.PARAM_ID, Collections.singletonList("CNTR-250-FR-FRA"));
-		req.setParams(params);
+        // id
+        params.put(CountryVerticle.PARAM_ID, Collections.singletonList("CNTR-250-FR-FRA"));
+        req.setParams(params);
 
-		final String reply = sendonBus(CountryVerticle.GET, req);
-		JsonObject result = new JsonObject(reply);
+        final String reply = sendonBus(CountryVerticle.GET, req);
+        JsonObject result = new JsonObject(reply);
 
-		String label = result.getString("label");
+        String label = result.getString("label");
 
-		Assert.assertEquals("France", label);
-	}
+        Assert.assertEquals("France", label);
+    }
 
-	/**
-	 * Tests get for CountryVerticle
-	 * with missing mandatory fields
-	 */
-	@Test public void getObjectByIdKo() {
+    /**
+     * Tests get for CountryVerticle
+     * with missing mandatory fields
+     */
+    @Test
+    public void getObjectByIdKo() {
 
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
 
-		final Map<String, List<String>> params = new HashMap<>();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		JsonObject resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
-		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+        JsonObject resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
+        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
-		// id
-		params.put(CountryVerticle.PARAM_ID, Collections.singletonList(""));
-		req.setParams(params);
+        // id
+        params.put(CountryVerticle.PARAM_ID, Collections.singletonList(""));
+        req.setParams(params);
 
-		resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
-		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+        resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
+        Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
-	}
+    }
 
-	/**
-	 * Tests getList for CountryVerticle
-	 */
-	@Test public void getListAll() {
+    /**
+     * Tests getList for CountryVerticle
+     */
+    @Test
+    public void getListAll() {
 
-		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<>();
-		params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
-		req.setParams(params);
+        final HashMap<String, List<String>> params = new HashMap<>();
+        params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
+        req.setParams(params);
 
-		JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
-		Assert.assertEquals(202, result.size());
+        JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
+        Assert.assertEquals(202, result.size());
 
-	}
+    }
 
-	/**
-	 * Tests getList for CountryVerticle
-	 */
-	@Test public void getListFilter() {
+    /**
+     * Tests getList for CountryVerticle
+     */
+    @Test
+    public void getListFilter() {
 
-		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setMethod(Constantes.GET);
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.GET);
 
-		final Map<String, List<String>> params = new HashMap<>();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		// label
-		params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
-		params.put(CountryVerticle.PARAM_LABEL, Collections.singletonList("//Fra"));
-		req.setParams(params);
+        // label
+        params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
+        params.put(CountryVerticle.PARAM_LABEL, Collections.singletonList("//Fra"));
+        req.setParams(params);
 
-		JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
-		Assert.assertEquals(4, result.size());
+        JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
+        Assert.assertEquals(4, result.size());
 
-	}
+    }
 
 }

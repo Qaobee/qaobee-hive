@@ -31,205 +31,206 @@ import com.qaobee.hive.business.model.transversal.Contact;
  * @author Nada Vujanic-Maquin
  */
 
-@JsonIgnoreProperties(ignoreUnknown = true) public class Structure {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Structure {
 
-	/**
-	 * Internal identifier
-	 */
-	private String _id; // NOSONAR
-	/**
-	 * Label
-	 */
-	private String label;
-	/**
-	 * Structure's Acronym
-	 */
-	private String acronym;
-	/**
-	 * activity code of the structure
-	 */
-	private Activity activity;
-	/**
-	 * Address
-	 */
-	private Address address;
-	/**
-	 * Contact
-	 */
-	private Contact contact;
-	/**
-	 * Avatar
-	 */
-	private String avatar;
-	/**
-	 * audit CRUD object
-	 */
-	private Audit audit;
-	/**
-	 * country of the structure
-	 */
-	private Country country;
+    /**
+     * Internal identifier
+     */
+    private String _id; // NOSONAR
+    /**
+     * Label
+     */
+    private String label;
+    /**
+     * Structure's Acronym
+     */
+    private String acronym;
+    /**
+     * activity code of the structure
+     */
+    private Activity activity;
+    /**
+     * Address
+     */
+    private Address address;
+    /**
+     * Contact
+     */
+    private Contact contact;
+    /**
+     * Avatar
+     */
+    private String avatar;
+    /**
+     * audit CRUD object
+     */
+    private Audit audit;
+    /**
+     * country of the structure
+     */
+    private Country country;
 
-	/**
-	 * Returns the internal identifier.
-	 *
-	 * @return String : ID
-	 */
-	public String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : ID
+     */
+    public String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 *
-	 * @param _id (String) : ID
-	 */
-	public void set_id(final String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : ID
+     */
+    public void set_id(final String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the label.
-	 *
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the label.
-	 *
-	 * @param label (String) : label
-	 */
-	public void setLabel(final String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the label.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(final String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the acronym.
-	 *
-	 * @return String : acronym
-	 */
-	public String getAcronym() {
-		return acronym;
-	}
+    /**
+     * Returns the acronym.
+     *
+     * @return String : acronym
+     */
+    public String getAcronym() {
+        return acronym;
+    }
 
-	/**
-	 * Defines the acronym.
-	 *
-	 * @param acronym (String) : acronym
-	 */
-	public void setAcronym(final String acronym) {
-		this.acronym = acronym;
-	}
+    /**
+     * Defines the acronym.
+     *
+     * @param acronym (String) : acronym
+     */
+    public void setAcronym(final String acronym) {
+        this.acronym = acronym;
+    }
 
-	/**
-	 * Returns the avatar.
-	 *
-	 * @return String : avatar
-	 */
-	public String getAvatar() {
-		return avatar;
-	}
+    /**
+     * Returns the avatar.
+     *
+     * @return String : avatar
+     */
+    public String getAvatar() {
+        return avatar;
+    }
 
-	/**
-	 * Defines the avatar.
-	 *
-	 * @param avatar (String) : avatar
-	 */
-	public void setAvatar(final String avatar) {
-		this.avatar = avatar;
-	}
+    /**
+     * Defines the avatar.
+     *
+     * @param avatar (String) : avatar
+     */
+    public void setAvatar(final String avatar) {
+        this.avatar = avatar;
+    }
 
-	/**
-	 * Returns the country.
-	 *
-	 * @return Country : country
-	 */
-	public Country getCountry() {
-		return country;
-	}
+    /**
+     * Returns the country.
+     *
+     * @return Country : country
+     */
+    public Country getCountry() {
+        return country;
+    }
 
-	/**
-	 * Defines the country.
-	 *
-	 * @param country (Country) : country
-	 */
-	public void setCountry(Country country) {
-		this.country = country;
-	}
+    /**
+     * Defines the country.
+     *
+     * @param country (Country) : country
+     */
+    public void setCountry(Country country) {
+        this.country = country;
+    }
 
-	/**
-	 * Returns the activity.
-	 *
-	 * @return Activity : activity
-	 */
-	public Activity getActivity() {
-		return activity;
-	}
+    /**
+     * Returns the activity.
+     *
+     * @return Activity : activity
+     */
+    public Activity getActivity() {
+        return activity;
+    }
 
-	/**
-	 * Defines the activity.
-	 *
-	 * @param activity (Activity) : activity
-	 */
-	public void setActivity(Activity activity) {
-		this.activity = activity;
-	}
+    /**
+     * Defines the activity.
+     *
+     * @param activity (Activity) : activity
+     */
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
 
-	/**
-	 * Returns the address.
-	 *
-	 * @return Address : address
-	 */
-	public Address getAddress() {
-		return address;
-	}
+    /**
+     * Returns the address.
+     *
+     * @return Address : address
+     */
+    public Address getAddress() {
+        return address;
+    }
 
-	/**
-	 * Defines the address.
-	 *
-	 * @param address (Address) : address
-	 */
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    /**
+     * Defines the address.
+     *
+     * @param address (Address) : address
+     */
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
-	/**
-	 * Returns the contact.
-	 *
-	 * @return Contact : contact
-	 */
-	public Contact getContact() {
-		return contact;
-	}
+    /**
+     * Returns the contact.
+     *
+     * @return Contact : contact
+     */
+    public Contact getContact() {
+        return contact;
+    }
 
-	/**
-	 * Defines the contact.
-	 *
-	 * @param contact (Contact) : contact
-	 */
-	public void setContact(Contact contact) {
-		this.contact = contact;
-	}
+    /**
+     * Defines the contact.
+     *
+     * @param contact (Contact) : contact
+     */
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
 
-	/**
-	 * Returns the audit.
-	 *
-	 * @return Audit : audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * Returns the audit.
+     *
+     * @return Audit : audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * Defines the audit.
-	 *
-	 * @param audit (Audit) : audit
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * Defines the audit.
+     *
+     * @param audit (Audit) : audit
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 
 }

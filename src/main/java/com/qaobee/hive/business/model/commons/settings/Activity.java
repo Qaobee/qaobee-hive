@@ -26,143 +26,144 @@ import com.qaobee.hive.business.model.transversal.Audit;
  *
  * @author jerome
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class Activity {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Activity {
 
-	/**
-	 * Internal identifier.
-	 */
-	private String _id; // NOSONAR
+    /**
+     * Internal identifier.
+     */
+    private String _id; // NOSONAR
 
-	/**
-	 * Code.
-	 */
-	private String code;
+    /**
+     * Code.
+     */
+    private String code;
 
-	/**
-	 * Label.
-	 */
-	private String label;
+    /**
+     * Label.
+     */
+    private String label;
 
-	/**
-	 * Label.
-	 */
-	private boolean enable;
+    /**
+     * Label.
+     */
+    private boolean enable;
 
-	/**
-	 * Type of activity.
-	 */
-	private ActivityTypeEnum activityType;
+    /**
+     * Type of activity.
+     */
+    private ActivityTypeEnum activityType;
 
-	/**
-	 * audit CRUD object
-	 */
-	private Audit audit;
+    /**
+     * audit CRUD object
+     */
+    private Audit audit;
 
-	/**
-	 * Returns the internal identifier.
-	 *
-	 * @return String : id
-	 */
-	public String get_id() {// NOSONAR
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : id
+     */
+    public String get_id() {// NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 *
-	 * @param _id (String) : id
-	 */
-	public void set_id(final String _id) {// NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : id
+     */
+    public void set_id(final String _id) {// NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the code.
-	 *
-	 * @return String : activity code
-	 */
-	public String getCode() {
-		return code;
-	}
+    /**
+     * Returns the code.
+     *
+     * @return String : activity code
+     */
+    public String getCode() {
+        return code;
+    }
 
-	/**
-	 * Defines the code.
-	 *
-	 * @param code (String) : activity code
-	 */
-	public void setCode(final String code) {
-		this.code = code;
-	}
+    /**
+     * Defines the code.
+     *
+     * @param code (String) : activity code
+     */
+    public void setCode(final String code) {
+        this.code = code;
+    }
 
-	/**
-	 * Returns the label.
-	 *
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the label.
-	 *
-	 * @param label (String) :  label
-	 */
-	public void setLabel(final String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the label.
+     *
+     * @param label (String) :  label
+     */
+    public void setLabel(final String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the type of activity.
-	 *
-	 * @return ActivityTypeEnum : type of activity
-	 */
-	public ActivityTypeEnum getActivityType() {
-		return activityType;
-	}
+    /**
+     * Returns the type of activity.
+     *
+     * @return ActivityTypeEnum : type of activity
+     */
+    public ActivityTypeEnum getActivityType() {
+        return activityType;
+    }
 
-	/**
-	 * Sets the type of activity.
-	 *
-	 * @param activityType (ActivityTypeEnum) : type of activity
-	 */
-	public void setActivityType(final ActivityTypeEnum activityType) {
-		this.activityType = activityType;
-	}
+    /**
+     * Sets the type of activity.
+     *
+     * @param activityType (ActivityTypeEnum) : type of activity
+     */
+    public void setActivityType(final ActivityTypeEnum activityType) {
+        this.activityType = activityType;
+    }
 
-	/**
-	 * Returns if the activity is enable.
-	 *
-	 * @return true if enable
-	 */
-	public boolean isEnable() {
-		return enable;
-	}
+    /**
+     * Returns if the activity is enable.
+     *
+     * @return true if enable
+     */
+    public boolean isEnable() {
+        return enable;
+    }
 
-	/**
-	 * Defines if the activity is enable.
-	 *
-	 * @param enable (boolean) : true if enable
-	 */
-	public void setEnable(boolean enable) {
-		this.enable = enable;
-	}
+    /**
+     * Defines if the activity is enable.
+     *
+     * @param enable (boolean) : true if enable
+     */
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
 
-	/**
-	 * Returns the audit.
-	 *
-	 * @return Audit : audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * Returns the audit.
+     *
+     * @return Audit : audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * Defines the audit.
-	 *
-	 * @param audit (Audit) : audit
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * Defines the audit.
+     *
+     * @param audit (Audit) : audit
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 }

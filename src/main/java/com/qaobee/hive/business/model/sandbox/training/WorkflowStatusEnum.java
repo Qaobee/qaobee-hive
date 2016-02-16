@@ -23,47 +23,47 @@ package com.qaobee.hive.business.model.sandbox.training;
  */
 public enum WorkflowStatusEnum {
 
-	/**
-	 * In progress status.
-	 */
-	INPROGRESS("education.status.inprogress"),
+    /**
+     * In progress status.
+     */
+    INPROGRESS("education.status.inprogress"),
 
-	/**
-	 * submitted status.
-	 */
-	SUBMITTED("education.status.submitted"),
+    /**
+     * submitted status.
+     */
+    SUBMITTED("education.status.submitted"),
 
-	/**
-	 * Validate status.
-	 */
-	VALIDATED("education.status.validated"),
+    /**
+     * Validate status.
+     */
+    VALIDATED("education.status.validated"),
 
-	/**
-	 * Cancelled status.
-	 */
-	CANCELLED("education.status.cancelled");
+    /**
+     * Cancelled status.
+     */
+    CANCELLED("education.status.cancelled");
 
-	/**
-	 * workflowStatus.
-	 */
-	private String workflowStatus;
+    /**
+     * workflowStatus.
+     */
+    private String workflowStatus;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param workflowStatus (String) : workflowStatus in i18n
-	 */
-	WorkflowStatusEnum(final String workflowStatus) {
-		this.workflowStatus = workflowStatus;
-	}
+    /**
+     * Constructor.
+     *
+     * @param workflowStatus (String) : workflowStatus in i18n
+     */
+    WorkflowStatusEnum(final String workflowStatus) {
+        this.workflowStatus = workflowStatus;
+    }
 
-	/**
-	 * Gets the workflowStatus.
-	 *
-	 * @return the workflowStatus
-	 */
-	public String getWorkflowStatus() {
-		return workflowStatus;
-	}
+    /**
+     * Gets the workflowStatus.
+     *
+     * @return the workflowStatus
+     */
+    public String getWorkflowStatus() {
+        return workflowStatus;
+    }
 
 }

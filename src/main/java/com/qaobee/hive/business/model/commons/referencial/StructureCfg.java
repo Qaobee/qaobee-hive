@@ -26,139 +26,167 @@ import java.util.List;
 
 /**
  * Bean that describes the structure configuration.
+ *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class StructureCfg {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class StructureCfg {
 
-	/** Internal identifier */
-	private String _id; // NOSONAR
-	/** Structure */
-	private Structure structure;
-	/** Season */
-	private Season season;
-	/** List of teams */
-	private List<Team> teams;
-	/** List of infraStructures */
-	private List<InfraStructure> infraStructures;
-	/** audit CRUD object */
-	private Audit audit;
+    /**
+     * Internal identifier
+     */
+    private String _id; // NOSONAR
+    /**
+     * Structure
+     */
+    private Structure structure;
+    /**
+     * Season
+     */
+    private Season season;
+    /**
+     * List of teams
+     */
+    private List<Team> teams;
+    /**
+     * List of infraStructures
+     */
+    private List<InfraStructure> infraStructures;
+    /**
+     * audit CRUD object
+     */
+    private Audit audit;
 
-	/**
-	 * Returns the internal identifier.
-	 * @return String : ID
-	 */
-	public String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : ID
+     */
+    public String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 * @param _id (String) : ID
-	 */
-	public void set_id(String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : ID
+     */
+    public void set_id(String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the structure.
-	 * @return Structure : structure
-	 */
-	public Structure getStructure() {
-		return structure;
-	}
+    /**
+     * Returns the structure.
+     *
+     * @return Structure : structure
+     */
+    public Structure getStructure() {
+        return structure;
+    }
 
-	/**
-	 * Defines the structure.
-	 * @param structure (Structure) : structure
-	 */
-	public void setStructure(Structure structure) {
-		this.structure = structure;
-	}
+    /**
+     * Defines the structure.
+     *
+     * @param structure (Structure) : structure
+     */
+    public void setStructure(Structure structure) {
+        this.structure = structure;
+    }
 
-	/**
-	 * Returns the season.
-	 * @return Season : season
-	 */
-	public Season getSeason() {
-		return season;
-	}
+    /**
+     * Returns the season.
+     *
+     * @return Season : season
+     */
+    public Season getSeason() {
+        return season;
+    }
 
-	/**
-	 * Defines the season.
-	 * @param season (Season) : season
-	 */
-	public void setSeason(Season season) {
-		this.season = season;
-	}
+    /**
+     * Defines the season.
+     *
+     * @param season (Season) : season
+     */
+    public void setSeason(Season season) {
+        this.season = season;
+    }
 
-	/**
-	 * Returns the list of teams.
-	 * @return List(Team) : list
-	 */
-	public List<Team> getTeams() {
-		return teams;
-	}
+    /**
+     * Returns the list of teams.
+     *
+     * @return List(Team) : list
+     */
+    public List<Team> getTeams() {
+        return teams;
+    }
 
-	/**
-	 * Defines the list of teams.
-	 * @param teams (List(Team)) : list
-	 */
-	public void setTeams(List<Team> teams) {
-		this.teams = teams;
-	}
+    /**
+     * Defines the list of teams.
+     *
+     * @param teams (List(Team)) : list
+     */
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
 
-	/**
-	 * Adds a team to the list.
-	 * @param team (Team) : team
-	 */
-	public void addTeam(Team team) {
-		if (teams == null) {
-			teams = new ArrayList<>();
-		}
-		teams.add(team);
-	}
+    /**
+     * Adds a team to the list.
+     *
+     * @param team (Team) : team
+     */
+    public void addTeam(Team team) {
+        if (teams == null) {
+            teams = new ArrayList<>();
+        }
+        teams.add(team);
+    }
 
-	/**
-	 * Returns the list of infrastructures.
-	 * @return List(InfraStructure) : list
-	 */
-	public List<InfraStructure> getInfraStructures() {
-		return infraStructures;
-	}
+    /**
+     * Returns the list of infrastructures.
+     *
+     * @return List(InfraStructure) : list
+     */
+    public List<InfraStructure> getInfraStructures() {
+        return infraStructures;
+    }
 
-	/**
-	 * Defines the list of infrastructures.
-	 * @param infraStructures (List(InfraStructure)) : list
-	 */
-	public void setInfraStructures(List<InfraStructure> infraStructures) {
-		this.infraStructures = infraStructures;
-	}
+    /**
+     * Defines the list of infrastructures.
+     *
+     * @param infraStructures (List(InfraStructure)) : list
+     */
+    public void setInfraStructures(List<InfraStructure> infraStructures) {
+        this.infraStructures = infraStructures;
+    }
 
-	/**
-	 * Adds an infrastructure to the list.
-	 * @param infraStructure (InfraStructure) : infra
-	 */
-	public void addInfraStructure(InfraStructure infraStructure) {
-		if (infraStructures == null) {
-			infraStructures = new ArrayList<>();
-		}
-		infraStructures.add(infraStructure);
-	}
+    /**
+     * Adds an infrastructure to the list.
+     *
+     * @param infraStructure (InfraStructure) : infra
+     */
+    public void addInfraStructure(InfraStructure infraStructure) {
+        if (infraStructures == null) {
+            infraStructures = new ArrayList<>();
+        }
+        infraStructures.add(infraStructure);
+    }
 
-	/**
-	 * Returns the audit.
-	 * @return Audit : audit
-	 */
-	public Audit getAudit() {
-		return audit;
-	}
+    /**
+     * Returns the audit.
+     *
+     * @return Audit : audit
+     */
+    public Audit getAudit() {
+        return audit;
+    }
 
-	/**
-	 * Defines the audit.
-	 * @param audit (Audit) : audit
-	 */
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
+    /**
+     * Defines the audit.
+     *
+     * @param audit (Audit) : audit
+     */
+    public void setAudit(Audit audit) {
+        this.audit = audit;
+    }
 
 }

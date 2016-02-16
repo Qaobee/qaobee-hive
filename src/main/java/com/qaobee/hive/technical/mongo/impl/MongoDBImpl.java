@@ -39,327 +39,350 @@ import java.util.regex.Pattern;
  */
 public class MongoDBImpl implements MongoDB {
 
-	protected static final Logger LOG = Logger.getLogger(MongoDBImpl.class.getName());
+    protected static final Logger LOG = Logger.getLogger(MongoDBImpl.class.getName());
 
-	private DB db;
-	private MongoClient mongo;
-	private JsonObject config;
-	private WriteConcern writeConcern;
+    private DB db;
+    private MongoClient mongo;
+    private JsonObject config;
+    private WriteConcern writeConcern;
 
-	/**
-	 * Instantiates a new Mongo dB impl.
-	 *
-	 * @param config the config
-	 * @throws UnknownHostException the unknown host exception
-	 */
-	public MongoDBImpl(JsonObject config) throws UnknownHostException {
-		this.config = config;
-		String host = getOptionalStringConfig("host", "localhost");
-		writeConcern = WriteConcern.valueOf(getOptionalStringConfig("writeConcern", ""));
-		final int port = getOptionalIntConfig("port", 27017);
-		final String dbName = getOptionalStringConfig("db_name", "default_db");
-		final String username = getOptionalStringConfig("username", null);
-		final String password = getOptionalStringConfig("password", null); // NOSONAR
-		final ReadPreference readPreference = ReadPreference.valueOf(getOptionalStringConfig("read_preference", "primary"));
-		final int poolSize = getOptionalIntConfig("pool_size", 10);
-		final int socketTimeout = getOptionalIntConfig("socket_timeout", 60000);
-		final boolean useSSL = getOptionalBooleanConfig("use_ssl", false);
-		final JsonArray seedsProperty = config.getArray("seeds");
-		final MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
-		builder.connectionsPerHost(poolSize);
-		builder.socketTimeout(socketTimeout);
-		builder.readPreference(readPreference);
-		if (useSSL) {
-			builder.socketFactory(SSLSocketFactory.getDefault());
-		}
-		if (seedsProperty == null) {
-			final ServerAddress address = new ServerAddress(host, port);
-			if (username != null && password != null) {
-				final MongoCredential credential = MongoCredential.createMongoCRCredential(username, dbName, password.toCharArray());
-				mongo = new MongoClient(address, Collections.singletonList(credential), builder.build());
-			} else {
-				mongo = new MongoClient(address, builder.build());
-			}
-		} else {
-			final List<ServerAddress> seeds = makeSeeds(seedsProperty);
-			if (username != null && password != null) {
-				final MongoCredential credential = MongoCredential.createMongoCRCredential(username, dbName, password.toCharArray());
-				mongo = new MongoClient(seeds, Collections.singletonList(credential), builder.build());
-			} else {
-				mongo = new MongoClient(seeds, builder.build());
-			}
+    /**
+     * Instantiates a new Mongo dB impl.
+     *
+     * @param config the config
+     * @throws UnknownHostException the unknown host exception
+     */
+    public MongoDBImpl(JsonObject config) throws UnknownHostException {
+        this.config = config;
+        String host = getOptionalStringConfig("host", "localhost");
+        writeConcern = WriteConcern.valueOf(getOptionalStringConfig("writeConcern", ""));
+        final int port = getOptionalIntConfig("port", 27017);
+        final String dbName = getOptionalStringConfig("db_name", "default_db");
+        final String username = getOptionalStringConfig("username", null);
+        final String password = getOptionalStringConfig("password", null); // NOSONAR
+        final ReadPreference readPreference = ReadPreference.valueOf(getOptionalStringConfig("read_preference", "primary"));
+        final int poolSize = getOptionalIntConfig("pool_size", 10);
+        final int socketTimeout = getOptionalIntConfig("socket_timeout", 60000);
+        final boolean useSSL = getOptionalBooleanConfig("use_ssl", false);
+        final JsonArray seedsProperty = config.getArray("seeds");
+        final MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
+        builder.connectionsPerHost(poolSize);
+        builder.socketTimeout(socketTimeout);
+        builder.readPreference(readPreference);
+        if (useSSL) {
+            builder.socketFactory(SSLSocketFactory.getDefault());
+        }
+        if (seedsProperty == null) {
+            final ServerAddress address = new ServerAddress(host, port);
+            if (username != null && password != null) {
+                final MongoCredential credential = MongoCredential.createMongoCRCredential(username, dbName, password.toCharArray());
+                mongo = new MongoClient(address, Collections.singletonList(credential), builder.build());
+            } else {
+                mongo = new MongoClient(address, builder.build());
+            }
+        } else {
+            final List<ServerAddress> seeds = makeSeeds(seedsProperty);
+            if (username != null && password != null) {
+                final MongoCredential credential = MongoCredential.createMongoCRCredential(username, dbName, password.toCharArray());
+                mongo = new MongoClient(seeds, Collections.singletonList(credential), builder.build());
+            } else {
+                mongo = new MongoClient(seeds, builder.build());
+            }
 
-		}
+        }
 
-		db = mongo.getDB(dbName);
-	}
+        db = mongo.getDB(dbName);
+    }
 
-	/**
-	 * Gets the optional boolean config.
-	 *
-	 * @param fieldName the field name
-	 * @param defValue  the def value
-	 * @return the optional boolean config
-	 */
-	private boolean getOptionalBooleanConfig(final String fieldName, final boolean defValue) {
-		return config.containsField(fieldName) ? config.getBoolean(fieldName) : defValue;
-	}
+    /**
+     * Gets the optional boolean config.
+     *
+     * @param fieldName the field name
+     * @param defValue  the def value
+     * @return the optional boolean config
+     */
+    private boolean getOptionalBooleanConfig(final String fieldName, final boolean defValue) {
+        return config.containsField(fieldName) ? config.getBoolean(fieldName) : defValue;
+    }
 
-	/**
-	 * Gets the optional int config.
-	 *
-	 * @param fieldName the field name
-	 * @param defValue  the def value
-	 * @return the optional int config
-	 */
-	private int getOptionalIntConfig(final String fieldName, final int defValue) {
-		return config.containsField(fieldName) ? config.getInteger(fieldName) : defValue;
-	}
+    /**
+     * Gets the optional int config.
+     *
+     * @param fieldName the field name
+     * @param defValue  the def value
+     * @return the optional int config
+     */
+    private int getOptionalIntConfig(final String fieldName, final int defValue) {
+        return config.containsField(fieldName) ? config.getInteger(fieldName) : defValue;
+    }
 
-	/**
-	 * Gets the optional string config.
-	 *
-	 * @param fieldName the field name
-	 * @param defValue  the def value
-	 * @return the optional string config
-	 */
-	private String getOptionalStringConfig(final String fieldName, final String defValue) {
-		return config.containsField(fieldName) ? config.getString(fieldName) : defValue;
-	}
+    /**
+     * Gets the optional string config.
+     *
+     * @param fieldName the field name
+     * @param defValue  the def value
+     * @return the optional string config
+     */
+    private String getOptionalStringConfig(final String fieldName, final String defValue) {
+        return config.containsField(fieldName) ? config.getString(fieldName) : defValue;
+    }
 
-	/**
-	 * Make seeds.
-	 *
-	 * @param seedsProperty the seeds property
-	 * @return the list
-	 * @throws UnknownHostException the unknown host exception
-	 */
-	private List<ServerAddress> makeSeeds(final JsonArray seedsProperty) throws UnknownHostException {
-		final List<ServerAddress> seeds = new ArrayList<>();
-		for (final Object elem : seedsProperty) {
-			final JsonObject address = (JsonObject) elem;
-			final String host = address.getString("host");
-			final int port = address.getInteger("port");
-			seeds.add(new ServerAddress(host, port));
-		}
-		return seeds;
-	}
+    /**
+     * Make seeds.
+     *
+     * @param seedsProperty the seeds property
+     * @return the list
+     * @throws UnknownHostException the unknown host exception
+     */
+    private List<ServerAddress> makeSeeds(final JsonArray seedsProperty) throws UnknownHostException {
+        final List<ServerAddress> seeds = new ArrayList<>();
+        for (final Object elem : seedsProperty) {
+            final JsonObject address = (JsonObject) elem;
+            final String host = address.getString("host");
+            final int port = address.getInteger("port");
+            seeds.add(new ServerAddress(host, port));
+        }
+        return seeds;
+    }
 
-	/**
-	 * Gets the write concern.
-	 *
-	 * @return the writeConcern
-	 */
-	public WriteConcern getWriteConcern() {
-		if (writeConcern == null) {
-			writeConcern = db.getWriteConcern();
-		}
-		return writeConcern;
-	}
+    /**
+     * Gets the write concern.
+     *
+     * @return the writeConcern
+     */
+    public WriteConcern getWriteConcern() {
+        if (writeConcern == null) {
+            writeConcern = db.getWriteConcern();
+        }
+        return writeConcern;
+    }
 
-	@Override public String save(final Object o) throws QaobeeException {
-		return save(new JsonObject(Json.encode(o)), o.getClass());
-	}
+    @Override
+    public String save(final Object o) throws QaobeeException {
+        return save(new JsonObject(Json.encode(o)), o.getClass());
+    }
 
-	@Override public String update(final JsonObject document, final Class<?> collection) {
-		final DBCollection coll = db.getCollection(collection.getSimpleName());
-		JsonObject q = new JsonObject();
-		JsonObject set = new JsonObject();
-		q.putString("_id", document.getString("_id"));
-		document.removeField("_id");
-		set.putObject("$set", document);
-		WriteResult res = coll.update(new BasicDBObject(q.toMap()), new BasicDBObject(set.toMap()));
+    @Override
+    public String update(final JsonObject document, final Class<?> collection) {
+        final DBCollection coll = db.getCollection(collection.getSimpleName());
+        JsonObject q = new JsonObject();
+        JsonObject set = new JsonObject();
+        q.putString("_id", document.getString("_id"));
+        document.removeField("_id");
+        set.putObject("$set", document);
+        WriteResult res = coll.update(new BasicDBObject(q.toMap()), new BasicDBObject(set.toMap()));
 
-		return (String) res.getUpsertedId();
-	}
+        return (String) res.getUpsertedId();
+    }
 
-	@Override public String update(final JsonObject document, final String collection) {
-		final DBCollection coll = db.getCollection(collection);
-		JsonObject q = new JsonObject();
-		JsonObject set = new JsonObject();
-		q.putString("_id", document.getString("_id"));
-		document.removeField("_id");
-		set.putObject("$set", document);
-		WriteResult res = coll.update(new BasicDBObject(q.toMap()), new BasicDBObject(set.toMap()));
+    @Override
+    public String update(final JsonObject document, final String collection) {
+        final DBCollection coll = db.getCollection(collection);
+        JsonObject q = new JsonObject();
+        JsonObject set = new JsonObject();
+        q.putString("_id", document.getString("_id"));
+        document.removeField("_id");
+        set.putObject("$set", document);
+        WriteResult res = coll.update(new BasicDBObject(q.toMap()), new BasicDBObject(set.toMap()));
 
-		return (String) res.getUpsertedId();
+        return (String) res.getUpsertedId();
 
-	}
+    }
 
-	@Override public String update(JsonObject query, JsonObject set, Class<?> collection) {
-		final DBCollection coll = db.getCollection(collection.getSimpleName());
-		WriteResult res = coll.update(new BasicDBObject(query.toMap()), new BasicDBObject(set.toMap()));
-		return (String) res.getUpsertedId();
-	}
+    @Override
+    public String update(JsonObject query, JsonObject set, Class<?> collection) {
+        final DBCollection coll = db.getCollection(collection.getSimpleName());
+        WriteResult res = coll.update(new BasicDBObject(query.toMap()), new BasicDBObject(set.toMap()));
+        return (String) res.getUpsertedId();
+    }
 
-	@Override public String save(final JsonObject document, final Class<?> collection) throws QaobeeException {
-		final DBCollection coll = db.getCollection(collection.getSimpleName());
-		String genID;
-		if (document.getField("_id") == null) {
-			genID = UUID.randomUUID().toString();
-			document.putString("_id", genID);
-		} else {
-			genID = document.getField("_id");
-		}
-		final DBObject obj = new BasicDBObject(document.toMap());
-		final WriteResult res = coll.save(obj, getWriteConcern());
-		return getUpsertedId(res, genID, document);
-	}
+    @Override
+    public String save(final JsonObject document, final Class<?> collection) throws QaobeeException {
+        final DBCollection coll = db.getCollection(collection.getSimpleName());
+        String genID;
+        if (document.getField("_id") == null) {
+            genID = UUID.randomUUID().toString();
+            document.putString("_id", genID);
+        } else {
+            genID = document.getField("_id");
+        }
+        final DBObject obj = new BasicDBObject(document.toMap());
+        final WriteResult res = coll.save(obj, getWriteConcern());
+        return getUpsertedId(res, genID, document);
+    }
 
-	private String getUpsertedId(WriteResult res, String genID, JsonObject document) throws QaobeeException {
-		if (res.getN() > 0) {
-			if (genID != null) {
-				return genID;
-			} else {
-				return (String) res.getUpsertedId();
-			}
-		} else {
-			throw new QaobeeException(ExceptionCodes.MONGO_ERROR, "Can't save " + document.encode());
-		}
-	}
+    private String getUpsertedId(WriteResult res, String genID, JsonObject document) throws QaobeeException {
+        if (res.getN() > 0) {
+            if (genID != null) {
+                return genID;
+            } else {
+                return (String) res.getUpsertedId();
+            }
+        } else {
+            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, "Can't save " + document.encode());
+        }
+    }
 
-	@Override public String save(final JsonObject document, String collection) throws QaobeeException {
-		final DBCollection coll = db.getCollection(collection);
-		String genID;
-		if (document.getField("_id") == null) {
-			genID = UUID.randomUUID().toString();
-			document.putString("_id", genID);
-		} else {
-			genID = document.getField("_id");
-		}
-		final DBObject obj = new BasicDBObject(document.toMap());
-		final WriteResult res = coll.save(obj, getWriteConcern());
-		return getUpsertedId(res, genID, document);
-	}
+    @Override
+    public String save(final JsonObject document, String collection) throws QaobeeException {
+        final DBCollection coll = db.getCollection(collection);
+        String genID;
+        if (document.getField("_id") == null) {
+            genID = UUID.randomUUID().toString();
+            document.putString("_id", genID);
+        } else {
+            genID = document.getField("_id");
+        }
+        final DBObject obj = new BasicDBObject(document.toMap());
+        final WriteResult res = coll.save(obj, getWriteConcern());
+        return getUpsertedId(res, genID, document);
+    }
 
-	@Override @SuppressWarnings("unchecked") public JsonObject getById(final String id, final Class<?> collection) throws QaobeeException {
-		final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id));
-		if (res.count() != 1) {
-			throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
-		} else {
-			return new JsonObject(res.next().toMap());
-		}
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public JsonObject getById(final String id, final Class<?> collection) throws QaobeeException {
+        final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id));
+        if (res.count() != 1) {
+            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
+        } else {
+            return new JsonObject(res.next().toMap());
+        }
+    }
 
-	@Override @SuppressWarnings("unchecked") public JsonObject getById(final String id, final String collection) throws QaobeeException {
-		final DBCursor res = db.getCollection(collection).find(new BasicDBObject("_id", id));
-		if (res.count() != 1) {
-			throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
-		} else {
-			return new JsonObject(res.next().toMap());
-		}
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public JsonObject getById(final String id, final String collection) throws QaobeeException {
+        final DBCursor res = db.getCollection(collection).find(new BasicDBObject("_id", id));
+        if (res.count() != 1) {
+            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
+        } else {
+            return new JsonObject(res.next().toMap());
+        }
+    }
 
-	@Override @SuppressWarnings("unchecked") public JsonObject getById(final String id, final Class<?> collection, final List<String> minimal) throws QaobeeException {
-		final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id), new BasicDBObject(getMinimal(minimal)));
-		if (res.count() != 1) {
-			throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
-		} else {
-			return new JsonObject(res.next().toMap());
-		}
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public JsonObject getById(final String id, final Class<?> collection, final List<String> minimal) throws QaobeeException {
+        final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id), new BasicDBObject(getMinimal(minimal)));
+        if (res.count() != 1) {
+            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
+        } else {
+            return new JsonObject(res.next().toMap());
+        }
+    }
 
-	@Override public Map<String, Boolean> getMinimal(final List<String> minimal) {
-		final Map<String, Boolean> map = new HashMap<>();
-		for (final String key : minimal) {
-			map.put(key, Boolean.TRUE);
-		}
-		return map;
-	}
+    @Override
+    public Map<String, Boolean> getMinimal(final List<String> minimal) {
+        final Map<String, Boolean> map = new HashMap<>();
+        for (final String key : minimal) {
+            map.put(key, Boolean.TRUE);
+        }
+        return map;
+    }
 
-	@Override public void deleteById(final String id, final Class<?> collection) {
-		final DBCollection coll = db.getCollection(collection.getSimpleName());
-		coll.remove(new BasicDBObject("_id", id));
-	}
+    @Override
+    public void deleteById(final String id, final Class<?> collection) {
+        final DBCollection coll = db.getCollection(collection.getSimpleName());
+        coll.remove(new BasicDBObject("_id", id));
+    }
 
-	@Override @SuppressWarnings("unchecked") public JsonArray findByCriterias(final Map<String, Object> criteria, final List<String> fields, final String sort, final int order, final int limit,
-			final Class<?> collection) {
-		final DBCollection coll = db.getCollection(collection.getSimpleName());
-		DBObject query = new BasicDBObject();
-		if (criteria != null) {
-			final BasicDBList and = new BasicDBList();
-			for (Iterator<String> iterator = criteria.keySet().iterator(); iterator.hasNext(); ) {
-				String k = iterator.next();
-				if (criteria.get(k) instanceof String && ((String) criteria.get(k)).startsWith("//")) {
-					and.add(new BasicDBObject(k, Pattern.compile(((String) criteria.get(k)).substring(2))));
-				} else {
-					and.add(new BasicDBObject(k, criteria.get(k)));
-				}
-			}
-			query = new BasicDBObject("$and", and);
-		}
+    @Override
+    @SuppressWarnings("unchecked")
+    public JsonArray findByCriterias(final Map<String, Object> criteria, final List<String> fields, final String sort, final int order, final int limit,
+                                     final Class<?> collection) {
+        final DBCollection coll = db.getCollection(collection.getSimpleName());
+        DBObject query = new BasicDBObject();
+        if (criteria != null) {
+            final BasicDBList and = new BasicDBList();
+            for (Iterator<String> iterator = criteria.keySet().iterator(); iterator.hasNext(); ) {
+                String k = iterator.next();
+                if (criteria.get(k) instanceof String && ((String) criteria.get(k)).startsWith("//")) {
+                    and.add(new BasicDBObject(k, Pattern.compile(((String) criteria.get(k)).substring(2))));
+                } else {
+                    and.add(new BasicDBObject(k, criteria.get(k)));
+                }
+            }
+            query = new BasicDBObject("$and", and);
+        }
 
-		DBCursor res;
-		if (fields != null) {
-			res = coll.find(query, new BasicDBObject(getMinimal(fields)));
-		} else {
-			res = coll.find(query);
-		}
-		if (limit > 0) {
-			res = res.limit(limit);
-		}
-		if (sort != null) {
-			res = res.sort(new BasicDBObject(sort, order));
-		}
-		final JsonArray json = new JsonArray();
-		while (res.hasNext()) {
-			json.add(new JsonObject(res.next().toMap()));
-		}
-		return json;
-	}
+        DBCursor res;
+        if (fields != null) {
+            res = coll.find(query, new BasicDBObject(getMinimal(fields)));
+        } else {
+            res = coll.find(query);
+        }
+        if (limit > 0) {
+            res = res.limit(limit);
+        }
+        if (sort != null) {
+            res = res.sort(new BasicDBObject(sort, order));
+        }
+        final JsonArray json = new JsonArray();
+        while (res.hasNext()) {
+            json.add(new JsonObject(res.next().toMap()));
+        }
+        return json;
+    }
 
-	@Override public JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection) {
-		return findByCriterias(null, fields, sort, order, limit, collection);
-	}
+    @Override
+    public JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection) {
+        return findByCriterias(null, fields, sort, order, limit, collection);
+    }
 
-	@Override public JsonArray findByInClause(List<String> in, String sort, int order, int limit, Class<?> collection) {
-		final DBCollection coll = db.getCollection(collection.getSimpleName());
-		final BasicDBList docIds = new BasicDBList();
-		docIds.addAll(in);
-		final DBObject inClause = new BasicDBObject("$in", docIds);
-		DBObject query = new BasicDBObject("$in", inClause);
-		DBCursor res = coll.find(query);
-		if (limit > 0) {
-			res = res.limit(limit);
-		}
-		if (sort != null) {
-			res = res.sort(new BasicDBObject(sort, order));
-		}
-		final JsonArray json = new JsonArray();
-		while (res.hasNext()) {
-			json.add(new JsonObject(res.next().toMap()));
-		}
-		return json;
-	}
+    @Override
+    public JsonArray findByInClause(List<String> in, String sort, int order, int limit, Class<?> collection) {
+        final DBCollection coll = db.getCollection(collection.getSimpleName());
+        final BasicDBList docIds = new BasicDBList();
+        docIds.addAll(in);
+        final DBObject inClause = new BasicDBObject("$in", docIds);
+        DBObject query = new BasicDBObject("$in", inClause);
+        DBCursor res = coll.find(query);
+        if (limit > 0) {
+            res = res.limit(limit);
+        }
+        if (sort != null) {
+            res = res.sort(new BasicDBObject(sort, order));
+        }
+        final JsonArray json = new JsonArray();
+        while (res.hasNext()) {
+            json.add(new JsonObject(res.next().toMap()));
+        }
+        return json;
+    }
 
-	// TODO : JRO : implémente cette partie pour éviter de trimbaler des DBObjects
-	@Override @SuppressWarnings("unchecked") public JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection) {
-		JsonArray res = new JsonArray();
-		for (DBObject next : db.getCollection(collection.getSimpleName()).aggregate(pipeline).results()) {
-			if (next instanceof BasicDBList) {
-				res.addArray(new JsonObject((next).toMap()).asArray());
-			} else {
-				res.addObject(new JsonObject((next).toMap()));
-			}
-		}
-		return res;
-	}
+    // TODO : JRO : implémente cette partie pour éviter de trimbaler des DBObjects
+    @Override
+    @SuppressWarnings("unchecked")
+    public JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection) {
+        JsonArray res = new JsonArray();
+        for (DBObject next : db.getCollection(collection.getSimpleName()).aggregate(pipeline).results()) {
+            if (next instanceof BasicDBList) {
+                res.addArray(new JsonObject((next).toMap()).asArray());
+            } else {
+                res.addObject(new JsonObject((next).toMap()));
+            }
+        }
+        return res;
+    }
 
-	// TODO : JRO : implémente cette partie pour éviter de trimbaler des DBObjects
-	@Override @SuppressWarnings("unchecked") public JsonArray aggregate(String field, List<DBObject> pipeline, String collection) {
-		JsonArray res = new JsonArray();
-		for (DBObject next : db.getCollection(collection).aggregate(pipeline).results()) {
-			if (next instanceof BasicDBList) {
-				res.addArray(new JsonObject((next).toMap()).asArray());
-			} else {
-				res.addObject(new JsonObject((next).toMap()));
-			}
-		}
-		return res;
-	}
+    // TODO : JRO : implémente cette partie pour éviter de trimbaler des DBObjects
+    @Override
+    @SuppressWarnings("unchecked")
+    public JsonArray aggregate(String field, List<DBObject> pipeline, String collection) {
+        JsonArray res = new JsonArray();
+        for (DBObject next : db.getCollection(collection).aggregate(pipeline).results()) {
+            if (next instanceof BasicDBList) {
+                res.addArray(new JsonObject((next).toMap()).asArray());
+            } else {
+                res.addObject(new JsonObject((next).toMap()));
+            }
+        }
+        return res;
+    }
 
-	@Override public DB getDb() {
-		return db;
-	}
+    @Override
+    public DB getDb() {
+        return db;
+    }
 
 }

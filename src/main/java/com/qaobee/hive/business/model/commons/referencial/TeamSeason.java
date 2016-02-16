@@ -29,85 +29,86 @@ import java.util.List;
  *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class TeamSeason {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class TeamSeason {
 
-	/**
-	 * Championship
-	 */
-	private ChampionShip championShip;
-	/**
-	 * label
-	 */
-	private Season season;
-	/**
-	 * List of staff members
-	 */
-	private List<Member> staffMembers;
+    /**
+     * Championship
+     */
+    private ChampionShip championShip;
+    /**
+     * label
+     */
+    private Season season;
+    /**
+     * List of staff members
+     */
+    private List<Member> staffMembers;
 
-	/**
-	 * Returns the description of the championship.
-	 *
-	 * @return ChampionShip : championship
-	 */
-	public ChampionShip getChampionShip() {
-		return championShip;
-	}
+    /**
+     * Returns the description of the championship.
+     *
+     * @return ChampionShip : championship
+     */
+    public ChampionShip getChampionShip() {
+        return championShip;
+    }
 
-	/**
-	 * Defines the description of the championship.
-	 *
-	 * @param championShip (ChampionShip) : championship
-	 */
-	public void setChampionShip(ChampionShip championShip) {
-		this.championShip = championShip;
-	}
+    /**
+     * Defines the description of the championship.
+     *
+     * @param championShip (ChampionShip) : championship
+     */
+    public void setChampionShip(ChampionShip championShip) {
+        this.championShip = championShip;
+    }
 
-	/**
-	 * Returns the season.
-	 *
-	 * @return Season : season
-	 */
-	public Season getSeason() {
-		return season;
-	}
+    /**
+     * Returns the season.
+     *
+     * @return Season : season
+     */
+    public Season getSeason() {
+        return season;
+    }
 
-	/**
-	 * Defines the season.
-	 *
-	 * @param season (Season) : season
-	 */
-	public void setSeason(Season season) {
-		this.season = season;
-	}
+    /**
+     * Defines the season.
+     *
+     * @param season (Season) : season
+     */
+    public void setSeason(Season season) {
+        this.season = season;
+    }
 
-	/**
-	 * Returns the list of staff members.
-	 *
-	 * @return List(Member) : list
-	 */
-	public List<Member> getStaffMembers() {
-		return staffMembers;
-	}
+    /**
+     * Returns the list of staff members.
+     *
+     * @return List(Member) : list
+     */
+    public List<Member> getStaffMembers() {
+        return staffMembers;
+    }
 
-	/**
-	 * Defines the list of staff members.
-	 *
-	 * @param staffMembers (List(Member)) : list
-	 */
-	public void setStaffMembers(List<Member> staffMembers) {
-		this.staffMembers = staffMembers;
-	}
+    /**
+     * Defines the list of staff members.
+     *
+     * @param staffMembers (List(Member)) : list
+     */
+    public void setStaffMembers(List<Member> staffMembers) {
+        this.staffMembers = staffMembers;
+    }
 
-	/**
-	 * Adds a member to the staff.
-	 *
-	 * @param member (Member) : member
-	 */
-	public void addStaffMember(Member member) {
-		if (staffMembers == null) {
-			staffMembers = new ArrayList<>();
-		}
-		staffMembers.add(member);
-	}
+    /**
+     * Adds a member to the staff.
+     *
+     * @param member (Member) : member
+     */
+    public void addStaffMember(Member member) {
+        if (staffMembers == null) {
+            staffMembers = new ArrayList<>();
+        }
+        staffMembers.add(member);
+    }
 
 }

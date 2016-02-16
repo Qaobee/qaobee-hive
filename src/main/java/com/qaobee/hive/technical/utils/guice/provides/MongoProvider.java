@@ -36,19 +36,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class MongoProvider implements Provider<MongoDB> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MongoProvider.class);
-	private final AtomicBoolean mongoInitialized = new AtomicBoolean(false);
-	@Inject @Named("mongo.persistor") private JsonObject config;
-	private MongoDB mongo;
+    private static final Logger LOG = LoggerFactory.getLogger(MongoProvider.class);
+    private final AtomicBoolean mongoInitialized = new AtomicBoolean(false);
+    @Inject
+    @Named("mongo.persistor")
+    private JsonObject config;
+    private MongoDB mongo;
 
-	@Override public MongoDB get() {
-		if (!mongoInitialized.getAndSet(true)) {
-			try {
-				mongo = new MongoDBImpl(config);
-			} catch (UnknownHostException e) {
-				LOG.error(e.getMessage(), e);
-			}
-		}
-		return mongo;
-	}
+    @Override
+    public MongoDB get() {
+        if (!mongoInitialized.getAndSet(true)) {
+            try {
+                mongo = new MongoDBImpl(config);
+            } catch (UnknownHostException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+        return mongo;
+    }
 }

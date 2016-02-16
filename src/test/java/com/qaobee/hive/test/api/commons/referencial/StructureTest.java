@@ -36,195 +36,201 @@ import java.util.List;
  */
 public class StructureTest extends VertxJunitSupport {
 
-	/**
-	 * Tests getHandler for StructureVerticle
-	 */
-	@Test public void getObjectByIdOk() {
+    /**
+     * Tests getHandler for StructureVerticle
+     */
+    @Test
+    public void getObjectByIdOk() {
 
-		populate(POPULATE_ONLY, DATA_STRUCTURE);
-
-		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
-
-		final HashMap<String, List<String>> params = new HashMap<>();
-
-		// id
-		params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
-		req.setParams(params);
-
-		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
-		JsonObject result = new JsonObject(reply);
-
-		String label = result.getString("label");
-
-		Assert.assertEquals("Dunkerque Handball", label);
-	}
-
-	/**
-	 * Tests getHandler for StructureVerticle
-	 * with missing mandatory fields
-	 */
-	@Test public void getObjectByIdKo() {
-
-		populate(POPULATE_ONLY, DATA_STRUCTURE);
+        populate(POPULATE_ONLY, DATA_STRUCTURE);
 
 		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<>();
+        final HashMap<String, List<String>> params = new HashMap<>();
 
-		JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+        // id
+        params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
+        req.setParams(params);
 
-		// id
-		params.put(StructureVerticle.PARAM_ID, Collections.singletonList(""));
-		req.setParams(params);
+        final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
+        JsonObject result = new JsonObject(reply);
 
-		resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+        String label = result.getString("label");
 
-	}
+        Assert.assertEquals("Dunkerque Handball", label);
+    }
 
-	/**
-	 * Tests updateHandler for StructureVerticle
-	 */
-	@Test public void getUpdateOk() {
+    /**
+     * Tests getHandler for StructureVerticle
+     * with missing mandatory fields
+     */
+    @Test
+    public void getObjectByIdKo() {
 
-		populate(POPULATE_ONLY, DATA_STRUCTURE);
+        populate(POPULATE_ONLY, DATA_STRUCTURE);
 
 		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<>();
-		
+        final HashMap<String, List<String>> params = new HashMap<>();
+
+        JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
+        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+
+        // id
+        params.put(StructureVerticle.PARAM_ID, Collections.singletonList(""));
+        req.setParams(params);
+
+        resultUpdate = new JsonObject(sendonBus(StructureVerticle.GET, req, user.getAccount().getToken()));
+        Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+
+    }
+
+    /**
+     * Tests updateHandler for StructureVerticle
+     */
+    @Test
+    public void getUpdateOk() {
+
+        populate(POPULATE_ONLY, DATA_STRUCTURE);
+
+		/* User simulation connection */
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
+
+        final HashMap<String, List<String>> params = new HashMap<>();
+
 		/* Retreive object */
-		params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
-		req.setParams(params);
+        params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
+        req.setParams(params);
 
-		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
-		JsonObject result = new JsonObject(reply);
+        final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
+        JsonObject result = new JsonObject(reply);
 
-		String label = result.getString("label");
-		Assert.assertEquals("Dunkerque Handball", label);
+        String label = result.getString("label");
+        Assert.assertEquals("Dunkerque Handball", label);
 		
 		/* Update object */
-		req.setMethod(Constantes.POST);
+        req.setMethod(Constantes.POST);
 
-		result.putString("label", "newValue");
-		req.setBody(result.encode());
+        result.putString("label", "newValue");
+        req.setBody(result.encode());
 
-		final String reply2 = sendonBus(StructureVerticle.UPDATE, req, user.getAccount().getToken());
-		JsonObject result2 = new JsonObject(reply2);
-		label = result2.getString("label");
-		Assert.assertEquals("newValue", label);
+        final String reply2 = sendonBus(StructureVerticle.UPDATE, req, user.getAccount().getToken());
+        JsonObject result2 = new JsonObject(reply2);
+        label = result2.getString("label");
+        Assert.assertEquals("newValue", label);
 
-	}
+    }
 
-	/**
-	 * Tests updateHandler for StructureVerticle
-	 * with missing mandatory fields
-	 */
-	@Test public void getUpdateKo() {
+    /**
+     * Tests updateHandler for StructureVerticle
+     * with missing mandatory fields
+     */
+    @Test
+    public void getUpdateKo() {
 
-		populate(POPULATE_ONLY, DATA_STRUCTURE);
+        populate(POPULATE_ONLY, DATA_STRUCTURE);
 
 		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
 
-		final HashMap<String, List<String>> params = new HashMap<>();
+        final HashMap<String, List<String>> params = new HashMap<>();
 		
 		/* Retreive object */
-		params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
-		req.setParams(params);
+        params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
+        req.setParams(params);
 
-		final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
-		JsonObject result = new JsonObject(reply);
+        final String reply = sendonBus(StructureVerticle.GET, req, user.getAccount().getToken());
+        JsonObject result = new JsonObject(reply);
 
-		String label = result.getString("label");
-		Assert.assertEquals("Dunkerque Handball", label);
+        String label = result.getString("label");
+        Assert.assertEquals("Dunkerque Handball", label);
 		
 		/* Update object */
-		req.setMethod(Constantes.POST);
+        req.setMethod(Constantes.POST);
 
-		result.putString("label", "newValue");
-		result.putObject("country", null);
-		req.setBody(result.encode());
+        result.putString("label", "newValue");
+        result.putObject("country", null);
+        req.setBody(result.encode());
 
-		final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.UPDATE, req, user.getAccount().getToken()));
-		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
-	}
+        final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.UPDATE, req, user.getAccount().getToken()));
+        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
+    }
 
-	/**
-	 * Tests addHandler for StructureVerticle
-	 */
-	@Test public void getAddOk() {
+    /**
+     * Tests addHandler for StructureVerticle
+     */
+    @Test
+    public void getAddOk() {
 
-		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-		populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 		
 		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.POST);
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.POST);
 		
 
 		/* Generate a simple Structure Object */
-		final JsonObject params = new JsonObject();
-		params.putString("label", "labelValue");
-		params.putString("acronym", "acronymValue");
-		params.putObject(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
-		params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", user));
+        final JsonObject params = new JsonObject();
+        params.putString("label", "labelValue");
+        params.putString("acronym", "acronymValue");
+        params.putObject(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
+        params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", user));
 
-		req.setBody(params.encode());
+        req.setBody(params.encode());
 
-		final JsonObject result = new JsonObject(sendonBus(StructureVerticle.ADD, req, user.getAccount().getToken()));
-		String id = result.getString("_id");
-		Assert.assertNotNull(id);
-	}
+        final JsonObject result = new JsonObject(sendonBus(StructureVerticle.ADD, req, user.getAccount().getToken()));
+        String id = result.getString("_id");
+        Assert.assertNotNull(id);
+    }
 
-	/**
-	 * Tests addHandler for StructureVerticle
-	 * with missing mandatory fields
-	 */
-	@Test public void getAddKo() {
+    /**
+     * Tests addHandler for StructureVerticle
+     * with missing mandatory fields
+     */
+    @Test
+    public void getAddKo() {
 
-		populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
 
 		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.POST);
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.POST);
 
 		/* Generate a simple Structure Object */
-		final JsonObject params = new JsonObject();
-		params.putString("label", "labelValue");
-		params.putString("acronym", "acronymValue");
-		params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", user));
+        final JsonObject params = new JsonObject();
+        params.putString("label", "labelValue");
+        params.putString("acronym", "acronymValue");
+        params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", user));
 
-		req.setBody(params.encode());
+        req.setBody(params.encode());
 
-		final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.ADD, req, user.getAccount().getToken()));
-		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
-	}
+        final JsonObject resultUpdate = new JsonObject(sendonBus(StructureVerticle.ADD, req, user.getAccount().getToken()));
+        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
+    }
 
 }

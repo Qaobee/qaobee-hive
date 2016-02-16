@@ -36,117 +36,120 @@ import java.util.Map;
 
 /**
  * @author cke
- *
  */
 public class SeasonTest extends VertxJunitSupport {
 
-	/**
-	 * Tests getHandler for SeasonVerticle
-	 */
-	@Test public void getObjectByIdOk() {
+    /**
+     * Tests getHandler for SeasonVerticle
+     */
+    @Test
+    public void getObjectByIdOk() {
 
-		populate(POPULATE_ONLY, SETTINGS_SEASONS);
-
-		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
-
-		final Map<String, List<String>> params = new HashMap<>();
-
-		// id
-		params.put(SeasonVerticle.PARAM_ID, Collections.singletonList("559a9294889089a442f3d499"));
-		req.setParams(params);
-
-		final String reply = sendonBus(SeasonVerticle.GET, req, user.getAccount().getToken());
-		JsonObject result = new JsonObject(reply);
-
-		String label = result.getString("label");
-
-		Assert.assertEquals("SAISON 2014-2015", label);
-	}
-
-	/**
-	 * Tests getHandler for SeasonVerticle
-	 * with missing mandatory fields
-	 */
-	@Test public void getObjectByIdKo() {
+        populate(POPULATE_ONLY, SETTINGS_SEASONS);
 
 		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
 
-		final Map<String, List<String>> params = new HashMap<>();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		JsonObject resultUpdate = new JsonObject(sendonBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+        // id
+        params.put(SeasonVerticle.PARAM_ID, Collections.singletonList("559a9294889089a442f3d499"));
+        req.setParams(params);
 
-		// id
-		params.put(SeasonVerticle.PARAM_ID, Collections.singletonList(""));
-		req.setParams(params);
+        final String reply = sendonBus(SeasonVerticle.GET, req, user.getAccount().getToken());
+        JsonObject result = new JsonObject(reply);
 
-		resultUpdate = new JsonObject(sendonBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
-		Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
+        String label = result.getString("label");
 
-	}
+        Assert.assertEquals("SAISON 2014-2015", label);
+    }
 
-	/**
-	 * Tests getListHandler for SeasonVerticle
-	 */
-	@Test public void getListOk() {
-
-		populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-
-		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
-
-		final Map<String, List<String>> params = new HashMap<>();
-
-		// id
-		params.put(SeasonVerticle.PARAM_COUNTRY_ID, Collections.singletonList((String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID)));
-		params.put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
-		req.setParams(params);
-
-		final String reply = sendonBus(SeasonVerticle.GET_LIST_BY_ACTIVITY, req, user.getAccount().getToken());
-		Assert.assertEquals(3, new JsonArray(reply).size());
-	}
-
-	/**
-	 * Tests getCurrentHandler for SeasonVerticle
-	 */
-	@Test public void getCurrentSeason() {
-
-		populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
+    /**
+     * Tests getHandler for SeasonVerticle
+     * with missing mandatory fields
+     */
+    @Test
+    public void getObjectByIdKo() {
 
 		/* User simulation connection */
-		User user = generateLoggedUser();
-		final RequestWrapper req = new RequestWrapper();
-		req.setLocale(LOCALE);
-		req.setUser(user);
-		req.setMethod(Constantes.GET);
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
 
-		final Map<String, List<String>> params = new HashMap<>();
+        final Map<String, List<String>> params = new HashMap<>();
 
-		// id
-		params.put(SeasonVerticle.PARAM_COUNTRY_ID, Collections.singletonList((String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID)));
-		params.put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
-		req.setParams(params);
+        JsonObject resultUpdate = new JsonObject(sendonBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
+        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
-		final String reply = sendonBus(SeasonVerticle.GET_CURRENT, req, user.getAccount().getToken());
-		JsonObject result = new JsonObject(reply);
+        // id
+        params.put(SeasonVerticle.PARAM_ID, Collections.singletonList(""));
+        req.setParams(params);
 
-		String label = result.getString("label");
+        resultUpdate = new JsonObject(sendonBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
+        Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
-		Assert.assertEquals("SAISON 2015-2016", label);
-	}
+    }
+
+    /**
+     * Tests getListHandler for SeasonVerticle
+     */
+    @Test
+    public void getListOk() {
+
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
+
+		/* User simulation connection */
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
+
+        final Map<String, List<String>> params = new HashMap<>();
+
+        // id
+        params.put(SeasonVerticle.PARAM_COUNTRY_ID, Collections.singletonList((String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID)));
+        params.put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
+        req.setParams(params);
+
+        final String reply = sendonBus(SeasonVerticle.GET_LIST_BY_ACTIVITY, req, user.getAccount().getToken());
+        Assert.assertEquals(3, new JsonArray(reply).size());
+    }
+
+    /**
+     * Tests getCurrentHandler for SeasonVerticle
+     */
+    @Test
+    public void getCurrentSeason() {
+
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
+
+		/* User simulation connection */
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setUser(user);
+        req.setMethod(Constantes.GET);
+
+        final Map<String, List<String>> params = new HashMap<>();
+
+        // id
+        params.put(SeasonVerticle.PARAM_COUNTRY_ID, Collections.singletonList((String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID)));
+        params.put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
+        req.setParams(params);
+
+        final String reply = sendonBus(SeasonVerticle.GET_CURRENT, req, user.getAccount().getToken());
+        JsonObject result = new JsonObject(reply);
+
+        String label = result.getString("label");
+
+        Assert.assertEquals("SAISON 2015-2016", label);
+    }
 
 }

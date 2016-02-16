@@ -47,264 +47,272 @@ import java.util.Map;
 /**
  * The type Sand box cfg verticle.
  */
-@DeployableVerticle(isWorker = true) public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
-	/**
-	 * The constant GET.
-	 */
-	public static final String GET = Module.VERSION + ".sandbox.config.sandbox.get";
-	/**
-	 * The constant GET_BY_OWNER.
-	 */
-	public static final String GET_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getByOwner";
-	/**
-	 * The constant GET_LIST_BY_OWNER.
-	 */
-	public static final String GET_LIST_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getListByOwner";
-	/**
-	 * The constant ADD.
-	 */
-	public static final String ADD = Module.VERSION + ".sandbox.config.sandbox.add";
-	/**
-	 * The constant UPDATE.
-	 */
-	public static final String UPDATE = Module.VERSION + ".sandbox.config.sandbox.update";
-	/**
-	 * The constant PARAM_ID.
-	 */
+@DeployableVerticle(isWorker = true)
+public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
+    /**
+     * The constant GET.
+     */
+    public static final String GET = Module.VERSION + ".sandbox.config.sandbox.get";
+    /**
+     * The constant GET_BY_OWNER.
+     */
+    public static final String GET_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getByOwner";
+    /**
+     * The constant GET_LIST_BY_OWNER.
+     */
+    public static final String GET_LIST_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getListByOwner";
+    /**
+     * The constant ADD.
+     */
+    public static final String ADD = Module.VERSION + ".sandbox.config.sandbox.add";
+    /**
+     * The constant UPDATE.
+     */
+    public static final String UPDATE = Module.VERSION + ".sandbox.config.sandbox.update";
+    /**
+     * The constant PARAM_ID.
+     */
 /* Parameters */
-	public static final String PARAM_ID = "_id";
-	/**
-	 * The constant PARAM_OWNER_ID.
-	 */
-	public static final String PARAM_OWNER_ID = "owner";
-	/**
-	 * The constant PARAM_ACTIVITY_ID.
-	 */
-	public static final String PARAM_ACTIVITY_ID = "activityId";
-	/**
-	 * The constant PARAM_SEASON_ID.
-	 */
-	public static final String PARAM_SEASON_ID = "seasonId";
-	/**
-	 * The constant PARAM_USER.
-	 */
-	public static final String PARAM_USER = "user";
-	/**
-	 * The constant PARAM_SB_CFG_ID.
-	 */
-	public static final String PARAM_SB_CFG_ID = "sandboxCfgId";
-	private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxVerticle.class);
-	/* Injections */
-	@Inject private MongoDB mongo;
-	@Inject private Utils utils;
+    public static final String PARAM_ID = "_id";
+    /**
+     * The constant PARAM_OWNER_ID.
+     */
+    public static final String PARAM_OWNER_ID = "owner";
+    /**
+     * The constant PARAM_ACTIVITY_ID.
+     */
+    public static final String PARAM_ACTIVITY_ID = "activityId";
+    /**
+     * The constant PARAM_SEASON_ID.
+     */
+    public static final String PARAM_SEASON_ID = "seasonId";
+    /**
+     * The constant PARAM_USER.
+     */
+    public static final String PARAM_USER = "user";
+    /**
+     * The constant PARAM_SB_CFG_ID.
+     */
+    public static final String PARAM_SB_CFG_ID = "sandboxCfgId";
+    private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxVerticle.class);
+    /* Injections */
+    @Inject
+    private MongoDB mongo;
+    @Inject
+    private Utils utils;
 
-	/**
-	 * Start void.
-	 */
-	@Override public void start() {
-		super.start();
-		LOG.debug(this.getClass().getName() + " started");
+    /**
+     * Start void.
+     */
+    @Override
+    public void start() {
+        super.start();
+        LOG.debug(this.getClass().getName() + " started");
 
-		/**
-		 * @api {post} /api/v1/sandbox/config/sandbox/getByOwner
-		 * @apiVersion 0.1.0
-		 * @apiName getByOwner
-		 * @apiGroup SandBox API
-		 * @apiPermission all
-		 *
-		 * @apiDescription Retrieve the user's sandbox
-		 *
-		 * @apiParam {String} activityId Mandatory The sandBox activity.
-		 *
-		 * @apiSuccess {sandBox}   sandBox    The sandBox updated.
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
-			@Override public void handle(Message<String> message) {
-				LOG.debug(GET_BY_OWNER + " - SandBox");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.isUserLogged(req);
-					Map<String, List<String>> params = req.getParams();
-					utils.testMandatoryParams(params, PARAM_ACTIVITY_ID);
+        /**
+         * @api {post} /api/v1/sandbox/config/sandbox/getByOwner
+         * @apiVersion 0.1.0
+         * @apiName getByOwner
+         * @apiGroup SandBox API
+         * @apiPermission all
+         *
+         * @apiDescription Retrieve the user's sandbox
+         *
+         * @apiParam {String} activityId Mandatory The sandBox activity.
+         *
+         * @apiSuccess {sandBox}   sandBox    The sandBox updated.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
+            @Override
+            public void handle(Message<String> message) {
+                LOG.debug(GET_BY_OWNER + " - SandBox");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
+                    Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_ACTIVITY_ID);
 
-					CriteriaBuilder cb = new CriteriaBuilder();
+                    CriteriaBuilder cb = new CriteriaBuilder();
 
-					cb.add(PARAM_OWNER_ID, req.getUser().get_id());
-					cb.add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
+                    cb.add(PARAM_OWNER_ID, req.getUser().get_id());
+                    cb.add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
 
-					JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
+                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
 
-					if (resultJson == null || resultJson.size() == 0) {
-						throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" + req.getUser().get_id() + " ,and activityId : " + params.get(PARAM_ACTIVITY_ID));
-					}
-					JsonObject json = resultJson.get(0);
-					LOG.debug("SandBox found : " + json.toString());
-					message.reply(json.encode());
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				} catch (Exception e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-				}
-			}
-		});
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" + req.getUser().get_id() + " ,and activityId : " + params.get(PARAM_ACTIVITY_ID));
+                    }
+                    JsonObject json = resultJson.get(0);
+                    LOG.debug("SandBox found : " + json.toString());
+                    message.reply(json.encode());
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
 
-		/**
-		 * @api {post} /api/v1/sandbox/config/sandbox/getListByOwner
-		 * @apiVersion 0.1.0
-		 * @apiName getListByOwner
-		 * @apiGroup SandBox API
-		 * @apiPermission all
-		 *
-		 * @apiDescription Retrieve the user's sandbox
-		 *
-		 * @apiParam {String} activityId Mandatory The sandBox activity.
-		 *
-		 * @apiSuccess {sandBox}   sandBox    The sandBox updated.
-		 *
-		 * @apiError HTTP_ERROR Bad request
-		 * @apiError MONGO_ERROR Error on DB request
-		 * @apiError INVALID_PARAMETER Parameters not found
-		 */
-		vertx.eventBus().registerHandler(GET_LIST_BY_OWNER, new Handler<Message<String>>() {
-			@Override public void handle(Message<String> message) {
-				LOG.debug(GET_LIST_BY_OWNER + " - SandBox");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.GET, req.getMethod());
-					utils.isUserLogged(req);
+        /**
+         * @api {post} /api/v1/sandbox/config/sandbox/getListByOwner
+         * @apiVersion 0.1.0
+         * @apiName getListByOwner
+         * @apiGroup SandBox API
+         * @apiPermission all
+         *
+         * @apiDescription Retrieve the user's sandbox
+         *
+         * @apiParam {String} activityId Mandatory The sandBox activity.
+         *
+         * @apiSuccess {sandBox}   sandBox    The sandBox updated.
+         *
+         * @apiError HTTP_ERROR Bad request
+         * @apiError MONGO_ERROR Error on DB request
+         * @apiError INVALID_PARAMETER Parameters not found
+         */
+        vertx.eventBus().registerHandler(GET_LIST_BY_OWNER, new Handler<Message<String>>() {
+            @Override
+            public void handle(Message<String> message) {
+                LOG.debug(GET_LIST_BY_OWNER + " - SandBox");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.isUserLogged(req);
 
-					CriteriaBuilder cb = new CriteriaBuilder();
-					if (req.getParams().get("id") != null && !req.getParams().get("id").isEmpty() && StringUtils.isNoneBlank(req.getParams().get("id").get(0))) {
-						cb.add(PARAM_OWNER_ID, req.getParams().get("id").get(0));
-					} else {
-						cb.add(PARAM_OWNER_ID, req.getUser().get_id());
-					}
+                    CriteriaBuilder cb = new CriteriaBuilder();
+                    if (req.getParams().get("id") != null && !req.getParams().get("id").isEmpty() && StringUtils.isNoneBlank(req.getParams().get("id").get(0))) {
+                        cb.add(PARAM_OWNER_ID, req.getParams().get("id").get(0));
+                    } else {
+                        cb.add(PARAM_OWNER_ID, req.getUser().get_id());
+                    }
 
-					JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
+                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
 
-					if (resultJson == null || resultJson.size() == 0) {
-						throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" + req.getUser().get_id());
-					}
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" + req.getUser().get_id());
+                    }
 
-					for (int i = 0; i < resultJson.size(); i++) {
-						JsonObject json = resultJson.get(i);
-						LOG.debug("SandBox found : " + json.toString());
-					}
+                    for (int i = 0; i < resultJson.size(); i++) {
+                        JsonObject json = resultJson.get(i);
+                        LOG.debug("SandBox found : " + json.toString());
+                    }
 
-					message.reply(resultJson.encode());
+                    message.reply(resultJson.encode());
 
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				} catch (Exception e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-				}
-			}
-		});
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
 
-		/**
-		 *
-		 */
-		vertx.eventBus().registerHandler(ADD, new Handler<Message<JsonObject>>() {
-			@Override public void handle(Message<JsonObject> message) {
-				LOG.debug(ADD + " - SandBox");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body().encode(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.PUT, req.getMethod());
+        /**
+         *
+         */
+        vertx.eventBus().registerHandler(ADD, new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(Message<JsonObject> message) {
+                LOG.debug(ADD + " - SandBox");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body().encode(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.PUT, req.getMethod());
 
-					final JsonObject jsonReq = new JsonObject(req.getBody());
-					Map<String, Object> params = jsonReq.toMap();
-					utils.testMandatoryParams(params, PARAM_USER, PARAM_ACTIVITY_ID);
+                    final JsonObject jsonReq = new JsonObject(req.getBody());
+                    Map<String, Object> params = jsonReq.toMap();
+                    utils.testMandatoryParams(params, PARAM_USER, PARAM_ACTIVITY_ID);
 
-					final User user = Json.decodeValue((jsonReq.getObject(PARAM_USER)).encode(), User.class);
-					final String activityId = jsonReq.getString(PARAM_ACTIVITY_ID);
+                    final User user = Json.decodeValue((jsonReq.getObject(PARAM_USER)).encode(), User.class);
+                    final String activityId = jsonReq.getString(PARAM_ACTIVITY_ID);
 
-					JsonObject sandbox = new JsonObject();
-					sandbox.putString("activityId", activityId);
-					sandbox.putString("owner", user.get_id());
-					String sandboxId = mongo.save(sandbox, SB_SandBox.class);
-					sandbox.putString("_id", sandboxId);
+                    JsonObject sandbox = new JsonObject();
+                    sandbox.putString("activityId", activityId);
+                    sandbox.putString("owner", user.get_id());
+                    String sandboxId = mongo.save(sandbox, SB_SandBox.class);
+                    sandbox.putString("_id", sandboxId);
 
-					message.reply(sandbox.encode());
+                    message.reply(sandbox.encode());
 
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendErrorJ(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (Exception e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-				}
-			}
-		});
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendErrorJ(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
 
-		/**
-		 *
-		 */
-		vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
-			@Override public void handle(Message<String> message) {
-				LOG.debug(UPDATE + " - SandBox");
-				try {
-					final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-					utils.testHTTPMetod(Constantes.POST, req.getMethod());
+        /**
+         *
+         */
+        vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
+            @Override
+            public void handle(Message<String> message) {
+                LOG.debug(UPDATE + " - SandBox");
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
 
-					Map<String, List<String>> params = req.getParams();
-					utils.testMandatoryParams(params, PARAM_ID, PARAM_SB_CFG_ID);
+                    Map<String, List<String>> params = req.getParams();
+                    utils.testMandatoryParams(params, PARAM_ID, PARAM_SB_CFG_ID);
 
-					// Sandbox ID
-					final String id = params.get(PARAM_ID).get(0);
-					// Sandbox Cfg Id
-					final String sandboxCfgId = params.get(PARAM_SB_CFG_ID).get(0);
+                    // Sandbox ID
+                    final String id = params.get(PARAM_ID).get(0);
+                    // Sandbox Cfg Id
+                    final String sandboxCfgId = params.get(PARAM_SB_CFG_ID).get(0);
 
-					// Récup sandbox
-					final JsonObject sandbox = mongo.getById(id, SB_SandBox.class);
+                    // Récup sandbox
+                    final JsonObject sandbox = mongo.getById(id, SB_SandBox.class);
 
-					if (sandbox == null) {
-						throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for id :" + id);
-					}
+                    if (sandbox == null) {
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for id :" + id);
+                    }
 
-					// MàJ
-					sandbox.putString("sandboxCfgId", sandboxCfgId);
+                    // MàJ
+                    sandbox.putString("sandboxCfgId", sandboxCfgId);
 
-					// Sauvegarde
-					mongo.save(sandbox, SB_SandBox.class);
+                    // Sauvegarde
+                    mongo.save(sandbox, SB_SandBox.class);
 
-				} catch (final NoSuchMethodException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-				} catch (final IllegalArgumentException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-				} catch (QaobeeException e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, e);
-				} catch (Exception e) {
-					LOG.error(e.getMessage(), e);
-					utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-				}
-			}
-		});
-	}
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
+            }
+        });
+    }
 }

@@ -25,139 +25,140 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author Xavier MARIN
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class BlogPost {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class BlogPost {
 
-	/**
-	 * The _id.
-	 */
-	private String _id; // NOSONAR
-	/**
-	 * The timestamp.
-	 */
-	private long timestamp;
-	/**
-	 * The title.
-	 */
-	private String title;
-	/**
-	 * The exerp.
-	 */
-	private String exerp;
-	/**
-	 * The content.
-	 */
-	private String content;
-	/**
-	 * The user_id.
-	 */
-	private String user_id;
+    /**
+     * The _id.
+     */
+    private String _id; // NOSONAR
+    /**
+     * The timestamp.
+     */
+    private long timestamp;
+    /**
+     * The title.
+     */
+    private String title;
+    /**
+     * The exerp.
+     */
+    private String exerp;
+    /**
+     * The content.
+     */
+    private String content;
+    /**
+     * The user_id.
+     */
+    private String user_id;
 
-	/**
-	 * Gets the timestamp.
-	 *
-	 * @return long : timestamp
-	 */
-	public long getTimestamp() {
-		return timestamp;
-	}
+    /**
+     * Gets the timestamp.
+     *
+     * @return long : timestamp
+     */
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-	/**
-	 * Defines the timestamp.
-	 *
-	 * @param timestamp (long) : timestamp
-	 */
-	public void setTimestamp(final long timestamp) {
-		this.timestamp = timestamp;
-	}
+    /**
+     * Defines the timestamp.
+     *
+     * @param timestamp (long) : timestamp
+     */
+    public void setTimestamp(final long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	/**
-	 * Gets the title.
-	 *
-	 * @return String : title
-	 */
-	public String getTitle() {
-		return title;
-	}
+    /**
+     * Gets the title.
+     *
+     * @return String : title
+     */
+    public String getTitle() {
+        return title;
+    }
 
-	/**
-	 * Sets the title.
-	 *
-	 * @param title (String) : title
-	 */
-	public void setTitle(final String title) {
-		this.title = title;
-	}
+    /**
+     * Sets the title.
+     *
+     * @param title (String) : title
+     */
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 
-	/**
-	 * Gets the exerp.
-	 *
-	 * @return String : exerp
-	 */
-	public String getExerp() {
-		return exerp;
-	}
+    /**
+     * Gets the exerp.
+     *
+     * @return String : exerp
+     */
+    public String getExerp() {
+        return exerp;
+    }
 
-	/**
-	 * Sets the exerp.
-	 *
-	 * @param exerp (String) :  exerp
-	 */
-	public void setExerp(final String exerp) {
-		this.exerp = exerp;
-	}
+    /**
+     * Sets the exerp.
+     *
+     * @param exerp (String) :  exerp
+     */
+    public void setExerp(final String exerp) {
+        this.exerp = exerp;
+    }
 
-	/**
-	 * Gets the content of the post.
-	 *
-	 * @return String : content
-	 */
-	public String getContent() {
-		return content;
-	}
+    /**
+     * Gets the content of the post.
+     *
+     * @return String : content
+     */
+    public String getContent() {
+        return content;
+    }
 
-	/**
-	 * Sets the content of the post.
-	 *
-	 * @param content (String) : content
-	 */
-	public void setContent(final String content) {
-		this.content = content;
-	}
+    /**
+     * Sets the content of the post.
+     *
+     * @param content (String) : content
+     */
+    public void setContent(final String content) {
+        this.content = content;
+    }
 
-	/**
-	 * Gets the _id.
-	 *
-	 * @return String : _id
-	 */
-	public String get_id() { // NOSONAR
-		return _id;
-	}
+    /**
+     * Gets the _id.
+     *
+     * @return String : _id
+     */
+    public String get_id() { // NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Sets the _id.
-	 *
-	 * @param _id (String) : _id
-	 */
-	public void set_id(final String _id) { // NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Sets the _id.
+     *
+     * @param _id (String) : _id
+     */
+    public void set_id(final String _id) { // NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Gets the user _id.
-	 *
-	 * @return String : user identifier
-	 */
-	public String getUser_id() {
-		return user_id;
-	}
+    /**
+     * Gets the user _id.
+     *
+     * @return String : user identifier
+     */
+    public String getUser_id() {
+        return user_id;
+    }
 
-	/**
-	 * Sets the user _id.
-	 *
-	 * @param user_id (String) : user identifier
-	 */
-	public void setUser_id(final String user_id) {
-		this.user_id = user_id;
-	}
+    /**
+     * Sets the user _id.
+     *
+     * @param user_id (String) : user identifier
+     */
+    public void setUser_id(final String user_id) {
+        this.user_id = user_id;
+    }
 
 }

@@ -28,240 +28,241 @@ import java.util.List;
  *
  * @author cke
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class IndicatorCfg {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class IndicatorCfg {
 
-	/**
-	 * Internal identifier
-	 */
-	private String _id;// NOSONAR
-	/**
-	 * Code
-	 */
-	private String code;
-	/**
-	 * Activity identifier
-	 */
-	private String activityId;
-	/**
-	 * Country identifier
-	 */
-	private String countryId;
-	/**
-	 * Type of indicator
-	 */
-	private String indicatorType;
-	/**
-	 * List of screens
-	 */
-	private List<String> listScreen;
-	/**
-	 * Description
-	 */
-	private String description;
-	/**
-	 * List of fields
-	 */
-	private List<IndicatorField> listField;
-	/**
-	 * List of values
-	 */
-	private List<String> listValues;
+    /**
+     * Internal identifier
+     */
+    private String _id;// NOSONAR
+    /**
+     * Code
+     */
+    private String code;
+    /**
+     * Activity identifier
+     */
+    private String activityId;
+    /**
+     * Country identifier
+     */
+    private String countryId;
+    /**
+     * Type of indicator
+     */
+    private String indicatorType;
+    /**
+     * List of screens
+     */
+    private List<String> listScreen;
+    /**
+     * Description
+     */
+    private String description;
+    /**
+     * List of fields
+     */
+    private List<IndicatorField> listField;
+    /**
+     * List of values
+     */
+    private List<String> listValues;
 
-	/**
-	 * Returns the internal identifier.
-	 *
-	 * @return String : id
-	 */
-	public String get_id() {// NOSONAR
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : id
+     */
+    public String get_id() {// NOSONAR
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 *
-	 * @param _id (String) : id
-	 */
-	public void set_id(String _id) {// NOSONAR
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : id
+     */
+    public void set_id(String _id) {// NOSONAR
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the code.
-	 *
-	 * @return String : code
-	 */
-	public String getCode() {
-		return code;
-	}
+    /**
+     * Returns the code.
+     *
+     * @return String : code
+     */
+    public String getCode() {
+        return code;
+    }
 
-	/**
-	 * Defines the code.
-	 *
-	 * @param code (String) : code
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
+    /**
+     * Defines the code.
+     *
+     * @param code (String) : code
+     */
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	/**
-	 * Returns the activity ID.
-	 *
-	 * @return String : activity ID
-	 */
-	public String getActivityId() {
-		return activityId;
-	}
+    /**
+     * Returns the activity ID.
+     *
+     * @return String : activity ID
+     */
+    public String getActivityId() {
+        return activityId;
+    }
 
-	/**
-	 * Defines the activity ID.
-	 *
-	 * @param activityId (String) : activity ID
-	 */
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+    /**
+     * Defines the activity ID.
+     *
+     * @param activityId (String) : activity ID
+     */
+    public void setActivityId(String activityId) {
+        this.activityId = activityId;
+    }
 
-	/**
-	 * Returns the country ID.
-	 *
-	 * @return String : country ID
-	 */
-	public String getCountryId() {
-		return countryId;
-	}
+    /**
+     * Returns the country ID.
+     *
+     * @return String : country ID
+     */
+    public String getCountryId() {
+        return countryId;
+    }
 
-	/**
-	 * Defines the country ID.
-	 *
-	 * @param countryId (String) : country ID
-	 */
-	public void setCountryId(String countryId) {
-		this.countryId = countryId;
-	}
+    /**
+     * Defines the country ID.
+     *
+     * @param countryId (String) : country ID
+     */
+    public void setCountryId(String countryId) {
+        this.countryId = countryId;
+    }
 
-	/**
-	 * Returns the type of indicator.
-	 *
-	 * @return String : type
-	 */
-	public String getIndicatorType() {
-		return indicatorType;
-	}
+    /**
+     * Returns the type of indicator.
+     *
+     * @return String : type
+     */
+    public String getIndicatorType() {
+        return indicatorType;
+    }
 
-	/**
-	 * Defines the type of indicator.
-	 *
-	 * @param indicatorType (String) : type
-	 */
-	public void setIndicatorType(String indicatorType) {
-		this.indicatorType = indicatorType;
-	}
+    /**
+     * Defines the type of indicator.
+     *
+     * @param indicatorType (String) : type
+     */
+    public void setIndicatorType(String indicatorType) {
+        this.indicatorType = indicatorType;
+    }
 
-	/**
-	 * Returns the list of screens.
-	 *
-	 * @return List(String) : list
-	 */
-	public List<String> getListScreen() {
-		return listScreen;
-	}
+    /**
+     * Returns the list of screens.
+     *
+     * @return List(String) : list
+     */
+    public List<String> getListScreen() {
+        return listScreen;
+    }
 
-	/**
-	 * Defines the list of screens.
-	 *
-	 * @param listScreen (List(Screen)) : list
-	 */
-	public void setListScreen(List<String> listScreen) {
-		this.listScreen = listScreen;
-	}
+    /**
+     * Defines the list of screens.
+     *
+     * @param listScreen (List(Screen)) : list
+     */
+    public void setListScreen(List<String> listScreen) {
+        this.listScreen = listScreen;
+    }
 
-	/**
-	 * Adds a screen to the list.
-	 *
-	 * @param screen (String) : screen name
-	 */
-	public void addScreen(String screen) {
-		if (listScreen == null) {
-			listScreen = new ArrayList<>();
-		}
-		listScreen.add(screen);
-	}
+    /**
+     * Adds a screen to the list.
+     *
+     * @param screen (String) : screen name
+     */
+    public void addScreen(String screen) {
+        if (listScreen == null) {
+            listScreen = new ArrayList<>();
+        }
+        listScreen.add(screen);
+    }
 
-	/**
-	 * Returns the indicator description.
-	 *
-	 * @return String : description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * Returns the indicator description.
+     *
+     * @return String : description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * Defines the indicator description.
-	 *
-	 * @param description (String) : description
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * Defines the indicator description.
+     *
+     * @param description (String) : description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * Returns the list of fields.
-	 *
-	 * @return List(IndicatorField) : list
-	 */
-	public List<IndicatorField> getListField() {
-		return listField;
-	}
+    /**
+     * Returns the list of fields.
+     *
+     * @return List(IndicatorField) : list
+     */
+    public List<IndicatorField> getListField() {
+        return listField;
+    }
 
-	/**
-	 * Defines the list of fields.
-	 *
-	 * @param listField (List(IndicatorField)) : list
-	 */
-	public void setListField(List<IndicatorField> listField) {
-		this.listField = listField;
-	}
+    /**
+     * Defines the list of fields.
+     *
+     * @param listField (List(IndicatorField)) : list
+     */
+    public void setListField(List<IndicatorField> listField) {
+        this.listField = listField;
+    }
 
-	/**
-	 * Adds a field to the list of fields.
-	 *
-	 * @param field (IndicatorField) : field
-	 */
-	public void addField(IndicatorField field) {
-		if (listField == null) {
-			listField = new ArrayList<>();
-		}
-		listField.add(field);
-	}
+    /**
+     * Adds a field to the list of fields.
+     *
+     * @param field (IndicatorField) : field
+     */
+    public void addField(IndicatorField field) {
+        if (listField == null) {
+            listField = new ArrayList<>();
+        }
+        listField.add(field);
+    }
 
-	/**
-	 * Returns the list of values.
-	 *
-	 * @return List(String) : list
-	 */
-	public List<String> getListValues() {
-		return listValues;
-	}
+    /**
+     * Returns the list of values.
+     *
+     * @return List(String) : list
+     */
+    public List<String> getListValues() {
+        return listValues;
+    }
 
-	/**
-	 * Defines the list of values.
-	 *
-	 * @param listValues (List(String)) : list
-	 */
-	public void setListValues(List<String> listValues) {
-		this.listValues = listValues;
-	}
+    /**
+     * Defines the list of values.
+     *
+     * @param listValues (List(String)) : list
+     */
+    public void setListValues(List<String> listValues) {
+        this.listValues = listValues;
+    }
 
-	/**
-	 * Adds a value to the list.
-	 *
-	 * @param value (String) : value
-	 */
-	public void addValue(String value) {
-		if (listValues == null) {
-			listValues = new ArrayList<>();
-		}
-		listValues.add(value);
-	}
+    /**
+     * Adds a value to the list.
+     *
+     * @param value (String) : value
+     */
+    public void addValue(String value) {
+        if (listValues == null) {
+            listValues = new ArrayList<>();
+        }
+        listValues.add(value);
+    }
 }

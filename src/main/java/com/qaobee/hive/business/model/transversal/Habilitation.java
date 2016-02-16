@@ -26,77 +26,78 @@ import java.io.Serializable;
  *
  * @author xavier
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class Habilitation implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Habilitation implements Serializable {
 
-	/**
-	 * The Constant serialVersionUID.
-	 */
-	private static final long serialVersionUID = -961204023798043214L;
+    /**
+     * The Constant serialVersionUID.
+     */
+    private static final long serialVersionUID = -961204023798043214L;
 
-	/**
-	 * Internal identifier
-	 */
-	private String _id;
-	/**
-	 * Key
-	 */
-	private String key;
-	/**
-	 * Description
-	 */
-	private String description;
+    /**
+     * Internal identifier
+     */
+    private String _id;
+    /**
+     * Key
+     */
+    private String key;
+    /**
+     * Description
+     */
+    private String description;
 
-	/**
-	 * Returns the key.
-	 *
-	 * @return String : key
-	 */
-	public String getKey() {
-		return key;
-	}
+    /**
+     * Returns the key.
+     *
+     * @return String : key
+     */
+    public String getKey() {
+        return key;
+    }
 
-	/**
-	 * Defines the key.
-	 *
-	 * @param key (String) : key
-	 */
-	public void setKey(final String key) {
-		this.key = key;
-	}
+    /**
+     * Defines the key.
+     *
+     * @param key (String) : key
+     */
+    public void setKey(final String key) {
+        this.key = key;
+    }
 
-	/**
-	 * Returns the description.
-	 *
-	 * @return String : description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * Returns the description.
+     *
+     * @return String : description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * Defines the description.
-	 *
-	 * @param description (String) : description
-	 */
-	public void setDescription(final String description) {
-		this.description = description;
-	}
+    /**
+     * Defines the description.
+     *
+     * @param description (String) : description
+     */
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
-	/**
-	 * Returns the internal identifier.
-	 *
-	 * @return String : ID
-	 */
-	public String get_id() {
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : ID
+     */
+    public String get_id() {
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 *
-	 * @param _id (String) : ID
-	 */
-	public void set_id(final String _id) {
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : ID
+     */
+    public void set_id(final String _id) {
+        this._id = _id;
+    }
 }

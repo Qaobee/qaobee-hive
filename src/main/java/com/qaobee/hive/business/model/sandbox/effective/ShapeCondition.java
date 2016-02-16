@@ -23,95 +23,96 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Bean that describes a shape condition.
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class ShapeCondition {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ShapeCondition {
 
-	/**
-	 * Internal identifier
-	 */
-	private String _id;
-	/**
-	 * Code
-	 */
-	private String code;
-	/**
-	 * Label
-	 */
-	private String label;
-	/**
-	 * Order list
-	 */
-	private int order;
+    /**
+     * Internal identifier
+     */
+    private String _id;
+    /**
+     * Code
+     */
+    private String code;
+    /**
+     * Label
+     */
+    private String label;
+    /**
+     * Order list
+     */
+    private int order;
 
-	/**
-	 * Returns the internal identifier.
-	 *
-	 * @return String : ID
-	 */
-	public String get_id() {
-		return _id;
-	}
+    /**
+     * Returns the internal identifier.
+     *
+     * @return String : ID
+     */
+    public String get_id() {
+        return _id;
+    }
 
-	/**
-	 * Defines the internal identifier.
-	 *
-	 * @param _id (String) : ID
-	 */
-	public void set_id(String _id) {
-		this._id = _id;
-	}
+    /**
+     * Defines the internal identifier.
+     *
+     * @param _id (String) : ID
+     */
+    public void set_id(String _id) {
+        this._id = _id;
+    }
 
-	/**
-	 * Returns the code.
-	 *
-	 * @return String : code
-	 */
-	public String getCode() {
-		return code;
-	}
+    /**
+     * Returns the code.
+     *
+     * @return String : code
+     */
+    public String getCode() {
+        return code;
+    }
 
-	/**
-	 * Defines the code.
-	 *
-	 * @param code (String) : code
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
+    /**
+     * Defines the code.
+     *
+     * @param code (String) : code
+     */
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	/**
-	 * Returns the label.
-	 *
-	 * @return String : label
-	 */
-	public String getLabel() {
-		return label;
-	}
+    /**
+     * Returns the label.
+     *
+     * @return String : label
+     */
+    public String getLabel() {
+        return label;
+    }
 
-	/**
-	 * Defines the label.
-	 *
-	 * @param label (String) : label
-	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
+    /**
+     * Defines the label.
+     *
+     * @param label (String) : label
+     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
-	/**
-	 * Returns the order.
-	 *
-	 * @return int : order
-	 */
-	public int getOrder() {
-		return order;
-	}
+    /**
+     * Returns the order.
+     *
+     * @return int : order
+     */
+    public int getOrder() {
+        return order;
+    }
 
-	/**
-	 * Defines the order.
-	 *
-	 * @param order (int) : order
-	 */
-	public void setOrder(int order) {
-		this.order = order;
-	}
+    /**
+     * Defines the order.
+     *
+     * @param order (int) : order
+     */
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
 }

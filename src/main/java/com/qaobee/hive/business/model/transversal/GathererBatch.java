@@ -24,51 +24,52 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author jerome
  */
-@JsonIgnoreProperties(ignoreUnknown = true) public class GathererBatch {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class GathererBatch {
 
-	/**
-	 * Date processing batch
-	 */
-	protected String batchProcessDate;
-	/**
-	 * Action made by processing batch
-	 */
-	protected String batchProcessAction;
+    /**
+     * Date processing batch
+     */
+    protected String batchProcessDate;
+    /**
+     * Action made by processing batch
+     */
+    protected String batchProcessAction;
 
-	/**
-	 * Returns date for processing batch.
-	 *
-	 * @return String : date in YYYY-MM-DD format.
-	 */
-	public String getBatchProcessDate() {
-		return batchProcessDate;
-	}
+    /**
+     * Returns date for processing batch.
+     *
+     * @return String : date in YYYY-MM-DD format.
+     */
+    public String getBatchProcessDate() {
+        return batchProcessDate;
+    }
 
-	/**
-	 * Defines date for processing batch.
-	 *
-	 * @param batchProcessDate (String)  :date in YYYY-MM-DD format
-	 */
-	public void setBatchProcessDate(String batchProcessDate) {
-		this.batchProcessDate = batchProcessDate;
-	}
+    /**
+     * Defines date for processing batch.
+     *
+     * @param batchProcessDate (String)  :date in YYYY-MM-DD format
+     */
+    public void setBatchProcessDate(String batchProcessDate) {
+        this.batchProcessDate = batchProcessDate;
+    }
 
-	/**
-	 * Returns action made by processing batch.
-	 *
-	 * @return String : action (CREATED, UPDATED, NO_CHANGE)
-	 */
-	public String getBatchProcessAction() {
-		return batchProcessAction;
-	}
+    /**
+     * Returns action made by processing batch.
+     *
+     * @return String : action (CREATED, UPDATED, NO_CHANGE)
+     */
+    public String getBatchProcessAction() {
+        return batchProcessAction;
+    }
 
-	/**
-	 * Defines action made by processing batch.
-	 *
-	 * @param batchProcessAction (String) : action (CREATED, UPDATED, NO_CHANGE)
-	 */
-	public void setBatchProcessAction(String batchProcessAction) {
-		this.batchProcessAction = batchProcessAction;
-	}
+    /**
+     * Defines action made by processing batch.
+     *
+     * @param batchProcessAction (String) : action (CREATED, UPDATED, NO_CHANGE)
+     */
+    public void setBatchProcessAction(String batchProcessAction) {
+        this.batchProcessAction = batchProcessAction;
+    }
 
 }
