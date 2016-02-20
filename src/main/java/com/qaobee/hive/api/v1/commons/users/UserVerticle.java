@@ -381,6 +381,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     final String code = json.getString("code");
                     final String passwd = json.getString("passwd");
                     final boolean injunit = json.getBoolean("junit", false);
+                    final boolean byPassActivationCode = json.getBoolean("byPassActivationCode", false);
                     ReCaptchaResponse reCaptchaResponse = null;
                     if (!injunit) {
                         final JsonObject catcha = json.getObject("captcha");
@@ -394,13 +395,22 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
                     } else {
                         final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
-                        if (code.equals(user.getAccount().getActivationPasswd())) {
+                        /* update password by profil menu */
+                        if(byPassActivationCode) {
                             user.getAccount().setPasswd(passwd);
                             mongo.save(personUtils.prepareUpsert(user));
                             utils.sendStatus(true, message);
                         } else {
-                            utils.sendStatus(false, message);
+                            /* update password by home public */
+                            if (code.equals(user.getAccount().getActivationPasswd())) {
+                                user.getAccount().setPasswd(passwd);
+                                mongo.save(personUtils.prepareUpsert(user));
+                                utils.sendStatus(true, message);
+                            } else {
+                                utils.sendStatus(false, message);
+                            }
                         }
+
                     }
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
