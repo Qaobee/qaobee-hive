@@ -76,7 +76,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      * Country Id
      */
     public static final String PARAM_COUNTRY_ID = "countryId";
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractGuiceVerticle.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActivityCfgVerticle.class);
     /**
      * The Mongo.
      */
