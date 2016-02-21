@@ -86,11 +86,14 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
                     JsonObject data = event.body();
                     Client client = Client.basicAuth(config.getString("apikey"));
                     User m = client.users.me().execute();
-                    System.out.println(m.id + " " + m.name);
                     JsonObject asanaReq = new JsonObject();
-                    asanaReq.putString("name", data.getString("note"));
+                    String title = "";
+                    if (data.containsField("meta") && data.getObject("meta").containsField("user")) {
+                        title += "[" + data.getObject("meta").getObject("user").getString("firstname") + " " + data.getObject("meta").getObject("user").getString("name") + "] ";
+                    }
+                    title += data.getString("note");
+                    asanaReq.putString("name", title);
                     asanaReq.putString("notes", data.getString("url") + "\n" + data.getObject("browser").encodePrettily());
-                    //data.getString("img"));
                     asanaReq.putArray("projects", new JsonArray().add(config.getString("project")));
                     asanaReq.putString("assignee", m.id);
                     Task t = client.tasks.create().data(asanaReq.toMap()).execute();
