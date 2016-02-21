@@ -9,6 +9,10 @@
     "css": [
     ]
   },
+  "asana": {
+    "apikey": "80LZMme1.66OB3CDxJsEeLCrHZkePc0O",
+    "project": "92340957592737"
+  },
   "metrix.mod": {
     "address": "metrix"
   },

@@ -1,19 +1,17 @@
 {
-  "runtime" : {
-    "version" : 1
+  "runtime": {
+    "version": 1
   },
   "cors": {
     "enabled": true
   },
   "pdf": {
     "css": [
-
     ]
   },
-  "asana" : {
-    "apikey" : "80LZMme1.66OB3CDxJsEeLCrHZkePc0O",
-    "project" : "92340957592737",
-    "assignee" : "28216887974449",
+  "asana": {
+    "apikey": "80LZMme1.66OB3CDxJsEeLCrHZkePc0O",
+    "project": "92340957592737"
   },
   "payplug": {
     "baseUrl": "api.payplug.com",

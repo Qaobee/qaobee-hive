@@ -63,11 +63,9 @@ public class GuiceModule extends AbstractModule {
     @Override
     protected void configure() {
         //get the vertx configuration
-        JsonObject mongoConfig = config.getObject("mongo.persistor");
-        JsonObject payPlugconfig = config.getObject("payplug");
-
-        bind(JsonObject.class).annotatedWith(Names.named("mongo.persistor")).toInstance(mongoConfig);
-        bind(JsonObject.class).annotatedWith(Names.named("payplug")).toInstance(payPlugconfig);
+        bind(JsonObject.class).annotatedWith(Names.named("mongo.persistor")).toInstance(config.getObject("mongo.persistor"));
+        bind(JsonObject.class).annotatedWith(Names.named("payplug")).toInstance(config.getObject("payplug"));
+        bind(JsonObject.class).annotatedWith(Names.named("asana")).toInstance(config.getObject("asana"));
 
         // TECHNICAL MODULES
         bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);

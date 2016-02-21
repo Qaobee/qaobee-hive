@@ -1,6 +1,7 @@
-package com.qaobee.hive.api.v1.commons.users;
+package com.qaobee.hive.api.v1.commons.utils;
 
 import com.asana.Client;
+import com.asana.models.Task;
 import com.asana.models.User;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -9,6 +10,8 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
@@ -19,8 +22,11 @@ import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.UUID;
 
 /**
  * The type Feedback verticle.
@@ -46,6 +52,15 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
+
+        /**
+         * @apiDescription Send feedback
+         * @api {post} /api/1/commons/feedback/send update user
+         * @apiName POST_FEEDBACK
+         * @apiGroup FeedbackVerticle
+         * @apiParam {String} param URL encoded string from feedback.js
+         * @apiSuccess {Object} status boolean status
+         */
         vertx.eventBus().registerHandler(POST_FEEDBACK, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
@@ -53,29 +68,39 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     String[] postRequest = req.getBody().split("=");
-
                     String decoded = URLDecoder.decode(postRequest[1]);
-
                     final JsonObject data = new JsonObject(decoded);
-                    String me = "28216887974449";
+                    vertx.eventBus().send("internal.feedback.send", data);
+                    utils.sendStatus(true, message);
+                } catch (final NoSuchMethodException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                }
+            }
+        });
 
+        vertx.eventBus().registerHandler("internal.feedback.send", new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(Message<JsonObject> event) {
+                try {
+                    JsonObject data = event.body();
                     Client client = Client.basicAuth(config.getString("apikey"));
                     User m = client.users.me().execute();
                     System.out.println(m.id + " " + m.name);
                     JsonObject asanaReq = new JsonObject();
                     asanaReq.putString("name", data.getString("note"));
-                    asanaReq.putString("notes", data.getObject("browser").encodePrettily() + "\n" +
-                            data.getString("url")); // + "\n" +
+                    asanaReq.putString("notes", data.getString("url") + "\n" + data.getObject("browser").encodePrettily());
                     //data.getString("img"));
                     asanaReq.putArray("projects", new JsonArray().add(config.getString("project")));
-                    asanaReq.putString("assignee", m.id );
-                    client.tasks.create().data(asanaReq.toMap()).execute();
-                    utils.sendStatus(true, message);
-                } catch (final NoSuchMethodException e) {
+                    asanaReq.putString("assignee", m.id);
+                    Task t = client.tasks.create().data(asanaReq.toMap()).execute();
+                    byte[] img = Base64.decodeBase64(data.getString("img").replace("data:image/png;base64,", ""));
+                    File temp = File.createTempFile("temp-file-name", ".tmp");
+                    FileUtils.writeByteArrayToFile(temp, img);
+                    FileInputStream in = new FileInputStream(temp);
+                    client.attachments.createOnTask(t.id, in, UUID.randomUUID().toString() + ".png", "image/png").execute();
+                } catch (final IOException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         });
