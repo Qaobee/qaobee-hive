@@ -587,6 +587,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         }
                         user.setBirthdate(userUpdate.getBirthdate());
                         user.setContact(userUpdate.getContact());
+                        user.setCountry(structureObj.getCountry());
+                        user.setNationality(structureObj.getCountry());
                         user.setFirstname(userUpdate.getFirstname());
                         user.setGender(userUpdate.getGender());
                         user.setName(userUpdate.getName());
@@ -670,7 +672,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         for (int i = 0; i < resultJson.size(); i++) {
                             JsonObject s = resultJson.get(i);
                             if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
-                                sbSandBoxCfg.setSeason((Season) Json.decodeValue(Json.encode(s), Season.class));
+                                sbSandBoxCfg.setSeason((Season) Json.decodeValue(s.encode(), Season.class));
                                 break;
                             }
                         }
