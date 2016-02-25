@@ -61,6 +61,25 @@ public class UserTest extends VertxJunitSupport {
     }
 
     /**
+     * Test Login OK with an uppercase login.
+     */
+    @Test
+    public void loginOkWithUppercaseLogin() {
+        User u = generateUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        req.setMethod(Constantes.POST);
+        final JsonObject params = new JsonObject();
+        params.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin().toUpperCase());
+        params.putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+        req.setBody(params.encode());
+        final String reply = sendonBus(UserVerticle.LOGIN, req);
+        JsonObject result = new JsonObject(reply);
+        String name = result.getString("name");
+        Assert.assertEquals(u.getName(), name);
+    }
+
+    /**
      * Badlogin hTTP method.
      */
     @Test

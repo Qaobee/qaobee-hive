@@ -47,6 +47,7 @@ public final class PersonUtilsImpl implements PersonUtils {
      */
     @Override
     public User prepareUpsert(final User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
         if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
             final byte[] salt = passwordEncryptionService.generateSalt();
             user.getAccount().setSalt(salt);

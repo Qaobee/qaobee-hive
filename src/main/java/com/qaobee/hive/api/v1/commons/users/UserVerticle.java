@@ -147,7 +147,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         LOG.error(e.getMessage(), e);
                         utils.sendError(message, e);
                     } else {
-                        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN)).get(), null, null, 0, 0, User.class);
+                        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
                         if (res.size() != 1) {
                             final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
                             utils.sendError(message, e);
@@ -263,7 +263,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     final JsonObject infos = new JsonObject(req.getBody());
-                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN)).get(), null, null, 0, 0, User.class);
+                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
                         final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", req.getLocale()));
                         LOG.error(e.getMessage(), e);
@@ -586,7 +586,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     utils.isLoggedAndAdmin(req);
                     // Creation of request
                     CriteriaBuilder criterias = new CriteriaBuilder();
-                    criterias.add("account.login", req.getParams().get("login").get(0));
+                    criterias.add("account.login", req.getParams().get("login").get(0).toLowerCase());
                     JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
                     if (jsonArray == null || jsonArray.size() == 0) {
                         utils.sendError(message, ExceptionCodes.DB_NO_ROW_RETURNED, "Login inconnu");
@@ -636,7 +636,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     JsonObject request = new JsonObject(req.getBody());
                     CriteriaBuilder cb = new CriteriaBuilder();
                     cb.add("account.mobileToken", request.getString(MOBILE_TOKEN));
-                    cb.add("account.login", request.getString(PARAM_LOGIN));
+                    cb.add("account.login", request.getString(PARAM_LOGIN).toLowerCase());
 
                     final JsonArray res = mongo.findByCriterias(cb.get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {

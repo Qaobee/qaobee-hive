@@ -198,7 +198,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<JsonObject> message) {
                 final JsonObject jsonReq = new JsonObject(message.body().encode());
-                final String login = jsonReq.getString(PARAM_LOGIN);
+                final String login = jsonReq.getString(PARAM_LOGIN).toLowerCase();
                 final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
                 if (res.size() > 0) {
                     utils.sendStatusJson(true, message);
@@ -233,7 +233,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     if (!jsonReq.containsField("login")) {
                         utils.sendStatus(false, message);
                     } else {
-                        final String login = jsonReq.getString("login");
+                        final String login = jsonReq.getString("login").toLowerCase();
                         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
                         if (res.size() > 0) {
                             utils.sendStatus(true, message);
@@ -309,6 +309,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                 } else {
                                     try { // NOSONAR
                                         user.getAccount().setActive(false);
+                                        user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
                                         final Plan plan = Json.decodeValue(json.getObject(PARAM_PLAN).encode(), Plan.class);
                                         if (user.getAccount().getListPlan() == null) {
                                             user.getAccount().setListPlan(new ArrayList<Plan>());
