@@ -230,10 +230,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     final JsonObject jsonReq = new JsonObject(req.getBody());
-                    if (!jsonReq.containsField("login")) {
+                    if (!jsonReq.containsField(PARAM_LOGIN)) {
                         utils.sendStatus(false, message);
                     } else {
-                        final String login = jsonReq.getString("login").toLowerCase();
+                        final String login = jsonReq.getString(PARAM_LOGIN).toLowerCase();
                         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
                         if (res.size() > 0) {
                             utils.sendStatus(true, message);
