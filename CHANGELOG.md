@@ -1,85 +1,96 @@
 # CHANGELOG
 ---
 
-## 2016-01-05
+## 2016-02-26
 
-## 2016-01-04
-> + bugfix (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:18 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d2043bd2008d78ad1baeb875f92c8f8914c8ce0f)*)
+## 2016-02-25
+> + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:09 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/de669259700ee9b5df5b5c4fdd7b3594bb56f801)*)
+> + Nom du logger (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:56 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/14e8bcfe541f003b4004deae0f54579b3669d9e6)*)
+> + Nom du logger (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:54 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/37c019ede793fcaf9421fc2b388f35b625e49c44)*)
+> + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:33 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0cf956465950642f943442bc471836cf7713e7fd)*)
+> + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:17 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4de2e7f523a7c0b8ca959604f323b1d7f5600dd5)*)
+> + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bc42045379fe3b5599f8820353158128e823898f)*)
+> + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:56 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4523a0552947594c46f12f9976dd5de97ec21d65)*)
 
-## 2016-01-01
-> + bugfix (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:28 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6bb760239b5ef725728748da244132adb83c8248)*)
-> + timer fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:36 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ca08c95d42cb149d0b89b2b5451ab2d3f7389f23)*)
+## 2016-02-23
+> + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e6bfb7203a7326be97b2aa437e037f7941a7c7a3)*)
+> + #94480307488859 : bug envoi de mail au signup (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:48 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/32843824e198e7ebd27146bdc7cae6c17e3f9002)*)
+> + #94228748721030 : login case insensitive (*par [Xavier MARIN](xavier.marin@arkea.com) à 11:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ed52755a87d75636828437e0022f23e22f7ff980)*)
 
-## 2015-12-31
+## 2016-02-21
+> + Correction signup (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/c6e7087ca07f61ab9ad5bfecc113e232f1fc7ac1)*)
 
-## 2015-12-30
-> + payplug mock server (*par [Xavier MARIN](marin.xavier@gmail.com) à 17:01 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e20922fabed0c4e4d5e3d6f104a02bd1e1d31aed)*)
-> + payplug mock server (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:29 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f1bb36f139095256d978b648ab877eb7d1c221ba)*)
-> + Javadoc fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:14 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/089ad4c637d3cd41556c02f09dc0b01fcc6cd7a1)*)
-> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 01:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f84fbc079180ab126a9581f7b1babb572cd814dc)*)
-> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:59 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a8802023729ef240a2798c59e92ef5e8a2a399c4)*)
-> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1795ce29ee668727b1ed8a8a83bd70edcf30b52c)*)
-> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:55 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/23f6f498180f7e5b987ecdfbe87ec795d309211e)*)
-> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/76b2d8b3d92294e2bf9f26b0d13ccfa9d62f7024)*)
+## 2016-02-20
+> + Ajout du nom de la personne connectée au feedback (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:23 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/99c0b1bb60d06246f11ced3734be1f2bd9ed7075)*)
+> + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 18:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d5c67161d9a81d5655c26e1de8f6e028c7dbd0b4)*)
+> + feedback + intégration asana (*par [Xavier MARIN](marin.xavier@gmail.com) à 11:28 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/48bf79a03e7f83d0d4f263a60b7031e91d6a80c8)*)
 
-## 2015-12-28
-> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 19:28 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d5400311f7e6f4bc9086bcfccc9634118c8f260e)*)
-> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:08 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/2595ac5eeee5d001c2c2ddab15b98c86c13ce79d)*)
+## 2016-02-16
+> + feedback + intégration asana (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:39 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/89d535dde67c3c769ef84490a5640d6be8ec3e1a)*)
+> + logger (*par [Xavier MARIN](marin.xavier@gmail.com) à 15:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/56de0e7d6a8810e24f1aaa07bff1c27fb8562925)*)
+> + Update password from profil IHM (*par [ch.kervella](ch.kervella@gmail.com) à 10:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/4f10abda98b484458bc7159d980b57875c83a386)*)
 
-## 2015-12-23
-> + intégration payplug (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/b60cfeb51ce791395eacefd53afd86b90e9dc8bc)*)
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:09 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ac634ba5eeb1186f28166f5452ef5c572d561c76)*)
+## 2016-02-15
+> + JAVADOC (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:08 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d7adc4b17fcf9047bc42641549a21b9aac1c3924)*)
+> + Code format (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:42 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a4d1b5482225560267f47dae98f5e5d6d0a03a89)*)
+> + Code format (*par [Xavier MARIN](marin.xavier@gmail.com) à 20:31 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/52f86521cf12441613c4b3c38fb5b3a12c926ae1)*)
+> + NOSONAR (*par [Jerome ROUE](jerome.roue@gmail.com) à 20:13 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/09bf2d7a914c6de679af05930a58badd5dc29c71)*)
 
-## 2015-12-22
-> + docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:38 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a65cc2d8cc78c80aea6c6acfc03de1c365eb72be)*)
+## 2016-02-11
+> + resol sonar (*par [Jerome ROUE](jerome.roue@gmail.com) à 22:37 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3e0f08b0017696f6d41f37e936fa42b71b20ec29)*)
 
-## 2015-12-21
+## 2016-02-10
+> + bug fix (*par [Xavier MARIN](marin.xavier@gmail.com) à 21:03 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d4e214b0da7c7110194fb957dd1262d531526712)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:29 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/da806bfa2abf5e05ce77e838ec8b254df8355116)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:27 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/b7f15ad077e33f0af5fbeb3108dbf4243a66a826)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:22 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1267fd7df30b4a7c591c88af9ffc5fff96197298)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:19 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/356894545da0e70ae44c93e837fd7212c3c36bf0)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/23ef1bfb1dc4cb8343273420c4e565a9c45cdc37)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e39e0a847752e70eb8286f8fa067bb45e14228ec)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:14 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1cf769d45cca971672021c634dc968cbf153b933)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:10 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ad91128b845f0b7488ac6fb1203c2e0347412c7a)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:09 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/c02fc562ccb90fb09f2cab3e86b7fa9624806058)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:59 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e9dce5707d41e1550bb64870eae6d512a3a8513a)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:59 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/508d95eb2bd39723648e84a730a8a25e12fbb8fc)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/aad8a4f161c3b4f3ef0caa81d7ca687af535a232)*)
 
-## 2015-12-20
-> + Correction bug test (*par [Christophe Kervella](ch.kervella@gmail.com) à 10:47 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0cae98691e9c07354ecaddc9c829da650cc1c140)*)
-> + MAJ jeu de données (*par [Christophe Kervella](ch.kervella@gmail.com) à 10:26 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/aab3b91fb7ce7f0ba943656ec4ef7a4f39691779)*)
+## 2016-02-08
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6f62aa39c46129ad7510316faf17838c4f2ab1cf)*)
+> + javadoc (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:39 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/9d72a6685eeec96973e85452dccd59ad0d883d8b)*)
 
-## 2015-12-19
-> + docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 18:52 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/11c39650810f41e82432aac194bed6c9f4e6f3e7)*)
-> + update (*par [Xavier MARIN](marin.xavier@gmail.com) à 18:49 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/c058e1a9e0cb07a9796cae2055210a18e372e2cb)*)
+## 2016-02-03
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/a1cac4073b09e31b5d2788e43ebee59e82553075)*)
+> + sonar (*par [Xavier MARIN](marin.xavier@gmail.com) à 22:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/666aca6fef49d93c1c9667e9b8dbd9250fee896d)*)
 
-## 2015-12-16
-> + Event stats (*par [Christophe Kervella](ch.kervella@gmail.com) à 14:11 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/27749bbb8f5956b4d317f95227ed2e377c8b707a)*)
-> + Bug fix avatar user (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:45 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bd310d67e5337c8a1b63e00db3fc1a6fe464dffb)*)
+## 2016-02-02
+> + REC env (*par [Xavier MARIN](marin.xavier@gmail.com) à 11:44 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/500bdcb1b1de00afdef40673e8822d2b6765d678)*)
 
-## 2015-12-12
-> + playtime convert to number (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:07 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/efc027f8bd12183faa77d25bd918dbcc8e67178b)*)
+## 2016-02-01
+> + Bug fix sur File upload (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:43 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/710371df5ef51112b8becfaf16208e54f61dcf2a)*)
+> + Bug fix sur MAJ profil (*par [Xavier MARIN](marin.xavier@gmail.com) à 14:55 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6f65d8b2dbd6942914fed647de0f64164ac5573e)*)
 
-## 2015-12-11
-> + suppression de gitlabCI (*par [Xavier MARIN](marin.xavier@gmail.com) à 01:00 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/acca833ca2b4ae4d0b73dfcc9076da1f78b9c316)*)
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:46 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d699d72c3b9d3423d276f39ddc615634bcabb52c)*)
-> + version bump (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:45 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/2120a7dcc9adea3e183010c17b8c77e098bd4075)*)
-> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:43 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/bf7f6f790540d035c1c681041cc7416a5e7cc0f4)*)
-> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:41 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6aceabff3a7c51bd0f51444d0c625561cc4b82c0)*)
+## 2016-01-31
+> + Add listLaterality to settings.activityCfg (*par [Christophe Kervella](ch.kervella@gmail.com) à 21:01 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/60d1696a17dff48ec6a131554733eef69ee4a2f5)*)
 
-## 2015-12-10
-> + Changelog (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:42 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/114931e5b51e3c0176bb969221bba28780980965)*)
+## 2016-01-27
+> + Jeu de données (*par [Christophe Kervella](ch.kervella@gmail.com) à 18:08 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/af7c4a31e44c0dcee0b8279ed1191d79277da791)*)
 
-## 2015-12-08
-> + Asana-69246817945888 : QaoBee en Qaobee (*par [Jerome ROUE](jerome.roue@gmail.com) à 21:25 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/93cda250afdfc6591283f52ff1dbdd8c875d2bc0)*)
+## 2016-01-26
+> + Ajout env de REC (*par [Jerome ROUE](jerome.roue@gmail.com) à 22:15 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0aa0c04a79e82b6f2eb889de84125c4e31e6a300)*)
 
-## 2015-12-07
-> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:35 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e97fe5a6d00e7f1ac8d29082486ac1d30ce115a0)*)
-> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:30 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/27bd48d64c79f328841bc2bd22d2df0f04d4685c)*)
-> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d813f17280c4a20840c7dbcbc62f1e6ccf7d4354)*)
-> + Docker (*par [Xavier MARIN](marin.xavier@gmail.com) à 23:11 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ded6a8481021f4730fb197c3f3882ef99602faa1)*)
+## 2016-01-25
+> + correction javadoc (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/dd3a349964cdfdc6146f481c88e9f74f9b4ee0f7)*)
+> + Création de l'effectif en fonction du paramétrage (*par [Jerome ROUE](jerome.roue@gmail.com) à 00:03 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/7147b1b53266f8376a0fb627f5bfe3a5187ef030)*)
 
-## 2015-12-06
+## 2016-01-24
+> + Evo jeu de données (*par [Christophe Kervella](ch.kervella@gmail.com) à 22:21 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/65858f564001e567b28e12023383e04338a73c57)*)
+> + Ajout tests pour ne pas lancer d'exceptions (*par [Jerome ROUE](jerome.roue@gmail.com) à 20:09 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/cbcc6ae6efb39f90f422d01a11a6dc9d6d93440c)*)
 
-## 2015-12-05
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 01:18 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/0b5c2b5dd69b9467d0f34eb7cf15a29207408aed)*)
-> + Bug fix test logged user (*par [Xavier MARIN](marin.xavier@gmail.com) à 01:06 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d1dacdbd50444e41b52c42f597af88a587fb4103)*)
-> + Modification du templating PDF et adaptation sur factures et profil (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:54 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e58bb8ee27a95cb0e736162be5b00fa53451066f)*)
-> + Modification du templating PDF et adaptation sur factures et profil (*par [Xavier MARIN](marin.xavier@gmail.com) à 00:40 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/85f04a6d597ec57589088d51f09cfa1a8c1925af)*)
+## 2016-01-23
+> + Corrections pour vérif données en admin Ajout recherche données par Login (*par [Jerome ROUE](jerome.roue@gmail.com) à 23:14 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/75e4ae9ef729a6a4d50e93305c9fc0c7e3418860)*)
+> + Maj Pojo + Verticle Signup (*par [Jerome ROUE](jerome.roue@gmail.com) à 13:05 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1e80ce8d24674035188a5358144cd7b314fe4882)*)
+> + Ajout des positions (*par [Jerome ROUE](jerome.roue@gmail.com) à 08:52 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/1359bc58419bd5973e89a9704c209fac69dcb1f6)*)
 
-## 2015-12-04
-> + changelog (*par [Xavier MARIN](marin.xavier@gmail.com) à 14:12 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/ddd58b6db98d71f12380fba8c34d188bf464a5a1)*)
-> + test foireux mis en stand-by (*par [Xavier MARIN](marin.xavier@gmail.com) à 14:10 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/e8dd1bf3d08bef67adb86e245e8a735d1315e947)*)
-> + Gestion du profil utilisateur (*par [Xavier MARIN](marin.xavier@gmail.com) à 13:58 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/3ad53ab26038dcda07fe78a28d26ac115d60ab34)*)
-> + Merge remote-tracking branch 'origin/master' (*par [Xavier MARIN](marin.xavier@gmail.com) à 13:56 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/f135ab5be25a5176e3a24ea4831a282d14acd15a)*)
-> + Divers (*par [Christophe Kervella](ch.kervella@gmail.com) à 00:53 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/08ce8826ea3881e21722d46ce5ad1d3690737549)*)
+## 2016-01-14
+> + logs (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:23 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/d5efad8a46a708ce23783e990713873241625d84)*)
+> + Centralisation des logs + adaptations JDK7 + amélioration DockerFile (*par [Xavier MARIN](marin.xavier@gmail.com) à 16:21 [view commit](https://gitlab.com/qaobee/qaobee-swarn/commit/6d03d75a89438c31415f7dfe68dca3f34e7fab07)*)
