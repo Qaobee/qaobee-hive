@@ -38,6 +38,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.inject.Inject;
 import java.io.*;
+import java.util.Map;
 
 /**
  * The Class PDFVerticle.
@@ -76,6 +77,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
+        final Map<String, String> envs = container.env();
         LOG.debug(this.getClass().getName() + " started");
         final Handler<Message<JsonObject>> generatePDFHandler = new Handler<Message<JsonObject>>() {
             @Override
@@ -94,7 +96,12 @@ public class PDFVerticle extends AbstractGuiceVerticle {
                     }
                     data.putString("css", cssStr.toString());
                     final String result = process(message.body().getString(TEMPLATE), data);
-                    final File temp = new File(System.getProperty("java.io.tmpdir") + "/" + message.body().getString(FILE_NAME) + ".pdf");
+                    String datadir = System.getProperty("user.home");
+                    if (envs.containsKey("OPENSHIFT_DATA_DIR")) {
+                        datadir = envs.get("OPENSHIFT_DATA_DIR");
+                    }
+
+                    final File temp = new File(datadir + "/tmp/" + message.body().getString(FILE_NAME) + ".pdf");
                     if (temp.exists()) {
                         boolean res = temp.delete();
                         LOG.debug(String.valueOf(res));
