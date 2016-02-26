@@ -100,6 +100,10 @@ public class PDFVerticle extends AbstractGuiceVerticle {
                     if (envs.containsKey("OPENSHIFT_DATA_DIR")) {
                         datadir = envs.get("OPENSHIFT_DATA_DIR");
                     }
+                    File dir = new File(datadir + "/tmp/");
+                    if(!dir.exists()) {
+                        dir.createNewFile();
+                    }
 
                     final File temp = new File(datadir + "/tmp/" + message.body().getString(FILE_NAME) + ".pdf");
                     if (temp.exists()) {
