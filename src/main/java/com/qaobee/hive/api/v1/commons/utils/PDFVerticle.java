@@ -102,7 +102,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
                     }
                     File dir = new File(datadir + "/tmp/");
                     if(!dir.exists()) {
-                        dir.createNewFile();
+                        dir.mkdirs();
                     }
 
                     final File temp = new File(datadir + "/tmp/" + message.body().getString(FILE_NAME) + ".pdf");
