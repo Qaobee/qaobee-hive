@@ -120,7 +120,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * Journeys
      */
     public static final String PARAM_JOURNEYS = "journeys";
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractGuiceVerticle.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ChampionshipVerticle.class);
 
     /* Injections */
     /**
