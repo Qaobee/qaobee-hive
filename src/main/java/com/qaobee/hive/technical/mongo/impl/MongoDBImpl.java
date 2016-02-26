@@ -243,7 +243,7 @@ public class MongoDBImpl implements MongoDB {
     public JsonObject getById(final String id, final Class<?> collection) throws QaobeeException {
         final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id));
         if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
+            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection.getSimpleName());
         } else {
             return new JsonObject(res.next().toMap());
         }
