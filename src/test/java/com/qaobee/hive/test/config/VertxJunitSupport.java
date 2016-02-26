@@ -63,7 +63,6 @@ import java.util.logging.Logger;
 @RunWith(VertxJUnit4ClassRunner.class)
 @VertxConfiguration(modsDir = "build/mods", injectResources = true)
 @TestModule(name = "com.qaobee~hive~0.1", jsonConfig = "file:config.json")
-@Ignore
 public class VertxJunitSupport
         extends VertxTestBase implements JSDataMongoTest {
     /**
@@ -151,6 +150,7 @@ public class VertxJunitSupport
         System.out.println("About to execute : " + name.getMethodName());
         mongo.getDb().dropDatabase();
     }
+
 
     /**
      * Generate user.

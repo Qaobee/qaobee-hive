@@ -88,7 +88,7 @@ task apidoc(type: Exec) {
     args '-i', 'src/main/java/','-o',  'build/docs/api-doc'
 }
 test {
-    include 'com/qaobee/**'
+    include 'com/qaobee/hive/test/api/**'
 }
 sonarqube{
     check
