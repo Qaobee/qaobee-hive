@@ -709,12 +709,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         team.setLabel("Mon équipe");
                         team.setEnable(true);
                         team.setAdversary(false);
-                        String homeTeamId = mongo.save(team);
-
-                        // Equipe adversaire
-                        team.setLabel("Equipe adverse");
-                        team.setAdversary(true);
-                        team.setLinkTeamId(homeTeamId);
                         mongo.save(team);
 
                         // MàJ du plan FREEMIUM
