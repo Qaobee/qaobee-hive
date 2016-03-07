@@ -688,7 +688,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         // Création Sandbox Effective
                         SB_Effective sbEffective = new SB_Effective();
                         sbEffective.setSandBoxCfgId(sbSandBoxCfg.get_id());
-                        sbEffective.setLabel("Defaut");
+                        sbEffective.setLabel("Défaut");
                         sbEffective.setCategoryAge(categoryAgeObj);
 
                         // SB_Effective -> members
