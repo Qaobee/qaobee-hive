@@ -28,6 +28,7 @@ import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.vertx.ServerHook;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,8 +45,11 @@ import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.http.HttpServerFileUpload;
 import org.vertx.java.core.http.HttpServerRequest;
 import org.vertx.java.core.http.RouteMatcher;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
+import org.vertx.java.core.sockjs.SockJSServer;
+import org.vertx.java.core.sockjs.SockJSSocket;
 import org.vertx.mods.Mailer;
 
 import javax.inject.Inject;
@@ -63,6 +67,8 @@ public class Main extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
     @Inject
     private Utils utils;
+    private SockJSServer sockJSServer;
+    private Map<String, SockJSSocket> sockets = new HashMap<>();
 
     /**
      * Start void.
@@ -83,6 +89,7 @@ public class Main extends AbstractGuiceVerticle {
             mongopersistor.putString("username", envs.get("OPENSHIFT_MONGODB_DB_USERNAME"));
         }
         final HttpServer server = vertx.createHttpServer();
+
         final RouteMatcher rm = new RouteMatcher();
         final EventBus eb = vertx.eventBus();
 
@@ -309,8 +316,17 @@ public class Main extends AbstractGuiceVerticle {
                 if (envs.containsKey("OPENSHIFT_VERTX_PORT")) {
                     port = Integer.parseInt(envs.get("OPENSHIFT_VERTX_PORT"));
                 }
-                server.listen(port, ip);
 
+                sockJSServer = vertx.createSockJSServer(server);
+                JsonObject config = new JsonObject().putString("prefix", "/eventbus");
+
+                JsonArray noPermitted = new JsonArray();
+                noPermitted.add(new JsonObject());
+
+                ServerHook hook = new ServerHook(LOG);
+                sockJSServer.setHook(hook);
+                sockJSServer.bridge(config, noPermitted, noPermitted);
+                server.listen(port, ip);
                 LOG.info("The http server is started");
                 startedResult.setResult(null);
                 return null;
@@ -322,8 +338,9 @@ public class Main extends AbstractGuiceVerticle {
                 return null;
             }
         });
-
     }
+
+
 
     /**
      * Enable cors.
