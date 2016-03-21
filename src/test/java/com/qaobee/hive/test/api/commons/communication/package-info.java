@@ -1,0 +1,1 @@
+package com.qaobee.hive.test.api.commons.communication;

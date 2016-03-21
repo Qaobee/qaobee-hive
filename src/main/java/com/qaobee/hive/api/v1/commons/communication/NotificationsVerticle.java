@@ -87,7 +87,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     Collections.reverse(p.getNotifications());
                     final List<Notification> notifs = p.getNotifications() != null ? p.getNotifications().subList(0,
                             limit > 0 ? Math.min(limit, p.getNotifications().size()) : p.getNotifications().size()) : new ArrayList<Notification>();
-                    if (notifs == null || notifs.isEmpty()) {
+                    if (notifs.isEmpty()) {
                         message.reply(new JsonArray().encode());
                     } else {
                         final JsonArray jNotifs = new JsonArray();
@@ -96,7 +96,6 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         }
                         message.reply(jNotifs.encode());
                     }
-
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -169,8 +168,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     final JsonObject jsonperson = mongo.getById(req.getUser().get_id(), User.class);
                     final User p = Json.decodeValue(jsonperson.encode(), User.class);
                     final List<Notification> notifications = p.getNotifications();
-                    for (final Iterator<Notification> iter = notifications.listIterator(); iter.hasNext(); ) {
-                        final Notification n = iter.next();
+                    for (final Notification n : notifications) {
                         if (n.get_id().equals(req.getParams().get(PARAM_NOTIF_ID).get(0))) {
                             n.setRead(!n.isRead());
                             mongo.save(p);
@@ -223,6 +221,8 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                             JsonObject sandbox = mongo.getById(id, "SB_SandBox");
                             // TODO : comment trouver tous les users d'une sandbox?
                             addNotificationToUser(sandbox.getString("owner"), notification);
+                            break;
+                        default:
                             break;
                     }
                     utils.sendStatusJson(true, message);
