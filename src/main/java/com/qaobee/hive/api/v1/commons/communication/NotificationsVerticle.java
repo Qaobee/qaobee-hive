@@ -21,10 +21,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The type Notifications verticle.
@@ -87,6 +84,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     if (req.getParams() != null && req.getParams().containsKey(PARAM_LIMIT)) {
                         limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
                     }
+                    Collections.reverse(p.getNotifications());
                     final List<Notification> notifs = p.getNotifications() != null ? p.getNotifications().subList(0,
                             limit > 0 ? Math.min(limit, p.getNotifications().size()) : p.getNotifications().size()) : new ArrayList<Notification>();
                     if (notifs == null || notifs.isEmpty()) {
