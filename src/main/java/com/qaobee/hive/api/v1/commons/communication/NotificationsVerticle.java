@@ -37,23 +37,27 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     @Inject
     private Utils utils;
     /**
-     * Handler to get the list of notifications.
+     * The constant LIST.
      */
     public static final String LIST = Module.VERSION + ".commons.communication.notifications";
     /**
-     * Handler to delete a notification.
+     * The constant DEL.
      */
     public static final String DEL = Module.VERSION + ".commons.communication.notifications.del";
     /**
-     * Handler to get the detail of a notification.
+     * The constant READ.
      */
     public static final String READ = Module.VERSION + ".commons.communication.notifications.read";
     /**
-     * Limit of notifications to show
+     * The constant NOTIFY.
+     */
+    public static final String NOTIFY = "internal.notify";
+    /**
+     * The constant PARAM_LIMIT.
      */
     public static final String PARAM_LIMIT = "limit";
     /**
-     * Notification ID
+     * The constant PARAM_NOTIF_ID.
      */
     public static final String PARAM_NOTIF_ID = "id";
 
@@ -71,11 +75,6 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request's method
          */
         final Handler<Message<String>> getUserNotifications = new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -101,10 +100,10 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     }
 
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }
@@ -119,11 +118,6 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request's method
          */
         final Handler<Message<String>> delNotificationHandler = new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -143,16 +137,16 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         }
                     }
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 }
             }
@@ -167,11 +161,6 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request's method
          */
         final Handler<Message<String>> readNotificationHandler = new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -192,17 +181,56 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         }
                     }
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final EncodeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final IllegalArgumentException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                }
+            }
+        };
+        /**
+         * Add a notification to a collection
+         * <p>Message : <pre>
+         *     {
+         *      id : "123456", // id of a document
+         *      target : "User", // collection's name
+         *      notification : {
+         *          content: "bla bla bla",
+         *          from_user_id : "123456",
+         *          title : "Hello"
+         *      }
+         *     }
+         * </pre></p>
+         */
+        final Handler<Message<JsonObject>> notify = new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(final Message<JsonObject> message) {
+                try {
+                    utils.testMandatoryParams(message.body().encode(), "id", "target", "notification");
+                    String id = message.body().getString("id");
+                    String collection = message.body().getString("target");
+                    JsonObject notification = message.body().getObject("notification");
+                    switch (collection) {
+                        case "User":
+                            addNotificationToUser(id, notification);
+                            break;
+                        case "SB_SandBox":
+                            JsonObject sandbox = mongo.getById(id, "SB_SandBox");
+                            // TODO : comment trouver tous les users d'une sandbox?
+                            addNotificationToUser(sandbox.getString("owner"), notification);
+                            break;
+                    }
+                    utils.sendStatusJson(true, message);
+                } catch (final QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendStatusJson(false, message);
                 }
             }
         };
@@ -212,35 +240,45 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(LIST, getUserNotifications);
         vertx.eventBus().registerHandler(DEL, delNotificationHandler);
         vertx.eventBus().registerHandler(READ, readNotificationHandler);
-        vertx.eventBus().registerHandler(Module.VERSION +".commons.communication.notifications.add", new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(NOTIFY, notify);
+
+        vertx.eventBus().registerHandler(Module.VERSION + ".commons.communication.notifications.add", new Handler<Message<String>>() {
             @Override
-            public void handle(Message<String> message) {
+            public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
+                    utils.isUserLogged(req);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    Notification n = Json.decodeValue(req.getBody(), Notification.class);
-
-                    final JsonObject jsonperson = mongo.getById(req.getParams().get("id").get(0), User.class);
-                    final User p = Json.decodeValue(jsonperson.encode(), User.class);
-                    List<Notification> notifications = p.getNotifications();
-                    if(notifications == null) {
-                        notifications = new ArrayList<>();
-                    }
-                    n.set_id(UUID.randomUUID().toString());
-                    n.setTimestamp(System.currentTimeMillis());
-                    notifications.add(n);
-                    p.setNotifications(notifications);
-                    mongo.save(p);
-                    vertx.eventBus().send("qaobee.notification", new JsonObject(req.getBody()));
-                    utils.sendStatus(true, message);
+                    JsonObject request = new JsonObject()
+                            .putString("id", req.getParams().get("id").get(0))
+                            .putString("target", User.class.getSimpleName())
+                            .putObject("notification", new JsonObject(req.getBody()));
+                    vertx.eventBus().send(NOTIFY, request, new Handler<Message<JsonObject>>() {
+                        @Override
+                        public void handle(Message<JsonObject> event) {
+                            utils.sendStatus(event.body().getBoolean("status", false), message);
+                        }
+                    });
                 } catch (final NoSuchMethodException e) {
-                    container.logger().error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final QaobeeException e) {
-                    container.logger().error(e.getMessage(), e);
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
             }
         });
+    }
+
+    private void addNotificationToUser(String id, JsonObject notification) throws QaobeeException {
+        final JsonObject object = mongo.getById(id, User.class);
+        JsonArray notifications = object.getArray("notifications", new JsonArray());
+        notification.putString("_id", UUID.randomUUID().toString());
+        notification.putNumber("timestamp", System.currentTimeMillis());
+        notification.putBoolean("read", false);
+        notifications.add(notification);
+        object.putArray("notifications", notifications);
+        mongo.save(object, User.class);
+        vertx.eventBus().send("qaobee.notification." + id, notification);
     }
 }

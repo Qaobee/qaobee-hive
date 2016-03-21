@@ -240,7 +240,6 @@ public class Main extends AbstractGuiceVerticle {
                             public void handle(final AsyncResult<Message<String>> message) {
                                 stopTimer(StringUtils.join(wrapper.getPath(), '.'));
                                 if (message.succeeded()) {
-
                                     final String response = message.result().body();
                                     if (response.startsWith("[") || !response.startsWith("{")) {
                                         enableCors(req);
@@ -267,14 +266,22 @@ public class Main extends AbstractGuiceVerticle {
                                         }
                                     }
                                 } else {
+                                    req.response().putHeader("Content-Type", "application/json");
                                     final ReplyException ex = (ReplyException) message.cause();
                                     enableCors(req);
-                                    LOG.error(ex.getMessage(), ex);
                                     if (ex.failureCode() > 0) {
                                         req.response().setStatusCode(ex.failureCode());
                                     }
                                     if (ex.getMessage() != null) {
-                                        req.response().end(ex.getMessage());
+                                        String exStr = ex.getMessage();
+                                        if(ex.getMessage().startsWith("{")) {
+                                            JsonObject jsonEx = new JsonObject(ex.getMessage());
+                                            if (jsonEx.containsField("stackTrace")) {
+                                                jsonEx.removeField("stackTrace");
+                                            }
+                                            exStr = jsonEx.encode();
+                                        }
+                                        req.response().end(exStr);
                                     } else {
                                         final JsonObject jsonResp = new JsonObject();
                                         jsonResp.putBoolean("status", false);
@@ -320,12 +327,12 @@ public class Main extends AbstractGuiceVerticle {
                 sockJSServer = vertx.createSockJSServer(server);
                 JsonObject config = new JsonObject().putString("prefix", "/eventbus");
 
-                JsonArray noPermitted = new JsonArray();
-                noPermitted.add(new JsonObject());
-
-                ServerHook hook = new ServerHook(LOG);
-                sockJSServer.setHook(hook);
-                sockJSServer.bridge(config, noPermitted, noPermitted);
+                JsonArray outboundPermitted = new JsonArray();
+                JsonArray inboundPermitted = new JsonArray();
+                outboundPermitted.add(new JsonObject());
+                inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
+                sockJSServer.setHook(new ServerHook());
+                sockJSServer.bridge(config, inboundPermitted, outboundPermitted);
                 server.listen(port, ip);
                 LOG.info("The http server is started");
                 startedResult.setResult(null);
@@ -339,7 +346,6 @@ public class Main extends AbstractGuiceVerticle {
             }
         });
     }
-
 
 
     /**
