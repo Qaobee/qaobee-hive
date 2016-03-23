@@ -22,6 +22,8 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -97,8 +99,16 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
                     }
                     JsonArray jnotif = new JsonArray();
+                    List<String> wl = Arrays.asList(new String[]  {"_id", "name", "firstname", "avatar"});
                     for (int i = start; i < limit; i++) {
-                        ((JsonObject) notifications.get(i)).putObject("from_user_id", mongo.getById(((JsonObject) notifications.get(i)).getString("from_user_id"), User.class));
+                        JsonObject u = mongo.getById(((JsonObject) notifications.get(i)).getString("from_user_id"), User.class);
+                        JsonObject cu = new JsonObject();
+                        for(String f : u.getFieldNames()) {
+                            if(wl.contains(f)) {
+                                cu.putValue(f, u.getValue(f));
+                            }
+                        }
+                        ((JsonObject) notifications.get(i)).putObject("from_user_id", cu);
                         jnotif.add(notifications.get(i));
                     }
                     message.reply(jnotif.encode());
@@ -131,7 +141,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
                     n.putBoolean("deleted", true);
                     mongo.save(n, Notification.class);
-                    vertx.eventBus().send("qaobee.notification." + n.getString("user_id"), n);
+                    vertx.eventBus().send("qaobee.notification." + n.getString("user_id"), new JsonObject());
                     utils.sendStatus(true, message);
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
@@ -168,7 +178,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
                     n.putBoolean("read", true);
                     mongo.save(n, Notification.class);
-                    vertx.eventBus().send("qaobee.notification." + n.getString("user_id"), n);
+                    vertx.eventBus().send("qaobee.notification." + n.getString("user_id"), new JsonObject());
                     utils.sendStatus(true, message);
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
