@@ -265,6 +265,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
 
     private void addNotificationToUser(String id, JsonObject notification) throws QaobeeException {
         notification.putString("_id", UUID.randomUUID().toString());
+        notification.putString("user_id", id);
         notification.putNumber("timestamp", System.currentTimeMillis());
         notification.putBoolean("read", false);
         notification.putBoolean("deleted", false);
