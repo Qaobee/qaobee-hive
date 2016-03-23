@@ -264,14 +264,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     }
 
     private void addNotificationToUser(String id, JsonObject notification) throws QaobeeException {
-        final JsonObject object = mongo.getById(id, User.class);
-        JsonArray notifications = object.getArray("notifications", new JsonArray());
         notification.putString("_id", UUID.randomUUID().toString());
         notification.putNumber("timestamp", System.currentTimeMillis());
         notification.putBoolean("read", false);
-        notifications.add(notification);
-        object.putArray("notifications", notifications);
-        mongo.save(object, User.class);
+        notification.putBoolean("deleted", false);
+        mongo.save(notification, Notification.class);
         vertx.eventBus().send("qaobee.notification." + id, notification);
     }
 }
