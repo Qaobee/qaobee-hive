@@ -13,27 +13,25 @@ import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import java.util.ArrayList;
-
 /**
  * The type Notifications test.
  */
 public class NotificationsTest extends VertxJunitSupport {
+
     /**
-     * A notification.
+     * Gets notifications test.
      */
     @Test
-    public void getNotifications() {
+    public void getNotificationsTest() {
         final User u = generateUser();
 
         final Notification n = new Notification();
         n.setContent("Hello");
         n.setTitle("Message");
         n.setFrom_user_id(u.get_id());
+        n.setUser_id(u.get_id());
         n.setTimestamp(System.currentTimeMillis());
-        n.setRead(false);
-
-        n.set_id(addnotification(n, u));
+        n.set_id(addNotification(n));
 
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -53,20 +51,18 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Mark As Read.
+     * Mark as read test.
      */
     @Test
-    public void markAsRead() {
+    public void markAsReadTest() {
         final User u = generateUser();
-
         final Notification n = new Notification();
         n.setContent("Hello");
         n.setTitle("Message");
         n.setFrom_user_id(u.get_id());
         n.setTimestamp(System.currentTimeMillis());
-        n.setRead(false);
-
-        n.set_id(addnotification(n, u));
+        n.setUser_id(u.get_id());
+        n.set_id(addNotification(n));
 
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -92,10 +88,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Deletenotification.
+     * Delete notification test.
      */
     @Test
-    public void delete() {
+    public void DeleteNotificationTest() {
         final User u = generateUser();
 
         final Notification n = new Notification();
@@ -103,9 +99,8 @@ public class NotificationsTest extends VertxJunitSupport {
         n.setTitle("Message");
         n.setFrom_user_id(u.get_id());
         n.setTimestamp(System.currentTimeMillis());
-        n.setRead(false);
-
-        n.set_id(addnotification(n, u));
+        n.setUser_id(u.get_id());
+        n.set_id(addNotification(n));
 
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -119,38 +114,34 @@ public class NotificationsTest extends VertxJunitSupport {
         req.setMethod(Constantes.GET);
 
         final JsonArray jar = new JsonArray(sendonBus(NotificationsVerticle.LIST, req));
-        boolean found = false;
         for (int index = 0; index < jar.size(); index++) {
             final JsonObject item = jar.get(index);
             if (item.getString("_id").equals(n.get_id())) {
-                found = true;
+                Assert.fail("must be empty");
             }
         }
-        Assert.assertFalse(found);
     }
 
     /**
-     * No notifications.
+     * Gets empty notifications test.
      */
     @Test
-    public void getEmptyNotifications() {
+    public void getEmptyNotificationsTest() {
         final User u = generateUser();
         // del all notifications
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
         req.setUser(u);
+        req.setMethod(Constantes.GET);
         final JsonArray jar = new JsonArray(sendonBus(NotificationsVerticle.LIST, req));
+        req.setMethod(Constantes.DELETE);
         for (int index = 0; index < jar.size(); index++) {
             final JsonObject item = jar.get(index);
-            req.setMethod(Constantes.DELETE);
             req.setParams(getParams(new String[]{"id", item.getString("_id")}));
             final JsonObject status = new JsonObject(sendonBus(NotificationsVerticle.DEL, req));
             Assert.assertTrue(status.getBoolean("status", false));
         }
-
         req.setMethod(Constantes.GET);
-
         final JsonArray jar2 = new JsonArray(sendonBus(NotificationsVerticle.LIST, req));
         Assert.assertEquals(0, jar2.size());
     }
@@ -159,26 +150,12 @@ public class NotificationsTest extends VertxJunitSupport {
      * Addnotification.
      *
      * @param n Notification
-     * @param u User
      * @return notification id
      */
-    private String addnotification(final Notification n, final User u) {
+    private String addNotification(final Notification n) {
         String nid = null;
         try {
             nid = mongo.save(n);
-        } catch (EncodeException | QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        if (nid == null) {
-            Assert.fail("notification id is null");
-        }
-        n.set_id(nid);
-
-        u.setNotifications(new ArrayList<Notification>());
-        u.getNotifications().add(n);
-
-        try {
-            mongo.save(u);
         } catch (EncodeException | QaobeeException e) {
             Assert.fail(e.getMessage());
         }

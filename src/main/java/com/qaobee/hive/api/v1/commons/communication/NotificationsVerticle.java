@@ -7,6 +7,7 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -21,7 +22,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.UUID;
 
 /**
  * The type Notifications verticle.
@@ -54,6 +55,10 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_LIMIT = "limit";
     /**
+     * The constant PARAM_START.
+     */
+    public static final String PARAM_START = "start";
+    /**
      * The constant PARAM_NOTIF_ID.
      */
     public static final String PARAM_NOTIF_ID = "id";
@@ -78,24 +83,25 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
-                    final JsonObject jsonperson = mongo.getById(req.getUser().get_id(), User.class);
-                    final User p = Json.decodeValue(jsonperson.encode(), User.class);
-                    int limit = 0;
+                    int start = 0;
+
+                    if (req.getParams() != null && req.getParams().containsKey(PARAM_START)) {
+                        start = Integer.parseInt(req.getParams().get(PARAM_START).get(0));
+                    }
+                    CriteriaBuilder cb = new CriteriaBuilder()
+                            .add("user_id", req.getUser().get_id())
+                            .add("deleted", false);
+                    JsonArray notifications = mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, Notification.class);
+                    int limit = notifications.size();
                     if (req.getParams() != null && req.getParams().containsKey(PARAM_LIMIT)) {
                         limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
                     }
-                    Collections.reverse(p.getNotifications());
-                    final List<Notification> notifs = p.getNotifications() != null ? p.getNotifications().subList(0,
-                            limit > 0 ? Math.min(limit, p.getNotifications().size()) : p.getNotifications().size()) : new ArrayList<Notification>();
-                    if (notifs.isEmpty()) {
-                        message.reply(new JsonArray().encode());
-                    } else {
-                        final JsonArray jNotifs = new JsonArray();
-                        for (final Notification n : notifs) {
-                            jNotifs.add(new JsonObject(Json.encode(n)).putObject("from_user_id", mongo.getById(n.getFrom_user_id(), User.class)));
-                        }
-                        message.reply(jNotifs.encode());
+                    JsonArray jnotif = new JsonArray();
+                    for (int i = start; i < limit; i++) {
+                        ((JsonObject) notifications.get(i)).putObject("from_user_id", mongo.getById(((JsonObject) notifications.get(i)).getString("from_user_id"), User.class));
+                        jnotif.add(notifications.get(i));
                     }
+                    message.reply(jnotif.encode());
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -122,17 +128,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.DELETE, req.getMethod());
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_NOTIF_ID);
-                    final JsonObject jsonperson = mongo.getById(req.getUser().get_id(), User.class);
-                    final User p = Json.decodeValue(jsonperson.encode(), User.class);
-                    for (final Iterator<Notification> iter = p.getNotifications().listIterator(); iter.hasNext(); ) {
-                        final Notification n = iter.next();
-                        if (n.get_id().equals(req.getParams().get(PARAM_NOTIF_ID).get(0))) {
-                            iter.remove();
-                            mongo.save(p);
-                            utils.sendStatus(true, message);
-                            break;
-                        }
-                    }
+                    JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
+                    n.putBoolean("deleted", true);
+                    mongo.save(n, Notification.class);
+                    vertx.eventBus().send("qaobee.notification." + n.getString("user_id"), n);
+                    utils.sendStatus(true, message);
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -165,17 +165,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_NOTIF_ID);
-                    final JsonObject jsonperson = mongo.getById(req.getUser().get_id(), User.class);
-                    final User p = Json.decodeValue(jsonperson.encode(), User.class);
-                    final List<Notification> notifications = p.getNotifications();
-                    for (final Notification n : notifications) {
-                        if (n.get_id().equals(req.getParams().get(PARAM_NOTIF_ID).get(0))) {
-                            n.setRead(!n.isRead());
-                            mongo.save(p);
-                            utils.sendStatus(true, message);
-                            break;
-                        }
-                    }
+                    JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
+                    n.putBoolean("read", true);
+                    mongo.save(n, Notification.class);
+                    vertx.eventBus().send("qaobee.notification." + n.getString("user_id"), n);
+                    utils.sendStatus(true, message);
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
@@ -196,7 +190,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
          * <p>Message : <pre>
          *     {
          *      id : "123456", // id of a document
-         *      target : "User", // collection's name
+         *      target : "User | SB_SandBoxCfg", // collection's name
          *      notification : {
          *          content: "bla bla bla",
          *          from_user_id : "123456",
@@ -217,10 +211,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         case "User":
                             addNotificationToUser(id, notification);
                             break;
-                        case "SB_SandBox":
-                            JsonObject sandbox = mongo.getById(id, "SB_SandBox");
+                        case "SB_SandBoxCfg":
+                            JsonObject sandbox = mongo.getById(id, "SB_SandBoxCfg");
+                            for(int i = 0; i < sandbox.getArray("members").size(); i++)
                             // TODO : comment trouver tous les users d'une sandbox?
-                            addNotificationToUser(sandbox.getString("owner"), notification);
+                            addNotificationToUser((String) sandbox.getArray("members").get(0), notification);
                             break;
                         default:
                             break;

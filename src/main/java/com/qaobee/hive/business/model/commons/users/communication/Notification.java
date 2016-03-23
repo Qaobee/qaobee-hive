@@ -34,30 +34,14 @@ public class Notification implements Serializable {
      * The Constant serialVersionUID.
      */
     private static final long serialVersionUID = -5693811404344145826L;
-    /**
-     * Internal identifier
-     */
     private String _id; // NOSONAR
-    /**
-     * Timestamp.
-     */
+    private String user_id;
     private long timestamp;
-    /**
-     * Content.
-     */
     private String content;
-    /**
-     * From user _id.
-     */
     private String from_user_id;
-    /**
-     * Title.
-     */
     private String title;
-    /**
-     * Is read ?
-     */
     private boolean read;
+    private boolean deleted;
 
     /**
      * Gets the internal identifier.
@@ -75,6 +59,24 @@ public class Notification implements Serializable {
      */
     public void set_id(final String _id) { // NOSONAR
         this._id = _id;
+    }
+
+    /**
+     * Gets user id.
+     *
+     * @return the user id
+     */
+    public String getUser_id() {
+        return user_id;
+    }
+
+    /**
+     * Sets user id.
+     *
+     * @param user_id the user id
+     */
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
     /**
@@ -165,5 +167,23 @@ public class Notification implements Serializable {
      */
     public void setTitle(final String title) {
         this.title = title;
+    }
+
+    /**
+     * Is deleted boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    /**
+     * Sets deleted.
+     *
+     * @param deleted the deleted
+     */
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

@@ -276,7 +276,7 @@ public class VertxJunitSupport
             } else if (result instanceof JsonObject) {
                 return ((JsonObject) result).encode();
             } else {
-                Assert.fail("unparsable data");
+                Assert.fail("unparsable data : " + result.toString());
             }
         } catch (final InterruptedException e) {
             Assert.fail(e.getMessage());
