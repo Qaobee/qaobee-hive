@@ -176,7 +176,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_NOTIF_ID);
                     JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
-                    n.putBoolean("read", true);
+                    n.putBoolean("read", !n.getBoolean("read"));
                     mongo.save(n, Notification.class);
                     vertx.eventBus().send("qaobee.notification." + n.getString("user_id"), new JsonObject());
                     utils.sendStatus(true, message);
