@@ -224,7 +224,6 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         case "SB_SandBoxCfg":
                             JsonObject sandbox = mongo.getById(id, "SB_SandBoxCfg");
                             for(int i = 0; i < sandbox.getArray("members").size(); i++)
-                            // TODO : comment trouver tous les users d'une sandbox?
                             addNotificationToUser((String) sandbox.getArray("members").get(0), notification);
                             break;
                         default:
@@ -273,6 +272,12 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         });
     }
 
+    /**
+     *
+     * @param id id user
+     * @param notification notification object
+     * @throws QaobeeException exception
+     */
     private void addNotificationToUser(String id, JsonObject notification) throws QaobeeException {
         notification.putString("_id", UUID.randomUUID().toString());
         notification.putString("user_id", id);
