@@ -235,14 +235,6 @@ db.ActivityCfg.insert({
         "code" : "friendlyGame",
         "label" : "Match amical",
         "order" : NumberInt(3)
-    }, {
-        "code" : "training",
-        "label" : "Entraînement",
-        "order" : NumberInt(4)
-    }, {
-        "code" : "other",
-        "label" : "Autre",
-        "order" : NumberInt(5)
     }],
     "parametersGame": {
         "nbMaxPlayers" : 16,
@@ -548,14 +540,6 @@ db.ActivityCfg.insert({
         "code" : "friendlyGame",
         "label" : "Match amical",
         "order" : NumberInt(3)
-    }, {
-        "code" : "training",
-        "label" : "Entraînement",
-        "order" : NumberInt(4)
-    }, {
-        "code" : "other",
-        "label" : "Autre",
-        "order" : NumberInt(5)
     }],
     "parametersGame": {
         "nbMaxPlayers" : 12,
