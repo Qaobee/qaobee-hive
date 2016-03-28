@@ -21,6 +21,7 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.shipping.Customer;
 import com.qaobee.hive.business.model.shipping.HostedPayment;
@@ -227,6 +228,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                         req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
                                         req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
                                         req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
+                                        req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.<Card>decodeValue(res.getObject("card").encode(), Card.class));
                                         try { // NOSONAR
                                             mongo.save(req.getUser());
                                             JsonObject messageResponse = new JsonObject();
