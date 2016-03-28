@@ -21,6 +21,7 @@ package com.qaobee.hive.api.v1.commons.users;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.business.commons.settings.ActivityBusiness;
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
@@ -314,10 +315,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                         if (user.getAccount().getListPlan() == null) {
                                             user.getAccount().setListPlan(new ArrayList<Plan>());
                                         }
-                                        plan.setPaymentId(UUID.randomUUID().toString());
+                                  //      plan.setPaymentId(UUID.randomUUID().toString());
                                         plan.setStatus("open");
-                                        plan.setAmountPaid(Long.parseLong(Params.getString("plan." + plan.getLevelPlan().name() + ".price")) / 100L);
+                                     //   plan.setAmountPaid(Long.parseLong(Params.getString("plan." + plan.getLevelPlan().name() + ".price")) / 100L);
                                         plan.setStartPeriodDate(System.currentTimeMillis());
+
                                         // Si on vient du mobile, on connait le plan, mais pas par le web
                                         if (plan.getActivity() != null) {
                                             JsonObject activity = mongo.getById(plan.getActivity().get_id(), Activity.class);
@@ -710,13 +712,21 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         team.setEnable(true);
                         team.setAdversary(false);
                         mongo.save(team);
-
-                        // MàJ du plan FREEMIUM
+                        /*
                         user.getAccount().getListPlan().get(0).setPaidDate(System.currentTimeMillis());
                         user.getAccount().getListPlan().get(0).setStatus("paid");
-
+*/
                         mongo.save(user);
                         message.reply(Json.encode(user));
+                        JsonObject notification = new JsonObject();
+                        notification.putString("id", user.get_id());
+                        notification.putString("target", User.class.getSimpleName());
+                        notification.putObject("notification", new JsonObject()
+                                .putString("content", Messages.getString("first.connection.notification.content"))
+                                .putString("title", Messages.getString("first.connection.notification.title"))
+                                .putString("from_user_id", Messages.getString("admin.id"))
+                        );
+                        vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
                         utils.sendStatus(true, message);
                     }
 

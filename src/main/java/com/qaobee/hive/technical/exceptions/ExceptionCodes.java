@@ -92,7 +92,15 @@ public enum ExceptionCodes {
     /**
      * Business Error
      */
-    BUSINESS_ERROR(200);
+    BUSINESS_ERROR(200),
+    /**
+     * Trial ended exception codes.
+     */
+    TRIAL_ENDED(403),
+    /**
+     * Not paid exception codes.
+     */
+    NOT_PAID(403);
 
     /**
      * The code.

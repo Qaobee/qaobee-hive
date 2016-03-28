@@ -25,8 +25,8 @@
   "payplug": {
     "baseUrl": "api.payplug.com",
     "ipn_url": "https://hive-qaobee.rhcloud.com/api/1/commons/users/shipping/ipn",
-    "return_url": "https://rec.qaobee.com/qswarm-web/#/signup/coach/end",
-    "cancel_url": "https://rec.qaobee.com/#/signup/coach/cancel",
+    "return_url": "https://rec.qaobee.com/qswarm-web/#/private/profile/billing",
+    "cancel_url": "https://rec.qaobee.com/#/private/profile/billing",
     "api_key": "sk_live_bdb7dcd46103d08f7fd207d4c982f1aa",
     "port": 443,
     "basePath": "/v1"

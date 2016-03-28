@@ -103,7 +103,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 try {
                     // Check param mandatory
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.testMandatoryParams(req.getBody(), "id", "payment_id", "metadata", "created_at");
+                    utils.testMandatoryParams(req.getBody(), "id", "id", "metadata", "created_at");
                     JsonObject body = new JsonObject(req.getBody());
                     if (!body.getObject("metadata").containsField("plan_id") || !body.getObject("metadata").containsField("customer_id")) {
                         throw new IllegalArgumentException("some metadatas are missing");
@@ -125,6 +125,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                 utils.sendStatus(true, message);
                             } else {
                                 // WTF, it's not paid !!! bloody hell !
+                                LOG.info(body.encode());
                                 utils.sendStatus(false, message);
                             }
                             break;
@@ -172,7 +173,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getBody(), PARAM_PLAN_ID);
                     final JsonObject body = new JsonObject(req.getBody());
-                    final int planId = body.getInteger(PARAM_PLAN_ID);
+                    final int planId = Integer.parseInt(body.getString(PARAM_PLAN_ID));
                     Payment payment = new Payment();
                     if (req.getUser().getAccount().getListPlan().size() <= planId) {
                         utils.sendError(message, new QaobeeException(ExceptionCodes.INVALID_PARAMETER, planId + " is not present"));
@@ -188,7 +189,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                         utils.sendStatus(true, message);
                         return;
                     }
-                    payment.setAmount(amount);
+                    payment.setAmount(amount *100);
                     payment.setCurrency("EUR");
 
                     Customer customer = new Customer();

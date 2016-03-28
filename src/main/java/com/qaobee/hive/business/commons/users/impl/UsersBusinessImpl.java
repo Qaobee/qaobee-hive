@@ -79,8 +79,6 @@ public class UsersBusinessImpl implements UsersBusiness {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.password.required", locale));
         } else if (user.getAccount().getPasswd().length() < 4) {
             throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.password.short", locale));
-        } else if (!VALID_LOGIN_REGEX.matcher(user.getAccount().getPasswd().trim()).find()) {
-            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.login.format", locale));
         }
 
         return true;

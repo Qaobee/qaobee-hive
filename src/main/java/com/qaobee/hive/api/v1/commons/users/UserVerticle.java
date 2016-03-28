@@ -53,6 +53,7 @@ import org.vertx.java.core.json.impl.Base64;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -162,17 +163,24 @@ public class UserVerticle extends AbstractGuiceVerticle {
                                 utils.sendError(message, e);
                             } else {
                                 if (user.getAccount().isActive()) {
-                                    user.getAccount().setToken(UUID.randomUUID().toString());
-                                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                                    if (infos.containsField(MOBILE_TOKEN)) {
-                                        user.getAccount().setMobileToken(infos.getString(MOBILE_TOKEN));
+                                    // trial period test
+                                    if(user.getAccount().getListPlan().get(0).getStatus().equals("notpaid")) {
+                                        utils.sendError(message, ExceptionCodes.NOT_PAID, Messages.getString("popup.warning.notpaid", req.getLocale()));
+                                    } else if(testTrial(user) || user.getAccount().getListPlan().get(0).getStatus().equals("paid") || user.getAccount().getListPlan().get(0).getStatus().equals("pending")) {
+                                        user.getAccount().setToken(UUID.randomUUID().toString());
+                                        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                                        if (infos.containsField(MOBILE_TOKEN)) {
+                                            user.getAccount().setMobileToken(infos.getString(MOBILE_TOKEN));
+                                        }
+                                        mongo.save(user);
+                                        JsonObject jUser = new JsonObject(Json.encode(user));
+                                        jUser.getObject("account").removeField("passwd");
+                                        jUser.getObject("account").removeField("password");
+                                        jUser.getObject("account").removeField("salt");
+                                        message.reply(jUser.toString());
+                                    } else {
+                                        utils.sendError(message, ExceptionCodes.TRIAL_ENDED, Messages.getString("popup.warning.trialended", req.getLocale()));
                                     }
-                                    mongo.save(user);
-                                    JsonObject jUser = new JsonObject(Json.encode(user));
-                                    jUser.getObject("account").removeField("passwd");
-                                    jUser.getObject("account").removeField("password");
-                                    jUser.getObject("account").removeField("salt");
-                                    message.reply(jUser.toString());
                                 } else {
                                     utils.sendError(message, ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", req.getLocale()));
                                 }
@@ -663,5 +671,19 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 }
             }
         });
+    }
+
+    /**
+     *
+     * @param user User
+     * @return in triel period
+     */
+    private boolean testTrial(User user) {
+        Calendar cal  =Calendar.getInstance();
+        cal.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
+        Calendar cal2  =Calendar.getInstance();
+        cal2.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
+        cal2.add(Calendar.MONTH, 1);
+        return user.getAccount().getListPlan().get(0).getStatus().equals("open") && cal.before(cal2);
     }
 }
