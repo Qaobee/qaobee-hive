@@ -9,6 +9,7 @@ public class Card {
     private int exp_month;
     private int exp_year;
     private int brand;
+    private String id;
 
     /**
      * Gets last 4.
@@ -98,5 +99,23 @@ public class Card {
      */
     public void setBrand(int brand) {
         this.brand = brand;
+    }
+
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -20,6 +20,7 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
@@ -31,7 +32,9 @@ import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.tools.Params;
+import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -67,6 +70,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     private MongoDB mongo;
     @Inject
     private Utils utils;
+    @Inject
+    private MailUtils mailUtils;
     @Inject
     @Named("payplug")
     private JsonObject config;
@@ -105,12 +110,12 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     // Check param mandatory
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.testMandatoryParams(req.getBody(), "id", "id", "metadata", "created_at");
-                    JsonObject body = new JsonObject(req.getBody());
+                    final JsonObject body = new JsonObject(req.getBody());
                     if (!body.getObject("metadata").containsField("plan_id") || !body.getObject("metadata").containsField("customer_id")) {
                         throw new IllegalArgumentException("some metadatas are missing");
                     }
                     int planId = Integer.parseInt(body.getObject("metadata").getString("plan_id"));
-                    JsonObject user = mongo.getById(body.getObject("metadata").getString("customer_id"), User.class);
+                    final JsonObject user = mongo.getById(body.getObject("metadata").getString("customer_id"), User.class);
                     switch (body.getString("object")) {
                         // We only have payments, no refunds ;)
                         case "payment":
@@ -120,10 +125,32 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                 }
                                 ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putString("status", "paid");
                                 // TODO : Verify if created_at evolve with recurring payments
-                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putNumber("paidDate", body.getLong("created_at"));
+                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putNumber("paidDate", body.getLong("created_at") * 1000);
                                 ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putObject("cardInfo", body.getObject("card"));
                                 mongo.save(user, User.class);
-                                utils.sendStatus(true, message);
+                                final JsonObject tplReq = new JsonObject();
+                                tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
+                                tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generatePaymentBody(Json.<User>decodeValue(user.encode(), User.class),
+                                        body.getObject("metadata").getString("locale"),
+                                        Json.<Plan>decodeValue(((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).encode(), Plan.class
+                                        )));
+
+                                vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
+                                    @Override
+                                    public void handle(final Message<JsonObject> tplResp) {
+                                        final String tplRes = tplResp.body().getString("result");
+                                        final JsonObject emailReq = new JsonObject();
+                                        emailReq.putString("from", Params.getString("mail.from"));
+                                        emailReq.putString("to", Json.<User>decodeValue(user.encode(), User.class).getContact().getEmail());
+                                        emailReq.putString("subject", Messages.getString("mail.payment.subject", body.getObject("metadata").getString("locale")));
+                                        emailReq.putString("content_type", "text/html");
+                                        emailReq.putString("body", tplRes);
+                                        vertx.eventBus().publish("mailer.mod", emailReq);
+                                        final JsonObject resp = new JsonObject();
+                                        resp.putBoolean("status", true);
+                                        utils.sendStatus(true, message);
+                                    }
+                                });
                             } else {
                                 // WTF, it's not paid !!! bloody hell !
                                 LOG.info(body.encode());
@@ -190,7 +217,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                         utils.sendStatus(true, message);
                         return;
                     }
-                    payment.setAmount(amount *100);
+                    payment.setAmount(amount * 100);
                     payment.setCurrency("EUR");
 
                     Customer customer = new Customer();
@@ -209,6 +236,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     Map<String, String> metaDatas = new HashMap<>();
                     metaDatas.put("customer_id", req.getUser().get_id());
                     metaDatas.put("plan_id", String.valueOf(planId));
+                    metaDatas.put("locale", req.getLocale());
                     payment.setMetadata(metaDatas);
 
                     payment.setSave_card(true);
@@ -228,7 +256,9 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                         req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
                                         req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
                                         req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
-                                        req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.<Card>decodeValue(res.getObject("card").encode(), Card.class));
+                                        if (res.getObject("card").getString("id", null) != null) {
+                                            req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.<Card>decodeValue(res.getObject("card").encode(), Card.class));
+                                        }
                                         try { // NOSONAR
                                             mongo.save(req.getUser());
                                             JsonObject messageResponse = new JsonObject();

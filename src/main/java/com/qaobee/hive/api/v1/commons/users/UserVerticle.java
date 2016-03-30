@@ -164,9 +164,12 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             } else {
                                 if (user.getAccount().isActive()) {
                                     // trial period test
-                                    if(user.getAccount().getListPlan().get(0).getStatus().equals("notpaid")) {
+                                    if (user.getAccount().getListPlan().get(0).getStatus().equals("notpaid")) {
                                         utils.sendError(message, ExceptionCodes.NOT_PAID, Messages.getString("popup.warning.notpaid", req.getLocale()));
-                                    } else if(testTrial(user) || user.getAccount().getListPlan().get(0).getStatus().equals("paid") || user.getAccount().getListPlan().get(0).getStatus().equals("pending")) {
+                                    } else if (testTrial(user)
+                                            || user.getAccount().getListPlan().get(0).getStatus().equals("paid")
+                                            || user.getAccount().getListPlan().get(0).getStatus().equals("pending")
+                                            || user.getAccount().getListPlan().get(0).getStatus().equals("vip")) {
                                         user.getAccount().setToken(UUID.randomUUID().toString());
                                         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
                                         if (infos.containsField(MOBILE_TOKEN)) {
@@ -404,7 +407,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     } else {
                         final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
                         /* update password by profil menu */
-                        if(byPassActivationCode) {
+                        if (byPassActivationCode) {
                             user.getAccount().setPasswd(passwd);
                             mongo.save(personUtils.prepareUpsert(user));
                             utils.sendStatus(true, message);
@@ -674,14 +677,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
     }
 
     /**
-     *
      * @param user User
      * @return in triel period
      */
     private boolean testTrial(User user) {
-        Calendar cal  =Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
-        Calendar cal2  =Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
         cal2.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
         cal2.add(Calendar.MONTH, 1);
         return user.getAccount().getListPlan().get(0).getStatus().equals("open") && cal.before(cal2);
