@@ -254,7 +254,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                         JsonObject res = new JsonObject(buffer.toString());
                                         req.getUser().getAccount().getListPlan().get(planId).setAmountPaid(finalAmount);
                                         req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
-                                        req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
+                                       // req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
                                         req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
                                         if (res.getObject("card").getString("id", null) != null) {
                                             req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.<Card>decodeValue(res.getObject("card").encode(), Card.class));

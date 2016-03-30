@@ -164,26 +164,20 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             } else {
                                 if (user.getAccount().isActive()) {
                                     // trial period test
-                                    if (user.getAccount().getListPlan().get(0).getStatus().equals("notpaid")) {
-                                        utils.sendError(message, ExceptionCodes.NOT_PAID, Messages.getString("popup.warning.notpaid", req.getLocale()));
-                                    } else if (testTrial(user)
-                                            || user.getAccount().getListPlan().get(0).getStatus().equals("paid")
-                                            || user.getAccount().getListPlan().get(0).getStatus().equals("pending")
-                                            || user.getAccount().getListPlan().get(0).getStatus().equals("vip")) {
-                                        user.getAccount().setToken(UUID.randomUUID().toString());
-                                        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                                        if (infos.containsField(MOBILE_TOKEN)) {
-                                            user.getAccount().setMobileToken(infos.getString(MOBILE_TOKEN));
-                                        }
-                                        mongo.save(user);
-                                        JsonObject jUser = new JsonObject(Json.encode(user));
-                                        jUser.getObject("account").removeField("passwd");
-                                        jUser.getObject("account").removeField("password");
-                                        jUser.getObject("account").removeField("salt");
-                                        message.reply(jUser.toString());
-                                    } else {
-                                        utils.sendError(message, ExceptionCodes.TRIAL_ENDED, Messages.getString("popup.warning.trialended", req.getLocale()));
+                                    if (!testTrial(user)) {
+                                        user.getAccount().getListPlan().get(0).setStatus("notpaid");
                                     }
+                                    user.getAccount().setToken(UUID.randomUUID().toString());
+                                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                                    if (infos.containsField(MOBILE_TOKEN)) {
+                                        user.getAccount().setMobileToken(infos.getString(MOBILE_TOKEN));
+                                    }
+                                    mongo.save(user);
+                                    JsonObject jUser = new JsonObject(Json.encode(user));
+                                    jUser.getObject("account").removeField("passwd");
+                                    jUser.getObject("account").removeField("password");
+                                    jUser.getObject("account").removeField("salt");
+                                    message.reply(jUser.toString());
                                 } else {
                                     utils.sendError(message, ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", req.getLocale()));
                                 }
