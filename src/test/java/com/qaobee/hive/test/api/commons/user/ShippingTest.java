@@ -48,10 +48,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
 
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
@@ -61,10 +62,11 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("paid"));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -80,11 +82,12 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 1);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "1");
         req.setBody(request.encode());
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
-        Assert.assertTrue("createPaymentWithWrongPlanIdTest", result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
+        Assert.assertTrue("createPaymentWithWrongPlanIdTest",
+                result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
@@ -101,7 +104,8 @@ public class ShippingTest extends VertxJunitSupport {
         req.setBody(request.encode());
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
-        Assert.assertTrue("createPaymentWithMissingPlanIdTest", result.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
+        Assert.assertTrue("createPaymentWithMissingPlanIdTest",
+                result.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -116,7 +120,8 @@ public class ShippingTest extends VertxJunitSupport {
         req.setUser(u);
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
-        Assert.assertTrue("createPaymentWithWrongHttpMethodTest", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
+        Assert.assertTrue("createPaymentWithWrongHttpMethodTest",
+                result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -129,10 +134,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -141,10 +147,11 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("paid"));
             final RequestWrapper notificationRequest = new RequestWrapper();
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.POST);
@@ -158,7 +165,9 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject notificationPlan = notificationUser.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("Payment date does'nt exists", notificationPlan.containsField("paidDate"));
             Assert.assertTrue("Card is null", notificationPlan.containsField("cardInfo"));
-            Assert.assertTrue("Card info are wrong", notificationPlan.getObject("cardInfo").getString("last4").equals(notification.getObject("card").getString("last4")));
+            Assert.assertTrue("Card info are wrong", notificationPlan.getObject("cardInfo").getString("last4")
+                                                                     .equals(notification.getObject("card")
+                                                                                         .getString("last4")));
             Assert.assertTrue("Payment is not in pending state", notificationPlan.getString("status").equals("paid"));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
@@ -175,10 +184,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -187,17 +197,19 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("paid"));
             final RequestWrapper notificationRequest = new RequestWrapper();
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.GET);
             notificationRequest.setBody(buildNotificationRequest(plan, u).encode());
             final String notificationReply = sendonBus(ShippingVerticle.IPN, notificationRequest);
             JsonObject notificationResult = new JsonObject(notificationReply);
-            Assert.assertTrue("Wrong HTTP method tested", notificationResult.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
+            Assert.assertTrue("Wrong HTTP method tested",
+                    notificationResult.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -213,10 +225,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -225,10 +238,11 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("paid"));
             final RequestWrapper notificationRequest = new RequestWrapper();
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.POST);
@@ -237,7 +251,8 @@ public class ShippingTest extends VertxJunitSupport {
             notificationRequest.setBody(notification.encode());
             final String notificationReply = sendonBus(ShippingVerticle.IPN, notificationRequest);
             JsonObject notificationResult = new JsonObject(notificationReply);
-            Assert.assertTrue("Wrong data tested", notificationResult.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
+            Assert.assertTrue("Wrong data tested",
+                    notificationResult.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -253,10 +268,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -265,10 +281,11 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("paid"));
             final RequestWrapper notificationRequest = new RequestWrapper();
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.POST);
@@ -277,7 +294,8 @@ public class ShippingTest extends VertxJunitSupport {
             notificationRequest.setBody(notification.encode());
             final String notificationReply = sendonBus(ShippingVerticle.IPN, notificationRequest);
             JsonObject notificationResult = new JsonObject(notificationReply);
-            Assert.assertTrue("Wrong data tested", notificationResult.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
+            Assert.assertTrue("Wrong data tested",
+                    notificationResult.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -293,10 +311,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -305,10 +324,11 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in paid state", plan.getString("status").equals("paid"));
             final RequestWrapper notificationRequest = new RequestWrapper();
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.POST);
@@ -317,7 +337,8 @@ public class ShippingTest extends VertxJunitSupport {
             notificationRequest.setBody(notification.encode());
             final String notificationReply = sendonBus(ShippingVerticle.IPN, notificationRequest);
             JsonObject notificationResult = new JsonObject(notificationReply);
-            Assert.assertTrue("Wrong data tested", notificationResult.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
+            Assert.assertTrue("Wrong data tested",
+                    notificationResult.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -333,10 +354,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -345,10 +367,11 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("paid"));
             final RequestWrapper notificationRequest = new RequestWrapper();
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.POST);
@@ -373,10 +396,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -385,10 +409,11 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("paid"));
             final RequestWrapper notificationRequest = new RequestWrapper();
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.POST);
@@ -397,7 +422,8 @@ public class ShippingTest extends VertxJunitSupport {
             notificationRequest.setBody(notification.encode());
             final String notificationReply = sendonBus(ShippingVerticle.IPN, notificationRequest);
             JsonObject notificationResult = new JsonObject(notificationReply);
-            Assert.assertTrue("Wrong data tested", notificationResult.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
+            Assert.assertTrue("Wrong data tested",
+                    notificationResult.getString("code").contains(ExceptionCodes.MANDATORY_FIELD.toString()));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -413,10 +439,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -425,10 +452,11 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("paid"));
             final RequestWrapper notificationRequest = new RequestWrapper();
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.POST);
@@ -453,10 +481,11 @@ public class ShippingTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
         req.setUser(u);
-        JsonObject request = new JsonObject().putNumber(ShippingVerticle.PARAM_PLAN_ID, 0);
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         req.setBody(request.encode());
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201).withBody(generateMockBody(u, 0)));
+                                               .respond(HttpResponse.response().withStatusCode(201)
+                                                                    .withBody(generateMockBody(u, 0)));
         final String reply = sendonBus(ShippingVerticle.PAY, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("Status is false", result.getBoolean("status"));
@@ -465,10 +494,11 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject user = mongo.getById(u.get_id(), User.class);
             JsonObject plan = user.getObject("account").getArray("listPlan").get(0);
             Assert.assertTrue("user id is not equals", user.getString("_id").equals(u.get_id()));
-            Assert.assertTrue("Payment url is not equals", plan.getString("paiementURL").equals(result.getString("payment_url")));
+            Assert.assertTrue("Payment url is not equals",
+                    plan.getString("paiementURL").equals(result.getString("payment_url")));
             Assert.assertTrue("Payment id does'nt exists", plan.containsField("paymentId"));
             Assert.assertTrue("Payment id is blank", StringUtils.isNotBlank(plan.getString("paymentId")));
-            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("pending"));
+            Assert.assertTrue("Payment is not in pending state", plan.getString("status").equals("paid"));
             final RequestWrapper notificationRequest = new RequestWrapper();
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.POST);
@@ -477,7 +507,8 @@ public class ShippingTest extends VertxJunitSupport {
             notificationRequest.setBody(notification.encode());
             final String notificationReply = sendonBus(ShippingVerticle.IPN, notificationRequest);
             JsonObject notificationResult = new JsonObject(notificationReply);
-            Assert.assertTrue("Wrong data tested", notificationResult.getString("code").contains(ExceptionCodes.MONGO_ERROR.toString()));
+            Assert.assertTrue("Wrong data tested",
+                    notificationResult.getString("code").contains(ExceptionCodes.MONGO_ERROR.toString()));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -486,6 +517,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * @param plan plan
      * @param u    user
+     *
      * @return a notification object
      */
     private JsonObject buildNotificationRequest(JsonObject plan, User u) {
@@ -496,6 +528,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject metadata = new JsonObject();
         metadata.putString("customer_id", u.get_id());
         metadata.putString("plan_id", "0");
+        metadata.putString("locale", "fr_FR");
         notification.putObject("metadata", metadata);
         JsonObject card = new JsonObject();
         card.putString("last4", "1800");
@@ -512,54 +545,56 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * @param u User
      * @param i planId
+     *
      * @return body
      */
     private String generateMockBody(User u, int i) {
         return "{\n" +
-                "  \"amount\": 900,\n" +
-                "  \"amount_refunded\": 0,\n" +
-                "  \"card\": {\n" +
-                "      \"brand\": null,\n" +
-                "      \"country\": null,\n" +
-                "      \"exp_month\": null,\n" +
-                "      \"exp_year\": null,\n" +
-                "      \"id\": null,\n" +
-                "      \"last4\": null\n" +
-                "  },\n" +
-                "  \"created_at\": " + new Date().getTime() + ",\n" +
-                "  \"currency\": \"EUR\",\n" +
-                "  \"customer\": {\n" +
-                "      \"address1\": null,\n" +
-                "      \"address2\": null,\n" +
-                "      \"city\": null,\n" +
-                "      \"country\": null,\n" +
-                "      \"email\": \"" + u.getContact().getEmail() + "\",\n" +
-                "      \"first_name\": \"" + u.getFirstname() + "\",\n" +
-                "      \"last_name\": \"" + u.getName() + "\",\n" +
-                "      \"postcode\": null\n" +
-                "  },\n" +
-                "  \"failure\": null,\n" +
-                "  \"hosted_payment\": {\n" +
-                "      \"cancel_url\": \"" + moduleConfig.getObject("payplug").getString("cancel_url") + "\",\n" +
-                "      \"paid_at\": null,\n" +
-                "      \"payment_url\": \"https://www.payplug.com/pay/test/2DNkjF024bcLFhTn7OBfcc\",\n" +
-                "      \"return_url\": \"" + moduleConfig.getObject("payplug").getString("return_url") + "\"\n" +
-                "  },\n" +
-                "  \"id\": \"pay_2DNkjF024bcLFhTn7OBfcc\",\n" +
-                "  \"is_3ds\": null,\n" +
-                "  \"is_live\": false,\n" +
-                "  \"is_paid\": false,\n" +
-                "  \"is_refunded\": false,\n" +
-                "  \"metadata\": {\n" +
-                "      \"customer_id\": \"" + u.get_id() + "\",\n" +
-                "      \"plan_id\": \"" + i + "\"\n" +
-                "  },\n" +
-                "  \"notification\": {\n" +
-                "      \"response_code\": null,\n" +
-                "      \"url\": \"https://example.net/notifications?id=42710\"\n" +
-                "  },\n" +
-                "  \"object\": \"payment\",\n" +
-                "  \"save_card\": true\n" +
-                "}";
+               "  \"amount\": 900,\n" +
+               "  \"amount_refunded\": 0,\n" +
+               "  \"card\": {\n" +
+               "      \"brand\": null,\n" +
+               "      \"country\": null,\n" +
+               "      \"exp_month\": null,\n" +
+               "      \"exp_year\": null,\n" +
+               "      \"id\": null,\n" +
+               "      \"last4\": null\n" +
+               "  },\n" +
+               "  \"created_at\": " + new Date().getTime() + ",\n" +
+               "  \"currency\": \"EUR\",\n" +
+               "  \"customer\": {\n" +
+               "      \"address1\": null,\n" +
+               "      \"address2\": null,\n" +
+               "      \"city\": null,\n" +
+               "      \"country\": null,\n" +
+               "      \"email\": \"" + u.getContact().getEmail() + "\",\n" +
+               "      \"first_name\": \"" + u.getFirstname() + "\",\n" +
+               "      \"last_name\": \"" + u.getName() + "\",\n" +
+               "      \"postcode\": null\n" +
+               "  },\n" +
+               "  \"failure\": null,\n" +
+               "  \"hosted_payment\": {\n" +
+               "      \"cancel_url\": \"" + moduleConfig.getObject("payplug").getString("cancel_url") + "\",\n" +
+               "      \"paid_at\": null,\n" +
+               "      \"payment_url\": \"https://www.payplug.com/pay/test/2DNkjF024bcLFhTn7OBfcc\",\n" +
+               "      \"return_url\": \"" + moduleConfig.getObject("payplug").getString("return_url") + "\"\n" +
+               "  },\n" +
+               "  \"id\": \"pay_2DNkjF024bcLFhTn7OBfcc\",\n" +
+               "  \"is_3ds\": null,\n" +
+               "  \"is_live\": false,\n" +
+               "  \"is_paid\": false,\n" +
+               "  \"is_refunded\": false,\n" +
+               "  \"metadata\": {\n" +
+               "      \"customer_id\": \"" + u.get_id() + "\",\n" +
+               "      \"plan_id\": \"" + i + "\",\n" +
+               "      \"locale\": \"fr_FR\"\n" +
+               "  },\n" +
+               "  \"notification\": {\n" +
+               "      \"response_code\": null,\n" +
+               "      \"url\": \"https://example.net/notifications?id=42710\"\n" +
+               "  },\n" +
+               "  \"object\": \"payment\",\n" +
+               "  \"save_card\": true\n" +
+               "}";
     }
 }

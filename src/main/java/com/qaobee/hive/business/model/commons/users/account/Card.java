@@ -8,7 +8,7 @@ public class Card {
     private String country;
     private int exp_month;
     private int exp_year;
-    private int brand;
+    private String brand;
     private String id;
 
     /**
@@ -88,7 +88,7 @@ public class Card {
      *
      * @return the brand
      */
-    public int getBrand() {
+    public String getBrand() {
         return brand;
     }
 
@@ -97,7 +97,7 @@ public class Card {
      *
      * @param brand the brand
      */
-    public void setBrand(int brand) {
+    public void setBrand(String brand) {
         this.brand = brand;
     }
 
