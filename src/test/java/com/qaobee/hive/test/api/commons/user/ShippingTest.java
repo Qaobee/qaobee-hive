@@ -247,7 +247,7 @@ public class ShippingTest extends VertxJunitSupport {
             notificationRequest.setLocale(LOCALE);
             notificationRequest.setMethod(Constantes.POST);
             JsonObject notification = buildNotificationRequest(plan, u);
-            notification.removeField("payment_id");
+            notification.removeField("created_at");
             notificationRequest.setBody(notification.encode());
             final String notificationReply = sendonBus(ShippingVerticle.IPN, notificationRequest);
             JsonObject notificationResult = new JsonObject(notificationReply);

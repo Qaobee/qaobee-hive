@@ -109,7 +109,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 try {
                     // Check param mandatory
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.testMandatoryParams(req.getBody(), "id", "id", "metadata", "created_at", "payment_id");
+                    utils.testMandatoryParams(req.getBody(), "id", "id", "metadata", "created_at");
                     final JsonObject body = new JsonObject(req.getBody());
                     if (!body.getObject("metadata").containsField("plan_id") || !body.getObject("metadata").containsField("customer_id")) {
                         throw new IllegalArgumentException("some metadatas are missing");
