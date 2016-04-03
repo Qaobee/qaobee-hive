@@ -164,7 +164,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             } else {
                                 if (user.getAccount().isActive()) {
                                     // trial period test
-                                    if (!testTrial(user)) {
+                                    if (!user.getAccount().getListPlan().get(0).getStatus().equals("paid") && !testTrial(user)) {
                                         user.getAccount().getListPlan().get(0).setStatus("notpaid");
                                     }
                                     user.getAccount().setToken(UUID.randomUUID().toString());
