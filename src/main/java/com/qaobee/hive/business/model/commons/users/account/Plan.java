@@ -21,54 +21,27 @@ package com.qaobee.hive.business.model.commons.users.account;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 
+import java.util.List;
+
 /**
  * Bean that describes a plan.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Plan {
 
-    /**
-     * Payment Id
-     */
     private String paymentId;
-    /**
-     * Level Plan
-     */
     private LevelPlan levelPlan;
-    /**
-     * amount paid
-     */
     private long amountPaid;
-    /**
-     * Payment date
-     */
     private long paidDate;
-    /**
-     * Date of start period
-     */
     private long startPeriodDate;
-    /**
-     * Date of end period
-     */
     private long endPeriodDate;
-    /**
-     * Payment status
-     */
     private String status;
-    /**
-     * Payment periodicity
-     */
     private String periodicity;
-    /**
-     * Activity
-     */
     private Activity activity;
-    /**
-     * Payment URL
-     */
     private String paymentURL;
     private String cardId;
     private Card cardInfo;
+    private List<Payment> shippingList;
 
     /**
      * Gets card info.
@@ -302,5 +275,23 @@ public class Plan {
      */
     public void setPaiementURL(String paymentURL) {
         this.paymentURL = paymentURL;
+    }
+
+    /**
+     * Gets shipping list.
+     *
+     * @return the shipping list
+     */
+    public List<Payment> getShippingList() {
+        return shippingList;
+    }
+
+    /**
+     * Sets shipping list.
+     *
+     * @param shippingList the shipping list
+     */
+    public void setShippingList(List<Payment> shippingList) {
+        this.shippingList = shippingList;
     }
 }

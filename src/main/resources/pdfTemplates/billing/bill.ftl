@@ -3,7 +3,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>{forname} {name}</title>
+    <title>${firstname!''} ${name!''}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css"/>
 
     <style>
@@ -30,7 +30,7 @@
     <nav class="top-nav green darken-1" role="navigation">
         <div class="container">
             <div class="nav-wrapper">
-                <a href="/#/" class="brand-logo"><img src="http://www.qaobee.com/assets/images/logo-mini.png"
+                <a href="/#/" class="brand-logo"><img src="https://www.qaobee.com/assets/images/logo-mini.png"
                                                       height="30px"/></a>
                 <ul class="right">
                     <li><a href="https://twitter.com/Qaobee"
@@ -46,34 +46,31 @@
 <main>
     <div id="main-container">
         <div class="row">
-            <div class="col s6 offset-s3">
-                <div class="row">
-                    <div class="col s6">
-                        <strong>${firstname!''} ${name!''}</strong>
-                        <small> ${username!''}</small>
-                        <br/> ${address!''}
-                    </div>
-                    <div class="col s6">
-                    ${paidDate!''} #: ${paymentId!''}
-                    </div>
-                </div>
-                <table class="bordered">
-                    <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>${plan}</td>
-                        <td>${amountPaid} &euro;</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <h3>Thanks,<br/>The <a href="http://www.qaobee.com" target="_blank">Qaobee</a> team.</h3>
+            <div class="row">
+                <strong>${firstname!''} ${name!''}</strong>
+                <small> ${username!''}</small>
+                <br/> ${address!''}
             </div>
         </div>
+        <table class="bordered">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Date</th>
+                <th>Id</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>${plan}</td>
+                <td>${paidDate!''} </td>
+                <td>${paymentId!''}</td>
+                <td>${amountPaid} &euro;</td>
+            </tr>
+            </tbody>
+        </table>
+        <h3>Thanks,<br/>The <a href="https://www.qaobee.com" target="_blank">Qaobee</a> team.</h3>
     </div>
 </main>
 <footer class="page-footer grey">

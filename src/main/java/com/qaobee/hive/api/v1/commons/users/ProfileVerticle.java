@@ -21,6 +21,7 @@ import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.business.model.commons.users.account.Payment;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
@@ -223,41 +224,52 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.testMandatoryParams(req.getParams(), "plan_id", "pay_id");
                     utils.isUserLogged(req);
                     final User user = req.getUser();
-                    Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(req.getParams().get("id").get(0)));
-
-                    final JsonObject juser = new JsonObject();
-                    if (StringUtils.isNoneBlank(user.getAvatar())) {
-                        juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
-                    }
-                    juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-                    if (user.getAddress() != null) {
-                        if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                            juser.putString("address", user.getAddress().getFormatedAddress());
-                        } else {
-                            juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
+                    Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(req.getParams().get("plan_id").get(0)));
+                    Payment payment = null;
+                    for(Payment p : planItem.getShippingList()) {
+                        if(req.getParams().get("pay_id").get(0).equals(p.getId())) {
+                            payment = p;
                         }
                     }
-                    juser.putString("firstname", user.getFirstname());
-                    juser.putString("name", user.getName());
-                    juser.putString("username", user.getAccount().getLogin());
-                    juser.putString("phoneNumber", user.getContact().getHome());
-                    juser.putString("email", user.getContact().getEmail());
-                    juser.putString("paidDate", utils.formatDate(planItem.getPaidDate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-                    juser.putString("paymentId", planItem.getPaymentId());
-                    juser.putString("plan", planItem.getLevelPlan().name());
-                    juser.putString("amountPaid", String.valueOf(planItem.getAmountPaid()));
-
-                    final JsonObject pdfReq = new JsonObject();
-                    pdfReq.putString(PDFVerticle.FILE_NAME, planItem.getPaymentId() + "-Qaobee");
-                    pdfReq.putString(PDFVerticle.TEMPLATE, "billing/bill.ftl");
-                    pdfReq.putObject(PDFVerticle.DATA, juser);
-                    vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
-
+                    if(payment !=null) {
+                        final JsonObject juser = new JsonObject();
+                        if (StringUtils.isNoneBlank(user.getAvatar())) {
+                            juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
+                        }
+                        juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
+                        if (user.getAddress() != null) {
+                            if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
+                                juser.putString("address", user.getAddress().getFormatedAddress());
+                            } else {
+                                juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
+                            }
+                        }
+                        juser.putString("firstname", user.getFirstname());
+                        juser.putString("name", user.getName());
+                        juser.putString("username", user.getAccount().getLogin());
+                        juser.putString("phoneNumber", user.getContact().getHome());
+                        juser.putString("email", user.getContact().getEmail());
+                        juser.putString("paidDate", utils.formatDate(payment.getPaidDate() / 1000L, DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
+                        juser.putString("paymentId", payment.getPaymentId());
+                        juser.putString("plan", planItem.getLevelPlan().name());
+                        juser.putString("amountPaid", String.valueOf(payment.getAmountPaid()));
+                        final JsonObject pdfReq = new JsonObject();
+                        pdfReq.putString(PDFVerticle.FILE_NAME, payment.getPaymentId() + "-Qaobee");
+                        pdfReq.putString(PDFVerticle.TEMPLATE, "billing/bill.ftl");
+                        pdfReq.putObject(PDFVerticle.DATA, juser);
+                        vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
+                    } else {
+                        throw new IllegalArgumentException("unknown bill");
+                    }
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);

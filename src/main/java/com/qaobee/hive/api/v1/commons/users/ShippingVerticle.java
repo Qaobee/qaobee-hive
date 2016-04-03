@@ -46,6 +46,7 @@ import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
@@ -53,6 +54,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The type Shipping verticle.
@@ -124,9 +126,22 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                     throw new IllegalArgumentException("some metadatas are wrong");
                                 }
                                 ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putString("status", "paid");
-                                // TODO : Verify if created_at evolve with recurring payments
-                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putNumber("paidDate", body.getLong("created_at") * 1000);
                                 ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putObject("cardInfo", body.getObject("card"));
+
+                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putNumber("paidDate", body.getLong("created_at") * 1000);
+                                if (!((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).containsField("shippingList")) {
+                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putArray("shippingList", new JsonArray());
+                                }
+                                JsonObject payment = new JsonObject();
+
+                                // TODO : Verify if created_at evolve with recurring payments
+                                payment.putNumber("paidDate", body.getLong("created_at") * 1000L);
+                                payment.putNumber("amountPaid",  body.getLong("amount") / 100L);
+                                payment.putObject("cardInfo", body.getObject("card"));
+                                payment.putString("paymentId", ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getString("paymentId"));
+                                payment.putString("id", UUID.randomUUID().toString());
+
+                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getArray("shippingList").add(payment);
                                 mongo.save(user, User.class);
                                 final JsonObject tplReq = new JsonObject();
                                 tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
@@ -254,7 +269,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                         JsonObject res = new JsonObject(buffer.toString());
                                         req.getUser().getAccount().getListPlan().get(planId).setAmountPaid(finalAmount);
                                         req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
-                                       // req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
+                                        // req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
                                         req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
                                         if (res.getObject("card").getString("id", null) != null) {
                                             req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.<Card>decodeValue(res.getObject("card").encode(), Card.class));
