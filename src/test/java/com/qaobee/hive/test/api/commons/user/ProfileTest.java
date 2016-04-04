@@ -8,7 +8,6 @@ import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
@@ -83,7 +82,6 @@ public class ProfileTest extends VertxJunitSupport {
      * Generate billing pdf test.
      */
     @Test
-    @Ignore
     public void generateBillingPDFTest() {
         User u = generateLoggedUser();
         final RequestWrapper req = new RequestWrapper();
@@ -92,6 +90,7 @@ public class ProfileTest extends VertxJunitSupport {
         req.setUser(u);
         final HashMap<String, List<String>> params = new HashMap<>();
         params.put("plan_id", Collections.singletonList("0"));
+        params.put("pay_id", Collections.singletonList(u.getAccount().getListPlan().get(0).getShippingList().get(0).getId()));
         req.setParams(params);
         final String reply = sendonBus(ProfileVerticle.GENERATE_BILL_PDF, req);
         JsonObject result = new JsonObject(reply);

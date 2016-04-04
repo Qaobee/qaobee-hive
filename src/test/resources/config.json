@@ -59,23 +59,49 @@
         "salt": "CPAaJ8ydx6I=",
         "listPlan": [
           {
-            "paymentId": "paymentId003",
-            "levelPlan": "PREMIUM",
-            "amountPaid": 6,
-            "paidDate": 1408312800000,
-            "startPeriodDate": 1408312800000,
-            "endPeriodDate": 1435615200000,
+            "paymentId": "pay_jyexVVRKKGJsJAXobSL3q",
+            "levelPlan": "FREEMIUM",
+            "amountPaid": 9,
+            "paidDate": 1459714012000,
+            "startPeriodDate": 1459184846640,
+            "endPeriodDate": 0,
             "status": "paid",
-            "periodicity": "monthly",
+            "periodicity": null,
             "activity": {
-              "_id": "ACT-FOOT",
-              "code": "ACT-FOOT",
-              "label": "admin.settings.activity.football.label",
+              "_id": "ACT-HAND",
+              "code": "ACT-HAND",
+              "label": "commons.settings.activity.handball",
               "enable": true,
               "activityType": "TEAM_SPORT",
               "audit": null
             },
-            "paiementURL": null
+            "paymentURL": "https://www.payplug.com/pay/test/jyexVVRKKGJsJAXobSL3q",
+            "cardId": null,
+            "cardInfo": {
+              "exp_month": 7,
+              "country": "US",
+              "id": "card_5ffqKb9RqjN1v6WeEQS8d4",
+              "exp_year": 2016,
+              "last4": "5559",
+              "brand": null
+            },
+            "shippingList": [
+              {
+                "paidDate": 1459714012000,
+                "amountPaid": 9,
+                "cardInfo": {
+                  "exp_month": 7,
+                  "country": "US",
+                  "id": "card_5ffqKb9RqjN1v6WeEQS8d4",
+                  "exp_year": 2016,
+                  "last4": "5559",
+                  "brand": null
+                },
+                "paymentId": "pay_jyexVVRKKGJsJAXobSL3q",
+                "id": "8f55399f-e09c-4282-8360-9a827871c571"
+              }
+            ],
+            "paiementURL": "https://www.payplug.com/pay/test/jyexVVRKKGJsJAXobSL3q"
           }
         ]
       }

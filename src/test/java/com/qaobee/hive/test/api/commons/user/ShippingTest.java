@@ -523,6 +523,7 @@ public class ShippingTest extends VertxJunitSupport {
     private JsonObject buildNotificationRequest(JsonObject plan, User u) {
         JsonObject notification = new JsonObject();
         notification.putString("id", "123456");
+        notification.putNumber("amount", 900L);
         notification.putString("object", "payment");
         notification.putBoolean("is_paid", true);
         JsonObject metadata = new JsonObject();
