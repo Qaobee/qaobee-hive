@@ -19,6 +19,9 @@
 
 package com.qaobee.hive.api.v1.commons.users;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -52,9 +55,7 @@ import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The type Shipping verticle.
@@ -118,63 +119,68 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     }
                     int planId = Integer.parseInt(body.getObject("metadata").getString("plan_id"));
                     final JsonObject user = mongo.getById(body.getObject("metadata").getString("customer_id"), User.class);
-                    switch (body.getString("object")) {
-                        // We only have payments, no refunds ;)
-                        case "payment":
-                            if (body.containsField("is_paid") && body.getBoolean("is_paid")) {
-                                if (user.getObject("account").getArray("listPlan").size() < planId) {
-                                    throw new IllegalArgumentException("some metadatas are wrong");
-                                }
-                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putString("status", "paid");
-                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putObject("cardInfo", body.getObject("card"));
-
-                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putNumber("paidDate", body.getLong("created_at") * 1000);
-                                if (!((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).containsField("shippingList")) {
-                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putArray("shippingList", new JsonArray());
-                                }
-                                JsonObject payment = new JsonObject();
-
-                                // TODO : Verify if created_at evolve with recurring payments
-                                payment.putNumber("paidDate", body.getLong("created_at") * 1000L);
-                                payment.putNumber("amountPaid",  body.getLong("amount") / 100L);
-                                payment.putObject("cardInfo", body.getObject("card"));
-                                payment.putString("paymentId", ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getString("paymentId"));
-                                payment.putString("id", UUID.randomUUID().toString());
-
-                                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getArray("shippingList").add(payment);
-                                mongo.save(user, User.class);
-                                final JsonObject tplReq = new JsonObject();
-                                tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
-                                tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generatePaymentBody(Json.<User>decodeValue(user.encode(), User.class),
-                                        body.getObject("metadata").getString("locale"),
-                                        Json.<Plan>decodeValue(((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).encode(), Plan.class
-                                        )));
-
-                                vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
-                                    @Override
-                                    public void handle(final Message<JsonObject> tplResp) {
-                                        final String tplRes = tplResp.body().getString("result");
-                                        final JsonObject emailReq = new JsonObject();
-                                        emailReq.putString("from", Params.getString("mail.from"));
-                                        emailReq.putString("to", Json.<User>decodeValue(user.encode(), User.class).getContact().getEmail());
-                                        emailReq.putString("subject", Messages.getString("mail.payment.subject", body.getObject("metadata").getString("locale")));
-                                        emailReq.putString("content_type", "text/html");
-                                        emailReq.putString("body", tplRes);
-                                        vertx.eventBus().publish("mailer.mod", emailReq);
-                                        final JsonObject resp = new JsonObject();
-                                        resp.putBoolean("status", true);
-                                        utils.sendStatus(true, message);
+                    if(body.getObject("failure") != null) {
+                        // TODO : traiter le retour foireux
+                        // -> envoi d'un mail avec envoi du lien vers le paiement
+                    } else {
+                        switch (body.getString("object")) {
+                            // We only have payments, no refunds ;)
+                            case "payment":
+                                if (body.containsField("is_paid") && body.getBoolean("is_paid")) {
+                                    if (user.getObject("account").getArray("listPlan").size() < planId) {
+                                        throw new IllegalArgumentException("some metadatas are wrong");
                                     }
-                                });
-                            } else {
-                                // WTF, it's not paid !!! bloody hell !
-                                LOG.info(body.encode());
-                                utils.sendStatus(false, message);
-                            }
-                            break;
-                        default:
-                            utils.sendStatus(false, message);
+                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putString("status", "paid");
+                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putObject("cardInfo", body.getObject("card"));
 
+                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putNumber("paidDate", body.getLong("created_at") * 1000);
+                                    if (!((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).containsField("shippingList")) {
+                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putArray("shippingList", new JsonArray());
+                                    }
+                                    JsonObject payment = new JsonObject();
+
+                                    // TODO : Verify if created_at evolve with recurring payments
+                                    payment.putNumber("paidDate", body.getLong("created_at") * 1000L);
+                                    payment.putNumber("amountPaid", body.getLong("amount") / 100L);
+                                    payment.putObject("cardInfo", body.getObject("card"));
+                                    payment.putString("paymentId", ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getString("paymentId"));
+                                    payment.putString("id", UUID.randomUUID().toString());
+
+                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getArray("shippingList").add(payment);
+                                    mongo.save(user, User.class);
+                                    final JsonObject tplReq = new JsonObject();
+                                    tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
+                                    tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generatePaymentBody(Json.<User>decodeValue(user.encode(), User.class),
+                                            body.getObject("metadata").getString("locale"),
+                                            Json.<Plan>decodeValue(((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).encode(), Plan.class
+                                            )));
+
+                                    vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
+                                        @Override
+                                        public void handle(final Message<JsonObject> tplResp) {
+                                            final String tplRes = tplResp.body().getString("result");
+                                            final JsonObject emailReq = new JsonObject();
+                                            emailReq.putString("from", Params.getString("mail.from"));
+                                            emailReq.putString("to", Json.<User>decodeValue(user.encode(), User.class).getContact().getEmail());
+                                            emailReq.putString("subject", Messages.getString("mail.payment.subject", body.getObject("metadata").getString("locale")));
+                                            emailReq.putString("content_type", "text/html");
+                                            emailReq.putString("body", tplRes);
+                                            vertx.eventBus().publish("mailer.mod", emailReq);
+                                            final JsonObject resp = new JsonObject();
+                                            resp.putBoolean("status", true);
+                                            utils.sendStatus(true, message);
+                                        }
+                                    });
+                                } else {
+                                    // WTF, it's not paid !!! bloody hell !
+                                    LOG.info(body.encode());
+                                    utils.sendStatus(false, message);
+                                }
+                                break;
+                            default:
+                                utils.sendStatus(false, message);
+
+                        }
                     }
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
@@ -271,6 +277,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                         req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
                                         // req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
                                         req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
+                                        req.getUser().getAccount().getListPlan().get(planId).setPeriodicity("monthly");
                                         if (res.getObject("card").getString("id", null) != null) {
                                             req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.<Card>decodeValue(res.getObject("card").encode(), Card.class));
                                         }
@@ -319,59 +326,135 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
         /**
          * Periodic timer, each day it runs
-
-         long timerID = vertx.setPeriodic(1000  * 60 * 60 * 24 , new Handler<Long>() {
-         public void handle(Long timerID) {
-         // oh we are ticking each 24h after the startup time
-         // First, let's collect all the guys
-         DBObject statusQuery = new BasicDBObject("status", "paid");
-         // TODO : change paid level plan here
-         statusQuery.put("levelPlan", "PREMIUM");
-         DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
-         DBObject query = new BasicDBObject("account.listPlan",fields);
-         DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
-         LOG.info(result.size());
-         while(result.hasNext()) {
-         vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, new JsonObject(result.next().toString()));
-         }
-         }
-         });
-
-         vertx.eventBus().registerHandler(TRIGGERED_RECURING_PAYMENT, new Handler<Message<JsonObject>>() {
-        @Override public void handle(Message<JsonObject> message) {
-        JsonObject user = message.body();
-        JsonArray listPlan = user.getObject("account").getArray("listPlan");
-        for(int i =0; i < listPlan.size(); i++) {
-        JsonObject plan = listPlan.get(i);
-        // TODO : change paid level plan here
-        if(plan.containsField("levelPlan") && plan.getString("levelPlan").equals("PREMIUM")) {
-        switch (plan.getString("periodicity")) {
-        case "monthly" :
-        // test if we have to make pay him (or her) !
-        long paidDate = plan.getLong("paidDate");
-        Calendar initialPaidDate = Calendar.getInstance();
-        initialPaidDate.setTime(new Date(paidDate));
-        Calendar now = Calendar.getInstance();
-        now.setTime(new Date());
-        // test if we are the last day of the next month following the last fee
-        if(now.get(Calendar.MONTH) > initialPaidDate.get(Calendar.MONTH)
-        && now.get(Calendar.DAY_OF_MONTH) == now.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-        // 1- Trigger payment
-        // 1.1- Verify card expiry
-        // 1.1.1- if expired -> send a mail with a new payment url (first payment process)
-        // 1.1.2- else :
-        // 1.2- process a payment with the card id
-
-        // 2- send an email
-
-        // 3- generate a fee
-        }
-        }
-        }
-
-        }
-        }
-        });
          */
+
+        long timerID = vertx.setPeriodic(1000 * 60 * 60 * 24, new Handler<Long>() {
+            public void handle(Long timerID) {
+                // oh we are ticking each 24h after the startup time
+                // First, let's collect all the guys
+                DBObject statusQuery = new BasicDBObject("status", "paid");
+                // TODO : change paid level plan here
+                //   statusQuery.put("levelPlan", "PREMIUM");
+                DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
+                DBObject query = new BasicDBObject("account.listPlan", fields);
+                DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
+                LOG.info(result.size() + "");
+                while (result.hasNext()) {
+                    DBObject p = result.next();
+                    //  LOG.info(p.toString());
+                    vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, new JsonObject(p.toString()));
+                }
+            }
+        });
+
+        vertx.eventBus().registerHandler(TRIGGERED_RECURING_PAYMENT, new Handler<Message<JsonObject>>() {
+            @Override
+            public void handle(final Message<JsonObject> message) {
+                final JsonObject user = message.body();
+                JsonArray listPlan = user.getObject("account").getArray("listPlan");
+                for (int i = 0; i < listPlan.size(); i++) {
+                    JsonObject plan = listPlan.get(i);
+                    // TODO : change paid level plan here
+                    if (plan != null && plan.containsField("levelPlan")
+                            && plan.containsField("cardInfo")
+                            && plan.getObject("cardInfo") != null
+                            && !"null".equals(plan.getObject("cardInfo").getString("id"))) {//&& plan.getString("levelPlan").equals("PREMIUM")) {
+                        switch (plan.getString("periodicity", "")) {
+                            case "monthly":
+                                // test if we have to make pay him (or her) !
+                                long paidDate = plan.getLong("paidDate");
+                                Calendar initialPaidDate = Calendar.getInstance();
+                                initialPaidDate.setTime(new Date(paidDate));
+                                initialPaidDate.add(Calendar.MONTH, 1);
+                                Calendar now = Calendar.getInstance();
+                                now.setTime(new Date());
+                                JsonObject account = user.getObject("account");
+                                // test if we are the last day of the next month following the last fee
+                                if (now.after(initialPaidDate)) {
+                                    // 1- Trigger payment
+                                    Payment payment = new Payment();
+                                    int amount = 0;
+                                    if (Params.containsKey("plan." + plan.getString("levelPlan") + ".price")) {
+                                        amount = Integer.parseInt(Params.getString("plan." + plan.getString("levelPlan") + ".price"));
+                                    }
+                                    if (amount == 0) {
+                                        // FREEMIUM, nothing to do
+                                        utils.sendStatusJson(true, message);
+                                        return;
+                                    }
+                                    payment.setAmount(amount * 100);
+                                    payment.setCurrency("EUR");
+                                    Customer customer = new Customer();
+                                    customer.setFirst_name(user.getString("firstname"));
+                                    customer.setLast_name(user.getString("name"));
+                                    customer.setEmail(user.getObject("contact").getString("email"));
+                                    payment.setCustomer(customer);
+                                    payment.setNotification_url(config.getString("ipn_url"));
+                                    payment.setPayment_method(plan.getObject("cardInfo").getString("id"));
+                                    Map<String, String> metaDatas = new HashMap<>();
+                                    metaDatas.put("customer_id", user.getString("_id"));
+                                    metaDatas.put("plan_id", String.valueOf(i));
+                                    metaDatas.put("locale", user.getObject("country").getString("local") + "_" + user.getObject("country").getString("local").toUpperCase());
+                                    payment.setMetadata(metaDatas);
+                                    payment.setSave_card(true);
+                                    payment.setForce_3ds(true);
+
+                                    final int finalAmount = amount;
+                                    final int finalI = i;
+                                    HttpClientRequest request = client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
+                                        @Override
+                                        public void handle(final HttpClientResponse resp) {
+                                            if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
+                                                resp.bodyHandler(new Handler<Buffer>() {
+                                                    @Override
+                                                    public void handle(Buffer buffer) {
+                                                        // The entire response body has been received
+                                                        JsonObject res = new JsonObject(buffer.toString());
+                                                        System.out.println(res.encodePrettily());
+                                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putNumber("amountPaid",finalAmount);
+                                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("paiementURL", res.getObject("hosted_payment").getString("payment_url"));
+                                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("paymentId",res.getString("id"));
+                                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("periodicity", "monthly");
+                                                        if (res.getObject("card").getString("id", null) != null) {
+                                                            ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putObject("cardInfo", res.getObject("card"));
+                                                        }
+                                                        try { // NOSONAR
+                                                            mongo.save(user, User.class);
+                                                            JsonObject messageResponse = new JsonObject();
+                                                            messageResponse.putBoolean("status", true);
+                                                            messageResponse.putString("payment_url", res.getObject("hosted_payment").getString("payment_url"));
+                                                            ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("cardId", res.getString("id"));
+
+                                                            message.reply(messageResponse);
+                                                        } catch (QaobeeException e) {
+                                                            LOG.error(e.getMessage(), e);
+                                                            utils.sendErrorJ(message, e.getCode(), e.getMessage());
+                                                        }
+
+                                                    }
+                                                });
+                                            } else {
+                                                System.out.println(resp.statusCode() + " : " + resp.statusMessage());
+                                                utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage());
+                                            }
+                                        }
+                                    });
+                                    request.putHeader("Authorization", "Bearer " + config.getString("api_key")).putHeader("Content-Type", "application/json");
+                                    JsonObject requestBody = new JsonObject(Json.encode(payment));
+                                    requestBody.removeField("hosted_payment");
+                                    LOG.info(requestBody.encode());
+                                    request.putHeader("Content-Length", String.valueOf(requestBody.toString().length()));
+                                    request.write(requestBody.toString());
+                                    request.end();
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+                    }
+
+                }
+            }
+        });
     }
 }
