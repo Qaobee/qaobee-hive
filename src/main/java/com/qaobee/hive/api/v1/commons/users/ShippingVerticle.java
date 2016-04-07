@@ -359,10 +359,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
                 DBObject query = new BasicDBObject("account.listPlan", fields);
                 DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
-                LOG.info(result.size() + "");
                 while (result.hasNext()) {
                     DBObject p = result.next();
-                    //  LOG.info(p.toString());
                     vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, new JsonObject(p.toString()));
                 }
             }
@@ -417,7 +415,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                     metaDatas.put("plan_id", String.valueOf(i));
                                     metaDatas.put("locale", user.getObject("country").getString("local"));
                                     payment.setMetadata(metaDatas);
-                                    payment.setSave_card(true);
+                                    payment.setSave_card(false);
                                     payment.setForce_3ds(true);
 
                                     final int finalAmount = amount;
@@ -431,9 +429,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                                     public void handle(Buffer buffer) {
                                                         // The entire response body has been received
                                                         JsonObject res = new JsonObject(buffer.toString());
-                                                        System.out.println(res.encodePrettily());
                                                         ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putNumber("amountPaid", finalAmount);
-                                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("paiementURL", res.getObject("hosted_payment").getString("payment_url"));
                                                         ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("paymentId", res.getString("id"));
                                                         ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("periodicity", "monthly");
                                                         if (res.getObject("card").getString("id", null) != null) {
@@ -443,9 +439,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                                             mongo.save(user, User.class);
                                                             JsonObject messageResponse = new JsonObject();
                                                             messageResponse.putBoolean("status", true);
-                                                            messageResponse.putString("payment_url", res.getObject("hosted_payment").getString("payment_url"));
                                                             ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("cardId", res.getString("id"));
-
                                                             message.reply(messageResponse);
                                                         } catch (QaobeeException e) {
                                                             LOG.error(e.getMessage(), e);
@@ -455,7 +449,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                                     }
                                                 });
                                             } else {
-                                                System.out.println(resp.statusCode() + " : " + resp.statusMessage());
+                                                LOG.error(resp.statusCode() + " : " + resp.statusMessage());
                                                 utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage());
                                             }
                                         }
@@ -463,7 +457,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                     request.putHeader("Authorization", "Bearer " + config.getString("api_key")).putHeader("Content-Type", "application/json");
                                     JsonObject requestBody = new JsonObject(Json.encode(payment));
                                     requestBody.removeField("hosted_payment");
-                                    LOG.info(requestBody.encode());
                                     request.putHeader("Content-Length", String.valueOf(requestBody.toString().length()));
                                     request.write(requestBody.toString());
                                     request.end();
