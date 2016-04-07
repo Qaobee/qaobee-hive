@@ -64,4 +64,15 @@ public interface MailUtils {
      * @return body json object
      */
     JsonObject generateRefoundBody(User user, String locale, Plan planItem);
+
+    /**
+     * Generate refused card body json object.
+     *
+     * @param user   the user
+     * @param locale the locale
+     * @param plan   the plan
+     * @param reason the reason  @return the json object
+     * @return the json object
+     */
+    JsonObject generateRefusedCardBody(User user, String locale, Plan plan, String reason);
 }

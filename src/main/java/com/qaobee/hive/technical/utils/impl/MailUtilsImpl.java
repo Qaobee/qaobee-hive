@@ -118,4 +118,19 @@ public final class MailUtilsImpl implements MailUtils {
         json.putString("stayConnected", Messages.getString("mail.footer.stayConnected", locale));
         return json;
     }
+
+
+    @Override
+    public JsonObject generateRefusedCardBody(User user, String locale, Plan planItem, String reason) {
+        final JsonObject json = new JsonObject();
+        json.putString("title", Messages.getString("mail.refusedCard.title", locale));
+        json.putString("desc", Messages.getString("mail.refusedCard.line.1", locale, user.getFirstname() + " " + user.getName(), planItem.getLevelPlan().name()));
+        json.putString("header", Messages.getString("mail.refusedCard.title", locale));
+        json.putString("subheader", "mail.refusedCard.line.subheader." + reason);
+        json.putString("message", Messages.getString("mail.refusedCard.line2", locale, Params.getString("site.url") + "/" + Params.getString("pay.url.api")));
+        json.putString("sig", Messages.getString("mail.account.validation.sig", locale, Params.getString("site.url")));
+        json.putString("assistant", Messages.getString("mail.footer.assistant", locale));
+        json.putString("stayConnected", Messages.getString("mail.footer.stayConnected", locale));
+        return json;
+    }
 }
