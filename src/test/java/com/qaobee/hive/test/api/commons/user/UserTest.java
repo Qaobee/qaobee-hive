@@ -23,13 +23,21 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
 import org.junit.Test;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.buffer.Buffer;
+import org.vertx.java.core.http.HttpClientRequest;
+import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -775,6 +783,88 @@ public class UserTest extends VertxJunitSupport {
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
+    }
+
+    @Test
+    public void uploadAvatarTest() {
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        HttpClientRequest request = getVertx().createHttpClient()
+                .setPort(Integer.parseInt(Params.getString("defaultPort")))
+                .setHost("localhost")
+                .setKeepAlive(true)
+                .post("/file/User/avatar/" + user.get_id(), new Handler<HttpClientResponse>() {
+                    public void handle(HttpClientResponse resp) {
+                        Assert.assertEquals("HTTP Response must be 200", 200, resp.statusCode());
+                        resp.bodyHandler(new Handler<Buffer>() {
+                            @Override
+                            public void handle(Buffer event) {
+                                Assert.assertTrue("Must be a json object", event.toString().startsWith("{"));
+                                JsonObject json = new JsonObject(event.toString());
+                                LOG.info(json.getString("avatar"));
+                                try {
+                                    Thread.sleep(2000L);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                getVertx().createHttpClient().
+                                        setPort(Integer.parseInt(Params.getString("defaultPort")))
+                                        .setHost("localhost")
+                                        .setKeepAlive(true)
+                                        .getNow("/file/User/" + json.getString("avatar"), new Handler<HttpClientResponse>() {
+                                            @Override
+                                            public void handle(HttpClientResponse fileEvent) {
+                                                Assert.assertEquals("HTTP Response must be 200", 200, fileEvent.statusCode());
+                                                fileEvent.bodyHandler(new Handler<Buffer>() {
+                                                    @Override
+                                                    public void handle(Buffer imgBuffer) {
+                                                        getVertx().fileSystem().writeFileSync("src/test/resources/res.jpg", imgBuffer);
+                                                        Assert.assertEquals("Files must have same size",
+                                                                getVertx().fileSystem().propsSync("src/test/resources/res.jpg").size(),
+                                                                getVertx().fileSystem().propsSync("src/test/resources/avatar.jpg").size());
+                                                        if (getVertx().fileSystem().existsSync("src/test/resources/res.jpg")) {
+                                                            getVertx().fileSystem().deleteSync("src/test/resources/res.jpg");
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+                            }
+                        });
+                    }
+                }).setChunked(false);
+        Buffer bodyBuffer = getBody("avatar.jpg", "src/test/resources/avatar.jpg", "image/jpeg");
+        request.putHeader("Content-Type", "multipart/form-data; boundary=MyBoundary");
+        //  request.putHeader("Content-Length", String.valueOf(bodyBuffer.length()));
+        request.putHeader("token", user.getAccount().getToken());
+        request.putHeader("accept", "application/json");
+        request.end(bodyBuffer);
+        try {
+            Thread.sleep(10000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //  client.close();
+    }
+
+    private Buffer getBody(String filename, String filepath, String mime) {
+        Buffer buffer = new Buffer();
+        buffer.appendString("--MyBoundary\r\n");
+        buffer.appendString("Content-Disposition: form-data; name=\"image\"; filename=\"" + filename + "\"\r\n");
+        buffer.appendString("Content-Type: " + mime + "\r\n");
+        buffer.appendString("Content-Transfer-Encoding: binary\r\n");
+        buffer.appendString("\r\n");
+        try {
+            // buffer.appendBuffer(getVertx().fileSystem().readFileSync(filepath));
+            buffer.appendBytes(Files.readAllBytes(Paths.get(filepath)));
+            buffer.appendString("\r\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        buffer.appendString("--MyBoundary--\r\n");
+        return buffer;
     }
 
 }

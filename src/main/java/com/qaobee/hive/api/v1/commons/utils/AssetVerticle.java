@@ -114,8 +114,9 @@ public class AssetVerticle extends AbstractGuiceVerticle {
 
                         resp.putNumber(Constantes.STATUS_CODE, 200);
                         resp.putString(Constantes.MESSAGE, personToSave.encode());
-
-                        FileUtils.deleteQuietly(new File(message.body().getString("filename")));
+                        if(vertx.fileSystem().existsSync(message.body().getString("filename"))) {
+                            vertx.fileSystem().deleteSync(message.body().getString("filename"));
+                        }
                         message.reply(resp);
                     }
                 } catch (IOException e) {

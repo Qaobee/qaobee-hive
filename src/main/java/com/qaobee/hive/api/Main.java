@@ -29,7 +29,6 @@ import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.technical.vertx.ServerHook;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -172,7 +171,9 @@ public class Main extends AbstractGuiceVerticle {
                         request.putString("filename", filename);
                         request.putString("contentType", upload.contentType());
                         LOG.debug("filename : " + filename);
-                        FileUtils.deleteQuietly(new File(filename));
+                        if(vertx.fileSystem().existsSync(filename)) {
+                            vertx.fileSystem().deleteSync(filename);
+                        }
                         upload.streamToFileSystem(filename);
                         upload.endHandler(new Handler<Void>() {
                             @Override
