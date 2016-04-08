@@ -481,7 +481,6 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getCurrentUserNotLogged() {
-        User user = generateLoggedUser();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.GET);
@@ -533,7 +532,6 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void logoutFailed() {
-        User user = generateLoggedUser();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.GET);
@@ -562,7 +560,6 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void passwordRenewBadRequest() {
-        User user = generateUser();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
