@@ -48,7 +48,6 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 import org.vertx.java.core.sockjs.SockJSServer;
-import org.vertx.java.core.sockjs.SockJSSocket;
 import org.vertx.mods.Mailer;
 
 import javax.inject.Inject;
@@ -67,7 +66,6 @@ public class Main extends AbstractGuiceVerticle {
     @Inject
     private Utils utils;
     private SockJSServer sockJSServer;
-    private Map<String, SockJSSocket> sockets = new HashMap<>();
 
     /**
      * Start void.
