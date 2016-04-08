@@ -48,6 +48,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.text.DateFormat;
 
+import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
+
 /**
  * The Class ProfileVerticle.
  *
@@ -95,7 +97,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
                 } else {
                     final JsonObject json = new JsonObject();
-                    json.putString(Main.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE);
+                    json.putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE);
                     json.putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF));
                     message.reply(json.encode());
                 }
@@ -163,7 +165,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
          * @api {get} /api/1/commons/users/profile/pdf Generate a PDF from the current profile
          * @apiName generatePDFHandler
          * @apiGroup ProfileVerticle
-         * @apiSuccess {Object} PDF { "contenttype" : "application/pdf", 'fileserve" : "path to local pdf file" }
+         * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
          * @apiError HTTP_ERROR wrong request's method
          */
         final Handler<Message<String>> generatePDFHandler = new Handler<Message<String>>() {
@@ -215,7 +217,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
          * @apiName generateBillPDFHandler
          * @apiGroup ProfileVerticle
          * @apiParam {String} plan plan type
-         * @apiSuccess {Object} PDF { "contenttype" : "application/pdf", 'fileserve" : "path to local pdf file" }
+         * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
          * @apiError HTTP_ERROR wrong request's method
          */
         final Handler<Message<String>> generateBillPDFHandler = new Handler<Message<String>>() {

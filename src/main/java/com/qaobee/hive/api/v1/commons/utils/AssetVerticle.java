@@ -28,11 +28,13 @@ import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import io.netty.handler.codec.http.HttpHeaders;
 import org.apache.commons.io.FileUtils;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -46,6 +48,8 @@ import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+
+import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 
 /**
  * The type Asset verticle.
@@ -99,7 +103,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                         BasicDBObject meta = new BasicDBObject();
                         meta.append("uid", message.body().getString("uid"));
                         gfsFile.setMetaData(meta);
-                        gfsFile.setContentType(message.body().getString("contentType"));
+                        gfsFile.setContentType(message.body().getString(CONTENT_TYPE));
                         gfsFile.save();
 
                         JsonObject personToSave = new JsonObject();
@@ -107,14 +111,16 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                         personToSave.putString(message.body().getString("field"), gfsFile.getId().toString());
 
                         if ("SB_Person".equals(message.body().getString("collection"))) {
+                            mongo.getById(message.body().getString("uid"), SB_Person.class);
                             mongo.update(personToSave, SB_Person.class);
                         } else {
+                            mongo.getById(message.body().getString("uid"), User.class);
                             mongo.update(personToSave, User.class);
                         }
 
                         resp.putNumber(Constantes.STATUS_CODE, 200);
                         resp.putString(Constantes.MESSAGE, personToSave.encode());
-                        if(vertx.fileSystem().existsSync(message.body().getString("filename"))) {
+                        if (vertx.fileSystem().existsSync(message.body().getString("filename"))) {
                             vertx.fileSystem().deleteSync(message.body().getString("filename"));
                         }
                         message.reply(resp);
@@ -123,13 +129,25 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     LOG.error(e.getMessage(), e);
                     resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
                     resp.putString(Constantes.MESSAGE, e.getMessage());
-                    FileUtils.deleteQuietly(new File(message.body().getString("filename")));
+                    if (vertx.fileSystem().existsSync(message.body().getString("filename"))) {
+                        vertx.fileSystem().deleteSync(message.body().getString("filename"));
+                    }
                     message.reply(resp);
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
                     resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
                     resp.putString(Constantes.MESSAGE, e.getMessage());
-                    FileUtils.deleteQuietly(new File(message.body().getString("filename")));
+                    if (vertx.fileSystem().existsSync(message.body().getString("filename"))) {
+                        vertx.fileSystem().deleteSync(message.body().getString("filename"));
+                    }
+                    message.reply(resp);
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.MONGO_ERROR.getCode());
+                    resp.putString(Constantes.MESSAGE, e.getMessage());
+                    if (vertx.fileSystem().existsSync(message.body().getString("filename"))) {
+                        vertx.fileSystem().deleteSync(message.body().getString("filename"));
+                    }
                     message.reply(resp);
                 }
             }
@@ -150,17 +168,17 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     utils.testMandatoryParams(message.body().toMap(), "collection", "id");
                     GridFS img = new GridFS(mongo.getDb(), "Assets");
 
-                    if (SB_Person.class.getSimpleName().equals(message.body().getString("collection")) || message.body().getString("collection").equals(User.class.getSimpleName())) {
+                    if (SB_Person.class.getSimpleName().equals(message.body().getString("collection")) || User.class.getSimpleName().equals(message.body().getString("collection"))) {
                         GridFSDBFile imageForOutput = img.findOne(new ObjectId(message.body().getString("id")));
                         if (imageForOutput != null && imageForOutput.getChunkSize() > 0) {
                             ByteArrayOutputStream bos = new ByteArrayOutputStream();
                             imageForOutput.writeTo(bos);
                             byte[] asset = bos.toByteArray();
-                            resp.putString("Content-Length", Integer.toString(asset.length));
+                            resp.putString(HttpHeaders.Names.CONTENT_LENGTH, Integer.toString(asset.length));
                             resp.putBinary("asset", asset);
                         } else {
                             byte[] asset = FileUtils.readFileToByteArray(new File("web/user.png"));
-                            resp.putString("Content-Length", Integer.toString(asset.length));
+                            resp.putString(HttpHeaders.Names.CONTENT_LENGTH, Integer.toString(asset.length));
                             resp.putBinary("asset", asset);
                         }
                         message.reply(resp);

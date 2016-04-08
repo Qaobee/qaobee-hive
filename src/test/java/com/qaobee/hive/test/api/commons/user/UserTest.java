@@ -785,6 +785,9 @@ public class UserTest extends VertxJunitSupport {
         }
     }
 
+    /**
+     * Upload avatar test.
+     */
     @Test
     public void uploadAvatarTest() {
         User user = generateLoggedUser();
@@ -836,7 +839,6 @@ public class UserTest extends VertxJunitSupport {
                 }).setChunked(false);
         Buffer bodyBuffer = getBody("avatar.jpg", "src/test/resources/avatar.jpg", "image/jpeg");
         request.putHeader("Content-Type", "multipart/form-data; boundary=MyBoundary");
-        //  request.putHeader("Content-Length", String.valueOf(bodyBuffer.length()));
         request.putHeader("token", user.getAccount().getToken());
         request.putHeader("accept", "application/json");
         request.end(bodyBuffer);
@@ -845,9 +847,95 @@ public class UserTest extends VertxJunitSupport {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        //  client.close();
     }
 
+    /**
+     * Upload avatar with wrong user id test.
+     */
+    @Test
+    public void uploadAvatarWithWrongUserIdTest() {
+        User user = generateLoggedUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        HttpClientRequest request = getVertx().createHttpClient()
+                .setPort(Integer.parseInt(Params.getString("defaultPort")))
+                .setHost("localhost")
+                .setKeepAlive(true)
+                .post("/file/User/avatar/blabla", new Handler<HttpClientResponse>() {
+                    public void handle(HttpClientResponse resp) {
+                        Assert.assertEquals("HTTP Response must be 500", 500, resp.statusCode());
+                    }
+                }).setChunked(false);
+        Buffer bodyBuffer = getBody("avatar.jpg", "src/test/resources/avatar.jpg", "image/jpeg");
+        request.putHeader("Content-Type", "multipart/form-data; boundary=MyBoundary");
+        request.putHeader("token", user.getAccount().getToken());
+        request.putHeader("accept", "application/json");
+        request.end(bodyBuffer);
+        try {
+            Thread.sleep(2000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Upload avatar with not logged user test.
+     */
+    @Test
+    public void uploadAvatarWithNotLoggedUserTest() {
+        User user = generateUser();
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        HttpClientRequest request = getVertx().createHttpClient()
+                .setPort(Integer.parseInt(Params.getString("defaultPort")))
+                .setHost("localhost")
+                .setKeepAlive(true)
+                .post("/file/User/avatar/" + user.get_id(), new Handler<HttpClientResponse>() {
+                    public void handle(HttpClientResponse resp) {
+                        Assert.assertEquals("HTTP Response must be 400", 400, resp.statusCode());
+                    }
+                }).setChunked(false);
+        Buffer bodyBuffer = getBody("avatar.jpg", "src/test/resources/avatar.jpg", "image/jpeg");
+        request.putHeader("Content-Type", "multipart/form-data; boundary=MyBoundary");
+        request.putHeader("accept", "application/json");
+        request.end(bodyBuffer);
+        try {
+            Thread.sleep(2000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Get avatar with wrong avatar id test.
+     */
+    @Test
+    public void getAvatarWithWrongAvatarIdTest() {
+        final RequestWrapper req = new RequestWrapper();
+        req.setLocale(LOCALE);
+        getVertx().createHttpClient().
+                setPort(Integer.parseInt(Params.getString("defaultPort")))
+                .setHost("localhost")
+                .setKeepAlive(true)
+                .getNow("/file/User/blabla", new Handler<HttpClientResponse>() {
+                    @Override
+                    public void handle(HttpClientResponse fileEvent) {
+                        Assert.assertEquals("HTTP Response must be 404", 404, fileEvent.statusCode());
+                    }
+                });
+        try {
+            Thread.sleep(2000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param filename filename
+     * @param filepath path
+     * @param mime     mime type
+     * @return buffer
+     */
     private Buffer getBody(String filename, String filepath, String mime) {
         Buffer buffer = new Buffer();
         buffer.appendString("--MyBoundary\r\n");
@@ -856,7 +944,6 @@ public class UserTest extends VertxJunitSupport {
         buffer.appendString("Content-Transfer-Encoding: binary\r\n");
         buffer.appendString("\r\n");
         try {
-            // buffer.appendBuffer(getVertx().fileSystem().readFileSync(filepath));
             buffer.appendBytes(Files.readAllBytes(Paths.get(filepath)));
             buffer.appendString("\r\n");
         } catch (IOException e) {

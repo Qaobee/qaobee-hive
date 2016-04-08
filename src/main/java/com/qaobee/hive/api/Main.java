@@ -54,6 +54,10 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.*;
 
+import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
+import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
+
 /**
  * The Class Main.
  *
@@ -61,8 +65,10 @@ import java.util.*;
  */
 public class Main extends AbstractGuiceVerticle {
     public static final String FILE_SERVE = "fileserve";
-    public static final String CONTENT_TYPE = "contenttype";
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+    private static final String COLLECTION = "collection";
+    private static final String APPLICATION_JSON = "application/json";
+    private static final String MESSAGE = "message";
     @Inject
     private Utils utils;
     private SockJSServer sockJSServer;
@@ -107,17 +113,17 @@ public class Main extends AbstractGuiceVerticle {
             public void handle(final HttpServerRequest req) {
                 enableCors(req);
                 final JsonObject request = new JsonObject();
-                request.putString("collection", req.params().get("collection"));
+                request.putString(COLLECTION, req.params().get(COLLECTION));
                 request.putString("id", req.params().get("id"));
                 eb.send(AssetVerticle.GET, request, new Handler<Message<JsonObject>>() {
                     @Override
                     public void handle(Message<JsonObject> message) {
-                        if (message.body().containsField("Content-Length")) {
-                            req.response().putHeader("Content-Length", message.body().getString("Content-Length"));
+                        if (message.body().containsField(CONTENT_LENGTH)) {
+                            req.response().putHeader(CONTENT_LENGTH, message.body().getString(CONTENT_LENGTH));
                             req.response().end(new Buffer(message.body().getBinary("asset")));
                         } else {
-                            req.response().setStatusCode(message.body().getInteger("statusCode"));
-                            req.response().end(message.body().getString("message"));
+                            req.response().setStatusCode(404);
+                            req.response().end(message.body().getString(MESSAGE));
                         }
                     }
                 });
@@ -142,11 +148,11 @@ public class Main extends AbstractGuiceVerticle {
                 startTimer("main.avatar");
                 enableCors(req);
                 final JsonObject request = new JsonObject();
-                request.putString("collection", req.params().get("collection"));
+                request.putString(COLLECTION, req.params().get(COLLECTION));
                 request.putString("field", req.params().get("field"));
                 request.putString("uid", req.params().get("uid"));
                 request.putString("token", req.headers().get("token"));
-                request.putString("locale", req.headers().get("Accept-Language"));
+                request.putString("locale", req.headers().get(ACCEPT_LANGUAGE));
 
                 // We first pause the request so we don't receive any data between now and when the file is opened
                 String datadir = System.getProperty("user.home");
@@ -181,7 +187,7 @@ public class Main extends AbstractGuiceVerticle {
                                     @Override
                                     public void handle(Message<JsonObject> message) {
                                         req.response().setStatusCode(message.body().getInteger("statusCode"));
-                                        req.response().end(message.body().getString("message"));
+                                        req.response().end(message.body().getString(MESSAGE));
                                         stopTimer("main.avatar");
                                     }
                                 });
@@ -221,7 +227,7 @@ public class Main extends AbstractGuiceVerticle {
                         wrapper.setMethod(req.method());
                         wrapper.setHeaders(utils.toMap(req.headers()));
                         wrapper.setParams(utils.toMap(req.params()));
-                        wrapper.setLocale(req.headers().get("Accept-Language"));
+                        wrapper.setLocale(req.headers().get(ACCEPT_LANGUAGE));
                         List<String> path = Arrays.asList(req.path().split("/"));
                         path = path.subList(3, path.size());
                         wrapper.setPath(path);
@@ -242,7 +248,7 @@ public class Main extends AbstractGuiceVerticle {
                                     final String response = message.result().body();
                                     if (response.startsWith("[") || !response.startsWith("{")) {
                                         enableCors(req);
-                                        req.response().putHeader("Content-Type", "application/json");
+                                        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
                                         req.response().end(response);
                                     } else {
                                         final JsonObject json = new JsonObject(response);
@@ -250,22 +256,22 @@ public class Main extends AbstractGuiceVerticle {
                                             // TODO : externaliser dans le service File
                                             final File f = new File(json.getString(FILE_SERVE));
                                             req.response().putHeader("Content-Description", "File Transfer");
-                                            req.response().putHeader("Content-Type", json.getString(CONTENT_TYPE));
+                                            req.response().putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE));
                                             req.response().putHeader("Content-Disposition", "attachment; filename=" + f.getName());
                                             req.response().putHeader("Expires", "0");
                                             req.response().putHeader("Cache-Control", "must-revalidate");
                                             req.response().putHeader("Pragma", "public");
-                                            req.response().putHeader("Content-Length", String.valueOf(f.length()));
+                                            req.response().putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
                                             enableCors(req);
                                             req.response().sendFile(f.getAbsolutePath());
                                         } else {
                                             enableCors(req);
-                                            req.response().putHeader("Content-Type", "application/json");
+                                            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
                                             req.response().end(response);
                                         }
                                     }
                                 } else {
-                                    req.response().putHeader("Content-Type", "application/json");
+                                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
                                     final ReplyException ex = (ReplyException) message.cause();
                                     enableCors(req);
                                     if (ex.failureCode() > 0) {
@@ -284,7 +290,7 @@ public class Main extends AbstractGuiceVerticle {
                                     } else {
                                         final JsonObject jsonResp = new JsonObject();
                                         jsonResp.putBoolean("status", false);
-                                        jsonResp.putString("message", "Nothing here");
+                                        jsonResp.putString(MESSAGE, "Nothing here");
                                         jsonResp.putNumber("httpCode", 404);
                                         req.response().setStatusCode(404);
                                         req.response().end(jsonResp.encode());
