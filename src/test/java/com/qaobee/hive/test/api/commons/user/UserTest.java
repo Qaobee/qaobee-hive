@@ -81,8 +81,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void badloginHTTPMethod() {
-        given()
-                .when().get(getURL(UserVerticle.LOGIN))
+        given().when().get(getURL(UserVerticle.LOGIN))
                 .then()
                 .assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
@@ -721,8 +720,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void uploadAvatarTest() {
         User user = generateLoggedUser();
-        String avatarId = given()
-                .header("token", user.getAccount().getToken())
+        String avatarId = given().header("token", user.getAccount().getToken())
                 .multiPart(new File("src/test/resources/avatar.jpg")).
                         pathParam("uid", user.get_id()).
                         when().
@@ -746,10 +744,9 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void uploadAvatarWithWrongUserIdTest() {
-        given()
-                .header("token", generateLoggedUser().getAccount().getToken())
+        given().header("token", generateLoggedUser().getAccount().getToken())
                 .multiPart(new File("src/test/resources/avatar.jpg")).
-                pathParam("uid","blabla").
+                pathParam("uid", "blabla").
                 when().
                 post(BASE_URL + "/file/User/avatar/{uid}")
                 .then().assertThat().statusCode(ExceptionCodes.MONGO_ERROR.getCode());

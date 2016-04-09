@@ -18,17 +18,22 @@
  */
 package com.qaobee.hive.test.config;
 
+import de.flapdoodle.embed.mongo.Command;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
 import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.config.RuntimeConfigBuilder;
 import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.config.IRuntimeConfig;
+import de.flapdoodle.embed.process.config.io.ProcessOutput;
 import de.flapdoodle.embed.process.runtime.Network;
 import org.vertx.java.core.json.JsonObject;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * The Class JunitMongoSingleton.
@@ -36,6 +41,7 @@ import java.io.IOException;
  * @author xavier
  */
 public class JunitMongoSingleton {
+    private static final Logger LOG = Logger.getLogger(JunitMongoSingleton.class.getName());
 
     /**
      * The mongod executable.
@@ -45,7 +51,7 @@ public class JunitMongoSingleton {
     /**
      * The starter.
      */
-    private static MongodStarter starter = MongodStarter.getDefaultInstance();
+    private static MongodStarter starter;
 
     /**
      * The process.
@@ -79,7 +85,15 @@ public class JunitMongoSingleton {
         if (process == null || !process.isProcessRunning()) {
             System.out.println("Running mongod");
             int port = config.getObject("mongo.persistor").getInteger("port");
-            IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.V2_4).net(new Net(port, Network.localhostIsIPv6())).build();
+            IMongodConfig mongodConfig = new MongodConfigBuilder()
+                    .version(Version.Main.V2_4)
+                    .net(new Net(port, Network.localhostIsIPv6()))
+                    .build();
+            IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+                    .defaultsWithLogger(Command.MongoD, LOG)
+                    .processOutput(ProcessOutput.getDefaultInstanceSilent())
+                    .build();
+            starter = MongodStarter.getInstance(runtimeConfig);
             mongodExecutable = starter.prepare(mongodConfig);
             setProcess(mongodExecutable.start());
         }

@@ -66,7 +66,7 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
  * @author xavier
  */
 @RunWith(VertxJUnit4ClassRunner.class)
-@VertxConfiguration(modsDir = "build/mods", injectResources = true)
+@VertxConfiguration(modsDir = "build/mods")
 @TestModule(name = "com.qaobee~hive~0.1", jsonConfig = "file:config.json")
 public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest {
     /**
@@ -74,19 +74,19 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     public static final String LOCALE = "fr_FR";
     /**
-     * The constant LOG.
-     */
-    protected static final Logger LOG = Logger.getLogger(VertxJunitSupport.class.getName());
-    /**
      * The constant POPULATE_ONLY.
      */
     protected static final String POPULATE_ONLY = "only";
     /**
+     * The constant BASE_URL.
+     */
+    protected static final String BASE_URL = "http://localhost:" + Params.getString("defaultPort");
+    /**
      * The constant moduleConfig.
      */
     protected static JsonObject moduleConfig;
+    private static final Logger LOG = Logger.getLogger(VertxJunitSupport.class.getName());
     private static final String POPULATE_WITHOUT = "without";
-    protected static final String BASE_URL = "http://localhost:" + Params.getString("defaultPort");
     private static final String POPULATE_ALL = "all";
     private final LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<>();
     /**
@@ -110,6 +110,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     public static void startMongoServer() {
         RestAssured.defaultParser = Parser.JSON;
         RestAssured.requestSpecification = new RequestSpecBuilder().addHeader(ACCEPT_LANGUAGE, LOCALE).build();
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         moduleConfig = DeploymentUtils.getJsonConfig(VertxJunitSupport.class.getAnnotation(TestModule.class).jsonConfig());
         try {
             JunitMongoSingleton.getInstance().startServer(moduleConfig);
@@ -307,7 +308,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         if (req.getHeaders() == null) {
             req.setHeaders(new HashMap<String, List<String>>());
         }
-        req.getHeaders().put("token", Arrays.asList(token));
+        req.getHeaders().put("token", Collections.singletonList(token));
         return sendonBus(address, req);
     }
 

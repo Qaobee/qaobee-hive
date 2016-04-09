@@ -557,7 +557,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
-                    message.reply(mongo.getById(req.getParams().get("id").get(0), User.class).encode());
+                    JsonObject u = mongo.getById(req.getParams().get("id").get(0), User.class);
+                    u.removeField("salt");
+                    u.removeField("passwd");
+                    u.removeField("password");
+                    message.reply(u.encode());
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());

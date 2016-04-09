@@ -41,6 +41,7 @@ import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
@@ -114,7 +115,11 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.testMandatoryParams(req.getBody(), "id", "id", "metadata", "created_at");
                     final JsonObject body = new JsonObject(req.getBody());
-                    if (!body.getObject("metadata").containsField("plan_id") || !body.getObject("metadata").containsField("customer_id")) {
+                    if (!body.getObject("metadata").containsField("plan_id")
+                            || !body.getObject("metadata").containsField("customer_id")
+                            || StringUtils.isBlank(body.getObject("metadata").getString("plan_id"))
+                            || StringUtils.isBlank(body.getObject("metadata").getString("customer_id"))
+                            ) {
                         throw new IllegalArgumentException("some metadatas are missing");
                     }
                     int planId = Integer.parseInt(body.getObject("metadata").getString("plan_id"));
