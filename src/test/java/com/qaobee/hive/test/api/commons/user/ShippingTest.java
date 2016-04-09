@@ -73,8 +73,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("account.listPlan[0].paiementURL", notNullValue())
                 .body("account.listPlan[0].paiementURL", is(payment_url))
                 .body("account.listPlan[0].paymentId", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""))
-                .body("account.listPlan[0].status", is("paid"));
+                .body("account.listPlan[0].paymentId", not(""));
 
     }
 
@@ -145,7 +144,6 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("account.listPlan[0].paiementURL", is(payment_url))
                 .body("account.listPlan[0].paymentId", notNullValue())
                 .body("account.listPlan[0].paymentId", not(""))
-                .body("account.listPlan[0].status", is("paid"))
                 .extract().path("paymentId");
 
         JsonObject notification = buildNotificationRequest(paymentId, u);
@@ -288,7 +286,6 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("account.listPlan[0].paiementURL", is(payment_url))
                 .body("account.listPlan[0].paymentId", notNullValue())
                 .body("account.listPlan[0].paymentId", not(""))
-                .body("account.listPlan[0].status", is("paid"))
                 .extract().path("paymentId");
 
         JsonObject notification = buildNotificationRequest(paymentId, u);
@@ -329,7 +326,6 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("account.listPlan[0].paiementURL", is(payment_url))
                 .body("account.listPlan[0].paymentId", notNullValue())
                 .body("account.listPlan[0].paymentId", not(""))
-                .body("account.listPlan[0].status", is("paid"))
                 .extract().path("paymentId");
 
         JsonObject notification = buildNotificationRequest(paymentId, u);
@@ -339,6 +335,75 @@ public class ShippingTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
                 .body("status", is(false));
+        given().header("token", u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].paiementURL", notNullValue())
+                .body("account.listPlan[0].paiementURL", is(payment_url))
+                .body("account.listPlan[0].paymentId", notNullValue())
+                .body("account.listPlan[0].paymentId", not(""))
+                .body("account.listPlan[0].status", is("notpaid"));
+    }
+
+    /**
+     * Recieve payplug notification with failure test.
+     */
+    @Test
+    public void recievePayplugNotificationWithFailureTest() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
+                .respond(HttpResponse.response().withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
+        String payment_url = given().header("token", u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(200)
+                .body("status", is(true))
+                .body("status", notNullValue())
+                .body("payment_url", notNullValue()).extract().path("payment_url");
+
+        String paymentId = given().header("token", u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].paiementURL", notNullValue())
+                .body("account.listPlan[0].paiementURL", is(payment_url))
+                .body("account.listPlan[0].paymentId", notNullValue())
+                .body("account.listPlan[0].paymentId", not(""))
+                .body("account.listPlan[0].status", is("notpaid"))
+                .extract().path("paymentId");
+
+        JsonObject failure = new JsonObject();
+        JsonObject notification = buildNotificationRequest(paymentId, u);
+        String[] failures = {"processing_error", "card_declined", "insufficient_funds", "fraud_suspected", "3ds_declined", "incorrect_number", "aborted"};
+        for (String f : failures) {
+            failure.putString("code", f);
+            notification.putObject("failure", failure);
+            given().body(notification.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.IPN))
+                    .then().assertThat().statusCode(200)
+                    .body("status", notNullValue())
+                    .body("status", is(false));
+            // Let's verify if our user have'nt be marked as paid
+            given().header("token", u.getAccount().getToken())
+                    .param("id", u.get_id())
+                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(u.get_id()))
+                    .body("account.listPlan[0].paiementURL", notNullValue())
+                    .body("account.listPlan[0].paiementURL", is(payment_url))
+                    .body("account.listPlan[0].paymentId", notNullValue())
+                    .body("account.listPlan[0].paymentId", not(""))
+                    .body("account.listPlan[0].status", is("notpaid"));
+        }
     }
 
     /**

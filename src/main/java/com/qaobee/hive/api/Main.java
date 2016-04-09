@@ -186,6 +186,7 @@ public class Main extends AbstractGuiceVerticle {
                                 eb.send(AssetVerticle.ADD, request, new Handler<Message<JsonObject>>() {
                                     @Override
                                     public void handle(Message<JsonObject> message) {
+                                        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
                                         req.response().setStatusCode(message.body().getInteger("statusCode"));
                                         req.response().end(message.body().getString(MESSAGE));
                                         stopTimer("main.avatar");

@@ -61,7 +61,7 @@ import java.util.*;
 /**
  * The type Shipping verticle.
  */
-// TODO : Ugly hack because of a bug in Vert.X 2.x, must be in the main thread WTF!!
+// Ugly hack because of a bug in Vert.X 2.x, must be in the main thread WTF!!
 // https://groups.google.com/forum/#!topic/vertx/KvtxhkA0wiM
 @DeployableVerticle(isWorker = false)
 public class ShippingVerticle extends AbstractGuiceVerticle {
@@ -126,7 +126,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     final JsonObject user = mongo.getById(body.getObject("metadata").getString("customer_id"), User.class);
                     final User u = Json.decodeValue(user.encode(), User.class);
                     if (body.getObject("failure") != null) {
-                        // -> envoi d'un mail avec envoi du lien vers le paiement
+                        // -> Send a mail with the payment url link
                         final JsonObject tplReq = new JsonObject();
                         tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
                         tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateRefusedCardBody(u,
@@ -145,9 +145,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                 emailReq.putString("content_type", "text/html");
                                 emailReq.putString("body", tplRes);
                                 vertx.eventBus().publish("mailer.mod", emailReq);
-                                final JsonObject resp = new JsonObject();
-                                resp.putBoolean("status", false);
-                                utils.sendStatus(true, message);
+                                utils.sendStatus(false, message);
                             }
                         });
                     } else {
@@ -301,7 +299,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                         JsonObject res = new JsonObject(buffer.toString());
                                         req.getUser().getAccount().getListPlan().get(planId).setAmountPaid(finalAmount);
                                         req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
-                                        // req.getUser().getAccount().getListPlan().get(planId).setStatus("pending");
                                         req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
                                         req.getUser().getAccount().getListPlan().get(planId).setPeriodicity("monthly");
                                         if (res.getObject("card").getString("id", null) != null) {
@@ -360,7 +357,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 // First, let's collect all the guys
                 DBObject statusQuery = new BasicDBObject("status", "paid");
                 // TODO : change paid level plan here
-                //   statusQuery.put("levelPlan", "PREMIUM");
                 DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
                 DBObject query = new BasicDBObject("account.listPlan", fields);
                 DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
@@ -382,7 +378,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     if (plan != null && plan.containsField("levelPlan")
                             && plan.containsField("cardInfo")
                             && plan.getObject("cardInfo") != null
-                            && !"null".equals(plan.getObject("cardInfo").getString("id"))) {//&& plan.getString("levelPlan").equals("PREMIUM")) {
+                            && !"null".equals(plan.getObject("cardInfo").getString("id"))) {
                         switch (plan.getString("periodicity", "")) {
                             case "monthly":
                                 // test if we have to make pay him (or her) !
