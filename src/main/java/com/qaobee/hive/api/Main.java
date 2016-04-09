@@ -244,58 +244,7 @@ public class Main extends AbstractGuiceVerticle {
                             @Override
                             public void handle(final AsyncResult<Message<String>> message) {
                                 stopTimer(StringUtils.join(wrapper.getPath(), '.'));
-                                if (message.succeeded()) {
-                                    final String response = message.result().body();
-                                    if (response.startsWith("[") || !response.startsWith("{")) {
-                                        enableCors(req);
-                                        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                                        req.response().end(response);
-                                    } else {
-                                        final JsonObject json = new JsonObject(response);
-                                        if (json.containsField(FILE_SERVE)) {
-                                            // TODO : externaliser dans le service File
-                                            final File f = new File(json.getString(FILE_SERVE));
-                                            req.response().putHeader("Content-Description", "File Transfer");
-                                            req.response().putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE));
-                                            req.response().putHeader("Content-Disposition", "attachment; filename=" + f.getName());
-                                            req.response().putHeader("Expires", "0");
-                                            req.response().putHeader("Cache-Control", "must-revalidate");
-                                            req.response().putHeader("Pragma", "public");
-                                            req.response().putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
-                                            enableCors(req);
-                                            req.response().sendFile(f.getAbsolutePath());
-                                        } else {
-                                            enableCors(req);
-                                            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                                            req.response().end(response);
-                                        }
-                                    }
-                                } else {
-                                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                                    final ReplyException ex = (ReplyException) message.cause();
-                                    enableCors(req);
-                                    if (ex.failureCode() > 0) {
-                                        req.response().setStatusCode(ex.failureCode());
-                                    }
-                                    if (ex.getMessage() != null) {
-                                        String exStr = ex.getMessage();
-                                        if(ex.getMessage().startsWith("{")) {
-                                            JsonObject jsonEx = new JsonObject(ex.getMessage());
-                                            if (jsonEx.containsField("stackTrace")) {
-                                                jsonEx.removeField("stackTrace");
-                                            }
-                                            exStr = jsonEx.encode();
-                                        }
-                                        req.response().end(exStr);
-                                    } else {
-                                        final JsonObject jsonResp = new JsonObject();
-                                        jsonResp.putBoolean("status", false);
-                                        jsonResp.putString(MESSAGE, "Nothing here");
-                                        jsonResp.putNumber("httpCode", 404);
-                                        req.response().setStatusCode(404);
-                                        req.response().end(jsonResp.encode());
-                                    }
-                                }
+                                handleResult(message, req);
                             }
 
                         });
@@ -350,6 +299,60 @@ public class Main extends AbstractGuiceVerticle {
                 return null;
             }
         });
+    }
+
+    private void handleResult(AsyncResult<Message<String>> message, HttpServerRequest req) {
+        if (message.succeeded()) {
+            final String response = message.result().body();
+            if (response.startsWith("[") || !response.startsWith("{")) {
+                enableCors(req);
+                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+                req.response().end(response);
+            } else {
+                final JsonObject json = new JsonObject(response);
+                if (json.containsField(FILE_SERVE)) {
+                    final File f = new File(json.getString(FILE_SERVE));
+                    req.response().putHeader("Content-Description", "File Transfer");
+                    req.response().putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE));
+                    req.response().putHeader("Content-Disposition", "attachment; filename=" + f.getName());
+                    req.response().putHeader("Expires", "0");
+                    req.response().putHeader("Cache-Control", "must-revalidate");
+                    req.response().putHeader("Pragma", "public");
+                    req.response().putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
+                    enableCors(req);
+                    req.response().sendFile(f.getAbsolutePath());
+                } else {
+                    enableCors(req);
+                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+                    req.response().end(response);
+                }
+            }
+        } else {
+            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+            final ReplyException ex = (ReplyException) message.cause();
+            enableCors(req);
+            if (ex.failureCode() > 0) {
+                req.response().setStatusCode(ex.failureCode());
+            }
+            if (ex.getMessage() != null) {
+                String exStr = ex.getMessage();
+                if(ex.getMessage().startsWith("{")) {
+                    JsonObject jsonEx = new JsonObject(ex.getMessage());
+                    if (jsonEx.containsField("stackTrace")) {
+                        jsonEx.removeField("stackTrace");
+                    }
+                    exStr = jsonEx.encode();
+                }
+                req.response().end(exStr);
+            } else {
+                final JsonObject jsonResp = new JsonObject();
+                jsonResp.putBoolean("status", false);
+                jsonResp.putString(MESSAGE, "Nothing here");
+                jsonResp.putNumber("httpCode", 404);
+                req.response().setStatusCode(404);
+                req.response().end(jsonResp.encode());
+            }
+        }
     }
 
 
