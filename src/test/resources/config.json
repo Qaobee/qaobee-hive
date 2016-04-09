@@ -1,4 +1,7 @@
 {
+  "runtime": {
+    "version": 1
+  },
   "cors": {
     "enabled": true
   },

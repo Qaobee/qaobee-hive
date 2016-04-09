@@ -175,7 +175,7 @@ public class UtilsImpl implements Utils {
 
     @Override
     public void testMandatoryParams(String body, final String... fields) {
-        if (null == body) {
+        if (StringUtils.isBlank(body)) {
             body = "{}";
         }
         testMandatoryParams(new JsonObject(body).toMap(), fields);

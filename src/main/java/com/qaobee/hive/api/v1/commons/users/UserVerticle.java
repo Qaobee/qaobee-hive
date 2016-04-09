@@ -219,6 +219,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.testMandatoryParams(req.getHeaders(), "token");
                     final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", req.getHeaders().get("token").get(0)).get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
                         utils.sendStatus(false, message);
@@ -235,7 +236,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final QaobeeException e) {
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendStatus(false, message);
+                }catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
@@ -659,7 +663,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         LOG.debug(result);
                         message.reply(result);
                     }
-                } catch (final IllegalArgumentException | NoSuchMethodException e) {
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final Exception e) {

@@ -20,6 +20,9 @@ package com.qaobee.hive.test.config;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.builder.RequestSpecBuilder;
+import com.jayway.restassured.parsing.Parser;
 import com.mongodb.MongoException;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
@@ -28,6 +31,7 @@ import com.qaobee.hive.business.model.transversal.Habilitation;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.guice.GuiceModule;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.ArrayUtils;
@@ -54,45 +58,37 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
+
 /**
  * The Class VertxJunitSupport.
  *
  * @author xavier
  */
-
 @RunWith(VertxJUnit4ClassRunner.class)
 @VertxConfiguration(modsDir = "build/mods", injectResources = true)
 @TestModule(name = "com.qaobee~hive~0.1", jsonConfig = "file:config.json")
-public class VertxJunitSupport
-        extends VertxTestBase implements JSDataMongoTest {
+public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest {
     /**
      * The Constant LOCALE.
      */
     public static final String LOCALE = "fr_FR";
     /**
-     * The Constant LOG.
+     * The constant LOG.
      */
     protected static final Logger LOG = Logger.getLogger(VertxJunitSupport.class.getName());
     /**
-     * The Constant POPULATE_ONLY.
+     * The constant POPULATE_ONLY.
      */
     protected static final String POPULATE_ONLY = "only";
     /**
-     * The Constant POPULATE_WITHOUT.
-     */
-    protected static final String POPULATE_WITHOUT = "without";
-    /**
-     * The Constant POPULATE_ALL.
-     */
-    protected static final String POPULATE_ALL = "all";
-    /**
-     * The module config.
+     * The constant moduleConfig.
      */
     protected static JsonObject moduleConfig;
-    /**
-     * The queue.
-     */
-    protected final LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<>();
+    private static final String POPULATE_WITHOUT = "without";
+    protected static final String BASE_URL = "http://localhost:" + Params.getString("defaultPort");
+    private static final String POPULATE_ALL = "all";
+    private final LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<>();
     /**
      * The name.
      */
@@ -101,7 +97,6 @@ public class VertxJunitSupport
     /**
      * The timeout.
      */
-    protected long timeout = 150L;
     /**
      * The Mongo.
      */
@@ -113,6 +108,8 @@ public class VertxJunitSupport
      */
     @BeforeClass
     public static void startMongoServer() {
+        RestAssured.defaultParser = Parser.JSON;
+        RestAssured.requestSpecification = new RequestSpecBuilder().addHeader(ACCEPT_LANGUAGE, LOCALE).build();
         moduleConfig = DeploymentUtils.getJsonConfig(VertxJunitSupport.class.getAnnotation(TestModule.class).jsonConfig());
         try {
             JunitMongoSingleton.getInstance().startServer(moduleConfig);
@@ -122,6 +119,9 @@ public class VertxJunitSupport
         }
     }
 
+    /**
+     * Stop all.
+     */
     @AfterClass
     public static void stopAll() {
         JunitMongoSingleton.getInstance().getProcess().stop();
@@ -138,6 +138,16 @@ public class VertxJunitSupport
         final int port = server.getLocalPort();
         server.close();
         return port;
+    }
+
+    /**
+     * Gets url.
+     *
+     * @param busAddress the bus address
+     * @return the url
+     */
+    protected String getURL(String busAddress) {
+        return BASE_URL + "/api/v1" + busAddress.replaceAll("\\.", "/");
     }
 
     /**
@@ -259,6 +269,7 @@ public class VertxJunitSupport
      * @return result string
      */
     protected String sendonBus(final String address, final RequestWrapper req) {
+        long timeout = 150L;
         getEventBus().send(address, Json.encode(req), new QueueReplyHandler<>(queue, timeout));
         try {
             final Object result = queue.poll(timeout, TimeUnit.SECONDS);
