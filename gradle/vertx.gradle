@@ -170,7 +170,7 @@ test {
 test.finalizedBy jacocoTestReport
 jacocoTestReport {
     reports {
-        xml.enabled false
+        xml.enabled true
         csv.enabled false
         html.destination "build/reports/jacocoHtml"
     }
