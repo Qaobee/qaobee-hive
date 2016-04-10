@@ -166,6 +166,11 @@ test {
     testLogging { exceptionFormat "full" }
 
     systemProperty 'vertx.mods', "build/mods"
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+        classDumpFile = file("$buildDir/jacoco/classpathdumps")
+    }
 }
 test.finalizedBy jacocoTestReport
 jacocoTestReport {
