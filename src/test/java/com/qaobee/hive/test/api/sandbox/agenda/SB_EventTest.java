@@ -66,7 +66,7 @@ public class SB_EventTest extends VertxJunitSupport {
         params.putObject("owner", owner);
 
         req.setBody(params.encode());
-        final JsonObject result = new JsonObject(sendonBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
+        final JsonObject result = new JsonObject(sendOnBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
         System.out.println(result);
         Assert.assertNotNull("id is null", result.getString("_id"));
     }
@@ -86,7 +86,7 @@ public class SB_EventTest extends VertxJunitSupport {
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
 
         req.setBody(params.encode());
-        final JsonObject result = new JsonObject(sendonBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
+        final JsonObject result = new JsonObject(sendOnBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
         Assert.assertTrue("addEventWithMissingMandatoryParametersTest", result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
@@ -100,7 +100,7 @@ public class SB_EventTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setUser(user);
         req.setMethod(Constantes.GET);
-        final JsonObject result = new JsonObject(sendonBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
+        final JsonObject result = new JsonObject(sendOnBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
         Assert.assertTrue("addEventWithWrongHttpMethodTest", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
@@ -112,7 +112,7 @@ public class SB_EventTest extends VertxJunitSupport {
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
-        final JsonObject result = new JsonObject(sendonBus(SB_EventVerticle.ADD, req));
+        final JsonObject result = new JsonObject(sendOnBus(SB_EventVerticle.ADD, req));
         System.out.println(result.encodePrettily());
         Assert.assertTrue("addEventWithNotLoggedUserTest", result.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -141,19 +141,19 @@ public class SB_EventTest extends VertxJunitSupport {
         params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
         req.setBody(params.encode());
-        final String reply = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals("getListEventTest1", 4, new JsonArray(reply).size());
 
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "");
 
         req.setBody(params.encode());
-        final String reply2 = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply2 = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals("getListEventTest2", 4, new JsonArray(reply2).size());
 
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "TOTO");
 
         req.setBody(params.encode());
-        final String reply3 = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply3 = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals("getListEventTest3", 0, new JsonArray(reply3).size());
     }
 
@@ -175,7 +175,7 @@ public class SB_EventTest extends VertxJunitSupport {
         params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
         req.setBody(params.encode());
-        final String reply = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertTrue("getListEventWithWrongHttpMethodTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
@@ -194,7 +194,7 @@ public class SB_EventTest extends VertxJunitSupport {
         params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
         params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000l);
         req.setBody(params.encode());
-        final String reply = sendonBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertTrue("getListEventWithMissingParametersTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
@@ -215,7 +215,7 @@ public class SB_EventTest extends VertxJunitSupport {
         params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
         req.setBody(params.encode());
-        final String reply = sendonBus(SB_EventVerticle.GET_LIST, req);
+        final String reply = sendOnBus(SB_EventVerticle.GET_LIST, req);
         Assert.assertTrue("getListEventWithNotLoggedUserTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
@@ -236,7 +236,7 @@ public class SB_EventTest extends VertxJunitSupport {
         final HashMap<String, List<String>> params = new HashMap<>();
         params.put(SB_EventVerticle.PARAM_ID, Collections.singletonList("55847ed0d040353767a48e68"));
         req.setParams(params);
-        final JsonObject reply = new JsonObject(sendonBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertEquals("getEventByIdTest", "Amical", reply.getString("label"));
     }
 
@@ -253,7 +253,7 @@ public class SB_EventTest extends VertxJunitSupport {
         final HashMap<String, List<String>> params = new HashMap<>();
         params.put(SB_EventVerticle.PARAM_ID, Collections.singletonList("12345"));
         req.setParams(params);
-        final JsonObject reply = new JsonObject(sendonBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("getEventByIdWithWrongHttpMethodTest", reply.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
@@ -269,7 +269,7 @@ public class SB_EventTest extends VertxJunitSupport {
         final HashMap<String, List<String>> params = new HashMap<>();
         params.put(SB_EventVerticle.PARAM_ID, Collections.singletonList("12345"));
         req.setParams(params);
-        final JsonObject reply = new JsonObject(sendonBus(SB_EventVerticle.GET, req));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req));
         Assert.assertTrue("getEventByIdWithNotLoggedUserTest", reply.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
@@ -285,7 +285,7 @@ public class SB_EventTest extends VertxJunitSupport {
         req.setMethod(Constantes.GET);
         final HashMap<String, List<String>> params = new HashMap<>();
         req.setParams(params);
-        final JsonObject reply = new JsonObject(sendonBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("getEventByIdWithMissingParametersTest", reply.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
@@ -299,7 +299,7 @@ public class SB_EventTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setUser(user);
         req.setMethod(Constantes.GET);
-        final JsonObject reply = new JsonObject(sendonBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("getEventByIdWithEmptyParametersTest", reply.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 }

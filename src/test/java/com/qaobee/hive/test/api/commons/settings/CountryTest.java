@@ -56,7 +56,7 @@ public class CountryTest extends VertxJunitSupport {
         params.put(CountryVerticle.PARAM_ID, Collections.singletonList("CNTR-250-FR-FRA"));
         req.setParams(params);
 
-        final String reply = sendonBus(CountryVerticle.GET, req);
+        final String reply = sendOnBus(CountryVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
 
         String label = result.getString("label");
@@ -77,14 +77,14 @@ public class CountryTest extends VertxJunitSupport {
 
         final Map<String, List<String>> params = new HashMap<>();
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(CountryVerticle.GET, req));
         Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
         // id
         params.put(CountryVerticle.PARAM_ID, Collections.singletonList(""));
         req.setParams(params);
 
-        resultUpdate = new JsonObject(sendonBus(CountryVerticle.GET, req));
+        resultUpdate = new JsonObject(sendOnBus(CountryVerticle.GET, req));
         Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
     }
@@ -105,7 +105,7 @@ public class CountryTest extends VertxJunitSupport {
         params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
         req.setParams(params);
 
-        JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
+        JsonArray result = new JsonArray(sendOnBus(CountryVerticle.GET_LIST, req));
         Assert.assertEquals(202, result.size());
 
     }
@@ -129,7 +129,7 @@ public class CountryTest extends VertxJunitSupport {
         params.put(CountryVerticle.PARAM_LABEL, Collections.singletonList("//Fra"));
         req.setParams(params);
 
-        JsonArray result = new JsonArray(sendonBus(CountryVerticle.GET_LIST, req));
+        JsonArray result = new JsonArray(sendOnBus(CountryVerticle.GET_LIST, req));
         Assert.assertEquals(4, result.size());
 
     }

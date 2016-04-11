@@ -58,7 +58,7 @@ public class SB_StatsTest extends VertxJunitSupport {
 
         req.setBody(params.encode());
 
-        final String reply = sendonBus(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES, req, user.getAccount().getToken());
         Assert.assertEquals("getListDetailValues", 10, new JsonArray(reply).size());
 
     }

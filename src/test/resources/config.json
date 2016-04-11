@@ -52,11 +52,14 @@
       "name": "MARIN",
       "firstname": "Xavier",
       "contact": {
-        "email": "contact@qaobee.com"
+        "email": "toto@qaobee.com"
+      },
+      "country": {
+        "local": "fr"
       },
       "account": {
         "passwd": "toto",
-        "login": "xav",
+        "login": "xavlogin",
         "activationCode": "12345",
         "password": "xHvS+ICtNg/1rrrj49WT+A/y9MA=",
         "salt": "CPAaJ8ydx6I=",

@@ -88,7 +88,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        client = vertx.createHttpClient().setKeepAlive(true).setHost(config.getString("baseUrl")).setPort(config.getInteger("port"));
+        client = vertx.createHttpClient().setKeepAlive(true).setHost(config.getString("baseUrl"))
+                .setPort(config.getInteger("port"));
         if (config.getInteger("port") == 443) {
             client.setSSL(true).setTrustAll(true);
         }
@@ -123,7 +124,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                         throw new IllegalArgumentException("some metadatas are missing");
                     }
                     int planId = Integer.parseInt(body.getObject("metadata").getString("plan_id"));
-                    final JsonObject user = mongo.getById(body.getObject("metadata").getString("customer_id"), User.class);
+                    final JsonObject user =
+                            mongo.getById(body.getObject("metadata").getString("customer_id"), User.class);
                     final User u = Json.decodeValue(user.encode(), User.class);
                     if (body.getObject("failure") != null) {
                         // -> Send a mail with the payment url link
@@ -134,20 +136,22 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                 u.getAccount().getListPlan().get(planId),
                                 body.getObject("failure").getString("code")));
 
-                        vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
-                            @Override
-                            public void handle(final Message<JsonObject> tplResp) {
-                                final String tplRes = tplResp.body().getString("result");
-                                final JsonObject emailReq = new JsonObject();
-                                emailReq.putString("from", Params.getString("mail.from"));
-                                emailReq.putString("to", u.getContact().getEmail());
-                                emailReq.putString("subject", Messages.getString("mail.payment.subject", body.getObject("metadata").getString("locale")));
-                                emailReq.putString("content_type", "text/html");
-                                emailReq.putString("body", tplRes);
-                                vertx.eventBus().publish("mailer.mod", emailReq);
-                                utils.sendStatus(false, message);
-                            }
-                        });
+                        vertx.eventBus()
+                                .send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
+                                    @Override
+                                    public void handle(final Message<JsonObject> tplResp) {
+                                        final String tplRes = tplResp.body().getString("result");
+                                        final JsonObject emailReq = new JsonObject();
+                                        emailReq.putString("from", Params.getString("mail.from"));
+                                        emailReq.putString("to", u.getContact().getEmail());
+                                        emailReq.putString("subject", Messages.getString("mail.payment.subject",
+                                                body.getObject("metadata").getString("locale")));
+                                        emailReq.putString("content_type", "text/html");
+                                        emailReq.putString("body", tplRes);
+                                        vertx.eventBus().publish("mailer.mod", emailReq);
+                                        utils.sendStatus(false, message);
+                                    }
+                                });
                     } else {
                         switch (body.getString("object")) {
                             // We only have payments, no refunds ;)
@@ -156,12 +160,17 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                     if (user.getObject("account").getArray("listPlan").size() < planId) {
                                         throw new IllegalArgumentException("some metadatas are wrong");
                                     }
-                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putString("status", "paid");
-                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putObject("cardInfo", body.getObject("card"));
+                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                                            .putString("status", "paid");
+                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                                            .putObject("cardInfo", body.getObject("card"));
 
-                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putNumber("paidDate", body.getLong("created_at") * 1000);
-                                    if (!((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).containsField("shippingList")) {
-                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).putArray("shippingList", new JsonArray());
+                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                                            .putNumber("paidDate", body.getLong("created_at") * 1000);
+                                    if (!((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).containsField("shippingList")
+                                            || ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getArray("shippingList", null) == null) {
+                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                                                .putArray("shippingList", new JsonArray());
                                     }
                                     JsonObject payment = new JsonObject();
 
@@ -169,10 +178,13 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                     payment.putNumber("paidDate", body.getLong("created_at") * 1000L);
                                     payment.putNumber("amountPaid", body.getLong("amount") / 100L);
                                     payment.putObject("cardInfo", body.getObject("card"));
-                                    payment.putString("paymentId", ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getString("paymentId"));
+                                    payment.putString("paymentId",
+                                            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                                                    .getString("paymentId"));
                                     payment.putString("id", UUID.randomUUID().toString());
 
-                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getArray("shippingList").add(payment);
+                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                                            .getArray("shippingList").add(payment);
                                     mongo.save(user, User.class);
                                     final JsonObject tplReq = new JsonObject();
                                     tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
@@ -180,22 +192,25 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                             body.getObject("metadata").getString("locale"),
                                             u.getAccount().getListPlan().get(planId)));
 
-                                    vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
-                                        @Override
-                                        public void handle(final Message<JsonObject> tplResp) {
-                                            final String tplRes = tplResp.body().getString("result");
-                                            final JsonObject emailReq = new JsonObject();
-                                            emailReq.putString("from", Params.getString("mail.from"));
-                                            emailReq.putString("to", u.getContact().getEmail());
-                                            emailReq.putString("subject", Messages.getString("mail.payment.subject", body.getObject("metadata").getString("locale")));
-                                            emailReq.putString("content_type", "text/html");
-                                            emailReq.putString("body", tplRes);
-                                            vertx.eventBus().publish("mailer.mod", emailReq);
-                                            final JsonObject resp = new JsonObject();
-                                            resp.putBoolean("status", true);
-                                            utils.sendStatus(true, message);
-                                        }
-                                    });
+                                    vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq,
+                                            new Handler<Message<JsonObject>>() {
+                                                @Override
+                                                public void handle(final Message<JsonObject> tplResp) {
+                                                    final String tplRes = tplResp.body().getString("result");
+                                                    final JsonObject emailReq = new JsonObject();
+                                                    emailReq.putString("from", Params.getString("mail.from"));
+                                                    emailReq.putString("to", u.getContact().getEmail());
+                                                    emailReq.putString("subject",
+                                                            Messages.getString("mail.payment.subject",
+                                                                    body.getObject("metadata").getString("locale")));
+                                                    emailReq.putString("content_type", "text/html");
+                                                    emailReq.putString("body", tplRes);
+                                                    vertx.eventBus().publish("mailer.mod", emailReq);
+                                                    final JsonObject resp = new JsonObject();
+                                                    resp.putBoolean("status", true);
+                                                    utils.sendStatus(true, message);
+                                                }
+                                            });
                                 } else {
                                     // WTF, it's not paid !!! bloody hell !
                                     LOG.info(body.encode());
@@ -249,7 +264,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     final int planId = Integer.parseInt(body.getString(PARAM_PLAN_ID));
                     Payment payment = new Payment();
                     if (req.getUser().getAccount().getListPlan().size() <= planId) {
-                        utils.sendError(message, new QaobeeException(ExceptionCodes.INVALID_PARAMETER, planId + " is not present"));
+                        utils.sendError(message,
+                                new QaobeeException(ExceptionCodes.INVALID_PARAMETER, planId + " is not present"));
                         return;
                     }
                     Plan plan = req.getUser().getAccount().getListPlan().get(planId);
@@ -288,43 +304,54 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     payment.setForce_3ds(true);
 
                     final int finalAmount = amount;
-                    HttpClientRequest request = client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
-                        @Override
-                        public void handle(final HttpClientResponse resp) {
-                            if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
-                                resp.bodyHandler(new Handler<Buffer>() {
-                                    @Override
-                                    public void handle(Buffer buffer) {
-                                        // The entire response body has been received
-                                        JsonObject res = new JsonObject(buffer.toString());
-                                        req.getUser().getAccount().getListPlan().get(planId).setAmountPaid(finalAmount);
-                                        req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject("hosted_payment").getString("payment_url"));
-                                        req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
-                                        req.getUser().getAccount().getListPlan().get(planId).setPeriodicity("monthly");
-                                        if (res.getObject("card").getString("id", null) != null) {
-                                            req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.<Card>decodeValue(res.getObject("card").encode(), Card.class));
-                                        }
-                                        try { // NOSONAR
-                                            mongo.save(req.getUser());
-                                            JsonObject messageResponse = new JsonObject();
-                                            messageResponse.putBoolean("status", true);
-                                            messageResponse.putString("payment_url", res.getObject("hosted_payment").getString("payment_url"));
-                                            req.getUser().getAccount().getListPlan().get(planId).setCardId(res.getString("id"));
+                    HttpClientRequest request =
+                            client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
+                                @Override
+                                public void handle(final HttpClientResponse resp) {
+                                    if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
+                                        resp.bodyHandler(new Handler<Buffer>() {
+                                            @Override
+                                            public void handle(Buffer buffer) {
+                                                // The entire response body has been received
+                                                JsonObject res = new JsonObject(buffer.toString());
+                                                req.getUser().getAccount().getListPlan().get(planId)
+                                                        .setAmountPaid(finalAmount);
+                                                req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(
+                                                        res.getObject("hosted_payment").getString("payment_url"));
+                                                req.getUser().getAccount().getListPlan().get(planId)
+                                                        .setPaymentId(res.getString("id"));
+                                                req.getUser().getAccount().getListPlan().get(planId)
+                                                        .setPeriodicity("monthly");
+                                                if (res.getObject("card").getString("id", null) != null) {
+                                                    req.getUser().getAccount().getListPlan().get(planId).setCardInfo(
+                                                            Json.<Card>decodeValue(res.getObject("card").encode(),
+                                                                    Card.class));
+                                                }
+                                                try { // NOSONAR
+                                                    mongo.save(req.getUser());
+                                                    JsonObject messageResponse = new JsonObject();
+                                                    messageResponse.putBoolean("status", true);
+                                                    messageResponse.putString("payment_url",
+                                                            res.getObject("hosted_payment").getString("payment_url"));
+                                                    req.getUser().getAccount().getListPlan().get(planId)
+                                                            .setCardId(res.getString("id"));
 
-                                            message.reply(messageResponse.toString());
-                                        } catch (QaobeeException e) {
-                                            LOG.error(e.getMessage(), e);
-                                            utils.sendError(message, e);
-                                        }
+                                                    message.reply(messageResponse.toString());
+                                                } catch (QaobeeException e) {
+                                                    LOG.error(e.getMessage(), e);
+                                                    utils.sendError(message, e);
+                                                }
 
+                                            }
+                                        });
+                                    } else {
+                                        utils.sendError(message, new QaobeeException(ExceptionCodes.HTTP_ERROR,
+                                                resp.statusCode() + " : " + resp.statusMessage()));
                                     }
-                                });
-                            } else {
-                                utils.sendError(message, new QaobeeException(ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage()));
-                            }
-                        }
-                    });
-                    request.putHeader("Authorization", "Bearer " + config.getString("api_key")).putHeader("Content-Type", "application/json");
+                                }
+                            });
+                    request.putHeader("Authorization", "Bearer " + config.getString("api_key"))
+                            .putHeader("Content-Type", "application/json");
                     JsonObject requestBody = new JsonObject(Json.encode(payment));
                     requestBody.removeField("payment_method");
                     LOG.info(requestBody.encode());
@@ -395,7 +422,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                     Payment payment = new Payment();
                                     int amount = 0;
                                     if (Params.containsKey("plan." + plan.getString("levelPlan") + ".price")) {
-                                        amount = Integer.parseInt(Params.getString("plan." + plan.getString("levelPlan") + ".price"));
+                                        amount = Integer.parseInt(
+                                                Params.getString("plan." + plan.getString("levelPlan") + ".price"));
                                     }
                                     if (amount == 0) {
                                         // FREEMIUM, nothing to do
@@ -421,53 +449,86 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
                                     final int finalAmount = amount;
                                     final int finalI = i;
-                                    HttpClientRequest request = client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
-                                        @Override
-                                        public void handle(final HttpClientResponse resp) {
-                                            if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
-                                                resp.bodyHandler(new Handler<Buffer>() {
-                                                    @Override
-                                                    public void handle(Buffer buffer) {
-                                                        // The entire response body has been received
-                                                        JsonObject res = new JsonObject(buffer.toString());
-                                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putNumber("amountPaid", finalAmount);
-                                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("paymentId", res.getString("id"));
-                                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("periodicity", "monthly");
-                                                        if (res.getObject("card").getString("id", null) != null) {
-                                                            ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putObject("cardInfo", res.getObject("card"));
+                                    HttpClientRequest request =
+                                            client.post(config.getString("basePath") + "/payments",
+                                                    new Handler<HttpClientResponse>() {
+                                                        @Override
+                                                        public void handle(final HttpClientResponse resp) {
+                                                            if (resp.statusCode() >= 200 &&
+                                                                    resp.statusCode() < 400) {
+                                                                resp.bodyHandler(new Handler<Buffer>() {
+                                                                    @Override
+                                                                    public void handle(Buffer buffer) {
+                                                                        // The entire response body has been received
+                                                                        JsonObject res =
+                                                                                new JsonObject(buffer.toString());
+                                                                        ((JsonObject) user.getObject("account")
+                                                                                .getArray("listPlan")
+                                                                                .get(finalI))
+                                                                                .putNumber("amountPaid", finalAmount);
+                                                                        ((JsonObject) user.getObject("account")
+                                                                                .getArray("listPlan")
+                                                                                .get(finalI))
+                                                                                .putString("paymentId",
+                                                                                        res.getString("id"));
+                                                                        ((JsonObject) user.getObject("account")
+                                                                                .getArray("listPlan")
+                                                                                .get(finalI))
+                                                                                .putString("periodicity", "monthly");
+                                                                        if (res.getObject("card")
+                                                                                .getString("id", null) != null) {
+                                                                            ((JsonObject) user.getObject("account")
+                                                                                    .getArray("listPlan")
+                                                                                    .get(finalI))
+                                                                                    .putObject("cardInfo",
+                                                                                            res.getObject("card"));
+                                                                        }
+                                                                        try { // NOSONAR
+                                                                            ((JsonObject) user.getObject("account")
+                                                                                    .getArray("listPlan")
+                                                                                    .get(finalI))
+                                                                                    .putString("cardId",
+                                                                                            res.getString("id"));
+                                                                            mongo.save(user, User.class);
+                                                                            utils.sendStatusJson(true, message);
+                                                                        } catch (QaobeeException e) {
+                                                                            LOG.error(e.getMessage(), e);
+                                                                            utils.sendErrorJ(message, e.getCode(),
+                                                                                    e.getMessage());
+                                                                        }
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                LOG.error(resp.statusCode() + " : " +
+                                                                        resp.statusMessage());
+                                                                utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR,
+                                                                        resp.statusCode() + " : " +
+                                                                                resp.statusMessage());
+                                                            }
                                                         }
-                                                        try { // NOSONAR
-                                                            mongo.save(user, User.class);
-                                                            JsonObject messageResponse = new JsonObject();
-                                                            messageResponse.putBoolean("status", true);
-                                                            ((JsonObject) user.getObject("account").getArray("listPlan").get(finalI)).putString("cardId", res.getString("id"));
-                                                            message.reply(messageResponse);
-                                                        } catch (QaobeeException e) {
-                                                            LOG.error(e.getMessage(), e);
-                                                            utils.sendErrorJ(message, e.getCode(), e.getMessage());
-                                                        }
-
-                                                    }
-                                                });
-                                            } else {
-                                                LOG.error(resp.statusCode() + " : " + resp.statusMessage());
-                                                utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage());
-                                            }
-                                        }
-                                    });
-                                    request.putHeader("Authorization", "Bearer " + config.getString("api_key")).putHeader("Content-Type", "application/json");
+                                                    });
+                                    request.putHeader("Authorization", "Bearer " + config.getString("api_key"))
+                                            .putHeader("Content-Type", "application/json");
                                     JsonObject requestBody = new JsonObject(Json.encode(payment));
                                     requestBody.removeField("hosted_payment");
-                                    request.putHeader("Content-Length", String.valueOf(requestBody.toString().length()));
+                                    request.putHeader("Content-Length",
+                                            String.valueOf(requestBody.toString().length()));
                                     request.write(requestBody.toString());
                                     request.end();
                                     break;
+                                } else {
+                                    utils.sendStatusJson(false, message);
                                 }
                             default:
+                                utils.sendStatusJson(false, message);
                                 break;
                         }
+                    } else {
+                        utils.sendStatusJson(false, message);
                     }
-
+                }
+                if (listPlan.size() == 0) {
+                    utils.sendStatusJson(false, message);
                 }
             }
         });

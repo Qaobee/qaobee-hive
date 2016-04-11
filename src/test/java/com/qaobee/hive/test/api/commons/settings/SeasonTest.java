@@ -60,7 +60,7 @@ public class SeasonTest extends VertxJunitSupport {
         params.put(SeasonVerticle.PARAM_ID, Collections.singletonList("559a9294889089a442f3d499"));
         req.setParams(params);
 
-        final String reply = sendonBus(SeasonVerticle.GET, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SeasonVerticle.GET, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
 
         String label = result.getString("label");
@@ -84,14 +84,14 @@ public class SeasonTest extends VertxJunitSupport {
 
         final Map<String, List<String>> params = new HashMap<>();
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
         // id
         params.put(SeasonVerticle.PARAM_ID, Collections.singletonList(""));
         req.setParams(params);
 
-        resultUpdate = new JsonObject(sendonBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
+        resultUpdate = new JsonObject(sendOnBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
     }
@@ -118,7 +118,7 @@ public class SeasonTest extends VertxJunitSupport {
         params.put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
         req.setParams(params);
 
-        final String reply = sendonBus(SeasonVerticle.GET_LIST_BY_ACTIVITY, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SeasonVerticle.GET_LIST_BY_ACTIVITY, req, user.getAccount().getToken());
         Assert.assertEquals(3, new JsonArray(reply).size());
     }
 
@@ -144,7 +144,7 @@ public class SeasonTest extends VertxJunitSupport {
         params.put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
         req.setParams(params);
 
-        final String reply = sendonBus(SeasonVerticle.GET_CURRENT, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SeasonVerticle.GET_CURRENT, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
 
         String label = result.getString("label");

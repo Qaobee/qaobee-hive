@@ -59,7 +59,7 @@ public class SandBoxCfgTest extends VertxJunitSupport {
         params.put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(id));
         req.setParams(params);
 
-        final String reply = sendonBus(SB_SandBoxCfgVerticle.GET, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_SandBoxCfgVerticle.GET, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
         Assert.assertEquals(id, result.getString("_id"));
         Assert.assertEquals(user.get_id(), result.getObject("sandbox").getString("owner"));
@@ -88,7 +88,7 @@ public class SandBoxCfgTest extends VertxJunitSupport {
             params.put(SB_SandBoxCfgVerticle.PARAM_SEASON_ID, Collections.singletonList("558b0ceaf9285df5b7553fc6"));
             req.setParams(params);
 
-            final String reply = sendonBus(SB_SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());
+            final String reply = sendOnBus(SB_SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());
             JsonArray result = new JsonArray(reply);
             Assert.assertEquals(1, result.size());
 

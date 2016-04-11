@@ -230,21 +230,16 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    final JsonObject jsonReq = new JsonObject(req.getBody());
-                    if (!jsonReq.containsField(PARAM_LOGIN)) {
-                        utils.sendStatus(false, message);
-                    } else {
-                        final String login = jsonReq.getString(PARAM_LOGIN).toLowerCase();
-                        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
-                        if (res.size() > 0) {
-                            utils.sendStatus(true, message);
-                        } else {
-                            utils.sendStatus(false, message);
-                        }
-                    }
+                    utils.testMandatoryParams(req.getBody(), PARAM_LOGIN);
+                    final String login = new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase();
+                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
+                    utils.sendStatus(res.size() > 0, message);
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 }
             }
         });
@@ -354,7 +349,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                     try { // NOSONAR
                                                         res.putObject("person", mongo.getById(id, User.class));
                                                         res.putString("planId", plan.getPaymentId());
-                                                        LOG.debug(res.encode());
                                                         message.reply(res.encode());
                                                     } catch (final EncodeException e) {
                                                         LOG.error(e.getMessage(), e);
@@ -415,6 +409,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
+                    utils.testMandatoryParams(req.getParams(), "id", "code");
                     final String id = req.getParams().get("id").get(0);
                     final String activationCode = req.getParams().get("code").get(0);
                     final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
@@ -429,12 +424,15 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (final EncodeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendStatus(false, message);
                 }
             }
         });
@@ -467,25 +465,29 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     final String id = params.get(PARAM_ID).get(0);
                     final String activationCode = params.get(PARAM_CODE).get(0);
 
-                    final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
-                    if (user == null) {
+                    User user = null;
+                    try {
+                        user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
+                    } catch (final QaobeeException e) {
                         utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
-                    } else if (user.getAccount().isActive()) {
-                        utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
-                    } else if (!user.getAccount().isFirstConnexion()) {
-                        utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
-                    } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
-                        utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
-                    } else {
-
-                        user.getAccount().setToken(UUID.randomUUID().toString());
-                        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                        mongo.save(user);
-
-                        message.reply(Json.encode(user));
-                        utils.sendStatus(true, message);
                     }
-
+                    if (user != null) {
+                        if (user.getAccount().isActive()) {
+                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
+                        } else if (!user.getAccount().isFirstConnexion()) {
+                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
+                        } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
+                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
+                        } else {
+                            user.getAccount().setToken(UUID.randomUUID().toString());
+                            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                            mongo.save(user);
+                            message.reply(Json.encode(user));
+                        }
+                    }
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());

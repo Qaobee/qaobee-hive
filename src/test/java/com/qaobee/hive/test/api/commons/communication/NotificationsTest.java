@@ -37,7 +37,7 @@ public class NotificationsTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setMethod(Constantes.GET);
         req.setUser(u);
-        final JsonArray jar = new JsonArray(sendonBus(NotificationsVerticle.LIST, req));
+        final JsonArray jar = new JsonArray(sendOnBus(NotificationsVerticle.LIST, req));
         Assert.assertTrue(jar.size() > 0);
         boolean found = false;
         for (int index = 0; index < jar.size(); index++) {
@@ -69,11 +69,11 @@ public class NotificationsTest extends VertxJunitSupport {
         req.setMethod(Constantes.POST);
         req.setParams(getParams(new String[]{"id", n.get_id()}));
         req.setUser(u);
-        final JsonObject status = new JsonObject(sendonBus(NotificationsVerticle.READ, req));
+        final JsonObject status = new JsonObject(sendOnBus(NotificationsVerticle.READ, req));
         Assert.assertTrue(status.getBoolean("status", false));
 
         req.setMethod(Constantes.GET);
-        final JsonArray jar = new JsonArray(sendonBus(NotificationsVerticle.LIST, req));
+        final JsonArray jar = new JsonArray(sendOnBus(NotificationsVerticle.LIST, req));
         Assert.assertTrue(jar.size() > 0);
         boolean found = false;
         for (int index = 0; index < jar.size(); index++) {
@@ -107,13 +107,13 @@ public class NotificationsTest extends VertxJunitSupport {
         req.setMethod(Constantes.DELETE);
         req.setParams(getParams(new String[]{"id", n.get_id()}));
         req.setUser(u);
-        final JsonObject status = new JsonObject(sendonBus(NotificationsVerticle.DEL, req));
+        final JsonObject status = new JsonObject(sendOnBus(NotificationsVerticle.DEL, req));
         Assert.assertTrue(status.getBoolean("status", false));
 
         req.setParams(null);
         req.setMethod(Constantes.GET);
 
-        final JsonArray jar = new JsonArray(sendonBus(NotificationsVerticle.LIST, req));
+        final JsonArray jar = new JsonArray(sendOnBus(NotificationsVerticle.LIST, req));
         for (int index = 0; index < jar.size(); index++) {
             final JsonObject item = jar.get(index);
             if (item.getString("_id").equals(n.get_id())) {
@@ -133,16 +133,16 @@ public class NotificationsTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setUser(u);
         req.setMethod(Constantes.GET);
-        final JsonArray jar = new JsonArray(sendonBus(NotificationsVerticle.LIST, req));
+        final JsonArray jar = new JsonArray(sendOnBus(NotificationsVerticle.LIST, req));
         req.setMethod(Constantes.DELETE);
         for (int index = 0; index < jar.size(); index++) {
             final JsonObject item = jar.get(index);
             req.setParams(getParams(new String[]{"id", item.getString("_id")}));
-            final JsonObject status = new JsonObject(sendonBus(NotificationsVerticle.DEL, req));
+            final JsonObject status = new JsonObject(sendOnBus(NotificationsVerticle.DEL, req));
             Assert.assertTrue(status.getBoolean("status", false));
         }
         req.setMethod(Constantes.GET);
-        final JsonArray jar2 = new JsonArray(sendonBus(NotificationsVerticle.LIST, req));
+        final JsonArray jar2 = new JsonArray(sendOnBus(NotificationsVerticle.LIST, req));
         Assert.assertEquals(0, jar2.size());
     }
 

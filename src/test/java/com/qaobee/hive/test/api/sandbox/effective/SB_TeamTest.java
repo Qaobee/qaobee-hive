@@ -61,7 +61,7 @@ public class SB_TeamTest extends VertxJunitSupport {
 
         req.setParams(params);
 
-        final String reply = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
         JsonArray result = new JsonArray(reply);
 
         Assert.assertEquals(1, result.size());
@@ -93,7 +93,7 @@ public class SB_TeamTest extends VertxJunitSupport {
 
         req.setParams(params);
 
-        final String reply = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
         JsonArray result = new JsonArray(reply);
 
         Assert.assertEquals(7, result.size());
@@ -103,7 +103,7 @@ public class SB_TeamTest extends VertxJunitSupport {
 
         params.put(SB_TeamVerticle.PARAM_LINK_TEAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
 
-        final String reply2 = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply2 = sendOnBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
         JsonArray result2 = new JsonArray(reply2);
 
         Assert.assertEquals(6, result2.size());
@@ -129,7 +129,7 @@ public class SB_TeamTest extends VertxJunitSupport {
 
         req.setParams(params);
 
-        final String reply = sendonBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
         JsonObject team = new JsonObject(reply);
         Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
 
@@ -156,7 +156,7 @@ public class SB_TeamTest extends VertxJunitSupport {
         params.putBoolean(SB_TeamVerticle.PARAM_ADVERSARY, true);
 
         req.setBody(params.encode());
-        final JsonObject team = new JsonObject(sendonBus(SB_TeamVerticle.ADD, req, user.getAccount().getToken()));
+        final JsonObject team = new JsonObject(sendOnBus(SB_TeamVerticle.ADD, req, user.getAccount().getToken()));
         System.out.println(team);
         Assert.assertNotNull("id is null", team.getString("_id"));
         Assert.assertEquals("TheNewTeam", team.getString("label"));
@@ -181,7 +181,7 @@ public class SB_TeamTest extends VertxJunitSupport {
         params.put(SB_TeamVerticle.PARAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
         req.setParams(params);
 
-        final String reply = sendonBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
         JsonObject team = new JsonObject(reply);
         Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
 
@@ -189,7 +189,7 @@ public class SB_TeamTest extends VertxJunitSupport {
         req.setMethod(Constantes.PUT);
         team.putBoolean(SB_TeamVerticle.PARAM_ENABLE, false);
         req.setBody(team.encode());
-        sendonBus(SB_TeamVerticle.UPDATE, req, user.getAccount().getToken());
+        sendOnBus(SB_TeamVerticle.UPDATE, req, user.getAccount().getToken());
         
         /* list of parameters */
         req.setMethod(Constantes.GET);
@@ -202,7 +202,7 @@ public class SB_TeamTest extends VertxJunitSupport {
 
         req.setParams(param2s);
 
-        final String reply2 = sendonBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply2 = sendOnBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
         JsonArray result = new JsonArray(reply2);
 
         Assert.assertEquals(0, result.size());

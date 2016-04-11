@@ -55,7 +55,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         final HashMap<String, List<String>> params = new HashMap<>();
         params.put(SB_EventVerticle.PARAM_ID, Collections.singletonList("e254897f-cf3a-48b8-bed5-a4d4664ab4a4"));
         req.setParams(params);
-        final JsonObject event = new JsonObject(sendonBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
+        final JsonObject event = new JsonObject(sendOnBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
 
         Assert.assertEquals("addCollecteEvent", "ACT-HAND", event.getString("activityId"));
 
@@ -86,7 +86,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
 
         req.setBody(collecte.encode());
 
-        final JsonObject result = new JsonObject(sendonBus(SB_CollecteVerticle.ADD, req, user.getAccount().getToken()));
+        final JsonObject result = new JsonObject(sendOnBus(SB_CollecteVerticle.ADD, req, user.getAccount().getToken()));
         System.out.println(result);
         Assert.assertNotNull("id is null", result.getString("_id"));
     }
@@ -108,7 +108,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         params.putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
 
         req.setBody(params.encode());
-        final JsonObject result = new JsonObject(sendonBus(SB_CollecteVerticle.ADD, req, user.getAccount().getToken()));
+        final JsonObject result = new JsonObject(sendOnBus(SB_CollecteVerticle.ADD, req, user.getAccount().getToken()));
         Assert.assertTrue("addCollecteWithMissingMandatoryParametersTest", result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
@@ -122,7 +122,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setUser(user);
         req.setMethod(Constantes.GET);
-        final JsonObject result = new JsonObject(sendonBus(SB_CollecteVerticle.ADD, req, user.getAccount().getToken()));
+        final JsonObject result = new JsonObject(sendOnBus(SB_CollecteVerticle.ADD, req, user.getAccount().getToken()));
         Assert.assertTrue("addCollecteWithWrongHttpMethodTest", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
@@ -134,7 +134,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constantes.POST);
-        final JsonObject result = new JsonObject(sendonBus(SB_CollecteVerticle.ADD, req));
+        final JsonObject result = new JsonObject(sendOnBus(SB_CollecteVerticle.ADD, req));
         System.out.println(result.encodePrettily());
         Assert.assertTrue("addCollecteWithNotLoggedUserTest", result.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -161,13 +161,13 @@ public class SB_CollecteTest extends VertxJunitSupport {
         params.putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9");
         params.putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
         req.setBody(params.encode());
-        final String reply = sendonBus(SB_CollecteVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_CollecteVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals("getListCollecteTest1", 1, new JsonArray(reply).size());
 
         params.putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "TOTO");
 
         req.setBody(params.encode());
-        final String reply3 = sendonBus(SB_CollecteVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply3 = sendOnBus(SB_CollecteVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals("getListCollecteTest3", 0, new JsonArray(reply3).size());
     }
 
@@ -187,7 +187,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         params.putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9");
         params.putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
         req.setBody(params.encode());
-        final String reply = sendonBus(SB_CollecteVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_CollecteVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertTrue("getListCollecteWithWrongHttpMethodTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
@@ -205,7 +205,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         params.putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1448491800000l);
         params.putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1448492500000l);
         req.setBody(params.encode());
-        final String reply = sendonBus(SB_CollecteVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_CollecteVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertTrue("getListCollecteWithMissingParametersTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
@@ -224,7 +224,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         params.putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9");
         params.putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
         req.setBody(params.encode());
-        final String reply = sendonBus(SB_CollecteVerticle.GET_LIST, req);
+        final String reply = sendOnBus(SB_CollecteVerticle.GET_LIST, req);
         Assert.assertTrue("getListCollecteWithNotLoggedUserTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
@@ -245,7 +245,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         final HashMap<String, List<String>> params = new HashMap<>();
         params.put(SB_CollecteVerticle.PARAM_ID, Collections.singletonList("565e0f0dbcda594d193e24db"));
         req.setParams(params);
-        final JsonObject reply = new JsonObject(sendonBus(SB_CollecteVerticle.GET, req, user.getAccount().getToken()));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_CollecteVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertEquals("getCollecteByIdTest", "done", reply.getString("status"));
     }
 
@@ -262,7 +262,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         final HashMap<String, List<String>> params = new HashMap<>();
         params.put(SB_CollecteVerticle.PARAM_ID, Collections.singletonList("12345"));
         req.setParams(params);
-        final JsonObject reply = new JsonObject(sendonBus(SB_CollecteVerticle.GET, req, user.getAccount().getToken()));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_CollecteVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("getCollecteByIdWithWrongHttpMethodTest", reply.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
@@ -278,7 +278,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         final HashMap<String, List<String>> params = new HashMap<>();
         params.put(SB_CollecteVerticle.PARAM_ID, Collections.singletonList("12345"));
         req.setParams(params);
-        final JsonObject reply = new JsonObject(sendonBus(SB_CollecteVerticle.GET, req));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_CollecteVerticle.GET, req));
         Assert.assertTrue("getCollecteByIdWithNotLoggedUserTest", reply.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
@@ -294,7 +294,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         req.setMethod(Constantes.GET);
         final HashMap<String, List<String>> params = new HashMap<>();
         req.setParams(params);
-        final JsonObject reply = new JsonObject(sendonBus(SB_CollecteVerticle.GET, req, user.getAccount().getToken()));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_CollecteVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("getCollecteByIdWithMissingParametersTest", reply.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
@@ -308,7 +308,7 @@ public class SB_CollecteTest extends VertxJunitSupport {
         req.setLocale(LOCALE);
         req.setUser(user);
         req.setMethod(Constantes.GET);
-        final JsonObject reply = new JsonObject(sendonBus(SB_CollecteVerticle.GET, req, user.getAccount().getToken()));
+        final JsonObject reply = new JsonObject(sendOnBus(SB_CollecteVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("getCollecteByIdWithEmptyParametersTest", reply.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 

@@ -57,7 +57,7 @@ public class ActivityTest extends VertxJunitSupport {
         params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
         req.setParams(params);
 
-        final String reply = sendonBus(ActivityVerticle.GET, req);
+        final String reply = sendOnBus(ActivityVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
 
         String label = result.getString("label");
@@ -81,14 +81,14 @@ public class ActivityTest extends VertxJunitSupport {
 
         final Map<String, List<String>> params = new HashMap<>();
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
         // id
         params.put(ActivityVerticle.PARAM_ID, Collections.singletonList(""));
         req.setParams(params);
 
-        resultUpdate = new JsonObject(sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
+        resultUpdate = new JsonObject(sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
     }
@@ -114,7 +114,7 @@ public class ActivityTest extends VertxJunitSupport {
         params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
         req.setParams(params);
 
-        final String reply = sendonBus(ActivityVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(ActivityVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals(26, new JsonArray(reply).size());
     }
 
@@ -139,7 +139,7 @@ public class ActivityTest extends VertxJunitSupport {
         params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
         req.setParams(params);
 
-        final String reply = sendonBus(ActivityVerticle.GET_LIST_ENABLE, req, user.getAccount().getToken());
+        final String reply = sendOnBus(ActivityVerticle.GET_LIST_ENABLE, req, user.getAccount().getToken());
         Assert.assertEquals(2, new JsonArray(reply).size());
     }
 }

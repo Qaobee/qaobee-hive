@@ -61,7 +61,7 @@ public class IndicatorTest extends VertxJunitSupport {
         params.put(IndicatorVerticle.PARAM_ID, Collections.singletonList("559a9294889089a442f3d464"));
         req.setParams(params);
 
-        final String reply = sendonBus(IndicatorVerticle.GET, req, user.getAccount().getToken());
+        final String reply = sendOnBus(IndicatorVerticle.GET, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
 
         String label = result.getString("code");
@@ -85,14 +85,14 @@ public class IndicatorTest extends VertxJunitSupport {
 
         final Map<String, List<String>> params = new HashMap<>();
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(IndicatorVerticle.GET, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(IndicatorVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
         // id
         params.put(SeasonVerticle.PARAM_ID, Collections.singletonList(""));
         req.setParams(params);
 
-        resultUpdate = new JsonObject(sendonBus(IndicatorVerticle.GET, req, user.getAccount().getToken()));
+        resultUpdate = new JsonObject(sendOnBus(IndicatorVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
     }
@@ -120,7 +120,7 @@ public class IndicatorTest extends VertxJunitSupport {
         params.putArray(IndicatorVerticle.PARAM_SCREEN, new JsonArray(new String[]{"COLLECTE"}));
         req.setBody(params.encode());
 
-        final String reply = sendonBus(IndicatorVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(IndicatorVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals(45, new JsonArray(reply).size());
 
     }

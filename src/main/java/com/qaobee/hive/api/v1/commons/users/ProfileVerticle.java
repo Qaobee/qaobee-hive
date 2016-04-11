@@ -132,6 +132,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    utils.isUserLogged(req);
                     JsonObject u = new JsonObject(req.getBody());
                     final User user = Json.decodeValue(req.getBody(), User.class);
                     if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {

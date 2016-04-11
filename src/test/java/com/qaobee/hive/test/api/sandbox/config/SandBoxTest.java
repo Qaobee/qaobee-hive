@@ -54,7 +54,7 @@ public class SandBoxTest extends VertxJunitSupport {
         params.put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
         req.setParams(params);
 
-        final String reply = sendonBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
 
         Assert.assertEquals(user.get_id(), result.getString("owner"));
@@ -76,7 +76,7 @@ public class SandBoxTest extends VertxJunitSupport {
 
         final Map<String, List<String>> params = new HashMap<>();
 
-        final String reply = sendonBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
 
         Assert.assertTrue("Missing mandatory parameters", result.getString("message").contains("Missing mandatory parameters : [activityId]"));
@@ -85,7 +85,7 @@ public class SandBoxTest extends VertxJunitSupport {
         params.put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(""));
         req.setParams(params);
 
-        final String reply2 = sendonBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
+        final String reply2 = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
         JsonObject result2 = new JsonObject(reply2);
 
         Assert.assertTrue("Wrong format mandatory parameters", result2.getString("message").contains("Missing mandatory parameters : [activityId]"));
@@ -110,7 +110,7 @@ public class SandBoxTest extends VertxJunitSupport {
         params.put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
         req.setParams(params);
 
-        final String reply = sendonBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
 
         Assert.assertTrue("SandBox not found", result.getString("message").contains("No SandBox found for user id"));
@@ -135,7 +135,7 @@ public class SandBoxTest extends VertxJunitSupport {
         params.put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-FOOT", user).getField(ActivityVerticle.PARAM_ID)));
         req.setParams(params);
 
-        final String reply = sendonBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
 
         Assert.assertTrue("SandBox not found", result.getString("message").contains("No SandBox found for user id"));

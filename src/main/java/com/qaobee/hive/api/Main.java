@@ -331,6 +331,7 @@ public class Main extends AbstractGuiceVerticle {
         } else {
             req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
             final ReplyException ex = (ReplyException) message.cause();
+            req.response().setStatusCode(404);
             enableCors(req);
             if (ex.failureCode() > 0) {
                 req.response().setStatusCode(ex.failureCode());
@@ -350,7 +351,6 @@ public class Main extends AbstractGuiceVerticle {
                 jsonResp.putBoolean("status", false);
                 jsonResp.putString(MESSAGE, "Nothing here");
                 jsonResp.putNumber("httpCode", 404);
-                req.response().setStatusCode(404);
                 req.response().end(jsonResp.encode());
             }
         }

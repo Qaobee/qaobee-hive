@@ -62,7 +62,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         params.put(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, Collections.singletonList("sen"));
         req.setParams(params);
 
-        final String reply = sendonBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
         JsonArray result = new JsonArray(reply);
 
         Assert.assertEquals(1, result.size());
@@ -93,7 +93,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         params.put(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, Collections.singletonList("zzz"));
         req.setParams(params);
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken()));
         Assert.assertTrue("Bad parameters", resultUpdate.getString("message").contains("No Effective found"));
     }
 
@@ -110,7 +110,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         req.setMethod(Constantes.GET);
         req.setUser(user);
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken()));
         Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [sandBoxCfgId]"));
     }
 
@@ -127,7 +127,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         req.setMethod(Constantes.PUT);
         req.setUser(user);
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken()));
         Assert.assertTrue("Bad method request", resultUpdate.getString("message").contains("PUT is not allowed"));
     }
 
@@ -148,7 +148,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         params.put(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, Collections.singletonList("559d268318e3cb71c60d9649"));
         req.setParams(params);
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.GET_LIST, req, ""));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET_LIST, req, ""));
         Assert.assertTrue("User not connected", resultUpdate.getString("message").contains("Please log in first"));
     }
 
@@ -171,7 +171,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         params.put(SB_EffectiveVerticle.PARAM_ID, Collections.singletonList("550b31f925da07681592db23"));
         req.setParams(params);
 
-        final String reply = sendonBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
 
         JsonArray members = result.getArray("members");
@@ -191,7 +191,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         req.setMethod(Constantes.PUT);
         req.setUser(user);
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("Bad method request", resultUpdate.getString("message").contains("PUT is not allowed"));
     }
 
@@ -210,14 +210,14 @@ public class SB_EffectiveTest extends VertxJunitSupport {
 
         final Map<String, List<String>> params = new HashMap<>();
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
         // id
         params.put(CountryVerticle.PARAM_ID, Collections.singletonList(""));
         req.setParams(params);
 
-        resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken()));
+        resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken()));
         Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
 
     }
@@ -266,7 +266,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
 
         req.setBody(Json.encode(effective));
 
-        final String reply = sendonBus(SB_EffectiveVerticle.ADD, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_EffectiveVerticle.ADD, req, user.getAccount().getToken());
         JsonObject result = new JsonObject(reply);
         String id = result.getString("_id");
 
@@ -289,7 +289,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         req.setMethod(Constantes.GET);
         req.setUser(user);
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.ADD, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.ADD, req, user.getAccount().getToken()));
         Assert.assertTrue("Bad method request", resultUpdate.getString("message").contains("GET is not allowed"));
     }
 
@@ -337,7 +337,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
 
         req.setBody(Json.encode(effective));
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.ADD, req, ""));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.ADD, req, ""));
         Assert.assertTrue("User not connected", resultUpdate.getString("message").contains("Please log in first"));
     }
 
@@ -361,7 +361,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         params.put(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, Collections.singletonList("sen"));
         req.setParams(params);
 
-        final String reply = sendonBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
         JsonArray result = new JsonArray(reply);
 
         Assert.assertEquals(1, result.size());
@@ -381,7 +381,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
 
         req.setMethod(Constantes.PUT);
         req.setBody(itemOne.encode());
-        final String reply2 = sendonBus(SB_EffectiveVerticle.UPDATE, req, user.getAccount().getToken());
+        final String reply2 = sendOnBus(SB_EffectiveVerticle.UPDATE, req, user.getAccount().getToken());
 
         JsonObject result2 = new JsonObject(reply2);
         JsonArray membersUpdate = result2.getArray("members");
@@ -410,7 +410,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         params.put(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, Collections.singletonList("sen"));
         req.setParams(params);
 
-        final String reply = sendonBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
         JsonArray result = new JsonArray(reply);
 
         Assert.assertEquals(1, result.size());
@@ -430,7 +430,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
 
         req.setMethod(Constantes.PUT);
         req.setBody(effective.encode());
-        final String reply2 = sendonBus(SB_EffectiveVerticle.UPDATE, req, user.getAccount().getToken());
+        final String reply2 = sendOnBus(SB_EffectiveVerticle.UPDATE, req, user.getAccount().getToken());
 
         JsonObject result2 = new JsonObject(reply2);
         JsonArray membersUpdate = result2.getArray("members");
@@ -452,7 +452,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
 
         req.setMethod(Constantes.PUT);
         req.setBody(Json.encode("toto"));
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.UPDATE, req, ""));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.UPDATE, req, ""));
         Assert.assertTrue("User not connected", resultUpdate.getString("message").contains("Please log in first"));
 
     }
@@ -470,7 +470,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         req.setMethod(Constantes.GET);
         req.setUser(user);
 
-        JsonObject resultUpdate = new JsonObject(sendonBus(SB_EffectiveVerticle.UPDATE, req, user.getAccount().getToken()));
+        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.UPDATE, req, user.getAccount().getToken()));
         Assert.assertTrue("Bad method request", resultUpdate.getString("message").contains("GET is not allowed"));
     }
 }

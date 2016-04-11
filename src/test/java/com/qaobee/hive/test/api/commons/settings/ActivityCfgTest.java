@@ -59,7 +59,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
         params.put(ActivityCfgVerticle.PARAM_DATE, Collections.singletonList("1391209200000"));
         req.setParams(params);
 
-        final String reply = sendonBus(ActivityCfgVerticle.GET, req);
+        final String reply = sendOnBus(ActivityCfgVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
 
         String id = result.getString("activityId");
@@ -84,7 +84,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
         params.put(ActivityCfgVerticle.PARAM_DATE, Collections.singletonList("1391209200000"));
         req.setParams(params);
 
-        final String reply = sendonBus(ActivityCfgVerticle.GET, req);
+        final String reply = sendOnBus(ActivityCfgVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("getWithWrongHttpMethodTest", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
     }
@@ -104,7 +104,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
         // parameter
         req.setParams(params);
 
-        final String reply = sendonBus(ActivityCfgVerticle.GET, req);
+        final String reply = sendOnBus(ActivityCfgVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("getWithoutParameterTest", result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
@@ -129,7 +129,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
         params.put(ActivityCfgVerticle.PARAM_DATE, Collections.singletonList("1391209200000"));
         req.setParams(params);
 
-        final String reply = sendonBus(ActivityCfgVerticle.GET, req);
+        final String reply = sendOnBus(ActivityCfgVerticle.GET, req);
         JsonObject result = new JsonObject(reply);
         Assert.assertTrue("getWitWrongActivityIdTest", result.getString("code").contains(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
     }
@@ -155,7 +155,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
         params.put(ActivityCfgVerticle.PARAM_FIELD_LIST, Collections.singletonList("listPositionType"));
         req.setParams(params);
 
-        final String reply = sendonBus(ActivityCfgVerticle.PARAMS, req);
+        final String reply = sendOnBus(ActivityCfgVerticle.PARAMS, req);
         JsonArray result = new JsonArray(reply);
         Assert.assertTrue("getListParamsField", result.size() == 7);
     }

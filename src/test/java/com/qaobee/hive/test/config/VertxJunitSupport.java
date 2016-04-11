@@ -132,6 +132,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * Find free port.
      *
      * @return the int
+     *
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static int findFreePort() throws IOException {
@@ -145,10 +146,11 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * Gets url.
      *
      * @param busAddress the bus address
+     *
      * @return the url
      */
     protected String getURL(String busAddress) {
-        return BASE_URL + "/api/v1" + busAddress.replaceAll("\\.", "/");
+        return BASE_URL + "/api/v" + busAddress.replaceAll("\\.", "/");
     }
 
     /**
@@ -196,6 +198,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * Generate logged user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected User generateLoggedUser(String userId) {
@@ -230,6 +233,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * Generate logged admin user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected User generateLoggedAdminUser(String userId) {
@@ -252,6 +256,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * Gets the params.
      *
      * @param args tableaux de type [clef, val1, val2, ...]
+     *
      * @return map de paramètres de requête
      */
     protected Map<String, List<String>> getParams(final String[]... args) {
@@ -267,9 +272,10 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      *
      * @param address bus address
      * @param req     request
+     *
      * @return result string
      */
-    protected String sendonBus(final String address, final RequestWrapper req) {
+    protected String sendOnBus(final String address, final RequestWrapper req) {
         long timeout = 150L;
         getEventBus().send(address, Json.encode(req), new QueueReplyHandler<>(queue, timeout));
         try {
@@ -302,14 +308,42 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param address the address
      * @param req     the req
      * @param token   the token
+     *
      * @return the string
      */
-    protected String sendonBus(String address, RequestWrapper req, String token) {
+    protected String sendOnBus(String address, RequestWrapper req, String token) {
         if (req.getHeaders() == null) {
             req.setHeaders(new HashMap<String, List<String>>());
         }
         req.getHeaders().put("token", Collections.singletonList(token));
-        return sendonBus(address, req);
+        return sendOnBus(address, req);
+    }
+
+
+    /**
+     * Send on bus json object.
+     *
+     * @param address the address
+     * @param query   the query
+     *
+     * @return the json object
+     */
+    protected JsonObject sendOnBus(String address, JsonObject query) {
+        long timeout = 150L;
+        getEventBus().send(address, query, new QueueReplyHandler<>(queue, timeout));
+        try {
+            final Object result = queue.poll(timeout, TimeUnit.SECONDS);
+            if (result instanceof ReplyException) {
+                    Assert.fail(((ReplyException) result).getMessage());
+            } else if (result instanceof JsonObject) {
+                return ((JsonObject) result);
+            } else {
+                Assert.fail("unparsable data : " + result.toString());
+            }
+        } catch (final InterruptedException e) {
+            Assert.fail(e.getMessage());
+        }
+        return null;
     }
 
     /**
@@ -431,6 +465,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      *
      * @param id   the id
      * @param user the user
+     *
      * @return activity activity
      */
     protected JsonObject getActivity(String id, User user) {
@@ -444,7 +479,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 		/* Retreive object */
         params.put(ActivityVerticle.PARAM_ID, Collections.singletonList(id));
         req.setParams(params);
-        final String reply = sendonBus(ActivityVerticle.GET, req, user.getAccount().getToken());
+        final String reply = sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken());
         return new JsonObject(reply);
     }
 
@@ -452,6 +487,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * Commons function for return a country JsonObject
      *
      * @param id the id
+     *
      * @return country country
      */
     protected JsonObject getCountry(String id) {
@@ -462,7 +498,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         /* Retreive object */
         params.put(CountryVerticle.PARAM_ID, Collections.singletonList(id));
         req.setParams(params);
-        final String reply = sendonBus(CountryVerticle.GET, req);
+        final String reply = sendOnBus(CountryVerticle.GET, req);
         return new JsonObject(reply);
     }
 }

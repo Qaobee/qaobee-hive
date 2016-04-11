@@ -3,9 +3,12 @@ package com.qaobee.hive.test.api.commons.user;
 import com.qaobee.hive.api.v1.commons.users.ShippingVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockserver.client.server.MockServerClient;
@@ -13,7 +16,9 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -163,9 +168,121 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("account.listPlan[0].cardInfo", notNullValue())
                 .body("account.listPlan[0].cardInfo.last4", notNullValue())
                 .body("account.listPlan[0].cardInfo.last4", is(notification.getObject("card").getString("last4")))
+                .body("account.listPlan[0].shippingList.size()", is(2))
+                .body("account.listPlan[0].shippingList[1].cardInfo.last4", notNullValue())
+                .body("account.listPlan[0].shippingList[1].cardInfo.last4", is(notification.getObject("card").getString("last4")))
                 .body("account.listPlan[0].paymentId", not(""))
                 .body("account.listPlan[0].status", is("paid"))
                 .extract().path("paymentId");
+    }
+
+    /**
+     * Recieve payplug notification with no previous shipping test.
+     */
+    @Test
+    public void recievePayplugNotificationWithNoPreviousShippingTest() {
+        User u = generateLoggedUser();
+        u.getAccount().getListPlan().get(0).setShippingList(null);
+        u.getAccount().getListPlan().get(0).setCardInfo(null);
+        u.getAccount().getListPlan().get(0).setCardId(null);
+        try {
+            mongo.save(u);
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
+                .respond(HttpResponse.response().withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
+        String payment_url = given().header("token", u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(200)
+                .body("status", notNullValue())
+                .body("status", is(true))
+                .body("payment_url", notNullValue()).extract().path("payment_url");
+
+        String paymentId = given().header("token", u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].paiementURL", notNullValue())
+                .body("account.listPlan[0].paiementURL", is(payment_url))
+                .body("account.listPlan[0].paymentId", notNullValue())
+                .body("account.listPlan[0].paymentId", not(""))
+                .extract().path("paymentId");
+
+        JsonObject notification = buildNotificationRequest(paymentId, u);
+        given().body(notification.encodePrettily())
+                .when().post(getURL(ShippingVerticle.IPN))
+                .then().assertThat().statusCode(200)
+                .body("status", notNullValue())
+                .body("status", is(true));
+        // Let's verify user's info
+        given().header("token", u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].paidDate", notNullValue())
+                .body("account.listPlan[0].cardInfo", notNullValue())
+                .body("account.listPlan[0].cardInfo.last4", notNullValue())
+                .body("account.listPlan[0].cardInfo.last4", is(notification.getObject("card").getString("last4")))
+                .body("account.listPlan[0].paymentId", not(""))
+                .body("account.listPlan[0].shippingList.size()", is(1))
+                .body("account.listPlan[0].shippingList[0].cardInfo.last4", notNullValue())
+                .body("account.listPlan[0].shippingList[0].cardInfo.last4", is(notification.getObject("card").getString("last4")))
+                .body("account.listPlan[0].status", is("paid"))
+                .extract().path("paymentId");
+    }
+
+    /**
+     * Recieve payplug notification with zero amount test.
+     */
+    @Test
+    public void recievePayplugNotificationWithZeroAmountTest() {
+        User u = generateLoggedUser();
+        u.getAccount().getListPlan().get(0).setAmountPaid(0L);
+        try {
+            mongo.save(u);
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
+                .respond(HttpResponse.response().withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
+        String payment_url = given().header("token", u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(200)
+                .body("status", notNullValue())
+                .body("status", is(true))
+                .body("payment_url", notNullValue()).extract().path("payment_url");
+
+        String paymentId = given().header("token", u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].paiementURL", notNullValue())
+                .body("account.listPlan[0].paiementURL", is(payment_url))
+                .body("account.listPlan[0].paymentId", notNullValue())
+                .body("account.listPlan[0].paymentId", not(""))
+                .extract().path("paymentId");
+
+        JsonObject notification = buildNotificationRequest(paymentId, u);
+        given().body(notification.encodePrettily())
+                .when().post(getURL(ShippingVerticle.IPN))
+                .then().assertThat().statusCode(200)
+                .body("status", notNullValue())
+                .body("status", is(true));
     }
 
     /**
@@ -382,7 +499,9 @@ public class ShippingTest extends VertxJunitSupport {
 
         JsonObject failure = new JsonObject();
         JsonObject notification = buildNotificationRequest(paymentId, u);
-        String[] failures = {"processing_error", "card_declined", "insufficient_funds", "fraud_suspected", "3ds_declined", "incorrect_number", "aborted"};
+        String[] failures =
+                {"processing_error", "card_declined", "insufficient_funds", "fraud_suspected", "3ds_declined",
+                        "incorrect_number", "aborted"};
         for (String f : failures) {
             failure.putString("code", f);
             notification.putObject("failure", failure);
@@ -446,6 +565,131 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
+     * Recurring payment test.
+     */
+    @Test
+    public void recurringPaymentTest() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().getListPlan().get(0).setPaidDate(0);
+        u.getAccount().getListPlan().get(0).setCardId("123456");
+        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with zero amount test.
+     */
+    @Test
+    public void recurringPaymentWithZeroAmountTest() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(201)
+                        .withBody(generateMockBody(u, 0, 0)));
+        u.getAccount().getListPlan().get(0).setPaidDate(0);
+        u.getAccount().getListPlan().get(0).setCardId("123456");
+        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with no card info test.
+     */
+    @Test
+    public void recurringPaymentWithNoCardInfoTest() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().getListPlan().get(0).setPaidDate(0);
+        u.getAccount().getListPlan().get(0).setCardId(null);
+        u.getAccount().getListPlan().get(0).setCardInfo(null);
+        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with future date test.
+     */
+    @Test
+    public void recurringPaymentWithFutureDateTest() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().getListPlan().get(0).setPaidDate(System.currentTimeMillis());
+        u.getAccount().getListPlan().get(0).setCardId("123456");
+        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with not supported periodicity test.
+     */
+    @Test
+    public void recurringPaymentWithNotSupportedPeriodicityTest() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().getListPlan().get(0).setPaidDate(0);
+        u.getAccount().getListPlan().get(0).setCardId("123456");
+        u.getAccount().getListPlan().get(0).setPeriodicity("daily");
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with no plan test.
+     */
+    @Test
+    public void recurringPaymentWithNoPlanTest() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().setListPlan(new ArrayList<Plan>());
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
      * @param paymentId paymentId
      * @param u         user
      * @return a notification object
@@ -474,13 +718,14 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * @param u User
-     * @param i planId
+     * @param u      user
+     * @param planId plan id
+     * @param amount amount
      * @return body
      */
-    private String generateMockBody(User u, int i) {
+    private String generateMockBody(User u, int planId, int amount) {
         return "{\n" +
-                "  \"amount\": 900,\n" +
+                "  \"amount\": " + amount + ",\n" +
                 "  \"amount_refunded\": 0,\n" +
                 "  \"card\": {\n" +
                 "      \"brand\": null,\n" +
@@ -516,8 +761,8 @@ public class ShippingTest extends VertxJunitSupport {
                 "  \"is_refunded\": false,\n" +
                 "  \"metadata\": {\n" +
                 "      \"customer_id\": \"" + u.get_id() + "\",\n" +
-                "      \"plan_id\": \"" + i + "\",\n" +
-                "      \"locale\": \"fr_FR\"\n" +
+                "      \"plan_id\": \"" + planId + "\",\n" +
+                "      \"locale\": \"" + LOCALE + "\"\n" +
                 "  },\n" +
                 "  \"notification\": {\n" +
                 "      \"response_code\": null,\n" +
@@ -526,5 +771,14 @@ public class ShippingTest extends VertxJunitSupport {
                 "  \"object\": \"payment\",\n" +
                 "  \"save_card\": true\n" +
                 "}";
+    }
+
+    /**
+     * @param u User
+     * @param i planId
+     * @return body
+     */
+    private String generateMockBody(User u, int i) {
+        return generateMockBody(u, i, 900);
     }
 }

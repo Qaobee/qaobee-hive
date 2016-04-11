@@ -1,20 +1,17 @@
 package com.qaobee.hive.test.api.commons.user;
 
-import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.commons.users.ProfileVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
 
 /**
  * Created by b3605 on 04/12/15.
@@ -30,14 +27,12 @@ public class ProfileTest extends VertxJunitSupport {
     public void updateProfileWithCommonDataTest() {
         User u = generateLoggedUser();
         u.setGender("androgyn");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.POST);
-        req.setBody(Json.encode(u));
-        final String reply = sendonBus(ProfileVerticle.UPDATE, req);
-        JsonObject result = new JsonObject(reply);
-        Assert.assertEquals(u.getName(), result.getString("name"));
-        Assert.assertEquals(u.getGender(), result.getString("gender"));
+        given().header("token", u.getAccount().getToken())
+               .body(Json.encode(u))
+               .when().post(getURL(ProfileVerticle.UPDATE))
+               .then().assertThat().statusCode(200)
+               .body("name", is(u.getName()))
+               .body("gender", is("androgyn"));
     }
 
     /**
@@ -47,20 +42,18 @@ public class ProfileTest extends VertxJunitSupport {
     public void updateProfileWithPasswordChangeTest() {
         User u = generateLoggedUser();
         u.getAccount().setPasswd("toto");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.POST);
-        req.setBody(Json.encode(u));
-        final String reply = sendonBus(ProfileVerticle.UPDATE, req);
-        JsonObject result = new JsonObject(reply);
-        Assert.assertEquals(u.getName(), result.getString("name"));
+        given().header("token", u.getAccount().getToken())
+               .body(Json.encode(u))
+               .when().post(getURL(ProfileVerticle.UPDATE))
+               .then().assertThat().statusCode(200)
+               .body("name", is(u.getName()));
         final JsonObject params = new JsonObject();
         params.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
-        params.putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
-        req.setBody(params.encode());
-        final String reply2 = sendonBus(UserVerticle.LOGIN, req);
-        JsonObject result2 = new JsonObject(reply2);
-        Assert.assertEquals(u.getName(), result2.getString("name"));
+        params.putString(UserVerticle.PARAM_PWD, "toto");
+        given().body(params.encode())
+               .when().post(getURL(UserVerticle.LOGIN))
+               .then().assertThat().statusCode(200)
+               .body("name", is(u.getName()));
     }
 
     /**
@@ -69,13 +62,33 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateProfilePDFTest() {
         User u = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(u);
-        final String reply = sendonBus(ProfileVerticle.GENERATE_PDF, req);
-        JsonObject result = new JsonObject(reply);
-        Assert.assertTrue(result.getString(Main.FILE_SERVE), result.containsField(Main.FILE_SERVE));
+        byte[] byteArray = given().header("token", u.getAccount().getToken())
+                                  .get(getURL(ProfileVerticle.GENERATE_PDF))
+                                  .then().assertThat().statusCode(200)
+                                  .extract().asByteArray();
+        Assert.assertTrue(byteArray.length > 0);
+    }
+
+    /**
+     * Generate profile with wrong http method test.
+     */
+    @Test
+    public void generateProfileWithWrongHttpMethodTest() {
+        User u = generateLoggedUser();
+        given().header("token", u.getAccount().getToken())
+               .post(getURL(ProfileVerticle.GENERATE_PDF))
+               .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+               .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Generate profile pdf with non logged user test.
+     */
+    @Test
+    public void generateProfilePDFWithNonLoggedUserTest() {
+        given().get(getURL(ProfileVerticle.GENERATE_PDF))
+               .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+               .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -84,16 +97,51 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateBillingPDFTest() {
         User u = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(u);
-        final HashMap<String, List<String>> params = new HashMap<>();
-        params.put("plan_id", Collections.singletonList("0"));
-        params.put("pay_id", Collections.singletonList(u.getAccount().getListPlan().get(0).getShippingList().get(0).getId()));
-        req.setParams(params);
-        final String reply = sendonBus(ProfileVerticle.GENERATE_BILL_PDF, req);
-        JsonObject result = new JsonObject(reply);
-        Assert.assertTrue(result.getString(Main.FILE_SERVE), result.containsField(Main.FILE_SERVE));
+        byte[] byteArray = given().header("token", u.getAccount().getToken())
+                                  .param("plan_id", 0)
+                                  .param("pay_id", u.getAccount().getListPlan().get(0).getShippingList().get(0).getId())
+                                  .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
+                                  .then().assertThat().statusCode(200)
+                                  .extract().asByteArray();
+        Assert.assertTrue(byteArray.length > 0);
+    }
+
+    /**
+     * Generate billing pdf with non logged user test.
+     */
+    @Test
+    public void generateBillingPDFWithNonLoggedUserTest() {
+        given().param("plan_id", 0)
+               .param("pay_id", "blabla")
+               .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
+               .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+               .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Generate billing pdf with missing data test.
+     */
+    @Test
+    public void generateBillingPDFWithMissingDataTest() {
+        User u = generateLoggedUser();
+        given().header("token", u.getAccount().getToken())
+               .param("pay_id", u.getAccount().getListPlan().get(0).getShippingList().get(0).getId())
+               .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
+               .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+               .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Generate billing pdf with wrong data test.
+     */
+    @Test
+    public void generateBillingPDFWithWrongDataTest() {
+        User u = generateLoggedUser();
+        given().header("token", u.getAccount().getToken())
+               .param("plan_id", 0)
+               .param("pay_id", "blabla")
+               .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
+               .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+               .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 }

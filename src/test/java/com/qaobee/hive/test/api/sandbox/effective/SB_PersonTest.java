@@ -65,7 +65,7 @@ public class SB_PersonTest extends VertxJunitSupport {
         req.setBody(params.encode());
 
 		/* Call to verticle */
-        final String reply = sendonBus(SB_PersonVerticle.GET_LIST, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_PersonVerticle.GET_LIST, req, user.getAccount().getToken());
         Assert.assertEquals(11, new JsonArray(reply).size());
 
     }
@@ -87,7 +87,7 @@ public class SB_PersonTest extends VertxJunitSupport {
         req.setParams(params);
 
 		/* Call to verticle */
-        final String reply = sendonBus(SB_PersonVerticle.GET_LIST_SANDBOX, req, user.getAccount().getToken());
+        final String reply = sendOnBus(SB_PersonVerticle.GET_LIST_SANDBOX, req, user.getAccount().getToken());
         Assert.assertEquals(17, new JsonArray(reply).size());
 
     }
