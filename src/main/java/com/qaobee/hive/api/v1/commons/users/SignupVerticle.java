@@ -464,13 +464,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                     final String id = params.get(PARAM_ID).get(0);
                     final String activationCode = params.get(PARAM_CODE).get(0);
-
-                    User user = null;
-                    try {
-                        user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
-                    } catch (final QaobeeException e) {
-                        utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
-                    }
+                    User user = getUser(id, message, req.getLocale());
                     if (user != null) {
                         if (user.getAccount().isActive()) {
                             utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
@@ -526,14 +520,14 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 try {
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
+                    utils.testMandatoryParams(req.getBody(), PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE);
+
                     final JsonObject jsonReq = new JsonObject(req.getBody());
-
-                    utils.testMandatoryParams(jsonReq.toMap(), PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE);
-
                     // JSon User
                     final JsonObject jsonUser = jsonReq.getObject(PARAM_USER);
                     // Converts jSon to Bean (extra parameters are ignored)
                     User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
+                    // FIXME : to JRO : Est-ce utile?
                     userUpdate.set_id(jsonUser.getString("_id"));
 
                     // Code activation
@@ -547,6 +541,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     if (jsonReq.getObject(PARAM_STRUCTURE).containsField("_id")) {
                         structure = mongo.getById(jsonReq.getObject(PARAM_STRUCTURE).getString("_id"), Structure.class);
                     } else {
+                        // FIXME : to JRO : Mais alpha2 n'existe pas !!!
                         Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("address").getObject("country").getString("alpha2"));
                         structure.putObject("country", new JsonObject(Json.encode(country)));
                         structure.getObject("address").putString("country", country.getLabel());
@@ -561,168 +556,166 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     // Country
                     final String countryId = jsonReq.getString("country", "CNTR-250-FR-FRA");
 
-                    final User user = Json.decodeValue(mongo.getById(userUpdate.get_id(), User.class).encode(), User.class);
-
                     LOG.debug("ID: " + userUpdate.get_id() + ", code:" + activationCode + ", structure: " + structure + ", activity:" + activityId);
-
-                    if (user == null) {
-                        utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", req.getLocale()));
-                    } else if (user.getAccount().isActive()) {
-                        utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
-                    } else if (!user.getAccount().isFirstConnexion()) {
-                        utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
-                    } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
-                        utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
-                    } else {
-                        // MaJ User
-                        user.getAccount().setActive(true);
-                        user.getAccount().setFirstConnexion(false);
-                        user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
-                        // récupération des activities des plans
-                        for (Plan plan : user.getAccount().getListPlan()) {
-                            if (plan.getActivity() != null) {
-                                Activity activity = activityBusiness.getActivityFromId(plan.getActivity().get_id());
-                                if (activity != null) {
-                                    plan.setActivity(activity);
-                                }
-                            }
-                        }
-                        user.setBirthdate(userUpdate.getBirthdate());
-                        user.setContact(userUpdate.getContact());
-                        user.setCountry(structureObj.getCountry());
-                        user.setNationality(structureObj.getCountry());
-                        user.setFirstname(userUpdate.getFirstname());
-                        user.setGender(userUpdate.getGender());
-                        user.setName(userUpdate.getName());
-                        user.setAddress(userUpdate.getAddress());
-
-                        // Création Sandbox
-                        SB_SandBox sbSandBox = new SB_SandBox();
-                        sbSandBox.setActivityId(activityId);
-                        sbSandBox.setOwner(user.get_id());
-                        sbSandBox.set_id(mongo.save(sbSandBox));
-
-                        JsonArray tabParametersSignup;
-                        DBObject match;
-                        DBObject project;
-                        // $MATCH section
-                        BasicDBObject dbObjectParent = new BasicDBObject();
-                        dbObjectParent.put("activityId", activityId);
-                        dbObjectParent.put("countryId", countryId);
-                        match = new BasicDBObject("$match", dbObjectParent);
-                        // $PROJECT section
-                        dbObjectParent = new BasicDBObject();
-                        dbObjectParent.put("_id", 0);
-                        dbObjectParent.put("parametersSignup", 1);
-                        project = new BasicDBObject("$project", dbObjectParent);
-                        List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-                        tabParametersSignup = mongo.aggregate("parametersSignup", pipelineAggregation, ActivityCfg.class);
-
-                        // Création SB_Person
-                        List<String> listPersonsId = new ArrayList<>();
-                        if (tabParametersSignup != null && tabParametersSignup.size() > 0) {
-                            JsonObject parametersSignup = tabParametersSignup.get(0);
-                            if (parametersSignup.containsField("parametersSignup") && parametersSignup.getObject("parametersSignup").containsField("players")) {
-                                JsonArray tabPlayers = parametersSignup.getObject("parametersSignup").getArray("players");
-
-                                for (int i = 0; i < tabPlayers.size(); i++) {
-                                    JsonObject player = tabPlayers.get(i);
-                                    for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
-                                        SB_Person sbPerson = new SB_Person();
-                                        sbPerson.setFirstname("Numero " + (listPersonsId.size() + 1));
-                                        sbPerson.setName("Joueur");
-                                        sbPerson.setBirthcity(structureObj.getAddress().getCity());
-                                        sbPerson.setBirthcountry(structureObj.getCountry());
-                                        sbPerson.setBirthdate(utils.randomDate(categoryAgeObj.getAgeMin(), categoryAgeObj.getAgeMax() > 65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
-                                        sbPerson.setNationality(structureObj.getCountry());
-                                        sbPerson.setGender(categoryAgeObj.getGenre());
-                                        sbPerson.setSandboxId(sbSandBox.get_id());
-                                        sbPerson.setContact(new Contact());
-
-                                        Status status = new Status();
-                                        status.setAvailability(new Availability("available", "available"));
-                                        status.setHeight((int) Math.round(Math.random() * 30) + 150);
-                                        status.setLaterality(Math.random() > 0.5 ? "right-handed" : "left-handed");
-                                        status.setStateForm("good");
-                                        status.setWeight((int) Math.round(Math.random() * 20) + 70);
-                                        sbPerson.setStatus(status);
-
-                                        sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
-                                        sbPerson.getStatus().setPositionType(player.getString("positionType"));
-                                        listPersonsId.add(mongo.save(sbPerson));
+                    User user = getUser(userUpdate.get_id(), message, req.getLocale());
+                    if (user != null) {
+                        if (user.getAccount().isActive()) {
+                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
+                        } else if (!user.getAccount().isFirstConnexion()) {
+                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
+                        } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
+                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
+                        } else {
+                            // MaJ User
+                            user.getAccount().setActive(true);
+                            user.getAccount().setFirstConnexion(false);
+                            user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
+                            // récupération des activities des plans
+                            for (Plan plan : user.getAccount().getListPlan()) {
+                                if (plan.getActivity() != null) {
+                                    Activity activity = activityBusiness.getActivityFromId(plan.getActivity().get_id());
+                                    if (activity != null) {
+                                        plan.setActivity(activity);
                                     }
                                 }
                             }
-                        }
+                            user.setBirthdate(userUpdate.getBirthdate());
+                            user.setContact(userUpdate.getContact());
+                            user.setCountry(structureObj.getCountry());
+                            user.setNationality(structureObj.getCountry());
+                            user.setFirstname(userUpdate.getFirstname());
+                            user.setGender(userUpdate.getGender());
+                            user.setName(userUpdate.getName());
+                            user.setAddress(userUpdate.getAddress());
 
-                        // Création SandBoxCfg
-                        SB_SandBoxCfg sbSandBoxCfg = new SB_SandBoxCfg();
+                            // Création Sandbox
+                            SB_SandBox sbSandBox = new SB_SandBox();
+                            sbSandBox.setActivityId(activityId);
+                            sbSandBox.setOwner(user.get_id());
+                            sbSandBox.set_id(mongo.save(sbSandBox));
 
-                        sbSandBoxCfg.setActivity(activityBusiness.getActivityFromId(activityId));
-                        sbSandBoxCfg.setSandbox(sbSandBox);
-                        sbSandBoxCfg.setStructure(structureObj);
-                        // Search Season
-                        Map<String, Object> criterias = new HashMap<>();
-                        criterias.put("activityId", activityId);
-                        criterias.put("countryId", countryId);
-                        JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
+                            JsonArray tabParametersSignup;
+                            DBObject match;
+                            DBObject project;
+                            // $MATCH section
+                            BasicDBObject dbObjectParent = new BasicDBObject();
+                            dbObjectParent.put("activityId", activityId);
+                            dbObjectParent.put("countryId", countryId);
+                            match = new BasicDBObject("$match", dbObjectParent);
+                            // $PROJECT section
+                            dbObjectParent = new BasicDBObject();
+                            dbObjectParent.put("_id", 0);
+                            dbObjectParent.put("parametersSignup", 1);
+                            project = new BasicDBObject("$project", dbObjectParent);
+                            List<DBObject> pipelineAggregation = Arrays.asList(match, project);
+                            tabParametersSignup = mongo.aggregate("parametersSignup", pipelineAggregation, ActivityCfg.class);
 
-                        long currentDate = System.currentTimeMillis();
-                        if (resultJson == null || resultJson.size() == 0) {
-                            throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
-                        }
-                        for (int i = 0; i < resultJson.size(); i++) {
-                            JsonObject s = resultJson.get(i);
-                            if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
-                                sbSandBoxCfg.setSeason((Season) Json.decodeValue(s.encode(), Season.class));
-                                break;
+                            // Création SB_Person
+                            List<String> listPersonsId = new ArrayList<>();
+                            if (tabParametersSignup != null && tabParametersSignup.size() > 0) {
+                                JsonObject parametersSignup = tabParametersSignup.get(0);
+                                if (parametersSignup.containsField("parametersSignup") && parametersSignup.getObject("parametersSignup").containsField("players")) {
+                                    JsonArray tabPlayers = parametersSignup.getObject("parametersSignup").getArray("players");
+
+                                    for (int i = 0; i < tabPlayers.size(); i++) {
+                                        JsonObject player = tabPlayers.get(i);
+                                        for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
+                                            SB_Person sbPerson = new SB_Person();
+                                            sbPerson.setFirstname("Numero " + (listPersonsId.size() + 1));
+                                            sbPerson.setName("Joueur");
+                                            sbPerson.setBirthcity(structureObj.getAddress().getCity());
+                                            sbPerson.setBirthcountry(structureObj.getCountry());
+                                            sbPerson.setBirthdate(utils.randomDate(categoryAgeObj.getAgeMin(), categoryAgeObj.getAgeMax() > 65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
+                                            sbPerson.setNationality(structureObj.getCountry());
+                                            sbPerson.setGender(categoryAgeObj.getGenre());
+                                            sbPerson.setSandboxId(sbSandBox.get_id());
+                                            sbPerson.setContact(new Contact());
+
+                                            Status status = new Status();
+                                            status.setAvailability(new Availability("available", "available"));
+                                            status.setHeight((int) Math.round(Math.random() * 30) + 150);
+                                            status.setLaterality(Math.random() > 0.5 ? "right-handed" : "left-handed");
+                                            status.setStateForm("good");
+                                            status.setWeight((int) Math.round(Math.random() * 20) + 70);
+                                            sbPerson.setStatus(status);
+
+                                            sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
+                                            sbPerson.getStatus().setPositionType(player.getString("positionType"));
+                                            listPersonsId.add(mongo.save(sbPerson));
+                                        }
+                                    }
+                                }
                             }
+
+                            // Création SandBoxCfg
+                            SB_SandBoxCfg sbSandBoxCfg = new SB_SandBoxCfg();
+
+                            sbSandBoxCfg.setActivity(activityBusiness.getActivityFromId(activityId));
+                            sbSandBoxCfg.setSandbox(sbSandBox);
+                            sbSandBoxCfg.setStructure(structureObj);
+                            // Search Season
+                            Map<String, Object> criterias = new HashMap<>();
+                            criterias.put("activityId", activityId);
+                            criterias.put("countryId", countryId);
+                            JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
+
+                            long currentDate = System.currentTimeMillis();
+                            if (resultJson == null || resultJson.size() == 0) {
+                                throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
+                            }
+                            for (int i = 0; i < resultJson.size(); i++) {
+                                JsonObject s = resultJson.get(i);
+                                if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
+                                    sbSandBoxCfg.setSeason((Season) Json.decodeValue(s.encode(), Season.class));
+                                    break;
+                                }
+                            }
+
+                            // Sauvegarde SB_Cfg
+                            sbSandBoxCfg.set_id(mongo.save(sbSandBoxCfg));
+
+                            // Sauvegarde Sandbox avec ID sandbox Cfg
+                            sbSandBox.setSandboxCfgId(sbSandBoxCfg.get_id());
+                            mongo.save(sbSandBox);
+
+                            // Création Sandbox Effective
+                            SB_Effective sbEffective = new SB_Effective();
+                            sbEffective.setSandBoxCfgId(sbSandBoxCfg.get_id());
+                            sbEffective.setLabel("Défaut");
+                            sbEffective.setCategoryAge(categoryAgeObj);
+
+                            // SB_Effective -> members
+                            for (String playerId : listPersonsId) {
+                                Member member = new Member();
+                                member.setRole(new Role("player", "Joueur"));
+                                member.setPersonId(playerId);
+                                sbEffective.addMember(member);
+                            }
+                            sbEffective.set_id(mongo.save(sbEffective));
+                            user.setEffectiveDefault(sbEffective.get_id());
+
+                            // Création SB_Teams
+                            // My team
+                            SB_Team team = new SB_Team();
+                            team.setEffectiveId(sbEffective.get_id());
+                            team.setSandboxId(sbSandBox.get_id());
+                            team.setLabel("Mon équipe");
+                            team.setEnable(true);
+                            team.setAdversary(false);
+                            mongo.save(team);
+                            mongo.save(user);
+
+                            JsonObject notification = new JsonObject();
+                            notification.putString("id", user.get_id());
+                            notification.putString("target", User.class.getSimpleName());
+                            notification.putObject("notification", new JsonObject()
+                                    .putString("content", Messages.getString("first.connection.notification.content"))
+                                    .putString("title", Messages.getString("first.connection.notification.title"))
+                                    .putString("from_user_id", Params.getString("admin.id"))
+                            );
+                            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+                            message.reply(Json.encode(user));
                         }
-
-                        // Sauvegarde SB_Cfg
-                        sbSandBoxCfg.set_id(mongo.save(sbSandBoxCfg));
-
-                        // Sauvegarde Sandbox avec ID sandbox Cfg
-                        sbSandBox.setSandboxCfgId(sbSandBoxCfg.get_id());
-                        mongo.save(sbSandBox);
-
-                        // Création Sandbox Effective
-                        SB_Effective sbEffective = new SB_Effective();
-                        sbEffective.setSandBoxCfgId(sbSandBoxCfg.get_id());
-                        sbEffective.setLabel("Défaut");
-                        sbEffective.setCategoryAge(categoryAgeObj);
-
-                        // SB_Effective -> members
-                        for (String playerId : listPersonsId) {
-                            Member member = new Member();
-                            member.setRole(new Role("player", "Joueur"));
-                            member.setPersonId(playerId);
-                            sbEffective.addMember(member);
-                        }
-                        sbEffective.set_id(mongo.save(sbEffective));
-                        user.setEffectiveDefault(sbEffective.get_id());
-
-                        // Création SB_Teams
-                        // My team
-                        SB_Team team = new SB_Team();
-                        team.setEffectiveId(sbEffective.get_id());
-                        team.setSandboxId(sbSandBox.get_id());
-                        team.setLabel("Mon équipe");
-                        team.setEnable(true);
-                        team.setAdversary(false);
-                        mongo.save(team);
-                        mongo.save(user);
-                        message.reply(Json.encode(user));
-                        JsonObject notification = new JsonObject();
-                        notification.putString("id", user.get_id());
-                        notification.putString("target", User.class.getSimpleName());
-                        notification.putObject("notification", new JsonObject()
-                                .putString("content", Messages.getString("first.connection.notification.content"))
-                                .putString("title", Messages.getString("first.connection.notification.title"))
-                                .putString("from_user_id", Params.getString("admin.id"))
-                        );
-                        vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-                        utils.sendStatus(true, message);
                     }
 
                 } catch (final NoSuchMethodException e) {
@@ -733,12 +726,31 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendError(message, e);
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (final Exception e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
+    }
+
+    /**
+     *
+     * @param id User id
+     * @param message VertX message
+     * @return user or null
+     */
+    private User getUser(String id, Message<String> message, String locale) {
+        try {
+            return Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.BAD_LOGIN, Messages.getString("user.not.exist", locale));
+            return null;
+        }
     }
 }

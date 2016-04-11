@@ -21,7 +21,8 @@ package com.qaobee.hive.test.config;
 
 public interface JSDataMongoTest {
 
-    /* DATA */ String DATA_CHAMPIONSHIP_HAND = "data_championShip_Hand.js";
+    /* DATA */
+    String DATA_CHAMPIONSHIP_HAND = "data_championShip_Hand.js";
     String DATA_EFFECTIVE_HAND = "data_SB_effective_Hand.js";
     String DATA_TEAM_HAND = "data_SB_team_Hand.js";
     String DATA_EVENT_HAND = "data_SB_event_Hand_tests.js";
@@ -32,17 +33,21 @@ public interface JSDataMongoTest {
     String DATA_USER_QAOBEE = "data_users_qaobee.js";
     String DATA_SANDBOXES_HAND = "data_SB_sandbox_Hand.js";
 
-    /* Training */ String DATA_CYCLE = "data_SB_training_cycle.js";
+    /* Training */
+    String DATA_CYCLE = "data_SB_training_cycle.js";
     String DATA_SESSION = "data_SB_training_session.js";
     String DATA_EXERCISE = "data_SB_training_exercise.js";
     String DATA_THEME = "data_SB_training_theme.js";
 
-    /* Stats */ String DATA_STAT_HAND = "data_SB_Stats_Hand2.js";
+    /* Stats */
+    String DATA_STAT_HAND = "data_SB_Stats_Hand2.js";
 
-    /* SETTINGS */ String SETTINGS_ACTIVITY = "settings_activity.js";
+    /* SETTINGS */
+    String SETTINGS_ACTIVITY = "settings_activity.js";
     String SETTINGS_ACTIVITY_CFG = "settings_activityCfg.js";
     String SETTINGS_COUNTRY = "settings_country.js";
     String SETTINGS_SEASONS = "settings_season.js";
-    /* STATS */ String SETTINGS_INDICATOR = "settings_indicator_HAND.js";
+    /* STATS */
+    String SETTINGS_INDICATOR = "settings_indicator_HAND.js";
 
 }

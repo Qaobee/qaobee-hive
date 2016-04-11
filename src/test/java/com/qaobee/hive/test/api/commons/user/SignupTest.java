@@ -447,6 +447,9 @@ public class SignupTest extends VertxJunitSupport {
     }
 
 
+    /**
+     * First connection check test.
+     */
     @Test
     public void firstConnectionCheckTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
@@ -473,6 +476,9 @@ public class SignupTest extends VertxJunitSupport {
 
     }
 
+    /**
+     * First connection check already active user test.
+     */
     @Test
     public void firstConnectionCheckAlreadyActiveUserTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
@@ -484,20 +490,23 @@ public class SignupTest extends VertxJunitSupport {
                 .body("person.account.active", is(false))
                 .body("person.name", notNullValue())
                 .body("person.name", is(params.getString("name")))
-                .body("person._id", notNullValue()).extract().asString());
-        given().param("id", p.getObject("person").getString("_id"))
-                .param("code", p.getObject("person").getObject("account").getString("activationCode"))
+                .body("person._id", notNullValue()).extract().asString()).getObject("person");
+        given().param("id", p.getString("_id"))
+                .param("code", p.getObject("account").getString("activationCode"))
                 .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
                 .body("status", is(true));
-        given().param(SignupVerticle.PARAM_ID, p.getObject("person").getString("_id"))
-                .param(SignupVerticle.PARAM_CODE, p.getObject("person").getObject("account").getString("activationCode"))
+        given().param(SignupVerticle.PARAM_ID, p.getString("_id"))
+                .param(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"))
                 .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
                 .body("code", is(ExceptionCodes.BUSINESS_ERROR.toString()));
     }
 
+    /**
+     * First connection check missing values test.
+     */
     @Test
     public void firstConnectionCheckMissingValuesTest() {
         given().when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
@@ -505,6 +514,9 @@ public class SignupTest extends VertxJunitSupport {
                 .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
+    /**
+     * First connection check wrong user id test.
+     */
     @Test
     public void firstConnectionCheckWrongUserIdTest() {
         User u = generateUser();
@@ -515,6 +527,9 @@ public class SignupTest extends VertxJunitSupport {
                 .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
     }
 
+    /**
+     * First connection check wrong activation code test.
+     */
     @Test
     public void firstConnectionCheckWrongActivationCodeTest() {
         User u = generateUser();
@@ -523,6 +538,155 @@ public class SignupTest extends VertxJunitSupport {
                 .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
                 .body("code", is(ExceptionCodes.BUSINESS_ERROR.toString()));
+    }
+
+
+    @Test
+    public void firstConnectionCheckWithWrongHttpMethodTest() {
+        given().when().post(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Finalize signup test.
+     */
+    @Test
+    public void finalizeSignupTest() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
+        JsonObject u = generateNewUser();
+        JsonObject p = new JsonObject(given().body(u.encode())
+                .when().put(getURL(SignupVerticle.REGISTER))
+                .then().assertThat().statusCode(200)
+                .body("person", notNullValue())
+                .body("person.account.active", is(false))
+                .body("person.name", notNullValue())
+                .body("person.name", is(u.getString("name")))
+                .body("person._id", notNullValue()).extract().asString()).getObject("person");
+        String token = given().param(SignupVerticle.PARAM_ID, p.getString("_id"))
+                .param(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"))
+                .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
+                .then().assertThat().statusCode(200)
+                .body("account", notNullValue())
+                .body("account.token", notNullValue()).extract().path("account.token");
+
+        JsonObject param = new JsonObject();
+        param.putObject(SignupVerticle.PARAM_USER, p);
+        param.putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"));
+        param.putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"));
+        param.putObject(SignupVerticle.PARAM_STRUCTURE, getStructure());
+        param.putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
+        given().header("token", token)
+                .body(param.encode())
+                .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
+                .then().assertThat().statusCode(200)
+                .body("name", notNullValue())
+                .body("name", is(p.getString("name")))
+                .body("effectiveDefault", notNullValue())
+                .body("account.active", is(true));
+    }
+
+    @Test
+    public void finalizeSignupWithWrongHttpMethodTest() {
+        User u = generateLoggedUser();
+        given().header("token", u.getAccount().getToken())
+                .when().get(getURL(SignupVerticle.FINALIZE_SIGNUP))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    @Test
+    public void finalizeSignupWithNotloggedUserTest() {
+        given().when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    @Test
+    public void finalizeSignupWithBlankOrNullParamsTest() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
+        JsonObject u = generateNewUser();
+        JsonObject p = new JsonObject(given().body(u.encode())
+                .when().put(getURL(SignupVerticle.REGISTER))
+                .then().assertThat().statusCode(200)
+                .body("person", notNullValue())
+                .body("person.account.active", is(false))
+                .body("person.name", notNullValue())
+                .body("person.name", is(u.getString("name")))
+                .body("person._id", notNullValue()).extract().asString()).getObject("person");
+        String token = given().param(SignupVerticle.PARAM_ID, p.getString("_id"))
+                .param(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"))
+                .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
+                .then().assertThat().statusCode(200)
+                .body("account", notNullValue())
+                .body("account.token", notNullValue()).extract().path("account.token");
+
+        JsonObject param = new JsonObject();
+        param.putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"));
+        param.putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"));
+        param.putObject(SignupVerticle.PARAM_STRUCTURE, getStructure());
+        param.putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
+        given().header("token", token)
+                .body(param.encode())
+                .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+    @Test
+    public void finalizeSignupWithWrongParamsTest() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
+        JsonObject u = generateNewUser();
+        JsonObject p = new JsonObject(given().body(u.encode())
+                .when().put(getURL(SignupVerticle.REGISTER))
+                .then().assertThat().statusCode(200)
+                .body("person", notNullValue())
+                .body("person.account.active", is(false))
+                .body("person.name", notNullValue())
+                .body("person.name", is(u.getString("name")))
+                .body("person._id", notNullValue()).extract().asString()).getObject("person");
+        String token = given().param(SignupVerticle.PARAM_ID, p.getString("_id"))
+                .param(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"))
+                .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
+                .then().assertThat().statusCode(200)
+                .body("account", notNullValue())
+                .body("account.token", notNullValue()).extract().path("account.token");
+
+        JsonObject param = new JsonObject();
+        String id = p.getString("_id");
+        p.putString("_id", "blabla");
+        param.putObject(SignupVerticle.PARAM_USER, p);
+        param.putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"));
+        param.putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"));
+        param.putObject(SignupVerticle.PARAM_STRUCTURE, getStructure());
+        param.putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
+        given().header("token", token)
+                .body(param.encode())
+                .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
+                .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+
+        p.putString("_id", id);
+        param.putObject(SignupVerticle.PARAM_USER, p);
+        param.putString(SignupVerticle.PARAM_CODE,"blabla");
+        given().header("token", token)
+                .body(param.encode())
+                .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
+                .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
+                .body("code", is(ExceptionCodes.BUSINESS_ERROR.toString()));
+/*
+        param.putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"));
+        JsonObject structure = getStructure();
+        structure.removeField("_id");
+        param.putObject(SignupVerticle.PARAM_STRUCTURE, structure);
+        given().header("token", token)
+                .body(param.encode())
+                .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
+                .then().assertThat().statusCode(200)
+                .body("name", notNullValue())
+                .body("name", is(p.getString("name")))
+                .body("effectiveDefault", notNullValue())
+                .body("account.active", is(true));
+                */
     }
 
     /**
@@ -552,6 +716,40 @@ public class SignupTest extends VertxJunitSupport {
         //jUnit
         params.putBoolean("junit", true);
         return params;
+    }
+
+    private JsonObject getStructure() {
+        return new JsonObject("{\n" +
+                "    \"_id\" : \"541168295971d35c1f2d1b5e\",\n" +
+                "    \"label\" : \"Dunkerque Handball\",\n" +
+                "    \"acronym\" : \"USDK\",\n" +
+                "    \"activity\" : {\n" +
+                "        \"_id\" : \"ACT-HAND\",\n" +
+                "        \"code\" : \"ACT-HAND\",\n" +
+                "        \"label\" : \"admin.settings.activity.handball.label\",\n" +
+                "        \"enable\" : true,\n" +
+                "        \"activityType\" : \"TEAM_SPORT\"\n" +
+                "    },\n" +
+                "    \"address\" : {\n" +
+                "        \"place\" : \" Stades de Flandres, Avenue de Rosendaël\",\n" +
+                "        \"zipcode\" : \"59240\",\n" +
+                "        \"city\" : \" DUNKERQUE\",\n" +
+                "        \"country\" : \"France\"\n" +
+                "    },\n" +
+                "    \"contact\" : {\n" +
+                "        \"home\" : null,\n" +
+                "        \"office\" : \"03 28 66 91 52\",\n" +
+                "        \"cellphone\" : \"06 30 35 38 19\",\n" +
+                "        \"fax\" : \"\",\n" +
+                "        \"email\" : \"melanie.lefebvre@usdk.fr\"\n" +
+                "    },\n" +
+                "    \"country\" : {\"_id\" : \"CNTR-250-FR-FRA\" , \"codeOSCE\" : 250 , \"label\" : \"France\" , \"local\" : \"fr\"},\n" +
+                "    \"avatar\" : null\n" +
+                "}");
+    }
+
+    private JsonObject getCategoryAge() {
+        return new JsonObject("{ \"code\" : \"sen\", \"label\" : \"Senior Gars\" }");
     }
 
 }
