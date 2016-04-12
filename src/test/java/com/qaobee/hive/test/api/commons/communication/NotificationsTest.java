@@ -78,9 +78,8 @@ public class NotificationsTest extends VertxJunitSupport {
             n.setTitle("Message-" + i);
             n.setFrom_user_id(u.get_id());
             n.setUser_id(u.get_id());
-            n.setTimestamp(System.currentTimeMillis());
+            n.setTimestamp(i);
             n.set_id(addNotification(n));
-            Thread.sleep(250L);
         }
 
         given().header("token", u.getAccount().getToken())
