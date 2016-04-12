@@ -107,11 +107,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     }
                     JsonArray jnotif = new JsonArray();
                     List<String> wl = Arrays.asList("_id", "name", "firstname", "avatar");
-                    for (int i = start; i < start +limit; i++) {
+                    for (int i = start; i < start + limit; i++) {
                         JsonObject u = mongo.getById(((JsonObject) notifications.get(i)).getString("from_user_id"), User.class);
                         JsonObject cu = new JsonObject();
-                        for(String f : u.getFieldNames()) {
-                            if(wl.contains(f)) {
+                        for (String f : u.getFieldNames()) {
+                            if (wl.contains(f)) {
                                 cu.putValue(f, u.getValue(f));
                             }
                         }
@@ -225,8 +225,8 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                             break;
                         case "SB_SandBoxCfg":
                             JsonObject sandbox = mongo.getById(id, collection);
-                            for(int i = 0; i < sandbox.getArray("members").size(); i++)
-                            addNotificationToUser((String) sandbox.getArray("members").get(0), notification);
+                            for (int i = 0; i < sandbox.getArray("members").size(); i++)
+                                addNotificationToUser((String) sandbox.getArray("members").get(0), notification);
                             break;
                         default:
                             break;
@@ -254,7 +254,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     utils.isUserLogged(req);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.testMandatoryParams(req.getParams(), "id");
-                    if(StringUtils.isBlank(req.getBody())) {
+                    if (StringUtils.isBlank(req.getBody())) {
                         throw new IllegalArgumentException("missing body");
                     }
                     JsonObject request = new JsonObject()
@@ -282,8 +282,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     }
 
     /**
-     *
-     * @param id id user
+     * @param id           id user
      * @param notification notification object
      * @throws QaobeeException exception
      */
