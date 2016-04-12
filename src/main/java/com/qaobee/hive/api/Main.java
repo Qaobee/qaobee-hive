@@ -54,9 +54,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.*;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_LENGTH;
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 
 /**
  * The Class Main.
@@ -175,7 +173,7 @@ public class Main extends AbstractGuiceVerticle {
                         request.putString("filename", filename);
                         request.putString("contentType", upload.contentType());
                         LOG.debug("filename : " + filename);
-                        if(vertx.fileSystem().existsSync(filename)) {
+                        if (vertx.fileSystem().existsSync(filename)) {
                             vertx.fileSystem().deleteSync(filename);
                         }
                         upload.streamToFileSystem(filename);
@@ -338,11 +336,10 @@ public class Main extends AbstractGuiceVerticle {
             }
             if (ex.getMessage() != null) {
                 String exStr = ex.getMessage();
-                if(ex.getMessage().startsWith("{")) {
+                if (ex.getMessage().startsWith("{")) {
                     JsonObject jsonEx = new JsonObject(ex.getMessage());
-                    if (jsonEx.containsField("stackTrace")) {
-                        jsonEx.removeField("stackTrace");
-                    }
+                    jsonEx.removeField("stackTrace");
+                    jsonEx.removeField("suppressed");
                     exStr = jsonEx.encode();
                 }
                 req.response().end(exStr);

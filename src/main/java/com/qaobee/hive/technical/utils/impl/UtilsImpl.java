@@ -162,12 +162,18 @@ public class UtilsImpl implements Utils {
         for (final String field : fields) {
             if (!map.containsKey(field) || map.get(field) == null) {
                 missingFields.add(field);
-            } else if ((map.get(field) instanceof List && ((((List<?>) map.get(field)).isEmpty()) || (StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0))))) || (
-                    map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field)))) {
-                missingFields.add(field);
+            } else if (map.get(field) instanceof List) {
+                if ((((List<?>) map.get(field)).isEmpty())) {
+                    missingFields.add(field);
+                } else if (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field))) {
+                    missingFields.add(field);
+                } else if (((List<?>) map.get(field)).get(0) instanceof String && (StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0)))) {
+                    missingFields.add(field);
+                } else if (((List<?>) map.get(field)).get(0) == null) {
+                    missingFields.add(field);
+                }
             }
         }
-
         if (!missingFields.isEmpty()) {
             throw new IllegalArgumentException("Missing mandatory parameters : " + missingFields);
         }

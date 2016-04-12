@@ -184,7 +184,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                     DBObject match;
                     BasicDBObject dbObjectParent;
                     BasicDBObject dbObjectChild;
-					/* *** $MACTH section *** */
+                    /* *** $MACTH section *** */
                     dbObjectParent = new BasicDBObject();
                     // Activity ID
                     dbObjectParent.put("activityId", mapParams.get(PARAM_ACTIVITY));
@@ -250,17 +250,11 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("get() - Championship");
                 try {
-                    /*
-                     * *** Params section ***
-					 */
-                    // Check param mandatory
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_ID);
-                    /* Call to MongoDB */
                     message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), ChampionShip.class).encode());
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
@@ -272,7 +266,6 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
-
             }
         };
 
@@ -307,35 +300,26 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("add() - Championship");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-
                     // Check param mandatory
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isLoggedAndAdmin(req);
+                    utils.testMandatoryParams(req.getBody(), PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
+                            PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
                     JsonObject championship = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(championship.toMap(), PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                            PARAM_SEASON_CODE); //, PARAM_LIST_PARTICIPANTS => pb sur TestMandatory quand liste d'objets autre que String
-
-                    // Call to MongoDB
-                    final String id = mongo.save(championship, ChampionShip.class);
-                    championship.putString("_id", id);
-
-                    // Reply
+                    championship.putString("_id", mongo.save(championship, ChampionShip.class));
                     message.reply(championship.encode());
-
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
-
             }
         };
 
@@ -371,34 +355,25 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("update() - Championship");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-
-                    // Check param mandatory
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isLoggedAndAdmin(req);
+                    utils.testMandatoryParams(req.getBody(), "_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
+                            PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
                     JsonObject championship = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(championship.toMap(), PARAM_ID, PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                            PARAM_SEASON_CODE); //, PARAM_LIST_PARTICIPANTS => pb sur TestMandatory quand liste d'objets autre que String
-
-                    // Call to MongoDB
                     mongo.save(championship, ChampionShip.class);
-
-                    // Reply
                     message.reply(championship.encode());
-
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
-
             }
         };
         
