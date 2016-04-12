@@ -47,7 +47,7 @@ import java.util.Map;
  *
  * @author jro
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle()
 public class ChampionshipVerticle extends AbstractGuiceVerticle {
 
     /**
@@ -167,7 +167,6 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("getList() - Championship");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     /*
@@ -179,24 +178,20 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                     JsonObject params = new JsonObject(req.getBody());
                     utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE);
                     Map<String, Object> mapParams = params.toMap();
-                    
                     /*
                      * *** Aggregat section ***
 					 */
                     DBObject match;
                     BasicDBObject dbObjectParent;
                     BasicDBObject dbObjectChild;
-
 					/* *** $MACTH section *** */
                     dbObjectParent = new BasicDBObject();
-
                     // Activity ID
                     dbObjectParent.put("activityId", mapParams.get(PARAM_ACTIVITY));
                     // Category Age Code
                     dbObjectParent.put("categoryAge.code", mapParams.get(PARAM_CATEGORY_AGE));
                     // Structure ID
                     dbObjectParent.put("participants.structureId", mapParams.get(PARAM_STRUCTURE));
-
                     // Participant
                     if (mapParams.containsKey(PARAM_PARTICIPANT)) {
                         @SuppressWarnings("unchecked") Map<String, Object> mapParticipant = (Map<String, Object>) mapParams.get(PARAM_PARTICIPANT);
@@ -215,30 +210,21 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                         }
                         dbObjectParent.put("$and", Collections.singletonList(dbObjectChild));
                     }
-
                     match = new BasicDBObject("$match", dbObjectParent);
-
                     /* Pipeline */
                     List<DBObject> pipelineAggregation = Collections.singletonList(match);
-
-                    LOG.debug("getListChampionshipHandler : " + pipelineAggregation.toString());
-
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
-
-                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
-
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
-
             }
         };
 
@@ -274,16 +260,14 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_ID);
-                    
                     /* Call to MongoDB */
                     message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), ChampionShip.class).encode());
-
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);

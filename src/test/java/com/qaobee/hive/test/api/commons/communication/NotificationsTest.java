@@ -47,8 +47,8 @@ public class NotificationsTest extends VertxJunitSupport {
                .when().get(getURL(NotificationsVerticle.LIST))
                .then().assertThat().statusCode(200)
                .body("", hasSize(greaterThan(0)))
-               .body("[0]._id", is(n.get_id()))
-               .body("[0].content", is("Hello"));
+               .body("_id", hasItem(n.get_id()))
+               .body("content", hasItem("Hello"));
     }
 
     /**
@@ -86,7 +86,7 @@ public class NotificationsTest extends VertxJunitSupport {
                .when().get(getURL(NotificationsVerticle.LIST))
                .then().assertThat().statusCode(200)
                .body("", hasSize(15))
-               .body("[0].content", is("Hello"));
+               .body("content", hasItem("Hello"));
 
         given().header("token", u.getAccount().getToken())
                .param(NotificationsVerticle.PARAM_START, 5)
@@ -94,7 +94,7 @@ public class NotificationsTest extends VertxJunitSupport {
                .when().get(getURL(NotificationsVerticle.LIST))
                .then().assertThat().statusCode(200)
                .body("", hasSize(2))
-               .body("[0].title", is("Message-9"));
+               .body("title", hasItem("Message-9"));
     }
 
     /**
@@ -142,9 +142,9 @@ public class NotificationsTest extends VertxJunitSupport {
                .when().get(getURL(NotificationsVerticle.LIST))
                .then().assertThat().statusCode(200)
                .body("", hasSize(1))
-               .body("[0].content", is("Hello"))
-               .body("[0]._id", is(n.get_id()))
-               .body("[0].read", is(true));
+               .body("content", hasItem("Hello"))
+               .body("_id", hasItem(n.get_id()))
+               .body("read", hasItem(true));
     }
 
     /**
@@ -280,8 +280,8 @@ public class NotificationsTest extends VertxJunitSupport {
                .when().get(getURL(NotificationsVerticle.LIST))
                .then().assertThat().statusCode(200)
                .body("", hasSize(1))
-               .body("[0].content", is("Hello"))
-               .body("[0]._id", notNullValue());
+               .body("content", hasItem("Hello"))
+               .body("_id", hasItem(notNullValue()));
     }
 
     /**

@@ -20,6 +20,7 @@ package com.qaobee.hive.test.api.commons.referencial;
 import com.qaobee.hive.api.v1.commons.referencial.ChampionshipVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
@@ -31,117 +32,197 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
 /**
  * @author jerome
  */
 public class ChampionshipTest extends VertxJunitSupport {
 
     @Test
-    public void getListChampionShipsTest() {
+    public void getListChampionshipsTest() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
-        User user = generateLoggedAdminUser();
-
-        // Request
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-
-        // Params
+        User u = generateLoggedUser();
         final JsonObject params = new JsonObject();
         params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
         params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
         params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
 
-        req.setBody(params.encode());
-
-        // Send request
-        final String reply = sendOnBus(ChampionshipVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertEquals("getListChampionShipsTest", 1, new JsonArray(reply).size());
+        given().header("token", u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1))
+                .body("[0].activityId", is(params.getString(ChampionshipVerticle.PARAM_ACTIVITY)));
     }
 
     @Test
-    public void getListChampionShipsWithInfraTest() {
+    public void getListChampionshipsWithNonLoggedUserTest() {
+        given().when().post(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    @Test
+    public void getListChampionshipsWithWrongHttpMthodTest() {
+        given().when().get(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    @Test
+    public void getListChampionshipsWithMissingParamsTest() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
-        User user = generateLoggedAdminUser();
+        User u = generateLoggedUser();
+        final JsonObject params = new JsonObject();
+        params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
+        params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
 
-        // Request
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
+        given().header("token", u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
 
-        // Params
+    @Test
+    public void getListChampionshipsWithWrongParamsTest() {
+        // Populate default value
+        populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
+        // User connected
+        User u = generateLoggedUser();
+        final JsonObject params = new JsonObject();
+        params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "blabla");
+        params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
+        params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
+
+        given().header("token", u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(0));
+
+
+        params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
+        params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "12345");
+        given().header("token", u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(0));
+
+        params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "blabla");
+        params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e");
+        given().header("token", u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(0));
+    }
+
+
+    @Test
+    public void getListChampionshipsWithInfraTest() {
+        // Populate default value
+        populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
+        // User connected
+        User u = generateLoggedUser();
         final JsonObject params = new JsonObject();
         params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
         params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
         params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
-
         JsonObject paramParticipant = new JsonObject();
         paramParticipant.putString("id", "ID-PHARE-CHAMBERY");
         paramParticipant.putString("type", "infrastructure");
         params.putObject(ChampionshipVerticle.PARAM_PARTICIPANT, paramParticipant);
 
-        req.setBody(params.encode());
-
-        // Send request
-        final String reply = sendOnBus(ChampionshipVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertEquals("getListChampionShipsTest", 1, new JsonArray(reply).size());
+        given().header("token", u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1))
+                .body("[0].participants.id" , hasItem(paramParticipant.getString("id")));
     }
 
     @Test
-    public void getListChampionShipsWithInfraUnknownTest() {
+    public void getListChampionshipsWithInfraUnknownTest() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
-        User user = generateLoggedAdminUser();
-
-        // Request
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-
-        // Params
+        User u = generateLoggedUser();
         final JsonObject params = new JsonObject();
         params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
         params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
         params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
-
         JsonObject paramParticipant = new JsonObject();
         paramParticipant.putString("id", "ID-Anywhere-But-Not-There");
         paramParticipant.putString("type", "infrastructure");
         params.putObject(ChampionshipVerticle.PARAM_PARTICIPANT, paramParticipant);
 
-        req.setBody(params.encode());
-
-        // Send request
-        final String reply = sendOnBus(ChampionshipVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertEquals("getListChampionShipsTest", 0, new JsonArray(reply).size());
+        given().header("token", u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(0));
     }
 
     @Test
-    public void getChampionShipTest() {
+    public void getChampionshipTest() {
+        populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);User u = generateLoggedUser();
+        given().header("token", u.getAccount().getToken())
+                .queryParam(ChampionshipVerticle.PARAM_ID, "559ebfb499f07aa6f04dec76")
+                .when().get(getURL(ChampionshipVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("label",notNullValue())
+                .body("label",is("Championnat du bout du monde"));
+    }
+
+    @Test
+    public void getChampionshipWithNonLoggedUserTest() {
+        given().when().get(getURL(ChampionshipVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    @Test
+    public void getChampionshipWithWrongHttpMthodTest() {
+        given().when().post(getURL(ChampionshipVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    @Test
+    public void getChampionshipWithMissingParamsTest() {
+        // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
-        User user = generateLoggedAdminUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-        final HashMap<String, List<String>> params = new HashMap<>();
-        params.put(ChampionshipVerticle.PARAM_ID, Collections.singletonList("559ebfb499f07aa6f04dec76"));
-        req.setParams(params);
-
-        final JsonObject reply = new JsonObject(sendOnBus(ChampionshipVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertEquals("getChampionShipByIdTest", "Championnat du bout du monde", reply.getString("label"));
+        // User connected
+        User u = generateLoggedUser();
+        given().header("token", u.getAccount().getToken())
+                .when().get(getURL(ChampionshipVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     @Test
-    public void addChampionShipTest() {
+    public void getChampionshipWithWrongParamsTest() {
+        // Populate default value
+        populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
+        // User connected
+        User u = generateLoggedUser();
+        given().header("token", u.getAccount().getToken())
+                .queryParam(ChampionshipVerticle.PARAM_ID, "12345")
+                .when().get(getURL(ChampionshipVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
+    }
+
+    @Test
+    public void addChampionshipTest() {
         User user = generateLoggedAdminUser();
         RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
@@ -198,7 +279,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     @Test
-    public void updateChampionShipTest() {
+    public void updateChampionshipTest() {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         User user = generateLoggedAdminUser();
         RequestWrapper req = new RequestWrapper();
