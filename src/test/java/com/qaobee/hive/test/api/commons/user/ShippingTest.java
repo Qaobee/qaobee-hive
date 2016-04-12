@@ -534,8 +534,8 @@ public class ShippingTest extends VertxJunitSupport {
         notification.getObject("metadata").putString("customer_id", "bwahaha");
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
-                .then().assertThat().statusCode(ExceptionCodes.MONGO_ERROR.getCode())
-                .body("code", is(ExceptionCodes.MONGO_ERROR.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**

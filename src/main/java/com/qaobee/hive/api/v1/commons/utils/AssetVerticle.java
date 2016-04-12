@@ -143,7 +143,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     message.reply(resp);
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.MONGO_ERROR.getCode());
+                    resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.DATA_ERROR.getCode());
                     resp.putString(Constantes.MESSAGE, e.getMessage());
                     if (vertx.fileSystem().existsSync(message.body().getString("filename"))) {
                         vertx.fileSystem().deleteSync(message.body().getString("filename"));

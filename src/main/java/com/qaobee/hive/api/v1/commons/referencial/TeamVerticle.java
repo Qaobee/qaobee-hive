@@ -110,7 +110,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Team}   team            The Team added with the id.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> add = new Handler<Message<String>>() {
@@ -143,7 +143,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
                 }
             }
         };
@@ -162,7 +162,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Team}   team            The Team found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> get = new Handler<Message<String>>() {
@@ -219,7 +219,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Team}   team            The Team updated.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> update = new Handler<Message<String>>() {
@@ -251,7 +251,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
                 }
             }
         };

@@ -243,7 +243,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
 
                     final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, ActivityCfg.class);
                     if (resultJSon == null) {
-                        throw new QaobeeException(ExceptionCodes.MONGO_ERROR, "Resultset for field '" + paramField + "' is null (" + activityId + "/" + countryId + "/" + dateRef + ")");
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Resultset for field '" + paramField + "' is null (" + activityId + "/" + countryId + "/" + dateRef + ")");
                     }
 
                     LOG.debug(resultJSon.encodePrettily());

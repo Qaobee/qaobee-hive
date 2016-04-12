@@ -122,7 +122,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Indicator}   indicator            The Indicator found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
@@ -182,7 +182,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {List}   indicators            The list of indicators found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
@@ -280,7 +280,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {List}   indicators            The list of indicators found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_BY_CODE, new Handler<Message<String>>() {

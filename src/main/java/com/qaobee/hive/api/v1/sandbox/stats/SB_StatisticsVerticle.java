@@ -146,7 +146,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Array}   Stats    The statistics found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_STAT_GROUPBY, new Handler<Message<String>>() {
@@ -310,7 +310,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Array}   Stats    The detail value statistics found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LISTDETAIL_VALUES, new Handler<Message<String>>() {
@@ -409,7 +409,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Stats}   stats    The stats added.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(ADD_STAT, new Handler<Message<String>>() {
@@ -441,7 +441,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
                 }
             }
         });
@@ -460,7 +460,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Stats}   stats    The stats added.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(ADD_STAT_BULK, new Handler<Message<String>>() {

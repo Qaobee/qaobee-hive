@@ -156,7 +156,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Array} list of championships
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> getListChampionshipsHandler = new Handler<Message<String>>() {
@@ -253,7 +253,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> getChampionshipHandler = new Handler<Message<String>>() {
@@ -312,7 +312,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> addChampionshipHandler = new Handler<Message<String>>() {
@@ -376,7 +376,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> updateChampionshipHandler = new Handler<Message<String>>() {

@@ -196,7 +196,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {SB_team}   team            The SB_Team found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
@@ -250,7 +250,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Array}   teams           The set of SB_Team found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {

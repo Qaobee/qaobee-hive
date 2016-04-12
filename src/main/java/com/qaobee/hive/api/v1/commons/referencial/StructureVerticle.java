@@ -148,7 +148,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Structure}   structure            The Structure added with the id.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
@@ -182,7 +182,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
                 }
             }
         });
@@ -201,7 +201,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Structure}   structure            The Structure found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
@@ -246,7 +246,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Structure}   structure            The Structure found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
@@ -330,7 +330,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Structure}   structure            The Structure updated.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
@@ -363,7 +363,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
                 }
             }
         });

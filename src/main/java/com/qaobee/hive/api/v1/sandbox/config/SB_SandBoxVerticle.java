@@ -123,7 +123,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {sandBox}   sandBox    The sandBox updated.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
@@ -180,7 +180,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {sandBox}   sandBox    The sandBox updated.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST_BY_OWNER, new Handler<Message<String>>() {

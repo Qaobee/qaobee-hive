@@ -490,7 +490,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MONGO_ERROR, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
                 }
             }
         });

@@ -219,7 +219,7 @@ public class MongoDBImpl implements MongoDB {
                 return (String) res.getUpsertedId();
             }
         } else {
-            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, "Can't save " + document.encode());
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Can't save " + document.encode());
         }
     }
 
@@ -243,7 +243,7 @@ public class MongoDBImpl implements MongoDB {
     public JsonObject getById(final String id, final Class<?> collection) throws QaobeeException {
         final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id));
         if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection.getSimpleName());
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR, id + " not found in " + collection.getSimpleName());
         } else {
             return new JsonObject(res.next().toMap());
         }
@@ -254,7 +254,7 @@ public class MongoDBImpl implements MongoDB {
     public JsonObject getById(final String id, final String collection) throws QaobeeException {
         final DBCursor res = db.getCollection(collection).find(new BasicDBObject("_id", id));
         if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR, id + " not found in " + collection);
         } else {
             return new JsonObject(res.next().toMap());
         }
@@ -265,7 +265,7 @@ public class MongoDBImpl implements MongoDB {
     public JsonObject getById(final String id, final Class<?> collection, final List<String> minimal) throws QaobeeException {
         final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id), new BasicDBObject(getMinimal(minimal)));
         if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.MONGO_ERROR, id + " not found in " + collection);
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR, id + " not found in " + collection);
         } else {
             return new JsonObject(res.next().toMap());
         }

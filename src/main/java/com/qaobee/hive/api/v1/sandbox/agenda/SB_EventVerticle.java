@@ -156,7 +156,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiHeader {String} token
          * @apiSuccess {Array} list of SB_Event
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
@@ -267,7 +267,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiGroup SB_Event API
          * @apiSuccess {SB_Event} SB_Event create
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
@@ -317,7 +317,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiGroup SB_Event API
          * @apiSuccess {SB_Event} SB_Event updated
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
@@ -368,7 +368,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiGroup Event API
          * @apiParam {String} id
          * @apiSuccess {Object} event com.qaobee.swarn.business.model.tranversal.event.event;
-         * @apiError MONGO_ERROR Error during request to Mongo
+         * @apiError DATA_ERROR Error during request to Mongo
          * @apiError INVALID_PARAMETER Invalid Parameters
          * @apiError HTTP_ERROR Bad Request
          */

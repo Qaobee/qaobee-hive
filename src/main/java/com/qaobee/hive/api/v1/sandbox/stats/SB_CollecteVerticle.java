@@ -140,7 +140,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
          * @apiHeader {String} token
          * @apiSuccess {Array} list of SB_Collecte
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
@@ -228,7 +228,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
          * @apiGroup SB_Collecet API
          * @apiSuccess {SB_Collecte} SB_Collecte create
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
@@ -279,7 +279,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
          * @apiGroup SB_Collecet API
          * @apiSuccess {SB_Collecte} SB_Collecte updated
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
@@ -330,7 +330,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
          * @apiGroup Collecte API
          * @apiParam {String} id
          * @apiSuccess {Object} collecte
-         * @apiError MONGO_ERROR Error during request to Mongo
+         * @apiError DATA_ERROR Error during request to Mongo
          * @apiError INVALID_PARAMETER Invalid Parameters
          * @apiError HTTP_ERROR Bad Request
          */

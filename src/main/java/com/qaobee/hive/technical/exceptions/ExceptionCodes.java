@@ -72,7 +72,7 @@ public enum ExceptionCodes {
     /**
      * The mongo error.
      */
-    MONGO_ERROR(500),
+    DATA_ERROR(500),
     /**
      * The non unique login.
      */

@@ -94,7 +94,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Activity} activity The Activity found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
@@ -149,7 +149,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {List}   activities            List all activity
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
@@ -185,7 +185,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {List}   activities  List of enabled activities
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST_ENABLE, new Handler<Message<String>>() {

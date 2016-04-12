@@ -749,7 +749,7 @@ public class UserTest extends VertxJunitSupport {
                 pathParam("uid", "blabla").
                 when().
                 post(BASE_URL + "/file/User/avatar/{uid}")
-                .then().assertThat().statusCode(ExceptionCodes.MONGO_ERROR.getCode());
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
     }
 
     /**

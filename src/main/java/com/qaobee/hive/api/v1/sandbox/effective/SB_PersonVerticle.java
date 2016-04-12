@@ -156,7 +156,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
          * @apiGroup Person API
          * @apiParam {String} id
          * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
-         * @apiError MONGO_ERROR Error during request to Mongo
+         * @apiError DATA_ERROR Error during request to Mongo
          * @apiError INVALID_PARAMETER Invalid Parameters
          * @apiError HTTP_ERROR Bad Request
          */
@@ -224,7 +224,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
          * @apiGroup Person API
          * @apiSuccess {Array} list of persons
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
@@ -296,7 +296,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
          * @apiGroup Person API
          * @apiSuccess {Array} list of persons
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST_SANDBOX, new Handler<Message<String>>() {

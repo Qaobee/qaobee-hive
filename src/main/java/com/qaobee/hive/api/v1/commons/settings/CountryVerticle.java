@@ -109,7 +109,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Country}   country            The Country found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> get = new Handler<Message<String>>() {
@@ -163,7 +163,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Country}   country            The Country found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> getAlpha2 = new Handler<Message<String>>() {
@@ -216,7 +216,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {List}   countries            The list of countries found.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> getList = new Handler<Message<String>>() {

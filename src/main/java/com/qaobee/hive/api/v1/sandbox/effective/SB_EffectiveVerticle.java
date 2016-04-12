@@ -117,7 +117,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} _id Mandatory The effective Id.
          * @apiSuccess {Effective}   effective    The effective found.
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
@@ -162,7 +162,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} categoryCode Optional The category code of the effective.
          * @apiSuccess {List}   effectives            The list of effectives found.
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
@@ -223,7 +223,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Effective}   effective    The effective updated.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
@@ -269,7 +269,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Effective}   effective    The effective added.
          *
          * @apiError HTTP_ERROR Bad request
-         * @apiError MONGO_ERROR Error on DB request
+         * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {

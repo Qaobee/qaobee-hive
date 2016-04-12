@@ -12,11 +12,11 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
@@ -49,6 +49,10 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      */
     public static final String READ = Module.VERSION + ".commons.communication.notifications.read";
     /**
+     * The constant ADD.
+     */
+    public static final String ADD = Module.VERSION + ".commons.communication.notifications.add";
+    /**
      * The constant NOTIFY.
      */
     public static final String NOTIFY = "internal.notify";
@@ -71,8 +75,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         /**
-         * @apiDescription Fetch notifications for the current user
+         * @apiDescription Fetch the last notifications for the current user (from start to start+limit) ordered by
+         *  the newest first
          * @api {post} /api/v1/commons/communication/notifications commons.communication.notifications
+         * @apiParam {number} start start
+         * @apiParam {number} limit limit
          * @apiName getUserNotifications
          * @apiGroup NotificationsVerticle
          * @apiSuccess {Array} notification com.qaobee.hive.business.model.commons.users.communication.Notification
@@ -99,8 +106,8 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
                     }
                     JsonArray jnotif = new JsonArray();
-                    List<String> wl = Arrays.asList(new String[]  {"_id", "name", "firstname", "avatar"});
-                    for (int i = start; i < limit; i++) {
+                    List<String> wl = Arrays.asList("_id", "name", "firstname", "avatar");
+                    for (int i = start; i < start +limit; i++) {
                         JsonObject u = mongo.getById(((JsonObject) notifications.get(i)).getString("from_user_id"), User.class);
                         JsonObject cu = new JsonObject();
                         for(String f : u.getFieldNames()) {
@@ -146,15 +153,12 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 }
             }
         };
@@ -183,15 +187,12 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                 } catch (final NoSuchMethodException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 }
             }
         };
@@ -219,10 +220,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     JsonObject notification = message.body().getObject("notification");
                     switch (collection) {
                         case "User":
+                            mongo.getById(id, collection);
                             addNotificationToUser(id, notification);
                             break;
                         case "SB_SandBoxCfg":
-                            JsonObject sandbox = mongo.getById(id, "SB_SandBoxCfg");
+                            JsonObject sandbox = mongo.getById(id, collection);
                             for(int i = 0; i < sandbox.getArray("members").size(); i++)
                             addNotificationToUser((String) sandbox.getArray("members").get(0), notification);
                             break;
@@ -244,13 +246,17 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(READ, readNotificationHandler);
         vertx.eventBus().registerHandler(NOTIFY, notify);
 
-        vertx.eventBus().registerHandler(Module.VERSION + ".commons.communication.notifications.add", new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     utils.isUserLogged(req);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
+                    utils.testMandatoryParams(req.getParams(), "id");
+                    if(StringUtils.isBlank(req.getBody())) {
+                        throw new IllegalArgumentException("missing body");
+                    }
                     JsonObject request = new JsonObject()
                             .putString("id", req.getParams().get("id").get(0))
                             .putString("target", User.class.getSimpleName())
@@ -267,6 +273,9 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 }
             }
         });
