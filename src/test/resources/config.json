@@ -35,6 +35,7 @@
   },
   "mailer.mod": {
     "test": true,
+    "fake": true,
     "address": "mailer.mod",
     "host": "ssl0.ovh.net",
     "port": 465,
