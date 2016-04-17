@@ -26,6 +26,8 @@ import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxCfgVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -60,7 +62,7 @@ import java.util.UUID;
 /**
  * The type User verticle.
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle()
 public class UserVerticle extends AbstractGuiceVerticle {
     public static final String LOGIN = Module.VERSION + ".commons.users.user.login";
     public static final String LOGIN_BY_TOKEN = Module.VERSION + ".commons.users.user.sso";
@@ -111,6 +113,18 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * Start void.
      */
     @Override
+    @VerticleHandler({
+            @Rule(address = LOGIN, method = Constantes.POST),
+            @Rule(address = LOGOUT, method = Constantes.GET, logged = true, mandatoryParams = {"token"}, scope = Rule.Param.HEADER),
+            @Rule(address = PASSWD_RENEW, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY),
+            @Rule(address = PASSWD_RENEW_CHK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST),
+            @Rule(address = PASSWD_RESET, method = Constantes.POST, mandatoryParams = {"id", "code", "passwd"}, scope = Rule.Param.BODY),
+            @Rule(address = CURRENT, method = Constantes.GET, logged = true),
+            @Rule(address = META, method = Constantes.GET, logged = true),
+            @Rule(address = USER_INFO, method = Constantes.GET, logged = true, mandatoryParams = {"id"}, scope = Rule.Param.REQUEST),
+            @Rule(address = USER_BY_LOGIN, method = Constantes.GET, logged = true, admin = true, mandatoryParams = {"login"}, scope = Rule.Param.REQUEST),
+            @Rule(address = LOGIN_BY_TOKEN, method = Constantes.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN}, scope = Rule.Param.BODY),
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -140,7 +154,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     final JsonObject infos = new JsonObject(req.getBody());
 
                     if (StringUtils.isBlank(infos.getString(PARAM_LOGIN)) || StringUtils.isBlank(infos.getString(PARAM_PWD))) {
@@ -185,9 +198,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         }
 
                     }
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -218,8 +228,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.testMandatoryParams(req.getHeaders(), "token");
                     final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", req.getHeaders().get("token").get(0)).get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
                         utils.sendStatus(false, message);
@@ -233,13 +241,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         mongo.save(user);
                         utils.sendStatus(true, message);
                     }
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendStatus(false, message);
-                }catch (final QaobeeException e) {
+                } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 } catch (final Exception e) {
@@ -270,7 +272,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     final JsonObject infos = new JsonObject(req.getBody());
                     final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
@@ -304,10 +305,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             }
                         });
                     }
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -334,7 +331,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     final String id = req.getParams().get("id").get(0);
                     final String code = req.getParams().get("code").get(0);
                     JsonObject jsonUser = mongo.getById(id, User.class);
@@ -356,9 +352,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             utils.sendStatus(false, message);
                         }
                     }
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -384,7 +377,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     final JsonObject json = new JsonObject(req.getBody());
                     final String id = json.getString("id");
                     final String code = json.getString("code");
@@ -419,11 +411,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                                 utils.sendStatus(false, message);
                             }
                         }
-
                     }
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -455,25 +443,12 @@ public class UserVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    User user = utils.isUserLogged(req);
-                    JsonObject jUser = new JsonObject(Json.encode(user));
-                    jUser.getObject("account").removeField("passwd");
-                    jUser.getObject("account").removeField("password");
-                    jUser.getObject("account").removeField("salt");
-                    message.reply(jUser.toString());
-                    utils.sendStatus(true, message);
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
+                User user = req.getUser();
+                JsonObject jUser = new JsonObject(Json.encode(user));
+                jUser.getObject("account").removeField("passwd");
+                jUser.getObject("account").removeField("password");
+                jUser.getObject("account").removeField("salt");
+                message.reply(jUser.toString());
             }
         });
         /**
@@ -491,11 +466,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    User u = utils.isUserLogged(req);
-                    JsonObject user = mongo.getById(u.get_id(), User.class);
+                    JsonObject user = mongo.getById(req.getUser().get_id(), User.class);
                     final JsonObject activity = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("activity");
-
                     req.getParams().put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
                     whenEventBus.send(SB_SandBoxVerticle.GET_BY_OWNER, Json.encode(req)).then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
                         @Override
@@ -516,15 +488,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
                                         return null;
                                     }
                                 });
-
                             }
                             return null;
                         }
                     });
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -555,16 +522,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
                     JsonObject u = mongo.getById(req.getParams().get("id").get(0), User.class);
                     u.removeField("salt");
                     u.removeField("passwd");
                     u.removeField("password");
                     message.reply(u.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -594,32 +556,19 @@ public class UserVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isLoggedAndAdmin(req);
-                    // Creation of request
-                    CriteriaBuilder criterias = new CriteriaBuilder();
-                    criterias.add("account.login", req.getParams().get("login").get(0).toLowerCase());
-                    JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
-                    if (jsonArray == null || jsonArray.size() == 0) {
-                        utils.sendError(message, ExceptionCodes.DB_NO_ROW_RETURNED, "Login inconnu");
-                        return;
-                    }
-                    if (jsonArray.size() > 1) {
-                        utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné");
-                        return;
-                    }
-                    message.reply(jsonArray.get(0).toString());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                // Creation of request
+                CriteriaBuilder criterias = new CriteriaBuilder();
+                criterias.add("account.login", req.getParams().get("login").get(0).toLowerCase());
+                JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
+                if (jsonArray == null || jsonArray.size() == 0) {
+                    utils.sendError(message, ExceptionCodes.DB_NO_ROW_RETURNED, "Login inconnu");
+                    return;
                 }
+                if (jsonArray.size() > 1) {
+                    utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné");
+                    return;
+                }
+                message.reply(jsonArray.get(0).toString());
             }
         });
 
@@ -644,18 +593,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.testMandatoryParams(req.getBody(), MOBILE_TOKEN, PARAM_LOGIN);
                     JsonObject request = new JsonObject(req.getBody());
                     CriteriaBuilder cb = new CriteriaBuilder();
                     cb.add("account.mobileToken", request.getString(MOBILE_TOKEN));
                     cb.add("account.login", request.getString(PARAM_LOGIN).toLowerCase());
-
                     final JsonArray res = mongo.findByCriterias(cb.get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
-                        final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
-                        LOG.error(e.getMessage(), e);
-                        utils.sendError(message, e);
+                        throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
                     } else {
                         // we take the first one (should be only one)
                         final JsonObject jsonPerson = res.get(0);
@@ -663,19 +607,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         user.getAccount().setToken(UUID.randomUUID().toString());
                         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
                         mongo.save(user);
-                        String result = Json.encode(user);
-                        LOG.debug(result);
-                        message.reply(result);
+                        message.reply(Json.encode(user));
                     }
-                } catch (final IllegalArgumentException e) {
+                } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                    utils.sendError(message, e);
                 }
             }
         });

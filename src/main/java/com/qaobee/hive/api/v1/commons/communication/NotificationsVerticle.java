@@ -4,8 +4,9 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.communication.Notification;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -32,6 +33,7 @@ import java.util.UUID;
 @DeployableVerticle
 public class NotificationsVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(NotificationsVerticle.class);
+    private static final String WS_NOTIFICATION_PREFIX = "qaobee.notification.";
     @Inject
     private MongoDB mongo;
     @Inject
@@ -71,6 +73,12 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
 
 
     @Override
+    @VerticleHandler({
+            @Rule(address = LIST, method = Constantes.GET, logged = true),
+            @Rule(address = DEL, method = Constantes.DELETE, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST),
+            @Rule(address = READ, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST),
+            @Rule(address = ADD, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST),
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -90,10 +98,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
                     int start = 0;
-
                     if (req.getParams() != null && req.getParams().containsKey(PARAM_START)) {
                         start = Integer.parseInt(req.getParams().get(PARAM_START).get(0));
                     }
@@ -119,9 +124,6 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         jnotif.add(notifications.get(i));
                     }
                     message.reply(jnotif.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -142,23 +144,14 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.DELETE, req.getMethod());
-                    utils.isUserLogged(req);
-                    utils.testMandatoryParams(req.getParams(), PARAM_NOTIF_ID);
                     JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
                     n.putBoolean("deleted", true);
                     mongo.save(n, Notification.class);
-                    vertx.eventBus().send("qaobee.notification." + n.getString("user_id"), new JsonObject());
+                    vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString("user_id"), new JsonObject());
                     utils.sendStatus(true, message);
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 }
             }
         };
@@ -176,23 +169,14 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
-                    utils.testMandatoryParams(req.getParams(), PARAM_NOTIF_ID);
                     JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
                     n.putBoolean("read", !n.getBoolean("read"));
                     mongo.save(n, Notification.class);
-                    vertx.eventBus().send("qaobee.notification." + n.getString("user_id"), new JsonObject());
+                    vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString("user_id"), new JsonObject());
                     utils.sendStatus(true, message);
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 }
             }
         };
@@ -250,33 +234,19 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    utils.isUserLogged(req);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.testMandatoryParams(req.getParams(), "id");
-                    if (StringUtils.isBlank(req.getBody())) {
-                        throw new IllegalArgumentException("missing body");
-                    }
-                    JsonObject request = new JsonObject()
-                            .putString("id", req.getParams().get("id").get(0))
-                            .putString("target", User.class.getSimpleName())
-                            .putObject("notification", new JsonObject(req.getBody()));
-                    vertx.eventBus().send(NOTIFY, request, new Handler<Message<JsonObject>>() {
-                        @Override
-                        public void handle(Message<JsonObject> event) {
-                            utils.sendStatus(event.body().getBoolean("status", false), message);
-                        }
-                    });
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
+                if (StringUtils.isBlank(req.getBody())) {
+                    throw new IllegalArgumentException("missing body");
                 }
+                JsonObject request = new JsonObject()
+                        .putString("id", req.getParams().get("id").get(0))
+                        .putString("target", User.class.getSimpleName())
+                        .putObject("notification", new JsonObject(req.getBody()));
+                vertx.eventBus().send(NOTIFY, request, new Handler<Message<JsonObject>>() {
+                    @Override
+                    public void handle(Message<JsonObject> event) {
+                        utils.sendStatus(event.body().getBoolean("status", false), message);
+                    }
+                });
             }
         });
     }

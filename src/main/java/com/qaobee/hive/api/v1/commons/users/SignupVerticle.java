@@ -41,6 +41,8 @@ import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -176,6 +178,13 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @see org.vertx.java.platform.Verticle#start()
      */
     @Override
+    @VerticleHandler({
+            @Rule(address = LOGIN_TEST, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY),
+            @Rule(address = REGISTER, method = Constantes.PUT),
+            @Rule(address = ACCOUNT_CHECK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST),
+            @Rule(address = FIRST_CONNECTION_CHECK, method = Constantes.GET, mandatoryParams = {PARAM_ID, PARAM_CODE}, scope = Rule.Param.REQUEST),
+            @Rule(address = FINALIZE_SIGNUP, method = Constantes.POST, logged = true, mandatoryParams = { PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE}, scope = Rule.Param.BODY),
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -228,19 +237,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.testMandatoryParams(req.getBody(), PARAM_LOGIN);
-                    final String login = new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase();
-                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
-                    utils.sendStatus(res.size() > 0, message);
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
-                }
+                final String login = new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase();
+                final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
+                utils.sendStatus(res.size() > 0, message);
             }
         });
 
@@ -267,16 +266,12 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.PUT, req.getMethod());
-
                     // Gets JSon request
                     final JsonObject json = new JsonObject(req.getBody());
-
                     // Captcha management
                     final boolean bypassCaptcha = json.getBoolean(PARAM_JUNIT, json.getBoolean(PARAM_MOBILE, false));
                     final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
                     reCaptcha.setPrivateKey(Params.getString("recaptcha.pkey"));
-
                     ReCaptchaResponse reCaptchaResponse = null;
                     if (!bypassCaptcha) {
                         reCaptchaResponse = reCaptcha
@@ -287,9 +282,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
                         return;
                     }
-
                     final User user = Json.decodeValue(json.encode(), User.class);
-
                     // Check user informations
                     usersBusiness.checkUserInformations(user, req.getLocale());
 
@@ -377,9 +370,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MAIL_EXCEPTION, e.getMessage());
@@ -408,8 +398,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.testMandatoryParams(req.getParams(), "id", "code");
                     final String id = req.getParams().get("id").get(0);
                     final String activationCode = req.getParams().get("code").get(0);
                     final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
@@ -420,16 +408,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     } else {
                         utils.sendStatus(false, message);
                     }
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendStatus(false, message);
@@ -458,10 +436,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
                     Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_ID, PARAM_CODE);
-
                     final String id = params.get(PARAM_ID).get(0);
                     final String activationCode = params.get(PARAM_CODE).get(0);
                     User user = getUser(id, message, req.getLocale());
@@ -479,15 +454,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                             message.reply(Json.encode(user));
                         }
                     }
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
@@ -518,10 +484,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
-                    utils.testMandatoryParams(req.getBody(), PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE);
-
                     final JsonObject jsonReq = new JsonObject(req.getBody());
                     // JSon User
                     final JsonObject jsonUser = jsonReq.getObject(PARAM_USER);
@@ -717,19 +679,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                             message.reply(Json.encode(user));
                         }
                     }
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (final Exception e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
@@ -739,8 +691,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     }
 
     /**
-     *
-     * @param id User id
+     * @param id      User id
      * @param message VertX message
      * @return user or null
      */

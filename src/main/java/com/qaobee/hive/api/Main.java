@@ -23,7 +23,11 @@ import com.englishtown.promises.Runnable;
 import com.englishtown.promises.Value;
 import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -31,6 +35,8 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.technical.vertx.ServerHook;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.AsyncResult;
@@ -52,6 +58,7 @@ import org.vertx.mods.Mailer;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.*;
@@ -70,6 +77,7 @@ public class Main extends AbstractGuiceVerticle {
     @Inject
     private Utils utils;
     private SockJSServer sockJSServer;
+    private Map<String, Rule> rules = new HashMap<>();
 
     /**
      * Start void.
@@ -237,9 +245,11 @@ public class Main extends AbstractGuiceVerticle {
                         json.putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'));
                         json.putString("action", "mark");
                         eb.send("metrix", json);
-                        String busAddress = StringUtils.join(path, '.');
-                        eb.sendWithTimeout(config.getObject("runtime").getInteger("version") + "." + busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
-
+                        String busAddress = config.getObject("runtime").getInteger("version") + "." + StringUtils.join(path, '.');
+                        if (rules.containsKey(busAddress)) {
+                            testRequest(req, busAddress, wrapper);
+                        }
+                        eb.sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
                             @Override
                             public void handle(final AsyncResult<Message<String>> message) {
                                 stopTimer(StringUtils.join(wrapper.getPath(), '.'));
@@ -259,6 +269,7 @@ public class Main extends AbstractGuiceVerticle {
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
         for (final Class<?> restMod : restModules) {
+            manageRules(restMod);
             if (restMod.getAnnotation(DeployableVerticle.class).isWorker())
                 promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), config, 2, true));
             else
@@ -300,6 +311,82 @@ public class Main extends AbstractGuiceVerticle {
         });
     }
 
+    /**
+     * @param req        Request
+     * @param busAddress address
+     * @param wrapper    request wrapper
+     */
+    private void testRequest(HttpServerRequest req, String busAddress, RequestWrapper wrapper) {
+        try {
+            LOG.info(busAddress);
+            Rule rule = rules.get(busAddress);
+            if (StringUtils.isNotBlank(rule.method())) {
+                utils.testHTTPMetod(rule.method(), wrapper.getMethod());
+            }
+            if (rule.logged()) {
+                utils.isUserLogged(wrapper);
+            }
+            if (rule.admin()) {
+                utils.isLoggedAndAdmin(wrapper);
+            }
+            switch (rule.scope()) {
+                case BODY:
+                    utils.testMandatoryParams(wrapper.getBody(), rule.mandatoryParams());
+                    break;
+                case REQUEST:
+                    utils.testMandatoryParams(wrapper.getParams(), rule.mandatoryParams());
+                    break;
+                case HEADER:
+                    utils.testMandatoryParams(wrapper.getHeaders(), rule.mandatoryParams());
+                    break;
+                default:
+                    break;
+            }
+        } catch (final NoSuchMethodException e) {
+            LOG.error(e.getMessage(), e);
+            handleError(req, new QaobeeException(ExceptionCodes.HTTP_ERROR, e.getMessage()));
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            handleError(req, e);
+        } catch (final IllegalArgumentException e) {
+            LOG.error(e.getMessage(), e);
+            handleError(req, new QaobeeException(ExceptionCodes.MANDATORY_FIELD, e.getMessage()));
+        }
+    }
+
+    /**
+     * @param req request
+     * @param e   exception
+     */
+    private void handleError(HttpServerRequest req, QaobeeException e) {
+        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+        req.response().setStatusCode(e.getCode().getCode());
+        JsonObject jsonEx = new JsonObject(Json.encode(e));
+        jsonEx.removeField("stackTrace");
+        jsonEx.removeField("suppressed");
+        req.response().end(jsonEx.encode());
+    }
+
+    /**
+     * @param restMod Class to scan
+     */
+    private void manageRules(Class<?> restMod) {
+        Reflections reflections = new Reflections(restMod, new MethodAnnotationsScanner());
+        for (Method m : reflections.getMethodsAnnotatedWith(VerticleHandler.class)) {
+            for (Rule r : m.getAnnotation(VerticleHandler.class).value()) {
+                if (rules.containsKey(r.address())) {
+                    LOG.error("Duplicate address : " + r.address());
+                } else {
+                    rules.put(r.address(), r);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param message Vert.X message
+     * @param req     Request
+     */
     private void handleResult(AsyncResult<Message<String>> message, HttpServerRequest req) {
         if (message.succeeded()) {
             final String response = message.result().body();

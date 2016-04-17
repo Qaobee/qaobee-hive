@@ -24,6 +24,8 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Payment;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -82,35 +84,11 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
 
-    /**
-     * Get a message handler
-     *
-     * @param message Vertx message
-     * @return handler
-     */
-    private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
-        return new Handler<AsyncResult<Message<JsonObject>>>() {
-            @Override
-            public void handle(final AsyncResult<Message<JsonObject>> pdfResp) {
-                if (pdfResp.failed()) {
-                    LOG.error(pdfResp.cause().getMessage(), pdfResp.cause());
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
-                } else {
-                    final JsonObject json = new JsonObject();
-                    json.putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE);
-                    json.putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF));
-                    message.reply(json.encode());
-                }
-            }
-        };
-
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.vertx.java.platform.Verticle#start()
-     */
+    @VerticleHandler({
+            @Rule(address = UPDATE, method = Constantes.POST, logged = true),
+            @Rule(address = GENERATE_PDF, method = Constantes.GET, logged = true),
+            @Rule(address = GENERATE_BILL_PDF, method = Constantes.GET, logged = true, mandatoryParams = {"plan_id", "pay_id"}, scope = Rule.Param.REQUEST),
+    })
     @Override
     public void start() {
         super.start();
@@ -131,8 +109,6 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
                     JsonObject u = new JsonObject(req.getBody());
                     final User user = Json.decodeValue(req.getBody(), User.class);
                     if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
@@ -145,15 +121,11 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                         JsonObject p = mongo.getById(user.get_id(), User.class.getSimpleName());
                         u.putObject("account", p.getObject("account"));
                     }
-
                     mongo.save(u, User.class.getSimpleName());
                     message.reply(u.encode());
                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.PASSWD_EXCEPTION, e.getMessage());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -173,42 +145,30 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
-                    final User user = req.getUser();
-
-                    final JsonObject juser = new JsonObject();
-                    if (StringUtils.isNoneBlank(user.getAvatar())) {
-                        juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
-                    }
-                    juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-                    if (user.getAddress() != null) {
-                        if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                            juser.putString("address", user.getAddress().getFormatedAddress());
-                        } else {
-                            juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
-                        }
-                    }
-                    juser.putString("firstname", user.getFirstname());
-                    juser.putString("name", user.getName());
-                    juser.putString("username", user.getAccount().getLogin());
-                    juser.putString("phoneNumber", user.getContact().getHome());
-                    juser.putString("email", user.getContact().getEmail());
-
-                    final JsonObject pdfReq = new JsonObject();
-                    pdfReq.putString(PDFVerticle.FILE_NAME, user.getAccount().getLogin());
-                    pdfReq.putString(PDFVerticle.TEMPLATE, "profile/profile.ftl");
-                    pdfReq.putObject(PDFVerticle.DATA, juser);
-
-                    vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
+                final User user = req.getUser();
+                final JsonObject juser = new JsonObject();
+                if (StringUtils.isNoneBlank(user.getAvatar())) {
+                    juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
                 }
+                juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
+                if (user.getAddress() != null) {
+                    if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
+                        juser.putString("address", user.getAddress().getFormatedAddress());
+                    } else {
+                        juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
+                    }
+                }
+                juser.putString("firstname", user.getFirstname());
+                juser.putString("name", user.getName());
+                juser.putString("username", user.getAccount().getLogin());
+                juser.putString("phoneNumber", user.getContact().getHome());
+                juser.putString("email", user.getContact().getEmail());
+
+                final JsonObject pdfReq = new JsonObject();
+                pdfReq.putString(PDFVerticle.FILE_NAME, user.getAccount().getLogin());
+                pdfReq.putString(PDFVerticle.TEMPLATE, "profile/profile.ftl");
+                pdfReq.putObject(PDFVerticle.DATA, juser);
+                vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
             }
         };
 
@@ -224,20 +184,17 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
         final Handler<Message<String>> generateBillPDFHandler = new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.testMandatoryParams(req.getParams(), "plan_id", "pay_id");
-                    utils.isUserLogged(req);
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     final User user = req.getUser();
                     Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(req.getParams().get("plan_id").get(0)));
                     Payment payment = null;
-                    for(Payment p : planItem.getShippingList()) {
-                        if(req.getParams().get("pay_id").get(0).equals(p.getId())) {
+                    for (Payment p : planItem.getShippingList()) {
+                        if (req.getParams().get("pay_id").get(0).equals(p.getId())) {
                             payment = p;
                         }
                     }
-                    if(payment !=null) {
+                    if (payment != null) {
                         final JsonObject juser = new JsonObject();
                         if (StringUtils.isNoneBlank(user.getAvatar())) {
                             juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
@@ -267,20 +224,15 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                     } else {
                         throw new IllegalArgumentException("unknown bill");
                     }
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
                 }
             }
         };
 
         // Update a person's avatar
+        // FIXME : CKE : Est-ce toujours utilisé?
         final Handler<Message<String>> updateAvatar = new Handler<Message<String>>() {
             /*
              * (non-Javadoc)
@@ -312,5 +264,28 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GENERATE_PDF, generatePDFHandler);
         vertx.eventBus().registerHandler(GENERATE_BILL_PDF, generateBillPDFHandler);
         vertx.eventBus().registerHandler(UPDATE_AVATAR, updateAvatar);
+    }
+
+    /**
+     * Get a message handler
+     *
+     * @param message Vertx message
+     * @return handler
+     */
+    private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
+        return new Handler<AsyncResult<Message<JsonObject>>>() {
+            @Override
+            public void handle(final AsyncResult<Message<JsonObject>> pdfResp) {
+                if (pdfResp.failed()) {
+                    LOG.error(pdfResp.cause().getMessage(), pdfResp.cause());
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
+                } else {
+                    final JsonObject json = new JsonObject();
+                    json.putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE);
+                    json.putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF));
+                    message.reply(json.encode());
+                }
+            }
+        };
     }
 }

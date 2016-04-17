@@ -31,6 +31,8 @@ import com.qaobee.hive.business.model.shipping.Customer;
 import com.qaobee.hive.business.model.shipping.HostedPayment;
 import com.qaobee.hive.business.model.shipping.Payment;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -85,6 +87,10 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * Start void.
      */
     @Override
+    @VerticleHandler({
+            @Rule(address = IPN, method = Constantes.POST, mandatoryParams = {"id", "id", "metadata", "created_at"}, scope = Rule.Param.BODY),
+            @Rule(address = PAY, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_PLAN_ID}, scope = Rule.Param.BODY),
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -112,9 +118,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    // Check param mandatory
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.testMandatoryParams(req.getBody(), "id", "id", "metadata", "created_at");
                     final JsonObject body = new JsonObject(req.getBody());
                     if (!body.getObject("metadata").containsField("plan_id")
                             || !body.getObject("metadata").containsField("customer_id")
@@ -221,15 +224,12 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                 utils.sendStatus(false, message);
                         }
                     }
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
+                } catch (final IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
@@ -256,10 +256,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    // Check param mandatory
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
-                    utils.testMandatoryParams(req.getBody(), PARAM_PLAN_ID);
                     final JsonObject body = new JsonObject(req.getBody());
                     final int planId = Integer.parseInt(body.getString(PARAM_PLAN_ID));
                     Payment payment = new Payment();
@@ -358,15 +354,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     request.putHeader("Content-Length", String.valueOf(requestBody.toString().length()));
                     request.write(requestBody.toString());
                     request.end();
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());

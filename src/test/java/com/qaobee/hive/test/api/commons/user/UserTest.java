@@ -309,8 +309,8 @@ public class UserTest extends VertxJunitSupport {
                 .body("name", is(u.getName()));
 
         given().when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body("code", is(ExceptionCodes.INVALID_PARAMETER.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -488,9 +488,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void logoutBadHTTPMethod() {
         given().header("token", generateLoggedUser().getAccount().getToken())
-                .when().post(getURL(UserVerticle.LOGOUT))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .when().post(getURL(UserVerticle.LOGOUT));
     }
 
     /**
@@ -499,9 +497,8 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void logoutFailed() {
         given().when().get(getURL(UserVerticle.LOGOUT))
-                .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
-                .body("status", is(false));
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -523,8 +520,8 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void passwordRenewBadRequest() {
         given().when().post(getURL(UserVerticle.PASSWD_RENEW))
-                .then().assertThat().statusCode(ExceptionCodes.INTERNAL_ERROR.getCode())
-                .body("code", is(ExceptionCodes.INTERNAL_ERROR.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
