@@ -21,14 +21,14 @@ package com.qaobee.hive.api.v1.commons.settings;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
@@ -39,7 +39,6 @@ import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +46,7 @@ import java.util.Map;
  *
  * @author cke
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle()
 public class ActivityVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant GET.
@@ -76,6 +75,11 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
     private Utils utils;
 
     @Override
+    @VerticleHandler({
+            @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST),
+            @Rule(address = GET_LIST, method = Constantes.GET),
+            @Rule(address = GET_LIST_ENABLE, method = Constantes.GET)
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -93,46 +97,18 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Activity} activity The Activity found.
          *
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
-
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("get() - Activity");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_ID);
-
-                    // Tests mandatory parameters
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                        LOG.debug("get() JSON - " + params);
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
-                    }
-
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Activity.class);
-
-                    LOG.debug("Activity found : " + json.toString());
-
+                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Activity.class);
                     message.reply(json.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -148,28 +124,13 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {List}   activities            List all activity
          *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("getList() - Activity");
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
-                    LOG.debug("Activities found : " + resultJson.toString());
-                    message.reply(resultJson.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
+                JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
+                message.reply(resultJson.encode());
             }
         });
 
@@ -184,7 +145,6 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {List}   activities  List of enabled activities
          *
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
@@ -192,26 +152,10 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("getListEnable() - Activity");
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, Object> criterias = new HashMap<>();
-                    criterias.put("enable", true);
-
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
-
-                    LOG.debug("Activities found : " + resultJson.toString());
-
-                    message.reply(resultJson.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
+                Map<String, Object> criterias = new HashMap<>();
+                criterias.put("enable", true);
+                JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
+                message.reply(resultJson.encode());
             }
         });
     }

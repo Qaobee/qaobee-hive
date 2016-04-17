@@ -169,10 +169,10 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Add with non logged user test.
+     * Add structure with non logged user test.
      */
     @Test
-    public void addWithNonLoggedUserTest() {
+    public void addStructureWithNonLoggedUserTest() {
         given().when().post(getURL(StructureVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));

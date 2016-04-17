@@ -69,6 +69,9 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
  * @author Xavier.Marin
  */
 public class Main extends AbstractGuiceVerticle {
+    /**
+     * The constant FILE_SERVE.
+     */
     public static final String FILE_SERVE = "fileserve";
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
     private static final String COLLECTION = "collection";
@@ -242,17 +245,20 @@ public class Main extends AbstractGuiceVerticle {
                         json.putString("action", "mark");
                         eb.send("metrix", json);
                         String busAddress = config.getObject("runtime").getInteger("version") + "." + StringUtils.join(path, '.');
+                        boolean succeded = true;
                         if (rules.containsKey(busAddress)) {
-                            testRequest(req, busAddress, wrapper);
+                            succeded = false || testRequest(req, busAddress, wrapper);
                         }
-                        eb.sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
-                            @Override
-                            public void handle(final AsyncResult<Message<String>> message) {
-                                stopTimer(StringUtils.join(wrapper.getPath(), '.'));
-                                handleResult(message, req);
-                            }
+                        if (succeded) {
+                            eb.sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
+                                @Override
+                                public void handle(final AsyncResult<Message<String>> message) {
+                                    stopTimer(StringUtils.join(wrapper.getPath(), '.'));
+                                    handleResult(message, req);
+                                }
 
-                        });
+                            });
+                        }
                     }
                 });
             }
@@ -311,8 +317,9 @@ public class Main extends AbstractGuiceVerticle {
      * @param req        Request
      * @param busAddress address
      * @param wrapper    request wrapper
+     * @Return success
      */
-    private void testRequest(HttpServerRequest req, String busAddress, RequestWrapper wrapper) {
+    private boolean testRequest(HttpServerRequest req, String busAddress, RequestWrapper wrapper) {
         try {
             Rule rule = rules.get(busAddress);
             if (StringUtils.isNotBlank(rule.method())) {
@@ -340,13 +347,17 @@ public class Main extends AbstractGuiceVerticle {
         } catch (final NoSuchMethodException e) {
             LOG.error(e.getMessage(), e);
             handleError(req, new QaobeeException(ExceptionCodes.HTTP_ERROR, e.getMessage()));
+            return false;
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             handleError(req, e);
+            return false;
         } catch (final IllegalArgumentException e) {
             LOG.error(e.getMessage(), e);
             handleError(req, new QaobeeException(ExceptionCodes.MANDATORY_FIELD, e.getMessage()));
+            return false;
         }
+        return true;
     }
 
     /**

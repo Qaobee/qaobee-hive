@@ -32,6 +32,9 @@ import static org.hamcrest.Matchers.*;
  * The type Activity cfg test.
  */
 public class ActivityCfgTest extends VertxJunitSupport {
+    /**
+     * Gets activity cfg.
+     */
     @Test
     public void getActivityCfg() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
@@ -45,12 +48,19 @@ public class ActivityCfgTest extends VertxJunitSupport {
                 .body("activityId", is("ACT-HAND"));
     }
 
+    /**
+     * Gets activity cfg with non logged user test.
+     */
     @Test
     public void getActivityCfgWithNonLoggedUserTest() {
         given().when().get(getURL(ActivityCfgVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
+
+    /**
+     * Gets activity cfg with wrong http method test.
+     */
     @Test
     public void getActivityCfgWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
@@ -58,6 +68,10 @@ public class ActivityCfgTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
+
+    /**
+     * Gets activity cfg with missing parameter test.
+     */
     @Test
     public void getActivityCfgWithMissingParameterTest() {
         User u =  generateLoggedUser();
@@ -80,6 +94,10 @@ public class ActivityCfgTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
+
+    /**
+     * Gets activity cfg with wrong activity id test.
+     */
     @Test
     public void getActivityCfgWithWrongActivityIdTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
@@ -107,12 +125,20 @@ public class ActivityCfgTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(7));
     }
+
+    /**
+     * Gets params fields with non logged user test.
+     */
     @Test
     public void getParamsFieldsWithNonLoggedUserTest() {
         given().when().get(getURL(ActivityCfgVerticle.PARAMS))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
+
+    /**
+     * Gets params fields with wrong http method test.
+     */
     @Test
     public void getParamsFieldsWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
@@ -120,6 +146,10 @@ public class ActivityCfgTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
+
+    /**
+     * Gets params fields with missing parameter test.
+     */
     @Test
     public void getParamsFieldsWithMissingParameterTest() {
         User u =  generateLoggedUser();
@@ -152,6 +182,10 @@ public class ActivityCfgTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
+
+    /**
+     * Gets params fields with wrong activity id test.
+     */
     @Test
     public void getParamsFieldsWithWrongActivityIdTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);

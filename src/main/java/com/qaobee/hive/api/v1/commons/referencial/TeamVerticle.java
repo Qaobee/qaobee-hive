@@ -20,6 +20,8 @@ package com.qaobee.hive.api.v1.commons.referencial;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.referencial.Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -27,18 +29,14 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The type Team verticle.
@@ -90,6 +88,11 @@ public class TeamVerticle extends AbstractGuiceVerticle {
     private Utils utils;
 
     @Override
+    @VerticleHandler({
+            @Rule(address = ADD, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID}, scope = Rule.Param.BODY),
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST),
+            @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID}, scope = Rule.Param.BODY),
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -109,38 +112,19 @@ public class TeamVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Team}   team            The Team added with the id.
          *
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> add = new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("add() - Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     final JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID);
-
                     // Insert a team
                     final String id = mongo.save(params, Team.class);
-
                     params.putString("_id", id);
-                    LOG.debug("Team added : " + params.toString());
-
                     message.reply(params.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
@@ -161,40 +145,16 @@ public class TeamVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Team}   team            The Team found.
          *
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> get = new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("get() - Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-
-                    utils.testMandatoryParams(params, PARAM_ID);
-
-                    // Tests mandatory parameters
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
-                    }
-
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Team.class);
-
-                    LOG.debug("Team found : " + json.toString());
-
+                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Team.class);
                     message.reply(json.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -218,37 +178,18 @@ public class TeamVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Team}   team            The Team updated.
          *
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> update = new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("update() - Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     final JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID);
-
                     // Update a team
                     mongo.save(params, Team.class);
-
-                    LOG.debug("Team updated : " + params.toString());
-
                     message.reply(params.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
