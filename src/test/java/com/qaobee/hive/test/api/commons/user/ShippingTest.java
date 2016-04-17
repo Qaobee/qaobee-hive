@@ -61,7 +61,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .respond(HttpResponse.response()
                         .withStatusCode(201)
                         .withBody(generateMockBody(u, 0)));
-        String payment_url = given().header("token", u.getAccount().getToken())
+        String payment_url = given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
@@ -69,7 +69,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("status", notNullValue())
                 .body("payment_url", notNullValue()).extract().path("payment_url");
 
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -89,11 +89,11 @@ public class ShippingTest extends VertxJunitSupport {
     public void createPaymentWithWrongPlanIdTest() {
         User u = generateLoggedUser();
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "1");
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body("code", is(ExceptionCodes.INVALID_PARAMETER.toString()));
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
@@ -102,10 +102,10 @@ public class ShippingTest extends VertxJunitSupport {
     @Test
     public void createPaymentWithMissingPlanIdTest() {
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -114,10 +114,10 @@ public class ShippingTest extends VertxJunitSupport {
     @Test
     public void createPaymentWithWrongHttpMethodTest() {
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -131,7 +131,7 @@ public class ShippingTest extends VertxJunitSupport {
                         .withBody(generateMockBody(u, 0)));
 
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        String payment_url = given().header("token", u.getAccount().getToken())
+        String payment_url = given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
@@ -139,7 +139,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("status", is(true))
                 .body("payment_url", notNullValue()).extract().path("payment_url");
 
-        String paymentId = given().header("token", u.getAccount().getToken())
+        String paymentId = given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -158,7 +158,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("status", notNullValue())
                 .body("status", is(true));
         // Let's verify user's info
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -195,7 +195,7 @@ public class ShippingTest extends VertxJunitSupport {
                         .withBody(generateMockBody(u, 0)));
 
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        String payment_url = given().header("token", u.getAccount().getToken())
+        String payment_url = given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
@@ -203,7 +203,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("status", is(true))
                 .body("payment_url", notNullValue()).extract().path("payment_url");
 
-        String paymentId = given().header("token", u.getAccount().getToken())
+        String paymentId = given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -222,7 +222,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("status", notNullValue())
                 .body("status", is(true));
         // Let's verify user's info
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -257,7 +257,7 @@ public class ShippingTest extends VertxJunitSupport {
                         .withBody(generateMockBody(u, 0)));
 
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        String payment_url = given().header("token", u.getAccount().getToken())
+        String payment_url = given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
@@ -265,7 +265,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("status", is(true))
                 .body("payment_url", notNullValue()).extract().path("payment_url");
 
-        String paymentId = given().header("token", u.getAccount().getToken())
+        String paymentId = given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -292,7 +292,7 @@ public class ShippingTest extends VertxJunitSupport {
     public void recievePayplugNotificationWithWrongHttpMethodTest() {
         given().when().get(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -305,7 +305,7 @@ public class ShippingTest extends VertxJunitSupport {
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -318,7 +318,7 @@ public class ShippingTest extends VertxJunitSupport {
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
 
@@ -332,7 +332,7 @@ public class ShippingTest extends VertxJunitSupport {
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -345,7 +345,7 @@ public class ShippingTest extends VertxJunitSupport {
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -358,7 +358,7 @@ public class ShippingTest extends VertxJunitSupport {
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -371,7 +371,7 @@ public class ShippingTest extends VertxJunitSupport {
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -385,7 +385,7 @@ public class ShippingTest extends VertxJunitSupport {
                         .withBody(generateMockBody(u, 0)));
 
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        String payment_url = given().header("token", u.getAccount().getToken())
+        String payment_url = given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
@@ -393,7 +393,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("status", notNullValue())
                 .body("payment_url", notNullValue()).extract().path("payment_url");
 
-        String paymentId = given().header("token", u.getAccount().getToken())
+        String paymentId = given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -425,7 +425,7 @@ public class ShippingTest extends VertxJunitSupport {
                         .withBody(generateMockBody(u, 0)));
 
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        String payment_url = given().header("token", u.getAccount().getToken())
+        String payment_url = given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
@@ -433,7 +433,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("status", notNullValue())
                 .body("payment_url", notNullValue()).extract().path("payment_url");
 
-        String paymentId = given().header("token", u.getAccount().getToken())
+        String paymentId = given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -452,7 +452,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
                 .body("status", is(false));
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -476,7 +476,7 @@ public class ShippingTest extends VertxJunitSupport {
                         .withBody(generateMockBody(u, 0)));
 
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        String payment_url = given().header("token", u.getAccount().getToken())
+        String payment_url = given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
@@ -484,7 +484,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("status", notNullValue())
                 .body("payment_url", notNullValue()).extract().path("payment_url");
 
-        String paymentId = given().header("token", u.getAccount().getToken())
+        String paymentId = given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -503,7 +503,7 @@ public class ShippingTest extends VertxJunitSupport {
                 {"processing_error", "card_declined", "insufficient_funds", "fraud_suspected", "3ds_declined",
                         "incorrect_number", "aborted"};
         for (String f : failures) {
-            failure.putString("code", f);
+            failure.putString(CODE, f);
             notification.putObject("failure", failure);
             given().body(notification.encodePrettily())
                     .when().post(getURL(ShippingVerticle.IPN))
@@ -511,7 +511,7 @@ public class ShippingTest extends VertxJunitSupport {
                     .body("status", notNullValue())
                     .body("status", is(false));
             // Let's verify if our user have'nt be marked as paid
-            given().header("token", u.getAccount().getToken())
+            given().header(TOKEN, u.getAccount().getToken())
                     .param("id", u.get_id())
                     .when().get(getURL(UserVerticle.USER_INFO))
                     .then().assertThat().statusCode(200)
@@ -535,7 +535,7 @@ public class ShippingTest extends VertxJunitSupport {
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**
@@ -548,7 +548,7 @@ public class ShippingTest extends VertxJunitSupport {
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -561,7 +561,7 @@ public class ShippingTest extends VertxJunitSupport {
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**

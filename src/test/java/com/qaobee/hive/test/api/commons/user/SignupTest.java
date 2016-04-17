@@ -97,7 +97,7 @@ public class SignupTest extends VertxJunitSupport {
         given().body(param.encode())
                 .when().get(getURL(SignupVerticle.LOGIN_TEST))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -107,7 +107,7 @@ public class SignupTest extends VertxJunitSupport {
     public void existingLoginWithMissingParamTest() {
         given().when().post(getURL(SignupVerticle.LOGIN_TEST))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -142,7 +142,7 @@ public class SignupTest extends VertxJunitSupport {
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.NON_UNIQUE_LOGIN.getCode())
-                .body("code", is(ExceptionCodes.NON_UNIQUE_LOGIN.toString()));
+                .body(CODE, is(ExceptionCodes.NON_UNIQUE_LOGIN.toString()));
     }
 
     /**
@@ -152,7 +152,7 @@ public class SignupTest extends VertxJunitSupport {
     public void registerWithWrongHttpMethodTest() {
         given().when().get(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -171,7 +171,7 @@ public class SignupTest extends VertxJunitSupport {
             given().body(params.encode())
                     .when().put(getURL(SignupVerticle.REGISTER))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                    .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                    .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
         }
         params.getObject("account").putString("login", "aaaa");
         given().body(params.encode())
@@ -194,13 +194,13 @@ public class SignupTest extends VertxJunitSupport {
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
         params.getObject("account").removeField("login");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -214,13 +214,13 @@ public class SignupTest extends VertxJunitSupport {
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
         params.getObject("account").removeField("passwd");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -234,12 +234,12 @@ public class SignupTest extends VertxJunitSupport {
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         params.removeField("name");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -258,7 +258,7 @@ public class SignupTest extends VertxJunitSupport {
             given().body(params.encode())
                     .when().put(getURL(SignupVerticle.REGISTER))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                    .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                    .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
         }
         params.putString("name", "aaa");
         given().body(params.encode())
@@ -281,12 +281,12 @@ public class SignupTest extends VertxJunitSupport {
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         params.removeField("firstname");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -305,7 +305,7 @@ public class SignupTest extends VertxJunitSupport {
             given().body(params.encode())
                     .when().put(getURL(SignupVerticle.REGISTER))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                    .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                    .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
         }
         params.putString("firstname", "aaa");
         given().body(params.encode())
@@ -329,49 +329,49 @@ public class SignupTest extends VertxJunitSupport {
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getObject("contact").removeField("email");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getObject("contact").putString("email", "a");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getObject("contact").putString("email", "@a");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getObject("contact").putString("email", "a@");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getObject("contact").putString("email", "a@a");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getObject("contact").putString("email", "a@.a");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getObject("contact").putString("email", "@a.a");
         given().body(params.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
-                .body("code", is(ExceptionCodes.BAD_FORMAT.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
     }
 
     /**
@@ -391,7 +391,7 @@ public class SignupTest extends VertxJunitSupport {
                 .body("person._id", notNullValue()).extract().asString());
 
         given().param("id", p.getObject("person").getString("_id"))
-                .param("code", p.getObject("person").getObject("account").getString("activationCode"))
+                .param(CODE, p.getObject("person").getObject("account").getString("activationCode"))
                 .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
@@ -405,16 +405,16 @@ public class SignupTest extends VertxJunitSupport {
     public void accountCheckWrongOrMissingIdTest() {
         User u = generateUser();
         given().param("id", "haha")
-                .param("code", u.getAccount().getActivationCode())
+                .param(CODE, u.getAccount().getActivationCode())
                 .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
                 .body("status", is(false));
 
-        given().param("code", u.getAccount().getActivationCode())
+        given().param(CODE, u.getAccount().getActivationCode())
                 .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -424,7 +424,7 @@ public class SignupTest extends VertxJunitSupport {
     public void accountCheckWrongOrMissingActivationCodeTest() {
         User u = generateUser();
         given().param("id", u.get_id())
-                .param("code", "haha")
+                .param(CODE, "haha")
                 .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
@@ -433,7 +433,7 @@ public class SignupTest extends VertxJunitSupport {
         given().param("id", u.get_id())
                 .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -443,7 +443,7 @@ public class SignupTest extends VertxJunitSupport {
     public void accountCheckWrongHttpMethodTest() {
         given().when().post(getURL(SignupVerticle.ACCOUNT_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
 
@@ -468,7 +468,7 @@ public class SignupTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("account", notNullValue())
                 .body("account.token", notNullValue()).extract().path("account.token");
-        given().header("token", token)
+        given().header(TOKEN, token)
                 .when().get(getURL(UserVerticle.CURRENT))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
@@ -492,7 +492,7 @@ public class SignupTest extends VertxJunitSupport {
                 .body("person.name", is(params.getString("name")))
                 .body("person._id", notNullValue()).extract().asString()).getObject("person");
         given().param("id", p.getString("_id"))
-                .param("code", p.getObject("account").getString("activationCode"))
+                .param(CODE, p.getObject("account").getString("activationCode"))
                 .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
@@ -501,7 +501,7 @@ public class SignupTest extends VertxJunitSupport {
                 .param(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"))
                 .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
-                .body("code", is(ExceptionCodes.BUSINESS_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
     }
 
     /**
@@ -511,7 +511,7 @@ public class SignupTest extends VertxJunitSupport {
     public void firstConnectionCheckMissingValuesTest() {
         given().when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -524,7 +524,7 @@ public class SignupTest extends VertxJunitSupport {
                 .param(SignupVerticle.PARAM_CODE, u.getAccount().getActivationCode())
                 .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_LOGIN.toString()));
     }
 
     /**
@@ -537,7 +537,7 @@ public class SignupTest extends VertxJunitSupport {
                 .param(SignupVerticle.PARAM_CODE, "blabla")
                 .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
-                .body("code", is(ExceptionCodes.BUSINESS_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
     }
 
 
@@ -545,7 +545,7 @@ public class SignupTest extends VertxJunitSupport {
     public void firstConnectionCheckWithWrongHttpMethodTest() {
         given().when().post(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -576,7 +576,7 @@ public class SignupTest extends VertxJunitSupport {
         param.putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"));
         param.putObject(SignupVerticle.PARAM_STRUCTURE, getStructure());
         param.putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
-        given().header("token", token)
+        given().header(TOKEN, token)
                 .body(param.encode())
                 .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(200)
@@ -589,17 +589,17 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void finalizeSignupWithWrongHttpMethodTest() {
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     @Test
     public void finalizeSignupWithNotloggedUserTest() {
         given().when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     @Test
@@ -626,11 +626,11 @@ public class SignupTest extends VertxJunitSupport {
         param.putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"));
         param.putObject(SignupVerticle.PARAM_STRUCTURE, getStructure());
         param.putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
-        given().header("token", token)
+        given().header(TOKEN, token)
                 .body(param.encode())
                 .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
     @Test
     public void finalizeSignupWithWrongParamsTest() {
@@ -659,26 +659,26 @@ public class SignupTest extends VertxJunitSupport {
         param.putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"));
         param.putObject(SignupVerticle.PARAM_STRUCTURE, getStructure());
         param.putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
-        given().header("token", token)
+        given().header(TOKEN, token)
                 .body(param.encode())
                 .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+                .body(CODE, is(ExceptionCodes.BAD_LOGIN.toString()));
 
         p.putString("_id", id);
         param.putObject(SignupVerticle.PARAM_USER, p);
         param.putString(SignupVerticle.PARAM_CODE,"blabla");
-        given().header("token", token)
+        given().header(TOKEN, token)
                 .body(param.encode())
                 .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
-                .body("code", is(ExceptionCodes.BUSINESS_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
 /*
         param.putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"));
         JsonObject structure = getStructure();
         structure.removeField("_id");
         param.putObject(SignupVerticle.PARAM_STRUCTURE, structure);
-        given().header("token", token)
+        given().header(TOKEN, token)
                 .body(param.encode())
                 .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(200)

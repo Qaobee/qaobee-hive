@@ -22,8 +22,9 @@ import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.referencial.ChampionShip;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
@@ -138,10 +139,17 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * Start void.
      */
     @Override
+    @VerticleHandler({
+            @Rule(address = GET_LIST, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY),
+            @Rule(address = ADD, method = Constantes.POST, logged = true, admin = true, mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
+                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY),
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST),
+            @Rule(address = UPDATE, method = Constantes.POST, logged = true, admin = true, mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
+                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY),
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
         /**
          * @apiDescription retrieve all championships.
          * @api {post} /api/1/commons/referencial/championship/list Get all championships
@@ -155,9 +163,6 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
          * @apiParam {Participant} participant : participant (optionnal)
          *
          * @apiSuccess {Array} list of championships
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> getListChampionshipsHandler = new Handler<Message<String>>() {
             /*
@@ -168,63 +173,43 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    /*
-                     * *** Params section ***
-					 */
-                    // Check param mandatory
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
-                    JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE);
-                    Map<String, Object> mapParams = params.toMap();
-                    /*
-                     * *** Aggregat section ***
-					 */
-                    DBObject match;
-                    BasicDBObject dbObjectParent;
-                    BasicDBObject dbObjectChild;
-                    /* *** $MACTH section *** */
-                    dbObjectParent = new BasicDBObject();
-                    // Activity ID
-                    dbObjectParent.put("activityId", mapParams.get(PARAM_ACTIVITY));
-                    // Category Age Code
-                    dbObjectParent.put("categoryAge.code", mapParams.get(PARAM_CATEGORY_AGE));
-                    // Structure ID
-                    dbObjectParent.put("participants.structureId", mapParams.get(PARAM_STRUCTURE));
-                    // Participant
-                    if (mapParams.containsKey(PARAM_PARTICIPANT)) {
-                        @SuppressWarnings("unchecked") Map<String, Object> mapParticipant = (Map<String, Object>) mapParams.get(PARAM_PARTICIPANT);
-                        dbObjectChild = new BasicDBObject();
-                        if (mapParticipant.containsKey("id")) {
-                            dbObjectChild.put("participants.id", mapParticipant.get("id"));
-                        }
-                        if (mapParticipant.containsKey("structureId")) {
-                            dbObjectChild.put("participants.structureId", mapParticipant.get("structureId"));
-                        }
-                        if (mapParticipant.containsKey("name")) {
-                            dbObjectChild.put("participants.name", mapParticipant.get("name"));
-                        }
-                        if (mapParticipant.containsKey("type")) {
-                            dbObjectChild.put("participants.type", mapParticipant.get("type"));
-                        }
-                        dbObjectParent.put("$and", Collections.singletonList(dbObjectChild));
+                JsonObject params = new JsonObject(req.getBody());
+                Map<String, Object> mapParams = params.toMap();
+                // Aggregat section
+                DBObject match;
+                BasicDBObject dbObjectParent;
+                BasicDBObject dbObjectChild;
+                //$MACTH section
+                dbObjectParent = new BasicDBObject();
+                // Activity ID
+                dbObjectParent.put("activityId", mapParams.get(PARAM_ACTIVITY));
+                // Category Age Code
+                dbObjectParent.put("categoryAge.code", mapParams.get(PARAM_CATEGORY_AGE));
+                // Structure ID
+                dbObjectParent.put("participants.structureId", mapParams.get(PARAM_STRUCTURE));
+                // Participant
+                if (mapParams.containsKey(PARAM_PARTICIPANT)) {
+                    @SuppressWarnings("unchecked") Map<String, Object> mapParticipant = (Map<String, Object>) mapParams.get(PARAM_PARTICIPANT);
+                    dbObjectChild = new BasicDBObject();
+                    if (mapParticipant.containsKey("id")) {
+                        dbObjectChild.put("participants.id", mapParticipant.get("id"));
                     }
-                    match = new BasicDBObject("$match", dbObjectParent);
-                    /* Pipeline */
-                    List<DBObject> pipelineAggregation = Collections.singletonList(match);
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
-                    message.reply(resultJSon.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
+                    if (mapParticipant.containsKey("structureId")) {
+                        dbObjectChild.put("participants.structureId", mapParticipant.get("structureId"));
+                    }
+                    if (mapParticipant.containsKey("name")) {
+                        dbObjectChild.put("participants.name", mapParticipant.get("name"));
+                    }
+                    if (mapParticipant.containsKey("type")) {
+                        dbObjectChild.put("participants.type", mapParticipant.get("type"));
+                    }
+                    dbObjectParent.put("$and", Collections.singletonList(dbObjectChild));
                 }
+                match = new BasicDBObject("$match", dbObjectParent);
+                // Pipeline
+                List<DBObject> pipelineAggregation = Collections.singletonList(match);
+                final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
+                message.reply(resultJSon.encode());
             }
         };
 
@@ -238,9 +223,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} id
          *
          * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> getChampionshipHandler = new Handler<Message<String>>() {
             /*
@@ -252,16 +235,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
-                    utils.testMandatoryParams(req.getParams(), PARAM_ID);
                     message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), ChampionShip.class).encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -288,9 +262,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
          * @apiParam {Array(Journey)} journeys (optional) : list of journeys
          *
          * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> addChampionshipHandler = new Handler<Message<String>>() {
             /*
@@ -302,20 +274,9 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    // Check param mandatory
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isLoggedAndAdmin(req);
-                    utils.testMandatoryParams(req.getBody(), PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                            PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
                     JsonObject championship = new JsonObject(req.getBody());
                     championship.putString("_id", mongo.save(championship, ChampionShip.class));
                     message.reply(championship.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -343,9 +304,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
          * @apiParam {Array(Journey)} journeys (optional) : list of journeys
          *
          * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> updateChampionshipHandler = new Handler<Message<String>>() {
             /*
@@ -357,19 +316,9 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isLoggedAndAdmin(req);
-                    utils.testMandatoryParams(req.getBody(), "_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                            PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
                     JsonObject championship = new JsonObject(req.getBody());
                     mongo.save(championship, ChampionShip.class);
                     message.reply(championship.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);

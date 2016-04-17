@@ -27,7 +27,7 @@ public class ProfileTest extends VertxJunitSupport {
     public void updateProfileWithCommonDataTest() {
         User u = generateLoggedUser();
         u.setGender("androgyn");
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                .body(Json.encode(u))
                .when().post(getURL(ProfileVerticle.UPDATE))
                .then().assertThat().statusCode(200)
@@ -42,7 +42,7 @@ public class ProfileTest extends VertxJunitSupport {
     public void updateProfileWithPasswordChangeTest() {
         User u = generateLoggedUser();
         u.getAccount().setPasswd("toto");
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                .body(Json.encode(u))
                .when().post(getURL(ProfileVerticle.UPDATE))
                .then().assertThat().statusCode(200)
@@ -62,7 +62,7 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateProfilePDFTest() {
         User u = generateLoggedUser();
-        byte[] byteArray = given().header("token", u.getAccount().getToken())
+        byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
                                   .get(getURL(ProfileVerticle.GENERATE_PDF))
                                   .then().assertThat().statusCode(200)
                                   .extract().asByteArray();
@@ -75,10 +75,10 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateProfileWithWrongHttpMethodTest() {
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                .post(getURL(ProfileVerticle.GENERATE_PDF))
                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-               .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+               .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -88,7 +88,7 @@ public class ProfileTest extends VertxJunitSupport {
     public void generateProfilePDFWithNonLoggedUserTest() {
         given().get(getURL(ProfileVerticle.GENERATE_PDF))
                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-               .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+               .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -97,7 +97,7 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateBillingPDFTest() {
         User u = generateLoggedUser();
-        byte[] byteArray = given().header("token", u.getAccount().getToken())
+        byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
                                   .param("plan_id", 0)
                                   .param("pay_id", u.getAccount().getListPlan().get(0).getShippingList().get(0).getId())
                                   .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
@@ -115,7 +115,7 @@ public class ProfileTest extends VertxJunitSupport {
                .param("pay_id", "blabla")
                .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-               .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+               .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -124,11 +124,11 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateBillingPDFWithMissingDataTest() {
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                .param("pay_id", u.getAccount().getListPlan().get(0).getShippingList().get(0).getId())
                .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-               .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+               .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -137,11 +137,11 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateBillingPDFWithWrongDataTest() {
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                .param("plan_id", 0)
                .param("pay_id", "blabla")
                .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-               .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+               .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 }
