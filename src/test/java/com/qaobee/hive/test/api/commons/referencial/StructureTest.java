@@ -30,10 +30,15 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 /**
+ * The type Structure test.
+ *
  * @author cke
  */
 public class StructureTest extends VertxJunitSupport {
 
+    /**
+     * Gets structure by id.
+     */
     @Test
     public void getStructureById() {
         populate(POPULATE_ONLY, DATA_STRUCTURE);
@@ -45,6 +50,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"));
     }
 
+    /**
+     * Gets structure by id with non logged user test.
+     */
     @Test
     public void getStructureByIdWithNonLoggedUserTest() {
         given().when().get(getURL(StructureVerticle.GET))
@@ -52,6 +60,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
+    /**
+     * Gets structure by id with wrong http method test.
+     */
     @Test
     public void getStructureByIdWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
@@ -60,6 +71,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
+    /**
+     * Gets structure by id with missing parameter test.
+     */
     @Test
     public void getStructureByIdWithMissingParameterTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
@@ -68,6 +82,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
+    /**
+     * Update structure.
+     */
     @Test
     public void updateStructure() {
         populate(POPULATE_ONLY, DATA_STRUCTURE);
@@ -88,6 +105,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body(StructureVerticle.PARAM_LABEL, is("newValue"));
     }
 
+    /**
+     * Update structure with non logged user test.
+     */
     @Test
     public void updateStructureWithNonLoggedUserTest() {
         given().when().post(getURL(StructureVerticle.UPDATE))
@@ -95,6 +115,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
+    /**
+     * Update structure with wrong http method test.
+     */
     @Test
     public void updateStructureWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
@@ -103,6 +126,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
+    /**
+     * Update structure with missing parameter test.
+     */
     @Test
     public void updateStructureWithMissingParameterTest() {
         populate(POPULATE_ONLY, DATA_STRUCTURE);
@@ -125,7 +151,6 @@ public class StructureTest extends VertxJunitSupport {
     /**
      * Tests addHandler for StructureVerticle
      */
-
     @Test
     public void addStructure() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
@@ -143,6 +168,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body("_id", notNullValue());
     }
 
+    /**
+     * Add with non logged user test.
+     */
     @Test
     public void addWithNonLoggedUserTest() {
         given().when().post(getURL(StructureVerticle.ADD))
@@ -150,6 +178,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
+    /**
+     * Add structure with wrong http method test.
+     */
     @Test
     public void addStructureWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
@@ -158,6 +189,9 @@ public class StructureTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
+    /**
+     * Add structure with missing parameter test.
+     */
     @Test
     public void addStructureWithMissingParameterTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
