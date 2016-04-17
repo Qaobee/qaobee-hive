@@ -49,7 +49,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
         params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
 
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
@@ -64,7 +64,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     public void getListChampionshipsWithNonLoggedUserTest() {
         given().when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -74,7 +74,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     public void getListChampionshipsWithWrongHttpMethodTest() {
         given().when().get(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -90,11 +90,11 @@ public class ChampionshipTest extends VertxJunitSupport {
         params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
         params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
 
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -111,7 +111,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
         params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
 
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
@@ -120,7 +120,7 @@ public class ChampionshipTest extends VertxJunitSupport {
 
         params.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
         params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "12345");
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
@@ -128,7 +128,7 @@ public class ChampionshipTest extends VertxJunitSupport {
 
         params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "blabla");
         params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e");
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
@@ -154,7 +154,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         paramParticipant.putString("type", "infrastructure");
         params.putObject(ChampionshipVerticle.PARAM_PARTICIPANT, paramParticipant);
 
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
@@ -180,7 +180,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         paramParticipant.putString("type", "infrastructure");
         params.putObject(ChampionshipVerticle.PARAM_PARTICIPANT, paramParticipant);
 
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
@@ -194,7 +194,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     public void getChampionshipTest() {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .queryParam(ChampionshipVerticle.PARAM_ID, "559ebfb499f07aa6f04dec76")
                 .when().get(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(200)
@@ -209,7 +209,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     public void getChampionshipWithNonLoggedUserTest() {
         given().when().get(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -219,7 +219,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     public void getChampionshipWithWrongHttpMethodTest() {
         given().when().post(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -231,10 +231,10 @@ public class ChampionshipTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -246,11 +246,11 @@ public class ChampionshipTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .queryParam(ChampionshipVerticle.PARAM_ID, "12345")
                 .when().get(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**
@@ -262,7 +262,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         final JsonObject params = getShampionship();
 
-        String id = given().header("token", u.getAccount().getToken())
+        String id = given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.ADD))
                 .then().assertThat().statusCode(200)
@@ -270,7 +270,7 @@ public class ChampionshipTest extends VertxJunitSupport {
                 .body("label", is(params.getString("label")))
                 .extract().path("_id");
 
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .queryParam(ChampionshipVerticle.PARAM_ID, id)
                 .when().get(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(200)
@@ -285,7 +285,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     public void addChampionshipWithNonLoggedUserTest() {
         given().when().post(getURL(ChampionshipVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -294,10 +294,10 @@ public class ChampionshipTest extends VertxJunitSupport {
     @Test
     public void addChampionshipWithNonAdminUserTest() {
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .when().post(getURL(ChampionshipVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
-                .body("code", is(ExceptionCodes.NOT_ADMIN.toString()));
+                .body(CODE, is(ExceptionCodes.NOT_ADMIN.toString()));
     }
 
 
@@ -308,7 +308,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     public void addChampionshipWithWrongHttpMethodTest() {
         given().when().get(getURL(ChampionshipVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -320,11 +320,11 @@ public class ChampionshipTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         final JsonObject params = getShampionship();
         params.removeField("label");
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
 
@@ -336,7 +336,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         User u = generateLoggedAdminUser();
 
-        final JsonObject shampionship = new JsonObject(given().header("token", u.getAccount().getToken())
+        final JsonObject shampionship = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
                 .queryParam(ChampionshipVerticle.PARAM_ID, "559ebfb499f07aa6f04dec76")
                 .when().get(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(200)
@@ -344,14 +344,14 @@ public class ChampionshipTest extends VertxJunitSupport {
                 .extract().asString());
 
         shampionship.putString("label", "blabla");
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(shampionship.encode())
                 .when().post(getURL(ChampionshipVerticle.UPDATE))
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
                 .body("label", is(shampionship.getString("label")));
 
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .queryParam(ChampionshipVerticle.PARAM_ID, "559ebfb499f07aa6f04dec76")
                 .when().get(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(200)
@@ -366,7 +366,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     public void updateChampionshipWithNonLoggedUserTest() {
         given().when().post(getURL(ChampionshipVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -375,10 +375,10 @@ public class ChampionshipTest extends VertxJunitSupport {
     @Test
     public void updateChampionshipWithNonAdminUserTest() {
         User u = generateLoggedUser();
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .when().post(getURL(ChampionshipVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
-                .body("code", is(ExceptionCodes.NOT_ADMIN.toString()));
+                .body(CODE, is(ExceptionCodes.NOT_ADMIN.toString()));
     }
 
 
@@ -389,7 +389,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     public void updateChampionshipWithWrongHttpMethodTest() {
         given().when().get(getURL(ChampionshipVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -401,18 +401,18 @@ public class ChampionshipTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         final JsonObject params = getShampionship();
         params.removeField("label");
-        given().header("token", u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(ChampionshipVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     private JsonObject getShampionship() {
         JsonObject shampionship = new JsonObject();
         shampionship.putString(ChampionshipVerticle.PARAM_LABEL, "Mon championnat");
         JsonObject jsonObject = new JsonObject();
-        jsonObject.putString("code", "R");
+        jsonObject.putString(CODE, "R");
         jsonObject.putString("label", "regional");
         shampionship.putObject(ChampionshipVerticle.PARAM_LEVEL_GAME, jsonObject);
         shampionship.putString(ChampionshipVerticle.PARAM_SUB_LEVEL_GAME, "Honneur regional");
@@ -420,7 +420,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         shampionship.putString(ChampionshipVerticle.PARAM_INSTANCE, "Ligue du Boukhistan");
         shampionship.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
         jsonObject = new JsonObject();
-        jsonObject.putString("code", "sen");
+        jsonObject.putString(CODE, "sen");
         jsonObject.putString("label", "senior");
         jsonObject.putNumber("ageMax", 34);
         jsonObject.putNumber("ageMin", 20);

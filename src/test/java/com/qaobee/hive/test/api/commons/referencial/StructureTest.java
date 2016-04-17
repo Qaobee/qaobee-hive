@@ -20,217 +20,157 @@ package com.qaobee.hive.test.api.commons.referencial;
 
 import com.qaobee.hive.api.v1.commons.referencial.StructureVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * @author cke
  */
 public class StructureTest extends VertxJunitSupport {
 
-    /**
-     * Tests getHandler for StructureVerticle
-     */
     @Test
-    public void getObjectByIdOk() {
-
+    public void getStructureById() {
         populate(POPULATE_ONLY, DATA_STRUCTURE);
-
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-
-        final HashMap<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(StructureVerticle.GET, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        String label = result.getString("label");
-
-        Assert.assertEquals("Dunkerque Handball", label);
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .queryParam(StructureVerticle.PARAM_ID, "541168295971d35c1f2d1b5e")
+                .when().get(getURL(StructureVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body(StructureVerticle.PARAM_LABEL, notNullValue())
+                .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"));
     }
 
-    /**
-     * Tests getHandler for StructureVerticle
-     * with missing mandatory fields
-     */
     @Test
-    public void getObjectByIdKo() {
-
-        populate(POPULATE_ONLY, DATA_STRUCTURE);
-
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-
-        final HashMap<String, List<String>> params = new HashMap<>();
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(StructureVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
-        // id
-        params.put(StructureVerticle.PARAM_ID, Collections.singletonList(""));
-        req.setParams(params);
-
-        resultUpdate = new JsonObject(sendOnBus(StructureVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
+    public void getStructureByIdWithNonLoggedUserTest() {
+        given().when().get(getURL(StructureVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
-    /**
-     * Tests updateHandler for StructureVerticle
-     */
     @Test
-    public void getUpdateOk() {
-
-        populate(POPULATE_ONLY, DATA_STRUCTURE);
-
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-
-        final HashMap<String, List<String>> params = new HashMap<>();
-
-		/* Retreive object */
-        params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(StructureVerticle.GET, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        String label = result.getString("label");
-        Assert.assertEquals("Dunkerque Handball", label);
-		
-		/* Update object */
-        req.setMethod(Constantes.POST);
-
-        result.putString("label", "newValue");
-        req.setBody(result.encode());
-
-        final String reply2 = sendOnBus(StructureVerticle.UPDATE, req, user.getAccount().getToken());
-        JsonObject result2 = new JsonObject(reply2);
-        label = result2.getString("label");
-        Assert.assertEquals("newValue", label);
-
+    public void getStructureByIdWithWrongHttpMethodTest() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .post(getURL(StructureVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
-    /**
-     * Tests updateHandler for StructureVerticle
-     * with missing mandatory fields
-     */
     @Test
-    public void getUpdateKo() {
+    public void getStructureByIdWithMissingParameterTest() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .get(getURL(StructureVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
 
+    @Test
+    public void updateStructure() {
         populate(POPULATE_ONLY, DATA_STRUCTURE);
+        User u = generateLoggedUser();
+        JsonObject structure = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
+                .queryParam(StructureVerticle.PARAM_ID, "541168295971d35c1f2d1b5e")
+                .when().get(getURL(StructureVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body(StructureVerticle.PARAM_LABEL, notNullValue())
+                .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"))
+                .extract().asString());
+        structure.putString(StructureVerticle.PARAM_LABEL, "newValue");
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(structure.encode())
+                .when().post(getURL(StructureVerticle.UPDATE))
+                .then().assertThat().statusCode(200)
+                .body(StructureVerticle.PARAM_LABEL, notNullValue())
+                .body(StructureVerticle.PARAM_LABEL, is("newValue"));
+    }
 
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
+    @Test
+    public void updateStructureWithNonLoggedUserTest() {
+        given().when().post(getURL(StructureVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
 
-        final HashMap<String, List<String>> params = new HashMap<>();
-		
-		/* Retreive object */
-        params.put(StructureVerticle.PARAM_ID, Collections.singletonList("541168295971d35c1f2d1b5e"));
-        req.setParams(params);
+    @Test
+    public void updateStructureWithWrongHttpMethodTest() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .get(getURL(StructureVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
 
-        final String reply = sendOnBus(StructureVerticle.GET, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        String label = result.getString("label");
-        Assert.assertEquals("Dunkerque Handball", label);
-		
-		/* Update object */
-        req.setMethod(Constantes.POST);
-
-        result.putString("label", "newValue");
-        result.putObject("country", null);
-        req.setBody(result.encode());
-
-        final JsonObject resultUpdate = new JsonObject(sendOnBus(StructureVerticle.UPDATE, req, user.getAccount().getToken()));
-        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
+    @Test
+    public void updateStructureWithMissingParameterTest() {
+        populate(POPULATE_ONLY, DATA_STRUCTURE);
+        User u = generateLoggedUser();
+        JsonObject structure = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
+                .queryParam(StructureVerticle.PARAM_ID, "541168295971d35c1f2d1b5e")
+                .when().get(getURL(StructureVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body(StructureVerticle.PARAM_LABEL, notNullValue())
+                .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"))
+                .extract().asString());
+        structure.removeField(StructureVerticle.PARAM_COUNTRY);
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(structure.encode())
+                .post(getURL(StructureVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
      * Tests addHandler for StructureVerticle
      */
-    @Test
-    public void getAddOk() {
 
+    @Test
+    public void addStructure() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-		
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-		
-
-		/* Generate a simple Structure Object */
+        User u = generateLoggedUser();
         final JsonObject params = new JsonObject();
         params.putString("label", "labelValue");
         params.putString("acronym", "acronymValue");
         params.putObject(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
-        params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", user));
-
-        req.setBody(params.encode());
-
-        final JsonObject result = new JsonObject(sendOnBus(StructureVerticle.ADD, req, user.getAccount().getToken()));
-        String id = result.getString("_id");
-        Assert.assertNotNull(id);
+        params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", u));
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(StructureVerticle.ADD))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue());
     }
 
-    /**
-     * Tests addHandler for StructureVerticle
-     * with missing mandatory fields
-     */
     @Test
-    public void getAddKo() {
+    public void addWithNonLoggedUserTest() {
+        given().when().post(getURL(StructureVerticle.ADD))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
 
+    @Test
+    public void addStructureWithWrongHttpMethodTest() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .get(getURL(StructureVerticle.ADD))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    @Test
+    public void addStructureWithMissingParameterTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-
-		/* Generate a simple Structure Object */
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        User u = generateLoggedUser();
         final JsonObject params = new JsonObject();
         params.putString("label", "labelValue");
         params.putString("acronym", "acronymValue");
-        params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", user));
-
-        req.setBody(params.encode());
-
-        final JsonObject resultUpdate = new JsonObject(sendOnBus(StructureVerticle.ADD, req, user.getAccount().getToken()));
-        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [country]"));
+        params.putObject(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(StructureVerticle.ADD))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
-
 }
