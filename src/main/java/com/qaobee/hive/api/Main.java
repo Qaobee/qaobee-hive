@@ -177,10 +177,8 @@ public class Main extends AbstractGuiceVerticle {
                     public void handle(final HttpServerFileUpload upload) {
                         final String filename = new StringBuilder().append(dir.getAbsolutePath()).append("/").append(req.params().get("uid")).append(".")
                                 .append(FilenameUtils.getExtension(upload.filename())).toString();
-                        LOG.debug("---->" + filename);
                         request.putString("filename", filename);
                         request.putString("contentType", upload.contentType());
-                        LOG.debug("filename : " + filename);
                         if (vertx.fileSystem().existsSync(filename)) {
                             vertx.fileSystem().deleteSync(filename);
                         }
@@ -228,7 +226,6 @@ public class Main extends AbstractGuiceVerticle {
                 req.bodyHandler(new Handler<Buffer>() {
                     @Override
                     public void handle(final Buffer event) {
-
                         final RequestWrapper wrapper = new RequestWrapper();
                         wrapper.setBody(event.toString());
                         wrapper.setMethod(req.method());
@@ -239,7 +236,6 @@ public class Main extends AbstractGuiceVerticle {
                         path = path.subList(3, path.size());
                         wrapper.setPath(path);
                         startTimer(StringUtils.join(wrapper.getPath(), '.'));
-                        LOG.debug(path.toString());
                         // Remontée de métriques : nombre de requêtes
                         final JsonObject json = new JsonObject();
                         json.putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'));
@@ -318,7 +314,6 @@ public class Main extends AbstractGuiceVerticle {
      */
     private void testRequest(HttpServerRequest req, String busAddress, RequestWrapper wrapper) {
         try {
-            LOG.info(busAddress);
             Rule rule = rules.get(busAddress);
             if (StringUtils.isNotBlank(rule.method())) {
                 utils.testHTTPMetod(rule.method(), wrapper.getMethod());

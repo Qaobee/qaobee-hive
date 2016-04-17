@@ -70,6 +70,10 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * The constant PARAM_NOTIF_ID.
      */
     public static final String PARAM_NOTIF_ID = "id";
+    private static final String USER_ID = "user_id";
+    private static final String DELETED = "deleted";
+    private static final String TARGET = "target";
+    private static final String NOTIFICATION = "notification";
 
 
     @Override
@@ -103,8 +107,8 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         start = Integer.parseInt(req.getParams().get(PARAM_START).get(0));
                     }
                     CriteriaBuilder cb = new CriteriaBuilder()
-                            .add("user_id", req.getUser().get_id())
-                            .add("deleted", false);
+                            .add(USER_ID, req.getUser().get_id())
+                            .add(DELETED, false);
                     JsonArray notifications = mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, Notification.class);
                     int limit = notifications.size();
                     if (req.getParams() != null && req.getParams().containsKey(PARAM_LIMIT)) {
@@ -145,9 +149,9 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
-                    n.putBoolean("deleted", true);
+                    n.putBoolean(DELETED, true);
                     mongo.save(n, Notification.class);
-                    vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString("user_id"), new JsonObject());
+                    vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(USER_ID), new JsonObject());
                     utils.sendStatus(true, message);
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
@@ -172,7 +176,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
                     n.putBoolean("read", !n.getBoolean("read"));
                     mongo.save(n, Notification.class);
-                    vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString("user_id"), new JsonObject());
+                    vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(USER_ID), new JsonObject());
                     utils.sendStatus(true, message);
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
@@ -198,10 +202,10 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<JsonObject> message) {
                 try {
-                    utils.testMandatoryParams(message.body().encode(), "id", "target", "notification");
+                    utils.testMandatoryParams(message.body().encode(), "id", TARGET, NOTIFICATION);
                     String id = message.body().getString("id");
-                    String collection = message.body().getString("target");
-                    JsonObject notification = message.body().getObject("notification");
+                    String collection = message.body().getString(TARGET);
+                    JsonObject notification = message.body().getObject(NOTIFICATION);
                     switch (collection) {
                         case "User":
                             mongo.getById(id, collection);
@@ -239,8 +243,8 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                 }
                 JsonObject request = new JsonObject()
                         .putString("id", req.getParams().get("id").get(0))
-                        .putString("target", User.class.getSimpleName())
-                        .putObject("notification", new JsonObject(req.getBody()));
+                        .putString(TARGET, User.class.getSimpleName())
+                        .putObject(NOTIFICATION, new JsonObject(req.getBody()));
                 vertx.eventBus().send(NOTIFY, request, new Handler<Message<JsonObject>>() {
                     @Override
                     public void handle(Message<JsonObject> event) {
@@ -258,10 +262,10 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      */
     private void addNotificationToUser(String id, JsonObject notification) throws QaobeeException {
         notification.putString("_id", UUID.randomUUID().toString());
-        notification.putString("user_id", id);
+        notification.putString(USER_ID, id);
         notification.putNumber("timestamp", System.currentTimeMillis());
         notification.putBoolean("read", false);
-        notification.putBoolean("deleted", false);
+        notification.putBoolean(DELETED, false);
         mongo.save(notification, Notification.class);
         vertx.eventBus().send("qaobee.notification." + id, notification);
     }

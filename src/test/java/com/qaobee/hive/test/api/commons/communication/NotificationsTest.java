@@ -145,6 +145,21 @@ public class NotificationsTest extends VertxJunitSupport {
                .body("content", hasItem("Hello"))
                .body("_id", hasItem(n.get_id()))
                .body("read", hasItem(true));
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
+                .when().post(getURL(NotificationsVerticle.READ))
+                .then().assertThat().statusCode(200)
+                .body("status", notNullValue())
+                .body("status", is(true));
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .when().get(getURL(NotificationsVerticle.LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1))
+                .body("content", hasItem("Hello"))
+                .body("_id", hasItem(n.get_id()))
+                .body("read", hasItem(false));
     }
 
     /**
