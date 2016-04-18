@@ -69,9 +69,6 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
  * @author Xavier.Marin
  */
 public class Main extends AbstractGuiceVerticle {
-    /**
-     * The constant FILE_SERVE.
-     */
     public static final String FILE_SERVE = "fileserve";
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
     private static final String COLLECTION = "collection";
@@ -247,7 +244,7 @@ public class Main extends AbstractGuiceVerticle {
                         String busAddress = config.getObject("runtime").getInteger("version") + "." + StringUtils.join(path, '.');
                         boolean succeded = true;
                         if (rules.containsKey(busAddress)) {
-                            succeded = testRequest(req, busAddress, wrapper);
+                            testRequest(req, busAddress, wrapper);
                         }
                         if (succeded) {
                             eb.sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
