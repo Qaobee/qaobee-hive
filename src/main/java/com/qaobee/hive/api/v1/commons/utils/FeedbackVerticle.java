@@ -5,8 +5,9 @@ import com.asana.models.Task;
 import com.asana.models.User;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -31,7 +32,7 @@ import java.util.UUID;
 /**
  * The type Feedback verticle.
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle()
 public class FeedbackVerticle extends AbstractGuiceVerticle {
     /**
      * The constant POST_FEEDBACK.
@@ -49,6 +50,7 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
     private JsonObject config;
 
     @Override
+    @VerticleHandler({@Rule(address = POST_FEEDBACK, method = Constantes.POST)})
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -64,18 +66,12 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(POST_FEEDBACK, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    String[] postRequest = req.getBody().split("=");
-                    String decoded = URLDecoder.decode(postRequest[1]);
-                    final JsonObject data = new JsonObject(decoded);
-                    vertx.eventBus().send("internal.feedback.send", data);
-                    utils.sendStatus(true, message);
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                }
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                String[] postRequest = req.getBody().split("=");
+                String decoded = URLDecoder.decode(postRequest[1]);
+                final JsonObject data = new JsonObject(decoded);
+                vertx.eventBus().send("internal.feedback.send", data);
+                utils.sendStatus(true, message);
             }
         });
 

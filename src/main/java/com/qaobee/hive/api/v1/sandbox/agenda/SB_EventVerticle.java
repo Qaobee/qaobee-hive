@@ -22,6 +22,8 @@ import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.agenda.SB_Event;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -33,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
@@ -139,6 +140,19 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
      * Start void.
      */
     @Override
+    @VerticleHandler({
+                             @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID},
+                                   scope = Rule.Param.BODY),
+                             @Rule(address = ADD, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
+                                   scope = Rule.Param.BODY),
+                             @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
+                                   scope = Rule.Param.BODY),
+                             @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+                                   scope = Rule.Param.REQUEST)
+                     })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -155,9 +169,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiParam {Array} owner Owner
          * @apiHeader {String} token
          * @apiSuccess {Array} list of SB_Event
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
             /*
@@ -169,53 +180,33 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-
-					/*
-                     * *** Params section ***
-					 */
-                    // Check param mandatory
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
                     JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID);
-
-					/*
-					 * *** Aggregat section ***
-					 */
+                    // Aggregat section
                     DBObject match, sort, limit;
                     BasicDBObject dbObjectParent, dbObjectChild;
-
-					/* *** $MACTH section *** */
+                    // $MACTH section
                     dbObjectParent = new BasicDBObject();
-
                     // Event Activity
                     dbObjectParent.put(PARAM_ACTIVITY_ID, params.getString(PARAM_ACTIVITY_ID));
-
                     // Event sandboxId
                     dbObjectParent.put("owner.sandboxId", params.getString(PARAM_OWNER_SANBOXID));
-
                     if (params.getString(PARAM_OWNER_EFFECTIVEID) != null && !"".equals(params.getString(PARAM_OWNER_EFFECTIVEID).trim())) {
                         dbObjectParent.put("owner.effectiveId", params.getString(PARAM_OWNER_EFFECTIVEID));
                     }
-
                     if (params.getString(PARAM_OWNER_TEAMID) != null && !"".equals(params.getString(PARAM_OWNER_TEAMID).trim())) {
                         dbObjectParent.put("owner.teamId", params.getString(PARAM_OWNER_TEAMID));
                     }
-
                     DBObject o = new BasicDBObject();
                     o.put("$gte", params.getLong(PARAM_START_DATE));
                     o.put("$lt", params.getLong(PARAM_END_DATE));
                     dbObjectParent.put("startDate", o);
-
                     // Link.type
                     if (params.containsField(PARAM_LINK_TYPE)) {
                         dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_LINK_TYPE).toArray());
                         dbObjectParent.put("link.type", dbObjectChild);
                     }
-
                     match = new BasicDBObject("$match", dbObjectParent);
-
-					/* *** $SORT section *** */
+                    // $SORT section
                     dbObjectParent = new BasicDBObject();
                     if (params.containsField(PARAM_LIST_SORTBY)) {
                         for (Object item : params.getArray(PARAM_LIST_SORTBY)) {
@@ -226,8 +217,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                         dbObjectParent.put("_id", 1);
                     }
                     sort = new BasicDBObject("$sort", dbObjectParent);
-
-					/* *** $limit section *** */
+                    // $limit section
                     List<DBObject> pipelineAggregation;
                     if (params.containsField(PARAM_LIMIT_RESULT)) {
                         int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
@@ -236,23 +226,8 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                     } else {
                         pipelineAggregation = Arrays.asList(match, sort);
                     }
-
-                    LOG.debug("getList : " + pipelineAggregation.toString());
-
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Event.class);
-
-                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
@@ -266,9 +241,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiName add
          * @apiGroup SB_Event API
          * @apiSuccess {SB_Event} SB_Event create
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
             /*
@@ -280,26 +252,10 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
                     JsonObject event = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE);
-
                     final String id = mongo.save(event, SB_Event.class);
                     event.putString("_id", id);
-
-					/* return */
                     message.reply(event.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -316,9 +272,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiName update
          * @apiGroup SB_Event API
          * @apiSuccess {SB_Event} SB_Event updated
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             /*
@@ -330,27 +283,9 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
                     JsonObject event = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(event.toMap(), PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE);
-
                     mongo.save(event, SB_Event.class);
-
-                    LOG.debug("SB_Event updated : " + event.toString());
-
-					/* return */
                     message.reply(event.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -368,26 +303,13 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
          * @apiGroup Event API
          * @apiParam {String} id
          * @apiSuccess {Object} event com.qaobee.swarn.business.model.tranversal.event.event;
-         * @apiError DATA_ERROR Error during request to Mongo
-         * @apiError INVALID_PARAMETER Invalid Parameters
-         * @apiError HTTP_ERROR Bad Request
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
-                    utils.testMandatoryParams(req.getParams(), PARAM_ID);
-
                     message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_Event.class).encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);

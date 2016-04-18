@@ -80,7 +80,7 @@ public class Main extends AbstractGuiceVerticle {
     @Inject
     private Utils utils;
     private SockJSServer sockJSServer;
-    private Map<String, Rule> rules = new HashMap<>();
+    private static Map<String, Rule> rules = new HashMap<>();
 
     /**
      * Start void.
@@ -247,7 +247,7 @@ public class Main extends AbstractGuiceVerticle {
                         String busAddress = config.getObject("runtime").getInteger("version") + "." + StringUtils.join(path, '.');
                         boolean succeded = true;
                         if (rules.containsKey(busAddress)) {
-                            succeded = false || testRequest(req, busAddress, wrapper);
+                            succeded = testRequest(req, busAddress, wrapper);
                         }
                         if (succeded) {
                             eb.sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
@@ -456,5 +456,14 @@ public class Main extends AbstractGuiceVerticle {
         req.response().headers().add("Access-Control-Allow-Origin", "*");
         req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
         req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
+    }
+
+    /**
+     * Gets rules.
+     *
+     * @return the rules
+     */
+    public static Map<String, Rule> getRules() {
+        return rules;
     }
 }

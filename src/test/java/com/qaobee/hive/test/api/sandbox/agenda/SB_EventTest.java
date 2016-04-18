@@ -19,20 +19,20 @@
 
 package com.qaobee.hive.test.api.sandbox.agenda;
 
+import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.sandbox.agenda.SB_EventVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
 /**
  * The type Event test.
@@ -45,49 +45,43 @@ public class SB_EventTest extends VertxJunitSupport {
     @Test
     public void addEventTest() {
         User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-
         final JsonObject link = new JsonObject();
         link.putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship");
         params.putObject("link", link);
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1435701600100l);
-
+        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L);
+        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1435701600100L);
         final JsonObject owner = new JsonObject();
-        owner.putString("sandboxId", "558b0efebd2e39cdab651e1f");
+        owner.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
         owner.putString("effectiveId", "550b31f925da07681592db23");
-        params.putObject("owner", owner);
+        params.putObject(SB_EventVerticle.PARAM_OWNER, owner);
 
-        req.setBody(params.encode());
-        final JsonObject result = new JsonObject(sendOnBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
-        System.out.println(result);
-        Assert.assertNotNull("id is null", result.getString("_id"));
+        String id = given().header(TOKEN, user.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(SB_EventVerticle.ADD))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body(SB_EventVerticle.PARAM_LABEL, is(params.getString(SB_EventVerticle.PARAM_LABEL)))
+                .extract().path("_id");
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EventVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_EventVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                .body(SB_EventVerticle.PARAM_LABEL, is(params.getString(SB_EventVerticle.PARAM_LABEL)));
     }
 
     /**
-     * Add event with missing mandatory parameters test.
+     * Add event with non logged user test.
      */
     @Test
-    public void addEventWithMissingMandatoryParametersTest() {
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-        final JsonObject params = new JsonObject();
-        params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
-        params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-
-        req.setBody(params.encode());
-        final JsonObject result = new JsonObject(sendOnBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
-        Assert.assertTrue("addEventWithMissingMandatoryParametersTest", result.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
+    public void addEventWithNonLoggedUserTest() {
+        given().when().post(getURL(SB_EventVerticle.ADD))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -95,26 +89,41 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void addEventWithWrongHttpMethodTest() {
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-        final JsonObject result = new JsonObject(sendOnBus(SB_EventVerticle.ADD, req, user.getAccount().getToken()));
-        Assert.assertTrue("addEventWithWrongHttpMethodTest", result.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
+        given().when().get(getURL(SB_EventVerticle.ADD))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Add event with not logged user test.
+     * Add event with missing params test.
      */
     @Test
-    public void addEventWithNotLoggedUserTest() {
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.POST);
-        final JsonObject result = new JsonObject(sendOnBus(SB_EventVerticle.ADD, req));
-        System.out.println(result.encodePrettily());
-        Assert.assertTrue("addEventWithNotLoggedUserTest", result.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
+    public void addEventWithMissingParamsTest() {
+        User u = generateLoggedUser();
+        final JsonObject params = new JsonObject();
+        params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
+        params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
+        final JsonObject link = new JsonObject();
+        link.putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship");
+        params.putObject("link", link);
+        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L);
+        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1435701600100L);
+        final JsonObject owner = new JsonObject();
+        owner.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
+        owner.putString("effectiveId", "550b31f925da07681592db23");
+        params.putObject(SB_EventVerticle.PARAM_OWNER, owner);
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.ADD).mandatoryParams());
+        for (String k : params.getFieldNames()) {
+            if (mandatoryParams.contains(k)) {
+                JsonObject params2 = new JsonObject(params.encode());
+                params2.removeField(k);
+                given().header(TOKEN, u.getAccount().getToken())
+                        .body(params2.encode())
+                        .when().post(getURL(SB_EventVerticle.ADD))
+                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            }
+        }
     }
 
     /**
@@ -122,39 +131,51 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getListEventTest() {
-
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-
-        //First Add an event
         User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-
-        /* list of parameters */
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
         params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000l);
+        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L);
+        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000L);
         params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
-        req.setBody(params.encode());
-        final String reply = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertEquals("getListEventTest1", 4, new JsonArray(reply).size());
+        params.putNumber(SB_EventVerticle.PARAM_LIMIT_RESULT, 5);
+        params.putArray(SB_EventVerticle.PARAM_LIST_SORTBY, new JsonArray().add(new JsonObject()
+                        .putString("fieldName", SB_EventVerticle.PARAM_LABEL)
+                        .putNumber("sortOrder", -1)
+                )
+        );
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(SB_EventVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(4));
 
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "");
-
-        req.setBody(params.encode());
-        final String reply2 = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertEquals("getListEventTest2", 4, new JsonArray(reply2).size());
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(SB_EventVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(4));
 
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "TOTO");
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(SB_EventVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(0));
+    }
 
-        req.setBody(params.encode());
-        final String reply3 = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertEquals("getListEventTest3", 0, new JsonArray(reply3).size());
+    /**
+     * Gets list event with non logged user test.
+     */
+    @Test
+    public void getListEventWithNonLoggedUserTest() {
+        given().when().post(getURL(SB_EventVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -162,21 +183,9 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getListEventWithWrongHttpMethodTest() {
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-        final JsonObject params = new JsonObject();
-        params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000l);
-        params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
-        params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
-        req.setBody(params.encode());
-        final String reply = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertTrue("getListEventWithWrongHttpMethodTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
+        given().when().get(getURL(SB_EventVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -184,39 +193,27 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getListEventWithMissingParametersTest() {
+        populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-        final JsonObject params = new JsonObject();
-        params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000l);
-        req.setBody(params.encode());
-        final String reply = sendOnBus(SB_EventVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertTrue("getListEventWithMissingParametersTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
-    }
-
-    /**
-     * Gets list event with not logged user test.
-     */
-    @Test
-    public void getListEventWithNotLoggedUserTest() {
-        //First Add an event
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.POST);
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
         params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000l);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000l);
+        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L);
+        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000L);
         params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
-        req.setBody(params.encode());
-        final String reply = sendOnBus(SB_EventVerticle.GET_LIST, req);
-        Assert.assertTrue("getListEventWithNotLoggedUserTest", new JsonObject(reply).getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.GET_LIST).mandatoryParams());
+        for (String k : params.getFieldNames()) {
+            if (mandatoryParams.contains(k)) {
+                JsonObject params2 = new JsonObject(params.encode());
+                params2.removeField(k);
+                given().header(TOKEN, user.getAccount().getToken())
+                        .body(params2.encode())
+                        .when().post(getURL(SB_EventVerticle.GET_LIST))
+                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            }
+        }
     }
 
     /**
@@ -224,20 +221,24 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getEventByIdTest() {
-
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-
-        //First Add an event
         User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-        final HashMap<String, List<String>> params = new HashMap<>();
-        params.put(SB_EventVerticle.PARAM_ID, Collections.singletonList("55847ed0d040353767a48e68"));
-        req.setParams(params);
-        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertEquals("getEventByIdTest", "Amical", reply.getString("label"));
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
+                .when().get(getURL(SB_EventVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                .body(SB_EventVerticle.PARAM_LABEL, is("Amical"));
+    }
+
+    /**
+     * Gets event by id with non logged user test.
+     */
+    @Test
+    public void getEventByIdWithNonLoggedUserTest() {
+        given().when().get(getURL(SB_EventVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
@@ -245,32 +246,9 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getEventByIdWithWrongHttpMethodTest() {
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.POST);
-        final HashMap<String, List<String>> params = new HashMap<>();
-        params.put(SB_EventVerticle.PARAM_ID, Collections.singletonList("12345"));
-        req.setParams(params);
-        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("getEventByIdWithWrongHttpMethodTest", reply.getString("code").contains(ExceptionCodes.HTTP_ERROR.toString()));
-    }
-
-    /**
-     * Gets event by id with not logged user test.
-     */
-    @Test
-    public void getEventByIdWithNotLoggedUserTest() {
-        //First Add an event
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        final HashMap<String, List<String>> params = new HashMap<>();
-        params.put(SB_EventVerticle.PARAM_ID, Collections.singletonList("12345"));
-        req.setParams(params);
-        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req));
-        Assert.assertTrue("getEventByIdWithNotLoggedUserTest", reply.getString("code").contains(ExceptionCodes.NOT_LOGGED.toString()));
+        given().when().post(getURL(SB_EventVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
@@ -278,28 +256,103 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getEventByIdWithMissingParametersTest() {
+        populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-        final HashMap<String, List<String>> params = new HashMap<>();
-        req.setParams(params);
-        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("getEventByIdWithMissingParametersTest", reply.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
+        given().header(TOKEN, user.getAccount().getToken())
+                .when().get(getURL(SB_EventVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
-     * Gets event by id with empty parameters test.
+     * Gets event by id with wrong parameters test.
      */
     @Test
-    public void getEventByIdWithEmptyParametersTest() {
+    public void getEventByIdWithWrongParametersTest() {
+        populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-        final JsonObject reply = new JsonObject(sendOnBus(SB_EventVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("getEventByIdWithEmptyParametersTest", reply.getString("code").contains(ExceptionCodes.INVALID_PARAMETER.toString()));
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EventVerticle.PARAM_ID, "bla")
+                .when().get(getURL(SB_EventVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
+
+    /**
+     * Update event test.
+     */
+    @Test
+    public void updateEventTest() {
+        populate(POPULATE_ONLY, DATA_EVENT_HAND);
+        User user = generateLoggedUser();
+        JsonObject event = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
+                .when().get(getURL(SB_EventVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                .body(SB_EventVerticle.PARAM_LABEL, is("Amical")).extract().asString());
+        event.putString(SB_EventVerticle.PARAM_LABEL, "toto");
+        String id = given().header(TOKEN, user.getAccount().getToken())
+                .body(event.encode())
+                .when().post(getURL(SB_EventVerticle.UPDATE))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body(SB_EventVerticle.PARAM_LABEL, is(event.getString(SB_EventVerticle.PARAM_LABEL)))
+                .extract().path("_id");
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EventVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_EventVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                .body(SB_EventVerticle.PARAM_LABEL, is(event.getString(SB_EventVerticle.PARAM_LABEL)));
+    }
+
+    /**
+     * Update event with non logged user test.
+     */
+    @Test
+    public void updateEventWithNonLoggedUserTest() {
+        given().when().post(getURL(SB_EventVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Update event with wrong http method test.
+     */
+    @Test
+    public void updateEventWithWrongHttpMethodTest() {
+        given().when().get(getURL(SB_EventVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Update event with missing params test.
+     */
+    @Test
+    public void updateEventWithMissingParamsTest() {
+        populate(POPULATE_ONLY, DATA_EVENT_HAND);
+        User user = generateLoggedUser();
+        JsonObject event = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
+                .when().get(getURL(SB_EventVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                .body(SB_EventVerticle.PARAM_LABEL, is("Amical")).extract().asString());
+        event.putString(SB_EventVerticle.PARAM_LABEL, "toto");
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.UPDATE).mandatoryParams());
+        for (String k : event.getFieldNames()) {
+            if (mandatoryParams.contains(k)) {
+                JsonObject params2 = new JsonObject(event.encode());
+                params2.removeField(k);
+                given().header(TOKEN, user.getAccount().getToken())
+                        .body(params2.encode())
+                        .when().post(getURL(SB_EventVerticle.UPDATE))
+                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            }
+        }
     }
 }

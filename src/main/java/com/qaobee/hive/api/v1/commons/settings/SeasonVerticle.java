@@ -47,7 +47,7 @@ import java.util.Map;
  *
  * @author cke
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle()
 public class SeasonVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant GET.
