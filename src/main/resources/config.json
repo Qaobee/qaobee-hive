@@ -36,7 +36,7 @@
     "test": true,
     "address": "mailer.mod",
     "host": "ssl0.ovh.net",
-    "port": 4650,
+    "port": 465,
     "ssl": true,
     "auth": true,
     "username": "contact@qaobee.com",
