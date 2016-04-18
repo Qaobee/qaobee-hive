@@ -34,7 +34,6 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.PersonUtils;
@@ -286,14 +285,14 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
                         final JsonObject tplReq = new JsonObject();
                         tplReq.putString(TemplatesVerticle.TEMPLATE, "newPasswd.html");
-                        tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateNewpasswdBody(user, req.getLocale()));
+                        tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateNewpasswdBody(user, req.getLocale(), getContainer().config()));
 
                         vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
                             @Override
                             public void handle(final Message<JsonObject> tplResp) {
                                 final String tplRes = tplResp.body().getString("result");
                                 final JsonObject emailReq = new JsonObject();
-                                emailReq.putString("from", Params.getString("mail.from"));
+                                emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
                                 emailReq.putString("to", user.getContact().getEmail());
                                 emailReq.putString("subject", Messages.getString("mail.newpasswd.subject"));
                                 emailReq.putString("content_type", "text/html");
@@ -387,10 +386,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     if (!injunit) {
                         final JsonObject catcha = json.getObject("captcha");
                         final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-                        reCaptcha.setPrivateKey(Params.getString("recaptcha.pkey"));
+                        reCaptcha.setPrivateKey(getContainer().config().getObject("runtime").getString("recaptcha.pkey"));
                         final String challenge = catcha.getString("challenge");
                         final String uresponse = catcha.getString("response");
-                        reCaptchaResponse = reCaptcha.checkAnswer(Params.getString("recaptcha.site"), challenge, uresponse);
+                        reCaptchaResponse = reCaptcha.checkAnswer(getContainer().config().getObject("runtime").getString("recaptcha.site"), challenge, uresponse);
                     }
                     if (!injunit && !reCaptchaResponse.isValid()) {
                         utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");

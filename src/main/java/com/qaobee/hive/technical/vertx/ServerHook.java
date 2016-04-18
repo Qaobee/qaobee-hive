@@ -1,6 +1,5 @@
 package com.qaobee.hive.technical.vertx;
 
-import com.qaobee.hive.technical.tools.Params;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.AsyncResult;
@@ -15,12 +14,22 @@ import org.vertx.java.core.sockjs.SockJSSocket;
 public class ServerHook implements EventBusBridgeHook {
 
     private static final Logger LOG = LoggerFactory.getLogger(ServerHook.class);
+    private String siteUrl;
+
+    /**
+     * Instantiates a new Server hook.
+     *
+     * @param siteUrl the site url
+     */
+    public ServerHook(String siteUrl) {
+        this.siteUrl = siteUrl;
+    }
 
     public boolean handleSocketCreated(SockJSSocket sock) {
         // You can do things in here like check the Origin of the request
         String origin = sock.headers().get("origin") + "/";
-        LOG.info("Origin is " + origin + " / " + Params.getString("site.url"));
-        return !(origin == null || !origin.equals(Params.getString("site.url")));
+        LOG.info("Origin is " + origin + " / " + siteUrl);
+        return !(origin == null || !origin.equals(siteUrl));
     }
 
     @Override

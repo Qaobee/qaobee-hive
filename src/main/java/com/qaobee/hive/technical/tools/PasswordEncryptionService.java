@@ -23,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 /**
- * Created by xavier on 09/11/14.
+ * The interface Password encryption service.
  */
 public interface PasswordEncryptionService {
     /**

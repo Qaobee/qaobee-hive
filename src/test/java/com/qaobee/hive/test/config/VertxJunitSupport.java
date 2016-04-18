@@ -31,7 +31,6 @@ import com.qaobee.hive.business.model.transversal.Habilitation;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.guice.GuiceModule;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.ArrayUtils;
@@ -82,7 +81,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     /**
      * The constant BASE_URL.
      */
-    protected static final String BASE_URL = "http://localhost:" + Params.getString("defaultPort");
+    protected static final String BASE_URL = "http://localhost:8080";
     /**
      * The constant moduleConfig.
      */

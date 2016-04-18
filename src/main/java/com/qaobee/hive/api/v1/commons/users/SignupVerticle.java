@@ -49,7 +49,6 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.AuthCheck;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.PersonUtils;
@@ -75,13 +74,7 @@ import java.util.*;
 /**
  * The Class SignupVerticle.
  *
- * @author Xavier MARIN
- *         <ul>
- *         <li>resthandler.register : Register a new accunt</li>
- *         <li>resthandler.logintest : Login unicity test for rest request</li>
- *         <li>loginExists : Login unicity test for internal use</li>
- *         <li>resthandler.accountcheck : email validation number check</li>
- *         </ul>
+ * @author Xavier MARIN         <ul>         <li>resthandler.register : Register a new accunt</li>         <li>resthandler.logintest : Login unicity test for rest request</li>         <li>loginExists : Login unicity test for internal use</li>         <li>resthandler.accountcheck : email validation number check</li>         </ul>
  */
 @DeployableVerticle
 public class SignupVerticle extends AbstractGuiceVerticle {
@@ -183,7 +176,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             @Rule(address = REGISTER, method = Constantes.PUT),
             @Rule(address = ACCOUNT_CHECK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST),
             @Rule(address = FIRST_CONNECTION_CHECK, method = Constantes.GET, mandatoryParams = {PARAM_ID, PARAM_CODE}, scope = Rule.Param.REQUEST),
-            @Rule(address = FINALIZE_SIGNUP, method = Constantes.POST, logged = true, mandatoryParams = { PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE}, scope = Rule.Param.BODY),
+            @Rule(address = FINALIZE_SIGNUP, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE}, scope = Rule.Param.BODY),
     })
     public void start() {
         super.start();
@@ -271,11 +264,12 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     // Captcha management
                     final boolean bypassCaptcha = json.getBoolean(PARAM_JUNIT, json.getBoolean(PARAM_MOBILE, false));
                     final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-                    reCaptcha.setPrivateKey(Params.getString("recaptcha.pkey"));
+                    reCaptcha.setPrivateKey(getContainer().config().getObject("runtime").getString("recaptcha.pkey"));
                     ReCaptchaResponse reCaptchaResponse = null;
                     if (!bypassCaptcha) {
                         reCaptchaResponse = reCaptcha
-                                .checkAnswer(Params.getString("recaptcha.site"), json.getObject(PARAM_CAPTCHA).getString("challenge"), json.getObject(PARAM_CAPTCHA).getString("response"));
+                                .checkAnswer(getContainer().config().getObject("runtime").getString("recaptcha.site"),
+                                        json.getObject(PARAM_CAPTCHA).getString("challenge"), json.getObject(PARAM_CAPTCHA).getString("response"));
                     }
                     // If captcha needed and wrong captcha : Error and end transaction
                     if (!bypassCaptcha && !reCaptchaResponse.isValid()) {
@@ -318,14 +312,14 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                                             final JsonObject tplReq = new JsonObject();
                                             tplReq.putString(TemplatesVerticle.TEMPLATE, "newAccount.html");
-                                            tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateActivationBody(user, req.getLocale()));
+                                            tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateActivationBody(user, req.getLocale(), getContainer().config()));
 
                                             vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
                                                 @Override
                                                 public void handle(final Message<JsonObject> tplResp) {
                                                     final String tplRes = tplResp.body().getString("result");
                                                     final JsonObject emailReq = new JsonObject();
-                                                    emailReq.putString("from", Params.getString("mail.from"));
+                                                    emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
                                                     emailReq.putString("to", user.getContact().getEmail());
                                                     emailReq.putString("subject", Messages.getString("mail.account.validation.subject"));
                                                     emailReq.putString("content_type", "text/html");
@@ -673,7 +667,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                             notification.putObject("notification", new JsonObject()
                                     .putString("content", Messages.getString("first.connection.notification.content"))
                                     .putString("title", Messages.getString("first.connection.notification.title"))
-                                    .putString("from_user_id", Params.getString("admin.id"))
+                                    .putString("from_user_id", getContainer().config().getObject("runtime").getString("admin.id"))
                             );
                             vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
                             message.reply(Json.encode(user));

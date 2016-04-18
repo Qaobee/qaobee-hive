@@ -32,18 +32,20 @@ public interface MailUtils {
      *
      * @param user   the person
      * @param locale the locale language
+     * @param config the config
      * @return the json object
      */
-    JsonObject generateActivationBody(User user, String locale);
+    JsonObject generateActivationBody(User user, String locale, JsonObject config);
 
     /**
      * Generate newpasswd body.
      *
      * @param user   the u
      * @param locale the locale
+     * @param config the config
      * @return the json object
      */
-    JsonObject generateNewpasswdBody(User user, String locale);
+    JsonObject generateNewpasswdBody(User user, String locale, JsonObject config);
 
     /**
      * Generate email body for payment confirmation.
@@ -51,9 +53,10 @@ public interface MailUtils {
      * @param user     the person
      * @param locale   the locale
      * @param planItem plan
+     * @param config   the config
      * @return body json object
      */
-    JsonObject generatePaymentBody(User user, String locale, Plan planItem);
+    JsonObject generatePaymentBody(User user, String locale, Plan planItem, JsonObject config);
 
     /**
      * Generate mail body for refunding.
@@ -61,9 +64,10 @@ public interface MailUtils {
      * @param user     person
      * @param locale   locale
      * @param planItem plan
+     * @param config   the config
      * @return body json object
      */
-    JsonObject generateRefoundBody(User user, String locale, Plan planItem);
+    JsonObject generateRefoundBody(User user, String locale, Plan planItem, JsonObject config);
 
     /**
      * Generate refused card body json object.
@@ -72,7 +76,8 @@ public interface MailUtils {
      * @param locale the locale
      * @param plan   the plan
      * @param reason the reason  @return the json object
+     * @param config the config
      * @return the json object
      */
-    JsonObject generateRefusedCardBody(User user, String locale, Plan plan, String reason);
+    JsonObject generateRefusedCardBody(User user, String locale, Plan plan, String reason, JsonObject config);
 }

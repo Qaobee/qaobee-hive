@@ -1,6 +1,32 @@
 {
   "runtime": {
-    "version": 1
+    "version": 1,
+    "site.url": "http://localhost:3000/",
+    "defaultHost": "0.0.0.0",
+    "defaultPort": 8080,
+    "mail.site.url.api": "#/signup",
+    "mail.send": true,
+    "mail.to": "marin.xavier@gmail.com",
+    "mail.from": "contact@qaobee.com",
+    "newpasswd.site.url.api": "#/recoverpasswd",
+    "pay.url.api": "#/private/profile/billing",
+    "recaptcha.pkey": "6LdoTvMSAAAAAHbaOoyuXsPRWz2S5_7df1b6UTpZ",
+    "recaptcha.site": "http://www.qaobee.com",
+    "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
+    "plan": {
+      "FREEMIUM": {
+        "price": 9
+      },
+      "DISCOVERY": {
+        "price": 500
+      },
+      "PREMIUM": {
+        "price": 700
+      },
+      "TEAM_PLUS": {
+        "price": 900
+      }
+    }
   },
   "cors": {
     "enabled": true

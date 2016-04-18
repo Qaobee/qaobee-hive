@@ -38,7 +38,6 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -137,7 +136,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                         tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateRefusedCardBody(u,
                                 body.getObject("metadata").getString("locale"),
                                 u.getAccount().getListPlan().get(planId),
-                                body.getObject("failure").getString("code")));
+                                body.getObject("failure").getString("code"), getContainer().config()));
 
                         vertx.eventBus()
                                 .send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
@@ -145,7 +144,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                     public void handle(final Message<JsonObject> tplResp) {
                                         final String tplRes = tplResp.body().getString("result");
                                         final JsonObject emailReq = new JsonObject();
-                                        emailReq.putString("from", Params.getString("mail.from"));
+                                        emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
                                         emailReq.putString("to", u.getContact().getEmail());
                                         emailReq.putString("subject", Messages.getString("mail.payment.subject",
                                                 body.getObject("metadata").getString("locale")));
@@ -193,7 +192,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                     tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
                                     tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generatePaymentBody(u,
                                             body.getObject("metadata").getString("locale"),
-                                            u.getAccount().getListPlan().get(planId)));
+                                            u.getAccount().getListPlan().get(planId), getContainer().config()));
 
                                     vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq,
                                             new Handler<Message<JsonObject>>() {
@@ -201,7 +200,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                                 public void handle(final Message<JsonObject> tplResp) {
                                                     final String tplRes = tplResp.body().getString("result");
                                                     final JsonObject emailReq = new JsonObject();
-                                                    emailReq.putString("from", Params.getString("mail.from"));
+                                                    emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
                                                     emailReq.putString("to", u.getContact().getEmail());
                                                     emailReq.putString("subject",
                                                             Messages.getString("mail.payment.subject",
@@ -266,8 +265,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     }
                     Plan plan = req.getUser().getAccount().getListPlan().get(planId);
                     int amount = 0;
-                    if (Params.containsKey("plan." + plan.getLevelPlan() + ".price")) {
-                        amount = Integer.parseInt(Params.getString("plan." + plan.getLevelPlan() + ".price"));
+                    if (getContainer().config().getObject("runtime").getObject("plan").containsField(plan.getLevelPlan().name())) {
+                        amount = getContainer().config().getObject("runtime").getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price");
                     }
                     if (amount == 0) {
                         // FREEMIUM, nothing to do
@@ -408,9 +407,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                     // 1- Trigger payment
                                     Payment payment = new Payment();
                                     int amount = 0;
-                                    if (Params.containsKey("plan." + plan.getString("levelPlan") + ".price")) {
-                                        amount = Integer.parseInt(
-                                                Params.getString("plan." + plan.getString("levelPlan") + ".price"));
+                                    if (getContainer().config().getObject("runtime").getObject("plan").containsField(plan.getString("levelPlan"))) {
+                                        amount = getContainer().config().getObject("runtime").getObject("plan").getObject(plan.getString("levelPlan")).getInteger("price");
                                     }
                                     if (amount == 0) {
                                         // FREEMIUM, nothing to do

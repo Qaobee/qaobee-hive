@@ -28,7 +28,6 @@ import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.tools.Params;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -244,7 +243,7 @@ public class Main extends AbstractGuiceVerticle {
                         String busAddress = config.getObject("runtime").getInteger("version") + "." + StringUtils.join(path, '.');
                         boolean succeded = true;
                         if (rules.containsKey(busAddress)) {
-                            testRequest(req, busAddress, wrapper);
+                            succeded = testRequest(req, busAddress, wrapper);
                         }
                         if (succeded) {
                             eb.sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
@@ -278,8 +277,8 @@ public class Main extends AbstractGuiceVerticle {
             @Override
             public Promise<List<String>, Void> run(final List<String> value) {
                 server.requestHandler(rm);
-                String ip = Params.getString("defaultHost");
-                int port = Integer.parseInt(Params.getString("defaultPort"));
+                String ip = config.getObject("runtime").getString("defaultHost");
+                int port = config.getObject("runtime").getInteger("defaultPort");
                 if (envs.containsKey("OPENSHIFT_VERTX_IP")) {
                     ip = envs.get("OPENSHIFT_VERTX_IP");
                 }
@@ -288,14 +287,14 @@ public class Main extends AbstractGuiceVerticle {
                 }
 
                 sockJSServer = vertx.createSockJSServer(server);
-                JsonObject config = new JsonObject().putString("prefix", "/eventbus");
+                JsonObject wsConfig = new JsonObject().putString("prefix", "/eventbus");
 
                 JsonArray outboundPermitted = new JsonArray();
                 JsonArray inboundPermitted = new JsonArray();
                 outboundPermitted.add(new JsonObject());
                 inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
-                sockJSServer.setHook(new ServerHook());
-                sockJSServer.bridge(config, inboundPermitted, outboundPermitted);
+                sockJSServer.setHook(new ServerHook(config.getObject("runtime").getString("site.url")));
+                sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
                 server.listen(port, ip);
                 LOG.info("The http server is started");
                 startedResult.setResult(null);
