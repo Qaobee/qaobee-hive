@@ -380,9 +380,7 @@ public class Main extends AbstractGuiceVerticle {
         Reflections reflections = new Reflections(restMod, new MethodAnnotationsScanner());
         for (Method m : reflections.getMethodsAnnotatedWith(VerticleHandler.class)) {
             for (Rule r : m.getAnnotation(VerticleHandler.class).value()) {
-                if (rules.containsKey(r.address())) {
-                    LOG.error("Duplicate address : " + r.address());
-                } else {
+                if (!rules.containsKey(r.address())) {
                     rules.put(r.address(), r);
                 }
             }
