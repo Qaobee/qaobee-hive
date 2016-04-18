@@ -141,18 +141,18 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
      */
     @Override
     @VerticleHandler({
-                             @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID},
-                                   scope = Rule.Param.BODY),
-                             @Rule(address = ADD, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
-                                   scope = Rule.Param.BODY),
-                             @Rule(address = UPDATE, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
-                                   scope = Rule.Param.BODY),
-                             @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
-                                   scope = Rule.Param.REQUEST)
-                     })
+            @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+                    mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID},
+                    scope = Rule.Param.BODY),
+            @Rule(address = ADD, method = Constantes.POST, logged = true,
+                    mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
+                    scope = Rule.Param.BODY),
+            @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+                    mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
+                    scope = Rule.Param.BODY),
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+                    scope = Rule.Param.REQUEST)
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");

@@ -98,15 +98,15 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      */
     @Override
     @VerticleHandler({
-                             @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
-                                   scope = Rule.Param.REQUEST),
-                             @Rule(address = GET_LIST_BY_ACTIVITY, method = Constantes.GET, logged = true,
-                                   mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
-                                   scope = Rule.Param.REQUEST),
-                             @Rule(address = GET_CURRENT, method = Constantes.GET, logged = true,
-                                   mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
-                                   scope = Rule.Param.REQUEST)
-                     })
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+                    scope = Rule.Param.REQUEST),
+            @Rule(address = GET_LIST_BY_ACTIVITY, method = Constantes.GET, logged = true,
+                    mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
+                    scope = Rule.Param.REQUEST),
+            @Rule(address = GET_CURRENT, method = Constantes.GET, logged = true,
+                    mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
+                    scope = Rule.Param.REQUEST)
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");

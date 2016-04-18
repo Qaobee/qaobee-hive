@@ -1,18 +1,8 @@
 package com.qaobee.hive.test.api.commons.referencial;
 
-import com.qaobee.hive.api.v1.commons.referencial.TeamVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-@Ignore
 public class TeamTest extends VertxJunitSupport {
+    /*
     @Test
     public void getTeam() {
         populate(POPULATE_ONLY, DATA_TEAM_HAND);
@@ -147,5 +137,5 @@ public class TeamTest extends VertxJunitSupport {
                 .when().post(getURL(TeamVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
+    } */
 }
