@@ -89,15 +89,7 @@ public class Main extends AbstractGuiceVerticle {
         LOG.debug(this.getClass().getName() + " started");
         final Map<String, String> envs = container.env();
         final JsonObject config = container.config();
-        if (envs.containsKey("OPENSHIFT_MONGODB_DB_HOST")) {
-            JsonObject mongopersistor = config.getObject("mongo.persistor");
-            mongopersistor.putString("host", envs.get("OPENSHIFT_MONGODB_DB_HOST"));
-            mongopersistor.putNumber("port", Integer.parseInt(envs.get("OPENSHIFT_MONGODB_DB_PORT")));
-            mongopersistor.putString("password", envs.get("OPENSHIFT_MONGODB_DB_PASSWORD"));
-            mongopersistor.putString("username", envs.get("OPENSHIFT_MONGODB_DB_USERNAME"));
-        }
         final HttpServer server = vertx.createHttpServer();
-
         final RouteMatcher rm = new RouteMatcher();
         final EventBus eb = vertx.eventBus();
 
@@ -296,7 +288,7 @@ public class Main extends AbstractGuiceVerticle {
                 sockJSServer.setHook(new ServerHook(config.getObject("runtime").getString("site.url")));
                 sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
                 server.listen(port, ip);
-                LOG.info("The http server is started");
+                LOG.info("The http server is started on : " + ip + ":" +port);
                 startedResult.setResult(null);
                 return null;
             }

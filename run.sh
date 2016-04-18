@@ -6,6 +6,8 @@ docker run -ti \
 -e OPENSHIFT_MONGODB_DB_PORT=27017 \
 -e OPENSHIFT_MONGODB_DB_PASSWORD=hive \
 -e OPENSHIFT_MONGODB_DB_USERNAME=hive \
+-e ENV=REC \
 --add-host=mongo:$LOCALHOST \
--p 8888:8080 \
-tutum.co/giwi/qaobee-hive:latest
+-p 8888:8888 \
+qaobee-hive:latest
+# tutum.co/giwi/qaobee-hive:latest

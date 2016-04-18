@@ -1,7 +1,7 @@
 {
   "runtime": {
     "version": 1,
-    "site.url": "http://localhost:3000/",
+    "site.url": "http://rec.qaobee.com/",
     "defaultHost": "0.0.0.0",
     "defaultPort": 8888,
     "mail.site.url.api": "#/signup",
