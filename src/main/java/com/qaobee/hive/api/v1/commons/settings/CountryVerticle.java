@@ -22,6 +22,8 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -40,7 +42,6 @@ import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -91,6 +92,14 @@ public class CountryVerticle extends AbstractGuiceVerticle {
     private CountryBusiness countryBusiness;
 
     @Override
+    @VerticleHandler({
+                             @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID},
+                                   scope = Rule.Param.REQUEST),
+                             @Rule(address = GET_LIST, method = Constantes.GET, mandatoryParams = {PARAM_LOCAL},
+                                   scope = Rule.Param.REQUEST),
+                             @Rule(address = GET_ALPHA2, method = Constantes.GET, mandatoryParams = {PARAM_ALPHA2},
+                                   scope = Rule.Param.REQUEST)
+                     })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -108,40 +117,16 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Country}   country            The Country found.
          *
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> get = new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("get - Country");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-
-                    utils.testMandatoryParams(params, PARAM_ID);
-
-                    // Tests mandatory parameters
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
-                    }
-
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), Country.class);
-
-                    LOG.debug("Country found : " + json.toString());
-
+                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Country.class);
                     message.reply(json.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -162,40 +147,21 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Country}   country            The Country found.
          *
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> getAlpha2 = new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.info("getAlpha2 - Country");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-
-                    utils.testMandatoryParams(params, PARAM_ALPHA2);
-
-                    // Tests mandatory parameters
-                    if (StringUtils.isBlank(params.get(PARAM_ALPHA2).get(0))) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ALPHA2 + " is mandatory");
+                    Country country = countryBusiness.getCountryFromAlpha2(req.getParams().get(PARAM_ALPHA2).get(0));
+                    if (country == null) {
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR,
+                                "No Country defined for (" + req.getParams().get(PARAM_ALPHA2).get(0) + ")");
                     }
-
-                    Country country = countryBusiness.getCountryFromAlpha2(params.get(PARAM_ALPHA2).get(0));
-
-                    LOG.info("Country found : " + Json.encodePrettily(country));
-
                     message.reply(Json.encode(country));
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (QaobeeException e) {
+                } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
                 }
@@ -215,43 +181,28 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {List}   countries            The list of countries found.
          *
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         final Handler<Message<String>> getList = new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("getList() - Country");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    // Tests on method and parameters
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_LOCAL);
-
                     Map<String, Object> criterias = new HashMap<>();
-                    criterias.put(PARAM_LOCAL, params.get(PARAM_LOCAL).get(0));
-
+                    criterias.put(PARAM_LOCAL, req.getParams().get(PARAM_LOCAL).get(0));
                     String label = "undefined";
-
                     // label
-                    if (params.get(PARAM_LABEL) != null && !StringUtils.isBlank(params.get(PARAM_LABEL).get(0))) {
-                        label = params.get(PARAM_LABEL).get(0);
+                    if (req.getParams().containsKey(PARAM_LABEL) && StringUtils.isNotBlank(req.getParams().get(PARAM_LABEL).get(0))) {
+                        label = req.getParams().get(PARAM_LABEL).get(0);
                         criterias.put(PARAM_LABEL, label);
                     }
-
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Country.class);
-
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No Country defined for (" + label + ")");
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED,
+                                "No Country defined for (" + label + ")");
                     }
-
                     message.reply(resultJson.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);

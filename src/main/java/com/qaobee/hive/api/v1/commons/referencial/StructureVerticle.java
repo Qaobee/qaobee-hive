@@ -125,11 +125,17 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     @Override
     @VerticleHandler({
-            @Rule(address = ADD, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY}, scope = Rule.Param.BODY),
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = GET_LIST, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY),
-            @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY}, scope = Rule.Param.BODY),
-    })
+                             @Rule(address = ADD, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+                                   scope = Rule.Param.BODY),
+                             @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+                                   scope = Rule.Param.REQUEST),
+                             @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY),
+                             @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+                                   scope = Rule.Param.BODY),
+                     })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -222,30 +228,39 @@ public class StructureVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                JsonObject params = new JsonObject(req.getBody());
-                String activity = params.getString(PARAM_ACTIVITY);
-                JsonObject address = params.getObject(PARAM_ADDRESS);
-                Country country = countryBusiness.getCountryFromAlpha2(address.getString("countryAlpha2", "FR"));
-                // Aggregat section
-                DBObject match;
-                BasicDBObject dbObjectParent;
-                // $MACTH section
-                dbObjectParent = new BasicDBObject();
-                // Activity ID
-                dbObjectParent.put("activity._id", activity);
-                // Country ID
-                dbObjectParent.put("country._id", country.get_id());
-                // City OR Zipcode
-                BasicDBList dbList = new BasicDBList();
-                dbList.add(new BasicDBObject("address.city", address.getString("city").toUpperCase()));
-                dbList.add(new BasicDBObject("address.zipcode", address.getString("zipcode")));
-                dbObjectParent.put("$or", dbList.toArray());
-                match = new BasicDBObject("$match", dbObjectParent);
-                // Pipeline
-                List<DBObject> pipelineAggregation = Collections.singletonList(match);
-                final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Structure.class);
-                message.reply(resultJSon.encode());
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    JsonObject params = new JsonObject(req.getBody());
+                    String activity = params.getString(PARAM_ACTIVITY);
+                    JsonObject address = params.getObject(PARAM_ADDRESS);
+                    Country country = countryBusiness.getCountryFromAlpha2(address.getString("countryAlpha2", "FR"));
+                    if (country == null) {
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR,
+                                "No Country defined for (" + address.getString("countryAlpha2") + ")");
+                    }
+                    // Aggregat section
+                    DBObject match;
+                    BasicDBObject dbObjectParent;
+                    // $MACTH section
+                    dbObjectParent = new BasicDBObject();
+                    // Activity ID
+                    dbObjectParent.put("activity._id", activity);
+                    // Country ID
+                    dbObjectParent.put("country._id", country.get_id());
+                    // City OR Zipcode
+                    BasicDBList dbList = new BasicDBList();
+                    dbList.add(new BasicDBObject("address.city", address.getString("city").toUpperCase()));
+                    dbList.add(new BasicDBObject("address.zipcode", address.getString("zipcode")));
+                    dbObjectParent.put("$or", dbList.toArray());
+                    match = new BasicDBObject("$match", dbObjectParent);
+                    // Pipeline
+                    List<DBObject> pipelineAggregation = Collections.singletonList(match);
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Structure.class);
+                    message.reply(resultJSon.encode());
+                } catch (final QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
+                }
             }
         });
 

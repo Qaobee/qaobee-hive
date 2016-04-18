@@ -26,8 +26,7 @@ import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 /**
  * The type Structure test.
@@ -81,6 +80,107 @@ public class StructureTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
+
+    /**
+     * Gets structures list.
+     */
+    @Test
+    public void getStructuresList() {
+        populate(POPULATE_ONLY, DATA_STRUCTURE, SETTINGS_COUNTRY);
+        JsonObject param = new JsonObject()
+                .putString(StructureVerticle.PARAM_ACTIVITY, "ACT-HAND")
+                .putObject(StructureVerticle.PARAM_ADDRESS, new JsonObject()
+                        .putString("city", "DUNKERQUE")
+                        .putString("zipcode", "59240")
+                );
+
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .body(param.encode())
+                .when().post(getURL(StructureVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1))
+                .body("acronym", hasItem("USDK"));
+    }
+
+    /**
+     * Gets structures list with non logged user test.
+     */
+    @Test
+    public void getStructuresListWithNonLoggedUserTest() {
+        given().when().post(getURL(StructureVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets structures list with wrong http method test.
+     */
+    @Test
+    public void getStructuresListWithWrongHttpMethodTest() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .get(getURL(StructureVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Gets structures list with missing parameter test.
+     */
+    @Test
+    public void getStructuresListWithMissingParameterTest() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .post(getURL(StructureVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Gets structures list with wrong parameters.
+     */
+    @Test
+    public void getStructuresListWithWrongParameters() {
+        populate(POPULATE_ONLY, DATA_STRUCTURE, SETTINGS_COUNTRY);
+        JsonObject param = new JsonObject()
+                .putString(StructureVerticle.PARAM_ACTIVITY, "ACT-HAND")
+                .putObject(StructureVerticle.PARAM_ADDRESS, new JsonObject()
+                        .putString("city", "DUNKERQUE")
+                        .putString("zipcode", "59240")
+                        .putString("countryAlpha2", "KL")
+                );
+
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .body(param.encode())
+                .when().post(getURL(StructureVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+
+        param = new JsonObject()
+                .putString(StructureVerticle.PARAM_ACTIVITY, "ACT-HAND")
+                .putObject(StructureVerticle.PARAM_ADDRESS, new JsonObject()
+                        .putString("city", "blabla")
+                        .putString("zipcode", "bla")
+                );
+
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .body(param.encode())
+                .when().post(getURL(StructureVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(0));
+
+        param = new JsonObject()
+                .putString(StructureVerticle.PARAM_ACTIVITY, "ACT-BIDON")
+                .putObject(StructureVerticle.PARAM_ADDRESS, new JsonObject()
+                        .putString("city", "DUNKERQUE")
+                        .putString("zipcode", "59240")
+                );
+
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .body(param.encode())
+                .when().post(getURL(StructureVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(0));
+    }
+
 
     /**
      * Update structure.
@@ -169,10 +269,10 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Add with non logged user test.
+     * Add structure with non logged user test.
      */
     @Test
-    public void addWithNonLoggedUserTest() {
+    public void addStructureWithNonLoggedUserTest() {
         given().when().post(getURL(StructureVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));

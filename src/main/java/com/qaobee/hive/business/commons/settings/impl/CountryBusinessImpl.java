@@ -47,7 +47,7 @@ public class CountryBusinessImpl implements CountryBusiness {
         if (mapCountry == null) {
             return null;
         }
-        return mapCountry.get(alpha2);
+        return mapCountry.get(alpha2.toUpperCase());
     }
 
     private void getCountries() {

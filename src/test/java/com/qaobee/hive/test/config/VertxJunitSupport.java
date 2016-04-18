@@ -368,7 +368,9 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     private void populate(String populateType, String relativeDirectory, String... mongoFiles) {
         boolean comments = false;
-
+        for(String s : mongoFiles) {
+            LOG.info("Populating " + s);
+        }
         File[] listFiles = (new File("scripts/mongo" + relativeDirectory)).listFiles();
         if (listFiles != null && listFiles.length > 0) {
             BufferedReader reader = null;

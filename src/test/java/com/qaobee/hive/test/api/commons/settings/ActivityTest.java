@@ -21,76 +21,75 @@ package com.qaobee.hive.test.api.commons.settings;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+
 /**
+ * The type Activity test.
+ *
  * @author cke
  */
 public class ActivityTest extends VertxJunitSupport {
-
     /**
-     * Tests getHandler for ActivityVerticle
+     * Gets activity.
      */
     @Test
-    public void getObjectByIdOk() {
-
+    public void getActivity() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-
-		/* User simulation connection */
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(ActivityVerticle.GET, req);
-        JsonObject result = new JsonObject(reply);
-
-        String label = result.getString("label");
-
-        Assert.assertEquals("commons.settings.activity.handball", label);
+        given().queryParam(ActivityVerticle.PARAM_ID, "ACT-HAND")
+                .when().get(getURL(ActivityVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("label", notNullValue())
+                .body("label", is("commons.settings.activity.handball"));
     }
 
     /**
-     * Tests getHandler for ActivityVerticle
-     * with missing mandatory fields
+     * Gets activity with wrong http method test.
      */
     @Test
-    public void getObjectByIdKo() {
+    public void getActivityWithWrongHttpMethodTest() {
+        given().post(getURL(ActivityVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
 
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
+    /**
+     * Gets activity with missing parameter test.
+     */
+    @Test
+    public void getActivityWithMissingParameterTest() {
+        given().get(getURL(ActivityVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        given().queryParam(ActivityVerticle.PARAM_ID, "")
+                .get(getURL(ActivityVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
 
-        final Map<String, List<String>> params = new HashMap<>();
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
-        // id
-        params.put(ActivityVerticle.PARAM_ID, Collections.singletonList(""));
-        req.setParams(params);
-
-        resultUpdate = new JsonObject(sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
+    /**
+     * Gets activity with wrong activity id test.
+     */
+    @Test
+    public void getActivityWithWrongActivityIdTest() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
+        given().queryParam(ActivityVerticle.PARAM_ID, "ACT-BIDON")
+                .get(getURL(ActivityVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**

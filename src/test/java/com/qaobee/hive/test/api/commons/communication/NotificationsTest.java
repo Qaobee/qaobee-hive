@@ -70,7 +70,7 @@ public class NotificationsTest extends VertxJunitSupport {
      * @throws InterruptedException the interrupted exception
      */
     @Test
-    public void getNotificationsWithLimitAndStartTest() throws InterruptedException {
+    public void getNotificationsWithLimitAndStartTest() {
         final User u = generateLoggedUser();
         for (int i = 0; i < 15; i++) {
             final Notification n = new Notification();
@@ -108,10 +108,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets notifications with wrong http mthod test.
+     * Gets notifications with wrong http method test.
      */
     @Test
-    public void getNotificationsWithWrongHttpMthodTest() {
+    public void getNotificationsWithWrongHttpMethodTest() {
         given().when().post(getURL(NotificationsVerticle.LIST))
                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));

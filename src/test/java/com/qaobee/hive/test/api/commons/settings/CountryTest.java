@@ -19,119 +19,175 @@
 package com.qaobee.hive.test.api.commons.settings;
 
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
 /**
+ * The type Country test.
+ *
  * @author cke
  */
 public class CountryTest extends VertxJunitSupport {
-
     /**
-     * Tests get for CountryVerticle
+     * Gets country.
      */
     @Test
-    public void getObjectByIdOk() {
+    public void getCountry() {
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        given().queryParam(CountryVerticle.PARAM_ID, "CNTR-250-FR-FRA")
+                .when().get(getURL(CountryVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("label", notNullValue())
+                .body("label", is("France"));
+    }
 
+    /**
+     * Gets country with wrong http method test.
+     */
+    @Test
+    public void getCountryWithWrongHttpMethodTest() {
+        given().post(getURL(CountryVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Gets country with missing parameter test.
+     */
+    @Test
+    public void getCountryWithMissingParameterTest() {
+        given().get(getURL(CountryVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        given().queryParam(CountryVerticle.PARAM_ID, "")
+                .get(getURL(CountryVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Gets country with wrong activity id test.
+     */
+    @Test
+    public void getCountryWithWrongActivityIdTest() {
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        given().queryParam(CountryVerticle.PARAM_ID, "Pastafarie")
+                .get(getURL(CountryVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
+
+
+    /**
+     * Gets list of countries.
+     */
+    @Test
+    public void getListOfCountries() {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 
-		/* test based on script mongo */
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
+        given().queryParam(CountryVerticle.PARAM_LOCAL, "fr")
+                .when().get(getURL(CountryVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(202));
 
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(CountryVerticle.PARAM_ID, Collections.singletonList("CNTR-250-FR-FRA"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(CountryVerticle.GET, req);
-        JsonObject result = new JsonObject(reply);
-
-        String label = result.getString("label");
-
-        Assert.assertEquals("France", label);
+        given().queryParam(CountryVerticle.PARAM_LABEL, "//Fra")
+                .queryParam(CountryVerticle.PARAM_LOCAL, "fr")
+                .when().get(getURL(CountryVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(4));
     }
 
     /**
-     * Tests get for CountryVerticle
-     * with missing mandatory fields
+     * Gets list of countries with wrong http method test.
      */
     @Test
-    public void getObjectByIdKo() {
-
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(CountryVerticle.GET, req));
-        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
-        // id
-        params.put(CountryVerticle.PARAM_ID, Collections.singletonList(""));
-        req.setParams(params);
-
-        resultUpdate = new JsonObject(sendOnBus(CountryVerticle.GET, req));
-        Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
+    public void getListOfCountriesWithWrongHttpMethodTest() {
+        given().post(getURL(CountryVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Tests getList for CountryVerticle
+     * Gets list of countries with missing parameter test.
      */
     @Test
-    public void getListAll() {
+    public void getListOfCountriesWithMissingParameterTest() {
+        given().get(getURL(CountryVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        given().queryParam(CountryVerticle.PARAM_LOCAL, "")
+                .get(getURL(CountryVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
 
+    /**
+     * Gets list of countries with wrong param local test.
+     */
+    @Test
+    public void getListOfCountriesWithWrongParamLocalTest() {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-
-        final HashMap<String, List<String>> params = new HashMap<>();
-        params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
-        req.setParams(params);
-
-        JsonArray result = new JsonArray(sendOnBus(CountryVerticle.GET_LIST, req));
-        Assert.assertEquals(202, result.size());
-
+        given().queryParam(CountryVerticle.PARAM_LOCAL, "Kl")
+                .get(getURL(CountryVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
     }
 
     /**
-     * Tests getList for CountryVerticle
+     * Gets country alpha 2.
      */
     @Test
-    public void getListFilter() {
-
+    public void getCountryAlpha2() {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // label
-        params.put(CountryVerticle.PARAM_LOCAL, Collections.singletonList("fr"));
-        params.put(CountryVerticle.PARAM_LABEL, Collections.singletonList("//Fra"));
-        req.setParams(params);
-
-        JsonArray result = new JsonArray(sendOnBus(CountryVerticle.GET_LIST, req));
-        Assert.assertEquals(4, result.size());
-
+        given().queryParam(CountryVerticle.PARAM_ALPHA2, "fr")
+                .when().get(getURL(CountryVerticle.GET_ALPHA2))
+                .then().assertThat().statusCode(200)
+                .body("", notNullValue())
+                .body("label", is("France"));
+        given().queryParam(CountryVerticle.PARAM_ALPHA2, "FR")
+                .when().get(getURL(CountryVerticle.GET_ALPHA2))
+                .then().assertThat().statusCode(200)
+                .body("label", notNullValue())
+                .body("label", is("France"));
     }
 
+    /**
+     * Gets country alpha 2 with wrong http method test.
+     */
+    @Test
+    public void getCountryAlpha2WithWrongHttpMethodTest() {
+        given().post(getURL(CountryVerticle.GET_ALPHA2))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Gets country alpha 2 with missing parameter test.
+     */
+    @Test
+    public void getCountryAlpha2WithMissingParameterTest() {
+        given().get(getURL(CountryVerticle.GET_ALPHA2))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        given().queryParam(CountryVerticle.PARAM_ALPHA2, "")
+                .get(getURL(CountryVerticle.GET_ALPHA2))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Gets country alpha 2 with wrong activity id test.
+     */
+    @Test
+    public void getCountryAlpha2WithWrongActivityIdTest() {
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        given().queryParam(CountryVerticle.PARAM_ALPHA2, "kl")
+                .get(getURL(CountryVerticle.GET_ALPHA2))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
 }

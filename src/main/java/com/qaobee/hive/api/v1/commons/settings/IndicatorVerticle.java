@@ -23,6 +23,8 @@ import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.IndicatorCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -30,7 +32,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
@@ -43,7 +44,6 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The type Indicator verticle.
@@ -104,6 +104,16 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * Start void.
      */
     @Override
+    @VerticleHandler({
+                             @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+                                   scope = Rule.Param.REQUEST),
+                             @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
+                                   scope = Rule.Param.BODY),
+                             @Rule(address = GET_BY_CODE, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
+                                   scope = Rule.Param.BODY)
+                     })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -121,47 +131,19 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {Indicator}   indicator            The Indicator found.
          *
-         * @apiError HTTP_ERROR Bad request
          * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("get() - Indicator");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    utils.isUserLogged(req);
-
-                    // Tests mandatory parameters
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
-                    }
-
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), IndicatorCfg.class);
-
-                    LOG.debug("Indicator found : " + json.toString());
-
+                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), IndicatorCfg.class);
                     message.reply(json.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -181,9 +163,6 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {List}   indicators            The list of indicators found.
          *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
             /*
@@ -193,43 +172,30 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug("getList() - Indicator");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN);
-                    utils.isUserLogged(req);
-
                     // Activity ID
                     String activityId = params.getString(PARAM_ACTIVITY_ID);
                     // Country ID
                     String countryId = params.getString(PARAM_COUNTRY_ID);
                     // SCREEN
                     JsonArray screen = params.getArray(PARAM_SCREEN);
-
                     DBObject match;
                     DBObject project;
                     BasicDBObject dbObjectParent;
                     BasicDBObject dbObjectChild;
-
                     // $MATCH section
                     dbObjectParent = new BasicDBObject();
-
                     // - activity code
                     dbObjectParent.put("activityId", activityId);
-
                     // - country
                     dbObjectParent.put("countryId", countryId);
-
                     // - SCREEN
                     dbObjectChild = new BasicDBObject("$in", screen.toArray());
                     dbObjectParent.put("listScreen", dbObjectChild);
-
                     match = new BasicDBObject("$match", dbObjectParent);
-
                     // $PROJECT section
-                    // { $project : { "_id" : 0, listIndicator : {code : 1, label : 1}}}
                     dbObjectParent = new BasicDBObject();
                     dbObjectParent.put("_id", 1);
                     dbObjectParent.put("code", 1);
@@ -238,25 +204,10 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
                     dbObjectParent.put("listScreen", 1);
                     dbObjectParent.put("listField", 1);
                     dbObjectParent.put("listValues", 1);
-
                     project = new BasicDBObject("$project", dbObjectParent);
-
                     List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
-
-                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
@@ -279,9 +230,6 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {List}   indicators            The list of indicators found.
          *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_BY_CODE, new Handler<Message<String>>() {
             /*
@@ -293,47 +241,29 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE);
-
                     // Indicator code
                     String activityId = params.getString(PARAM_ACTIVITY_ID);
                     // Country ID
                     String countryId = params.getString(PARAM_COUNTRY_ID);
                     // List of indicators
                     JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
-
                     DBObject match;
                     BasicDBObject dbObjectParent;
                     BasicDBObject dbObjectChild;
-
                     // $MATCH section
                     dbObjectParent = new BasicDBObject();
-
                     // - activity code
                     dbObjectParent.put("activityId", activityId);
-
                     // - country
                     dbObjectParent.put("countryId", countryId);
-
                     // - code
                     dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
                     dbObjectParent.put("code", dbObjectChild);
-
                     match = new BasicDBObject("$match", dbObjectParent);
-
                     List<DBObject> pipelineAggregation = Collections.singletonList(match);
-
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
                     message.reply(resultJSon.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
