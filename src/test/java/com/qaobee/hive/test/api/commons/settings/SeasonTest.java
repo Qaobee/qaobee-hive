@@ -21,135 +21,218 @@ import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
 /**
+ * The type Season test.
+ *
  * @author cke
  */
 public class SeasonTest extends VertxJunitSupport {
-
     /**
-     * Tests getHandler for SeasonVerticle
+     * Gets season test.
      */
     @Test
-    public void getObjectByIdOk() {
-
+    public void getSeasonTest() {
         populate(POPULATE_ONLY, SETTINGS_SEASONS);
-
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(SeasonVerticle.PARAM_ID, Collections.singletonList("559a9294889089a442f3d499"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SeasonVerticle.GET, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        String label = result.getString("label");
-
-        Assert.assertEquals("SAISON 2014-2015", label);
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .queryParam(SeasonVerticle.PARAM_ID, "559a9294889089a442f3d499")
+                .when().get(getURL(SeasonVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("label", notNullValue())
+                .body("label", is("SAISON 2014-2015"));
     }
 
     /**
-     * Tests getHandler for SeasonVerticle
-     * with missing mandatory fields
+     * Gets season with non logged user test.
      */
     @Test
-    public void getObjectByIdKo() {
-
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
-        // id
-        params.put(SeasonVerticle.PARAM_ID, Collections.singletonList(""));
-        req.setParams(params);
-
-        resultUpdate = new JsonObject(sendOnBus(SeasonVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
+    public void getSeasonWithNonLoggedUserTest() {
+        given().when().get(getURL(SeasonVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Tests getListHandler for SeasonVerticle
+     * Gets season with wrong http method test.
      */
     @Test
-    public void getListOk() {
+    public void getSeasonWithWrongHttpMethodTest() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .when().post(getURL(SeasonVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
 
+    /**
+     * Gets season with wrong parameter test.
+     */
+    @Test
+    public void getSeasonWithWrongParameterTest() {
+        populate(POPULATE_ONLY, SETTINGS_SEASONS);
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .queryParam(SeasonVerticle.PARAM_ID, "blabla")
+                .when().get(getURL(SeasonVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
+
+    /**
+     * Gets season with missing parameter test.
+     */
+    @Test
+    public void getSeasonWithMissingParameterTest() {
+        populate(POPULATE_ONLY, SETTINGS_SEASONS);
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .when().get(getURL(SeasonVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Gets season list test.
+     */
+    @Test
+    public void getSeasonListTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-
-		/* User simulation connection */
         User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(SeasonVerticle.PARAM_COUNTRY_ID, Collections.singletonList((String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID)));
-        params.put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SeasonVerticle.GET_LIST_BY_ACTIVITY, req, user.getAccount().getToken());
-        Assert.assertEquals(3, new JsonArray(reply).size());
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
+                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
+                .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(3));
     }
+
+    /**
+     * Gets season list with non logged user test.
+     */
+    @Test
+    public void getSeasonListWithNonLoggedUserTest() {
+        given().when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets season list with wrong http method test.
+     */
+    @Test
+    public void getSeasonListWithWrongHttpMethodTest() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .when().post(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Gets season list with wrong parameter test.
+     */
+    @Test
+    public void getSeasonListWithWrongParameterTest() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
+                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
+                .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID,(String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
+                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+    }
+
+    /**
+     * Gets season list with missing parameter test.
+     */
+    @Test
+    public void getSeasonListWithMissingParameterTest() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
 
     /**
      * Tests getCurrentHandler for SeasonVerticle
      */
     @Test
-    public void getCurrentSeason() {
-
+    public void getCurrentSeasonTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-
-		/* User simulation connection */
         User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(SeasonVerticle.PARAM_COUNTRY_ID, Collections.singletonList((String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID)));
-        params.put(SeasonVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SeasonVerticle.GET_CURRENT, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        String label = result.getString("label");
-
-        Assert.assertEquals("SAISON 2015-2016", label);
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
+                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
+                .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                .then().assertThat().statusCode(200)
+                .body("label", notNullValue())
+                .body("label", is("SAISON 2015-2016"));
     }
 
+    /**
+     * Gets current season with non logged user test.
+     */
+    @Test
+    public void getCurrentSeasonWithNonLoggedUserTest() {
+        given().when().get(getURL(SeasonVerticle.GET_CURRENT))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets current season with wrong http method test.
+     */
+    @Test
+    public void getCurrentSeasonWithWrongHttpMethodTest() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .when().post(getURL(SeasonVerticle.GET_CURRENT))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Gets current season with wrong parameter test.
+     */
+    @Test
+    public void getCurrentSeasonWithWrongParameterTest() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
+                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
+                .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID,(String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
+                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+    }
+
+    /**
+     * Gets current season with missing parameter test.
+     */
+    @Test
+    public void getCurrentSeasonWithMissingParameterTest() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
 }
