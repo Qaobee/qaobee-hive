@@ -42,7 +42,6 @@ public class MongoDBImpl implements MongoDB {
     protected static final Logger LOG = Logger.getLogger(MongoDBImpl.class.getName());
 
     private DB db;
-    private MongoClient mongo;
     private JsonObject config;
     private WriteConcern writeConcern;
 
@@ -72,6 +71,7 @@ public class MongoDBImpl implements MongoDB {
         if (useSSL) {
             builder.socketFactory(SSLSocketFactory.getDefault());
         }
+        MongoClient mongo;
         if (seedsProperty == null) {
             final ServerAddress address = new ServerAddress(host, port);
             if (username != null && password != null) {
@@ -150,7 +150,7 @@ public class MongoDBImpl implements MongoDB {
      *
      * @return the writeConcern
      */
-    public WriteConcern getWriteConcern() {
+    private WriteConcern getWriteConcern() {
         if (writeConcern == null) {
             writeConcern = db.getWriteConcern();
         }

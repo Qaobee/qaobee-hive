@@ -8,6 +8,7 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -26,7 +27,9 @@ import javax.inject.Named;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -66,12 +69,17 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(POST_FEEDBACK, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                String[] postRequest = req.getBody().split("=");
-                String decoded = URLDecoder.decode(postRequest[1]);
-                final JsonObject data = new JsonObject(decoded);
-                vertx.eventBus().send("internal.feedback.send", data);
-                utils.sendStatus(true, message);
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    String[] postRequest = req.getBody().split("=");
+                    String decoded = URLDecoder.decode(postRequest[1], StandardCharsets.UTF_8.toString());
+                    final JsonObject data = new JsonObject(decoded);
+                    vertx.eventBus().send("internal.feedback.send", data);
+                    utils.sendStatus(true, message);
+                } catch (UnsupportedEncodingException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                }
             }
         });
 

@@ -33,28 +33,28 @@ public class QaobeeException extends Exception {
     /**
      * The code.
      */
-    private ExceptionCodes code; // NO SONAR
+    private ExceptionCodes code; // NOSONAR
 
     /**
      * The json context.
      */
-    private String jsonContext = ""; // NO SONAR
+    private String jsonContext = ""; // NOSONAR
 
     /**
      * The timestamp.
      */
-    private long timestamp = System.currentTimeMillis(); // NO SONAR
+    private long timestamp = System.currentTimeMillis(); // NOSONAR
 
     /**
      * The report.
      */
-    private boolean report = false; // NO SONAR
+    private boolean report = false; // NOSONAR
 
     /**
      * The error.
      */
     //NO SONAR
-    private boolean error = true; // NO SONAR
+    private boolean error = true; // NOSONAR
 
     /**
      * Instantiates a new qaobee exception.
