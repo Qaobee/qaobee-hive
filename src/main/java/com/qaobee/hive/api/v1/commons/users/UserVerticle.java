@@ -82,6 +82,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
      */
     public static final String MOBILE_TOKEN = "mobileToken";
     private static final Logger LOG = LoggerFactory.getLogger(UserVerticle.class);
+    private static final String ACCOUNT_FIELD = "account";
+    private static final String PASSWD_FIELD = "passwd"; // NOSONAR
+    private static final String ACCOUNT_LOGIN_FIELD = "account.login";
     /**
      * The Mongo.
      */
@@ -117,7 +120,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
             @Rule(address = LOGOUT, method = Constantes.GET, logged = true, mandatoryParams = {"token"}, scope = Rule.Param.HEADER),
             @Rule(address = PASSWD_RENEW, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY),
             @Rule(address = PASSWD_RENEW_CHK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST),
-            @Rule(address = PASSWD_RESET, method = Constantes.POST, mandatoryParams = {"id", "code", "passwd"}, scope = Rule.Param.BODY),
+            @Rule(address = PASSWD_RESET, method = Constantes.POST, mandatoryParams = {"id", "code", PASSWD_FIELD}, scope = Rule.Param.BODY),
             @Rule(address = CURRENT, method = Constantes.GET, logged = true),
             @Rule(address = META, method = Constantes.GET, logged = true),
             @Rule(address = USER_INFO, method = Constantes.GET, logged = true, mandatoryParams = {"id"}, scope = Rule.Param.REQUEST),
@@ -160,7 +163,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         LOG.error(e.getMessage(), e);
                         utils.sendError(message, e);
                     } else {
-                        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
+                        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add(ACCOUNT_LOGIN_FIELD,
+                                infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
                         if (res.size() != 1) {
                             final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
                             utils.sendError(message, e);
@@ -176,7 +180,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             } else {
                                 if (user.getAccount().isActive()) {
                                     // trial period test
-                                    if (!user.getAccount().getListPlan().get(0).getStatus().equals("paid") && !testTrial(user)) {
+                                    if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user)) {
                                         user.getAccount().getListPlan().get(0).setStatus("notpaid");
                                     }
                                     user.getAccount().setToken(UUID.randomUUID().toString());
@@ -186,9 +190,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
                                     }
                                     mongo.save(user);
                                     JsonObject jUser = new JsonObject(Json.encode(user));
-                                    jUser.getObject("account").removeField("passwd");
-                                    jUser.getObject("account").removeField("password");
-                                    jUser.getObject("account").removeField("salt");
+                                    jUser.getObject(ACCOUNT_FIELD).removeField(PASSWD_FIELD);
+                                    jUser.getObject(ACCOUNT_FIELD).removeField("password");
+                                    jUser.getObject(ACCOUNT_FIELD).removeField("salt");
                                     message.reply(jUser.toString());
                                 } else {
                                     utils.sendError(message, ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", req.getLocale()));
@@ -272,7 +276,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     final JsonObject infos = new JsonObject(req.getBody());
-                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
+                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add(ACCOUNT_LOGIN_FIELD, infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
                         final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", req.getLocale()));
                         LOG.error(e.getMessage(), e);
@@ -292,7 +296,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                             public void handle(final Message<JsonObject> tplResp) {
                                 final String tplRes = tplResp.body().getString("result");
                                 final JsonObject emailReq = new JsonObject();
-                                emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
+                                emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
                                 emailReq.putString("to", user.getContact().getEmail());
                                 emailReq.putString("subject", Messages.getString("mail.newpasswd.subject"));
                                 emailReq.putString("content_type", "text/html");
@@ -379,17 +383,17 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     final JsonObject json = new JsonObject(req.getBody());
                     final String id = json.getString("id");
                     final String code = json.getString("code");
-                    final String passwd = json.getString("passwd");
+                    final String passwd = json.getString(PASSWD_FIELD);
                     final boolean injunit = json.getBoolean("junit", false);
                     final boolean byPassActivationCode = json.getBoolean("byPassActivationCode", false);
                     ReCaptchaResponse reCaptchaResponse = null;
                     if (!injunit) {
                         final JsonObject catcha = json.getObject("captcha");
                         final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-                        reCaptcha.setPrivateKey(getContainer().config().getObject("runtime").getString("recaptcha.pkey"));
+                        reCaptcha.setPrivateKey(getContainer().config().getObject(RUNTIME).getString("recaptcha.pkey"));
                         final String challenge = catcha.getString("challenge");
                         final String uresponse = catcha.getString("response");
-                        reCaptchaResponse = reCaptcha.checkAnswer(getContainer().config().getObject("runtime").getString("recaptcha.site"), challenge, uresponse);
+                        reCaptchaResponse = reCaptcha.checkAnswer(getContainer().config().getObject(RUNTIME).getString("recaptcha.site"), challenge, uresponse);
                     }
                     if (!injunit && !reCaptchaResponse.isValid()) {
                         utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
@@ -444,9 +448,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 User user = req.getUser();
                 JsonObject jUser = new JsonObject(Json.encode(user));
-                jUser.getObject("account").removeField("passwd");
-                jUser.getObject("account").removeField("password");
-                jUser.getObject("account").removeField("salt");
+                jUser.getObject(ACCOUNT_FIELD).removeField(PASSWD_FIELD);
+                jUser.getObject(ACCOUNT_FIELD).removeField("password");
+                jUser.getObject(ACCOUNT_FIELD).removeField("salt");
                 message.reply(jUser.toString());
             }
         });
@@ -466,7 +470,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     JsonObject user = mongo.getById(req.getUser().get_id(), User.class);
-                    final JsonObject activity = ((JsonObject) user.getObject("account").getArray("listPlan").get(0)).getObject("activity");
+                    final JsonObject activity = ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray("listPlan").get(0)).getObject("activity");
                     req.getParams().put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
                     whenEventBus.send(SB_SandBoxVerticle.GET_BY_OWNER, Json.encode(req)).then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
                         @Override
@@ -523,7 +527,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 try {
                     JsonObject u = mongo.getById(req.getParams().get("id").get(0), User.class);
                     u.removeField("salt");
-                    u.removeField("passwd");
+                    u.removeField(PASSWD_FIELD);
                     u.removeField("password");
                     message.reply(u.encode());
                 } catch (QaobeeException e) {
@@ -557,7 +561,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 // Creation of request
                 CriteriaBuilder criterias = new CriteriaBuilder();
-                criterias.add("account.login", req.getParams().get("login").get(0).toLowerCase());
+                criterias.add(ACCOUNT_LOGIN_FIELD, req.getParams().get("login").get(0).toLowerCase());
                 JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
                 if (jsonArray == null || jsonArray.size() == 0) {
                     utils.sendError(message, ExceptionCodes.DB_NO_ROW_RETURNED, "Login inconnu");
@@ -595,7 +599,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     JsonObject request = new JsonObject(req.getBody());
                     CriteriaBuilder cb = new CriteriaBuilder();
                     cb.add("account.mobileToken", request.getString(MOBILE_TOKEN));
-                    cb.add("account.login", request.getString(PARAM_LOGIN).toLowerCase());
+                    cb.add(ACCOUNT_LOGIN_FIELD, request.getString(PARAM_LOGIN).toLowerCase());
                     final JsonArray res = mongo.findByCriterias(cb.get(), null, null, 0, 0, User.class);
                     if (res.size() != 1) {
                         throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
@@ -626,6 +630,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
         Calendar cal2 = Calendar.getInstance();
         cal2.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
         cal2.add(Calendar.MONTH, 1);
-        return user.getAccount().getListPlan().get(0).getStatus().equals("open") && cal.before(cal2);
+        return "open".equals(user.getAccount().getListPlan().get(0).getStatus()) && cal.before(cal2);
     }
 }

@@ -67,8 +67,6 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 /**
@@ -264,11 +262,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     // Captcha management
                     final boolean bypassCaptcha = json.getBoolean(PARAM_JUNIT, json.getBoolean(PARAM_MOBILE, false));
                     final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-                    reCaptcha.setPrivateKey(getContainer().config().getObject("runtime").getString("recaptcha.pkey"));
+                    reCaptcha.setPrivateKey(getContainer().config().getObject(RUNTIME).getString("recaptcha.pkey"));
                     ReCaptchaResponse reCaptchaResponse = null;
                     if (!bypassCaptcha) {
                         reCaptchaResponse = reCaptcha
-                                .checkAnswer(getContainer().config().getObject("runtime").getString("recaptcha.site"),
+                                .checkAnswer(getContainer().config().getObject(RUNTIME).getString("recaptcha.site"),
                                         json.getObject(PARAM_CAPTCHA).getString("challenge"), json.getObject(PARAM_CAPTCHA).getString("response"));
                     }
                     // If captcha needed and wrong captcha : Error and end transaction
@@ -319,7 +317,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                 public void handle(final Message<JsonObject> tplResp) {
                                                     final String tplRes = tplResp.body().getString("result");
                                                     final JsonObject emailReq = new JsonObject();
-                                                    emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
+                                                    emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
                                                     emailReq.putString("to", user.getContact().getEmail());
                                                     emailReq.putString("subject", Messages.getString("mail.account.validation.subject"));
                                                     emailReq.putString("content_type", "text/html");
@@ -347,12 +345,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                                 }
                                             });
                                         }
-                                    } catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
-                                        LOG.error(e.getMessage(), e);
-                                        utils.sendError(message, ExceptionCodes.PASSWD_EXCEPTION, e.getMessage());
-                                    } catch (final EncodeException e) {
-                                        LOG.error(e.getMessage(), e);
-                                        utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                                     } catch (final QaobeeException e) {
                                         LOG.error(e.getMessage(), e);
                                         utils.sendError(message, e);
@@ -667,7 +659,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                             notification.putObject("notification", new JsonObject()
                                     .putString("content", Messages.getString("first.connection.notification.content"))
                                     .putString("title", Messages.getString("first.connection.notification.title"))
-                                    .putString("from_user_id", getContainer().config().getObject("runtime").getString("admin.id"))
+                                    .putString("from_user_id", getContainer().config().getObject(RUNTIME).getString("admin.id"))
                             );
                             vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
                             message.reply(Json.encode(user));

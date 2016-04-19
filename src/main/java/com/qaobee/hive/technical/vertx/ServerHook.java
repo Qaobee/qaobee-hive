@@ -41,7 +41,6 @@ public class ServerHook implements EventBusBridgeHook {
     @Override
     public boolean handleSendOrPub(SockJSSocket sock, boolean send, JsonObject msg, String address) {
         LOG.info("handleSendOrPub, sock = " + sock + ", send = " + send + ", address = " + address);
-        LOG.info(msg.encode());
         return true;
     }
 

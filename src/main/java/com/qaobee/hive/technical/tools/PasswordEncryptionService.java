@@ -19,8 +19,7 @@
 
 package com.qaobee.hive.technical.tools;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 
 /**
  * The interface Password encryption service.
@@ -33,10 +32,9 @@ public interface PasswordEncryptionService {
      * @param encryptedPassword the encrypted password
      * @param salt              the salt
      * @return true, if successful
-     * @throws InvalidKeySpecException  the invalid key spec exception
-     * @throws NoSuchAlgorithmException the no such algorithm exception
+     * @throws QaobeeException the qaobee exception
      */
-    boolean authenticate(String attemptedPassword, byte[] encryptedPassword, byte[] salt) throws InvalidKeySpecException, NoSuchAlgorithmException;
+    boolean authenticate(String attemptedPassword, byte[] encryptedPassword, byte[] salt) throws QaobeeException;
 
     /**
      * Gets the encrypted password.
@@ -44,16 +42,15 @@ public interface PasswordEncryptionService {
      * @param password the password
      * @param salt     the salt
      * @return the encrypted password
-     * @throws NoSuchAlgorithmException the no such algorithm exception
-     * @throws InvalidKeySpecException  the invalid key spec exception
+     * @throws QaobeeException the qaobee exception
      */
-    byte[] getEncryptedPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException;
+    byte[] getEncryptedPassword(String password, byte[] salt) throws QaobeeException;
 
     /**
      * Generate salt.
      *
      * @return the byte[]
-     * @throws NoSuchAlgorithmException the no such algorithm exception
+     * @throws QaobeeException the qaobee exception
      */
-    byte[] generateSalt() throws NoSuchAlgorithmException;
+    byte[] generateSalt() throws QaobeeException;
 }

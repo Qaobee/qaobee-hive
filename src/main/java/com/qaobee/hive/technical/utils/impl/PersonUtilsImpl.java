@@ -19,13 +19,12 @@
 package com.qaobee.hive.technical.utils.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.utils.PersonUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.UUID;
 
 /**
@@ -37,16 +36,8 @@ public final class PersonUtilsImpl implements PersonUtils {
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
 
-    /**
-     * Prepare upsert.
-     *
-     * @param user a user
-     * @return a prepared person for upsert
-     * @throws NoSuchAlgorithmException password encoding problem
-     * @throws InvalidKeySpecException  password encoding problem
-     */
     @Override
-    public User prepareUpsert(final User user) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public User prepareUpsert(final User user) throws QaobeeException {
         user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
         if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
             final byte[] salt = passwordEncryptionService.generateSalt();

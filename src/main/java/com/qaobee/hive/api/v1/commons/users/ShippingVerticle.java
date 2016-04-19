@@ -71,6 +71,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     public static final String TRIGGERED_RECURING_PAYMENT = "inner.recuring_payment";
     public static final String PARAM_PLAN_ID = "plan_id";
     private static final Logger LOG = LoggerFactory.getLogger(ShippingVerticle.class);
+
     @Inject
     private MongoDB mongo;
     @Inject
@@ -158,66 +159,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                         switch (body.getString("object")) {
                             // We only have payments, no refunds ;)
                             case "payment":
-                                if (body.containsField("is_paid") && body.getBoolean("is_paid")) {
-                                    if (user.getObject("account").getArray("listPlan").size() < planId) {
-                                        throw new IllegalArgumentException("some metadatas are wrong");
-                                    }
-                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                                            .putString("status", "paid");
-                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                                            .putObject("cardInfo", body.getObject("card"));
-
-                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                                            .putNumber("paidDate", body.getLong("created_at") * 1000);
-                                    if (!((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).containsField("shippingList")
-                                            || ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getArray("shippingList", null) == null) {
-                                        ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                                                .putArray("shippingList", new JsonArray());
-                                    }
-                                    JsonObject payment = new JsonObject();
-
-                                    // TODO : Verify if created_at evolve with recurring payments
-                                    payment.putNumber("paidDate", body.getLong("created_at") * 1000L);
-                                    payment.putNumber("amountPaid", body.getLong("amount") / 100L);
-                                    payment.putObject("cardInfo", body.getObject("card"));
-                                    payment.putString("paymentId",
-                                            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                                                    .getString("paymentId"));
-                                    payment.putString("id", UUID.randomUUID().toString());
-
-                                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                                            .getArray("shippingList").add(payment);
-                                    mongo.save(user, User.class);
-                                    final JsonObject tplReq = new JsonObject();
-                                    tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
-                                    tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generatePaymentBody(u,
-                                            body.getObject("metadata").getString("locale"),
-                                            u.getAccount().getListPlan().get(planId), getContainer().config()));
-
-                                    vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq,
-                                            new Handler<Message<JsonObject>>() {
-                                                @Override
-                                                public void handle(final Message<JsonObject> tplResp) {
-                                                    final String tplRes = tplResp.body().getString("result");
-                                                    final JsonObject emailReq = new JsonObject();
-                                                    emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
-                                                    emailReq.putString("to", u.getContact().getEmail());
-                                                    emailReq.putString("subject",
-                                                            Messages.getString("mail.payment.subject",
-                                                                    body.getObject("metadata").getString("locale")));
-                                                    emailReq.putString("content_type", "text/html");
-                                                    emailReq.putString("body", tplRes);
-                                                    vertx.eventBus().publish("mailer.mod", emailReq);
-                                                    final JsonObject resp = new JsonObject();
-                                                    resp.putBoolean("status", true);
-                                                    utils.sendStatus(true, message);
-                                                }
-                                            });
-                                } else {
-                                    // WTF, it's not paid !!! bloody hell !
-                                    LOG.info(body.encode());
-                                    utils.sendStatus(false, message);
-                                }
+                                makePayment(body, user, u, planId, message);
                                 break;
                             default:
                                 utils.sendStatus(false, message);
@@ -325,7 +267,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                                 try { // NOSONAR
                                                     mongo.save(req.getUser());
                                                     JsonObject messageResponse = new JsonObject();
-                                                    messageResponse.putBoolean("status", true);
+                                                    messageResponse.putBoolean(STATUS, true);
                                                     messageResponse.putString("payment_url",
                                                             res.getObject("hosted_payment").getString("payment_url"));
                                                     req.getUser().getAccount().getListPlan().get(planId)
@@ -364,11 +306,12 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
          * Periodic timer, each day it runs
          */
 
-        long timerID = vertx.setPeriodic(1000 * 60 * 60 * 24, new Handler<Long>() {
+        vertx.setPeriodic(1000 * 60 * 60 * 24L, new Handler<Long>() {
+            @Override
             public void handle(Long timerID) {
                 // oh we are ticking each 24h after the startup time
                 // First, let's collect all the guys
-                DBObject statusQuery = new BasicDBObject("status", "paid");
+                DBObject statusQuery = new BasicDBObject(STATUS, "paid");
                 // TODO : change paid level plan here
                 DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
                 DBObject query = new BasicDBObject("account.listPlan", fields);
@@ -401,7 +344,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                                 initialPaidDate.add(Calendar.MONTH, 1);
                                 Calendar now = Calendar.getInstance();
                                 now.setTime(new Date());
-                                JsonObject account = user.getObject("account");
                                 // test if we are the last day of the next month following the last fee
                                 if (now.after(initialPaidDate)) {
                                     // 1- Trigger payment
@@ -517,5 +459,68 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 }
             }
         });
+    }
+
+    private void makePayment(final JsonObject body, JsonObject user, final User u, int planId, final Message<String> message) throws QaobeeException {
+        if (body.containsField("is_paid") && body.getBoolean("is_paid")) {
+            if (user.getObject("account").getArray("listPlan").size() < planId) {
+                throw new IllegalArgumentException("some metadatas are wrong");
+            }
+            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                    .putString(STATUS, "paid");
+            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                    .putObject("cardInfo", body.getObject("card"));
+
+            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                    .putNumber("paidDate", body.getLong("created_at") * 1000);
+            if (!((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).containsField("shippingList")
+                    || ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getArray("shippingList", null) == null) {
+                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                        .putArray("shippingList", new JsonArray());
+            }
+            JsonObject payment = new JsonObject();
+
+            // TODO : Verify if created_at evolve with recurring payments
+            payment.putNumber("paidDate", body.getLong("created_at") * 1000L);
+            payment.putNumber("amountPaid", body.getLong("amount") / 100L);
+            payment.putObject("cardInfo", body.getObject("card"));
+            payment.putString("paymentId",
+                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                            .getString("paymentId"));
+            payment.putString("id", UUID.randomUUID().toString());
+
+            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+                    .getArray("shippingList").add(payment);
+            mongo.save(user, User.class);
+            final JsonObject tplReq = new JsonObject();
+            tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
+            tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generatePaymentBody(u,
+                    body.getObject("metadata").getString("locale"),
+                    u.getAccount().getListPlan().get(planId), getContainer().config()));
+
+            vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq,
+                    new Handler<Message<JsonObject>>() {
+                        @Override
+                        public void handle(final Message<JsonObject> tplResp) {
+                            final String tplRes = tplResp.body().getString("result");
+                            final JsonObject emailReq = new JsonObject();
+                            emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
+                            emailReq.putString("to", u.getContact().getEmail());
+                            emailReq.putString("subject",
+                                    Messages.getString("mail.payment.subject",
+                                            body.getObject("metadata").getString("locale")));
+                            emailReq.putString("content_type", "text/html");
+                            emailReq.putString("body", tplRes);
+                            vertx.eventBus().publish("mailer.mod", emailReq);
+                            final JsonObject resp = new JsonObject();
+                            resp.putBoolean(STATUS, true);
+                            utils.sendStatus(true, message);
+                        }
+                    });
+        } else {
+            // WTF, it's not paid !!! bloody hell !
+            LOG.info(body.encode());
+            utils.sendStatus(false, message);
+        }
     }
 }

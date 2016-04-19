@@ -46,8 +46,6 @@ import org.vertx.java.core.json.impl.Base64;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.text.DateFormat;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
@@ -74,8 +72,11 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant UPDATE_AVATAR.
      */
-    public static final String UPDATE_AVATAR = "user.update.avatar";
+    private static final String UPDATE_AVATAR = "user.update.avatar";
     private static final Logger LOG = LoggerFactory.getLogger(ProfileVerticle.class);
+    private static final String ACCOUNT_FIELD = "account";
+    private static final String AVATAR_FIELD = "avatar";
+    private static final String ADDRESS_FIELD = "address";
     /* Injections */
     @Inject
     private MongoDB mongo;
@@ -116,16 +117,13 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                         user.getAccount().setSalt(salt);
                         user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
                         user.getAccount().setPasswd(null);
-                        u.putObject("account", new JsonObject(Json.encode(user.getAccount())));
+                        u.putObject(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
                     } else {
                         JsonObject p = mongo.getById(user.get_id(), User.class.getSimpleName());
-                        u.putObject("account", p.getObject("account"));
+                        u.putObject(ACCOUNT_FIELD, p.getObject(ACCOUNT_FIELD));
                     }
                     mongo.save(u, User.class.getSimpleName());
                     message.reply(u.encode());
-                } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.PASSWD_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -148,14 +146,14 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 final User user = req.getUser();
                 final JsonObject juser = new JsonObject();
                 if (StringUtils.isNoneBlank(user.getAvatar())) {
-                    juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
+                    juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
                 }
                 juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
                 if (user.getAddress() != null) {
                     if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                        juser.putString("address", user.getAddress().getFormatedAddress());
+                        juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
                     } else {
-                        juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
+                        juser.putString(ADDRESS_FIELD, user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
                     }
                 }
                 juser.putString("firstname", user.getFirstname());
@@ -197,14 +195,14 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                     if (payment != null) {
                         final JsonObject juser = new JsonObject();
                         if (StringUtils.isNoneBlank(user.getAvatar())) {
-                            juser.putString("avatar", new String(Base64.decode(user.getAvatar())));
+                            juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
                         }
                         juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
                         if (user.getAddress() != null) {
                             if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                                juser.putString("address", user.getAddress().getFormatedAddress());
+                                juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
                             } else {
-                                juser.putString("address", user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
+                                juser.putString(ADDRESS_FIELD, user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
                             }
                         }
                         juser.putString("firstname", user.getFirstname());
@@ -245,7 +243,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 JsonObject jsonperson;
                 try {
                     jsonperson = mongo.getById(req.getString("uid"), User.class);
-                    jsonperson.putString("avatar", req.getString("filename"));
+                    jsonperson.putString(AVATAR_FIELD, req.getString("filename"));
                     mongo.save(jsonperson, User.class);
                     message.reply(jsonperson);
                 } catch (final EncodeException e) {

@@ -20,9 +20,7 @@
 package com.qaobee.hive.technical.utils;
 
 import com.qaobee.hive.business.model.commons.users.User;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 
 /**
  * The interface Person utils.
@@ -33,8 +31,7 @@ public interface PersonUtils {
      *
      * @param u a user
      * @return a prepared person for upsert
-     * @throws NoSuchAlgorithmException the no such algorithm exception
-     * @throws InvalidKeySpecException  the invalid key spec exception
+     * @throws QaobeeException the qaobee exception
      */
-    User prepareUpsert(User u) throws NoSuchAlgorithmException, InvalidKeySpecException;
+    User prepareUpsert(User u) throws QaobeeException;
 }

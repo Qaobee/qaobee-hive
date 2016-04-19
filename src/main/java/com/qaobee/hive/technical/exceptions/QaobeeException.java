@@ -33,27 +33,28 @@ public class QaobeeException extends Exception {
     /**
      * The code.
      */
-    private ExceptionCodes code;
+    private ExceptionCodes code; // NO SONAR
 
     /**
      * The json context.
      */
-    private String jsonContext = "";
+    private String jsonContext = ""; // NO SONAR
 
     /**
      * The timestamp.
      */
-    private long timestamp = System.currentTimeMillis();
+    private long timestamp = System.currentTimeMillis(); // NO SONAR
 
     /**
      * The report.
      */
-    private boolean report = false;
+    private boolean report = false; // NO SONAR
 
     /**
      * The error.
      */
-    private boolean error = true;
+    //NO SONAR
+    private boolean error = true; // NO SONAR
 
     /**
      * Instantiates a new qaobee exception.
@@ -65,9 +66,9 @@ public class QaobeeException extends Exception {
      */
     public QaobeeException(final boolean report, final String jsonContext, final ExceptionCodes code, final String message) {
         super(message);
-        setJsonContext(jsonContext);
-        setCode(code);
-        setReport(report);
+        this.jsonContext = jsonContext;
+        this.code = code;
+        this.report = report;
     }
 
     /**
@@ -78,7 +79,7 @@ public class QaobeeException extends Exception {
      */
     public QaobeeException(final ExceptionCodes code, final String message) {
         super(message);
-        setCode(code);
+        this.code = code;
     }
 
     /**
@@ -90,8 +91,30 @@ public class QaobeeException extends Exception {
      */
     public QaobeeException(final String jsonContext, final ExceptionCodes code, final String message) {
         super(message);
-        setJsonContext(jsonContext);
-        setCode(code);
+        this.jsonContext = jsonContext;
+        this.code = code;
+    }
+
+    /**
+     * Instantiates a new Qaobee exception.
+     *
+     * @param code    the code
+     * @param message the message
+     * @param e       the e
+     */
+    public QaobeeException(ExceptionCodes code, String message, Exception e) {
+        super(message + " : " + e.getMessage());
+        this.code = code;
+    }
+
+    /**
+     * Instantiates a new Qaobee exception.
+     *  @param code the code
+     * @param e    the e
+     */
+    public QaobeeException(ExceptionCodes code, Exception e) {
+        super(e.getMessage());
+        this.code = code;
     }
 
     /**
@@ -104,30 +127,12 @@ public class QaobeeException extends Exception {
     }
 
     /**
-     * Sets the code.
-     *
-     * @param code the new code
-     */
-    public void setCode(final ExceptionCodes code) {
-        this.code = code;
-    }
-
-    /**
      * Gets the json context.
      *
      * @return the json context
      */
     public String getJsonContext() {
         return jsonContext;
-    }
-
-    /**
-     * Sets the json context.
-     *
-     * @param jsonContext the new json context
-     */
-    public void setJsonContext(final String jsonContext) {
-        this.jsonContext = jsonContext;
     }
 
     /**
@@ -140,15 +145,6 @@ public class QaobeeException extends Exception {
     }
 
     /**
-     * Sets the timestamp.
-     *
-     * @param timestamp the new timestamp
-     */
-    public void setTimestamp(final long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    /**
      * Checks if is the error.
      *
      * @return the error
@@ -158,29 +154,11 @@ public class QaobeeException extends Exception {
     }
 
     /**
-     * Sets the error.
-     *
-     * @param error the new error
-     */
-    public void setError(final boolean error) {
-        this.error = error;
-    }
-
-    /**
      * Checks if is the report.
      *
      * @return the report
      */
     public boolean isReport() {
         return report;
-    }
-
-    /**
-     * Sets the report.
-     *
-     * @param report the new report
-     */
-    public void setReport(final boolean report) {
-        this.report = report;
     }
 }

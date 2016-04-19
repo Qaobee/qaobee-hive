@@ -18,8 +18,11 @@
  */
 package com.qaobee.hive.technical.tools;
 
+import com.lowagie.text.BadElementException;
 import com.lowagie.text.Image;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.xhtmlrenderer.extend.FSImage;
 import org.xhtmlrenderer.extend.ReplacedElement;
@@ -32,6 +35,7 @@ import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -40,7 +44,7 @@ import java.io.InputStream;
  * @author xavier Replaced element in order to replace elements like <tt>&lt;div class="media" data-src="image.png" /&gt;</tt> with the real media content.
  */
 public class MediaReplacedElementFactory implements ReplacedElementFactory {
-
+    private static final Logger LOG = LoggerFactory.getLogger(MediaReplacedElementFactory.class);
     /**
      * The super factory.
      */
@@ -78,7 +82,8 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
         // binary data of `image.png` into the PDF.
         if ("div".equals(nodeName) && "media".equals(className)) {
             if (!element.hasAttribute("data-src")) {
-                throw new RuntimeException("An element with class `media` is missing a `data-src` attribute indicating the media file.");
+                LOG.error("An element with class `media` is missing a `data-src` attribute indicating the media file.");
+                return null;
             }
             InputStream input = null;
             try {
@@ -90,8 +95,8 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
                     fsImage.scale(cssWidth, cssHeight);
                 }
                 return new ITextImageElement(fsImage);
-            } catch (final Exception e) {
-                throw new RuntimeException("There was a problem trying to read a template embedded graphic.", e);
+            } catch (BadElementException | IOException e) {
+                LOG.error("There was a problem trying to read a template embedded graphic.", e);
             } finally {
                 IOUtils.closeQuietly(input);
             }
