@@ -25,6 +25,7 @@ public class ServerHook implements EventBusBridgeHook {
         this.siteUrl = siteUrl;
     }
 
+    @Override
     public boolean handleSocketCreated(SockJSSocket sock) {
         // You can do things in here like check the Origin of the request
         String origin = sock.headers().get("origin") + "/";
