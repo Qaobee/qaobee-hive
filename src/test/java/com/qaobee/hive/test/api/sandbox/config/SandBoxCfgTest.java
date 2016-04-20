@@ -35,6 +35,9 @@ import static org.hamcrest.Matchers.*;
  */
 public class SandBoxCfgTest extends VertxJunitSupport {
 
+    /**
+     * Gets sand box config by id.
+     */
     @Test
     public void getSandBoxConfigById() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
@@ -49,6 +52,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .body("sandbox.owner", is(user.get_id()));
     }
 
+    /**
+     * Gets sand box config by id with non logged user.
+     */
     @Test
     public void getSandBoxConfigByIdWithNonLoggedUser() {
         given().when().get(getURL(SB_SandBoxCfgVerticle.GET))
@@ -56,6 +62,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
+    /**
+     * Gets sand box config by id with wrong http method.
+     */
     @Test
     public void getSandBoxConfigByIdWithWrongHttpMethod() {
         given().when().post(getURL(SB_SandBoxCfgVerticle.GET))
@@ -63,6 +72,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
+    /**
+     * Gets sand box config by id with missing parameters.
+     */
     @Test
     public void getSandBoxConfigByIdWithMissingParameters() {
         User user = generateLoggedUser();
@@ -72,6 +84,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
+    /**
+     * Gets sand box config by id with wrong parameters.
+     */
     @Test
     public void getSandBoxConfigByIdWithWrongParameters() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
@@ -82,7 +97,11 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
-    // -----------------------------------------------
+
+    /**
+     * Gets sand box config by sand box id.
+     */
+// -----------------------------------------------
     @Test
     public void getSandBoxConfigBySandBoxId() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
@@ -102,6 +121,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .body("", hasSize(1));
     }
 
+    /**
+     * Gets sand box config by sand box id with non logged user.
+     */
     @Test
     public void getSandBoxConfigBySandBoxIdWithNonLoggedUser() {
         given().when().get(getURL(SB_SandBoxCfgVerticle.GETLIST))
@@ -109,6 +131,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
+    /**
+     * Gets sand box config by sand box id with wrong http method.
+     */
     @Test
     public void getSandBoxConfigBySandBoxIdWithWrongHttpMethod() {
         given().when().post(getURL(SB_SandBoxCfgVerticle.GETLIST))
@@ -116,6 +141,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
+    /**
+     * Gets sand box config by sand box id with missing parameters.
+     */
     @Test
     public void getSandBoxConfigBySandBoxIdWithMissingParameters() {
         User user = generateLoggedUser();
@@ -125,6 +153,9 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
+    /**
+     * Gets sand box config by sand box id with wrong parameters.
+     */
     @Test
     public void getSandBoxConfigBySandBoxIdWithWrongParameters() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
