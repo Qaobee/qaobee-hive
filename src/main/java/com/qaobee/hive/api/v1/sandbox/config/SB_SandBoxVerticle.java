@@ -62,7 +62,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
      */
     public static final String GET_LIST_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getListByOwner";
     /**
-     * The constant ADD.
+     * The constant ADD_TO_USER.
      */
     public static final String ADD = Module.VERSION + ".sandbox.config.sandbox.add";
     /**

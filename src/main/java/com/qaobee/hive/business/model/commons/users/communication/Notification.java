@@ -35,138 +35,138 @@ public class Notification implements Serializable {
      */
     private static final long serialVersionUID = -5693811404344145826L;
     private String _id; // NOSONAR
-    private String user_id; // NOSONAR
+    private String targetId;
     private long timestamp;
     private String content;
-    private String from_user_id; // NOSONAR
+    private String senderId;
     private String title;
     private boolean read;
     private boolean deleted;
 
     /**
-     * Gets the internal identifier.
+     * Gets id.
      *
-     * @return String : _id
+     * @return the id
      */
-    public String get_id() { // NOSONAR
+    public String get_id() {
         return _id;
     }
 
     /**
-     * Sets the internal identifier.
+     * Sets id.
      *
-     * @param _id (String) : _id
+     * @param _id the id
      */
-    public void set_id(final String _id) { // NOSONAR
+    public void set_id(String _id) {
         this._id = _id;
     }
 
     /**
-     * Gets user id.
+     * Gets target id.
      *
-     * @return the user id
+     * @return the target id
      */
-    public String getUser_id() { // NOSONAR
-        return user_id;
+    public String getTargetId() {
+        return targetId;
     }
 
     /**
-     * Sets user id.
+     * Sets target id.
      *
-     * @param user_id the user id
+     * @param targetId the target id
      */
-    public void setUser_id(String user_id) { // NOSONAR
-        this.user_id = user_id;
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
     }
 
     /**
-     * Gets the timestamp.
+     * Gets timestamp.
      *
-     * @return long : timestamp
+     * @return the timestamp
      */
     public long getTimestamp() {
         return timestamp;
     }
 
     /**
-     * Sets the timestamp.
+     * Sets timestamp.
      *
-     * @param timestamp (long) : timestamp
+     * @param timestamp the timestamp
      */
-    public void setTimestamp(final long timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
     /**
-     * Gets the content.
+     * Gets content.
      *
-     * @return String : content
+     * @return the content
      */
     public String getContent() {
         return content;
     }
 
     /**
-     * Sets the content.
+     * Sets content.
      *
-     * @param content (String) : content
+     * @param content the content
      */
-    public void setContent(final String content) {
+    public void setContent(String content) {
         this.content = content;
     }
 
     /**
-     * Gets the "from" user _id.
+     * Gets sender id.
      *
-     * @return String : from user _id
+     * @return the sender id
      */
-    public String getFrom_user_id() {// NOSONAR
-        return from_user_id;
+    public String getSenderId() {
+        return senderId;
     }
 
     /**
-     * Sets the "from" user _id.
+     * Sets sender id.
      *
-     * @param from_user_id (String) : from user _id
+     * @param senderId the sender id
      */
-    public void setFrom_user_id(final String from_user_id) { // NOSONAR
-        this.from_user_id = from_user_id;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
     /**
-     * Checks if notification is read.
+     * Gets title.
      *
-     * @return boolean : true if read
-     */
-    public boolean isRead() {
-        return read;
-    }
-
-    /**
-     * Sets if notification is read.
-     *
-     * @param read (boolean) : true if read
-     */
-    public void setRead(final boolean read) {
-        this.read = read;
-    }
-
-    /**
-     * Gets the title.
-     *
-     * @return String : title
+     * @return the title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * Sets the title.
+     * Sets title.
      *
-     * @param title (String) : title
+     * @param title the title
      */
-    public void setTitle(final String title) {
+    public void setTitle(String title) {
         this.title = title;
+    }
+
+    /**
+     * Is read boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isRead() {
+        return read;
+    }
+
+    /**
+     * Sets read.
+     *
+     * @param read the read
+     */
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     /**

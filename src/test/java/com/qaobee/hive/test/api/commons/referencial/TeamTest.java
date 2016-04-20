@@ -110,14 +110,14 @@ public class TeamTest extends VertxJunitSupport {
         params.putObject(TeamVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", u));
         given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
-                .when().post(getURL(TeamVerticle.ADD))
+                .when().post(getURL(TeamVerticle.ADD_TO_USER))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue());
     }
 
     @Test
     public void addTeamWithNonLoggedUserTest() {
-        given().when().post(getURL(TeamVerticle.ADD))
+        given().when().post(getURL(TeamVerticle.ADD_TO_USER))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -125,7 +125,7 @@ public class TeamTest extends VertxJunitSupport {
     @Test
     public void addTeamWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .get(getURL(TeamVerticle.ADD))
+                .get(getURL(TeamVerticle.ADD_TO_USER))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
@@ -141,7 +141,7 @@ public class TeamTest extends VertxJunitSupport {
         params.putObject(TeamVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", u));
         given().header(TOKEN, u.getAccount().getToken())
                 .body(params.encode())
-                .when().post(getURL(TeamVerticle.ADD))
+                .when().post(getURL(TeamVerticle.ADD_TO_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     } */

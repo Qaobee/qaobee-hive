@@ -63,7 +63,7 @@ import java.util.List;
 @DeployableVerticle(isWorker = true)
 public class StructureVerticle extends AbstractGuiceVerticle {
     /**
-     * The Constant ADD.
+     * The Constant ADD_TO_USER.
      */
     public static final String ADD = Module.VERSION + ".commons.referencial.structure.add";
     /* List of handlers */

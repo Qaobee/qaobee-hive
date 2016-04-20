@@ -46,7 +46,7 @@ import javax.inject.Inject;
 @DeployableVerticle(isWorker = true)
 public class TeamVerticle extends AbstractGuiceVerticle {
     /**
-     * The Constant ADD.
+     * The Constant ADD_TO_USER.
      */
     public static final String ADD = Module.VERSION + ".commons.referencial.team.add";
     // Declaration des variables finals

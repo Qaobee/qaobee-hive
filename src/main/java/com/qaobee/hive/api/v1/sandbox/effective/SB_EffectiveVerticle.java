@@ -59,7 +59,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
      */
     public static final String GET_LIST = Module.VERSION + ".sandbox.effective.effective.getList";
     /**
-     * The constant ADD.
+     * The constant ADD_TO_USER.
      */
     public static final String ADD = Module.VERSION + ".sandbox.effective.effective.add";
     /**
