@@ -20,19 +20,17 @@ package com.qaobee.hive.test.api.sandbox.config;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 /**
+ * The type Sand box test.
+ *
  * @author cke
  */
 public class SandBoxTest extends VertxJunitSupport {
@@ -41,104 +39,88 @@ public class SandBoxTest extends VertxJunitSupport {
      * Retrieve sand box by his owner.
      */
     @Test
-    public void getSandBoxByOwnerOk() {
-
+    public void getSandBoxByOwner() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        final Map<String, List<String>> params = new HashMap<>();
-        params.put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        Assert.assertEquals(user.get_id(), result.getString("owner"));
-
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                .then().assertThat().statusCode(200)
+                .body("owner", notNullValue())
+                .body("owner", is(user.get_id()));
     }
 
     /**
-     * Retrieve sand box by his owner.
-     * with missing mandatory fields
+     * Gets sand box by owner with non logged user.
      */
     @Test
-    public void getSandBoxByOwnerKo() {
-
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        final String reply = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        Assert.assertTrue("Missing mandatory parameters", result.getString("message").contains("Missing mandatory parameters : [activityId]"));
-
-        // id
-        params.put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(""));
-        req.setParams(params);
-
-        final String reply2 = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
-        JsonObject result2 = new JsonObject(reply2);
-
-        Assert.assertTrue("Wrong format mandatory parameters", result2.getString("message").contains("Missing mandatory parameters : [activityId]"));
-
+    public void getSandBoxByOwnerWithNonLoggedUser() {
+        given().when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Retrieve sand box by bad owner.
+     * Gets sand box by owner with wrong http method.
      */
     @Test
-    public void getSandBoxByOwnerBadUser() {
-
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        User user = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        params.put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID)));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        Assert.assertTrue("SandBox not found", result.getString("message").contains("No SandBox found for user id"));
-
+    public void getSandBoxByOwnerWithWrongHttpMethod() {
+        given().when().post(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Retrieve sand box by bad owner.
+     * Gets sand box by owner with missing parameters.
      */
     @Test
-    public void getSandBoxByOwnerBadActivity() {
+    public void getSandBoxByOwnerWithMissingParameters() {
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
 
+    /**
+     * Gets sand box by owner with wrong parameters.
+     */
+    @Test
+    public void getSandBoxByOwnerWithWrongParameters() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, "bla")
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+    }
+
+    /**
+     * Gets sand box by owner with wrong user.
+     */
+    @Test
+    public void getSandBoxByOwnerWithWrongUser() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+    }
+
+    /**
+     * Gets sand box by owner with wrong activity.
+     */
+    @Test
+    public void getSandBoxByOwnerWithWrongActivity() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        params.put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList((String) getActivity("ACT-FOOT", user).getField(ActivityVerticle.PARAM_ID)));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_SandBoxVerticle.GET_BY_OWNER, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        Assert.assertTrue("SandBox not found", result.getString("message").contains("No SandBox found for user id"));
-
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-FOOT", user).getField(ActivityVerticle.PARAM_ID))
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
     }
 }

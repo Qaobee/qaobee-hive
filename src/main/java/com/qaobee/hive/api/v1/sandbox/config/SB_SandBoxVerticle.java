@@ -23,6 +23,8 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -47,8 +49,8 @@ import java.util.Map;
 /**
  * The type Sand box cfg verticle.
  */
-@DeployableVerticle(isWorker = true)
-public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
+@DeployableVerticle()
+public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant GET.
      */
@@ -105,6 +107,15 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
      * Start void.
      */
     @Override
+    @VerticleHandler({
+            @Rule(address = GET_BY_OWNER, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
+                    scope = Rule.Param.REQUEST),
+            @Rule(address = GET_LIST_BY_OWNER, method = Constantes.GET, logged = true),
+            @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_USER, PARAM_ACTIVITY_ID},
+                    scope = Rule.Param.BODY),
+            @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_SB_CFG_ID},
+                    scope = Rule.Param.REQUEST),
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -121,41 +132,22 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} activityId Mandatory The sandBox activity.
          *
          * @apiSuccess {sandBox}   sandBox    The sandBox updated.
-         *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-                LOG.debug(GET_BY_OWNER + " - SandBox");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
                     Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_ACTIVITY_ID);
-
-                    CriteriaBuilder cb = new CriteriaBuilder();
-
-                    cb.add(PARAM_OWNER_ID, req.getUser().get_id());
-                    cb.add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
-
+                    CriteriaBuilder cb = new CriteriaBuilder()
+                            .add(PARAM_OWNER_ID, req.getUser().get_id())
+                            .add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
                     JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
-
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" + req.getUser().get_id() + " ,and activityId : " + params.get(PARAM_ACTIVITY_ID));
                     }
                     JsonObject json = resultJson.get(0);
-                    LOG.debug("SandBox found : " + json.toString());
                     message.reply(json.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -179,45 +171,23 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
          *
          * @apiSuccess {sandBox}   sandBox    The sandBox updated.
          *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST_BY_OWNER, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-                LOG.debug(GET_LIST_BY_OWNER + " - SandBox");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
-
                     CriteriaBuilder cb = new CriteriaBuilder();
                     if (req.getParams().get("id") != null && !req.getParams().get("id").isEmpty() && StringUtils.isNoneBlank(req.getParams().get("id").get(0))) {
                         cb.add(PARAM_OWNER_ID, req.getParams().get("id").get(0));
                     } else {
                         cb.add(PARAM_OWNER_ID, req.getUser().get_id());
                     }
-
                     JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
-
                     if (resultJson == null || resultJson.size() == 0) {
                         throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" + req.getUser().get_id());
                     }
-
-                    for (int i = 0; i < resultJson.size(); i++) {
-                        JsonObject json = resultJson.get(i);
-                        LOG.debug("SandBox found : " + json.toString());
-                    }
-
                     message.reply(resultJson.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -231,38 +201,23 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         /**
          *
          */
-        vertx.eventBus().registerHandler(ADD, new Handler<Message<JsonObject>>() {
+        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
             @Override
-            public void handle(Message<JsonObject> message) {
-                LOG.debug(ADD + " - SandBox");
+            public void handle(Message<String> message) {
                 try {
-                    final RequestWrapper req = Json.decodeValue(message.body().encode(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.PUT, req.getMethod());
-
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     final JsonObject jsonReq = new JsonObject(req.getBody());
-                    Map<String, Object> params = jsonReq.toMap();
-                    utils.testMandatoryParams(params, PARAM_USER, PARAM_ACTIVITY_ID);
-
                     final User user = Json.decodeValue((jsonReq.getObject(PARAM_USER)).encode(), User.class);
                     final String activityId = jsonReq.getString(PARAM_ACTIVITY_ID);
-
-                    JsonObject sandbox = new JsonObject();
-                    sandbox.putString("activityId", activityId);
-                    sandbox.putString("owner", user.get_id());
-                    String sandboxId = mongo.save(sandbox, SB_SandBox.class);
-                    sandbox.putString("_id", sandboxId);
-
+                    JsonObject sandbox = new JsonObject().putString("activityId", activityId).putString("owner", user.get_id());
+                    sandbox.putString("_id", mongo.save(sandbox, SB_SandBox.class));
                     message.reply(sandbox.encode());
-
-                } catch (final NoSuchMethodException e) {
+                } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendErrorJ(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                    utils.sendError(message, e);
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -273,38 +228,14 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-                LOG.debug(UPDATE + " - SandBox");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-
-                    Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_ID, PARAM_SB_CFG_ID);
-
-                    // Sandbox ID
-                    final String id = params.get(PARAM_ID).get(0);
-                    // Sandbox Cfg Id
-                    final String sandboxCfgId = params.get(PARAM_SB_CFG_ID).get(0);
-
-                    // Récup sandbox
-                    final JsonObject sandbox = mongo.getById(id, SB_SandBox.class);
-
+                    final JsonObject sandbox = mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_SandBox.class);
                     if (sandbox == null) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for id :" + id);
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for id :" + req.getParams().get(PARAM_ID).get(0));
                     }
-
-                    // MàJ
-                    sandbox.putString("sandboxCfgId", sandboxCfgId);
-
-                    // Sauvegarde
+                    sandbox.putString("sandboxCfgId", req.getParams().get(PARAM_SB_CFG_ID).get(0));
                     mongo.save(sandbox, SB_SandBox.class);
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);

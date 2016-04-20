@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * The type Sand box cfg verticle.
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle()
 public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
     public static final String GET = Module.VERSION + ".sandbox.config.sandboxCfg.get";
     public static final String GETLIST = Module.VERSION + ".sandbox.config.sandboxCfg.getList";

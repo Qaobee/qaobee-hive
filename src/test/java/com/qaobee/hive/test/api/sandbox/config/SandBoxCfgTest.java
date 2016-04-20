@@ -101,7 +101,6 @@ public class SandBoxCfgTest extends VertxJunitSupport {
     /**
      * Gets sand box config by sand box id.
      */
-// -----------------------------------------------
     @Test
     public void getSandBoxConfigBySandBoxId() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);

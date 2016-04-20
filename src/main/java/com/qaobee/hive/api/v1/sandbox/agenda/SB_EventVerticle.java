@@ -49,7 +49,7 @@ import java.util.List;
  * @author cke
  */
 @DeployableVerticle
-public class SB_EventVerticle extends AbstractGuiceVerticle {
+public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     public static final String GET_LIST = Module.VERSION + ".sandbox.agenda.event.list";
     public static final String ADD = Module.VERSION + ".sandbox.agenda.event.add";
     public static final String GET = Module.VERSION + ".sandbox.agenda.event.get";
@@ -182,10 +182,12 @@ public class SB_EventVerticle extends AbstractGuiceVerticle {
                 try {
                     JsonObject params = new JsonObject(req.getBody());
                     // Aggregat section
-                    DBObject match, sort, limit;
-                    BasicDBObject dbObjectParent, dbObjectChild;
+                    DBObject match;
+                    DBObject sort;
+                    DBObject limit;
+                    BasicDBObject dbObjectChild;
                     // $MACTH section
-                    dbObjectParent = new BasicDBObject();
+                    BasicDBObject dbObjectParent = new BasicDBObject();
                     // Event Activity
                     dbObjectParent.put(PARAM_ACTIVITY_ID, params.getString(PARAM_ACTIVITY_ID));
                     // Event sandboxId
