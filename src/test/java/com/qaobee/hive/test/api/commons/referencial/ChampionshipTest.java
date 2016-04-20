@@ -29,17 +29,17 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Championship test.
+ * The type Championship.
  *
  * @author jerome
  */
 public class ChampionshipTest extends VertxJunitSupport {
 
     /**
-     * Gets list championships test.
+     * Gets list championships.
      */
     @Test
-    public void getListChampionshipsTest() {
+    public void getListChampionships() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -55,33 +55,45 @@ public class ChampionshipTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(1))
                 .body("[0].activityId", is(params.getString(ChampionshipVerticle.PARAM_ACTIVITY)));
+
+        params.putObject(ChampionshipVerticle.PARAM_PARTICIPANT, new JsonObject()
+                .putString("name", "CHAMBERY SAVOIE HB")
+                .putString("id", "ID-TEAM-CHAMBERY")
+                .putString("structureId", "CHAMBERYSAVOIEHB")
+                .putString("type", "team"));
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1))
+                .body("[0].activityId", is(params.getString(ChampionshipVerticle.PARAM_ACTIVITY)));
     }
 
     /**
-     * Gets list championships with non logged user test.
+     * Gets list championships with non logged user.
      */
     @Test
-    public void getListChampionshipsWithNonLoggedUserTest() {
+    public void getListChampionshipsWithNonLoggedUser() {
         given().when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets list championships with wrong http method test.
+     * Gets list championships with wrong http method.
      */
     @Test
-    public void getListChampionshipsWithWrongHttpMethodTest() {
+    public void getListChampionshipsWithWrongHttpMethod() {
         given().when().get(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Gets list championships with missing params test.
+     * Gets list championships with missing params.
      */
     @Test
-    public void getListChampionshipsWithMissingParamsTest() {
+    public void getListChampionshipsWithMissingParams() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -98,10 +110,10 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list championships with wrong params test.
+     * Gets list championships with wrong params.
      */
     @Test
-    public void getListChampionshipsWithWrongParamsTest() {
+    public void getListChampionshipsWithWrongParams() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -137,10 +149,10 @@ public class ChampionshipTest extends VertxJunitSupport {
 
 
     /**
-     * Gets list championships with infra test.
+     * Gets list championships with infra.
      */
     @Test
-    public void getListChampionshipsWithInfraTest() {
+    public void getListChampionshipsWithInfra() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -163,10 +175,10 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list championships with infra unknown test.
+     * Gets list championships with infra unknown.
      */
     @Test
-    public void getListChampionshipsWithInfraUnknownTest() {
+    public void getListChampionshipsWithInfraUnknown() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -188,10 +200,10 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets championship test.
+     * Gets championship.
      */
     @Test
-    public void getChampionshipTest() {
+    public void getChampionship() {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
@@ -203,30 +215,30 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets championship with non logged user test.
+     * Gets championship with non logged user.
      */
     @Test
-    public void getChampionshipWithNonLoggedUserTest() {
+    public void getChampionshipWithNonLoggedUser() {
         given().when().get(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets championship with wrong http method test.
+     * Gets championship with wrong http method.
      */
     @Test
-    public void getChampionshipWithWrongHttpMethodTest() {
+    public void getChampionshipWithWrongHttpMethod() {
         given().when().post(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Gets championship with missing params test.
+     * Gets championship with missing params.
      */
     @Test
-    public void getChampionshipWithMissingParamsTest() {
+    public void getChampionshipWithMissingParams() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -238,10 +250,10 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets championship with wrong params test.
+     * Gets championship with wrong params.
      */
     @Test
-    public void getChampionshipWithWrongParamsTest() {
+    public void getChampionshipWithWrongParams() {
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -254,10 +266,10 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     /**
-     * Add championship test.
+     * Add championship.
      */
     @Test
-    public void addChampionshipTest() {
+    public void addChampionship() {
         User u = generateLoggedAdminUser();
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         final JsonObject params = getShampionship();
@@ -279,20 +291,20 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     /**
-     * Add championship with non logged user test.
+     * Add championship with non logged user.
      */
     @Test
-    public void addChampionshipWithNonLoggedUserTest() {
+    public void addChampionshipWithNonLoggedUser() {
         given().when().post(getURL(ChampionshipVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Add championship with non admin user test.
+     * Add championship with non admin user.
      */
     @Test
-    public void addChampionshipWithNonAdminUserTest() {
+    public void addChampionshipWithNonAdminUser() {
         User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
                 .when().post(getURL(ChampionshipVerticle.ADD))
@@ -302,20 +314,20 @@ public class ChampionshipTest extends VertxJunitSupport {
 
 
     /**
-     * Add championship with wrong http method test.
+     * Add championship with wrong http method.
      */
     @Test
-    public void addChampionshipWithWrongHttpMethodTest() {
+    public void addChampionshipWithWrongHttpMethod() {
         given().when().get(getURL(ChampionshipVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Add championship with missing params test.
+     * Add championship with missing params.
      */
     @Test
-    public void addChampionshipWithMissingParamsTest() {
+    public void addChampionshipWithMissingParams() {
         User u = generateLoggedAdminUser();
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         final JsonObject params = getShampionship();
@@ -329,10 +341,10 @@ public class ChampionshipTest extends VertxJunitSupport {
 
 
     /**
-     * Update championship test.
+     * Update championship.
      */
     @Test
-    public void updateChampionshipTest() {
+    public void updateChampionship() {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         User u = generateLoggedAdminUser();
 
@@ -360,20 +372,20 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     /**
-     * Update championship with non logged user test.
+     * Update championship with non logged user.
      */
     @Test
-    public void updateChampionshipWithNonLoggedUserTest() {
+    public void updateChampionshipWithNonLoggedUser() {
         given().when().post(getURL(ChampionshipVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Update championship with non admin user test.
+     * Update championship with non admin user.
      */
     @Test
-    public void updateChampionshipWithNonAdminUserTest() {
+    public void updateChampionshipWithNonAdminUser() {
         User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
                 .when().post(getURL(ChampionshipVerticle.UPDATE))
@@ -383,20 +395,20 @@ public class ChampionshipTest extends VertxJunitSupport {
 
 
     /**
-     * Update championship with wrong http method test.
+     * Update championship with wrong http method.
      */
     @Test
-    public void updateChampionshipWithWrongHttpMethodTest() {
+    public void updateChampionshipWithWrongHttpMethod() {
         given().when().get(getURL(ChampionshipVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Update championship with missing params test.
+     * Update championship with missing params.
      */
     @Test
-    public void updateChampionshipWithMissingParamsTest() {
+    public void updateChampionshipWithMissingParams() {
         User u = generateLoggedAdminUser();
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         final JsonObject params = getShampionship();
@@ -409,31 +421,27 @@ public class ChampionshipTest extends VertxJunitSupport {
     }
 
     private JsonObject getShampionship() {
-        JsonObject shampionship = new JsonObject();
-        shampionship.putString(ChampionshipVerticle.PARAM_LABEL, "Mon championnat");
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.putString(CODE, "R");
-        jsonObject.putString("label", "regional");
-        shampionship.putObject(ChampionshipVerticle.PARAM_LEVEL_GAME, jsonObject);
-        shampionship.putString(ChampionshipVerticle.PARAM_SUB_LEVEL_GAME, "Honneur regional");
-        shampionship.putString(ChampionshipVerticle.PARAM_POOL, "Cocotte");
-        shampionship.putString(ChampionshipVerticle.PARAM_INSTANCE, "Ligue du Boukhistan");
-        shampionship.putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
-        jsonObject = new JsonObject();
-        jsonObject.putString(CODE, "sen");
-        jsonObject.putString("label", "senior");
-        jsonObject.putNumber("ageMax", 34);
-        jsonObject.putNumber("ageMin", 20);
-        jsonObject.putString("genre", "gender.male");
-        shampionship.putObject(ChampionshipVerticle.PARAM_CATEGORY_AGE, jsonObject);
-        shampionship.putString(ChampionshipVerticle.PARAM_SEASON_CODE, "SAI-2014");
-        jsonObject = new JsonObject();
-        jsonObject.putString("id", "mon-id");
-        jsonObject.putString("name", "participantName");
-        jsonObject.putString("structureId", "participantStructureId");
-        jsonObject.putString("type", "team");
-        shampionship.putArray(ChampionshipVerticle.PARAM_LIST_PARTICIPANTS, new JsonArray().addObject(jsonObject));
-        return shampionship;
+        return new JsonObject()
+                .putString(ChampionshipVerticle.PARAM_LABEL, "Mon championnat")
+                .putObject(ChampionshipVerticle.PARAM_LEVEL_GAME, new JsonObject()
+                        .putString(CODE, "R")
+                        .putString("label", "regional"))
+                .putString(ChampionshipVerticle.PARAM_SUB_LEVEL_GAME, "Honneur regional")
+                .putString(ChampionshipVerticle.PARAM_POOL, "Cocotte")
+                .putString(ChampionshipVerticle.PARAM_INSTANCE, "Ligue du Boukhistan")
+                .putString(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND")
+                .putObject(ChampionshipVerticle.PARAM_CATEGORY_AGE, new JsonObject()
+                        .putString(CODE, "sen")
+                        .putString("label", "senior")
+                        .putNumber("ageMax", 34)
+                        .putNumber("ageMin", 20)
+                        .putString("genre", "gender.male"))
+                .putString(ChampionshipVerticle.PARAM_SEASON_CODE, "SAI-2014")
+                .putArray(ChampionshipVerticle.PARAM_LIST_PARTICIPANTS, new JsonArray().addObject(new JsonObject()
+                        .putString("id", "mon-id")
+                        .putString("name", "participantName")
+                        .putString("structureId", "participantStructureId")
+                        .putString("type", "team")));
     }
 
 }
