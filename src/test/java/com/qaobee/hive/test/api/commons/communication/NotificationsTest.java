@@ -283,7 +283,6 @@ public class NotificationsTest extends VertxJunitSupport {
         n.setTargetId(u.get_id());
 
         given().header(TOKEN, u.getAccount().getToken())
-               .queryParam("id", u.get_id())
                .body(Json.encode(n))
                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                .then().assertThat().statusCode(200)
@@ -313,7 +312,6 @@ public class NotificationsTest extends VertxJunitSupport {
         n.setTargetId("558b0fc0bd2e39cdab651e21");
 
         given().header(TOKEN, u.getAccount().getToken())
-               .queryParam("id", "558b0fc0bd2e39cdab651e21")
                .body(Json.encode(n))
                .when().post(getURL(NotificationsVerticle.ADD_TO_SANDBOX))
                .then().assertThat().statusCode(200)
@@ -330,11 +328,10 @@ public class NotificationsTest extends VertxJunitSupport {
         final Notification n = new Notification();
         n.setContent("Hello");
         n.setTitle("Message");
-        n.setSenderId(u.get_id());
+        n.setSenderId("blabla");
         n.setTimestamp(System.currentTimeMillis());
-        n.setTargetId(u.get_id());
+        n.setTargetId("blabla");
         given().header(TOKEN, u.getAccount().getToken())
-               .queryParam("id", "blabla")
                .body(Json.encode(n))
                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                .then().assertThat().statusCode(200)
@@ -348,30 +345,16 @@ public class NotificationsTest extends VertxJunitSupport {
     @Test
     public void addNotificationToUserWithNoData() {
         User u = generateLoggedUser();
-
         given().header(TOKEN, u.getAccount().getToken())
-                .queryParam("id", u.get_id())
                 .body(new JsonObject().encode())
                 .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
         given().header(TOKEN, u.getAccount().getToken())
-                .queryParam("id", u.get_id())
                 .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
-
-    /**
-     * Add notification to user with missing id.
-     */
-    @Test
-    public void addNotificationToUserWithMissingId() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-               .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
-               .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-               .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
@@ -380,7 +363,6 @@ public class NotificationsTest extends VertxJunitSupport {
     @Test
     public void addNotificationToUserWithWrongHttpMethod() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-               .queryParam("id", "blabla")
                .when().get(getURL(NotificationsVerticle.ADD_TO_USER))
                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
@@ -391,8 +373,7 @@ public class NotificationsTest extends VertxJunitSupport {
      */
     @Test
     public void addNotificationToUserWithNotLogged() {
-        given().queryParam("id", "blabla")
-               .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
+        given().when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }

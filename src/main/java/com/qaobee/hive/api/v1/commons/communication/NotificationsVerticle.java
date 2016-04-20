@@ -204,20 +204,23 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     String id = message.body().getString("id");
                     String collection = message.body().getString(TARGET);
                     JsonObject notification = message.body().getObject(NOTIFICATION);
-                    switch (collection) {
-                        case "User":
-                            mongo.getById(id, collection);
-                            addNotificationToUser(id, notification);
-                            break;
-                        case "SB_SandBoxCfg":
-                            JsonObject sandbox = mongo.getById(id, collection);
-                            for (int i = 0; i < sandbox.getArray("members").size(); i++)
-                                addNotificationToUser(((JsonObject) sandbox.getArray("members").get(0)).getString("personId"), notification);
-                            break;
-                        default:
-                            break;
+                    JsonObject target = mongo.getById(id, collection);
+                    if(target == null) {
+                        utils.sendStatusJson(false, message);
+                    } else {
+                        switch (collection) {
+                            case "User":
+                                addNotificationToUser(id, notification);
+                                break;
+                            case "SB_SandBoxCfg":
+                                for (int i = 0; i < target.getArray("members").size(); i++)
+                                    addNotificationToUser(((JsonObject) target.getArray("members").get(0)).getString("personId"), notification);
+                                break;
+                            default:
+                                break;
+                        }
+                        utils.sendStatusJson(true, message);
                     }
-                    utils.sendStatusJson(true, message);
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendStatusJson(false, message);
