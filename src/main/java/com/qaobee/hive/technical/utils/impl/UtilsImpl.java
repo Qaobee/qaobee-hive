@@ -180,7 +180,7 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void testMandatoryParams(String body, final String... fields) {
+    public void testMandatoryParams(String body, final String... fields) throws IllegalArgumentException {
         if (StringUtils.isBlank(body)) {
             body = "{}";
         }

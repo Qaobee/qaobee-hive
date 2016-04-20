@@ -35,10 +35,10 @@ public class Notification implements Serializable {
      */
     private static final long serialVersionUID = -5693811404344145826L;
     private String _id; // NOSONAR
-    private String user_id;
+    private String user_id; // NOSONAR
     private long timestamp;
     private String content;
-    private String from_user_id;
+    private String from_user_id; // NOSONAR
     private String title;
     private boolean read;
     private boolean deleted;
@@ -66,7 +66,7 @@ public class Notification implements Serializable {
      *
      * @return the user id
      */
-    public String getUser_id() {
+    public String getUser_id() { // NOSONAR
         return user_id;
     }
 
@@ -75,7 +75,7 @@ public class Notification implements Serializable {
      *
      * @param user_id the user id
      */
-    public void setUser_id(String user_id) {
+    public void setUser_id(String user_id) { // NOSONAR
         this.user_id = user_id;
     }
 
@@ -120,7 +120,7 @@ public class Notification implements Serializable {
      *
      * @return String : from user _id
      */
-    public String getFrom_user_id() {
+    public String getFrom_user_id() {// NOSONAR
         return from_user_id;
     }
 
@@ -129,7 +129,7 @@ public class Notification implements Serializable {
      *
      * @param from_user_id (String) : from user _id
      */
-    public void setFrom_user_id(final String from_user_id) {
+    public void setFrom_user_id(final String from_user_id) { // NOSONAR
         this.from_user_id = from_user_id;
     }
 

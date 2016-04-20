@@ -7,13 +7,13 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
@@ -238,19 +238,22 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                if (StringUtils.isBlank(req.getBody())) {
-                    throw new IllegalArgumentException("missing body");
+                try {
+                    utils.testMandatoryParams(req.getBody(), "user_id", "content", "from_user_id", "title");
+                    JsonObject request = new JsonObject()
+                            .putString("id", req.getParams().get("id").get(0))
+                            .putString(TARGET, User.class.getSimpleName())
+                            .putObject(NOTIFICATION, new JsonObject(req.getBody()));
+                    vertx.eventBus().send(NOTIFY, request, new Handler<Message<JsonObject>>() {
+                        @Override
+                        public void handle(Message<JsonObject> event) {
+                            utils.sendStatus(event.body().getBoolean("status", false), message);
+                        }
+                    });
+                } catch (IllegalArgumentException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
                 }
-                JsonObject request = new JsonObject()
-                        .putString("id", req.getParams().get("id").get(0))
-                        .putString(TARGET, User.class.getSimpleName())
-                        .putObject(NOTIFICATION, new JsonObject(req.getBody()));
-                vertx.eventBus().send(NOTIFY, request, new Handler<Message<JsonObject>>() {
-                    @Override
-                    public void handle(Message<JsonObject> event) {
-                        utils.sendStatus(event.body().getBoolean("status", false), message);
-                    }
-                });
             }
         });
     }

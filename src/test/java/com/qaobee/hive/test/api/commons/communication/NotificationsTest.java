@@ -10,13 +10,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Notifications test.
+ * The type Notifications.
  */
 public class NotificationsTest extends VertxJunitSupport {
 
@@ -29,10 +30,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets notifications test.
+     * Gets notifications.
      */
     @Test
-    public void getNotificationsTest() {
+    public void getNotifications() {
         final User u = generateLoggedUser();
 
         final Notification n = new Notification();
@@ -52,10 +53,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets empty notifications test.
+     * Gets empty notifications.
      */
     @Test
-    public void getEmptyNotificationsTest() {
+    public void getEmptyNotifications() {
         final User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
                .when().get(getURL(NotificationsVerticle.LIST))
@@ -65,12 +66,10 @@ public class NotificationsTest extends VertxJunitSupport {
 
 
     /**
-     * Gets notifications with limit and start test.
-     *
-     * @throws InterruptedException the interrupted exception
+     * Gets notifications with limit and start.
      */
     @Test
-    public void getNotificationsWithLimitAndStartTest() {
+    public void getNotificationsWithLimitAndStart() {
         final User u = generateLoggedUser();
         for (int i = 0; i < 15; i++) {
             final Notification n = new Notification();
@@ -98,30 +97,30 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets notifications with non logged user test.
+     * Gets notifications with non logged user.
      */
     @Test
-    public void getNotificationsWithNonLoggedUserTest() {
+    public void getNotificationsWithNonLoggedUser() {
         given().when().get(getURL(NotificationsVerticle.LIST))
                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets notifications with wrong http method test.
+     * Gets notifications with wrong http method.
      */
     @Test
-    public void getNotificationsWithWrongHttpMethodTest() {
+    public void getNotificationsWithWrongHttpMethod() {
         given().when().post(getURL(NotificationsVerticle.LIST))
                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Mark as read test.
+     * Mark as read.
      */
     @Test
-    public void markAsReadTest() {
+    public void markAsRead() {
         final User u = generateLoggedUser();
         final Notification n = new Notification();
         n.setContent("Hello");
@@ -163,10 +162,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Mark as read with wrong id test.
+     * Mark as read with wrong id.
      */
     @Test
-    public void markAsReadWithWrongIdTest() {
+    public void markAsReadWithWrongId() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                .when().post(getURL(NotificationsVerticle.READ))
@@ -175,10 +174,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Mark as read with missing id test.
+     * Mark as read with missing id.
      */
     @Test
-    public void markAsReadWithMissingIdTest() {
+    public void markAsReadWithMissingId() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .when().post(getURL(NotificationsVerticle.READ))
                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
@@ -186,10 +185,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Mark as read with wrong http method test.
+     * Mark as read with wrong http method.
      */
     @Test
-    public void markAsReadWithWrongHttpMethodTest() {
+    public void markAsReadWithWrongHttpMethod() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                .when().get(getURL(NotificationsVerticle.READ))
@@ -198,10 +197,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Delete notification test.
+     * Delete notification.
      */
     @Test
-    public void deleteNotificationTest() {
+    public void deleteNotification() {
         final User u = generateLoggedUser();
 
         final Notification n = new Notification();
@@ -225,10 +224,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Delete notification with wrong id test.
+     * Delete notification with wrong id.
      */
     @Test
-    public void deleteNotificationWithWrongIdTest() {
+    public void deleteNotificationWithWrongId() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                .when().delete(getURL(NotificationsVerticle.DEL))
@@ -237,10 +236,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Delete notification with missing id test.
+     * Delete notification with missing id.
      */
     @Test
-    public void deleteNotificationWithMissingIdTest() {
+    public void deleteNotificationWithMissingId() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .when().delete(getURL(NotificationsVerticle.DEL))
                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
@@ -248,10 +247,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Delete notification with wrong http method test.
+     * Delete notification with wrong http method.
      */
     @Test
-    public void deleteNotificationWithWrongHttpMethodTest() {
+    public void deleteNotificationWithWrongHttpMethod() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                .when().get(getURL(NotificationsVerticle.DEL))
@@ -260,10 +259,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Delete notification with not logged test.
+     * Delete notification with not logged.
      */
     @Test
-    public void deleteNotificationWithNotLoggedTest() {
+    public void deleteNotificationWithNotLogged() {
         given().queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                .when().delete(getURL(NotificationsVerticle.DEL))
                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
@@ -271,10 +270,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Add notification to user test.
+     * Add notification to user.
      */
     @Test
-    public void addNotificationToUserTest() {
+    public void addNotificationToUser() {
         User u = generateLoggedUser();
         final Notification n = new Notification();
         n.setContent("Hello");
@@ -300,10 +299,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Add notification to user with wrong user id test.
+     * Add notification to user with wrong user id.
      */
     @Test
-    public void addNotificationToUserWithWrongUserIdTest() {
+    public void addNotificationToUserWithWrongUserId() {
         User u = generateLoggedUser();
         final Notification n = new Notification();
         n.setContent("Hello");
@@ -321,10 +320,31 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Add notification to user with missing id test.
+     * Add notification to user with no data.
      */
     @Test
-    public void addNotificationToUserWithMissingIdTest() {
+    public void addNotificationToUserWithNoData() {
+        User u = generateLoggedUser();
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .queryParam("id", u.get_id())
+                .body(new JsonObject().encode())
+                .when().post(getURL(NotificationsVerticle.ADD))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .queryParam("id", u.get_id())
+                .when().post(getURL(NotificationsVerticle.ADD))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Add notification to user with missing id.
+     */
+    @Test
+    public void addNotificationToUserWithMissingId() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .when().post(getURL(NotificationsVerticle.ADD))
                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
@@ -332,10 +352,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Add notification to user with wrong http method test.
+     * Add notification to user with wrong http method.
      */
     @Test
-    public void addNotificationToUserWithWrongHttpMethodTest() {
+    public void addNotificationToUserWithWrongHttpMethod() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .queryParam("id", "blabla")
                .when().get(getURL(NotificationsVerticle.ADD))
@@ -344,10 +364,10 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
-     * Add notification to user with not logged test.
+     * Add notification to user with not logged.
      */
     @Test
-    public void addNotificationToUserWithNotLoggedTest() {
+    public void addNotificationToUserWithNotLogged() {
         given().queryParam("id", "blabla")
                .when().post(getURL(NotificationsVerticle.ADD))
                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
