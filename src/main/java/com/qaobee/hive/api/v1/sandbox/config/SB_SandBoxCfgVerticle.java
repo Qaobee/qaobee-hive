@@ -22,6 +22,8 @@ package com.qaobee.hive.api.v1.sandbox.config;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -39,7 +41,6 @@ import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -62,6 +63,12 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
      * Start void.
      */
     @Override
+    @VerticleHandler({
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+                    scope = Rule.Param.REQUEST),
+            @Rule(address = GETLIST, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID},
+                    scope = Rule.Param.REQUEST)
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -72,28 +79,14 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiName getSandBoxCfg
          * @apiGroup SandBoxCfg API
          * @apiParam {String} _id SandBoxCfg id
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError NOT_LOGGED invalid token
-         * @apiError INVALID_PARAMETER wrong parameters
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
-                    Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_SandBoxCfg.class);
-                    LOG.debug("SandBoxCfg found : " + json.toString());
+                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_SandBoxCfg.class);
                     message.reply(json.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -111,36 +104,20 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiGroup SandBoxCfg API
          * @apiParam {String} seaonId SandBoxCfg season
          * @apiParam {String} sandBoxId sandbox Id
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError NOT_LOGGED invalid token
-         * @apiError INVALID_PARAMETER wrong parameters
          */
         vertx.eventBus().registerHandler(GETLIST, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
-                    Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_SANDBOX_ID);
-
                     Map<String, Object> criterias = new HashMap<>();
-                    criterias.put("sandbox._id", params.get(PARAM_SANDBOX_ID).get(0));
+                    criterias.put("sandbox._id", req.getParams().get(PARAM_SANDBOX_ID).get(0));
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_SandBoxCfg.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBoxCfg defined for sandBox if (" + params.get(PARAM_SANDBOX_ID).get(0) + ")");
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBoxCfg defined for sandBox if (" + req.getParams().get(PARAM_SANDBOX_ID).get(0) + ")");
                     }
-                    LOG.debug("SandBoxCfg found : " + resultJson.toString());
-
                     message.reply(resultJson.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);

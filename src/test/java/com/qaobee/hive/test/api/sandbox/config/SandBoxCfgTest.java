@@ -21,79 +21,119 @@ package com.qaobee.hive.test.api.sandbox.config;
 
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxCfgVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
 /**
  * The type Sand box cfg test.
  */
 public class SandBoxCfgTest extends VertxJunitSupport {
 
-    /**
-     * Retrieve sand box config by id.
-     */
     @Test
-    public void retrieveSandBoxConfigById() {
-
-        // SandBoxCfg._id
-        String id = "558b0fc0bd2e39cdab651e21";
-
+    public void getSandBoxConfigById() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-        final Map<String, List<String>> params = new HashMap<>();
-        params.put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(id));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_SandBoxCfgVerticle.GET, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-        Assert.assertEquals(id, result.getString("_id"));
-        Assert.assertEquals(user.get_id(), result.getObject("sandbox").getString("owner"));
-
+        String id = "558b0fc0bd2e39cdab651e21";
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxCfgVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_SandBoxCfgVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(id))
+                .body("sandbox.owner", is(user.get_id()));
     }
 
-    /**
-     * Retrieve sand box config by sand box id.
-     */
     @Test
-    public void retrieveSandBoxConfigBySandBoxId() {
+    public void getSandBoxConfigByIdWithNonLoggedUser() {
+        given().when().get(getURL(SB_SandBoxCfgVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
 
+    @Test
+    public void getSandBoxConfigByIdWithWrongHttpMethod() {
+        given().when().post(getURL(SB_SandBoxCfgVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    @Test
+    public void getSandBoxConfigByIdWithMissingParameters() {
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .when().get(getURL(SB_SandBoxCfgVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    @Test
+    public void getSandBoxConfigByIdWithWrongParameters() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxCfgVerticle.PARAM_ID, "bla")
+                .when().get(getURL(SB_SandBoxCfgVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
+    // -----------------------------------------------
+    @Test
+    public void getSandBoxConfigBySandBoxId() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
             mongo.save(user);
-
-            final RequestWrapper req = new RequestWrapper();
-            req.setLocale(LOCALE);
-            req.setMethod(Constantes.GET);
-            req.setUser(user);
-            final Map<String, List<String>> params = new HashMap<>();
-            params.put(SB_SandBoxCfgVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-            params.put(SB_SandBoxCfgVerticle.PARAM_SEASON_ID, Collections.singletonList("558b0ceaf9285df5b7553fc6"));
-            req.setParams(params);
-
-            final String reply = sendOnBus(SB_SandBoxCfgVerticle.GETLIST, req, user.getAccount().getToken());
-            JsonArray result = new JsonArray(reply);
-            Assert.assertEquals(1, result.size());
-
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxCfgVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f")
+                .queryParam(SB_SandBoxCfgVerticle.PARAM_SEASON_ID, "558b0ceaf9285df5b7553fc6")
+                .when().get(getURL(SB_SandBoxCfgVerticle.GETLIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1));
+    }
+
+    @Test
+    public void getSandBoxConfigBySandBoxIdWithNonLoggedUser() {
+        given().when().get(getURL(SB_SandBoxCfgVerticle.GETLIST))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    @Test
+    public void getSandBoxConfigBySandBoxIdWithWrongHttpMethod() {
+        given().when().post(getURL(SB_SandBoxCfgVerticle.GETLIST))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    @Test
+    public void getSandBoxConfigBySandBoxIdWithMissingParameters() {
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .when().get(getURL(SB_SandBoxCfgVerticle.GETLIST))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    @Test
+    public void getSandBoxConfigBySandBoxIdWithWrongParameters() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxCfgVerticle.PARAM_SANDBOX_ID, "bla")
+                .queryParam(SB_SandBoxCfgVerticle.PARAM_SEASON_ID, "558b0ceaf9285df5b7553fc6")
+                .when().get(getURL(SB_SandBoxCfgVerticle.GETLIST))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
     }
 }

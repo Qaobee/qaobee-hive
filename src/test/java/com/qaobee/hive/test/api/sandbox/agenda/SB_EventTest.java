@@ -35,15 +35,15 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Event test.
+ * The type Event.
  */
 public class SB_EventTest extends VertxJunitSupport {
 
     /**
-     * Add event test.
+     * Add event.
      */
     @Test
-    public void addEventTest() {
+    public void addEvent() {
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
@@ -75,30 +75,30 @@ public class SB_EventTest extends VertxJunitSupport {
     }
 
     /**
-     * Add event with non logged user test.
+     * Add event with non logged user.
      */
     @Test
-    public void addEventWithNonLoggedUserTest() {
+    public void addEventWithNonLoggedUser() {
         given().when().post(getURL(SB_EventVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Add event with wrong http method test.
+     * Add event with wrong http method.
      */
     @Test
-    public void addEventWithWrongHttpMethodTest() {
+    public void addEventWithWrongHttpMethod() {
         given().when().get(getURL(SB_EventVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Add event with missing params test.
+     * Add event with missing params.
      */
     @Test
-    public void addEventWithMissingParamsTest() {
+    public void addEventWithMissingParams() {
         User u = generateLoggedUser();
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
@@ -127,10 +127,10 @@ public class SB_EventTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list event test.
+     * Gets list event.
      */
     @Test
-    public void getListEventTest() {
+    public void getListEvent() {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject();
@@ -169,30 +169,30 @@ public class SB_EventTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list event with non logged user test.
+     * Gets list event with non logged user.
      */
     @Test
-    public void getListEventWithNonLoggedUserTest() {
+    public void getListEventWithNonLoggedUser() {
         given().when().post(getURL(SB_EventVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets list event with wrong http method test.
+     * Gets list event with wrong http method.
      */
     @Test
-    public void getListEventWithWrongHttpMethodTest() {
+    public void getListEventWithWrongHttpMethod() {
         given().when().get(getURL(SB_EventVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Gets list event with missing parameters test.
+     * Gets list event with missing parameters.
      */
     @Test
-    public void getListEventWithMissingParametersTest() {
+    public void getListEventWithMissingParameters() {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject();
@@ -217,10 +217,10 @@ public class SB_EventTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets event by id test.
+     * Gets event by id.
      */
     @Test
-    public void getEventByIdTest() {
+    public void getEventById() {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
@@ -232,30 +232,30 @@ public class SB_EventTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets event by id with non logged user test.
+     * Gets event by id with non logged user.
      */
     @Test
-    public void getEventByIdWithNonLoggedUserTest() {
+    public void getEventByIdWithNonLoggedUser() {
         given().when().get(getURL(SB_EventVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets event by id with wrong http method test.
+     * Gets event by id with wrong http method.
      */
     @Test
-    public void getEventByIdWithWrongHttpMethodTest() {
+    public void getEventByIdWithWrongHttpMethod() {
         given().when().post(getURL(SB_EventVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Gets event by id with missing parameters test.
+     * Gets event by id with missing parameters.
      */
     @Test
-    public void getEventByIdWithMissingParametersTest() {
+    public void getEventByIdWithMissingParameters() {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
@@ -265,10 +265,10 @@ public class SB_EventTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets event by id with wrong parameters test.
+     * Gets event by id with wrong parameters.
      */
     @Test
-    public void getEventByIdWithWrongParametersTest() {
+    public void getEventByIdWithWrongParameters() {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
@@ -279,10 +279,10 @@ public class SB_EventTest extends VertxJunitSupport {
     }
 
     /**
-     * Update event test.
+     * Update event.
      */
     @Test
-    public void updateEventTest() {
+    public void updateEvent() {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
         JsonObject event = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
@@ -309,30 +309,30 @@ public class SB_EventTest extends VertxJunitSupport {
     }
 
     /**
-     * Update event with non logged user test.
+     * Update event with non logged user.
      */
     @Test
-    public void updateEventWithNonLoggedUserTest() {
+    public void updateEventWithNonLoggedUser() {
         given().when().post(getURL(SB_EventVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Update event with wrong http method test.
+     * Update event with wrong http method.
      */
     @Test
-    public void updateEventWithWrongHttpMethodTest() {
+    public void updateEventWithWrongHttpMethod() {
         given().when().get(getURL(SB_EventVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
     }
 
     /**
-     * Update event with missing params test.
+     * Update event with missing params.
      */
     @Test
-    public void updateEventWithMissingParamsTest() {
+    public void updateEventWithMissingParams() {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
         JsonObject event = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
