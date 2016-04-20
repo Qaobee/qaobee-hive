@@ -325,7 +325,7 @@ public class UserTest extends VertxJunitSupport {
             mongo.save(user);
             GregorianCalendar today = new GregorianCalendar();
             int year = today.get(GregorianCalendar.MONTH) < 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
-            given().header("token", user.getAccount().getToken())
+            given().header(TOKEN, user.getAccount().getToken())
                     .param(UserVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .when().get(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(200)
@@ -350,7 +350,7 @@ public class UserTest extends VertxJunitSupport {
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
             mongo.save(user);
-            given().header("token", user.getAccount().getToken())
+            given().header(TOKEN, user.getAccount().getToken())
                     .param(UserVerticle.PARAM_COUNTRY_ID, "Vulacain")
                     .when().post(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
@@ -370,7 +370,7 @@ public class UserTest extends VertxJunitSupport {
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
             mongo.save(user);
-            given().header("token", user.getAccount().getToken())
+            given().header(TOKEN, user.getAccount().getToken())
                     .param(UserVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .when().get(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
@@ -407,7 +407,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getUserById() {
         User user = generateLoggedUser();
-        given().header("token", user.getAccount().getToken())
+        given().header(TOKEN, user.getAccount().getToken())
                 .param("id", user.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -430,7 +430,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getUserByIdWrongHTTPMethod() {
-        given().header("token", generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(UserVerticle.META))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
@@ -442,7 +442,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getCurrentUser() {
         User user = generateLoggedUser();
-        given().header("token", user.getAccount().getToken())
+        given().header(TOKEN, user.getAccount().getToken())
                 .when().get(getURL(UserVerticle.CURRENT))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
@@ -464,7 +464,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getCurrentUserWrongHTTPMethod() {
-        given().header("token", generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(UserVerticle.CURRENT))
                 .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                 .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
@@ -475,7 +475,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void logout() {
-        given().header("token", generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().get(getURL(UserVerticle.LOGOUT))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
@@ -487,7 +487,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void logoutBadHTTPMethod() {
-        given().header("token", generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(UserVerticle.LOGOUT));
     }
 
@@ -717,7 +717,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void uploadAvatarTest() {
         User user = generateLoggedUser();
-        String avatarId = given().header("token", user.getAccount().getToken())
+        String avatarId = given().header(TOKEN, user.getAccount().getToken())
                 .multiPart(new File("src/test/resources/avatar.jpg")).
                         pathParam("uid", user.get_id()).
                         when().
@@ -741,7 +741,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void uploadAvatarWithWrongUserIdTest() {
-        given().header("token", generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .multiPart(new File("src/test/resources/avatar.jpg")).
                 pathParam("uid", "blabla").
                 when().
@@ -769,5 +769,68 @@ public class UserTest extends VertxJunitSupport {
         given().pathParam("avatar", "blabla")
                 .get(BASE_URL + "/file/User/{avatar}")
                 .then().assertThat().statusCode(404);
+    }
+
+    /**
+     * Gets user by login.
+     */
+    @Test
+    public void getUserByLogin() {
+        User u = generateLoggedAdminUser();
+        given().header(TOKEN, u.getAccount().getToken())
+                .queryParam(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                .when().get(getURL(UserVerticle.USER_BY_LOGIN))
+                .then().assertThat().statusCode(200)
+                .body("name", notNullValue())
+                .body("name", is(u.getName()));
+    }
+
+    /**
+     * Gets user by login bad http method.
+     */
+    @Test
+    public void getUserByLoginBadHTTPMethod() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .when().post(getURL(UserVerticle.USER_BY_LOGIN));
+    }
+
+    /**
+     * Gets user by login winth not logged user.
+     */
+    @Test
+    public void getUserByLoginWinthNotLoggedUser() {
+        given().when().get(getURL(UserVerticle.USER_BY_LOGIN))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets user by login winth not admin user.
+     */
+    @Test
+    public void getUserByLoginWinthNotAdminUser() {
+        User u = generateLoggedUser();
+        given().header(TOKEN, u.getAccount().getToken())
+                .when().get(getURL(UserVerticle.USER_BY_LOGIN))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
+                .body("code", is(ExceptionCodes.NOT_ADMIN.toString()));
+    }
+
+    /**
+     * Gets user by login with wrong data.
+     */
+    @Test
+    public void getUserByLoginWithWrongData() {
+        User u = generateLoggedAdminUser();
+        given().header(TOKEN, u.getAccount().getToken())
+                .queryParam(UserVerticle.PARAM_LOGIN, "blabla")
+                .when().get(getURL(UserVerticle.USER_BY_LOGIN))
+                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
+                .body("code", is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .when().get(getURL(UserVerticle.USER_BY_LOGIN))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 }

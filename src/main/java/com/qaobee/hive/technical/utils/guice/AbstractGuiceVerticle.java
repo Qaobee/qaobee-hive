@@ -34,6 +34,7 @@ import org.vertx.java.platform.Verticle;
 public class AbstractGuiceVerticle extends Verticle {
     protected static final String RUNTIME = "runtime";
     protected static final String STATUS = "status";
+    protected static final String TOKEN = "token";
     private static final String MONKO_CONF_KEY = "mongo.persistor";
     protected When<String, Void> when;
     protected WhenEventBus whenEventBus;

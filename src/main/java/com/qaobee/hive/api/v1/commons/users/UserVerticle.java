@@ -117,14 +117,14 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Override
     @VerticleHandler({
             @Rule(address = LOGIN, method = Constantes.POST),
-            @Rule(address = LOGOUT, method = Constantes.GET, logged = true, mandatoryParams = {"token"}, scope = Rule.Param.HEADER),
+            @Rule(address = LOGOUT, method = Constantes.GET, logged = true, mandatoryParams = {TOKEN}, scope = Rule.Param.HEADER),
             @Rule(address = PASSWD_RENEW, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY),
             @Rule(address = PASSWD_RENEW_CHK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST),
             @Rule(address = PASSWD_RESET, method = Constantes.POST, mandatoryParams = {"id", "code", PASSWD_FIELD}, scope = Rule.Param.BODY),
             @Rule(address = CURRENT, method = Constantes.GET, logged = true),
             @Rule(address = META, method = Constantes.GET, logged = true),
             @Rule(address = USER_INFO, method = Constantes.GET, logged = true, mandatoryParams = {"id"}, scope = Rule.Param.REQUEST),
-            @Rule(address = USER_BY_LOGIN, method = Constantes.GET, logged = true, admin = true, mandatoryParams = {"login"}, scope = Rule.Param.REQUEST),
+            @Rule(address = USER_BY_LOGIN, method = Constantes.GET, logged = true, admin = true, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.REQUEST),
             @Rule(address = LOGIN_BY_TOKEN, method = Constantes.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN}, scope = Rule.Param.BODY),
     })
     public void start() {

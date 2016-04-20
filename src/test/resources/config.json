@@ -90,6 +90,7 @@
         "activationCode": "12345",
         "password": "xHvS+ICtNg/1rrrj49WT+A/y9MA=",
         "salt": "CPAaJ8ydx6I=",
+        "mobileToken": "123456",
         "listPlan": [
           {
             "paymentId": "pay_jyexVVRKKGJsJAXobSL3q",
