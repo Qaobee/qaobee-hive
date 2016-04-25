@@ -624,7 +624,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @param user User
      * @return in triel period
      */
-    private boolean testTrial(User user) {
+    private static boolean testTrial(User user) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
         Calendar cal2 = Calendar.getInstance();
