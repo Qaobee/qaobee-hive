@@ -84,7 +84,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ID = "_id";
 
-	/* List of parameters */
+    // List of parameters
     /**
      * Label of the structure
      */
