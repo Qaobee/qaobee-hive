@@ -69,7 +69,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ID = "_id";
 
-	/* List of parameters */
+ /* List of parameters */
     /**
      * Alpha 2 code
      */
@@ -93,13 +93,13 @@ public class CountryVerticle extends AbstractGuiceVerticle {
 
     @Override
     @VerticleHandler({
-                             @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID},
-                                   scope = Rule.Param.REQUEST),
-                             @Rule(address = GET_LIST, method = Constantes.GET, mandatoryParams = {PARAM_LOCAL},
-                                   scope = Rule.Param.REQUEST),
-                             @Rule(address = GET_ALPHA2, method = Constantes.GET, mandatoryParams = {PARAM_ALPHA2},
-                                   scope = Rule.Param.REQUEST)
-                     })
+            @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID},
+                    scope = Rule.Param.REQUEST),
+            @Rule(address = GET_LIST, method = Constantes.GET, mandatoryParams = {PARAM_LOCAL},
+                    scope = Rule.Param.REQUEST),
+            @Rule(address = GET_ALPHA2, method = Constantes.GET, mandatoryParams = {PARAM_ALPHA2},
+                    scope = Rule.Param.REQUEST)
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -210,9 +210,9 @@ public class CountryVerticle extends AbstractGuiceVerticle {
             }
         };
 
-		/*
+  /*
          * Handlers registration
-		 */
+   */
         vertx.eventBus().registerHandler(GET, get);
         vertx.eventBus().registerHandler(GET_ALPHA2, getAlpha2);
         vertx.eventBus().registerHandler(GET_LIST, getList);

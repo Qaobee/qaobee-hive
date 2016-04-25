@@ -348,7 +348,7 @@ public class Main extends AbstractGuiceVerticle {
      * @param req request
      * @param e   exception
      */
-    private void handleError(HttpServerRequest req, QaobeeException e) {
+    private static void handleError(HttpServerRequest req, QaobeeException e) {
         req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
         req.response().setStatusCode(e.getCode().getCode());
         JsonObject jsonEx = new JsonObject(Json.encode(e));
@@ -375,7 +375,7 @@ public class Main extends AbstractGuiceVerticle {
      * @param message Vert.X message
      * @param req     Request
      */
-    private void handleResult(AsyncResult<Message<String>> message, HttpServerRequest req) {
+    private static void handleResult(AsyncResult<Message<String>> message, HttpServerRequest req) {
         if (message.succeeded()) {
             final String response = message.result().body();
             if (response.startsWith("[") || !response.startsWith("{")) {
@@ -434,7 +434,7 @@ public class Main extends AbstractGuiceVerticle {
      *
      * @param req the req
      */
-    private void enableCors(final HttpServerRequest req) {
+    private static void enableCors(final HttpServerRequest req) {
         req.response().headers().add("Access-Control-Allow-Origin", "*");
         req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
         req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");

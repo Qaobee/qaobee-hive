@@ -46,7 +46,7 @@ import java.util.Map;
  * The type Team verticle.
  */
 @DeployableVerticle(isWorker = true)
-public class SB_TeamVerticle extends AbstractGuiceVerticle {
+public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
     /**
      * Handler to get a set of team
      */
@@ -69,7 +69,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
     public static final String PARAM_ID = "_id";
 
     
-	/* List of parameters */
+ /* List of parameters */
     /**
      * SandboxId param
      */
@@ -124,7 +124,6 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-                LOG.debug(ADD + " - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -160,7 +159,6 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug(UPDATE + " - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());
@@ -202,7 +200,6 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-                LOG.debug(GET + " - SB_Team");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.GET, req.getMethod());
@@ -256,7 +253,6 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
-                LOG.debug(GET_LIST + " - SB_Team");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     // Tests on method and parameters

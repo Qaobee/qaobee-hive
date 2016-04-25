@@ -255,9 +255,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
             }
         };
 
-		/*
-         * handlers registration
-		 */
+        // handlers registration
         vertx.eventBus().registerHandler(UPDATE, updateUserHandler);
         vertx.eventBus().registerHandler(GENERATE_PDF, generatePDFHandler);
         vertx.eventBus().registerHandler(GENERATE_BILL_PDF, generateBillPDFHandler);

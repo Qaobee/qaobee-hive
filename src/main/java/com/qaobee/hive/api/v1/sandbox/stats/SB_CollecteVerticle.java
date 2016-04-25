@@ -44,8 +44,8 @@ import java.util.List;
 /**
  * @author cke
  */
-@DeployableVerticle(isWorker = true)
-public class SB_CollecteVerticle extends AbstractGuiceVerticle {
+@DeployableVerticle()
+public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * Collection name
      */
@@ -154,22 +154,22 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
 
-					/*
+     /*
                      * *** Params section ***
-					 */
+      */
                     // Check param mandatory
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
                     utils.isUserLogged(req);
                     JsonObject params = new JsonObject(req.getBody());
                     utils.testMandatoryParams(params.toMap(), PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID);
 
-					/*
+     /*
                      * *** Aggregat section ***
-					 */
+      */
                     DBObject match;
                     BasicDBObject dbObjectParent;
 
-					/* *** $MACTH section *** */
+     /* *** $MACTH section *** */
                     dbObjectParent = new BasicDBObject();
 
                     // Collecte sandboxId
@@ -194,7 +194,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
 
                     match = new BasicDBObject("$match", dbObjectParent);
 
-					/* *** $limit section *** */
+     /* *** $limit section *** */
                     List<DBObject> pipelineAggregation;
                     pipelineAggregation = Collections.singletonList(match);
 
@@ -249,7 +249,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
                     final String id = mongo.save(object, COLLECTION_NAME);
                     object.putString("_id", id);
 
-					/* return */
+     /* return */
                     LOG.debug(object.encodePrettily());
                     message.reply(object.encode());
 
@@ -301,7 +301,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {
 
                     LOG.debug("SB_Collecte updated : " + object.toString());
 
-					/* return */
+     /* return */
                     message.reply(object.encode());
 
                 } catch (final NoSuchMethodException e) {

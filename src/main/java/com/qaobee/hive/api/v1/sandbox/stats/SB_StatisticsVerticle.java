@@ -47,8 +47,8 @@ import java.util.List;
 /**
  * @author cke
  */
-@DeployableVerticle(isWorker = true)
-public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
+@DeployableVerticle()
+public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * Handler for average rate for one or many indicator and for one or many person, group by PARAM_LIST_GROUPBY
      */
@@ -70,7 +70,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
 
-	/* List of parameters */
+ /* List of parameters */
     /**
      * Value
      */
@@ -153,8 +153,6 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug(GET_STAT_GROUPBY + " - Statistics");
-
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -170,13 +168,13 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     Long startDate = params.getLong(PARAM_START_DATE);
                     Long endDate = params.getLong(PARAM_END_DATE);
 
-					/*
+     /*
                      * *** Aggregat section ***
-					 */
+      */
                     DBObject match, project, group, sort, limit;
                     BasicDBObject dbObjectParent, dbObjectChild;
 
-					/* *** $MACTH section *** */
+     /* *** $MACTH section *** */
                     dbObjectParent = new BasicDBObject();
 
                     // - code
@@ -207,8 +205,8 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
                     match = new BasicDBObject("$match", dbObjectParent);
 
-					/* *** $PROJECT section *** 
-					dbObjectParent = new BasicDBObject();
+     /* *** $PROJECT section *** 
+     dbObjectParent = new BasicDBObject();
                     dbObjectParent.put("owner", "$owner");
                     dbObjectParent.put("code", "$code");
                     dbObjectParent.put("timer", "$timer");
@@ -216,7 +214,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
                     project = new BasicDBObject("$project", dbObjectParent);
                     */
-					/* *** $GROUP section *** */
+     /* *** $GROUP section *** */
                     dbObjectParent = new BasicDBObject();
                     dbObjectChild = new BasicDBObject();
 
@@ -253,7 +251,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                     }
                     group = new BasicDBObject("$group", dbObjectParent);
 
-					/* *** $SORT section *** */
+     /* *** $SORT section *** */
                     dbObjectParent = new BasicDBObject();
                     if (params.containsField(PARAM_LIST_SORTBY)) {
                         for (Object item : params.getArray(PARAM_LIST_SORTBY)) {
@@ -317,8 +315,6 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug(GET_LISTDETAIL_VALUES + " - Statistics");
-
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.POST, req.getMethod());
@@ -377,11 +373,8 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
                         pipelineAggregation = Arrays.asList(match, sort);
                     }
 
-                    LOG.debug("getListDetailValue : " + pipelineAggregation.toString());
-
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
 
-                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
 
                 } catch (final NoSuchMethodException e) {
@@ -416,8 +409,6 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug(ADD_STAT + " - Statistics");
-
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());
@@ -467,7 +458,6 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug(ADD_STAT_BULK + " - Statistics");
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     utils.testHTTPMetod(Constantes.PUT, req.getMethod());

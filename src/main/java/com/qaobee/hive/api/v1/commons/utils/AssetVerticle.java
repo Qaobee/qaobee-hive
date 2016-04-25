@@ -59,6 +59,9 @@ public class AssetVerticle extends AbstractGuiceVerticle {
     public static final String ADD = "asset.add";
     public static final String GET = "asset.get";
     private static final Logger LOG = LoggerFactory.getLogger(AssetVerticle.class);
+    private static final String COLLECTION_FIELD = "collection";
+    private static final String FILENAME_FIELD = "filename";
+    private static final String UID_FIELD = "uid";
     @Inject
     private MongoDB mongo;
     @Inject
@@ -88,40 +91,36 @@ public class AssetVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<JsonObject> message) {
                 JsonObject resp = new JsonObject();
                 try {
-                    utils.testMandatoryParams(message.body().toMap(), "uid", "token", "filename", "collection", "field", "contentType");
-                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString("token")).get(), null, null, 0, 0, User.class);
+                    utils.testMandatoryParams(message.body().toMap(), UID_FIELD, AbstractGuiceVerticle.TOKEN, FILENAME_FIELD, COLLECTION_FIELD, "field", "contentType");
+                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString(AbstractGuiceVerticle.TOKEN)).get(), null, null, 0, 0, User.class);
 
                     if (res.size() != 1) {
-                        FileUtils.deleteQuietly(new File(message.body().getString("filename")));
+                        FileUtils.deleteQuietly(new File(message.body().getString(FILENAME_FIELD)));
                         resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.NOT_LOGGED.getCode()).putString(Constantes.MESSAGE, Messages.getString("not.logged", message.body().getString("locale")));
                     } else {
                         GridFS img = new GridFS(mongo.getDb(), "Assets");
-                        LOG.debug(mongo.getDb().getMongo().getConnectPoint());
-
-                        GridFSInputFile gfsFile = img.createFile(FileUtils.readFileToByteArray(new File(message.body().getString("filename"))));
-                        gfsFile.setFilename(message.body().getString("uid"));
+                        GridFSInputFile gfsFile = img.createFile(FileUtils.readFileToByteArray(new File(message.body().getString(FILENAME_FIELD))));
+                        gfsFile.setFilename(message.body().getString(UID_FIELD));
                         BasicDBObject meta = new BasicDBObject();
-                        meta.append("uid", message.body().getString("uid"));
+                        meta.append(UID_FIELD, message.body().getString(UID_FIELD));
                         gfsFile.setMetaData(meta);
                         gfsFile.setContentType(message.body().getString(CONTENT_TYPE));
                         gfsFile.save();
-
                         JsonObject personToSave = new JsonObject();
-                        personToSave.putString("_id", message.body().getString("uid"));
+                        personToSave.putString("_id", message.body().getString(UID_FIELD));
                         personToSave.putString(message.body().getString("field"), gfsFile.getId().toString());
-
-                        if ("SB_Person".equals(message.body().getString("collection"))) {
-                            mongo.getById(message.body().getString("uid"), SB_Person.class);
+                        if ("SB_Person".equals(message.body().getString(COLLECTION_FIELD))) {
+                            mongo.getById(message.body().getString(UID_FIELD), SB_Person.class);
                             mongo.update(personToSave, SB_Person.class);
                         } else {
-                            mongo.getById(message.body().getString("uid"), User.class);
+                            mongo.getById(message.body().getString(UID_FIELD), User.class);
                             mongo.update(personToSave, User.class);
                         }
 
                         resp.putNumber(Constantes.STATUS_CODE, 200);
                         resp.putString(Constantes.MESSAGE, personToSave.encode());
-                        if (vertx.fileSystem().existsSync(message.body().getString("filename"))) {
-                            vertx.fileSystem().deleteSync(message.body().getString("filename"));
+                        if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
+                            vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
                         }
                         message.reply(resp);
                     }
@@ -129,24 +128,24 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     LOG.error(e.getMessage(), e);
                     resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
                     resp.putString(Constantes.MESSAGE, e.getMessage());
-                    if (vertx.fileSystem().existsSync(message.body().getString("filename"))) {
-                        vertx.fileSystem().deleteSync(message.body().getString("filename"));
+                    if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
+                        vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
                     }
                     message.reply(resp);
                 } catch (final IllegalArgumentException e) {
                     LOG.error(e.getMessage(), e);
                     resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
                     resp.putString(Constantes.MESSAGE, e.getMessage());
-                    if (vertx.fileSystem().existsSync(message.body().getString("filename"))) {
-                        vertx.fileSystem().deleteSync(message.body().getString("filename"));
+                    if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
+                        vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
                     }
                     message.reply(resp);
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.DATA_ERROR.getCode());
                     resp.putString(Constantes.MESSAGE, e.getMessage());
-                    if (vertx.fileSystem().existsSync(message.body().getString("filename"))) {
-                        vertx.fileSystem().deleteSync(message.body().getString("filename"));
+                    if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
+                        vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
                     }
                     message.reply(resp);
                 }
@@ -165,10 +164,10 @@ public class AssetVerticle extends AbstractGuiceVerticle {
             public void handle(final Message<JsonObject> message) {
                 JsonObject resp = new JsonObject();
                 try {
-                    utils.testMandatoryParams(message.body().toMap(), "collection", "id");
+                    utils.testMandatoryParams(message.body().toMap(), COLLECTION_FIELD, "id");
                     GridFS img = new GridFS(mongo.getDb(), "Assets");
 
-                    if (SB_Person.class.getSimpleName().equals(message.body().getString("collection")) || User.class.getSimpleName().equals(message.body().getString("collection"))) {
+                    if ("SB_Person".equals(message.body().getString(COLLECTION_FIELD)) || "User".equals(message.body().getString(COLLECTION_FIELD))) {
                         GridFSDBFile imageForOutput = img.findOne(new ObjectId(message.body().getString("id")));
                         if (imageForOutput != null && imageForOutput.getChunkSize() > 0) {
                             ByteArrayOutputStream bos = new ByteArrayOutputStream();

@@ -70,7 +70,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ID = "_id";
 
-	/* List of parameters */
+ /* List of parameters */
     /**
      * Indicator activity id
      */

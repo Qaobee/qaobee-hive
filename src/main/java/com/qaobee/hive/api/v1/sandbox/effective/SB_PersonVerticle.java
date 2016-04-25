@@ -49,8 +49,8 @@ import java.util.Map;
 /**
  * The type Person verticle.
  */
-@DeployableVerticle(isWorker = true)
-public class SB_PersonVerticle extends AbstractGuiceVerticle {
+@DeployableVerticle()
+public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * Handler to get a set of persons
      */
@@ -77,7 +77,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
     public static final String PARAM_LIST_ID = "listId";
 
     
-	/* List of parameters */
+ /* List of parameters */
     /**
      * list Field
      */
@@ -251,14 +251,14 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {
                     DBObject match, project;
                     BasicDBObject dbObjectParent, dbObjectChild;
 
-					/* *** $MACTH section *** */
+     /* *** $MACTH section *** */
                     dbObjectParent = new BasicDBObject();
 
                     dbObjectChild = new BasicDBObject("$in", listId.toArray());
                     dbObjectParent.put("_id", dbObjectChild);
                     match = new BasicDBObject("$match", dbObjectParent);
 
-					/* *** $PROJECT section *** */
+     /* *** $PROJECT section *** */
                     dbObjectParent = new BasicDBObject();
                     for (Object field : listfield) {
                         dbObjectParent.put((String) field, "$" + field);

@@ -47,8 +47,8 @@ import java.util.Map;
 /**
  * The type Effective verticle.
  */
-@DeployableVerticle(isWorker = true)
-public class SB_EffectiveVerticle extends AbstractGuiceVerticle {
+@DeployableVerticle()
+public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * The constant GET.
      */

@@ -59,7 +59,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String PARAM_LIST_ID = "listId";
 
-	/* List of parameters */
+ /* List of parameters */
     /**
      * Event ID
      */
