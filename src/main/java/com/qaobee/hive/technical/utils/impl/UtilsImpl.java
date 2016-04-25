@@ -27,6 +27,7 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
@@ -56,6 +57,7 @@ import java.util.*;
  */
 public class UtilsImpl implements Utils {
     private static final Logger LOG = LoggerFactory.getLogger(UtilsImpl.class);
+    private static final String NOT_LOGGED_KEY = "not.logged";
     @Inject
     private MongoDB mongo;
     @Inject
@@ -154,16 +156,17 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void testMandatoryParams(Map<String, ?> map, String... fields) {
+    public void testMandatoryParams(Map<String, ?> mapParams, String... fields) {
         final List<String> missingFields = new ArrayList<>();
-        if (map == null) {
-            map = new HashMap<>();
+        Map<String, ?> map = new HashMap<>();
+        if (mapParams != null) {
+            map = mapParams;
         }
         for (final String field : fields) {
             if (!map.containsKey(field) || map.get(field) == null) {
                 missingFields.add(field);
             } else if (map.get(field) instanceof List) {
-                if ((((List<?>) map.get(field)).isEmpty())) {
+                if (((List<?>) map.get(field)).isEmpty()) {
                     missingFields.add(field);
                 } else if (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field))) {
                     missingFields.add(field);
@@ -181,10 +184,7 @@ public class UtilsImpl implements Utils {
 
     @Override
     public void testMandatoryParams(String body, final String... fields) throws IllegalArgumentException {
-        if (StringUtils.isBlank(body)) {
-            body = "{}";
-        }
-        testMandatoryParams(new JsonObject(body).toMap(), fields);
+        testMandatoryParams(new JsonObject(StringUtils.isBlank(body)?"{}":body).toMap(), fields);
     }
 
     @Override
@@ -193,25 +193,24 @@ public class UtilsImpl implements Utils {
         if (request.getUser() != null) {
             return request.getUser();
         }
-        if (request.getHeaders() != null && request.getHeaders().containsKey("token")) {
-            token = request.getHeaders().get("token").get(0);
+        if (request.getHeaders() != null && request.getHeaders().containsKey(AbstractGuiceVerticle.TOKEN)) {
+            token = request.getHeaders().get(AbstractGuiceVerticle.TOKEN).get(0);
         }
-        if (request.getParams() != null && request.getParams().containsKey("token")) {
-            token = request.getParams().get("token").get(0);
+        if (request.getParams() != null && request.getParams().containsKey(AbstractGuiceVerticle.TOKEN)) {
+            token = request.getParams().get(AbstractGuiceVerticle.TOKEN).get(0);
         }
         if (StringUtils.isBlank(token)) {
-            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", request.getLocale()));
+            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
         }
         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, User.class);
         if (res.size() != 1) {
-            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", request.getLocale()));
+            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
         } else {
             // we take the first one (should be only one)
             final JsonObject jsonUser = res.get(0);
             JsonObject userToSave = new JsonObject();
             final User user = Json.decodeValue(jsonUser.encode(), User.class);
             userToSave.putString("_id", user.get_id());
-
             if (Constantes.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
                 userToSave.putString("account.token", null);
                 user.getAccount().setToken(null);
@@ -222,11 +221,10 @@ public class UtilsImpl implements Utils {
                 userToSave.putNumber("account.tokenRenewDate", connectionTime);
                 user.getAccount().setTokenRenewDate(connectionTime);
             }
-
             try {
                 mongo.update(userToSave, User.class);
                 if (user.getAccount().getTokenRenewDate() == 0) {
-                    throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", request.getLocale()));
+                    throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
                 }
                 request.setUser(user);
                 return user;
