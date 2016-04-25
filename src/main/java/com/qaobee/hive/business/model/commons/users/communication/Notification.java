@@ -48,7 +48,7 @@ public class Notification implements Serializable {
      *
      * @return the id
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -57,7 +57,7 @@ public class Notification implements Serializable {
      *
      * @param _id the id
      */
-    public void set_id(String _id) {
+    public void set_id(String _id) { // NOSONAR
         this._id = _id;
     }
 
@@ -66,7 +66,7 @@ public class Notification implements Serializable {
      *
      * @return the target id
      */
-    public String getTargetId() {
+    public String getTargetId() { // NOSONAR
         return targetId;
     }
 
@@ -75,7 +75,7 @@ public class Notification implements Serializable {
      *
      * @param targetId the target id
      */
-    public void setTargetId(String targetId) {
+    public void setTargetId(String targetId) { // NOSONAR
         this.targetId = targetId;
     }
 
