@@ -43,13 +43,13 @@ import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.http.HttpClientRequest;
 import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -71,6 +71,19 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     public static final String TRIGGERED_RECURING_PAYMENT = "inner.recuring_payment";
     public static final String PARAM_PLAN_ID = "plan_id";
     private static final Logger LOG = LoggerFactory.getLogger(ShippingVerticle.class);
+    private static final java.lang.String PAID_DATE_FIELD = "paidDate";
+    private static final String LEVEL_PLAN_FIELD = "levelPlan";
+    private static final String HOSTED_PAYMENT_FIELD = "hosted_payment";
+    private static final String PAYMENT_URL_FIELD = "payment_url";
+    private static final String MONTHLY = "monthly";
+    private static final String METADATA_FIELD = "metadata";
+    private static final String CUSTOMER_ID_FIELD = "customer_id";
+    private static final String LOCALE_FIELD = "locale";
+    private static final String ACCOUNT_FIELD = "account";
+    private static final String LIST_PLAN_FIELD = "listPlan";
+    private static final String CARD_INFO_FIELD = "cardInfo";
+    private static final String PAYMENT_ID_FIELD = "paymentId";
+    private static final String SHIPPING_LIST_FIELD = "shippingList";
 
     @Inject
     private MongoDB mongo;
@@ -88,7 +101,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      */
     @Override
     @VerticleHandler({
-            @Rule(address = IPN, method = Constantes.POST, mandatoryParams = {"id", "id", "metadata", "created_at"}, scope = Rule.Param.BODY),
+            @Rule(address = IPN, method = Constantes.POST, mandatoryParams = {"id", "id", METADATA_FIELD, "created_at"}, scope = Rule.Param.BODY),
             @Rule(address = PAY, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_PLAN_ID}, scope = Rule.Param.BODY),
     })
     public void start() {
@@ -109,60 +122,29 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {object} status Status
          */
         vertx.eventBus().registerHandler(IPN, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     final JsonObject body = new JsonObject(req.getBody());
-                    if (!body.getObject("metadata").containsField("plan_id")
-                            || !body.getObject("metadata").containsField("customer_id")
-                            || StringUtils.isBlank(body.getObject("metadata").getString("plan_id"))
-                            || StringUtils.isBlank(body.getObject("metadata").getString("customer_id"))
+                    if (!body.getObject(METADATA_FIELD).containsField(PARAM_PLAN_ID)
+                            || !body.getObject(METADATA_FIELD).containsField(CUSTOMER_ID_FIELD)
+                            || StringUtils.isBlank(body.getObject(METADATA_FIELD).getString(PARAM_PLAN_ID))
+                            || StringUtils.isBlank(body.getObject(METADATA_FIELD).getString(CUSTOMER_ID_FIELD))
                             ) {
                         throw new IllegalArgumentException("some metadatas are missing");
                     }
-                    int planId = Integer.parseInt(body.getObject("metadata").getString("plan_id"));
-                    final JsonObject user =
-                            mongo.getById(body.getObject("metadata").getString("customer_id"), User.class);
+                    int planId = Integer.parseInt(body.getObject(METADATA_FIELD).getString(PARAM_PLAN_ID));
+                    final JsonObject user = mongo.getById(body.getObject(METADATA_FIELD).getString(CUSTOMER_ID_FIELD), User.class);
                     final User u = Json.decodeValue(user.encode(), User.class);
                     if (body.getObject("failure") != null) {
                         // -> Send a mail with the payment url link
-                        final JsonObject tplReq = new JsonObject();
-                        tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
-                        tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateRefusedCardBody(u,
-                                body.getObject("metadata").getString("locale"),
-                                u.getAccount().getListPlan().get(planId),
-                                body.getObject("failure").getString("code"), getContainer().config()));
-
-                        vertx.eventBus()
-                                .send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
-                                    @Override
-                                    public void handle(final Message<JsonObject> tplResp) {
-                                        final String tplRes = tplResp.body().getString("result");
-                                        final JsonObject emailReq = new JsonObject();
-                                        emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
-                                        emailReq.putString("to", u.getContact().getEmail());
-                                        emailReq.putString("subject", Messages.getString("mail.payment.subject",
-                                                body.getObject("metadata").getString("locale")));
-                                        emailReq.putString("content_type", "text/html");
-                                        emailReq.putString("body", tplRes);
-                                        vertx.eventBus().publish("mailer.mod", emailReq);
-                                        utils.sendStatus(false, message);
-                                    }
-                                });
+                        sendPaymentMail(body, planId, u, message);
                     } else {
-                        switch (body.getString("object")) {
-                            // We only have payments, no refunds ;)
-                            case "payment":
-                                makePayment(body, user, u, planId, message);
-                                break;
-                            default:
-                                utils.sendStatus(false, message);
+                        if ("payment".equals(body.getString("object"))) {
+                            makePayment(body, user, u, planId, message);
+                        } else {
+                            utils.sendStatus(false, message);
                         }
                     }
                 } catch (QaobeeException e) {
@@ -188,113 +170,27 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {object} status Status with a redirect link if any
          */
         vertx.eventBus().registerHandler(PAY, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
                     final JsonObject body = new JsonObject(req.getBody());
                     final int planId = Integer.parseInt(body.getString(PARAM_PLAN_ID));
-                    Payment payment = new Payment();
                     if (req.getUser().getAccount().getListPlan().size() <= planId) {
-                        utils.sendError(message,
-                                new QaobeeException(ExceptionCodes.INVALID_PARAMETER, planId + " is not present"));
+                        utils.sendError(message, new QaobeeException(ExceptionCodes.INVALID_PARAMETER, planId + " is not present"));
                         return;
                     }
                     Plan plan = req.getUser().getAccount().getListPlan().get(planId);
                     int amount = 0;
-                    if (getContainer().config().getObject("runtime").getObject("plan").containsField(plan.getLevelPlan().name())) {
-                        amount = getContainer().config().getObject("runtime").getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price");
+                    if (getContainer().config().getObject(RUNTIME).getObject("plan").containsField(plan.getLevelPlan().name())) {
+                        amount = getContainer().config().getObject(RUNTIME).getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price");
                     }
                     if (amount == 0) {
                         // FREEMIUM, nothing to do
                         utils.sendStatus(true, message);
                         return;
                     }
-                    payment.setAmount(amount * 100);
-                    payment.setCurrency("EUR");
-
-                    Customer customer = new Customer();
-                    customer.setFirst_name(req.getUser().getFirstname());
-                    customer.setLast_name(req.getUser().getName());
-                    customer.setEmail(req.getUser().getContact().getEmail());
-                    payment.setCustomer(customer);
-
-                    HostedPayment hostedPayment = new HostedPayment();
-                    hostedPayment.setCancel_url(config.getString("cancel_url"));
-                    hostedPayment.setReturn_url(config.getString("return_url"));
-                    payment.setHosted_payment(hostedPayment);
-
-                    payment.setNotification_url(config.getString("ipn_url"));
-
-                    Map<String, String> metaDatas = new HashMap<>();
-                    metaDatas.put("customer_id", req.getUser().get_id());
-                    metaDatas.put("plan_id", String.valueOf(planId));
-                    metaDatas.put("locale", req.getLocale());
-                    payment.setMetadata(metaDatas);
-
-                    payment.setSave_card(true);
-                    payment.setForce_3ds(true);
-
-                    final int finalAmount = amount;
-                    HttpClientRequest request =
-                            client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
-                                @Override
-                                public void handle(final HttpClientResponse resp) {
-                                    if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
-                                        resp.bodyHandler(new Handler<Buffer>() {
-                                            @Override
-                                            public void handle(Buffer buffer) {
-                                                // The entire response body has been received
-                                                JsonObject res = new JsonObject(buffer.toString());
-                                                req.getUser().getAccount().getListPlan().get(planId)
-                                                        .setAmountPaid(finalAmount);
-                                                req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(
-                                                        res.getObject("hosted_payment").getString("payment_url"));
-                                                req.getUser().getAccount().getListPlan().get(planId)
-                                                        .setPaymentId(res.getString("id"));
-                                                req.getUser().getAccount().getListPlan().get(planId)
-                                                        .setPeriodicity("monthly");
-                                                if (res.getObject("card").getString("id", null) != null) {
-                                                    req.getUser().getAccount().getListPlan().get(planId).setCardInfo(
-                                                            Json.<Card>decodeValue(res.getObject("card").encode(),
-                                                                    Card.class));
-                                                }
-                                                try { // NOSONAR
-                                                    mongo.save(req.getUser());
-                                                    JsonObject messageResponse = new JsonObject();
-                                                    messageResponse.putBoolean(STATUS, true);
-                                                    messageResponse.putString("payment_url",
-                                                            res.getObject("hosted_payment").getString("payment_url"));
-                                                    req.getUser().getAccount().getListPlan().get(planId)
-                                                            .setCardId(res.getString("id"));
-
-                                                    message.reply(messageResponse.toString());
-                                                } catch (QaobeeException e) {
-                                                    LOG.error(e.getMessage(), e);
-                                                    utils.sendError(message, e);
-                                                }
-
-                                            }
-                                        });
-                                    } else {
-                                        utils.sendError(message, new QaobeeException(ExceptionCodes.HTTP_ERROR,
-                                                resp.statusCode() + " : " + resp.statusMessage()));
-                                    }
-                                }
-                            });
-                    request.putHeader("Authorization", "Bearer " + config.getString("api_key"))
-                            .putHeader("Content-Type", "application/json");
-                    JsonObject requestBody = new JsonObject(Json.encode(payment));
-                    requestBody.removeField("payment_method");
-                    LOG.info(requestBody.encode());
-                    request.putHeader("Content-Length", String.valueOf(requestBody.toString().length()));
-                    request.write(requestBody.toString());
-                    request.end();
+                    sendPayplugPayment(req, planId, amount, message, generatePayment(amount, req, planId).encode());
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
@@ -327,128 +223,19 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
             @Override
             public void handle(final Message<JsonObject> message) {
                 final JsonObject user = message.body();
-                JsonArray listPlan = user.getObject("account").getArray("listPlan");
+                JsonArray listPlan = user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD);
                 for (int i = 0; i < listPlan.size(); i++) {
                     JsonObject plan = listPlan.get(i);
                     // TODO : change paid level plan here
-                    if (plan != null && plan.containsField("levelPlan")
-                            && plan.containsField("cardInfo")
-                            && plan.getObject("cardInfo") != null
-                            && !"null".equals(plan.getObject("cardInfo").getString("id"))) {
-                        switch (plan.getString("periodicity", "")) {
-                            case "monthly":
-                                // test if we have to make pay him (or her) !
-                                long paidDate = plan.getLong("paidDate");
-                                Calendar initialPaidDate = Calendar.getInstance();
-                                initialPaidDate.setTime(new Date(paidDate));
-                                initialPaidDate.add(Calendar.MONTH, 1);
-                                Calendar now = Calendar.getInstance();
-                                now.setTime(new Date());
-                                // test if we are the last day of the next month following the last fee
-                                if (now.after(initialPaidDate)) {
-                                    // 1- Trigger payment
-                                    Payment payment = new Payment();
-                                    int amount = 0;
-                                    if (getContainer().config().getObject("runtime").getObject("plan").containsField(plan.getString("levelPlan"))) {
-                                        amount = getContainer().config().getObject("runtime").getObject("plan").getObject(plan.getString("levelPlan")).getInteger("price");
-                                    }
-                                    if (amount == 0) {
-                                        // FREEMIUM, nothing to do
-                                        utils.sendStatusJson(true, message);
-                                        return;
-                                    }
-                                    payment.setAmount(amount * 100);
-                                    payment.setCurrency("EUR");
-                                    Customer customer = new Customer();
-                                    customer.setFirst_name(user.getString("firstname"));
-                                    customer.setLast_name(user.getString("name"));
-                                    customer.setEmail(user.getObject("contact").getString("email"));
-                                    payment.setCustomer(customer);
-                                    payment.setNotification_url(config.getString("ipn_url"));
-                                    payment.setPayment_method(plan.getObject("cardInfo").getString("id"));
-                                    Map<String, String> metaDatas = new HashMap<>();
-                                    metaDatas.put("customer_id", user.getString("_id"));
-                                    metaDatas.put("plan_id", String.valueOf(i));
-                                    metaDatas.put("locale", user.getObject("country").getString("local"));
-                                    payment.setMetadata(metaDatas);
-                                    payment.setSave_card(false);
-                                    payment.setForce_3ds(true);
-
-                                    final int finalAmount = amount;
-                                    final int finalI = i;
-                                    HttpClientRequest request =
-                                            client.post(config.getString("basePath") + "/payments",
-                                                    new Handler<HttpClientResponse>() {
-                                                        @Override
-                                                        public void handle(final HttpClientResponse resp) {
-                                                            if (resp.statusCode() >= 200 &&
-                                                                    resp.statusCode() < 400) {
-                                                                resp.bodyHandler(new Handler<Buffer>() {
-                                                                    @Override
-                                                                    public void handle(Buffer buffer) {
-                                                                        // The entire response body has been received
-                                                                        JsonObject res =
-                                                                                new JsonObject(buffer.toString());
-                                                                        ((JsonObject) user.getObject("account")
-                                                                                .getArray("listPlan")
-                                                                                .get(finalI))
-                                                                                .putNumber("amountPaid", finalAmount);
-                                                                        ((JsonObject) user.getObject("account")
-                                                                                .getArray("listPlan")
-                                                                                .get(finalI))
-                                                                                .putString("paymentId",
-                                                                                        res.getString("id"));
-                                                                        ((JsonObject) user.getObject("account")
-                                                                                .getArray("listPlan")
-                                                                                .get(finalI))
-                                                                                .putString("periodicity", "monthly");
-                                                                        if (res.getObject("card")
-                                                                                .getString("id", null) != null) {
-                                                                            ((JsonObject) user.getObject("account")
-                                                                                    .getArray("listPlan")
-                                                                                    .get(finalI))
-                                                                                    .putObject("cardInfo",
-                                                                                            res.getObject("card"));
-                                                                        }
-                                                                        try { // NOSONAR
-                                                                            ((JsonObject) user.getObject("account")
-                                                                                    .getArray("listPlan")
-                                                                                    .get(finalI))
-                                                                                    .putString("cardId",
-                                                                                            res.getString("id"));
-                                                                            mongo.save(user, User.class);
-                                                                            utils.sendStatusJson(true, message);
-                                                                        } catch (QaobeeException e) {
-                                                                            LOG.error(e.getMessage(), e);
-                                                                            utils.sendErrorJ(message, e.getCode(),
-                                                                                    e.getMessage());
-                                                                        }
-                                                                    }
-                                                                });
-                                                            } else {
-                                                                LOG.error(resp.statusCode() + " : " +
-                                                                        resp.statusMessage());
-                                                                utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR,
-                                                                        resp.statusCode() + " : " +
-                                                                                resp.statusMessage());
-                                                            }
-                                                        }
-                                                    });
-                                    request.putHeader("Authorization", "Bearer " + config.getString("api_key"))
-                                            .putHeader("Content-Type", "application/json");
-                                    JsonObject requestBody = new JsonObject(Json.encode(payment));
-                                    requestBody.removeField("hosted_payment");
-                                    request.putHeader("Content-Length",
-                                            String.valueOf(requestBody.toString().length()));
-                                    request.write(requestBody.toString());
-                                    request.end();
-                                    break;
-                                } else {
-                                    utils.sendStatusJson(false, message);
-                                }
-                            default:
-                                utils.sendStatusJson(false, message);
-                                break;
+                    if (plan != null && plan.containsField(LEVEL_PLAN_FIELD)
+                            && plan.containsField(CARD_INFO_FIELD)
+                            && plan.getObject(CARD_INFO_FIELD) != null
+                            && !"null".equals(plan.getObject(CARD_INFO_FIELD).getString("id"))) {
+                        String s = plan.getString("periodicity", "");
+                        if (MONTHLY.equals(s)) {
+                            triggerMonthly(plan, message, user, i);// test if we have to make pay him (or her) !
+                        } else {
+                            utils.sendStatusJson(false, message);
                         }
                     } else {
                         utils.sendStatusJson(false, message);
@@ -461,41 +248,237 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         });
     }
 
+    private void sendPayplugPayment(final RequestWrapper req, final int planId, final long amount, final Message<String> message, String requestBody) {
+        client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
+            @Override
+            public void handle(final HttpClientResponse resp) {
+                if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
+                    resp.bodyHandler(new Handler<Buffer>() {
+                        @Override
+                        public void handle(Buffer buffer) {
+                            handlePayplugPaymentResponse(buffer, req, planId, amount, message);
+                        }
+                    });
+                } else {
+                    utils.sendError(message, new QaobeeException(ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage()));
+                }
+            }
+        })
+                .putHeader("Authorization", "Bearer " + config.getString("api_key"))
+                .putHeader(HTTP.CONTENT_TYPE, "application/json")
+                .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody.length()))
+                .write(requestBody).end();
+    }
+
+    private void triggerMonthly(JsonObject plan, Message<JsonObject> message, JsonObject user, int planId) {
+        long paidDate = plan.getLong(PAID_DATE_FIELD);
+        Calendar initialPaidDate = Calendar.getInstance();
+        initialPaidDate.setTime(new Date(paidDate));
+        initialPaidDate.add(Calendar.MONTH, 1);
+        Calendar now = Calendar.getInstance();
+        now.setTime(new Date());
+        // test if we are the last day of the next month following the last fee
+        if (now.after(initialPaidDate)) {
+            // 1- Trigger payment
+            Payment payment = new Payment();
+            int amount = 0;
+            if (getContainer().config().getObject(RUNTIME).getObject("plan").containsField(plan.getString(LEVEL_PLAN_FIELD))) {
+                amount = getContainer().config().getObject(RUNTIME).getObject("plan").getObject(plan.getString(LEVEL_PLAN_FIELD)).getInteger("price");
+            }
+            if (amount == 0) {
+                // FREEMIUM, nothing to do
+                utils.sendStatusJson(true, message);
+                return;
+            }
+            payment.setAmount(amount * 100);
+            payment.setCurrency("EUR");
+            Customer customer = new Customer();
+            customer.setFirst_name(user.getString("firstname"));
+            customer.setLast_name(user.getString("name"));
+            customer.setEmail(user.getObject("contact").getString("email"));
+            payment.setCustomer(customer);
+            payment.setNotification_url(config.getString("ipn_url"));
+            payment.setPayment_method(plan.getObject(CARD_INFO_FIELD).getString("id"));
+            Map<String, String> metaDatas = new HashMap<>();
+            metaDatas.put(CUSTOMER_ID_FIELD, user.getString("_id"));
+            metaDatas.put(PARAM_PLAN_ID, String.valueOf(planId));
+            metaDatas.put(LOCALE_FIELD, user.getObject("country").getString("local"));
+            payment.setMetadata(metaDatas);
+            payment.setSave_card(false);
+            payment.setForce_3ds(true);
+            sendPayplugRecurringPayment(user, planId, amount, message, new JsonObject(Json.encode(payment)).encode());
+        } else {
+            utils.sendStatusJson(false, message);
+        }
+    }
+
+    private void sendPayplugRecurringPayment(final JsonObject user, final int planId, final long amount, final Message<JsonObject> message, String requestBody) {
+        client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
+                    @Override
+                    public void handle(final HttpClientResponse resp) {
+                        if (resp.statusCode() >= 200 &&resp.statusCode() < 400) {
+                            resp.bodyHandler(new Handler<Buffer>() {
+                                @Override
+                                public void handle(Buffer buffer) {
+                                    // The entire response body has been received
+                                    JsonObject res = new JsonObject(buffer.toString());
+                                    ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                                            .getArray(LIST_PLAN_FIELD)
+                                            .get(planId))
+                                            .putNumber("amountPaid", amount);
+                                    ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                                            .getArray(LIST_PLAN_FIELD)
+                                            .get(planId))
+                                            .putString(PAYMENT_ID_FIELD, res.getString("id"));
+                                    ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                                            .getArray(LIST_PLAN_FIELD)
+                                            .get(planId))
+                                            .putString("periodicity", MONTHLY);
+                                    if (res.getObject("card").getString("id", null) != null) {
+                                        ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                                                .getArray(LIST_PLAN_FIELD)
+                                                .get(planId))
+                                                .putObject(CARD_INFO_FIELD, res.getObject("card"));
+                                    }
+                                    try {
+                                        ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                                                .getArray(LIST_PLAN_FIELD)
+                                                .get(planId))
+                                                .putString("cardId", res.getString("id"));
+                                        mongo.save(user, User.class);
+                                        utils.sendStatusJson(true, message);
+                                    } catch (QaobeeException e) {
+                                        LOG.error(e.getMessage(), e);
+                                        utils.sendErrorJ(message, e.getCode(), e.getMessage());
+                                    }
+                                }
+                            });
+                        } else {
+                            LOG.error(resp.statusCode() + " : " + resp.statusMessage());
+                            utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR,
+                                    resp.statusCode() + " : " +
+                                            resp.statusMessage());
+                        }
+                    }
+                }
+        )
+                .putHeader("Authorization", "Bearer " + config.getString("api_key"))
+                .putHeader(HTTP.CONTENT_TYPE, "application/json")
+                .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody.length()))
+                .write(requestBody)
+                .end();
+    }
+
+    private void handlePayplugPaymentResponse(Buffer buffer, RequestWrapper req, int planId, long amount, Message<String> message) {
+        try {
+            // The entire response body has been received
+            JsonObject res = new JsonObject(buffer.toString());
+            req.getUser().getAccount().getListPlan().get(planId).setAmountPaid(amount);
+            req.getUser().getAccount().getListPlan().get(planId).setPaiementURL(res.getObject(HOSTED_PAYMENT_FIELD).getString(PAYMENT_URL_FIELD));
+            req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
+            req.getUser().getAccount().getListPlan().get(planId).setPeriodicity(MONTHLY);
+            if (res.getObject("card").getString("id", null) != null) {
+                req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.<Card>decodeValue(res.getObject("card").encode(), Card.class));
+            }
+            mongo.save(req.getUser());
+            JsonObject messageResponse = new JsonObject()
+                    .putBoolean(STATUS, true)
+                    .putString(PAYMENT_URL_FIELD, res.getObject(HOSTED_PAYMENT_FIELD).getString(PAYMENT_URL_FIELD));
+            req.getUser().getAccount().getListPlan().get(planId).setCardId(res.getString("id"));
+            message.reply(messageResponse.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+
+    }
+
+    private JsonObject generatePayment(int amount, RequestWrapper req, int planId) {
+        Payment payment = new Payment();
+        payment.setAmount(amount * 100);
+        payment.setCurrency("EUR");
+        Customer customer = new Customer();
+        customer.setFirst_name(req.getUser().getFirstname());
+        customer.setLast_name(req.getUser().getName());
+        customer.setEmail(req.getUser().getContact().getEmail());
+        payment.setCustomer(customer);
+        HostedPayment hostedPayment = new HostedPayment();
+        hostedPayment.setCancel_url(config.getString("cancel_url"));
+        hostedPayment.setReturn_url(config.getString("return_url"));
+        payment.setHosted_payment(hostedPayment);
+        payment.setNotification_url(config.getString("ipn_url"));
+        Map<String, String> metaDatas = new HashMap<>();
+        metaDatas.put(CUSTOMER_ID_FIELD, req.getUser().get_id());
+        metaDatas.put(PARAM_PLAN_ID, String.valueOf(planId));
+        metaDatas.put(LOCALE_FIELD, req.getLocale());
+        payment.setMetadata(metaDatas);
+        payment.setSave_card(true);
+        payment.setForce_3ds(true);
+        JsonObject requestBody = new JsonObject(Json.encode(payment));
+        requestBody.removeField("payment_method");
+        return requestBody;
+    }
+
+    private void sendPaymentMail(final JsonObject body, int planId, final User u, final Message<String> message) {
+        final JsonObject tplReq = new JsonObject();
+        tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
+        tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateRefusedCardBody(u,
+                body.getObject(METADATA_FIELD).getString(LOCALE_FIELD),
+                u.getAccount().getListPlan().get(planId),
+                body.getObject("failure").getString("code"), getContainer().config()));
+
+        vertx.eventBus()
+                .send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
+                    @Override
+                    public void handle(final Message<JsonObject> tplResp) {
+                        final String tplRes = tplResp.body().getString("result");
+                        final JsonObject emailReq = new JsonObject();
+                        emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
+                        emailReq.putString("to", u.getContact().getEmail());
+                        emailReq.putString("subject", Messages.getString("mail.payment.subject", body.getObject(METADATA_FIELD).getString(LOCALE_FIELD)));
+                        emailReq.putString("content_type", "text/html");
+                        emailReq.putString("body", tplRes);
+                        vertx.eventBus().publish("mailer.mod", emailReq);
+                        utils.sendStatus(false, message);
+                    }
+                });
+    }
+
     private void makePayment(final JsonObject body, JsonObject user, final User u, int planId, final Message<String> message) throws QaobeeException {
         if (body.containsField("is_paid") && body.getBoolean("is_paid")) {
-            if (user.getObject("account").getArray("listPlan").size() < planId) {
+            if (user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).size() < planId) {
                 throw new IllegalArgumentException("some metadatas are wrong");
             }
-            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
+            ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId))
                     .putString(STATUS, "paid");
-            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                    .putObject("cardInfo", body.getObject("card"));
+            ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId))
+                    .putObject(CARD_INFO_FIELD, body.getObject("card"));
 
-            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                    .putNumber("paidDate", body.getLong("created_at") * 1000);
-            if (!((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).containsField("shippingList")
-                    || ((JsonObject) user.getObject("account").getArray("listPlan").get(planId)).getArray("shippingList", null) == null) {
-                ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                        .putArray("shippingList", new JsonArray());
+            ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId))
+                    .putNumber(PAID_DATE_FIELD, body.getLong("created_at") * 1000);
+            if (!((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId)).containsField(SHIPPING_LIST_FIELD)
+                    || ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId)).getArray(SHIPPING_LIST_FIELD, null) == null) {
+                ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId))
+                        .putArray(SHIPPING_LIST_FIELD, new JsonArray());
             }
             JsonObject payment = new JsonObject();
 
             // TODO : Verify if created_at evolve with recurring payments
-            payment.putNumber("paidDate", body.getLong("created_at") * 1000L);
+            payment.putNumber(PAID_DATE_FIELD, body.getLong("created_at") * 1000L);
             payment.putNumber("amountPaid", body.getLong("amount") / 100L);
-            payment.putObject("cardInfo", body.getObject("card"));
-            payment.putString("paymentId",
-                    ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                            .getString("paymentId"));
+            payment.putObject(CARD_INFO_FIELD, body.getObject("card"));
+            payment.putString(PAYMENT_ID_FIELD,
+                    ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId))
+                            .getString(PAYMENT_ID_FIELD));
             payment.putString("id", UUID.randomUUID().toString());
 
-            ((JsonObject) user.getObject("account").getArray("listPlan").get(planId))
-                    .getArray("shippingList").add(payment);
+            ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId))
+                    .getArray(SHIPPING_LIST_FIELD).add(payment);
             mongo.save(user, User.class);
             final JsonObject tplReq = new JsonObject();
             tplReq.putString(TemplatesVerticle.TEMPLATE, "payment.html");
             tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generatePaymentBody(u,
-                    body.getObject("metadata").getString("locale"),
+                    body.getObject(METADATA_FIELD).getString(LOCALE_FIELD),
                     u.getAccount().getListPlan().get(planId), getContainer().config()));
 
             vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq,
@@ -504,11 +487,11 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                         public void handle(final Message<JsonObject> tplResp) {
                             final String tplRes = tplResp.body().getString("result");
                             final JsonObject emailReq = new JsonObject();
-                            emailReq.putString("from", getContainer().config().getObject("runtime").getString("mail.from"));
+                            emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
                             emailReq.putString("to", u.getContact().getEmail());
                             emailReq.putString("subject",
                                     Messages.getString("mail.payment.subject",
-                                            body.getObject("metadata").getString("locale")));
+                                            body.getObject(METADATA_FIELD).getString(LOCALE_FIELD)));
                             emailReq.putString("content_type", "text/html");
                             emailReq.putString("body", tplRes);
                             vertx.eventBus().publish("mailer.mod", emailReq);

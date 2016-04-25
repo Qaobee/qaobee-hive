@@ -109,18 +109,17 @@ public class Main extends AbstractGuiceVerticle {
             @Override
             public void handle(final HttpServerRequest req) {
                 enableCors(req);
-                final JsonObject request = new JsonObject();
-                request.putString(COLLECTION, req.params().get(COLLECTION));
-                request.putString("id", req.params().get("id"));
+                final JsonObject request = new JsonObject()
+                        .putString(COLLECTION, req.params().get(COLLECTION))
+                        .putString("id", req.params().get("id"));
                 eb.send(AssetVerticle.GET, request, new Handler<Message<JsonObject>>() {
                     @Override
                     public void handle(Message<JsonObject> message) {
                         if (message.body().containsField(CONTENT_LENGTH)) {
-                            req.response().putHeader(CONTENT_LENGTH, message.body().getString(CONTENT_LENGTH));
-                            req.response().end(new Buffer(message.body().getBinary("asset")));
+                            req.response().putHeader(CONTENT_LENGTH, message.body().getString(CONTENT_LENGTH))
+                                    .end(new Buffer(message.body().getBinary("asset")));
                         } else {
-                            req.response().setStatusCode(404);
-                            req.response().end(message.body().getString(MESSAGE));
+                            req.response().setStatusCode(404).end(message.body().getString(MESSAGE));
                         }
                     }
                 });
@@ -144,13 +143,12 @@ public class Main extends AbstractGuiceVerticle {
             public void handle(final HttpServerRequest req) {
                 startTimer("main.avatar");
                 enableCors(req);
-                final JsonObject request = new JsonObject();
-                request.putString(COLLECTION, req.params().get(COLLECTION));
-                request.putString("field", req.params().get("field"));
-                request.putString("uid", req.params().get("uid"));
-                request.putString("token", req.headers().get("token"));
-                request.putString("locale", req.headers().get(ACCEPT_LANGUAGE));
-
+                final JsonObject request = new JsonObject()
+                .putString(COLLECTION, req.params().get(COLLECTION))
+                        .putString("field", req.params().get("field"))
+                        .putString("uid", req.params().get("uid"))
+                        .putString("token", req.headers().get("token"))
+                        .putString("locale", req.headers().get(ACCEPT_LANGUAGE));
                 // We first pause the request so we don't receive any data between now and when the file is opened
                 String datadir = System.getProperty("user.home");
                 if (envs.containsKey("OPENSHIFT_DATA_DIR")) {
@@ -162,35 +160,7 @@ public class Main extends AbstractGuiceVerticle {
                     LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
                 }
                 request.putString("datadir", datadir);
-                req.expectMultiPart(true);
-                req.uploadHandler(new Handler<HttpServerFileUpload>() {
-                    @Override
-                    public void handle(final HttpServerFileUpload upload) {
-                        final String filename = new StringBuilder().append(dir.getAbsolutePath()).append("/").append(req.params().get("uid")).append(".")
-                                .append(FilenameUtils.getExtension(upload.filename())).toString();
-                        request.putString("filename", filename);
-                        request.putString("contentType", upload.contentType());
-                        if (vertx.fileSystem().existsSync(filename)) {
-                            vertx.fileSystem().deleteSync(filename);
-                        }
-                        upload.streamToFileSystem(filename);
-                        upload.endHandler(new Handler<Void>() {
-                            @Override
-                            public void handle(Void event) {
-                                upload.pause();
-                                eb.send(AssetVerticle.ADD, request, new Handler<Message<JsonObject>>() {
-                                    @Override
-                                    public void handle(Message<JsonObject> message) {
-                                        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                                        req.response().setStatusCode(message.body().getInteger("statusCode"));
-                                        req.response().end(message.body().getString(MESSAGE));
-                                        stopTimer("main.avatar");
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+                req.expectMultiPart(true).uploadHandler(getUploadHandler(request, dir, req));
             }
         }).optionsWithRegEx(".*", new Handler<HttpServerRequest>() {
             @Override
@@ -228,11 +198,11 @@ public class Main extends AbstractGuiceVerticle {
                         wrapper.setPath(path);
                         startTimer(StringUtils.join(wrapper.getPath(), '.'));
                         // Remontée de métriques : nombre de requêtes
-                        final JsonObject json = new JsonObject();
-                        json.putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'));
-                        json.putString("action", "mark");
+                        final JsonObject json = new JsonObject()
+                                .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
+                                .putString("action", "mark");
                         eb.send("metrix", json);
-                        String busAddress = config.getObject("runtime").getInteger("version") + "." + StringUtils.join(path, '.');
+                        String busAddress = config.getObject(RUNTIME).getInteger("version") + "." + StringUtils.join(path, '.');
                         boolean succeded = true;
                         if (rules.containsKey(busAddress)) {
                             succeded = testRequest(req, busAddress, wrapper);
@@ -269,26 +239,24 @@ public class Main extends AbstractGuiceVerticle {
             @Override
             public Promise<List<String>, Void> run(final List<String> value) {
                 server.requestHandler(rm);
-                String ip = config.getObject("runtime").getString("defaultHost");
-                int port = config.getObject("runtime").getInteger("defaultPort");
+                String ip = config.getObject(RUNTIME).getString("defaultHost");
+                int port = config.getObject(RUNTIME).getInteger("defaultPort");
                 if (envs.containsKey("OPENSHIFT_VERTX_IP")) {
                     ip = envs.get("OPENSHIFT_VERTX_IP");
                 }
                 if (envs.containsKey("OPENSHIFT_VERTX_PORT")) {
                     port = Integer.parseInt(envs.get("OPENSHIFT_VERTX_PORT"));
                 }
-
                 sockJSServer = vertx.createSockJSServer(server);
                 JsonObject wsConfig = new JsonObject().putString("prefix", "/eventbus");
-
                 JsonArray outboundPermitted = new JsonArray();
                 JsonArray inboundPermitted = new JsonArray();
                 outboundPermitted.add(new JsonObject());
                 inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
-                sockJSServer.setHook(new ServerHook(config.getObject("runtime").getString("site.url")));
+                sockJSServer.setHook(new ServerHook(config.getObject(RUNTIME).getString("site.url")));
                 sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
                 server.listen(port, ip);
-                LOG.info("The http server is started on : " + ip + ":" +port);
+                LOG.info("The http server is started on : " + ip + ":" + port);
                 startedResult.setResult(null);
                 return null;
             }
@@ -301,11 +269,39 @@ public class Main extends AbstractGuiceVerticle {
         });
     }
 
+    private Handler<HttpServerFileUpload> getUploadHandler(final JsonObject request, final File dir, final HttpServerRequest req) {
+        return new Handler<HttpServerFileUpload>() {
+            @Override
+            public void handle(final HttpServerFileUpload upload) {
+                final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
+                request.putString("filename", filename).putString("contentType", upload.contentType());
+                if (vertx.fileSystem().existsSync(filename)) {
+                    vertx.fileSystem().deleteSync(filename);
+                }
+                upload.streamToFileSystem(filename).endHandler(new Handler<Void>() {
+                    @Override
+                    public void handle(Void event) {
+                        upload.pause();
+                        vertx.eventBus().send(AssetVerticle.ADD, request, new Handler<Message<JsonObject>>() {
+                            @Override
+                            public void handle(Message<JsonObject> message) {
+                                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON)
+                                        .setStatusCode(message.body().getInteger("statusCode"))
+                                        .end(message.body().getString(MESSAGE));
+                                stopTimer("main.avatar");
+                            }
+                        });
+                    }
+                });
+            }
+        };
+    }
+
     /**
      * @param req        Request
      * @param busAddress address
      * @param wrapper    request wrapper
-     * @Return success
+     * @return success
      */
     private boolean testRequest(HttpServerRequest req, String busAddress, RequestWrapper wrapper) {
         try {
@@ -364,7 +360,7 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @param restMod Class to scan
      */
-    private void manageRules(Class<?> restMod) {
+    private static void manageRules(Class<?> restMod) {
         Reflections reflections = new Reflections(restMod, new MethodAnnotationsScanner());
         for (Method m : reflections.getMethodsAnnotatedWith(VerticleHandler.class)) {
             for (Rule r : m.getAnnotation(VerticleHandler.class).value()) {
