@@ -63,7 +63,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ID = "_id";
 
-	/* List of parameters */
+    // List of parameters */
     /**
      * Label of the team
      */
@@ -197,9 +197,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
             }
         };
 
-		/*
-         * Handlers registration
-		 */
+        // Handlers registration
         vertx.eventBus().registerHandler(ADD, add);
         vertx.eventBus().registerHandler(GET, get);
         vertx.eventBus().registerHandler(UPDATE, update);
