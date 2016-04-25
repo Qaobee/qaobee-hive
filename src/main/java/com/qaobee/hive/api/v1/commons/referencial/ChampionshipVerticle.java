@@ -325,11 +325,9 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                 }
             }
         };
-        
-        
-	   	/*
-         * Handlers declaration.
-		 */
+
+
+        // Handlers declaration.
         vertx.eventBus().registerHandler(GET_LIST, getListChampionshipsHandler);
         vertx.eventBus().registerHandler(ADD, addChampionshipHandler);
         vertx.eventBus().registerHandler(GET, getChampionshipHandler);
