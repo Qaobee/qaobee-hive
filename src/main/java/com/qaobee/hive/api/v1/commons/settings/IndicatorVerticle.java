@@ -105,15 +105,15 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      */
     @Override
     @VerticleHandler({
-                             @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
-                                   scope = Rule.Param.REQUEST),
-                             @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
-                                   scope = Rule.Param.BODY),
-                             @Rule(address = GET_BY_CODE, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
-                                   scope = Rule.Param.BODY)
-                     })
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+                    scope = Rule.Param.REQUEST),
+            @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+                    mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
+                    scope = Rule.Param.BODY),
+            @Rule(address = GET_BY_CODE, method = Constantes.POST, logged = true,
+                    mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
+                    scope = Rule.Param.BODY)
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");

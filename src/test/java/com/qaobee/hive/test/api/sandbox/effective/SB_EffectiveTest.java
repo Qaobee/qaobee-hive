@@ -17,23 +17,16 @@
  */
 package com.qaobee.hive.test.api.sandbox.effective;
 
-import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_EffectiveVerticle;
-import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
-import com.qaobee.hive.business.model.transversal.Member;
-import com.qaobee.hive.business.model.transversal.Role;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
-import java.util.*;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
 
 /**
  * The type Effective test.
@@ -41,436 +34,299 @@ import java.util.*;
  * @author cke
  */
 public class SB_EffectiveTest extends VertxJunitSupport {
-
     /**
-     * Tests of getting a list of members of effective for one category
+     * Gets list members by category.
      */
     @Test
     public void getListMembersByCategory() {
-
         populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-		/* list of parameters */
-        final Map<String, List<String>> params = new HashMap<>();
-
-        params.put(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, Collections.singletonList("558b0fc0bd2e39cdab651e21"));
-        params.put(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, Collections.singletonList("sen"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
-        JsonArray result = new JsonArray(reply);
-
-        Assert.assertEquals(1, result.size());
-
-        JsonObject itemOne = result.get(0);
-        JsonArray members = itemOne.getArray("members");
-
-        Assert.assertEquals(16, members.size());
+        String id = "558b0fc0bd2e39cdab651e21";
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, id)
+                .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "sen")
+                .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1))
+                .body("[0].members", hasSize(16));
     }
 
     /**
-     * Tests of getting a list of members of effective for one unknown category
+     * Gets list members by unknow category.
      */
     @Test
     public void getListMembersByUnknowCategory() {
-
         populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-		/* list of parameters */
-        final Map<String, List<String>> params = new HashMap<>();
-
-        params.put(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, Collections.singletonList("558b0fc0bd2e39cdab651e21"));
-        params.put(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, Collections.singletonList("zzz"));
-        req.setParams(params);
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken()));
-        Assert.assertTrue("Bad parameters", resultUpdate.getString("message").contains("No Effective found"));
+        String id = "558b0fc0bd2e39cdab651e21";
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, id)
+                .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "zzz")
+                .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**
-     * Tests of getting a list of members without sandbox config id
+     * Gets list members by category with non logged user.
      */
     @Test
-    public void getListMembersMissingSandBoxCfgId() {
-
-        populate(POPULATE_ONLY, DATA_USERS);
-        User user = generateLoggedUser("54160977d5bd065a1bb1e565");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken()));
-        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [sandBoxCfgId]"));
+    public void getListMembersByCategoryWithNonLoggedUser() {
+        given().when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Tests of getting a list of members -> Bad method request
+     * Gets list members by category with wrong http method.
      */
     @Test
-    public void getListMembersBadMethodRequest() {
-
-        populate(POPULATE_ONLY, DATA_USERS);
-        User user = generateLoggedUser("54160977d5bd065a1bb1e565");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.PUT);
-        req.setUser(user);
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken()));
-        Assert.assertTrue("Bad method request", resultUpdate.getString("message").contains("PUT is not allowed"));
+    public void getListMembersByCategoryWithWrongHttpMethod() {
+        given().when().post(getURL(SB_EffectiveVerticle.GET_LIST))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
-     * Tests of getting a list of members without sandbox config id
+     * Gets list members by category with missing parameters.
      */
     @Test
-    public void getListMembersMissingUser() {
-
-        User user = null;
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        params.put(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, Collections.singletonList("559d268318e3cb71c60d9649"));
-        req.setParams(params);
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET_LIST, req, ""));
-        Assert.assertTrue("User not connected", resultUpdate.getString("message").contains("Please log in first"));
+    public void getListMembersByCategoryWithMissingParameters() {
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
-     * Tests get for EffectiveVerticle
+     * Gets list members by category with wrong parameters.
      */
     @Test
-    public void getObjectByIdOk() {
+    public void getListMembersByCategoryWithWrongParameters() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, "bla")
+                .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
 
+    /**
+     * Gets effective.
+     */
+    @Test
+    public void getEffective() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(SB_EffectiveVerticle.PARAM_ID, Collections.singletonList("550b31f925da07681592db23"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-
-        JsonArray members = result.getArray("members");
-        Assert.assertEquals(16, members.size());
+        String id = "550b31f925da07681592db23";
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_EffectiveVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("_id", is(id))
+                .body("members", hasSize(16));
     }
 
     /**
-     * Tests get for EffectiveVerticle -> Bad method request
+     * Gets effective with non logged user.
      */
     @Test
-    public void getObjectByIdBadMethodRequest() {
-
-        populate(POPULATE_ONLY, DATA_USERS);
-        User user = generateLoggedUser("54160977d5bd065a1bb1e565");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.PUT);
-        req.setUser(user);
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("Bad method request", resultUpdate.getString("message").contains("PUT is not allowed"));
+    public void getEffectiveWithNonLoggedUser() {
+        given().when().get(getURL(SB_EffectiveVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Tests get for EffectiveVerticle
-     * with missing mandatory fields
+     * Gets effective with wrong http method.
      */
     @Test
-    public void getObjectByIdKo() {
-
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("Missing mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
-        // id
-        params.put(CountryVerticle.PARAM_ID, Collections.singletonList(""));
-        req.setParams(params);
-
-        resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.GET, req, user.getAccount().getToken()));
-        Assert.assertTrue("Wrong format mandatory parameters", resultUpdate.getString("message").contains("Missing mandatory parameters : [_id]"));
-
+    public void getEffectiveWithWrongHttpMethod() {
+        given().when().post(getURL(SB_EffectiveVerticle.GET))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
-     * Tests add effective
+     * Gets effective with missing parameters.
+     */
+    @Test
+    public void getEffectiveWithMissingParameters() {
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .when().get(getURL(SB_EffectiveVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Gets effective with wrong parameters.
+     */
+    @Test
+    public void getEffectiveWithWrongParameters() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        User user = generateLoggedUser();
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EffectiveVerticle.PARAM_ID, "bla")
+                .when().get(getURL(SB_EffectiveVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
+
+    /**
+     * Add effective.
      */
     @Test
     public void addEffective() {
-
-        populate(POPULATE_ONLY, DATA_USERS);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        CategoryAge categoryAge = new CategoryAge();
-        categoryAge.setCode("u19");
-        categoryAge.setAgeMax(18);
-        categoryAge.setAgeMin(17);
-        categoryAge.setLabel("U19");
-        categoryAge.setGenre("Masculin");
-        categoryAge.setOrder(4);
-
-        List<Member> members = new ArrayList<Member>();
-        Role role;
-        Member member;
-        for (int i = 0; i < 10; i++) {
-            member = new Member();
-            member.setPersonId(i + "test");
-            role = new Role();
-            role.setCode("player");
-            role.setLabel("Joueur");
-            member.setRole(role);
-
-            members.add(member);
-        }
-
-        SB_Effective effective = new SB_Effective();
-        effective.setSandBoxCfgId("idBidon");
-        effective.setCategoryAge(categoryAge);
-        effective.setMembers(members);
-
-        req.setMethod(Constantes.PUT);
-
-        req.setBody(Json.encode(effective));
-
-        final String reply = sendOnBus(SB_EffectiveVerticle.ADD, req, user.getAccount().getToken());
-        JsonObject result = new JsonObject(reply);
-        String id = result.getString("_id");
-
-        Assert.assertNotNull(id);
-        JsonArray listMember = result.getArray("members");
-
-        Assert.assertEquals(10, listMember.size());
-    }
-
-    /**
-     * Tests add effective -> Bad method request
-     */
-    @Test
-    public void addEffectiveBadMethodRequest() {
-
-        populate(POPULATE_ONLY, DATA_USERS);
-        User user = generateLoggedUser("54160977d5bd065a1bb1e565");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.ADD, req, user.getAccount().getToken()));
-        Assert.assertTrue("Bad method request", resultUpdate.getString("message").contains("GET is not allowed"));
-    }
-
-    /**
-     * Tests add effective
-     */
-    @Test
-    public void addEffectiveMissingUser() {
-
-        populate(POPULATE_ONLY, DATA_USERS);
-        User user = null;
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        CategoryAge categoryAge = new CategoryAge();
-        categoryAge.setCode("u19");
-        categoryAge.setAgeMax(18);
-        categoryAge.setAgeMin(17);
-        categoryAge.setLabel("U19");
-        categoryAge.setGenre("Masculin");
-        categoryAge.setOrder(4);
-
-        List<Member> members = new ArrayList<Member>();
-        Role role;
-        Member member;
-        for (int i = 0; i < 10; i++) {
-            member = new Member();
-            member.setPersonId(i + "test");
-            role = new Role();
-            role.setCode("player");
-            role.setLabel("Joueur");
-            member.setRole(role);
-
-            members.add(member);
-        }
-
-        SB_Effective effective = new SB_Effective();
-        effective.setSandBoxCfgId("idBidon");
-        effective.setCategoryAge(categoryAge);
-        effective.setMembers(members);
-
-        req.setMethod(Constantes.PUT);
-
-        req.setBody(Json.encode(effective));
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.ADD, req, ""));
-        Assert.assertTrue("User not connected", resultUpdate.getString("message").contains("Please log in first"));
-    }
-
-    /**
-     * Tests update effective, remove one person
-     */
-    @Test
-    public void updateRemovePerson() {
-
         populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
+        JsonObject effective = generateEffective();
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(effective.encode())
+                .when().post(getURL(SB_EffectiveVerticle.ADD))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("members", hasSize(effective.getArray("members").size()));
+    }
 
-        /* list of parameters */
-        final Map<String, List<String>> params = new HashMap<>();
+    /**
+     * Add effective with non logged user.
+     */
+    @Test
+    public void addEffectiveWithNonLoggedUser() {
+        given().when().post(getURL(SB_EffectiveVerticle.ADD))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
 
-        params.put(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, Collections.singletonList("558b0fc0bd2e39cdab651e21"));
-        params.put(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, Collections.singletonList("sen"));
-        req.setParams(params);
+    /**
+     * Add effective with wrong http method.
+     */
+    @Test
+    public void addEffectiveWithWrongHttpMethod() {
+        given().when().get(getURL(SB_EffectiveVerticle.ADD))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
 
-        final String reply = sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
-        JsonArray result = new JsonArray(reply);
-
-        Assert.assertEquals(1, result.size());
-
-        JsonObject itemOne = result.get(0);
-        JsonArray members = itemOne.getArray("members");
-        Assert.assertEquals(16, members.size());
-
+    /**
+     * Update effective remove one member.
+     */
+    @Test
+    public void updateEffectiveRemoveOneMember() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        String id = "550b31f925da07681592db23";
+        JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_EffectiveVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("_id", is(id))
+                .body("members", hasSize(16)).extract().asString());
         JsonArray newMembers = new JsonArray();
-        for (Object object : members) {
+        for (Object object : effective.getArray("members")) {
             JsonObject item = (JsonObject) object;
             if (!"550a05dadb8f8b6e2f51f4db".equals(item.getString("personId"))) {
                 newMembers.add(item);
             }
         }
-        itemOne.putArray("members", newMembers);
-
-        req.setMethod(Constantes.PUT);
-        req.setBody(itemOne.encode());
-        final String reply2 = sendOnBus(SB_EffectiveVerticle.UPDATE, req, user.getAccount().getToken());
-
-        JsonObject result2 = new JsonObject(reply2);
-        JsonArray membersUpdate = result2.getArray("members");
-
-        Assert.assertEquals(15, membersUpdate.size());
-
+        effective.putArray("members", newMembers);
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(effective.encode())
+                .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("members", hasSize(15));
     }
 
     /**
-     * test update effective, add one member
+     * Update effective add one member.
      */
     @Test
-    public void updateEffectiveAddMember() {
-
+    public void updateEffectiveAddOneMember() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
+        String id = "550b31f925da07681592db23";
+        JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_EffectiveVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("_id", is(id))
+                .body("members", hasSize(16)).extract().asString());
 
-        /* list of parameters */
-        final Map<String, List<String>> params = new HashMap<>();
-
-        params.put(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, Collections.singletonList("558b0fc0bd2e39cdab651e21"));
-        params.put(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, Collections.singletonList("sen"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_EffectiveVerticle.GET_LIST, req, user.getAccount().getToken());
-        JsonArray result = new JsonArray(reply);
-
-        Assert.assertEquals(1, result.size());
-
-        JsonObject effective = result.get(0);
-        JsonArray members = effective.getArray("members");
-        Assert.assertEquals(16, members.size());
-
-        Member member = new Member();
-        member.setPersonId("addMember");
-        Role role = new Role();
-        role.setCode("player");
-        role.setLabel("Joueur");
-        member.setRole(role);
-
-        members.add(Json.encode(member));
-
-        req.setMethod(Constantes.PUT);
-        req.setBody(effective.encode());
-        final String reply2 = sendOnBus(SB_EffectiveVerticle.UPDATE, req, user.getAccount().getToken());
-
-        JsonObject result2 = new JsonObject(reply2);
-        JsonArray membersUpdate = result2.getArray("members");
-
-        Assert.assertEquals(17, membersUpdate.size());
-
+        effective.getArray("members").add(new JsonObject()
+                .putString("_id", "test")
+                .putObject("role", new JsonObject()
+                        .putString("code", "player")
+                        .putString("label", "Joueur"))
+        );
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(effective.encode())
+                .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("members", hasSize(17));
     }
 
     /**
-     * test update effective, add one member
+     * Update effective with non logged user.
      */
     @Test
-    public void updateEffectiveMissingUser() {
-
-        User user = null;
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-
-        req.setMethod(Constantes.PUT);
-        req.setBody(Json.encode("toto"));
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.UPDATE, req, ""));
-        Assert.assertTrue("User not connected", resultUpdate.getString("message").contains("Please log in first"));
-
+    public void updateEffectiveWithNonLoggedUser() {
+        given().when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Tests update effective -> Bad method request
+     * Update effective with wrong http method.
      */
     @Test
-    public void updateEffectiveBadMethodRequest() {
-
-        populate(POPULATE_ONLY, DATA_USERS);
-        User user = generateLoggedUser("54160977d5bd065a1bb1e565");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-        JsonObject resultUpdate = new JsonObject(sendOnBus(SB_EffectiveVerticle.UPDATE, req, user.getAccount().getToken()));
-        Assert.assertTrue("Bad method request", resultUpdate.getString("message").contains("GET is not allowed"));
+    public void updateEffectiveWithWrongHttpMethod() {
+        given().when().get(getURL(SB_EffectiveVerticle.UPDATE))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
+
+    /**
+     * Update effective with missing parameters.
+     */
+    @Test
+    public void updateEffectiveWithMissingParameters() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        JsonObject effective = generateEffective();
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(effective.encode())
+                .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    private JsonObject generateEffective() {
+        JsonObject effective = new JsonObject()
+                .putObject("categoryAge", new JsonObject()
+                        .putString("code", "u19")
+                        .putString("label", "U19")
+                        .putString("genre", "Masculin")
+                        .putNumber("ageMax", 18)
+                        .putNumber("ageMin", 17)
+                        .putNumber("order", 4)
+                )
+                .putString("sandBoxCfgId", "blabla");
+        JsonArray members = new JsonArray();
+        for (int i = 0; i < 10; i++) {
+            members.add(new JsonObject()
+                    .putString("_id", i + "-test")
+                    .putObject("role", new JsonObject()
+                            .putString("code", "player")
+                            .putString("label", "Joueur"))
+            );
+        }
+        effective.putArray("members", members);
+        return effective;
+    }
+
 }

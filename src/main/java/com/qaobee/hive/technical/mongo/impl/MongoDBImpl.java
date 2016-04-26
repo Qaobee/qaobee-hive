@@ -164,29 +164,17 @@ public class MongoDBImpl implements MongoDB {
 
     @Override
     public String update(final JsonObject document, final Class<?> collection) {
-        final DBCollection coll = db.getCollection(collection.getSimpleName());
-        JsonObject q = new JsonObject();
-        JsonObject set = new JsonObject();
-        q.putString("_id", document.getString("_id"));
-        document.removeField("_id");
-        set.putObject("$set", document);
-        WriteResult res = coll.update(new BasicDBObject(q.toMap()), new BasicDBObject(set.toMap()));
-
-        return (String) res.getUpsertedId();
+        return update(document, collection.getSimpleName());
     }
 
     @Override
     public String update(final JsonObject document, final String collection) {
         final DBCollection coll = db.getCollection(collection);
-        JsonObject q = new JsonObject();
-        JsonObject set = new JsonObject();
-        q.putString("_id", document.getString("_id"));
+        JsonObject q = new JsonObject().putString("_id", document.getString("_id"));
         document.removeField("_id");
-        set.putObject("$set", document);
-        WriteResult res = coll.update(new BasicDBObject(q.toMap()), new BasicDBObject(set.toMap()));
-
-        return (String) res.getUpsertedId();
-
+        JsonObject set = new JsonObject().putObject("$set", document);
+        coll.update(new BasicDBObject(q.toMap()), new BasicDBObject(set.toMap()));
+        return q.getString("_id");
     }
 
     @Override
