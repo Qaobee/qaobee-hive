@@ -85,8 +85,8 @@ public class ChampionshipTest extends VertxJunitSupport {
     @Test
     public void getListChampionshipsWithWrongHttpMethod() {
         given().when().get(getURL(ChampionshipVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -230,8 +230,8 @@ public class ChampionshipTest extends VertxJunitSupport {
     @Test
     public void getChampionshipWithWrongHttpMethod() {
         given().when().post(getURL(ChampionshipVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -319,8 +319,8 @@ public class ChampionshipTest extends VertxJunitSupport {
     @Test
     public void addChampionshipWithWrongHttpMethod() {
         given().when().get(getURL(ChampionshipVerticle.ADD))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -400,8 +400,8 @@ public class ChampionshipTest extends VertxJunitSupport {
     @Test
     public void updateChampionshipWithWrongHttpMethod() {
         given().when().get(getURL(ChampionshipVerticle.UPDATE))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

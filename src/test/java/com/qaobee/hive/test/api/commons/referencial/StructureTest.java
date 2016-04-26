@@ -66,8 +66,8 @@ public class StructureTest extends VertxJunitSupport {
     public void getStructureByIdWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .post(getURL(StructureVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -119,8 +119,8 @@ public class StructureTest extends VertxJunitSupport {
     public void getStructuresListWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .get(getURL(StructureVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -222,8 +222,8 @@ public class StructureTest extends VertxJunitSupport {
     public void updateStructureWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .get(getURL(StructureVerticle.UPDATE))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -285,8 +285,8 @@ public class StructureTest extends VertxJunitSupport {
     public void addStructureWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .get(getURL(StructureVerticle.ADD))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

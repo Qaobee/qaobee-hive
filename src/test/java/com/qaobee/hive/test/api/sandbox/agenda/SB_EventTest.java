@@ -90,8 +90,8 @@ public class SB_EventTest extends VertxJunitSupport {
     @Test
     public void addEventWithWrongHttpMethod() {
         given().when().get(getURL(SB_EventVerticle.ADD))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -184,8 +184,8 @@ public class SB_EventTest extends VertxJunitSupport {
     @Test
     public void getListEventWithWrongHttpMethod() {
         given().when().get(getURL(SB_EventVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -247,8 +247,8 @@ public class SB_EventTest extends VertxJunitSupport {
     @Test
     public void getEventByIdWithWrongHttpMethod() {
         given().when().post(getURL(SB_EventVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -324,8 +324,8 @@ public class SB_EventTest extends VertxJunitSupport {
     @Test
     public void updateEventWithWrongHttpMethod() {
         given().when().get(getURL(SB_EventVerticle.UPDATE))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

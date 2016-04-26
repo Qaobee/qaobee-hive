@@ -28,6 +28,7 @@ public enum ExceptionCodes {
     /**
      * The http error.
      */
+    @Deprecated
     HTTP_ERROR(405),
     /**
      * The non active.

@@ -330,7 +330,11 @@ public class Main extends AbstractGuiceVerticle {
             }
         } catch (final NoSuchMethodException e) {
             LOG.error(e.getMessage(), e);
-            handleError(req, new QaobeeException(ExceptionCodes.HTTP_ERROR, e.getMessage()));
+            final JsonObject jsonResp = new JsonObject();
+            jsonResp.putBoolean("status", false);
+            jsonResp.putString(MESSAGE, "Nothing here");
+            jsonResp.putNumber("httpCode", 404);
+            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
             return false;
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);

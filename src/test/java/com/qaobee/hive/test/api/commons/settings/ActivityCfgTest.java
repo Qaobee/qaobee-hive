@@ -65,8 +65,8 @@ public class ActivityCfgTest extends VertxJunitSupport {
     public void getActivityCfgWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .post(getURL(ActivityCfgVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -143,8 +143,8 @@ public class ActivityCfgTest extends VertxJunitSupport {
     public void getParamsFieldsWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .post(getURL(ActivityCfgVerticle.PARAMS))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

@@ -134,8 +134,8 @@ public class NotificationsTest extends VertxJunitSupport {
                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
                .when().post(getURL(NotificationsVerticle.READ))
                .then().assertThat().statusCode(200)
-               .body("status", notNullValue())
-               .body("status", is(true));
+               .body(STATUS, notNullValue())
+               .body(STATUS, is(true));
 
         given().header(TOKEN, u.getAccount().getToken())
                .when().get(getURL(NotificationsVerticle.LIST))
@@ -149,8 +149,8 @@ public class NotificationsTest extends VertxJunitSupport {
                 .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
                 .when().post(getURL(NotificationsVerticle.READ))
                 .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
-                .body("status", is(true));
+                .body(STATUS, notNullValue())
+                .body(STATUS, is(true));
 
         given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(NotificationsVerticle.LIST))
@@ -192,8 +192,8 @@ public class NotificationsTest extends VertxJunitSupport {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                .when().get(getURL(NotificationsVerticle.READ))
-               .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-               .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -214,8 +214,8 @@ public class NotificationsTest extends VertxJunitSupport {
                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
                .when().delete(getURL(NotificationsVerticle.DEL))
                .then().assertThat().statusCode(200)
-               .body("status", notNullValue())
-               .body("status", is(true));
+               .body(STATUS, notNullValue())
+               .body(STATUS, is(true));
 
         given().header(TOKEN, u.getAccount().getToken())
                .when().get(getURL(NotificationsVerticle.LIST))
@@ -254,8 +254,8 @@ public class NotificationsTest extends VertxJunitSupport {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                .when().get(getURL(NotificationsVerticle.DEL))
-               .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-               .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -286,8 +286,8 @@ public class NotificationsTest extends VertxJunitSupport {
                .body(Json.encode(n))
                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                .then().assertThat().statusCode(200)
-               .body("status", notNullValue())
-               .body("status", is(true));
+               .body(STATUS, notNullValue())
+               .body(STATUS, is(true));
 
         given().header(TOKEN, u.getAccount().getToken())
                .when().get(getURL(NotificationsVerticle.LIST))
@@ -315,8 +315,8 @@ public class NotificationsTest extends VertxJunitSupport {
                .body(Json.encode(n))
                .when().post(getURL(NotificationsVerticle.ADD_TO_SANDBOX))
                .then().assertThat().statusCode(200)
-               .body("status", notNullValue())
-               .body("status", is(true));
+               .body(STATUS, notNullValue())
+               .body(STATUS, is(true));
     }
 
     /**
@@ -335,8 +335,8 @@ public class NotificationsTest extends VertxJunitSupport {
                .body(Json.encode(n))
                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                .then().assertThat().statusCode(200)
-               .body("status", notNullValue())
-               .body("status", is(false));
+               .body(STATUS, notNullValue())
+               .body(STATUS, is(false));
     }
 
     /**
@@ -364,8 +364,8 @@ public class NotificationsTest extends VertxJunitSupport {
     public void addNotificationToUserWithWrongHttpMethod() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                .when().get(getURL(NotificationsVerticle.ADD_TO_USER))
-               .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-               .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

@@ -62,8 +62,8 @@ public class ActivityTest extends VertxJunitSupport {
     @Test
     public void getActivityWithWrongHttpMethodTest() {
         given().post(getURL(ActivityVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

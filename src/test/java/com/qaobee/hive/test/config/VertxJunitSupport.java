@@ -74,6 +74,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     public static final String LOCALE = "fr_FR";
     protected static final String CODE = "code";
     protected static final String TOKEN = "token";
+    protected static final String STATUS = "status";
     /**
      * The constant POPULATE_ONLY.
      */
