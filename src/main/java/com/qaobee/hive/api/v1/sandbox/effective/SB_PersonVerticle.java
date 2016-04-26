@@ -49,7 +49,7 @@ import java.util.Map;
 /**
  * The type Person verticle.
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * Handler to get a set of persons

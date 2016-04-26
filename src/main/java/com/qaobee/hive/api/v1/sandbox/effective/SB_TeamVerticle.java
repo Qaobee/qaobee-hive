@@ -45,7 +45,7 @@ import java.util.Map;
 /**
  * The type Team verticle.
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle
 public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
     /**
      * Handler to get a set of team

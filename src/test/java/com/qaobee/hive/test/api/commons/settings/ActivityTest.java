@@ -19,23 +19,12 @@
 package com.qaobee.hive.test.api.commons.settings;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 /**
  * The type Activity test.
@@ -93,52 +82,46 @@ public class ActivityTest extends VertxJunitSupport {
     }
 
     /**
-     * Tests getListHandler for ActivityVerticle
+     * Gets list.
      */
     @Test
-    public void getListOk() {
-
+    public void getList() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(ActivityVerticle.GET_LIST, req, user.getAccount().getToken());
-        Assert.assertEquals(26, new JsonArray(reply).size());
+        given().queryParam(ActivityVerticle.PARAM_ID, "ACT-HAND")
+                .when().get(getURL(ActivityVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(26));
     }
 
     /**
-     * Tests getListEnableHandler for ActivityVerticle
+     * Gets list with wrong http method test.
      */
     @Test
-    public void getListEnableOk() {
+    public void getListWithWrongHttpMethodTest() {
+        given().post(getURL(ActivityVerticle.GET_LIST))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
 
+    /**
+     * Gets list enable.
+     */
+    @Test
+    public void getListEnable() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
+        given().queryParam(ActivityVerticle.PARAM_ID, "ACT-HAND")
+                .when().get(getURL(ActivityVerticle.GET_LIST_ENABLE))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(2));
+    }
 
-		/* User simulation connection */
-        User user = generateLoggedUser();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setUser(user);
-        req.setMethod(Constantes.GET);
-
-        final Map<String, List<String>> params = new HashMap<>();
-
-        // id
-        params.put(ActivityVerticle.PARAM_ID, Collections.singletonList("ACT-HAND"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(ActivityVerticle.GET_LIST_ENABLE, req, user.getAccount().getToken());
-        Assert.assertEquals(2, new JsonArray(reply).size());
+    /**
+     * Gets list enable with wrong http method test.
+     */
+    @Test
+    public void getListEnableWithWrongHttpMethodTest() {
+        given().post(getURL(ActivityVerticle.GET_LIST_ENABLE))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 }

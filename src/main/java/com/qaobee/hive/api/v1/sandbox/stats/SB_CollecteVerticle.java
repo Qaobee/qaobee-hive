@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * @author cke
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * Collection name

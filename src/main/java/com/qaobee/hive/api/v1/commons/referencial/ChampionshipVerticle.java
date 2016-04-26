@@ -48,7 +48,7 @@ import java.util.Map;
  *
  * @author jro
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class ChampionshipVerticle extends AbstractGuiceVerticle {
 
     /**

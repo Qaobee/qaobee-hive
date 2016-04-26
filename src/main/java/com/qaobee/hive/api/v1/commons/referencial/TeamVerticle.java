@@ -43,7 +43,7 @@ import javax.inject.Inject;
  *
  * @author cke
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle
 public class TeamVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant ADD_TO_USER.

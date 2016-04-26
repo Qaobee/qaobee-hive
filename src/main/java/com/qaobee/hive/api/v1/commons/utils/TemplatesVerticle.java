@@ -45,7 +45,7 @@ import java.util.Map;
  *
  * @author Xavier MARIN
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle(isWorker = false)
 public class TemplatesVerticle extends AbstractGuiceVerticle {
     public static final String DATA = "data";
     public static final String TEMPLATE = "template";

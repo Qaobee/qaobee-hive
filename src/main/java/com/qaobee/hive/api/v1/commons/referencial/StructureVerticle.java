@@ -60,7 +60,7 @@ import java.util.List;
  *         </ul>
  */
 
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle
 public class StructureVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant ADD_TO_USER.

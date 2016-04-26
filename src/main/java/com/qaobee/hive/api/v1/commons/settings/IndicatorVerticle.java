@@ -50,7 +50,7 @@ import java.util.List;
  *
  * @author cke
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class IndicatorVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant GET.

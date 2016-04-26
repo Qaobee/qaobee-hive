@@ -61,7 +61,7 @@ import java.util.UUID;
 /**
  * The type User verticle.
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class UserVerticle extends AbstractGuiceVerticle {
     public static final String LOGIN = Module.VERSION + ".commons.users.user.login";
     public static final String LOGIN_BY_TOKEN = Module.VERSION + ".commons.users.user.sso";

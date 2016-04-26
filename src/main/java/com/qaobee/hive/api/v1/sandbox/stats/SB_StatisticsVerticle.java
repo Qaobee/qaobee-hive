@@ -48,7 +48,7 @@ import java.util.UUID;
 /**
  * @author cke
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * Handler for average rate for one or many indicator and for one or many person, group by PARAM_LIST_GROUPBY

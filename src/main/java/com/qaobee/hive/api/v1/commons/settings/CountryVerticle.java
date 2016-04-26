@@ -49,7 +49,7 @@ import java.util.Map;
  *
  * @author cke
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class CountryVerticle extends AbstractGuiceVerticle {
     /**
      * The Constant GET.

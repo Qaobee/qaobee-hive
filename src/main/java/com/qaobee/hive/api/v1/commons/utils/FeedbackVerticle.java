@@ -35,7 +35,7 @@ import java.util.UUID;
 /**
  * The type Feedback verticle.
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class FeedbackVerticle extends AbstractGuiceVerticle {
     /**
      * The constant POST_FEEDBACK.

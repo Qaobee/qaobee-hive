@@ -49,7 +49,7 @@ import java.util.Map;
 /**
  * The type Sand box cfg verticle.
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant GET.

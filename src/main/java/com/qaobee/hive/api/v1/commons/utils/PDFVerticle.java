@@ -45,7 +45,7 @@ import java.util.Map;
  *
  * @author Xavier MARIN
  */
-@DeployableVerticle(isWorker = true)
+@DeployableVerticle(isWorker = false)
 public class PDFVerticle extends AbstractGuiceVerticle {
     public static final String GENERATE_PDF = "pdf.generate";
     public static final String DATA = "data";

@@ -49,7 +49,7 @@ import java.util.List;
 /**
  * The type Activity cfg verticle.
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class ActivityCfgVerticle extends AbstractGuiceVerticle {
     /**
      * The constant GET.
