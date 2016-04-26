@@ -68,8 +68,8 @@ public class IndicatorTest extends VertxJunitSupport {
     public void getIndicatorWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(IndicatorVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -135,8 +135,8 @@ public class IndicatorTest extends VertxJunitSupport {
     public void getListIndicatorWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().get(getURL(IndicatorVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -210,8 +210,8 @@ public class IndicatorTest extends VertxJunitSupport {
     public void getIndicatorByCodeWithWrongHttpMethodTest() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().get(getURL(IndicatorVerticle.GET_BY_CODE))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

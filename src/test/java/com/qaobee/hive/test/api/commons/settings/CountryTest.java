@@ -51,8 +51,8 @@ public class CountryTest extends VertxJunitSupport {
     @Test
     public void getCountryWithWrongHttpMethodTest() {
         given().post(getURL(CountryVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -107,8 +107,8 @@ public class CountryTest extends VertxJunitSupport {
     @Test
     public void getListOfCountriesWithWrongHttpMethodTest() {
         given().post(getURL(CountryVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -161,8 +161,8 @@ public class CountryTest extends VertxJunitSupport {
     @Test
     public void getCountryAlpha2WithWrongHttpMethodTest() {
         given().post(getURL(CountryVerticle.GET_ALPHA2))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

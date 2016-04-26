@@ -96,8 +96,8 @@ public class SignupTest extends VertxJunitSupport {
         JsonObject param = new JsonObject().putString(SignupVerticle.PARAM_LOGIN, "blabla");
         given().body(param.encode())
                 .when().get(getURL(SignupVerticle.LOGIN_TEST))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -151,8 +151,8 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void registerWithWrongHttpMethodTest() {
         given().when().get(getURL(SignupVerticle.REGISTER))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -442,8 +442,8 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void accountCheckWrongHttpMethodTest() {
         given().when().post(getURL(SignupVerticle.ACCOUNT_CHECK))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
 
@@ -544,8 +544,8 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void firstConnectionCheckWithWrongHttpMethodTest() {
         given().when().post(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -591,8 +591,8 @@ public class SignupTest extends VertxJunitSupport {
         User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(SignupVerticle.FINALIZE_SIGNUP))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     @Test

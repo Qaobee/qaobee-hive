@@ -112,8 +112,8 @@ public class NotificationsTest extends VertxJunitSupport {
     @Test
     public void getNotificationsWithWrongHttpMethod() {
         given().when().post(getURL(NotificationsVerticle.LIST))
-               .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-               .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

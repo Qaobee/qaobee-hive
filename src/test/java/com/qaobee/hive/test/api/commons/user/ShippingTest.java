@@ -116,8 +116,8 @@ public class ShippingTest extends VertxJunitSupport {
         User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -291,8 +291,8 @@ public class ShippingTest extends VertxJunitSupport {
     @Test
     public void recievePayplugNotificationWithWrongHttpMethodTest() {
         given().when().get(getURL(ShippingVerticle.IPN))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

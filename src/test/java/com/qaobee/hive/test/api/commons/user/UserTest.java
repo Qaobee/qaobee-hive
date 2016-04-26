@@ -82,9 +82,8 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void badloginHTTPMethod() {
         given().when().get(getURL(UserVerticle.LOGIN))
-                .then()
-                .assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -230,8 +229,8 @@ public class UserTest extends VertxJunitSupport {
                 .body("name", is(u.getName()));
 
         given().when().get(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -353,8 +352,8 @@ public class UserTest extends VertxJunitSupport {
             given().header(TOKEN, user.getAccount().getToken())
                     .param(UserVerticle.PARAM_COUNTRY_ID, "Vulacain")
                     .when().post(getURL(UserVerticle.META))
-                    .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                    .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -397,8 +396,8 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getMetasWrongHTTPMethod() {
         given().when().post(getURL(UserVerticle.META))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -432,8 +431,8 @@ public class UserTest extends VertxJunitSupport {
     public void getUserByIdWrongHTTPMethod() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(UserVerticle.META))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -466,8 +465,8 @@ public class UserTest extends VertxJunitSupport {
     public void getCurrentUserWrongHTTPMethod() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(UserVerticle.CURRENT))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -542,8 +541,8 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void passwordRenewBadHTTPMethod() {
         given().when().get(getURL(UserVerticle.PASSWD_RENEW))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -610,8 +609,8 @@ public class UserTest extends VertxJunitSupport {
                 .body("status", is(true));
 
         given().when().post(getURL(UserVerticle.PASSWD_RENEW_CHK))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -707,8 +706,8 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void passwordResetWrongHTTPMethod() {
         given().when().get(getURL(UserVerticle.PASSWD_RESET))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body("code", is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

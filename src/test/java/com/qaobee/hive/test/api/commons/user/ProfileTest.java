@@ -77,8 +77,8 @@ public class ProfileTest extends VertxJunitSupport {
         User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
                .post(getURL(ProfileVerticle.GENERATE_PDF))
-               .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-               .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

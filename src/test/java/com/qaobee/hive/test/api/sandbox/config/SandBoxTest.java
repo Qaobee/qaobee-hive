@@ -66,8 +66,8 @@ public class SandBoxTest extends VertxJunitSupport {
     @Test
     public void getSandBoxByOwnerWithWrongHttpMethod() {
         given().when().post(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

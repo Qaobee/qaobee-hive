@@ -68,8 +68,8 @@ public class SandBoxCfgTest extends VertxJunitSupport {
     @Test
     public void getSandBoxConfigByIdWithWrongHttpMethod() {
         given().when().post(getURL(SB_SandBoxCfgVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -136,8 +136,8 @@ public class SandBoxCfgTest extends VertxJunitSupport {
     @Test
     public void getSandBoxConfigBySandBoxIdWithWrongHttpMethod() {
         given().when().post(getURL(SB_SandBoxCfgVerticle.GETLIST))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
