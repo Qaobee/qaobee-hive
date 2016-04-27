@@ -150,7 +150,6 @@ public class SB_CollecteTest extends VertxJunitSupport {
 
     }
 
-
     /**
      * Gets list collecte with non logged user.
      */

@@ -17,196 +17,264 @@
  */
 package com.qaobee.hive.test.api.sandbox.effective;
 
+import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.sandbox.agenda.SB_EventVerticle;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_TeamVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
 /**
+ * The type Sb team test.
+ *
  * @author cke
  */
 public class SB_TeamTest extends VertxJunitSupport {
-
     /**
-     * Tests of getting a list of my teams for sandbox and effective
+     * Gets my teams list.
      */
     @Test
     public void getMyTeamsList() {
-
         populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
+        final Map<String, String> params = new HashMap<>();
+        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
+        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
+        params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
+        params.put(SB_TeamVerticle.PARAM_ADVERSARY, "false");
 
-		/* list of parameters */
-        final Map<String, List<String>> params = new HashMap<>();
-
-        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, Collections.singletonList("550b31f925da07681592db23"));
-        params.put(SB_TeamVerticle.PARAM_ENABLE, Collections.singletonList("true"));
-        params.put(SB_TeamVerticle.PARAM_ADVERSARY, Collections.singletonList("false"));
-
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
-        JsonArray result = new JsonArray(reply);
-
-        Assert.assertEquals(1, result.size());
-
-        JsonObject team = result.get(0);
-        Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
+        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+                .queryParams(params)
+                .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1))
+                .body("label", hasItem("Cesson-Sevigne A"));
     }
 
     /**
-     * Tests of getting a list of my adversaries for sandbox and effective
+     * Gets my teams list with non logged user.
+     */
+    @Test
+    public void getMyTeamsListWithNonLoggedUser() {
+        given().when().get(getURL(SB_TeamVerticle.GET_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets my teams list with wrong http method.
+     */
+    @Test
+    public void getMyTeamsListWithWrongHttpMethod() {
+        given().when().post(getURL(SB_TeamVerticle.GET_LIST))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
+
+    /**
+     * Gets my teams liste with missing parameters.
+     */
+    @Test
+    public void getMyTeamsListeWithMissingParameters() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_TeamVerticle.GET_LIST).mandatoryParams());
+        final Map<String, String> params = new HashMap<>();
+        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
+        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
+        params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
+        params.put(SB_TeamVerticle.PARAM_ADVERSARY, "false");
+
+        for (String k : params.keySet()) {
+            if (mandatoryParams.contains(k)) {
+                Map<String, String> params2 = new HashMap<>(params);
+                params2.remove(k);
+                given().header(TOKEN, user.getAccount().getToken())
+                        .queryParams(params2)
+                        .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            }
+        }
+    }
+
+    /**
+     * Gets my adversary teams list.
      */
     @Test
     public void getMyAdversaryTeamsList() {
-
         populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
+        final Map<String, String> params = new HashMap<>();
+        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
+        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
+        params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
+        params.put(SB_TeamVerticle.PARAM_ADVERSARY, "true");
 
-		/* list of parameters */
-        final Map<String, List<String>> params = new HashMap<>();
+        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+                .queryParams(params)
+                .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(7))
+                .body("label", hasItem("AIX En Provence HB"))
+                .body("label", hasItem("Nantes HBC"));
 
-        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, Collections.singletonList("550b31f925da07681592db23"));
-        params.put(SB_TeamVerticle.PARAM_ENABLE, Collections.singletonList("true"));
-        params.put(SB_TeamVerticle.PARAM_ADVERSARY, Collections.singletonList("true"));
+        params.put(SB_TeamVerticle.PARAM_LINK_TEAM_ID, "552d5e08644a77b3a20afdfe");
 
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
-        JsonArray result = new JsonArray(reply);
-
-        Assert.assertEquals(7, result.size());
-
-        JsonObject team = result.get(0);
-        Assert.assertEquals("Nantes HBC", team.getString("label"));
-
-        params.put(SB_TeamVerticle.PARAM_LINK_TEAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
-
-        final String reply2 = sendOnBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
-        JsonArray result2 = new JsonArray(reply2);
-
-        Assert.assertEquals(6, result2.size());
+        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+                .queryParams(params)
+                .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(6));
     }
 
     /**
-     * Tests of getting a  team by Id
+     * Gets by id.
      */
     @Test
-    public void getByIdOk() {
-
+    public void getById() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
-
-		/* list of parameters */
-        final Map<String, List<String>> params = new HashMap<>();
-
-        params.put(SB_TeamVerticle.PARAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
-
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
-        JsonObject team = new JsonObject(reply);
-        Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
-
+        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+                .queryParam(SB_TeamVerticle.PARAM_ID, "552d5e08644a77b3a20afdfe")
+                .when().get(getURL(SB_TeamVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("label", is("Cesson-Sevigne A"));
     }
 
     /**
-     * Tests of getting a  team by Id
+     * Gets by id with non logged user.
+     */
+    @Test
+    public void getByIdWithNonLoggedUser() {
+        given().when().get(getURL(SB_TeamVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets by id with wrong http method.
+     */
+    @Test
+    public void getByIdWithWrongHttpMethod() {
+        given().when().post(getURL(SB_TeamVerticle.GET))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
+
+    /**
+     * Gets by id with missing parameters.
+     */
+    @Test
+    public void getByIdWithMissingParameters() {
+        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+                .when().get(getURL(SB_TeamVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Add team.
      */
     @Test
     public void addTeam() {
-
         populate(POPULATE_ONLY, DATA_USERS);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.POST);
-        req.setUser(user);
+        final JsonObject params = new JsonObject()
+                .putString(SB_EventVerticle.PARAM_LABEL, "TheNewTeam")
+                .putString(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f")
+                .putString(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23")
+                .putBoolean(SB_TeamVerticle.PARAM_ENABLE, true)
+                .putBoolean(SB_TeamVerticle.PARAM_ADVERSARY, true);
 
-        final JsonObject params = new JsonObject();
-        params.putString(SB_EventVerticle.PARAM_LABEL, "TheNewTeam");
-        params.putString(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
-        params.putString(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
-        params.putBoolean(SB_TeamVerticle.PARAM_ENABLE, true);
-        params.putBoolean(SB_TeamVerticle.PARAM_ADVERSARY, true);
-
-        req.setBody(params.encode());
-        final JsonObject team = new JsonObject(sendOnBus(SB_TeamVerticle.ADD, req, user.getAccount().getToken()));
-        System.out.println(team);
-        Assert.assertNotNull("id is null", team.getString("_id"));
-        Assert.assertEquals("TheNewTeam", team.getString("label"));
-
+        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(SB_TeamVerticle.ADD))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("label", is("TheNewTeam"));
     }
 
     /**
-     * Tests of getting a  team by Id
+     * Add team with non logged user.
+     */
+    @Test
+    public void addTeamWithNonLoggedUser() {
+        given().when().post(getURL(SB_TeamVerticle.ADD))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Add team with wrong http method.
+     */
+    @Test
+    public void addTeamWithWrongHttpMethod() {
+        given().when().get(getURL(SB_TeamVerticle.ADD))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
+
+    /**
+     * Update team.
      */
     @Test
     public void updateTeam() {
-
         populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
-        req.setUser(user);
 
-		/* lget team */
-        final Map<String, List<String>> params = new HashMap<>();
-        params.put(SB_TeamVerticle.PARAM_ID, Collections.singletonList("552d5e08644a77b3a20afdfe"));
-        req.setParams(params);
-
-        final String reply = sendOnBus(SB_TeamVerticle.GET, req, user.getAccount().getToken());
-        JsonObject team = new JsonObject(reply);
-        Assert.assertEquals("Cesson-Sevigne A", team.getString("label"));
-
-        /* Update team */
-        req.setMethod(Constantes.PUT);
+        JsonObject team = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_TeamVerticle.PARAM_ID, "552d5e08644a77b3a20afdfe")
+                .when().get(getURL(SB_TeamVerticle.GET))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("label", is("Cesson-Sevigne A")).extract().asString());
         team.putBoolean(SB_TeamVerticle.PARAM_ENABLE, false);
-        req.setBody(team.encode());
-        sendOnBus(SB_TeamVerticle.UPDATE, req, user.getAccount().getToken());
-        
-        /* list of parameters */
-        req.setMethod(Constantes.GET);
-        final Map<String, List<String>> param2s = new HashMap<>();
 
-        param2s.put(SB_TeamVerticle.PARAM_SANDBOX_ID, Collections.singletonList("558b0efebd2e39cdab651e1f"));
-        param2s.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, Collections.singletonList("550b31f925da07681592db23"));
-        param2s.put(SB_TeamVerticle.PARAM_ENABLE, Collections.singletonList("true"));
-        param2s.put(SB_TeamVerticle.PARAM_ADVERSARY, Collections.singletonList("false"));
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(team.encode())
+                .when().put(getURL(SB_TeamVerticle.UPDATE))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("label", is("Cesson-Sevigne A"));
 
-        req.setParams(param2s);
+        final Map<String, String> params = new HashMap<>();
+        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
+        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
+        params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
+        params.put(SB_TeamVerticle.PARAM_ADVERSARY, "false");
 
-        final String reply2 = sendOnBus(SB_TeamVerticle.GET_LIST, req, user.getAccount().getToken());
-        JsonArray result = new JsonArray(reply2);
-
-        Assert.assertEquals(0, result.size());
-
+        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+                .queryParams(params)
+                .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(0));
     }
 
+    /**
+     * Update team with non logged user.
+     */
+    @Test
+    public void updateTeamWithNonLoggedUser() {
+        given().when().put(getURL(SB_TeamVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Update team with wrong http method.
+     */
+    @Test
+    public void updateTeamWithWrongHttpMethod() {
+        given().when().get(getURL(SB_TeamVerticle.UPDATE))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
 }

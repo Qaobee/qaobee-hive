@@ -20,27 +20,23 @@ package com.qaobee.hive.api.v1.sandbox.effective;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The type Team verticle.
@@ -67,9 +63,6 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      * team ID param
      */
     public static final String PARAM_ID = "_id";
-
-    
- /* List of parameters */
     /**
      * SandboxId param
      */
@@ -106,6 +99,13 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      * Start void.
      */
     @Override
+    @VerticleHandler({
+            @Rule(address = ADD, method = Constantes.POST, logged = true),
+            @Rule(address = UPDATE, method = Constantes.PUT, logged = true),
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST),
+            @Rule(address = GET_LIST, method = Constantes.GET, logged = true,
+                    mandatoryParams = {PARAM_SANDBOX_ID, PARAM_EFFECTIVE_ID, PARAM_ENABLE, PARAM_ADVERSARY}, scope = Rule.Param.REQUEST)
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -117,28 +117,16 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
          * @apiName add
          * @apiGroup Team API
          * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
-         * @apiError INTERNAL_ERROR Error during encode value
-         * @apiError QAOBEE EXCEPTION Error during validate data of Team Object
-         * @apiError HTTP_ERROR Bad Request
          */
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
                     final JsonObject json = new JsonObject(req.getBody());
                     final String id = mongo.save(json, SB_Team.class);
                     json.putString("_id", id);
-                    /* return */
                     message.reply(json.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -154,29 +142,15 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
          * @apiGroup Team API
          * @apiParam {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
          * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
-         * @apiError HTTP_ERROR Bad request
          */
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.PUT, req.getMethod());
-                    utils.isUserLogged(req);
-                    final JsonObject json = new JsonObject(req.getBody());
-                    final String id = mongo.update(json, SB_Team.class);
-                    json.putString("_id", id);
-                    message.reply(json.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                final JsonObject json = new JsonObject(req.getBody());
+                final String id = mongo.update(json, SB_Team.class);
+                json.putString("_id", id);
+                message.reply(json.encode());
             }
         });
 
@@ -193,38 +167,13 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
          *
          * @apiSuccess {SB_team}   team            The SB_Team found.
          *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-
-                    utils.testMandatoryParams(params, PARAM_ID);
-
-                    // Tests mandatory parameters
-                    utils.testMandatoryParams(params, PARAM_ID);
-                    if (StringUtils.isBlank(params.get(PARAM_ID).get(0))) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, PARAM_ID + " is mandatory");
-                    }
-
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_Team.class);
-
-                    LOG.debug("SB_Team found : " + json.toString());
-
-                    message.reply(json.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
+                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_Team.class).encode());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -246,44 +195,22 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
          *
          * @apiSuccess {Array}   teams           The set of SB_Team found.
          *
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    // Tests on method and parameters
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_SANDBOX_ID, PARAM_EFFECTIVE_ID, PARAM_ENABLE, PARAM_ADVERSARY);
-                    utils.isUserLogged(req);
-                    Map<String, Object> criterias = new HashMap<>();
-                    criterias.put(PARAM_SANDBOX_ID, params.get(PARAM_SANDBOX_ID).get(0));
-                    criterias.put(PARAM_EFFECTIVE_ID, params.get(PARAM_EFFECTIVE_ID).get(0));
-
-                    if (!"all".equals(params.get(PARAM_ENABLE).get(0))) {
-                        criterias.put(PARAM_ENABLE, "true".equals(params.get(PARAM_ENABLE).get(0)));
-                    }
-                    criterias.put(PARAM_ADVERSARY, "true".equals(params.get(PARAM_ADVERSARY).get(0)));
-
-                    if (params.get(PARAM_LINK_TEAM_ID) != null && !"".equals(params.get(PARAM_LINK_TEAM_ID).get(0).trim())) {
-                        criterias.put(PARAM_LINK_TEAM_ID, params.get(PARAM_LINK_TEAM_ID).get(0));
-                    }
-
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Team.class);
-                    LOG.debug("RETURN : " + resultJson);
-
-                    message.reply(resultJson.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
+                CriteriaBuilder criteria = new CriteriaBuilder()
+                        .add(PARAM_SANDBOX_ID, req.getParams().get(PARAM_SANDBOX_ID).get(0))
+                        .add(PARAM_EFFECTIVE_ID, req.getParams().get(PARAM_EFFECTIVE_ID).get(0))
+                        .add(PARAM_ADVERSARY, "true".equals(req.getParams().get(PARAM_ADVERSARY).get(0)));
+                if (!"all".equals(req.getParams().get(PARAM_ENABLE).get(0))) {
+                    criteria.add(PARAM_ENABLE, "true".equals(req.getParams().get(PARAM_ENABLE).get(0)));
                 }
+                if (req.getParams().get(PARAM_LINK_TEAM_ID) != null && !"".equals(req.getParams().get(PARAM_LINK_TEAM_ID).get(0).trim())) {
+                    criteria.add(PARAM_LINK_TEAM_ID, req.getParams().get(PARAM_LINK_TEAM_ID).get(0));
+                }
+                message.reply(mongo.findByCriterias(criteria.get(), null, null, -1, -1, SB_Team.class).encode());
             }
         });
     }
