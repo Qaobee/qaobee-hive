@@ -21,8 +21,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
@@ -32,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
@@ -70,9 +70,6 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      * Collecte ID
      */
     public static final String PARAM_ID = "_id";
-
-    
-    /* List of parameters */
     /**
      * Collecte status
      */
@@ -125,6 +122,13 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      * Start void.
      */
     @Override
+    @VerticleHandler({
+            @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+                    mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID}, scope = Rule.Param.BODY),
+            @Rule(address = ADD, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY),
+            @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY),
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -139,84 +143,39 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiParam {String} sandBoxId
          * @apiHeader {String} token
          * @apiSuccess {Array} list of SB_Collecte
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-
-     /*
-                     * *** Params section ***
-      */
-                    // Check param mandatory
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
                     JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID);
-
-     /*
-                     * *** Aggregat section ***
-      */
                     DBObject match;
                     BasicDBObject dbObjectParent;
-
-     /* *** $MACTH section *** */
                     dbObjectParent = new BasicDBObject();
-
                     // Collecte sandboxId
                     dbObjectParent.put("eventRef.owner.sandboxId", params.getString(PARAM_SANDBOX_ID));
-
                     if (params.getString(PARAM_EVENT_ID) != null && !"".equals(params.getString(PARAM_EVENT_ID).trim())) {
                         dbObjectParent.put("eventRef._id", params.getString(PARAM_EVENT_ID));
                     }
-
                     if (params.getString(PARAM_EFFECTIVE_ID) != null && !"".equals(params.getString(PARAM_EFFECTIVE_ID).trim())) {
                         dbObjectParent.put("eventRef.owner.effectiveId", params.getString(PARAM_EFFECTIVE_ID));
                     }
-
                     if (params.getString(PARAM_TEAM_ID) != null && !"".equals(params.getString(PARAM_TEAM_ID).trim())) {
                         dbObjectParent.put("eventRef.owner.teamId", params.getString(PARAM_TEAM_ID));
                     }
-
                     DBObject o = new BasicDBObject();
                     o.put("$gte", params.getLong(PARAM_START_DATE));
                     o.put("$lt", params.getLong(PARAM_END_DATE));
                     dbObjectParent.put("startDate", o);
-
                     match = new BasicDBObject("$match", dbObjectParent);
-
-     /* *** $limit section *** */
                     List<DBObject> pipelineAggregation;
                     pipelineAggregation = Collections.singletonList(match);
-
-                    LOG.debug("getList : " + pipelineAggregation.toString());
-
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, COLLECTION_NAME);
-
-                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -232,42 +191,17 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
                     JsonObject object = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(object.toMap(), PARAM_EVENT, PARAM_PLAYERS);
-
                     final String id = mongo.save(object, COLLECTION_NAME);
                     object.putString("_id", id);
-
-     /* return */
-                    LOG.debug(object.encodePrettily());
                     message.reply(object.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -283,43 +217,12 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
-                    JsonObject object = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(object.toMap(), PARAM_EVENT, PARAM_PLAYERS);
-
-                    mongo.update(object, COLLECTION_NAME);
-
-                    LOG.debug("SB_Collecte updated : " + object.toString());
-
-     /* return */
-                    message.reply(object.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
-                } catch (EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
+                JsonObject object = new JsonObject(req.getBody());
+                mongo.update(object, COLLECTION_NAME);
+                message.reply(object.encode());
             }
         });
 
@@ -339,28 +242,12 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
             public void handle(final Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
-                    utils.testMandatoryParams(req.getParams(), PARAM_ID);
-
-                    LOG.debug("SB_Collecte GET : " + req.getParams().get(PARAM_ID).get(0));
-
                     message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), COLLECTION_NAME).encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
     }
-
 }
