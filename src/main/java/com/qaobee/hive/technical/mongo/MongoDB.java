@@ -186,7 +186,7 @@ public interface MongoDB {
      * @param collection the collection
      * @return the json array
      */
-    JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection);
+    JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection) throws QaobeeException;
 
     /**
      * Aggregate json array.
@@ -196,7 +196,7 @@ public interface MongoDB {
      * @param collection the collection
      * @return the json array
      */
-    JsonArray aggregate(String field, List<DBObject> pipeline, String collection);
+    JsonArray aggregate(String field, List<DBObject> pipeline, String collection) throws QaobeeException;
 
     /**
      * Gets db.

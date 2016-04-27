@@ -19,6 +19,7 @@
 package com.qaobee.hive.technical.mongo.impl;
 
 import com.mongodb.*;
+import com.mongodb.util.JSONSerializers;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -64,10 +65,10 @@ public class MongoDBImpl implements MongoDB {
         final int socketTimeout = getOptionalIntConfig("socket_timeout", 60000);
         final boolean useSSL = getOptionalBooleanConfig("use_ssl", false);
         final JsonArray seedsProperty = config.getArray("seeds");
-        final MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
-        builder.connectionsPerHost(poolSize);
-        builder.socketTimeout(socketTimeout);
-        builder.readPreference(readPreference);
+        final MongoClientOptions.Builder builder = new MongoClientOptions.Builder()
+                .connectionsPerHost(poolSize)
+                .socketTimeout(socketTimeout)
+                .readPreference(readPreference);
         if (useSSL) {
             builder.socketFactory(SSLSocketFactory.getDefault());
         }
@@ -318,6 +319,7 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public JsonArray findByInClause(List<String> in, String sort, int order, int limit, Class<?> collection) {
         final DBCollection coll = db.getCollection(collection.getSimpleName());
         final BasicDBList docIds = new BasicDBList();
@@ -338,31 +340,26 @@ public class MongoDBImpl implements MongoDB {
         return json;
     }
 
-    // TODO : JRO : implémente cette partie pour éviter de trimbaler des DBObjects
     @Override
     @SuppressWarnings("unchecked")
-    public JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection) {
-        JsonArray res = new JsonArray();
-        for (DBObject next : db.getCollection(collection.getSimpleName()).aggregate(pipeline).results()) {
-            if (next instanceof BasicDBList) {
-                res.addArray(new JsonObject((next).toMap()).asArray());
-            } else {
-                res.addObject(new JsonObject((next).toMap()));
-            }
-        }
-        return res;
+    public JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection) throws QaobeeException {
+        return aggregate(field, pipeline, collection.getSimpleName());
     }
 
-    // TODO : JRO : implémente cette partie pour éviter de trimbaler des DBObjects
     @Override
     @SuppressWarnings("unchecked")
-    public JsonArray aggregate(String field, List<DBObject> pipeline, String collection) {
+    public JsonArray aggregate(String field, List<DBObject> pipeline, String collection) throws QaobeeException {
         JsonArray res = new JsonArray();
         for (DBObject next : db.getCollection(collection).aggregate(pipeline).results()) {
             if (next instanceof BasicDBList) {
-                res.addArray(new JsonObject((next).toMap()).asArray());
+                ListIterator<Object> it = ((BasicDBList) next).listIterator();
+                JsonArray jar = new JsonArray();
+                while (it.hasNext()) {
+                    jar.add(convertBsonToJson((DBObject) it.next()));
+                }
+                res.addArray(jar);
             } else {
-                res.addObject(new JsonObject((next).toMap()));
+                res.addObject(convertBsonToJson(next));
             }
         }
         return res;
@@ -371,6 +368,17 @@ public class MongoDBImpl implements MongoDB {
     @Override
     public DB getDb() {
         return db;
+    }
+
+    private static JsonObject convertBsonToJson(DBObject dbObject) throws QaobeeException {
+        if (dbObject == null) {
+            throw new QaobeeException(ExceptionCodes.JSON_EXCEPTION, "Cannot convert null to JsonObject");
+        }
+        // Create JSON string from DBObject
+        String serialize = JSONSerializers.getStrict().serialize(dbObject);
+        // Convert to JsonObject
+        HashMap<String, Object> jsonMap = Json.decodeValue(serialize, HashMap.class);
+        return new JsonObject(jsonMap);
     }
 
 }

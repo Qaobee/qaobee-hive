@@ -172,44 +172,49 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
              */
             @Override
             public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                JsonObject params = new JsonObject(req.getBody());
-                Map<String, Object> mapParams = params.toMap();
-                // Aggregat section
-                DBObject match;
-                BasicDBObject dbObjectParent;
-                BasicDBObject dbObjectChild;
-                //$MACTH section
-                dbObjectParent = new BasicDBObject();
-                // Activity ID
-                dbObjectParent.put("activityId", mapParams.get(PARAM_ACTIVITY));
-                // Category Age Code
-                dbObjectParent.put("categoryAge.code", mapParams.get(PARAM_CATEGORY_AGE));
-                // Structure ID
-                dbObjectParent.put("participants.structureId", mapParams.get(PARAM_STRUCTURE));
-                // Participant
-                if (mapParams.containsKey(PARAM_PARTICIPANT)) {
-                    @SuppressWarnings("unchecked") Map<String, Object> mapParticipant = (Map<String, Object>) mapParams.get(PARAM_PARTICIPANT);
-                    dbObjectChild = new BasicDBObject();
-                    if (mapParticipant.containsKey("id")) {
-                        dbObjectChild.put("participants.id", mapParticipant.get("id"));
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    JsonObject params = new JsonObject(req.getBody());
+                    Map<String, Object> mapParams = params.toMap();
+                    // Aggregat section
+                    DBObject match;
+                    BasicDBObject dbObjectParent;
+                    BasicDBObject dbObjectChild;
+                    //$MACTH section
+                    dbObjectParent = new BasicDBObject();
+                    // Activity ID
+                    dbObjectParent.put("activityId", mapParams.get(PARAM_ACTIVITY));
+                    // Category Age Code
+                    dbObjectParent.put("categoryAge.code", mapParams.get(PARAM_CATEGORY_AGE));
+                    // Structure ID
+                    dbObjectParent.put("participants.structureId", mapParams.get(PARAM_STRUCTURE));
+                    // Participant
+                    if (mapParams.containsKey(PARAM_PARTICIPANT)) {
+                        @SuppressWarnings("unchecked") Map<String, Object> mapParticipant = (Map<String, Object>) mapParams.get(PARAM_PARTICIPANT);
+                        dbObjectChild = new BasicDBObject();
+                        if (mapParticipant.containsKey("id")) {
+                            dbObjectChild.put("participants.id", mapParticipant.get("id"));
+                        }
+                        if (mapParticipant.containsKey("structureId")) {
+                            dbObjectChild.put("participants.structureId", mapParticipant.get("structureId"));
+                        }
+                        if (mapParticipant.containsKey("name")) {
+                            dbObjectChild.put("participants.name", mapParticipant.get("name"));
+                        }
+                        if (mapParticipant.containsKey("type")) {
+                            dbObjectChild.put("participants.type", mapParticipant.get("type"));
+                        }
+                        dbObjectParent.put("$and", Collections.singletonList(dbObjectChild));
                     }
-                    if (mapParticipant.containsKey("structureId")) {
-                        dbObjectChild.put("participants.structureId", mapParticipant.get("structureId"));
-                    }
-                    if (mapParticipant.containsKey("name")) {
-                        dbObjectChild.put("participants.name", mapParticipant.get("name"));
-                    }
-                    if (mapParticipant.containsKey("type")) {
-                        dbObjectChild.put("participants.type", mapParticipant.get("type"));
-                    }
-                    dbObjectParent.put("$and", Collections.singletonList(dbObjectChild));
+                    match = new BasicDBObject("$match", dbObjectParent);
+                    // Pipeline
+                    List<DBObject> pipelineAggregation = Collections.singletonList(match);
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
+                    message.reply(resultJSon.encode());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
                 }
-                match = new BasicDBObject("$match", dbObjectParent);
-                // Pipeline
-                List<DBObject> pipelineAggregation = Collections.singletonList(match);
-                final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
-                message.reply(resultJSon.encode());
             }
         };
 

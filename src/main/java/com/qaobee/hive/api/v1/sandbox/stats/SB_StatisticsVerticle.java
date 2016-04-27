@@ -161,98 +161,103 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
 
             @Override
             public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                JsonObject params = new JsonObject(req.getBody());
-                // List of indicators
-                JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
-                // List of owner
-                JsonArray listOwners = params.getArray(PARAM_LIST_OWNERS);
-                // Dates
-                Long startDate = params.getLong(PARAM_START_DATE);
-                Long endDate = params.getLong(PARAM_END_DATE);
-                // Aggregate section
-                DBObject match;
-                DBObject group;
-                DBObject sort;
-                DBObject limit;
-                BasicDBObject dbObjectParent;
-                BasicDBObject dbObjectChild;
-                // $MACTH section
-                dbObjectParent = new BasicDBObject();
-                // - code
-                dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
-                dbObjectParent.put(CODE_FIELD, dbObjectChild);
-                // - owner
-                dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
-                dbObjectParent.put(OWNER_FIELD, dbObjectChild);
-                // - values
-                if (params.containsField(PARAM_VALUES)) {
-                    dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_VALUES));
-                    dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                }
-                // - shootSeqId
-                if (params.containsField(PARAM_LIST_SHOOTSEQID)) {
-                    dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_LIST_SHOOTSEQID));
-                    dbObjectParent.put("shootSeqId", dbObjectChild);
-                }
-                // - timer
-                DBObject o = new BasicDBObject();
-                o.put("$gte", startDate);
-                o.put("$lt", endDate);
-                dbObjectParent.put(TIMER_FIELD, o);
-                match = new BasicDBObject("$match", dbObjectParent);
-                // $GROUP section
-                dbObjectParent = new BasicDBObject();
-                dbObjectChild = new BasicDBObject();
-                // - _id - List of field for id's group step
-                if (params.containsField(PARAM_LIST_GROUPBY)) {
-                    for (Object field : params.getArray(PARAM_LIST_GROUPBY)) {
-                        dbObjectChild.append((String) field, "$" + field);
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    JsonObject params = new JsonObject(req.getBody());
+                    // List of indicators
+                    JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
+                    // List of owner
+                    JsonArray listOwners = params.getArray(PARAM_LIST_OWNERS);
+                    // Dates
+                    Long startDate = params.getLong(PARAM_START_DATE);
+                    Long endDate = params.getLong(PARAM_END_DATE);
+                    // Aggregate section
+                    DBObject match;
+                    DBObject group;
+                    DBObject sort;
+                    DBObject limit;
+                    BasicDBObject dbObjectParent;
+                    BasicDBObject dbObjectChild;
+                    // $MACTH section
+                    dbObjectParent = new BasicDBObject();
+                    // - code
+                    dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
+                    dbObjectParent.put(CODE_FIELD, dbObjectChild);
+                    // - owner
+                    dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
+                    dbObjectParent.put(OWNER_FIELD, dbObjectChild);
+                    // - values
+                    if (params.containsField(PARAM_VALUES)) {
+                        dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_VALUES));
+                        dbObjectParent.put(VALUE_FIELD, dbObjectChild);
                     }
-                }
-                dbObjectParent.put("_id", dbObjectChild);
-                // - average
-                String aggregate = params.getString(PARAM_AGGREGAT);
-                switch (aggregate) {
-                    case "COUNT":
-                        dbObjectChild = new BasicDBObject("$sum", 1);
-                        dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                        break;
-                    case "SUM":
-                        dbObjectChild = new BasicDBObject("$sum", "$value");
-                        dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                        break;
-                    case "AVG":
-                        dbObjectChild = new BasicDBObject("$avg", "$value");
-                        dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                        break;
-                    default:
-                        dbObjectChild = new BasicDBObject("$sum", 1);
-                        dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                        break;
-                }
-                group = new BasicDBObject("$group", dbObjectParent);
-                // $SORT section
-                dbObjectParent = new BasicDBObject();
-                if (params.containsField(PARAM_LIST_SORTBY)) {
-                    for (Object item : params.getArray(PARAM_LIST_SORTBY)) {
-                        JsonObject field = (JsonObject) item;
-                        dbObjectParent.put(field.getString("fieldName"), field.getInteger("sortOrder"));
+                    // - shootSeqId
+                    if (params.containsField(PARAM_LIST_SHOOTSEQID)) {
+                        dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_LIST_SHOOTSEQID));
+                        dbObjectParent.put("shootSeqId", dbObjectChild);
                     }
-                } else {
-                    dbObjectParent.put("_id", 1);
+                    // - timer
+                    DBObject o = new BasicDBObject();
+                    o.put("$gte", startDate);
+                    o.put("$lt", endDate);
+                    dbObjectParent.put(TIMER_FIELD, o);
+                    match = new BasicDBObject("$match", dbObjectParent);
+                    // $GROUP section
+                    dbObjectParent = new BasicDBObject();
+                    dbObjectChild = new BasicDBObject();
+                    // - _id - List of field for id's group step
+                    if (params.containsField(PARAM_LIST_GROUPBY)) {
+                        for (Object field : params.getArray(PARAM_LIST_GROUPBY)) {
+                            dbObjectChild.append((String) field, "$" + field);
+                        }
+                    }
+                    dbObjectParent.put("_id", dbObjectChild);
+                    // - average
+                    String aggregate = params.getString(PARAM_AGGREGAT);
+                    switch (aggregate) {
+                        case "COUNT":
+                            dbObjectChild = new BasicDBObject("$sum", 1);
+                            dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+                            break;
+                        case "SUM":
+                            dbObjectChild = new BasicDBObject("$sum", "$value");
+                            dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+                            break;
+                        case "AVG":
+                            dbObjectChild = new BasicDBObject("$avg", "$value");
+                            dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+                            break;
+                        default:
+                            dbObjectChild = new BasicDBObject("$sum", 1);
+                            dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+                            break;
+                    }
+                    group = new BasicDBObject("$group", dbObjectParent);
+                    // $SORT section
+                    dbObjectParent = new BasicDBObject();
+                    if (params.containsField(PARAM_LIST_SORTBY)) {
+                        for (Object item : params.getArray(PARAM_LIST_SORTBY)) {
+                            JsonObject field = (JsonObject) item;
+                            dbObjectParent.put(field.getString("fieldName"), field.getInteger("sortOrder"));
+                        }
+                    } else {
+                        dbObjectParent.put("_id", 1);
+                    }
+                    sort = new BasicDBObject("$sort", dbObjectParent);
+                    List<DBObject> pipelineAggregation;
+                    if (params.containsField(PARAM_LIMIT_RESULT)) {
+                        int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
+                        limit = new BasicDBObject("$limit", limitNumber);
+                        pipelineAggregation = Arrays.asList(match, group, sort, limit);
+                    } else {
+                        pipelineAggregation = Arrays.asList(match, group, sort);
+                    }
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
+                    message.reply(resultJSon.encode());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
                 }
-                sort = new BasicDBObject("$sort", dbObjectParent);
-                List<DBObject> pipelineAggregation;
-                if (params.containsField(PARAM_LIMIT_RESULT)) {
-                    int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
-                    limit = new BasicDBObject("$limit", limitNumber);
-                    pipelineAggregation = Arrays.asList(match, group, sort, limit);
-                } else {
-                    pipelineAggregation = Arrays.asList(match, group, sort);
-                }
-                final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
-                message.reply(resultJSon.encode());
             }
         });
 
@@ -278,47 +283,52 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
         vertx.eventBus().registerHandler(GET_LISTDETAIL_VALUES, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                JsonObject params = new JsonObject(req.getBody());
-                JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
-                JsonArray listOwners = params.getArray(PARAM_LIST_OWNERS);
-                Long startDate = params.getLong(PARAM_START_DATE);
-                Long endDate = params.getLong(PARAM_END_DATE);
-                DBObject match, sort, limit;
-                BasicDBObject dbObjectParent, dbObjectChild;
-                // $MATCH section
-                dbObjectParent = new BasicDBObject();
-                // - code
-                dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
-                dbObjectParent.put(CODE_FIELD, dbObjectChild);
-                // - owner
-                dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
-                dbObjectParent.put(OWNER_FIELD, dbObjectChild);
-                // - values
-                if (params.containsField(PARAM_VALUES)) {
-                    dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_VALUES));
-                    dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+                try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                    JsonObject params = new JsonObject(req.getBody());
+                    JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
+                    JsonArray listOwners = params.getArray(PARAM_LIST_OWNERS);
+                    Long startDate = params.getLong(PARAM_START_DATE);
+                    Long endDate = params.getLong(PARAM_END_DATE);
+                    DBObject match, sort, limit;
+                    BasicDBObject dbObjectParent, dbObjectChild;
+                    // $MATCH section
+                    dbObjectParent = new BasicDBObject();
+                    // - code
+                    dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
+                    dbObjectParent.put(CODE_FIELD, dbObjectChild);
+                    // - owner
+                    dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
+                    dbObjectParent.put(OWNER_FIELD, dbObjectChild);
+                    // - values
+                    if (params.containsField(PARAM_VALUES)) {
+                        dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_VALUES));
+                        dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+                    }
+                    // - timer
+                    DBObject o = new BasicDBObject();
+                    o.put("$gte", startDate);
+                    o.put("$lt", endDate);
+                    dbObjectParent.put(TIMER_FIELD, o);
+                    match = new BasicDBObject("$match", dbObjectParent);
+                    dbObjectParent = new BasicDBObject();
+                    dbObjectParent.put(OWNER_FIELD, 1);
+                    dbObjectParent.put(TIMER_FIELD, 1);
+                    sort = new BasicDBObject("$sort", dbObjectParent);
+                    List<DBObject> pipelineAggregation;
+                    if (params.containsField(PARAM_LIMIT_RESULT)) {
+                        int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
+                        limit = new BasicDBObject("$limit", limitNumber);
+                        pipelineAggregation = Arrays.asList(match, sort, limit);
+                    } else {
+                        pipelineAggregation = Arrays.asList(match, sort);
+                    }
+                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
+                    message.reply(resultJSon.encode());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.sendError(message, e);
                 }
-                // - timer
-                DBObject o = new BasicDBObject();
-                o.put("$gte", startDate);
-                o.put("$lt", endDate);
-                dbObjectParent.put(TIMER_FIELD, o);
-                match = new BasicDBObject("$match", dbObjectParent);
-                dbObjectParent = new BasicDBObject();
-                dbObjectParent.put(OWNER_FIELD, 1);
-                dbObjectParent.put(TIMER_FIELD, 1);
-                sort = new BasicDBObject("$sort", dbObjectParent);
-                List<DBObject> pipelineAggregation;
-                if (params.containsField(PARAM_LIMIT_RESULT)) {
-                    int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
-                    limit = new BasicDBObject("$limit", limitNumber);
-                    pipelineAggregation = Arrays.asList(match, sort, limit);
-                } else {
-                    pipelineAggregation = Arrays.asList(match, sort);
-                }
-                final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
-                message.reply(resultJSon.encode());
             }
 
         });
