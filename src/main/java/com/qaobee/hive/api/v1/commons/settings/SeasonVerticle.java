@@ -161,7 +161,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                     criterias.put("countryId", countryId);
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
                     }
                     message.reply(resultJson.encode());
                 } catch (final QaobeeException e) {
@@ -199,7 +199,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
                     long currentDate = System.currentTimeMillis();
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
                     }
                     for (int i = 0; i < resultJson.size(); i++) {
                         JsonObject s = resultJson.get(i);

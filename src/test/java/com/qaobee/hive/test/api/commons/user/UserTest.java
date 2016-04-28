@@ -372,8 +372,8 @@ public class UserTest extends VertxJunitSupport {
             given().header(TOKEN, user.getAccount().getToken())
                     .param(UserVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .when().get(getURL(UserVerticle.META))
-                    .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                    .body("code", is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -824,8 +824,8 @@ public class UserTest extends VertxJunitSupport {
         given().header(TOKEN, u.getAccount().getToken())
                 .queryParam(UserVerticle.PARAM_LOGIN, "blabla")
                 .when().get(getURL(UserVerticle.USER_BY_LOGIN))
-                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                .body("code", is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
 
         given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(UserVerticle.USER_BY_LOGIN))

@@ -199,7 +199,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
                     }
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Country.class);
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED,
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR,
                                 "No Country defined for (" + label + ")");
                     }
                     message.reply(resultJson.encode());

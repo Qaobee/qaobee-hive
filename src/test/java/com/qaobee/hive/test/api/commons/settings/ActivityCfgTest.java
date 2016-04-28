@@ -106,8 +106,8 @@ public class ActivityCfgTest extends VertxJunitSupport {
                 .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                 .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
                 .get(getURL(ActivityCfgVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**
@@ -195,7 +195,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
                 .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
                 .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
                 .get(getURL(ActivityCfgVerticle.PARAMS))
-                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 }

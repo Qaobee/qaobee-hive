@@ -279,7 +279,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void updateSandBoxWithNonLoggedUser() {
-        given().when().post(getURL(SB_SandBoxVerticle.ADD))
+        given().when().post(getURL(SB_SandBoxVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -289,7 +289,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void updateSandBoxWithWrongHttpMethod() {
-        given().when().get(getURL(SB_SandBoxVerticle.ADD))
+        given().when().get(getURL(SB_SandBoxVerticle.UPDATE))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }

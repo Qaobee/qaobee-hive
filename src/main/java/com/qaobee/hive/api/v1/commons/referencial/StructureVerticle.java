@@ -125,17 +125,17 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     @Override
     @VerticleHandler({
-                             @Rule(address = ADD, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-                                   scope = Rule.Param.BODY),
-                             @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
-                                   scope = Rule.Param.REQUEST),
-                             @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY),
-                             @Rule(address = UPDATE, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-                                   scope = Rule.Param.BODY),
-                     })
+            @Rule(address = ADD, method = Constantes.POST, logged = true,
+                    mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+                    scope = Rule.Param.BODY),
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+                    scope = Rule.Param.REQUEST),
+            @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+                    mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY),
+            @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+                    mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+                    scope = Rule.Param.BODY),
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");

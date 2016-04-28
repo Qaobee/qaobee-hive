@@ -128,7 +128,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                     // Call to mongo
                     JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, ActivityCfg.class);
                     if (resultJSon == null || resultJSon.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
                     }
                     JsonObject jsonObject = resultJSon.get(0);
                     message.reply(jsonObject.encode());
@@ -190,7 +190,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
                         throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Resultset for field '" + paramField + "' is null (" + activityId + "/" + countryId + "/" + dateRef + ")");
                     }
                     if (resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");
                     }
                     message.reply(((JsonObject) resultJSon.get(0)).getArray(paramField).encode());
                 } catch (NumberFormatException e) {

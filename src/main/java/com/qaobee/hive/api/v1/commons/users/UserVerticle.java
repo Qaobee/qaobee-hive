@@ -564,7 +564,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 criterias.add(ACCOUNT_LOGIN_FIELD, req.getParams().get("login").get(0).toLowerCase());
                 JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
                 if (jsonArray == null || jsonArray.size() == 0) {
-                    utils.sendError(message, ExceptionCodes.DB_NO_ROW_RETURNED, "Login inconnu");
+                    utils.sendError(message, ExceptionCodes.DATA_ERROR, "Login inconnu");
                     return;
                 }
                 if (jsonArray.size() > 1) {

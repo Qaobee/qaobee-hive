@@ -90,9 +90,6 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -115,15 +112,12 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
                     JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_SandBoxCfg.class);
 
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBoxCfg defined for sandBox if (" + req.getParams().get(PARAM_SANDBOX_ID).get(0) + ")");
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBoxCfg defined for sandBox if (" + req.getParams().get(PARAM_SANDBOX_ID).get(0) + ")");
                     }
                     message.reply(resultJson.encode());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });

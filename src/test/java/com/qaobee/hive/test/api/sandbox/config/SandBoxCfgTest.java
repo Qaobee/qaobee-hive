@@ -163,7 +163,7 @@ public class SandBoxCfgTest extends VertxJunitSupport {
                 .queryParam(SB_SandBoxCfgVerticle.PARAM_SANDBOX_ID, "bla")
                 .queryParam(SB_SandBoxCfgVerticle.PARAM_SEASON_ID, "558b0ceaf9285df5b7553fc6")
                 .when().get(getURL(SB_SandBoxCfgVerticle.GETLIST))
-                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 }

@@ -149,9 +149,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -189,9 +186,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -236,9 +230,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });

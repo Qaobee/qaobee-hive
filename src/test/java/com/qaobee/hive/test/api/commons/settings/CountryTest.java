@@ -133,8 +133,8 @@ public class CountryTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
         given().queryParam(CountryVerticle.PARAM_LOCAL, "Kl")
                 .get(getURL(CountryVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**

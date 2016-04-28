@@ -609,7 +609,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
 
                             long currentDate = System.currentTimeMillis();
                             if (resultJson == null || resultJson.size() == 0) {
-                                throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No season defined for (" + activityId + " / " + countryId + ")");
+                                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
                             }
                             for (int i = 0; i < resultJson.size(); i++) {
                                 JsonObject s = resultJson.get(i);

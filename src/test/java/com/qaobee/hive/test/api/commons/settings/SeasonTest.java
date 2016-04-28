@@ -141,15 +141,15 @@ public class SeasonTest extends VertxJunitSupport {
                 .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
                 .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
                 .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
-                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SeasonVerticle.PARAM_COUNTRY_ID,(String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
                 .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
                 .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
-                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**
@@ -213,15 +213,15 @@ public class SeasonTest extends VertxJunitSupport {
                 .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
                 .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
                 .when().get(getURL(SeasonVerticle.GET_CURRENT))
-                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SeasonVerticle.PARAM_COUNTRY_ID,(String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
                 .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
                 .when().get(getURL(SeasonVerticle.GET_CURRENT))
-                .then().assertThat().statusCode(ExceptionCodes.DB_NO_ROW_RETURNED.getCode())
-                .body(CODE, is(ExceptionCodes.DB_NO_ROW_RETURNED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**

@@ -25,7 +25,6 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
@@ -178,8 +177,8 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
              */
             @Override
             public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
+                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     JsonObject params = new JsonObject(req.getBody());
                     // Aggregat section
                     DBObject match;
@@ -230,9 +229,9 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
                     }
                     final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Event.class);
                     message.reply(resultJSon.encode());
-                } catch (Exception e) {
+                } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                    utils.sendError(message, e);
                 }
             }
         });
@@ -261,9 +260,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -291,9 +287,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -315,9 +308,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });

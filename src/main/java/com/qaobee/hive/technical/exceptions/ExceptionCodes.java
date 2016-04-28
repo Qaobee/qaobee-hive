@@ -28,8 +28,7 @@ public enum ExceptionCodes {
     /**
      * The http error.
      */
-    @Deprecated
-    HTTP_ERROR(405),
+    HTTP_ERROR(404),
     /**
      * The non active.
      */
@@ -87,22 +86,9 @@ public enum ExceptionCodes {
      */
     JSON_EXCEPTION(500),
     /**
-     * No document returned by request
-     */
-    @Deprecated
-    DB_NO_ROW_RETURNED(500),
-    /**
      * Business Error
      */
-    BUSINESS_ERROR(200),
-    /**
-     * Trial ended exception codes.
-     */
-    TRIAL_ENDED(403),
-    /**
-     * Not paid exception codes.
-     */
-    NOT_PAID(403);
+    BUSINESS_ERROR(200);
 
     /**
      * The code.
