@@ -20,7 +20,6 @@
 package com.qaobee.hive.api.v1.sandbox.config;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
@@ -74,7 +73,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant PARAM_ID.
      */
-/* Parameters */
     public static final String PARAM_ID = "_id";
     /**
      * The constant PARAM_OWNER_ID.
@@ -91,7 +89,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant PARAM_USER.
      */
-    public static final String PARAM_USER = "user";
+    public static final String PARAM_USER_ID = "uid";
     /**
      * The constant PARAM_SB_CFG_ID.
      */
@@ -111,10 +109,10 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
             @Rule(address = GET_BY_OWNER, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
                     scope = Rule.Param.REQUEST),
             @Rule(address = GET_LIST_BY_OWNER, method = Constantes.GET, logged = true),
-            @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_USER, PARAM_ACTIVITY_ID},
+            @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_USER_ID, PARAM_ACTIVITY_ID},
                     scope = Rule.Param.BODY),
             @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_SB_CFG_ID},
-                    scope = Rule.Param.REQUEST),
+                    scope = Rule.Param.BODY),
     })
     public void start() {
         super.start();
@@ -144,7 +142,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
                             .add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
                     JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" + req.getUser().get_id() + " ,and activityId : " + params.get(PARAM_ACTIVITY_ID));
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + req.getUser().get_id() + " ,and activityId : " + params.get(PARAM_ACTIVITY_ID));
                     }
                     JsonObject json = resultJson.get(0);
                     message.reply(json.encode());
@@ -185,7 +183,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
                     }
                     JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for user id :" + req.getUser().get_id());
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + req.getUser().get_id());
                     }
                     message.reply(resultJson.encode());
                 } catch (QaobeeException e) {
@@ -207,17 +205,14 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                     final JsonObject jsonReq = new JsonObject(req.getBody());
-                    final User user = Json.decodeValue((jsonReq.getObject(PARAM_USER)).encode(), User.class);
-                    final String activityId = jsonReq.getString(PARAM_ACTIVITY_ID);
-                    JsonObject sandbox = new JsonObject().putString("activityId", activityId).putString("owner", user.get_id());
+                    JsonObject sandbox = new JsonObject()
+                            .putString("activityId", jsonReq.getString(PARAM_ACTIVITY_ID))
+                            .putString("owner", jsonReq.getString(PARAM_USER_ID));
                     sandbox.putString("_id", mongo.save(sandbox, SB_SandBox.class));
                     message.reply(sandbox.encode());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
                 }
             }
         });
@@ -230,12 +225,14 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
             public void handle(Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject sandbox = mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_SandBox.class);
+                    JsonObject body = new JsonObject(req.getBody());
+                    final JsonObject sandbox = mongo.getById(body.getString(PARAM_ID), SB_SandBox.class);
                     if (sandbox == null) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No SandBox found for id :" + req.getParams().get(PARAM_ID).get(0));
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for id :" + body.getString(PARAM_ID));
                     }
-                    sandbox.putString("sandboxCfgId", req.getParams().get(PARAM_SB_CFG_ID).get(0));
+                    sandbox.putString("sandboxCfgId", body.getString(PARAM_SB_CFG_ID));
                     mongo.save(sandbox, SB_SandBox.class);
+                    message.reply(sandbox.encode());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);

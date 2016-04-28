@@ -89,6 +89,7 @@ public enum ExceptionCodes {
     /**
      * No document returned by request
      */
+    @Deprecated
     DB_NO_ROW_RETURNED(500),
     /**
      * Business Error
