@@ -24,9 +24,12 @@ import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -35,22 +38,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The type Person verticle.
  */
 @DeployableVerticle
 public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
+    private static final Logger LOG = LoggerFactory.getLogger(SB_PersonVerticle.class);
     /**
      * Handler to get a set of persons
      */
@@ -75,9 +76,6 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * Group ID
      */
     public static final String PARAM_LIST_ID = "listId";
-
-    
- /* List of parameters */
     /**
      * list Field
      */
@@ -90,7 +88,6 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * Person ID
      */
     public static final String PARAM_PERSON_ID = "_id";
-    private static final Logger LOG = LoggerFactory.getLogger(SB_PersonVerticle.class);
     /**
      * The Mongo.
      */
@@ -106,6 +103,13 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * Start void.
      */
     @Override
+    @VerticleHandler({
+            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.REQUEST),
+            @Rule(address = GET_LIST, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_LIST_ID, PARAM_LIST_FIELD}, scope = Rule.Param.BODY),
+            @Rule(address = GET_LIST_SANDBOX, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST),
+            @Rule(address = UPDATE, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY),
+            @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {"person"}, scope = Rule.Param.BODY),
+    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -117,30 +121,17 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiName addPerson
          * @apiGroup Person API
          * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
-         * @apiError INTERNAL_ERROR Error during encode value
-         * @apiError QAOBEE EXCEPTION Error during validate data of Person Object
-         * @apiError HTTP_ERROR Bad Request
          */
         vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
             @Override
             public void handle(Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.PUT, req.getMethod());
-                    utils.isUserLogged(req);
                     final JsonObject dataContainer = new JsonObject(req.getBody());
                     final JsonObject personJson = new JsonObject(dataContainer.getElement("person").toString());
-
                     final String id = mongo.save(personJson, SB_Person.class);
                     personJson.putString("_id", id);
-                    /* return */
                     message.reply(personJson.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -156,25 +147,14 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiGroup Person API
          * @apiParam {String} id
          * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
-         * @apiError DATA_ERROR Error during request to Mongo
-         * @apiError INVALID_PARAMETER Invalid Parameters
-         * @apiError HTTP_ERROR Bad Request
          */
         vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    utils.isUserLogged(req);
                     utils.testMandatoryParams(req.getParams(), PARAM_PERSON_ID);
                     message.reply(mongo.getById(req.getParams().get(PARAM_PERSON_ID).get(0), SB_Person.class).encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
@@ -190,29 +170,15 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiGroup Person API
          * @apiParam {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
          * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
-         * @apiError HTTP_ERROR Bad request
          */
         vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
             @Override
             public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.PUT, req.getMethod());
-                    utils.isUserLogged(req);
-                    final JsonObject json = new JsonObject(req.getBody());
-                    final String id = mongo.update(json, SB_Person.class);
-                    json.putString("_id", id);
-                    message.reply(json.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+                final JsonObject json = new JsonObject(req.getBody());
+                final String id = mongo.update(json, SB_Person.class);
+                json.putString("_id", id);
+                message.reply(json.encode());
             }
         });
 
@@ -223,9 +189,6 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiName getListPerson
          * @apiGroup Person API
          * @apiSuccess {Array} list of persons
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
             /*
@@ -237,49 +200,21 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
             public void handle(final Message<String> message) {
                 try {
                     final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testHTTPMetod(Constantes.POST, req.getMethod());
-                    utils.isUserLogged(req);
                     JsonObject params = new JsonObject(req.getBody());
-                    utils.testMandatoryParams(params.toMap(), PARAM_LIST_ID, PARAM_LIST_FIELD);
-
-                    // List of id
                     JsonArray listId = params.getArray(PARAM_LIST_ID);
-
-                    // List of field
                     JsonArray listfield = params.getArray(PARAM_LIST_FIELD);
-
-                    DBObject match, project;
-                    BasicDBObject dbObjectParent, dbObjectChild;
-
-     /* *** $MACTH section *** */
-                    dbObjectParent = new BasicDBObject();
-
-                    dbObjectChild = new BasicDBObject("$in", listId.toArray());
+                    BasicDBObject dbObjectParent = new BasicDBObject();
+                    BasicDBObject dbObjectChild = new BasicDBObject("$in", listId.toArray());
                     dbObjectParent.put("_id", dbObjectChild);
-                    match = new BasicDBObject("$match", dbObjectParent);
-
-     /* *** $PROJECT section *** */
+                    DBObject match = new BasicDBObject("$match", dbObjectParent);
                     dbObjectParent = new BasicDBObject();
                     for (Object field : listfield) {
                         dbObjectParent.put((String) field, "$" + field);
                     }
-
-                    project = new BasicDBObject("$project", dbObjectParent);
-
+                    DBObject project = new BasicDBObject("$project", dbObjectParent);
                     List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-                    LOG.debug("getListPerson : " + pipelineAggregation.toString());
-
                     final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, SB_Person.class);
-
-                    LOG.debug(resultJSon.encodePrettily());
                     message.reply(resultJSon.encode());
-
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, e.getMessage());
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e.getCode(), e.getMessage());
@@ -295,35 +230,20 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
          * @apiName getListPerson
          * @apiGroup Person API
          * @apiSuccess {Array} list of persons
-         * @apiError HTTP_ERROR Bad request
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
          */
         vertx.eventBus().registerHandler(GET_LIST_SANDBOX, new Handler<Message<String>>() {
 
             @Override
             public void handle(final Message<String> message) {
-                LOG.debug(GET_LIST_SANDBOX + " - Country");
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
                 try {
-                    // Tests on method and parameters
-                    utils.testHTTPMetod(Constantes.GET, req.getMethod());
-                    Map<String, List<String>> params = req.getParams();
-                    utils.testMandatoryParams(params, PARAM_SANDBOX_ID);
-
-                    Map<String, Object> criterias = new HashMap<>();
-                    criterias.put(PARAM_SANDBOX_ID, params.get(PARAM_SANDBOX_ID).get(0));
-
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Person.class);
-
+                    CriteriaBuilder criteria = new CriteriaBuilder()
+                            .add(PARAM_SANDBOX_ID, req.getParams().get(PARAM_SANDBOX_ID).get(0));
+                    JsonArray resultJson = mongo.findByCriterias(criteria.get(), null, null, -1, -1, SB_Person.class);
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No person found for sandboxId (" + params.get(PARAM_SANDBOX_ID).get(0) + ")");
+                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No person found for sandboxId (" + req.getParams().get(PARAM_SANDBOX_ID).get(0) + ")");
                     }
-
                     message.reply(resultJson.encode());
-                } catch (final NoSuchMethodException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.HTTP_ERROR, e.getMessage());
                 } catch (final QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     utils.sendError(message, e);
