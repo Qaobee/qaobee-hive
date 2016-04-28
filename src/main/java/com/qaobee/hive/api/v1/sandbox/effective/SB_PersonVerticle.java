@@ -241,7 +241,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
                             .add(PARAM_SANDBOX_ID, req.getParams().get(PARAM_SANDBOX_ID).get(0));
                     JsonArray resultJson = mongo.findByCriterias(criteria.get(), null, null, -1, -1, SB_Person.class);
                     if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DB_NO_ROW_RETURNED, "No person found for sandboxId (" + req.getParams().get(PARAM_SANDBOX_ID).get(0) + ")");
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No person found for sandboxId (" + req.getParams().get(PARAM_SANDBOX_ID).get(0) + ")");
                     }
                     message.reply(resultJson.encode());
                 } catch (final QaobeeException e) {

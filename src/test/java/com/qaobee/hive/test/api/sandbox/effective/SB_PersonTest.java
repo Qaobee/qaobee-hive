@@ -39,6 +39,9 @@ import static org.hamcrest.Matchers.*;
  * The type Person test.
  */
 public class SB_PersonTest extends VertxJunitSupport {
+    /**
+     * Gets by id.
+     */
     @Test
     public void getById() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
@@ -60,6 +63,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body("name", hasItem("Batinovic"));
     }
 
+    /**
+     * Gets by id with non logged user.
+     */
     @Test
     public void getByIdWithNonLoggedUser() {
         given().when().post(getURL(SB_PersonVerticle.GET_LIST))
@@ -67,6 +73,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
+    /**
+     * Gets by id with wrong http method.
+     */
     @Test
     public void getByIdWithWrongHttpMethod() {
         given().when().get(getURL(SB_PersonVerticle.GET_LIST))
@@ -74,6 +83,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body(STATUS, is(false));
     }
 
+    /**
+     * Gets by id with missing parameters.
+     */
     @Test
     public void getByIdWithMissingParameters() {
         final JsonObject params = new JsonObject();
@@ -96,6 +108,9 @@ public class SB_PersonTest extends VertxJunitSupport {
         }
     }
 
+    /**
+     * Gets list person sandbox.
+     */
     @Test
     public void getListPersonSandbox() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
@@ -107,6 +122,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body("name", hasItem("Batinovic"));
     }
 
+    /**
+     * Gets list person sandbox with non logged user.
+     */
     @Test
     public void getListPersonSandboxWithNonLoggedUser() {
         given().when().queryParam(SB_PersonVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f")
@@ -115,6 +133,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
+    /**
+     * Gets list person sandbox with wrong http method.
+     */
     @Test
     public void getListPersonSandboxWithWrongHttpMethod() {
         given().when().post(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
@@ -122,14 +143,32 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body(STATUS, is(false));
     }
 
+    /**
+     * Gets list person sandbox with missing parameters.
+     */
     @Test
     public void getListPersonSandboxWithMissingParameters() {
         given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
-                .when().post(getURL(SB_PersonVerticle.GET_LIST))
+                .when().get(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
+    /**
+     * Gets list person sandbox with wring parameters.
+     */
+    @Test
+    public void getListPersonSandboxWithWringParameters() {
+        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+                .queryParam(SB_PersonVerticle.PARAM_SANDBOX_ID, "bla")
+                .when().get(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
+
+    /**
+     * Add person.
+     */
     @Test
     public void addPerson() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
@@ -143,6 +182,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body("name", is("Ranu"));
     }
 
+    /**
+     * Add person with non logged user.
+     */
     @Test
     public void addPersonWithNonLoggedUser() {
         given().when().post(getURL(SB_EffectiveVerticle.ADD))
@@ -150,6 +192,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
+    /**
+     * Add person with wrong http method.
+     */
     @Test
     public void addPersonWithWrongHttpMethod() {
         given().when().get(getURL(SB_EffectiveVerticle.ADD))
@@ -157,6 +202,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body(STATUS, is(false));
     }
 
+    /**
+     * Add person with missing parameter.
+     */
     @Test
     public void addPersonWithMissingParameter() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
@@ -167,6 +215,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
+    /**
+     * Update person.
+     */
     @Test
     public void updatePerson() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
@@ -188,6 +239,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body("name", is("Blabla"));
     }
 
+    /**
+     * Update person with non logged user.
+     */
     @Test
     public void updatePersonWithNonLoggedUser() {
         given().when().put(getURL(SB_EffectiveVerticle.UPDATE))
@@ -195,6 +249,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
+    /**
+     * Update person with wrong http method.
+     */
     @Test
     public void updatePersonWithWrongHttpMethod() {
         given().when().get(getURL(SB_EffectiveVerticle.UPDATE))
@@ -202,6 +259,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .body(STATUS, is(false));
     }
 
+    /**
+     * Update person with missing parameters.
+     */
     @Test
     public void updatePersonWithMissingParameters() {
         populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
