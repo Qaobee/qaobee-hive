@@ -148,7 +148,10 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
             BasicDBObject dbObjectChild = new BasicDBObject("$in", listId.toArray());
             dbObjectParent.put("_id", dbObjectChild);
             DBObject match = new BasicDBObject("$match", dbObjectParent);
-            listfield.forEach(field -> dbObjectParent.put((String) field, "$" + field));
+                    dbObjectParent = new BasicDBObject();
+                    for (Object field : listfield) {
+                        dbObjectParent.put((String) field, "$" + field);
+                    }
             DBObject project = new BasicDBObject("$project", dbObjectParent);
             List<DBObject> pipelineAggregation = Arrays.asList(match, project);
             final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, SB_Person.class);
