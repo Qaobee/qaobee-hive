@@ -42,7 +42,6 @@ import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -72,7 +71,13 @@ import java.util.*;
 /**
  * The Class SignupVerticle.
  *
- * @author Xavier MARIN         <ul>         <li>resthandler.register : Register a new accunt</li>         <li>resthandler.logintest : Login unicity test for rest request</li>         <li>loginExists : Login unicity test for internal use</li>         <li>resthandler.accountcheck : email validation number check</li>         </ul>
+ * @author Xavier MARIN
+ *         <ul>
+ *         <li>resthandler.register : Register a new accunt</li>
+ *         <li>resthandler.logintest : Login unicity test for rest request</li>
+ *         <li>loginExists : Login unicity test for internal use</li>
+ *         <li>resthandler.accountcheck : email validation number check</li>
+ *         </ul>
  */
 @DeployableVerticle
 public class SignupVerticle extends AbstractGuiceVerticle {
@@ -145,7 +150,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_PLAN = "plan";
     private static final Logger LOG = LoggerFactory.getLogger(SignupVerticle.class);
-    // MongoDB driver
     @Inject
     private MongoDB mongo;
     @Inject
@@ -164,95 +168,34 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     private ActivityBusiness activityBusiness;
 
     @Override
-    @VerticleHandler({
-            @Rule(address = LOGIN_TEST, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY),
-            @Rule(address = REGISTER, method = Constantes.PUT),
-            @Rule(address = ACCOUNT_CHECK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST),
-            @Rule(address = FIRST_CONNECTION_CHECK, method = Constantes.GET, mandatoryParams = {PARAM_ID, PARAM_CODE}, scope = Rule.Param.REQUEST),
-            @Rule(address = FINALIZE_SIGNUP, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE}, scope = Rule.Param.BODY),
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        /**
-         * @apiDescription Test the existence of a username in the db
-         * @api {get} /api/1/commons/users/signup/logintest
-         * @apiVersion 0.1.0
-         * @apiName userNameExistHandler
-         * @apiGroup Signup API
-         * @apiParam {String} [login] person.account.login
-         * @apiSuccess {Object} status {"status", true|false}
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(LOGIN_EXISTS, this::existingLoginHandler);
-        /**
-         * @apiDescription Login unicity test for rest request
-         * @api {get} /api/1/commons/users/signup/loginExists Login unicity test
-         * @apiVersion 0.1.0
-         * @apiName userNameTestHandler
-         * @apiGroup Signup API
-         * @apiParam {String} [login] person.account.login
-         * @apiSuccess {Object} status {"status", true|false}
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(LOGIN_TEST, this::loginTestHandler);
-        /**
-         * @apiDescription Register a new account
-         * @api {put} /api/1/commons/users/signup/register Register a new account
-         * @apiVersion 0.1.0
-         * @apiName registerHandler
-         * @apiGroup Signup API
-         * @apiParam {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
-         * @apiSuccess {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
-         * @apiError HTTP_ERROR wrong request's method
-         * @apiError PASSWD_EXCEPTION Password encoding exception
-         * @apiError NON_UNIQUE_LOGIN Non unique login
-         * @apiError MAIL_EXCEPTION problème d'envoi d'email
-         */
-        vertx.eventBus().registerHandler(REGISTER, this::registerHandler);
-
-        /**
-         * @apiDescription Account validation check
-         * @api {get} /api/1/commons/users/signup/accountcheck Account validation check
-         * @apiParam {String} code Activation code
-         * @apiParam {String} id Person id
-         * @apiVersion 0.1.0
-         * @apiName accountCheckHandler
-         * @apiGroup Signup API
-         * @apiSuccess {Object} status {"status", true|false}
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(ACCOUNT_CHECK, this::accountCheckHandler);
-
-        /**
-         * @apiDescription First connection account check
-         * @api {get} /api/1/commons/users/signup/firstconnectioncheck Account validation check
-         * @apiParam {String} code Activation code
-         * @apiParam {String} id Person id
-         * @apiVersion 0.1.0
-         * @apiName accountCheckHandler
-         * @apiGroup Signup API
-         * @apiSuccess {Object} status {"status", true|false}
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(FIRST_CONNECTION_CHECK, this::firstConnectionCheckHandler);
-
-        /**
-         * @apiDescription Finalizes signup
-         * @api {get} /api/1/commons/users/signup/finalizesignup Account finalizes signup
-         * @apiParam {Object} user the user
-         * @apiParam {String} activationCode The activation code
-         * @apiParam {Object} structure The structure
-         * @apiParam {Object} activity the activity
-         * @apiVersion 0.1.0
-         * @apiName finalizeSignupHandler
-         * @apiGroup Signup API
-         * @apiSuccess {Object} user {"status", true|false}
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(FINALIZE_SIGNUP, this::finalizeSignupHandler);
+        vertx.eventBus()
+                .registerHandler(LOGIN_EXISTS, this::existingLoginHandler)
+                .registerHandler(LOGIN_TEST, this::loginTestHandler)
+                .registerHandler(REGISTER, this::registerHandler)
+                .registerHandler(ACCOUNT_CHECK, this::accountCheckHandler)
+                .registerHandler(FIRST_CONNECTION_CHECK, this::firstConnectionCheckHandler)
+                .registerHandler(FINALIZE_SIGNUP, this::finalizeSignupHandler);
     }
 
+    /**
+     * @apiDescription Finalizes signup
+     * @api {get} /api/1/commons/users/signup/finalizesignup Account finalizes signup
+     * @apiParam {Object} user the user
+     * @apiParam {String} activationCode The activation code
+     * @apiParam {Object} structure The structure
+     * @apiParam {Object} activity the activity
+     * @apiVersion 0.1.0
+     * @apiName finalizeSignupHandler
+     * @apiGroup Signup API
+     * @apiSuccess {Object} user {"status", true|false}
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = FINALIZE_SIGNUP, method = Constantes.POST, logged = true,
+            mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
+            scope = Rule.Param.BODY)
     private void finalizeSignupHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -440,6 +383,18 @@ public class SignupVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription First connection account check
+     * @api {get} /api/1/commons/users/signup/firstconnectioncheck Account validation check
+     * @apiParam {String} code Activation code
+     * @apiParam {String} id Person id
+     * @apiVersion 0.1.0
+     * @apiName accountCheckHandler
+     * @apiGroup Signup API
+     * @apiSuccess {Object} status {"status", true|false}
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = FIRST_CONNECTION_CHECK, method = Constantes.GET, mandatoryParams = {PARAM_ID, PARAM_CODE}, scope = Rule.Param.REQUEST)
     private void firstConnectionCheckHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -467,6 +422,18 @@ public class SignupVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Account validation check
+     * @api {get} /api/1/commons/users/signup/accountcheck Account validation check
+     * @apiParam {String} code Activation code
+     * @apiParam {String} id Person id
+     * @apiVersion 0.1.0
+     * @apiName accountCheckHandler
+     * @apiGroup Signup API
+     * @apiSuccess {Object} status {"status", true|false}
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = ACCOUNT_CHECK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
     private void accountCheckHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -486,6 +453,20 @@ public class SignupVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Register a new account
+     * @api {put} /api/1/commons/users/signup/register Register a new account
+     * @apiVersion 0.1.0
+     * @apiName registerHandler
+     * @apiGroup Signup API
+     * @apiParam {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
+     * @apiSuccess {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
+     * @apiError HTTP_ERROR wrong request's method
+     * @apiError PASSWD_EXCEPTION Password encoding exception
+     * @apiError NON_UNIQUE_LOGIN Non unique login
+     * @apiError MAIL_EXCEPTION problème d'envoi d'email
+     */
+    @Rule(address = REGISTER, method = Constantes.PUT)
     private void registerHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -585,6 +566,17 @@ public class SignupVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Login unicity test for rest request
+     * @api {get} /api/1/commons/users/signup/loginExists Login unicity test
+     * @apiVersion 0.1.0
+     * @apiName userNameTestHandler
+     * @apiGroup Signup API
+     * @apiParam {String} [login] person.account.login
+     * @apiSuccess {Object} status {"status", true|false}
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = LOGIN_TEST, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
     private void loginTestHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final String login = new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase();
@@ -592,6 +584,16 @@ public class SignupVerticle extends AbstractGuiceVerticle {
         utils.sendStatus(res.size() > 0, message);
     }
 
+    /**
+     * @apiDescription Test the existence of a username in the db
+     * @api {get} /api/1/commons/users/signup/logintest
+     * @apiVersion 0.1.0
+     * @apiName userNameExistHandler
+     * @apiGroup Signup API
+     * @apiParam {String} [login] person.account.login
+     * @apiSuccess {Object} status {"status", true|false}
+     * @apiError HTTP_ERROR wrong request's method
+     */
     private void existingLoginHandler(Message<JsonObject> message) {
         final String login = message.body().getString(PARAM_LOGIN).toLowerCase();
         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);

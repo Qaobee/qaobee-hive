@@ -25,7 +25,6 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -36,7 +35,6 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -88,167 +86,138 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * Person ID
      */
     public static final String PARAM_PERSON_ID = "_id";
-    /**
-     * The Mongo.
-     */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = GET_LIST, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_LIST_ID, PARAM_LIST_FIELD}, scope = Rule.Param.BODY),
-            @Rule(address = GET_LIST_SANDBOX, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = UPDATE, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY),
-            @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {"person"}, scope = Rule.Param.BODY),
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
+        vertx.eventBus()
+                .registerHandler(ADD, this::addPersonHandler)
+                .registerHandler(GET, this::getPersonHandler)
+                .registerHandler(UPDATE, this::updatePersonHandler)
+                .registerHandler(GET_LIST, this::getPersonListHandler)
+                .registerHandler(GET_LIST_SANDBOX, this::getPersonListBySandboxHandler);
+    }
 
-        /**
-         * @apiDescription Add Person
-         * @api {put} /api/1/sandbox/effective/person/add Add Person
-         * @apiVersion 0.1.0
-         * @apiName addPerson
-         * @apiGroup Person API
-         * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
-         */
-        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
-            @Override
-            public void handle(Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject dataContainer = new JsonObject(req.getBody());
-                    final JsonObject personJson = new JsonObject(dataContainer.getElement("person").toString());
-                    final String id = mongo.save(personJson, SB_Person.class);
-                    personJson.putString("_id", id);
-                    message.reply(personJson.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+    /**
+     * @apiDescription Return list of person as member of group
+     * @api {post} /api/1/sandbox/effective/person/list Get list of persons
+     * @apiVersion 0.1.0
+     * @apiName getListPerson
+     * @apiGroup Person API
+     * @apiSuccess {Array} list of persons
+     */
+    @Rule(address = GET_LIST_SANDBOX, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST)
+    private void getPersonListBySandboxHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            CriteriaBuilder criteria = new CriteriaBuilder()
+                    .add(PARAM_SANDBOX_ID, req.getParams().get(PARAM_SANDBOX_ID).get(0));
+            JsonArray resultJson = mongo.findByCriterias(criteria.get(), null, null, -1, -1, SB_Person.class);
+            if (resultJson == null || resultJson.size() == 0) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No person found for sandboxId (" + req.getParams().get(PARAM_SANDBOX_ID).get(0) + ")");
             }
-        });
+            message.reply(resultJson.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
 
-        /**
-         * @apiDescription Retrieve Person by this Id
-         * @api {get} /api/1/sandbox/effective/person/get Get Person by Id
-         * @apiVersion 0.1.0
-         * @apiName getPersonById
-         * @apiGroup Person API
-         * @apiParam {String} id
-         * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
-         */
-        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    utils.testMandatoryParams(req.getParams(), PARAM_PERSON_ID);
-                    message.reply(mongo.getById(req.getParams().get(PARAM_PERSON_ID).get(0), SB_Person.class).encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+    }
 
-        /**
-         * @apiDescription Update person
-         * @api {get} /api/1/sandbox/effective/person/update Update person
-         * @apiVersion 0.1.0
-         * @apiName updatePerson
-         * @apiGroup Person API
-         * @apiParam {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
-         * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
-         */
-        vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                final JsonObject json = new JsonObject(req.getBody());
-                final String id = mongo.update(json, SB_Person.class);
-                json.putString("_id", id);
-                message.reply(json.encode());
-            }
-        });
+    /**
+     * @apiDescription Return list of person as member of group
+     * @api {post} /api/1/sandbox/effective/person/list Get list of persons
+     * @apiVersion 0.1.0
+     * @apiName getListPerson
+     * @apiGroup Person API
+     * @apiSuccess {Array} list of persons
+     */
+    @Rule(address = GET_LIST, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_LIST_ID, PARAM_LIST_FIELD}, scope = Rule.Param.BODY)
+    private void getPersonListHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            JsonObject params = new JsonObject(req.getBody());
+            JsonArray listId = params.getArray(PARAM_LIST_ID);
+            JsonArray listfield = params.getArray(PARAM_LIST_FIELD);
+            BasicDBObject dbObjectParent = new BasicDBObject();
+            BasicDBObject dbObjectChild = new BasicDBObject("$in", listId.toArray());
+            dbObjectParent.put("_id", dbObjectChild);
+            DBObject match = new BasicDBObject("$match", dbObjectParent);
+            listfield.forEach(field -> dbObjectParent.put((String) field, "$" + field));
+            DBObject project = new BasicDBObject("$project", dbObjectParent);
+            List<DBObject> pipelineAggregation = Arrays.asList(match, project);
+            final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, SB_Person.class);
+            message.reply(resultJSon.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e.getCode(), e.getMessage());
+        }
+    }
 
-        /**
-         * @apiDescription Return list of person as member of group
-         * @api {post} /api/1/sandbox/effective/person/list Get list of persons
-         * @apiVersion 0.1.0
-         * @apiName getListPerson
-         * @apiGroup Person API
-         * @apiSuccess {Array} list of persons
-         */
-        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    JsonObject params = new JsonObject(req.getBody());
-                    JsonArray listId = params.getArray(PARAM_LIST_ID);
-                    JsonArray listfield = params.getArray(PARAM_LIST_FIELD);
-                    BasicDBObject dbObjectParent = new BasicDBObject();
-                    BasicDBObject dbObjectChild = new BasicDBObject("$in", listId.toArray());
-                    dbObjectParent.put("_id", dbObjectChild);
-                    DBObject match = new BasicDBObject("$match", dbObjectParent);
-                    dbObjectParent = new BasicDBObject();
-                    for (Object field : listfield) {
-                        dbObjectParent.put((String) field, "$" + field);
-                    }
-                    DBObject project = new BasicDBObject("$project", dbObjectParent);
-                    List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-                    final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, SB_Person.class);
-                    message.reply(resultJSon.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e.getCode(), e.getMessage());
-                }
-            }
+    /**
+     * @apiDescription Update person
+     * @api {get} /api/1/sandbox/effective/person/update Update person
+     * @apiVersion 0.1.0
+     * @apiName updatePerson
+     * @apiGroup Person API
+     * @apiParam {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
+     * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
+     */
+    @Rule(address = UPDATE, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY)
+    private void updatePersonHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        final JsonObject json = new JsonObject(req.getBody());
+        final String id = mongo.update(json, SB_Person.class);
+        json.putString("_id", id);
+        message.reply(json.encode());
+    }
 
-        });
+    /**
+     * @apiDescription Retrieve Person by this Id
+     * @api {get} /api/1/sandbox/effective/person/get Get Person by Id
+     * @apiVersion 0.1.0
+     * @apiName getPersonById
+     * @apiGroup Person API
+     * @apiParam {String} id
+     * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
+     */
+    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.REQUEST)
+    private void getPersonHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            utils.testMandatoryParams(req.getParams(), PARAM_PERSON_ID);
+            message.reply(mongo.getById(req.getParams().get(PARAM_PERSON_ID).get(0), SB_Person.class).encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-        /**
-         * @apiDescription Return list of person as member of group
-         * @api {post} /api/1/sandbox/effective/person/list Get list of persons
-         * @apiVersion 0.1.0
-         * @apiName getListPerson
-         * @apiGroup Person API
-         * @apiSuccess {Array} list of persons
-         */
-        vertx.eventBus().registerHandler(GET_LIST_SANDBOX, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    CriteriaBuilder criteria = new CriteriaBuilder()
-                            .add(PARAM_SANDBOX_ID, req.getParams().get(PARAM_SANDBOX_ID).get(0));
-                    JsonArray resultJson = mongo.findByCriterias(criteria.get(), null, null, -1, -1, SB_Person.class);
-                    if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No person found for sandboxId (" + req.getParams().get(PARAM_SANDBOX_ID).get(0) + ")");
-                    }
-                    message.reply(resultJson.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+    /**
+     * @apiDescription Add Person
+     * @api {put} /api/1/sandbox/effective/person/add Add Person
+     * @apiVersion 0.1.0
+     * @apiName addPerson
+     * @apiGroup Person API
+     * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
+     */
+    @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {"person"}, scope = Rule.Param.BODY)
+    private void addPersonHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject dataContainer = new JsonObject(req.getBody());
+            final JsonObject personJson = new JsonObject(dataContainer.getElement("person").toString());
+            final String id = mongo.save(personJson, SB_Person.class);
+            personJson.putString("_id", id);
+            message.reply(personJson.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 }

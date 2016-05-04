@@ -25,7 +25,6 @@ import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -61,19 +60,57 @@ import java.util.UUID;
  */
 @DeployableVerticle
 public class UserVerticle extends AbstractGuiceVerticle {
+    /**
+     * The constant LOGIN.
+     */
     public static final String LOGIN = Module.VERSION + ".commons.users.user.login";
+    /**
+     * The constant LOGIN_BY_TOKEN.
+     */
     public static final String LOGIN_BY_TOKEN = Module.VERSION + ".commons.users.user.sso";
+    /**
+     * The constant LOGOUT.
+     */
     public static final String LOGOUT = Module.VERSION + ".commons.users.user.logout";
+    /**
+     * The constant PASSWD_RENEW.
+     */
     public static final String PASSWD_RENEW = Module.VERSION + ".commons.users.user.newpasswd";
+    /**
+     * The constant PASSWD_RENEW_CHK.
+     */
     public static final String PASSWD_RENEW_CHK = Module.VERSION + ".commons.users.user.passwdcheck";
+    /**
+     * The constant PASSWD_RESET.
+     */
     public static final String PASSWD_RESET = Module.VERSION + ".commons.users.user.resetPasswd";
+    /**
+     * The constant CURRENT.
+     */
     public static final String CURRENT = Module.VERSION + ".commons.users.user.current";
+    /**
+     * The constant META.
+     */
     public static final String META = Module.VERSION + ".commons.users.user.meta";
+    /**
+     * The constant USER_INFO.
+     */
     public static final String USER_INFO = Module.VERSION + ".commons.users.user.user";
+    /**
+     * The constant USER_BY_LOGIN.
+     */
     public static final String USER_BY_LOGIN = Module.VERSION + ".commons.users.user.userByLogin";
-    /* List of parameters */
+    /**
+     * The constant PARAM_LOGIN.
+     */
     public static final String PARAM_LOGIN = "login";
+    /**
+     * The constant PARAM_COUNTRY_ID.
+     */
     public static final String PARAM_COUNTRY_ID = "country";
+    /**
+     * The constant PARAM_PWD.
+     */
     public static final String PARAM_PWD = "password"; // NOSONAR
     /**
      * The constant MOBILE_TOKEN.
@@ -83,174 +120,47 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private static final String ACCOUNT_FIELD = "account";
     private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     private static final String ACCOUNT_LOGIN_FIELD = "account.login";
-    /**
-     * The Mongo.
-     */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Mail utils.
-     */
     @Inject
     private MailUtils mailUtils;
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
-    /**
-     * The Password encryption service.
-     */
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
-    /**
-     * The Person utils.
-     */
     @Inject
     private PersonUtils personUtils;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-            @Rule(address = LOGIN, method = Constantes.POST),
-            @Rule(address = LOGOUT, method = Constantes.GET, logged = true, mandatoryParams = {TOKEN}, scope = Rule.Param.HEADER),
-            @Rule(address = PASSWD_RENEW, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY),
-            @Rule(address = PASSWD_RENEW_CHK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST),
-            @Rule(address = PASSWD_RESET, method = Constantes.POST, mandatoryParams = {"id", "code", PASSWD_FIELD}, scope = Rule.Param.BODY),
-            @Rule(address = CURRENT, method = Constantes.GET, logged = true),
-            @Rule(address = META, method = Constantes.GET, logged = true),
-            @Rule(address = USER_INFO, method = Constantes.GET, logged = true, mandatoryParams = {"id"}, scope = Rule.Param.REQUEST),
-            @Rule(address = USER_BY_LOGIN, method = Constantes.GET, logged = true, admin = true, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.REQUEST),
-            @Rule(address = LOGIN_BY_TOKEN, method = Constantes.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN}, scope = Rule.Param.BODY),
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        /**
-         * @apiDescription Login user
-         * @api {post} /api/1/commons/users/user/login Login user
-         * @apiVersion 0.1.0
-         * @apiName loginHandler
-         * @apiGroup User API
-         * @apiParam {String} login login (user.username)
-         * @apiParam {String} password password
-         * @apiParam {String} [mobileToken] optionnal mobile token for SSO
-         * @apiSuccess {Object} user com.qaobee.hive.business.model.commons.users.User
-         * @apiError PASSWD_EXCEPTION wrong password encoding
-         * @apiError BAD_LOGIN wrong login or password
-         * @apiError NON_ACTIVE the user is not active
-         * @apiError HTTP_ERROR wrong request method
-         */
-        vertx.eventBus().registerHandler(LOGIN, this::loginHandler);
-        /**
-         * @apiDescription User logout
-         * @api {get} /api/1/commons/users/user/logout User logout
-         * @apiVersion 0.1.0
-         * @apiName logoutHandler
-         * @apiGroup User API
-         * @apiHeader {String} token
-         * @apiSuccess {Object} status {"status", true|false}
-         * @apiError HTTP_ERROR wrong request method
-         */
-        vertx.eventBus().registerHandler(LOGOUT, this::logoutHandler);
-        /**
-         * @apiDescription Mail generation for password renew
-         * @api {post} /api/1/commons/users/user/newpasswd Password renew
-         * @apiVersion 0.1.0
-         * @apiName newPasswdHandler
-         * @apiGroup User API
-         * @apiParam {String} login user login
-         * @apiSuccess {Object} status
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError MAIL_EXCEPTION email problem
-         */
-        vertx.eventBus().registerHandler(PASSWD_RENEW, this::passwordRenewHandler);
-        /**
-         * @apiDescription Check activation code supplied in the renew password email
-         * @api {get} /api/v1/commons/users/user/passwdcheck Check activation code
-         * @apiParam {String} code Activation code
-         * @apiParam {String} id Person id
-         * @apiVersion 0.1.0
-         * @apiName passwdCheckHandler
-         * @apiGroup User API
-         * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
-         * @apiError HTTP_ERROR wrong request method
-         */
-        vertx.eventBus().registerHandler(PASSWD_RENEW_CHK, this::passwordRenewCheckHandler);
-        /**
-         * @apiDescription Update password after renew ask
-         * @api {post} /api/v1/commons/users/user/resetPasswd Update password
-         * @apiParam {Object} data {id, code, passwd}
-         * @apiVersion 0.1.0
-         * @apiName resetPasswdHandler
-         * @apiGroup User API
-         * @apiSuccess {Object} status {"status", true|false}
-         * @apiError HTTP_ERROR wrong request method
-         */
-        vertx.eventBus().registerHandler(PASSWD_RESET,this::passwordResetHandler);
-        /**
-         * @apiDescription Fetch the current logged user
-         * @api {get} /api/1/commons/users/user/current Fetch the current logged user
-         * @apiVersion 0.1.0
-         * @apiName currentHandler
-         * @apiGroup User API
-         * @apiHeader {String} token
-         * @apiParam {Object} Person com.qaobee.swarn.business.model.tranversal.person.Person
-         * @apiSuccess {Object} Person com.qaobee.swarn.business.model.tranversal.person.Person
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError NOT_LOGGED invalid token
-         */
-        vertx.eventBus().registerHandler(CURRENT, this::currentUserHandler);
-        /**
-         * @apiDescription Fetch meta information
-         * @api {get} /api/1/commons/users/user/meta Fetch meta information
-         * @apiVersion 0.1.0
-         * @apiName getMetasHandler
-         * @apiGroup User API
-         * @apiHeader {String} token
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError NOT_LOGGED invalid token
-         */
-        vertx.eventBus().registerHandler(META, this::getMetaHandler);
-        /**
-         * @apiDescription Fetch user information by its id
-         * @api {get} /api/1/commons/users/user/user Fetch user by id
-         * @apiVersion 0.1.0
-         * @apiName getUserByIdhandler
-         * @apiGroup User API
-         * @apiParam {String} id
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError NOT_LOGGED invalid token
-         */
-        vertx.eventBus().registerHandler(USER_INFO, this::userInfoHandler);
-        /**
-         * @apiDescription Fetch user information by its Login
-         * @api {get} /api/1/commons/users/user/user Fetch user by login
-         * @apiVersion 0.1.0
-         * @apiName getUserByLoginhandler
-         * @apiGroup User API
-         * @apiParam {String} login
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError NOT_LOGGED invalid token
-         */
-        vertx.eventBus().registerHandler(USER_BY_LOGIN, this::userByLoginHandler);
-        /**
-         * @apiDescription SSO login by mobile token (token provided at the login phase corresponding to the device id)
-         * @api {post} /api/1/commons/users/user/sso SSO login by mobile token
-         * @apiVersion 0.1.0
-         * @apiName loginByMobileToken
-         * @apiParam {String} mobileToken Mobile device Id
-         * @apiParam {String} login Login
-         * @apiGroup User API
-         * @apiError HTTP_ERROR wrong request method
-         * @apiError NOT_LOGGED invalid token
-         */
-        vertx.eventBus().registerHandler(LOGIN_BY_TOKEN, this::userByTokenHandler);
+        vertx.eventBus()
+                .registerHandler(LOGIN, this::loginHandler)
+                .registerHandler(LOGOUT, this::logoutHandler)
+                .registerHandler(PASSWD_RENEW, this::passwordRenewHandler)
+                .registerHandler(PASSWD_RENEW_CHK, this::passwordRenewCheckHandler)
+                .registerHandler(PASSWD_RESET, this::passwordResetHandler)
+                .registerHandler(CURRENT, this::currentUserHandler)
+                .registerHandler(META, this::getMetaHandler)
+                .registerHandler(USER_INFO, this::userInfoHandler)
+                .registerHandler(USER_BY_LOGIN, this::userByLoginHandler)
+                .registerHandler(LOGIN_BY_TOKEN, this::loginByTokenHandler);
     }
 
-    private void userByTokenHandler(Message<String> message) {
+    /**
+     * @apiDescription SSO login by mobile token (token provided at the login phase corresponding to the device id)
+     * @api {post} /api/1/commons/users/user/sso SSO login by mobile token
+     * @apiVersion 0.1.0
+     * @apiName loginByMobileToken
+     * @apiParam {String} mobileToken Mobile device Id
+     * @apiParam {String} login Login
+     * @apiGroup User API
+     * @apiError HTTP_ERROR wrong request method
+     * @apiError NOT_LOGGED invalid token
+     */
+    @Rule(address = LOGIN_BY_TOKEN, method = Constantes.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN}, scope = Rule.Param.BODY)
+    private void loginByTokenHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject request = new JsonObject(req.getBody());
@@ -275,6 +185,17 @@ public class UserVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Fetch user information by its Login
+     * @api {get} /api/1/commons/users/user/user Fetch user by login
+     * @apiVersion 0.1.0
+     * @apiName getUserByLoginhandler
+     * @apiGroup User API
+     * @apiParam {String} login
+     * @apiError HTTP_ERROR wrong request method
+     * @apiError NOT_LOGGED invalid token
+     */
+    @Rule(address = USER_BY_LOGIN, method = Constantes.GET, logged = true, admin = true, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.REQUEST)
     private void userByLoginHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         // Creation of request
@@ -292,6 +213,17 @@ public class UserVerticle extends AbstractGuiceVerticle {
         message.reply(jsonArray.get(0).toString());
     }
 
+    /**
+     * @apiDescription Fetch user information by its id
+     * @api {get} /api/1/commons/users/user/user Fetch user by id
+     * @apiVersion 0.1.0
+     * @apiName getUserByIdhandler
+     * @apiGroup User API
+     * @apiParam {String} id
+     * @apiError HTTP_ERROR wrong request method
+     * @apiError NOT_LOGGED invalid token
+     */
+    @Rule(address = USER_INFO, method = Constantes.GET, logged = true, mandatoryParams = {"id"}, scope = Rule.Param.REQUEST)
     private void userInfoHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -306,6 +238,17 @@ public class UserVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Fetch meta information
+     * @api {get} /api/1/commons/users/user/meta Fetch meta information
+     * @apiVersion 0.1.0
+     * @apiName getMetasHandler
+     * @apiGroup User API
+     * @apiHeader {String} token
+     * @apiError HTTP_ERROR wrong request method
+     * @apiError NOT_LOGGED invalid token
+     */
+    @Rule(address = META, method = Constantes.GET, logged = true)
     private void getMetaHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -335,6 +278,19 @@ public class UserVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Fetch the current logged user
+     * @api {get} /api/1/commons/users/user/current Fetch the current logged user
+     * @apiVersion 0.1.0
+     * @apiName currentHandler
+     * @apiGroup User API
+     * @apiHeader {String} token
+     * @apiParam {Object} Person com.qaobee.swarn.business.model.tranversal.person.Person
+     * @apiSuccess {Object} Person com.qaobee.swarn.business.model.tranversal.person.Person
+     * @apiError HTTP_ERROR wrong request method
+     * @apiError NOT_LOGGED invalid token
+     */
+    @Rule(address = CURRENT, method = Constantes.GET, logged = true)
     private void currentUserHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         User user = req.getUser();
@@ -345,6 +301,17 @@ public class UserVerticle extends AbstractGuiceVerticle {
         message.reply(jUser.encode());
     }
 
+    /**
+     * @apiDescription Update password after renew ask
+     * @api {post} /api/v1/commons/users/user/resetPasswd Update password
+     * @apiParam {Object} data {id, code, passwd}
+     * @apiVersion 0.1.0
+     * @apiName resetPasswdHandler
+     * @apiGroup User API
+     * @apiSuccess {Object} status {"status", true|false}
+     * @apiError HTTP_ERROR wrong request method
+     */
+    @Rule(address = PASSWD_RESET, method = Constantes.POST, mandatoryParams = {"id", "code", PASSWD_FIELD}, scope = Rule.Param.BODY)
     private void passwordResetHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -389,6 +356,18 @@ public class UserVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Check activation code supplied in the renew password email
+     * @api {get} /api/v1/commons/users/user/passwdcheck Check activation code
+     * @apiParam {String} code Activation code
+     * @apiParam {String} id Person id
+     * @apiVersion 0.1.0
+     * @apiName passwdCheckHandler
+     * @apiGroup User API
+     * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
+     * @apiError HTTP_ERROR wrong request method
+     */
+    @Rule(address = PASSWD_RENEW_CHK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
     private void passwordRenewCheckHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -417,6 +396,18 @@ public class UserVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Mail generation for password renew
+     * @api {post} /api/1/commons/users/user/newpasswd Password renew
+     * @apiVersion 0.1.0
+     * @apiName newPasswdHandler
+     * @apiGroup User API
+     * @apiParam {String} login user login
+     * @apiSuccess {Object} status
+     * @apiError HTTP_ERROR wrong request method
+     * @apiError MAIL_EXCEPTION email problem
+     */
+    @Rule(address = PASSWD_RENEW, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
     private void passwordRenewHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -456,6 +447,17 @@ public class UserVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription User logout
+     * @api {get} /api/1/commons/users/user/logout User logout
+     * @apiVersion 0.1.0
+     * @apiName logoutHandler
+     * @apiGroup User API
+     * @apiHeader {String} token
+     * @apiSuccess {Object} status {"status", true|false}
+     * @apiError HTTP_ERROR wrong request method
+     */
+    @Rule(address = LOGOUT, method = Constantes.GET, logged = true, mandatoryParams = {TOKEN}, scope = Rule.Param.HEADER)
     private void logoutHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -481,6 +483,22 @@ public class UserVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Login user
+     * @api {post} /api/1/commons/users/user/login Login user
+     * @apiVersion 0.1.0
+     * @apiName loginHandler
+     * @apiGroup User API
+     * @apiParam {String} login login (user.username)
+     * @apiParam {String} password password
+     * @apiParam {String} [mobileToken] optionnal mobile token for SSO
+     * @apiSuccess {Object} user com.qaobee.hive.business.model.commons.users.User
+     * @apiError PASSWD_EXCEPTION wrong password encoding
+     * @apiError BAD_LOGIN wrong login or password
+     * @apiError NON_ACTIVE the user is not active
+     * @apiError HTTP_ERROR wrong request method
+     */
+    @Rule(address = LOGIN, method = Constantes.POST)
     private void loginHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {

@@ -22,7 +22,6 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -52,7 +51,6 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * The Constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.season.get";
-    // Declaration des variables finals
     /**
      * The Constant GET_LIST_BY_ACTIVITY.
      */
@@ -65,8 +63,6 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * Id of the season
      */
     public static final String PARAM_ID = "_id";
-
- /* List of parameters */
     /**
      * Activity ID
      */
@@ -82,60 +78,29 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
     @Inject
     private Utils utils;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
-                    scope = Rule.Param.REQUEST),
-            @Rule(address = GET_LIST_BY_ACTIVITY, method = Constantes.GET, logged = true,
-                    mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
-                    scope = Rule.Param.REQUEST),
-            @Rule(address = GET_CURRENT, method = Constantes.GET, logged = true,
-                    mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
-                    scope = Rule.Param.REQUEST)
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
-        /**
-         * @apiDescription get a season to the collection season in settings module
-         * @api {get} /api/1/commons/settings/season/get Get season by id
-         * @apiVersion 0.1.0
-         * @apiName getHandler
-         * @apiGroup Season API
-         * @apiParam {String} _id Mandatory The season Id.
-         * @apiSuccess {Season} the object found
-         */
-        vertx.eventBus().registerHandler(GET, this::getSeasonHandler);
-
-        /**
-         * @apiDescription Retrieve all seasons for one activity and one country
-         * @api {get} /api/1/commons/settings/season/getListByActivity Retrieve all seasons
-         * @apiVersion 0.1.0
-         * @apiName getListByActivityHandler
-         * @apiParam activityId Activity Id
-         * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
-         * @apiGroup Season API
-         * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
-         */
-        vertx.eventBus().registerHandler(GET_LIST_BY_ACTIVITY, this::getListByActivityHandler);
-
-        /**
-         * @apiDescription Retrieve current season for one activity and one country
-         * @api {get} /api/1/commons/settings/season/current Retrieve current seasons
-         * @apiVersion 0.1.0
-         * @apiName getCurrentHandler
-         * @apiGroup Season API
-         * @apiParam activityId Activity Id
-         * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
-         * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
-         */
-        vertx.eventBus().registerHandler(GET_CURRENT, this::getCurrentSeasonHandler);
+        vertx.eventBus()
+                .registerHandler(GET, this::getSeasonHandler)
+                .registerHandler(GET_LIST_BY_ACTIVITY, this::getListByActivityHandler)
+                .registerHandler(GET_CURRENT, this::getCurrentSeasonHandler);
     }
 
+    /**
+     * @apiDescription Retrieve current season for one activity and one country
+     * @api {get} /api/1/commons/settings/season/current Retrieve current seasons
+     * @apiVersion 0.1.0
+     * @apiName getCurrentHandler
+     * @apiGroup Season API
+     * @apiParam activityId Activity Id
+     * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
+     * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
+     */
+    @Rule(address = GET_CURRENT, method = Constantes.GET, logged = true,
+            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
+            scope = Rule.Param.REQUEST)
     private void getCurrentSeasonHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -166,6 +131,19 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Retrieve all seasons for one activity and one country
+     * @api {get} /api/1/commons/settings/season/getListByActivity Retrieve all seasons
+     * @apiVersion 0.1.0
+     * @apiName getListByActivityHandler
+     * @apiParam activityId Activity Id
+     * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
+     * @apiGroup Season API
+     * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
+     */
+    @Rule(address = GET_LIST_BY_ACTIVITY, method = Constantes.GET, logged = true,
+            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
+            scope = Rule.Param.REQUEST)
     private void getListByActivityHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -188,6 +166,17 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription get a season to the collection season in settings module
+     * @api {get} /api/1/commons/settings/season/get Get season by id
+     * @apiVersion 0.1.0
+     * @apiName getHandler
+     * @apiGroup Season API
+     * @apiParam {String} _id Mandatory The season Id.
+     * @apiSuccess {Season} the object found
+     */
+    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+            scope = Rule.Param.REQUEST)
     private void getSeasonHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

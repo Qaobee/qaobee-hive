@@ -52,15 +52,12 @@ public class CountryBusinessImpl implements CountryBusiness {
 
     private void getCountries() {
         JsonArray resultJson = mongo.findAll(null, null, -1, 0, Country.class);
-        if (resultJson != null && resultJson.size() > 0) {
-            Country country;
-            String[] tabId;
+        if (resultJson != null) {
             mapCountry = new HashMap<>();
-            for (int i = 0; i < resultJson.size(); i++) {
-                country = Json.decodeValue(resultJson.get(i).toString(), Country.class);
-                tabId = country.get_id().split("-");
-                mapCountry.put(tabId[2], country);
-            }
+            resultJson.forEach(c -> {
+                Country country = Json.decodeValue(c.toString(), Country.class);
+                mapCountry.put(country.get_id().split("-")[2], country);
+            });
         }
     }
 }

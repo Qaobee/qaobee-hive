@@ -23,7 +23,6 @@ import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -54,7 +53,6 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * The Constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.country.get";
-    // Declaration des variables finals
     /**
      * The Constant GET_ALPHA2.
      */
@@ -67,8 +65,6 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * Id of the structure
      */
     public static final String PARAM_ID = "_id";
-
- /* List of parameters */
     /**
      * Alpha 2 code
      */
@@ -82,7 +78,6 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_LOCAL = "local";
     private static final Logger LOG = LoggerFactory.getLogger(CountryVerticle.class);
-    /* Injections */
     @Inject
     private MongoDB mongo;
     @Inject
@@ -91,70 +86,28 @@ public class CountryVerticle extends AbstractGuiceVerticle {
     private CountryBusiness countryBusiness;
 
     @Override
-    @VerticleHandler({
-            @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID},
-                    scope = Rule.Param.REQUEST),
-            @Rule(address = GET_LIST, method = Constantes.GET, mandatoryParams = {PARAM_LOCAL},
-                    scope = Rule.Param.REQUEST),
-            @Rule(address = GET_ALPHA2, method = Constantes.GET, mandatoryParams = {PARAM_ALPHA2},
-                    scope = Rule.Param.REQUEST)
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
-        /**
-         * @api {get} /api/1/commons/settings/country/get Read data of an Country
-         * @apiVersion 0.1.0
-         * @apiName get
-         * @apiGroup Country API
-         * @apiPermission all
-         *
-         * @apiDescription get a country to the collection country in settings module
-         *
-         * @apiParam {String} id Mandatory The Country-ID.
-         *
-         * @apiSuccess {Country}   country            The Country found.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET, this::getCountryHandler);
-
-        /**
-         * @api {get} /api/1/commons/settings/country/getAlpha2 Read data of an Country
-         * @apiVersion 0.1.0
-         * @apiName get
-         * @apiGroup Country API
-         * @apiPermission all
-         *
-         * @apiDescription get a country to the collection country in settings module
-         *
-         * @apiParam {String} alpha2 Mandatory The Alpha2.
-         *
-         * @apiSuccess {Country}   country            The Country found.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET_ALPHA2, this::getAlpha2Handler);
-
-        /**
-         * @api {get} /api/1/commons/settings/country/getList Read data of an Country
-         * @apiVersion 0.1.0
-         * @apiName getList
-         * @apiGroup Country API
-         * @apiPermission all
-         *
-         * @apiDescription get a list of countries to the collection Country in settings module
-         *
-         * @apiParam {String} label Optional The Country label.
-         *
-         * @apiSuccess {List}   countries            The list of countries found.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET_LIST, this::getListHandler);
+        vertx.eventBus()
+                .registerHandler(GET, this::getCountryHandler)
+                .registerHandler(GET_ALPHA2, this::getAlpha2Handler)
+                .registerHandler(GET_LIST, this::getListHandler);
     }
 
+    /**
+     * @api {get} /api/1/commons/settings/country/getList Read data of an Country
+     * @apiVersion 0.1.0
+     * @apiName getList
+     * @apiGroup Country API
+     * @apiPermission all
+     * @apiDescription get a list of countries to the collection Country in settings module
+     * @apiParam {String} label Optional The Country label.
+     * @apiSuccess {List}   countries            The list of countries found.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET_LIST, method = Constantes.GET, mandatoryParams = {PARAM_LOCAL},
+            scope = Rule.Param.REQUEST)
     private void getListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -178,6 +131,20 @@ public class CountryVerticle extends AbstractGuiceVerticle {
         }
     }
 
+
+    /**
+     * @api {get} /api/1/commons/settings/country/getAlpha2 Read data of an Country
+     * @apiVersion 0.1.0
+     * @apiName get
+     * @apiGroup Country API
+     * @apiPermission all
+     * @apiDescription get a country to the collection country in settings module
+     * @apiParam {String} alpha2 Mandatory The Alpha2.
+     * @apiSuccess {Country}   country            The Country found.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET_ALPHA2, method = Constantes.GET, mandatoryParams = {PARAM_ALPHA2},
+            scope = Rule.Param.REQUEST)
     private void getAlpha2Handler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -193,6 +160,19 @@ public class CountryVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @api {get} /api/1/commons/settings/country/get Read data of an Country
+     * @apiVersion 0.1.0
+     * @apiName get
+     * @apiGroup Country API
+     * @apiPermission all
+     * @apiDescription get a country to the collection country in settings module
+     * @apiParam {String} id Mandatory The Country-ID.
+     * @apiSuccess {Country}   country            The Country found.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID},
+            scope = Rule.Param.REQUEST)
     private void getCountryHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

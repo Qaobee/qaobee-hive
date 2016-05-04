@@ -6,7 +6,6 @@ import com.qaobee.hive.business.model.commons.users.communication.Notification;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -80,77 +79,36 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     private static final String NOTIFICATION = "notification";
     private static final String SENDER_ID = "senderId";
 
-
     @Override
-    @VerticleHandler({
-                             @Rule(address = LIST, method = Constantes.GET, logged = true),
-                             @Rule(address = DEL, method = Constantes.DELETE, logged = true,
-                                   mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST),
-                             @Rule(address = READ, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST),
-                             @Rule(address = ADD_TO_USER, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
-                                   scope = Rule.Param.BODY),
-                             @Rule(address = ADD_TO_SANDBOX, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
-                                   scope = Rule.Param.BODY),
-                     })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        /**
-         * @apiDescription Fetch the last notifications for the current user (from start to start+limit) ordered by
-         *  the newest first
-         * @api {post} /api/v1/commons/communication/notifications commons.communication.notifications
-         * @apiParam {number} start start
-         * @apiParam {number} limit limit
-         * @apiName getUserNotifications
-         * @apiGroup NotificationsVerticle
-         * @apiSuccess {Array} notification com.qaobee.hive.business.model.commons.users.communication.Notification
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(LIST, this::notificationListHandler);
-        /**
-         * @apiDescription Delete a notification
-         * @api {put} /api/v1/commons/communication/notifications/del/?id=:id commons.communication.notifications.del
-         * @apiName delNotificationHandler
-         * @apiGroup NotificationsVerticle
-         * @apiParam {String} id notification id
-         * @apiSuccess {Object} status
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(DEL, this::deleteHandler);
-        /**
-         * @apiDescription Mark a notification as read
-         * @api {put} /api/v1/commons/communication/notifications/read/?id=:id commons.communication.notifications.read
-         * @apiName readNotificationHandler
-         * @apiGroup NotificationsVerticle
-         * @apiParam {String} id notification id
-         * @apiSuccess {Object} status
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(READ, this::markAsReadHandler);
-        /**
-         * Add a notification to a collection
-         * <p>Message : <pre>
-         *     {
-         *      id : "123456", // id of a document
-         *      target : "User | SB_SandBoxCfg", // collection's name
-         *      notification : {
-         *          content: "bla bla bla",
-         *          senderId : "123456",
-         *          title : "Hello"
-         *      }
-         *     }
-         * </pre></p>
-         */
-        vertx.eventBus().registerHandler(NOTIFY, this::notifyHandler);
-
-        vertx.eventBus().registerHandler(ADD_TO_USER, this::addNotificationToUserHandler);
-
-        vertx.eventBus().registerHandler(ADD_TO_SANDBOX, this::addNotificationToSandBoxHandler);
+        vertx.eventBus()
+                .registerHandler(LIST, this::notificationListHandler)
+                .registerHandler(DEL, this::deleteHandler)
+                .registerHandler(READ, this::markAsReadHandler)
+                .registerHandler(NOTIFY, this::notifyHandler)
+                .registerHandler(ADD_TO_USER, this::addNotificationToUserHandler)
+                .registerHandler(ADD_TO_SANDBOX, this::addNotificationToSandBoxHandler);
     }
 
+    /**
+     * Add a notification to a collection
+     * <p>Message : <pre>
+     *     {
+     *      id : "123456", // id of a document
+     *      target : "User | SB_SandBoxCfg", // collection's name
+     *      notification : {
+     *          content: "bla bla bla",
+     *          senderId : "123456",
+     *          title : "Hello"
+     *      }
+     *     }
+     * </pre></p>
+     */
+    @Rule(address = ADD_TO_SANDBOX, method = Constantes.POST, logged = true,
+            mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
+            scope = Rule.Param.BODY)
     private void addNotificationToSandBoxHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
@@ -163,6 +121,23 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         );
     }
 
+    /**
+     * Add a notification to a collection
+     * <p>Message : <pre>
+     *     {
+     *      id : "123456", // id of a document
+     *      target : "User | SB_SandBoxCfg", // collection's name
+     *      notification : {
+     *          content: "bla bla bla",
+     *          senderId : "123456",
+     *          title : "Hello"
+     *      }
+     *     }
+     * </pre></p>
+     */
+    @Rule(address = ADD_TO_USER, method = Constantes.POST, logged = true,
+            mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
+            scope = Rule.Param.BODY)
     private void addNotificationToUserHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
@@ -204,6 +179,16 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Mark a notification as read
+     * @api {put} /api/v1/commons/communication/notifications/read/?id=:id commons.communication.notifications.read
+     * @apiName readNotificationHandler
+     * @apiGroup NotificationsVerticle
+     * @apiParam {String} id notification id
+     * @apiSuccess {Object} status
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = READ, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
     private void markAsReadHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -218,6 +203,16 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Delete a notification
+     * @api {put} /api/v1/commons/communication/notifications/del/?id=:id commons.communication.notifications.del
+     * @apiName delNotificationHandler
+     * @apiGroup NotificationsVerticle
+     * @apiParam {String} id notification id
+     * @apiSuccess {Object} status
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = DEL, method = Constantes.DELETE, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
     private void deleteHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -232,6 +227,18 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Fetch the last notifications for the current user (from start to start+limit) ordered by
+     * the newest first
+     * @api {post} /api/v1/commons/communication/notifications commons.communication.notifications
+     * @apiParam {number} start start
+     * @apiParam {number} limit limit
+     * @apiName getUserNotifications
+     * @apiGroup NotificationsVerticle
+     * @apiSuccess {Array} notification com.qaobee.hive.business.model.commons.users.communication.Notification
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = LIST, method = Constantes.GET, logged = true)
     private void notificationListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -270,7 +277,6 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     /**
      * @param id           id user
      * @param notification notification object
-     *
      * @throws QaobeeException exception
      */
     private void addNotificationToUser(String id, JsonObject notification) throws QaobeeException {

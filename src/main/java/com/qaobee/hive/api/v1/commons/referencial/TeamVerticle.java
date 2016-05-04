@@ -21,7 +21,6 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.referencial.Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -48,7 +47,6 @@ public class TeamVerticle extends AbstractGuiceVerticle {
      * The Constant ADD_TO_USER.
      */
     public static final String ADD = Module.VERSION + ".commons.referencial.team.add";
-    // Declaration des variables finals
     /**
      * The Constant GET.
      */
@@ -84,71 +82,31 @@ public class TeamVerticle extends AbstractGuiceVerticle {
     private Utils utils;
 
     @Override
-    @VerticleHandler({
-            @Rule(address = ADD, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID}, scope = Rule.Param.BODY),
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID}, scope = Rule.Param.BODY),
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
-        /**
-         * @api {post} /api/1/commons/referencial/team/add Add team
-         * @apiVersion 0.1.0
-         * @apiName add
-         * @apiGroup Team API
-         * @apiPermission all
-         *
-         * @apiDescription Add team to the collection team in referencial module
-         *
-         * @apiParam {String} label Mandatory The Team label.
-         * @apiParam {Activity} activity Mandatory The Team activity.
-         * @apiParam {Country} country Mandatory The Team country
-         *
-         * @apiSuccess {Team}   team            The Team added with the id.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(ADD, this::addTeamHandler);
-
-        /**
-         * @api {get} /api/1/commons/referencial/team/get Read data of a Team
-         * @apiVersion 0.1.0
-         * @apiName get
-         * @apiGroup Team API
-         * @apiPermission all
-         *
-         * @apiDescription get a team to the collection team in referencial module
-         *
-         * @apiParam {String} id The Team-ID.
-         *
-         * @apiSuccess {Team}   team            The Team found.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET, this::getTeamHandler);
-        /**
-         * @api {post} /api/1/commons/referencial/team/update
-         * @apiVersion 0.1.0
-         * @apiName update
-         * @apiGroup Team API
-         * @apiPermission all
-         *
-         * @apiDescription Update a Team to the collection Team in referencial module
-         *
-         * @apiParam {String} _id Mandatory The Team ID.
-         * @apiParam {String} label Mandatory The Team label.
-         * @apiParam {Activity} activity Mandatory The Team activity.
-         * @apiParam {Country} country Mandatory The Team country
-         *
-         * @apiSuccess {Team}   team            The Team updated.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(UPDATE, this::updateTeamHandler);
+        vertx.eventBus()
+                .registerHandler(ADD, this::addTeamHandler)
+                .registerHandler(GET, this::getTeamHandler)
+                .registerHandler(UPDATE, this::updateTeamHandler);
     }
 
+    /**
+     * @api {post} /api/1/commons/referencial/team/update
+     * @apiVersion 0.1.0
+     * @apiName update
+     * @apiGroup Team API
+     * @apiPermission all
+     * @apiDescription Update a Team to the collection Team in referencial module
+     * @apiParam {String} _id Mandatory The Team ID.
+     * @apiParam {String} label Mandatory The Team label.
+     * @apiParam {Activity} activity Mandatory The Team activity.
+     * @apiParam {Country} country Mandatory The Team country
+     * @apiSuccess {Team}   team            The Team updated.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+            mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID}, scope = Rule.Param.BODY)
     private void updateTeamHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -162,6 +120,18 @@ public class TeamVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @api {get} /api/1/commons/referencial/team/get Read data of a Team
+     * @apiVersion 0.1.0
+     * @apiName get
+     * @apiGroup Team API
+     * @apiPermission all
+     * @apiDescription get a team to the collection team in referencial module
+     * @apiParam {String} id The Team-ID.
+     * @apiSuccess {Team}   team            The Team found.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
     private void getTeamHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -173,6 +143,21 @@ public class TeamVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @api {post} /api/1/commons/referencial/team/add Add team
+     * @apiVersion 0.1.0
+     * @apiName add
+     * @apiGroup Team API
+     * @apiPermission all
+     * @apiDescription Add team to the collection team in referencial module
+     * @apiParam {String} label Mandatory The Team label.
+     * @apiParam {Activity} activity Mandatory The Team activity.
+     * @apiParam {Country} country Mandatory The Team country
+     * @apiSuccess {Team}   team            The Team added with the id.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = ADD, method = Constantes.POST, logged = true,
+            mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID}, scope = Rule.Param.BODY)
     private void addTeamHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

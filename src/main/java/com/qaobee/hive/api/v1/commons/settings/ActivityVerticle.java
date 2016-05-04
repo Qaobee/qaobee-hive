@@ -22,7 +22,6 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -51,7 +50,6 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * The Constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.activity.get";
-    // Declaration des variables finals
     /**
      * The Constant GET_LIST.
      */
@@ -64,73 +62,34 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * Id of the structure
      */
     public static final String PARAM_ID = "_id";
-
-    /* List of parameters */
     private static final Logger LOG = LoggerFactory.getLogger(ActivityVerticle.class);
-    /* Injections */
     @Inject
     private MongoDB mongo;
     @Inject
     private Utils utils;
 
     @Override
-    @VerticleHandler({
-            @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = GET_LIST, method = Constantes.GET),
-            @Rule(address = GET_LIST_ENABLE, method = Constantes.GET)
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
-        /**
-         * @api {get} /api/v1/commons/settings/activity/get Read data of an Activity
-         * @apiVersion 0.1.0
-         * @apiName get
-         * @apiGroup Activity API
-         * @apiPermission all
-         *
-         * @apiDescription get a activity to the collection activity in settings module
-         *
-         * @apiParam {String} id The Activity-ID.
-         *
-         * @apiSuccess {Activity} activity The Activity found.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET, this::getActivityHandler);
-
-        /**
-         * @api {get} /api/v1/commons/settings/activity/getList List all activities
-         * @apiVersion 0.1.0
-         * @apiName getList
-         * @apiGroup Activity API
-         * @apiPermission all
-         *
-         * @apiDescription get all activity
-         *
-         * @apiSuccess {List}   activities            List all activity
-         *
-         */
-        vertx.eventBus().registerHandler(GET_LIST, this::getListHandler);
-
-        /**
-         * @api {get} /api/v1/commons/settings/activity/getListEnable List of enabled activities
-         * @apiVersion 0.1.0
-         * @apiName getListEnable
-         * @apiGroup Activity API
-         * @apiPermission all
-         *
-         * @apiDescription List of enabled activities
-         *
-         * @apiSuccess {List}   activities  List of enabled activities
-         *
-         * @apiError DATA_ERROR Error on DB request
-         * @apiError INVALID_PARAMETER Parameters not found
-         */
-        vertx.eventBus().registerHandler(GET_LIST_ENABLE, this::getEnableActivitiesHandler);
+        vertx.eventBus()
+                .registerHandler(GET, this::getActivityHandler)
+                .registerHandler(GET_LIST, this::getListHandler)
+                .registerHandler(GET_LIST_ENABLE, this::getEnableActivitiesHandler);
     }
 
+    /**
+     * @api {get} /api/v1/commons/settings/activity/getListEnable List of enabled activities
+     * @apiVersion 0.1.0
+     * @apiName getListEnable
+     * @apiGroup Activity API
+     * @apiPermission all
+     * @apiDescription List of enabled activities
+     * @apiSuccess {List}   activities  List of enabled activities
+     * @apiError DATA_ERROR Error on DB request
+     * @apiError INVALID_PARAMETER Parameters not found
+     */
+    @Rule(address = GET_LIST_ENABLE, method = Constantes.GET)
     private void getEnableActivitiesHandler(Message message) {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put("enable", true);
@@ -138,11 +97,33 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
         message.reply(resultJson.encode());
     }
 
+    /**
+     * @api {get} /api/v1/commons/settings/activity/getList List all activities
+     * @apiVersion 0.1.0
+     * @apiName getList
+     * @apiGroup Activity API
+     * @apiPermission all
+     * @apiDescription get all activity
+     * @apiSuccess {List}   activities            List all activity
+     */
+    @Rule(address = GET_LIST, method = Constantes.GET)
     private void getListHandler(Message message) {
         JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
         message.reply(resultJson.encode());
     }
 
+    /**
+     * @api {get} /api/v1/commons/settings/activity/get Read data of an Activity
+     * @apiVersion 0.1.0
+     * @apiName get
+     * @apiGroup Activity API
+     * @apiPermission all
+     * @apiDescription get a activity to the collection activity in settings module
+     * @apiParam {String} id The Activity-ID.
+     * @apiSuccess {Activity} activity The Activity found.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
     private void getActivityHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

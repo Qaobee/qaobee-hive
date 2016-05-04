@@ -25,7 +25,6 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -62,8 +61,6 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      * List of parameters
      */
     public static final String PARAM_FIELD_LIST = "paramFieldList";
-
-    /* List of parameters */
     /**
      * Reference date
      */
@@ -77,53 +74,33 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_COUNTRY_ID = "countryId";
     private static final Logger LOG = LoggerFactory.getLogger(ActivityCfgVerticle.class);
-    /**
-     * The Mongo.
-     */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE}, scope = Rule.Param.REQUEST),
-            @Rule(address = PARAMS, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST}, scope = Rule.Param.REQUEST)
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
-        /**
-         * @apiDescription Fetch ActivityCfg
-         * @api {post} /api/1/commons/settings/activitycfg/get Get ActivityCfg
-         * @apiVersion 0.1.0
-         * @apiName get
-         * @apiGroup ActivityCfg API
-         * @apiParam {String} activityId Activity Id
-         */
-        vertx.eventBus().registerHandler(GET, this::getActivityCfgHandler);
-
-        /**
-         * @apiDescription retrieve a list of value for one parameter ActivityCfg
-         * @api {post} /api/1/commons/settings/activitycfg/params params ActivityCfg
-         * @apiVersion 0.1.0
-         * @apiName params
-         * @apiGroup ActivityCfg API
-         * @apiParam {String} activityId Activity Id
-         * @apiParam {String} countryId Country Id
-         * @apiParam {long} date the current date
-         * @apiParam {String} paramFieldList the list of value
-         */
-        vertx.eventBus().registerHandler(PARAMS, this::getActivityCfgParamsHandler);
+        vertx.eventBus()
+                .registerHandler(GET, this::getActivityCfgHandler)
+                .registerHandler(PARAMS, this::getActivityCfgParamsHandler);
     }
 
+    /**
+     * @apiDescription retrieve a list of value for one parameter ActivityCfg
+     * @api {post} /api/1/commons/settings/activitycfg/params params ActivityCfg
+     * @apiVersion 0.1.0
+     * @apiName params
+     * @apiGroup ActivityCfg API
+     * @apiParam {String} activityId Activity Id
+     * @apiParam {String} countryId Country Id
+     * @apiParam {long} date the current date
+     * @apiParam {String} paramFieldList the list of value
+     */
+    @Rule(address = PARAMS, method = Constantes.GET, logged = true,
+            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST}, scope = Rule.Param.REQUEST)
     private void getActivityCfgParamsHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -165,12 +142,22 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
         } catch (NumberFormatException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
-        }  catch (final QaobeeException e) {
+        } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
         }
     }
 
+    /**
+     * @apiDescription Fetch ActivityCfg
+     * @api {post} /api/1/commons/settings/activitycfg/get Get ActivityCfg
+     * @apiVersion 0.1.0
+     * @apiName get
+     * @apiGroup ActivityCfg API
+     * @apiParam {String} activityId Activity Id
+     */
+    @Rule(address = GET, method = Constantes.GET, logged = true,
+            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE}, scope = Rule.Param.REQUEST)
     private void getActivityCfgHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -195,7 +182,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
         } catch (NumberFormatException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, ExceptionCodes.INVALID_PARAMETER, "Date is not numeric");
-        }  catch (QaobeeException e) {
+        } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
         }

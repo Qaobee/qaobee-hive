@@ -23,7 +23,6 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -34,7 +33,6 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -54,7 +52,6 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * The constant GET.
      */
     public static final String GET = Module.VERSION + ".sandbox.effective.effective.get";
-    /* Handler */
     /**
      * The constant GET_LIST.
      */
@@ -71,8 +68,6 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * The constant PARAM_ID.
      */
     public static final String PARAM_ID = "_id";
-
-    /* Params */
     /**
      * Sandbox config id
      */
@@ -86,158 +81,126 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String PARAM_ROLE_MEMBER = "members.role.code";
     private static final Logger LOG = LoggerFactory.getLogger(SB_EffectiveVerticle.class);
-
-    /* Injections */
-    /**
-     * The Mongo.
-     */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = GET_LIST, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_SANDBOXCFG_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = UPDATE, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.BODY),
-            @Rule(address = ADD, method = Constantes.POST, logged = true),
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
+        vertx.eventBus()
+                .registerHandler(GET, this::getEffectiveHandler)
+                .registerHandler(GET_LIST, this::getEffectiveListHandler)
+                .registerHandler(UPDATE, this::updateEffectiveHandler)
+                .registerHandler(ADD, this::addEffectiveHandler);
+    }
 
-        /**
-         * @api {get} /api/1/sandbox/effective/effective/get
-         * @apiVersion 0.1.0
-         * @apiName get
-         * @apiGroup SB_Effective API
-         * @apiPermission all
-         * @apiDescription Retrieve the effective by id
-         * @apiHeader {String} token
-         * @apiParam {String} _id Mandatory The effective Id.
-         * @apiSuccess {Effective}   effective    The effective found.
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
+    /**
+     * @api {post} /api/1/sandbox/effective/effective/add
+     * @apiVersion 0.1.0
+     * @apiName add
+     * @apiGroup Effective API
+     * @apiPermission all
+     * @apiDescription add one effective
+     * @apiParam {Effective} effective Mandatory The effective to add.
+     * @apiSuccess {Effective}   effective    The effective added.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = ADD, method = Constantes.POST, logged = true)
+    private void addEffectiveHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject json = new JsonObject(req.getBody());
+            final String id = mongo.save(json, SB_Effective.class);
+            json.putString("_id", id);
+            message.reply(json.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    Map<String, List<String>> params = req.getParams();
-                    final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_Effective.class);
-                    message.reply(json.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+    /**
+     * @api {post} /api/1/sandbox/effective/effective/update
+     * @apiVersion 0.1.0
+     * @apiName update
+     * @apiGroup Effective API
+     * @apiPermission all
+     * @apiDescription Update one effective
+     * @apiParam {Effective} effective Mandatory The effective to update.
+     * @apiSuccess {Effective}   effective    The effective updated.
+     */
+    @Rule(address = UPDATE, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.BODY)
+    private void updateEffectiveHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        final JsonObject json = new JsonObject(req.getBody());
+        final String id = mongo.update(json, SB_Effective.class);
+        json.putString("_id", id);
+        message.reply(json.encode());
+    }
+
+    /**
+     * @api {get} /api/1/sandbox/effective/effective/getList
+     * @apiVersion 0.1.0
+     * @apiName getList
+     * @apiGroup SB_Effective API
+     * @apiPermission all
+     * @apiHeader {String} token
+     * @apiDescription get a list of effectives for one sandbox Config id
+     * @apiParam {String} sandBoxCfgId Mandatory The sandBox config Id.
+     * @apiParam {String} categoryCode Optional The category code of the effective.
+     * @apiSuccess {List}   effectives            The list of effectives found.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET_LIST, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_SANDBOXCFG_ID}, scope = Rule.Param.REQUEST)
+    private void getEffectiveListHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            Map<String, List<String>> params = req.getParams();
+            Map<String, Object> criterias = new HashMap<>();
+            criterias.put(PARAM_SANDBOXCFG_ID, params.get(PARAM_SANDBOXCFG_ID).get(0));
+            // category code
+            String code = null;
+            if (params.get(PARAM_CATEGORY_AGE_CODE) != null && !StringUtils.isBlank(params.get(PARAM_CATEGORY_AGE_CODE).get(0))) {
+                code = params.get(PARAM_CATEGORY_AGE_CODE).get(0);
+                criterias.put(PARAM_CATEGORY_AGE_CODE, code);
             }
-        });
-
-        /**
-         * @api {get} /api/1/sandbox/effective/effective/getList
-         * @apiVersion 0.1.0
-         * @apiName getList
-         * @apiGroup SB_Effective API
-         * @apiPermission all
-         * @apiHeader {String} token
-         * @apiDescription get a list of effectives for one sandbox Config id
-         * @apiParam {String} sandBoxCfgId Mandatory The sandBox config Id.
-         * @apiParam {String} categoryCode Optional The category code of the effective.
-         * @apiSuccess {List}   effectives            The list of effectives found.
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    Map<String, List<String>> params = req.getParams();
-                    Map<String, Object> criterias = new HashMap<>();
-                    criterias.put(PARAM_SANDBOXCFG_ID, params.get(PARAM_SANDBOXCFG_ID).get(0));
-                    // category code
-                    String code = null;
-                    if (params.get(PARAM_CATEGORY_AGE_CODE) != null && !StringUtils.isBlank(params.get(PARAM_CATEGORY_AGE_CODE).get(0))) {
-                        code = params.get(PARAM_CATEGORY_AGE_CODE).get(0);
-                        criterias.put(PARAM_CATEGORY_AGE_CODE, code);
-                    }
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Effective.class);
-                    if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                                "No Effective found " + "for ( sandBoxCfgId : " + params.get(PARAM_SANDBOXCFG_ID).get(0) + " " + (code != null ? "and for category : " + code + ")" : ")"));
-                    }
-                    message.reply(resultJson.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+            JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Effective.class);
+            if (resultJson == null || resultJson.size() == 0) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR,
+                        "No Effective found " + "for ( sandBoxCfgId : " + params.get(PARAM_SANDBOXCFG_ID).get(0) + " " + (code != null ? "and for category : " + code + ")" : ")"));
             }
-        });
+            message.reply(resultJson.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-        /**
-         * @api {post} /api/1/sandbox/effective/effective/update
-         * @apiVersion 0.1.0
-         * @apiName update
-         * @apiGroup Effective API
-         * @apiPermission all
-         *
-         * @apiDescription Update one effective
-         *
-         * @apiParam {Effective} effective Mandatory The effective to update.
-         *
-         * @apiSuccess {Effective}   effective    The effective updated.
-         *
-         */
-        vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                final JsonObject json = new JsonObject(req.getBody());
-                final String id = mongo.update(json, SB_Effective.class);
-                json.putString("_id", id);
-                message.reply(json.encode());
-            }
-        });
-
-        /**
-         * @api {post} /api/1/sandbox/effective/effective/add
-         * @apiVersion 0.1.0
-         * @apiName add
-         * @apiGroup Effective API
-         * @apiPermission all
-         *
-         * @apiDescription add one effective
-         *
-         * @apiParam {Effective} effective Mandatory The effective to add.
-         *
-         * @apiSuccess {Effective}   effective    The effective added.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject json = new JsonObject(req.getBody());
-                    final String id = mongo.save(json, SB_Effective.class);
-                    json.putString("_id", id);
-                    message.reply(json.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+    /**
+     * @api {get} /api/1/sandbox/effective/effective/get
+     * @apiVersion 0.1.0
+     * @apiName get
+     * @apiGroup SB_Effective API
+     * @apiPermission all
+     * @apiDescription Retrieve the effective by id
+     * @apiHeader {String} token
+     * @apiParam {String} _id Mandatory The effective Id.
+     * @apiSuccess {Effective}   effective    The effective found.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    private void getEffectiveHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            Map<String, List<String>> params = req.getParams();
+            final JsonObject json = mongo.getById(params.get(PARAM_ID).get(0), SB_Effective.class);
+            message.reply(json.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 }

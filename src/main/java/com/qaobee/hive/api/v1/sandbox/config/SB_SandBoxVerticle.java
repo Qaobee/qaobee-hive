@@ -23,7 +23,6 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -35,7 +34,6 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -95,143 +93,124 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String PARAM_SB_CFG_ID = "sandboxCfgId";
     private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxVerticle.class);
-    /* Injections */
     @Inject
     private MongoDB mongo;
     @Inject
     private Utils utils;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-            @Rule(address = GET_BY_OWNER, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
-                    scope = Rule.Param.REQUEST),
-            @Rule(address = GET_LIST_BY_OWNER, method = Constantes.GET, logged = true),
-            @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_USER_ID, PARAM_ACTIVITY_ID},
-                    scope = Rule.Param.BODY),
-            @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_SB_CFG_ID},
-                    scope = Rule.Param.BODY),
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
+        vertx.eventBus()
+                .registerHandler(GET_BY_OWNER, this::getByOwnerHandler)
+                .registerHandler(GET_LIST_BY_OWNER, this::getListByOwnerHandler)
+                .registerHandler(ADD, this::addHandler)
+                .registerHandler(UPDATE, this::updateHandler);
+    }
 
-        /**
-         * @api {post} /api/v1/sandbox/config/sandbox/getByOwner
-         * @apiVersion 0.1.0
-         * @apiName getByOwner
-         * @apiGroup SandBox API
-         * @apiPermission all
-         *
-         * @apiDescription Retrieve the user's sandbox
-         *
-         * @apiParam {String} activityId Mandatory The sandBox activity.
-         *
-         * @apiSuccess {sandBox}   sandBox    The sandBox updated.
-         */
-        vertx.eventBus().registerHandler(GET_BY_OWNER, new Handler<Message<String>>() {
-            @Override
-            public void handle(Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    Map<String, List<String>> params = req.getParams();
-                    CriteriaBuilder cb = new CriteriaBuilder()
-                            .add(PARAM_OWNER_ID, req.getUser().get_id())
-                            .add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
-                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
-                    if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + req.getUser().get_id() + " ,and activityId : " + params.get(PARAM_ACTIVITY_ID));
-                    }
-                    JsonObject json = resultJson.get(0);
-                    message.reply(json.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+    /**
+     *
+     */
+    @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_SB_CFG_ID},
+            scope = Rule.Param.BODY)
+    private void updateHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            JsonObject body = new JsonObject(req.getBody());
+            final JsonObject sandbox = mongo.getById(body.getString(PARAM_ID), SB_SandBox.class);
+            if (sandbox == null) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for id :" + body.getString(PARAM_ID));
             }
-        });
+            sandbox.putString("sandboxCfgId", body.getString(PARAM_SB_CFG_ID));
+            mongo.save(sandbox, SB_SandBox.class);
+            message.reply(sandbox.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-        /**
-         * @api {post} /api/v1/sandbox/config/sandbox/getListByOwner
-         * @apiVersion 0.1.0
-         * @apiName getListByOwner
-         * @apiGroup SandBox API
-         * @apiPermission all
-         *
-         * @apiDescription Retrieve the user's sandbox
-         *
-         * @apiParam {String} activityId Mandatory The sandBox activity.
-         *
-         * @apiSuccess {sandBox}   sandBox    The sandBox updated.
-         *
-         */
-        vertx.eventBus().registerHandler(GET_LIST_BY_OWNER, new Handler<Message<String>>() {
-            @Override
-            public void handle(Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    CriteriaBuilder cb = new CriteriaBuilder();
-                    if (req.getParams().get("id") != null && !req.getParams().get("id").isEmpty() && StringUtils.isNoneBlank(req.getParams().get("id").get(0))) {
-                        cb.add(PARAM_OWNER_ID, req.getParams().get("id").get(0));
-                    } else {
-                        cb.add(PARAM_OWNER_ID, req.getUser().get_id());
-                    }
-                    JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
-                    if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + req.getUser().get_id());
-                    }
-                    message.reply(resultJson.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+    /**
+     *
+     */
+    @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_USER_ID, PARAM_ACTIVITY_ID},
+            scope = Rule.Param.BODY)
+    private void addHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject jsonReq = new JsonObject(req.getBody());
+            JsonObject sandbox = new JsonObject()
+                    .putString("activityId", jsonReq.getString(PARAM_ACTIVITY_ID))
+                    .putString("owner", jsonReq.getString(PARAM_USER_ID));
+            sandbox.putString("_id", mongo.save(sandbox, SB_SandBox.class));
+            message.reply(sandbox.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-        /**
-         *
-         */
-        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
-            @Override
-            public void handle(Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject jsonReq = new JsonObject(req.getBody());
-                    JsonObject sandbox = new JsonObject()
-                            .putString("activityId", jsonReq.getString(PARAM_ACTIVITY_ID))
-                            .putString("owner", jsonReq.getString(PARAM_USER_ID));
-                    sandbox.putString("_id", mongo.save(sandbox, SB_SandBox.class));
-                    message.reply(sandbox.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+    /**
+     * @api {post} /api/v1/sandbox/config/sandbox/getListByOwner
+     * @apiVersion 0.1.0
+     * @apiName getListByOwner
+     * @apiGroup SandBox API
+     * @apiPermission all
+     * @apiDescription Retrieve the user's sandbox
+     * @apiParam {String} activityId Mandatory The sandBox activity.
+     * @apiSuccess {sandBox}   sandBox    The sandBox updated.
+     */
+    @Rule(address = GET_LIST_BY_OWNER, method = Constantes.GET, logged = true)
+    private void getListByOwnerHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            CriteriaBuilder cb = new CriteriaBuilder();
+            if (req.getParams().get("id") != null && !req.getParams().get("id").isEmpty() && StringUtils.isNoneBlank(req.getParams().get("id").get(0))) {
+                cb.add(PARAM_OWNER_ID, req.getParams().get("id").get(0));
+            } else {
+                cb.add(PARAM_OWNER_ID, req.getUser().get_id());
             }
-        });
+            JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
+            if (resultJson == null || resultJson.size() == 0) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + req.getUser().get_id());
+            }
+            message.reply(resultJson.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-        /**
-         *
-         */
-        vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
-            @Override
-            public void handle(Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    JsonObject body = new JsonObject(req.getBody());
-                    final JsonObject sandbox = mongo.getById(body.getString(PARAM_ID), SB_SandBox.class);
-                    if (sandbox == null) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for id :" + body.getString(PARAM_ID));
-                    }
-                    sandbox.putString("sandboxCfgId", body.getString(PARAM_SB_CFG_ID));
-                    mongo.save(sandbox, SB_SandBox.class);
-                    message.reply(sandbox.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+    /**
+     * @api {post} /api/v1/sandbox/config/sandbox/getByOwner
+     * @apiVersion 0.1.0
+     * @apiName getByOwner
+     * @apiGroup SandBox API
+     * @apiPermission all
+     * @apiDescription Retrieve the user's sandbox
+     * @apiParam {String} activityId Mandatory The sandBox activity.
+     * @apiSuccess {sandBox}   sandBox    The sandBox updated.
+     */
+    @Rule(address = GET_BY_OWNER, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
+            scope = Rule.Param.REQUEST)
+    private void getByOwnerHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            Map<String, List<String>> params = req.getParams();
+            CriteriaBuilder cb = new CriteriaBuilder()
+                    .add(PARAM_OWNER_ID, req.getUser().get_id())
+                    .add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
+            JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
+            if (resultJson == null || resultJson.size() == 0) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + req.getUser().get_id()
+                        + " ,and activityId : " + params.get(PARAM_ACTIVITY_ID));
             }
-        });
+            JsonObject json = resultJson.get(0);
+            message.reply(json.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 }

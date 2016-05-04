@@ -52,13 +52,12 @@ public class ActivityBusinessImpl implements ActivityBusiness {
 
     private void getActivities() {
         JsonArray resultJson = mongo.findAll(null, null, -1, 0, Activity.class);
-        if (resultJson != null && resultJson.size() > 0) {
-            Activity activity;
+        if (resultJson != null) {
             mapActivity = new HashMap<>();
-            for (int i = 0; i < resultJson.size(); i++) {
-                activity = Json.decodeValue(resultJson.get(i).toString(), Activity.class);
+            resultJson.forEach(s -> {
+                Activity activity = Json.decodeValue(s.toString(), Activity.class);
                 mapActivity.put(activity.get_id(), activity);
-            }
+            });
         }
     }
 }

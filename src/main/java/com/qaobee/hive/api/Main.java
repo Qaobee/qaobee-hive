@@ -23,7 +23,6 @@ import com.englishtown.promises.When;
 import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -55,7 +54,6 @@ import org.vertx.mods.Mailer;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.*;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.*;
@@ -355,13 +353,13 @@ public class Main extends AbstractGuiceVerticle {
      */
     private static void manageRules(Class<?> restMod) {
         Reflections reflections = new Reflections(restMod, new MethodAnnotationsScanner());
-        for (Method m : reflections.getMethodsAnnotatedWith(VerticleHandler.class)) {
-            for (Rule r : m.getAnnotation(VerticleHandler.class).value()) {
-                if (!rules.containsKey(r.address())) {
-                    rules.put(r.address(), r);
-                }
+        reflections.getMethodsAnnotatedWith(Rule.class).forEach(m-> {
+            Rule r = m.getAnnotation(Rule.class);
+            if (!rules.containsKey(r.address())) {
+                rules.put(r.address(), r);
+                LOG.info("Registring : " + r.address());
             }
-        }
+        });
     }
 
     /**
@@ -412,7 +410,7 @@ public class Main extends AbstractGuiceVerticle {
                 }
                 req.response().end(exStr);
             } else {
-               manage404Error(req);
+                manage404Error(req);
             }
         }
     }

@@ -23,7 +23,6 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.referencial.ChampionShip;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -120,96 +119,40 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     @Inject
     private MongoDB mongo;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-            @Rule(address = GET_LIST, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY),
-            @Rule(address = ADD, method = Constantes.POST, logged = true, admin = true, mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY),
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = UPDATE, method = Constantes.POST, logged = true, admin = true, mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY),
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        /**
-         * @apiDescription retrieve all championships.
-         * @api {post} /api/1/commons/referencial/championship/list Get all championships
-         * @apiName getListChampionshipsHandler
-         * @apiGroup Championship API
-         * @apiPermission TBD
-         *
-         * @apiParam {String} activityId : activity code
-         * @apiParam {String} categoryAge : category age code
-         * @apiParam {String} structureId : structure ID
-         * @apiParam {Participant} participant : participant (optionnal)
-         *
-         * @apiSuccess {Array} list of championships
-         */
-        vertx.eventBus().registerHandler(GET_LIST, this::getListChampionshipsHandler);
-        /**
-         * @apiDescription Retrieve a championship by its id.
-         * @api {post} /api/1/commons/referencial/championship/get Get a championship
-         * @apiName getChampionshipHandler
-         * @apiGroup Championship API
-         * @apiPermission TBD
-         *
-         * @apiParam {String} id
-         *
-         * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET, this::getChampionshipHandler);
-        /**
-         * @apiDescription Add a championship.
-         * @api {post} /api/1/commons/referencial/championship/add Add a championship
-         * @apiName addChampionshipHandler
-         * @apiGroup Championship API
-         * @apiPermission TBD
-         *
-         * @apiParam {String} label : championship label
-         * @apiParam {LevelGame} levelGame : level game
-         * @apiParam {String} subLevelGame : sub-level game label
-         * @apiParam {String} pool : pool label
-         * @apiParam {String} instance (optional) : instance
-         * @apiParam {String} activityId : ID activity
-         * @apiParam {CategoryAge} categoryAge : age category
-         * @apiParam {String} seasonCode : season
-         * @apiParam {Array(Participant)} participants : list of participants (at least one)
-         * @apiParam {Array(Journey)} journeys (optional) : list of journeys
-         *
-         * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(ADD, this::addChampionshipHandler);
-        /**
-         * @apiDescription Update a championship.
-         * @api {post} /api/1/commons/referencial/championship/update Update a championship
-         * @apiName updateChampionshipHandler
-         * @apiGroup Championship API
-         * @apiPermission TBD
-         *
-         * @apiParam {String} id : identifier of the championship
-         * @apiParam {String} label : championship label
-         * @apiParam {LevelGame} levelGame : level game
-         * @apiParam {String} subLevelGame : sub-level game label
-         * @apiParam {String} pool : pool label
-         * @apiParam {String} instance (optional) : instance
-         * @apiParam {String} activityId : ID activity
-         * @apiParam {CategoryAge} categoryAge : age category
-         * @apiParam {String} seasonCode : season
-         * @apiParam {Array(Participant)} participants : list of participants (at least one)
-         * @apiParam {Array(Journey)} journeys (optional) : list of journeys
-         *
-         * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(UPDATE, this::updateChampionshipHandler);
+        vertx.eventBus()
+                .registerHandler(GET_LIST, this::getListChampionshipsHandler)
+                .registerHandler(GET, this::getChampionshipHandler)
+                .registerHandler(ADD, this::addChampionshipHandler)
+                .registerHandler(UPDATE, this::updateChampionshipHandler);
     }
 
+    /**
+     * @apiDescription Update a championship.
+     * @api {post} /api/1/commons/referencial/championship/update Update a championship
+     * @apiName updateChampionshipHandler
+     * @apiGroup Championship API
+     * @apiPermission TBD
+     * @apiParam {String} id : identifier of the championship
+     * @apiParam {String} label : championship label
+     * @apiParam {LevelGame} levelGame : level game
+     * @apiParam {String} subLevelGame : sub-level game label
+     * @apiParam {String} pool : pool label
+     * @apiParam {String} instance (optional) : instance
+     * @apiParam {String} activityId : ID activity
+     * @apiParam {CategoryAge} categoryAge : age category
+     * @apiParam {String} seasonCode : season
+     * @apiParam {Array(Participant)} participants : list of participants (at least one)
+     * @apiParam {Array(Journey)} journeys (optional) : list of journeys
+     * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = UPDATE, method = Constantes.POST, logged = true, admin = true,
+            mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
+                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void updateChampionshipHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -222,6 +165,28 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Add a championship.
+     * @api {post} /api/1/commons/referencial/championship/add Add a championship
+     * @apiName addChampionshipHandler
+     * @apiGroup Championship API
+     * @apiPermission TBD
+     * @apiParam {String} label : championship label
+     * @apiParam {LevelGame} levelGame : level game
+     * @apiParam {String} subLevelGame : sub-level game label
+     * @apiParam {String} pool : pool label
+     * @apiParam {String} instance (optional) : instance
+     * @apiParam {String} activityId : ID activity
+     * @apiParam {CategoryAge} categoryAge : age category
+     * @apiParam {String} seasonCode : season
+     * @apiParam {Array(Participant)} participants : list of participants (at least one)
+     * @apiParam {Array(Journey)} journeys (optional) : list of journeys
+     * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = ADD, method = Constantes.POST, logged = true, admin = true,
+            mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
+                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void addChampionshipHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -234,6 +199,17 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Retrieve a championship by its id.
+     * @api {post} /api/1/commons/referencial/championship/get Get a championship
+     * @apiName getChampionshipHandler
+     * @apiGroup Championship API
+     * @apiPermission TBD
+     * @apiParam {String} id
+     * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
     private void getChampionshipHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -244,6 +220,19 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription retrieve all championships.
+     * @api {post} /api/1/commons/referencial/championship/list Get all championships
+     * @apiName getListChampionshipsHandler
+     * @apiGroup Championship API
+     * @apiPermission TBD
+     * @apiParam {String} activityId : activity code
+     * @apiParam {String} categoryAge : category age code
+     * @apiParam {String} structureId : structure ID
+     * @apiParam {Participant} participant : participant (optionnal)
+     * @apiSuccess {Array} list of championships
+     */
+    @Rule(address = GET_LIST, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
     private void getListChampionshipsHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

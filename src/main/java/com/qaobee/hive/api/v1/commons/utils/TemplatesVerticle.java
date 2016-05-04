@@ -46,8 +46,17 @@ import java.util.Map;
  */
 @DeployableVerticle(isWorker = false)
 public class TemplatesVerticle extends AbstractGuiceVerticle {
+    /**
+     * The constant DATA.
+     */
     public static final String DATA = "data";
+    /**
+     * The constant TEMPLATE.
+     */
     public static final String TEMPLATE = "template";
+    /**
+     * The constant TEMPLATE_GENERATE.
+     */
     public static final String TEMPLATE_GENERATE = "template.generate";
     private static final Logger LOG = LoggerFactory.getLogger(TemplatesVerticle.class);
     private static final String TEMPLATE_PATH = "mailTemplates";
@@ -55,9 +64,6 @@ public class TemplatesVerticle extends AbstractGuiceVerticle {
     private Utils utils;
     private Configuration cfg;
 
-    /**
-     * Start void.
-     */
     @Override
     public void start() {
         super.start();

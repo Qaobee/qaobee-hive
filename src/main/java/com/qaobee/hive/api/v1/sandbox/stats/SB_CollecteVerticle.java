@@ -22,7 +22,6 @@ import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -31,7 +30,6 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -42,6 +40,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * The type Sb collecte verticle.
+ *
  * @author cke
  */
 @DeployableVerticle
@@ -112,133 +112,118 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     @Inject
     protected Utils utils;
-    /**
-     * The Mongo.
-     */
     @Inject
     private MongoDB mongo;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-            @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
-                    mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID}, scope = Rule.Param.BODY),
-            @Rule(address = ADD, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY),
-            @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY),
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
+        vertx.eventBus()
+                .registerHandler(GET_LIST, this::getListHandler)
+                .registerHandler(ADD, this::addHandler)
+                .registerHandler(UPDATE, this::updateHandler)
+                .registerHandler(GET, this::getHandler);
+    }
 
-        /**
-         * @apiDescription retrieve all documents collecte
-         * @api {post} /api/1/sandbox/stats/collecte/list Get all SB_Collecte
-         * @apiName getListOwner
-         * @apiGroup SB_Collecet API
-         * @apiParam {String} startDate start date
-         * @apiParam {String} endDate end date
-         * @apiParam {String} sandBoxId
-         * @apiHeader {String} token
-         * @apiSuccess {Array} list of SB_Collecte
-         */
-        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject params = new JsonObject(req.getBody());
-                    DBObject match;
-                    BasicDBObject dbObjectParent;
-                    dbObjectParent = new BasicDBObject();
-                    // Collecte sandboxId
-                    dbObjectParent.put("eventRef.owner.sandboxId", params.getString(PARAM_SANDBOX_ID));
-                    if (params.getString(PARAM_EVENT_ID) != null && !"".equals(params.getString(PARAM_EVENT_ID).trim())) {
-                        dbObjectParent.put("eventRef._id", params.getString(PARAM_EVENT_ID));
-                    }
-                    if (params.getString(PARAM_EFFECTIVE_ID) != null && !"".equals(params.getString(PARAM_EFFECTIVE_ID).trim())) {
-                        dbObjectParent.put("eventRef.owner.effectiveId", params.getString(PARAM_EFFECTIVE_ID));
-                    }
-                    if (params.getString(PARAM_TEAM_ID) != null && !"".equals(params.getString(PARAM_TEAM_ID).trim())) {
-                        dbObjectParent.put("eventRef.owner.teamId", params.getString(PARAM_TEAM_ID));
-                    }
-                    DBObject o = new BasicDBObject();
-                    o.put("$gte", params.getLong(PARAM_START_DATE));
-                    o.put("$lt", params.getLong(PARAM_END_DATE));
-                    dbObjectParent.put("startDate", o);
-                    match = new BasicDBObject("$match", dbObjectParent);
-                    List<DBObject> pipelineAggregation;
-                    pipelineAggregation = Collections.singletonList(match);
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, COLLECTION_NAME);
-                    message.reply(resultJSon.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+    /**
+     * @apiDescription Retrieve Collecte by this Id
+     * @api {get} /api/1/sandbox/stats/collecte/get Get event by Id
+     * @apiName getEventHandler
+     * @apiGroup Collecte API
+     * @apiParam {String} id
+     * @apiSuccess {Object} collecte
+     */
+    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    private void getHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), COLLECTION_NAME).encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-        /**
-         * @apiDescription Add an SB_Collecte.
-         * @api {post} /api/1/sandbox/stats/collecte/add Add an SB_Collecte
-         * @apiName add
-         * @apiGroup SB_Collecet API
-         * @apiSuccess {SB_Collecte} SB_Collecte create
-         */
-        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject object = new JsonObject(req.getBody());
-                    final String id = mongo.save(object, COLLECTION_NAME);
-                    object.putString("_id", id);
-                    message.reply(object.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+    /**
+     * @apiDescription Update an collecte document.
+     * @api {post} /api/1/sandbox/stats/collecte/update Update an SB_Collecte
+     * @apiName update
+     * @apiGroup SB_Collecet API
+     * @apiSuccess {SB_Collecte} SB_Collecte updated
+     */
+    @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
+    private void updateHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject object = new JsonObject(req.getBody());
+        mongo.update(object, COLLECTION_NAME);
+        message.reply(object.encode());
+    }
 
-        /**
-         * @apiDescription Update an collecte document.
-         * @api {post} /api/1/sandbox/stats/collecte/update Update an SB_Collecte
-         * @apiName update
-         * @apiGroup SB_Collecet API
-         * @apiSuccess {SB_Collecte} SB_Collecte updated
-         */
-        vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                JsonObject object = new JsonObject(req.getBody());
-                mongo.update(object, COLLECTION_NAME);
-                message.reply(object.encode());
-            }
-        });
+    /**
+     * @apiDescription Add an SB_Collecte.
+     * @api {post} /api/1/sandbox/stats/collecte/add Add an SB_Collecte
+     * @apiName add
+     * @apiGroup SB_Collecet API
+     * @apiSuccess {SB_Collecte} SB_Collecte create
+     */
+    @Rule(address = ADD, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
+    private void addHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject object = new JsonObject(req.getBody());
+            final String id = mongo.save(object, COLLECTION_NAME);
+            object.putString("_id", id);
+            message.reply(object.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-        /**
-         * @apiDescription Retrieve Collecte by this Id
-         * @api {get} /api/1/sandbox/stats/collecte/get Get event by Id
-         * @apiName getEventHandler
-         * @apiGroup Collecte API
-         * @apiParam {String} id
-         * @apiSuccess {Object} collecte
-         */
-        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), COLLECTION_NAME).encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+    /**
+     * @apiDescription retrieve all documents collecte
+     * @api {post} /api/1/sandbox/stats/collecte/list Get all SB_Collecte
+     * @apiName getListOwner
+     * @apiGroup SB_Collecet API
+     * @apiParam {String} startDate start date
+     * @apiParam {String} endDate end date
+     * @apiParam {String} sandBoxId
+     * @apiHeader {String} token
+     * @apiSuccess {Array} list of SB_Collecte
+     */
+    @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+            mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID}, scope = Rule.Param.BODY)
+    private void getListHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject params = new JsonObject(req.getBody());
+            DBObject match;
+            BasicDBObject dbObjectParent;
+            dbObjectParent = new BasicDBObject();
+            // Collecte sandboxId
+            dbObjectParent.put("eventRef.owner.sandboxId", params.getString(PARAM_SANDBOX_ID));
+            if (params.getString(PARAM_EVENT_ID) != null && !"".equals(params.getString(PARAM_EVENT_ID).trim())) {
+                dbObjectParent.put("eventRef._id", params.getString(PARAM_EVENT_ID));
             }
-        });
+            if (params.getString(PARAM_EFFECTIVE_ID) != null && !"".equals(params.getString(PARAM_EFFECTIVE_ID).trim())) {
+                dbObjectParent.put("eventRef.owner.effectiveId", params.getString(PARAM_EFFECTIVE_ID));
+            }
+            if (params.getString(PARAM_TEAM_ID) != null && !"".equals(params.getString(PARAM_TEAM_ID).trim())) {
+                dbObjectParent.put("eventRef.owner.teamId", params.getString(PARAM_TEAM_ID));
+            }
+            DBObject o = new BasicDBObject();
+            o.put("$gte", params.getLong(PARAM_START_DATE));
+            o.put("$lt", params.getLong(PARAM_END_DATE));
+            dbObjectParent.put("startDate", o);
+            match = new BasicDBObject("$match", dbObjectParent);
+            List<DBObject> pipelineAggregation;
+            pipelineAggregation = Collections.singletonList(match);
+            final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, COLLECTION_NAME);
+            message.reply(resultJSon.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 }

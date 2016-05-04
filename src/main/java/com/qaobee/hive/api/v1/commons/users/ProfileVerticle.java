@@ -25,7 +25,6 @@ import com.qaobee.hive.business.model.commons.users.account.Payment;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -76,7 +75,6 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     private static final String ACCOUNT_FIELD = "account";
     private static final String AVATAR_FIELD = "avatar";
     private static final String ADDRESS_FIELD = "address";
-    /* Injections */
     @Inject
     private MongoDB mongo;
     @Inject
@@ -84,63 +82,40 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
 
-    @VerticleHandler({
-            @Rule(address = UPDATE, method = Constantes.POST, logged = true),
-            @Rule(address = GENERATE_PDF, method = Constantes.GET, logged = true),
-            @Rule(address = GENERATE_BILL_PDF, method = Constantes.GET, logged = true, mandatoryParams = {"plan_id", "pay_id"}, scope = Rule.Param.REQUEST),
-    })
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
-        /**
-         * @apiDescription User update
-         * @api {post} /api/1/commons/users/profile update user
-         * @apiName updateUserHandler
-         * @apiGroup ProfileVerticle
-         * @apiParam {Object} User com.qaobee.hive.business.model.commons.users.User
-         * @apiSuccess {Object} User com.qaobee.hive.business.model.commons.users.User
-         * @apiError PASSWD_EXCEPTION Password exception
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(UPDATE, this::updateUserHandler);
-        /**
-         * @apiDescription Generate a PDF from the current profile
-         * @api {get} /api/1/commons/users/profile/pdf Generate a PDF from the current profile
-         * @apiName generatePDFHandler
-         * @apiGroup ProfileVerticle
-         * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(GENERATE_PDF, this::generatePDFHandler);
-        /**
-         * @apiDescription Generate a PDF from the bill of the current profile
-         * @api {get} /api/1/commons/users/profile/billpdf?id= Generate a PDF from the bill of the current profile
-         * @apiName generateBillPDFHandler
-         * @apiGroup ProfileVerticle
-         * @apiParam {String} plan plan type
-         * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        vertx.eventBus().registerHandler(GENERATE_BILL_PDF, this::generateBillPDFHandler);
-        // Update a person's avatar
-        // FIXME : CKE : Est-ce toujours utilisé?
-        vertx.eventBus().registerHandler(UPDATE_AVATAR, this::updateAvatar);
+        vertx.eventBus()
+                .registerHandler(UPDATE, this::updateUserHandler)
+                .registerHandler(GENERATE_PDF, this::generatePDFHandler)
+                .registerHandler(GENERATE_BILL_PDF, this::generateBillPDFHandler)
+                .registerHandler(UPDATE_AVATAR, this::updateAvatar);
     }
 
+    // FIXME : CKE : Est-ce toujours utilisé?
     private void updateAvatar(Message<String> message) {
         try {
             final JsonObject req = new JsonObject(message.body());
-            JsonObject jsonperson= mongo.getById(req.getString("uid"), User.class);
+            JsonObject jsonperson = mongo.getById(req.getString("uid"), User.class);
             jsonperson.putString(AVATAR_FIELD, req.getString("filename"));
             mongo.save(jsonperson, User.class);
             message.reply(jsonperson);
-        }  catch (QaobeeException e) {
+        } catch (QaobeeException e) {
             utils.sendError(message, e);
         }
     }
 
+    /**
+     * @apiDescription Generate a PDF from the bill of the current profile
+     * @api {get} /api/1/commons/users/profile/billpdf?id= Generate a PDF from the bill of the current profile
+     * @apiName generateBillPDFHandler
+     * @apiGroup ProfileVerticle
+     * @apiParam {String} plan plan type
+     * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = GENERATE_BILL_PDF, method = Constantes.GET, logged = true, mandatoryParams = {"plan_id", "pay_id"}, scope = Rule.Param.REQUEST)
     private void generateBillPDFHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -188,6 +163,15 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Generate a PDF from the current profile
+     * @api {get} /api/1/commons/users/profile/pdf Generate a PDF from the current profile
+     * @apiName generatePDFHandler
+     * @apiGroup ProfileVerticle
+     * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = GENERATE_PDF, method = Constantes.GET, logged = true)
     private void generatePDFHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final User user = req.getUser();
@@ -216,6 +200,17 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
     }
 
+    /**
+     * @apiDescription User update
+     * @api {post} /api/1/commons/users/profile update user
+     * @apiName updateUserHandler
+     * @apiGroup ProfileVerticle
+     * @apiParam {Object} User com.qaobee.hive.business.model.commons.users.User
+     * @apiSuccess {Object} User com.qaobee.hive.business.model.commons.users.User
+     * @apiError PASSWD_EXCEPTION Password exception
+     * @apiError HTTP_ERROR wrong request's method
+     */
+    @Rule(address = UPDATE, method = Constantes.POST, logged = true)
     private void updateUserHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {

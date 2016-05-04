@@ -27,7 +27,6 @@ import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -108,107 +107,38 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     @Inject
     private CountryBusiness countryBusiness;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-                             @Rule(address = ADD, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-                                   scope = Rule.Param.BODY),
-                             @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
-                                   scope = Rule.Param.REQUEST),
-                             @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY),
-                             @Rule(address = UPDATE, method = Constantes.POST, logged = true,
-                                   mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-                                   scope = Rule.Param.BODY),
-                     })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        /**
-         * @api {post} /api/1/commons/referencial/structure/add Add structure
-         * @apiVersion 0.1.0
-         * @apiName add
-         * @apiGroup Structure API
-         * @apiPermission all
-         *
-         * @apiDescription Add structure to the collection structure in referencial module
-         *
-         * @apiParam {String} label Mandatory The Structure label.
-         * @apiParam {Activity} activity Mandatory The Structure activity.
-         * @apiParam {Country} country Mandatory The Structure country
-         * @apiParam {acronym} acronym Optional The Structure acronym.
-         * @apiParam {Address} address Optional The Structure-ID.
-         * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
-         * @apiParam {String} avatar Optional The Structure logo.
-         *
-         * @apiSuccess {Structure}   structure            The Structure added with the id.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(ADD, this::addStructureHandler);
-
-        /**
-         * @api {get} /api/1/commons/referencial/structure/get Read data of a Structure
-         * @apiVersion 0.1.0
-         * @apiName get
-         * @apiGroup Structure API
-         * @apiPermission all
-         *
-         * @apiDescription get a structure to the collection structure in referencial module
-         *
-         * @apiParam {String} id The Structure-ID.
-         *
-         * @apiSuccess {Structure}   structure            The Structure found.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET, this::getStructureHandler);
-
-        /**
-         * @api {post} /api/1/commons/referencial/structure/getList Returns list of structures from criterias
-         * @apiVersion 0.1.0
-         * @apiName getList
-         * @apiGroup Structure API
-         * @apiPermission all
-         *
-         * @apiDescription Gets list of structures from criterias from the collection structure in referencial module
-         *
-         * @apiParam {String} activity The Activity-ID.
-         * @apiParam {Object} address The address
-         *
-         * @apiSuccess {Structure}   structure            The Structure found.
-         *
-         */
-        vertx.eventBus().registerHandler(GET_LIST, this::getListOfStructuresHandler);
-
-        /**
-         * @api {post} /api/1/commons/referencial/structure/update Update a structure
-         * @apiVersion 0.1.0
-         * @apiName update
-         * @apiGroup Structure API
-         * @apiPermission all
-         *
-         * @apiDescription Update a structure to the collection structure in referencial module
-         *
-         * @apiParam {String} _id Mandatory The Structure ID.
-         * @apiParam {String} label Mandatory The Structure label.
-         * @apiParam {Activity} activity Mandatory The Structure activity.
-         * @apiParam {Country} country Mandatory The Structure country
-         * @apiParam {acronym} acronym Optional The Structure acronym.
-         * @apiParam {Address} address Optional The Structure-ID.
-         * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
-         * @apiParam {String} avatar Optional The Structure logo.
-         *
-         * @apiSuccess {Structure}   structure            The Structure updated.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(UPDATE, this::updateStructureHandler);
+        vertx.eventBus()
+                .registerHandler(ADD, this::addStructureHandler)
+                .registerHandler(GET, this::getStructureHandler)
+                .registerHandler(GET_LIST, this::getListOfStructuresHandler)
+                .registerHandler(UPDATE, this::updateStructureHandler);
     }
 
+    /**
+     * @api {post} /api/1/commons/referencial/structure/update Update a structure
+     * @apiVersion 0.1.0
+     * @apiName update
+     * @apiGroup Structure API
+     * @apiPermission all
+     * @apiDescription Update a structure to the collection structure in referencial module
+     * @apiParam {String} _id Mandatory The Structure ID.
+     * @apiParam {String} label Mandatory The Structure label.
+     * @apiParam {Activity} activity Mandatory The Structure activity.
+     * @apiParam {Country} country Mandatory The Structure country
+     * @apiParam {acronym} acronym Optional The Structure acronym.
+     * @apiParam {Address} address Optional The Structure-ID.
+     * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
+     * @apiParam {String} avatar Optional The Structure logo.
+     * @apiSuccess {Structure}   structure            The Structure updated.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+            mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+            scope = Rule.Param.BODY)
     private void updateStructureHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -222,6 +152,19 @@ public class StructureVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @api {post} /api/1/commons/referencial/structure/getList Returns list of structures from criterias
+     * @apiVersion 0.1.0
+     * @apiName getList
+     * @apiGroup Structure API
+     * @apiPermission all
+     * @apiDescription Gets list of structures from criterias from the collection structure in referencial module
+     * @apiParam {String} activity The Activity-ID.
+     * @apiParam {Object} address The address
+     * @apiSuccess {Structure}   structure            The Structure found.
+     */
+    @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+            mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY)
     private void getListOfStructuresHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -258,6 +201,19 @@ public class StructureVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @api {get} /api/1/commons/referencial/structure/get Read data of a Structure
+     * @apiVersion 0.1.0
+     * @apiName get
+     * @apiGroup Structure API
+     * @apiPermission all
+     * @apiDescription get a structure to the collection structure in referencial module
+     * @apiParam {String} id The Structure-ID.
+     * @apiSuccess {Structure}   structure            The Structure found.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+            scope = Rule.Param.REQUEST)
     private void getStructureHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -269,6 +225,26 @@ public class StructureVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @api {post} /api/1/commons/referencial/structure/add Add structure
+     * @apiVersion 0.1.0
+     * @apiName add
+     * @apiGroup Structure API
+     * @apiPermission all
+     * @apiDescription Add structure to the collection structure in referencial module
+     * @apiParam {String} label Mandatory The Structure label.
+     * @apiParam {Activity} activity Mandatory The Structure activity.
+     * @apiParam {Country} country Mandatory The Structure country
+     * @apiParam {acronym} acronym Optional The Structure acronym.
+     * @apiParam {Address} address Optional The Structure-ID.
+     * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
+     * @apiParam {String} avatar Optional The Structure logo.
+     * @apiSuccess {Structure}   structure            The Structure added with the id.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = ADD, method = Constantes.POST, logged = true,
+            mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+            scope = Rule.Param.BODY)
     private void addStructureHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

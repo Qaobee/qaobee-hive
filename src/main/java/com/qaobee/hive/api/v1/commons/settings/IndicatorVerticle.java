@@ -24,7 +24,6 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.IndicatorCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -55,7 +54,6 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * The Constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.indicator.get";
-    // Declaration des variables finals
     /**
      * Handler for retrieve list of indicators
      */
@@ -68,8 +66,6 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * Indicator id
      */
     public static final String PARAM_ID = "_id";
-
- /* List of parameters */
     /**
      * Indicator activity id
      */
@@ -87,89 +83,36 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
     private static final Logger LOG = LoggerFactory.getLogger(IndicatorVerticle.class);
-    /**
-     * The Mongo.
-     */
-/* Injections */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
 
-    /**
-     * Start void.
-     */
     @Override
-    @VerticleHandler({
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
-                    scope = Rule.Param.REQUEST),
-            @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
-                    mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
-                    scope = Rule.Param.BODY),
-            @Rule(address = GET_BY_CODE, method = Constantes.POST, logged = true,
-                    mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
-                    scope = Rule.Param.BODY)
-    })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
-        /**
-         * @api {get} /api/1/commons/settings/indicator/get Read data of an indicator
-         * @apiVersion 0.1.0
-         * @apiName get
-         * @apiGroup Indicator API
-         * @apiPermission all
-         *
-         * @apiDescription get a indicator to the collection indicator in settings module
-         *
-         * @apiParam {String} id Mandatory The Indicator-ID.
-         *
-         * @apiSuccess {Indicator}   indicator            The Indicator found.
-         *
-         * @apiError DATA_ERROR Error on DB request
-         */
-        vertx.eventBus().registerHandler(GET, this::getIndicatorHandler);
-        /**
-         * @api {get} /api/1/commons/settings/indicator/getList Get a list of indicators
-         * @apiVersion 0.1.0
-         * @apiName getList
-         * @apiGroup Indicator API
-         * @apiPermission all
-         *
-         * @apiDescription get a list of indicators to the collection indicator in settings module
-         *
-         * @apiParam {String} activityId Mandatory The activity Id.
-         * @apiParam {String} countryId Mandatory The country Id.
-         * @apiParam {List} screen Mandatory The list of screen name.
-         *
-         * @apiSuccess {List}   indicators            The list of indicators found.
-         *
-         */
-        vertx.eventBus().registerHandler(GET_LIST, this::getIndicatorsListHandler);
-
-        /**
-         * @api {get} /api/1/commons/settings/indicator/getByCode Get indicators by code
-         * @apiVersion 0.1.0
-         * @apiName getByCode
-         * @apiGroup Indicator API
-         * @apiPermission all
-         *
-         * @apiDescription get a list of indicators by code
-         *
-         * @apiParam {String} activityId Mandatory The activity Id.
-         * @apiParam {String} countryId Mandatory The country Id.
-         * @apiParam {Array} listIndicators Mandatory list of indicator's codes
-         *
-         * @apiSuccess {List}   indicators            The list of indicators found.
-         *
-         */
-        vertx.eventBus().registerHandler(GET_BY_CODE, this::getIndicatorByCodeHandler);
+        vertx.eventBus()
+                .registerHandler(GET, this::getIndicatorHandler)
+                .registerHandler(GET_LIST, this::getIndicatorsListHandler)
+                .registerHandler(GET_BY_CODE, this::getIndicatorByCodeHandler);
     }
 
+    /**
+     * @api {get} /api/1/commons/settings/indicator/getByCode Get indicators by code
+     * @apiVersion 0.1.0
+     * @apiName getByCode
+     * @apiGroup Indicator API
+     * @apiPermission all
+     * @apiDescription get a list of indicators by code
+     * @apiParam {String} activityId Mandatory The activity Id.
+     * @apiParam {String} countryId Mandatory The country Id.
+     * @apiParam {Array} listIndicators Mandatory list of indicator's codes
+     * @apiSuccess {List}   indicators            The list of indicators found.
+     */
+    @Rule(address = GET_BY_CODE, method = Constantes.POST, logged = true,
+            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
+            scope = Rule.Param.BODY)
     private void getIndicatorByCodeHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -202,6 +145,21 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @api {get} /api/1/commons/settings/indicator/getList Get a list of indicators
+     * @apiVersion 0.1.0
+     * @apiName getList
+     * @apiGroup Indicator API
+     * @apiPermission all
+     * @apiDescription get a list of indicators to the collection indicator in settings module
+     * @apiParam {String} activityId Mandatory The activity Id.
+     * @apiParam {String} countryId Mandatory The country Id.
+     * @apiParam {List} screen Mandatory The list of screen name.
+     * @apiSuccess {List}   indicators            The list of indicators found.
+     */
+    @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
+            scope = Rule.Param.BODY)
     private void getIndicatorsListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -245,6 +203,19 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @api {get} /api/1/commons/settings/indicator/get Read data of an indicator
+     * @apiVersion 0.1.0
+     * @apiName get
+     * @apiGroup Indicator API
+     * @apiPermission all
+     * @apiDescription get a indicator to the collection indicator in settings module
+     * @apiParam {String} id Mandatory The Indicator-ID.
+     * @apiSuccess {Indicator}   indicator            The Indicator found.
+     * @apiError DATA_ERROR Error on DB request
+     */
+    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+            scope = Rule.Param.REQUEST)
     private void getIndicatorHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

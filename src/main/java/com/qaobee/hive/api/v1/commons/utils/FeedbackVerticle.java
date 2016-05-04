@@ -6,7 +6,6 @@ import com.asana.models.User;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.annotations.VerticleHandler;
 import com.qaobee.hive.technical.constantes.Constantes;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.utils.Utils;
@@ -46,21 +45,12 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
     private JsonObject config;
 
     @Override
-    @VerticleHandler({@Rule(address = POST_FEEDBACK, method = Constantes.POST)})
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
-        /**
-         * @apiDescription Send feedback
-         * @api {post} /api/1/commons/feedback/send update user
-         * @apiName POST_FEEDBACK
-         * @apiGroup FeedbackVerticle
-         * @apiParam {String} param URL encoded string from feedback.js
-         * @apiSuccess {Object} status boolean status
-         */
-        vertx.eventBus().registerHandler(POST_FEEDBACK,this::postFeedbackHandler);
-        vertx.eventBus().registerHandler("internal.feedback.send", this::internarFeebackHandler);
+        vertx.eventBus()
+                .registerHandler(POST_FEEDBACK,this::postFeedbackHandler)
+                .registerHandler("internal.feedback.send", this::internarFeebackHandler);
     }
 
     private void internarFeebackHandler(Message<JsonObject> message) {
@@ -89,6 +79,15 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * @apiDescription Send feedback
+     * @api {post} /api/1/commons/feedback/send update user
+     * @apiName POST_FEEDBACK
+     * @apiGroup FeedbackVerticle
+     * @apiParam {String} param URL encoded string from feedback.js
+     * @apiSuccess {Object} status boolean status
+     */
+    @Rule(address = POST_FEEDBACK, method = Constantes.POST)
     private void postFeedbackHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

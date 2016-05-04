@@ -55,7 +55,13 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
  */
 @DeployableVerticle
 public class AssetVerticle extends AbstractGuiceVerticle {
+    /**
+     * The constant ADD.
+     */
     public static final String ADD = "asset.add";
+    /**
+     * The constant GET.
+     */
     public static final String GET = "asset.get";
     private static final Logger LOG = LoggerFactory.getLogger(AssetVerticle.class);
     private static final String COLLECTION_FIELD = "collection";
@@ -66,37 +72,24 @@ public class AssetVerticle extends AbstractGuiceVerticle {
     @Inject
     private Utils utils;
 
-    /**
-     * Start void.
-     */
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        /**
-         * Add an asset
-         *
-         * <pre>{
-         *  uid User id
-         *  token
-         *  filename
-         *  collection
-         *  field
-         *  contentType
-         *  }</pre>
-         */
-        vertx.eventBus().registerHandler(ADD, this::addAssetHandler);
-        /**
-         * Get an asset
-         *
-         * <pre>{
-         *  id
-         *  collection
-         *  }</pre>
-         */
-        vertx.eventBus().registerHandler(GET, this::getAssetHandler);
+        vertx.eventBus()
+                .registerHandler(ADD, this::addAssetHandler)
+                .registerHandler(GET, this::getAssetHandler);
     }
 
+    /**
+     * Get an asset
+     * <p>
+     * <pre>{
+     *  id
+     *  collection
+     *  }</pre>
+     *  </p>
+     */
     private void getAssetHandler(Message<JsonObject> message) {
         JsonObject resp = new JsonObject();
         try {
@@ -131,6 +124,19 @@ public class AssetVerticle extends AbstractGuiceVerticle {
         }
     }
 
+    /**
+     * Add an asset
+     * <p>
+     * <pre>{
+     *  uid User id
+     *  token
+     *  filename
+     *  collection
+     *  field
+     *  contentType
+     *  }</pre>
+     *  </p>
+     */
     private void addAssetHandler(Message<JsonObject> message) {
         JsonObject resp = new JsonObject();
         try {
