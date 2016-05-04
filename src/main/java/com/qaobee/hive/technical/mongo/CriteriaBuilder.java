@@ -34,7 +34,7 @@ public class CriteriaBuilder {
     /**
      * The map.
      */
-    private final Map<String, Object> map = new HashMap<String, Object>();
+    private final Map<String, Object> map = new HashMap<>();
 
     /**
      * Adds the a search criteria.

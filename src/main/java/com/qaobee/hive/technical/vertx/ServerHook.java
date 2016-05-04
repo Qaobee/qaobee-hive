@@ -30,7 +30,7 @@ public class ServerHook implements EventBusBridgeHook {
         // You can do things in here like check the Origin of the request
         String origin = sock.headers().get("origin") + "/";
         LOG.info("Origin is " + origin + " / " + siteUrl);
-        return !(origin == null || !origin.equals(siteUrl));
+        return siteUrl.equals(origin);
     }
 
     @Override

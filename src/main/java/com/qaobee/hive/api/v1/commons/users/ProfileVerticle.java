@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
 import org.vertx.java.core.json.impl.Json;
@@ -105,32 +104,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
          * @apiError PASSWD_EXCEPTION Password exception
          * @apiError HTTP_ERROR wrong request's method
          */
-        final Handler<Message<String>> updateUserHandler = new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject u = new JsonObject(req.getBody());
-                    final User user = Json.decodeValue(req.getBody(), User.class);
-                    if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
-                        final byte[] salt = passwordEncryptionService.generateSalt();
-                        user.getAccount().setSalt(salt);
-                        user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
-                        user.getAccount().setPasswd(null);
-                        u.putObject(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
-                    } else {
-                        JsonObject p = mongo.getById(user.get_id(), User.class.getSimpleName());
-                        u.putObject(ACCOUNT_FIELD, p.getObject(ACCOUNT_FIELD));
-                    }
-                    mongo.save(u, User.class.getSimpleName());
-                    message.reply(u.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        };
-
+        vertx.eventBus().registerHandler(UPDATE, this::updateUserHandler);
         /**
          * @apiDescription Generate a PDF from the current profile
          * @api {get} /api/1/commons/users/profile/pdf Generate a PDF from the current profile
@@ -139,11 +113,46 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
          * @apiError HTTP_ERROR wrong request's method
          */
-        final Handler<Message<String>> generatePDFHandler = new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                final User user = req.getUser();
+        vertx.eventBus().registerHandler(GENERATE_PDF, this::generatePDFHandler);
+        /**
+         * @apiDescription Generate a PDF from the bill of the current profile
+         * @api {get} /api/1/commons/users/profile/billpdf?id= Generate a PDF from the bill of the current profile
+         * @apiName generateBillPDFHandler
+         * @apiGroup ProfileVerticle
+         * @apiParam {String} plan plan type
+         * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
+         * @apiError HTTP_ERROR wrong request's method
+         */
+        vertx.eventBus().registerHandler(GENERATE_BILL_PDF, this::generateBillPDFHandler);
+        // Update a person's avatar
+        // FIXME : CKE : Est-ce toujours utilisé?
+        vertx.eventBus().registerHandler(UPDATE_AVATAR, this::updateAvatar);
+    }
+
+    private void updateAvatar(Message<String> message) {
+        try {
+            final JsonObject req = new JsonObject(message.body());
+            JsonObject jsonperson= mongo.getById(req.getString("uid"), User.class);
+            jsonperson.putString(AVATAR_FIELD, req.getString("filename"));
+            mongo.save(jsonperson, User.class);
+            message.reply(jsonperson);
+        }  catch (QaobeeException e) {
+            utils.sendError(message, e);
+        }
+    }
+
+    private void generateBillPDFHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final User user = req.getUser();
+            Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(req.getParams().get("plan_id").get(0)));
+            Payment payment = null;
+            for (Payment p : planItem.getShippingList()) {
+                if (req.getParams().get("pay_id").get(0).equals(p.getId())) {
+                    payment = p;
+                }
+            }
+            if (payment != null) {
                 final JsonObject juser = new JsonObject();
                 if (StringUtils.isNoneBlank(user.getAvatar())) {
                     juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
@@ -161,105 +170,73 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 juser.putString("username", user.getAccount().getLogin());
                 juser.putString("phoneNumber", user.getContact().getHome());
                 juser.putString("email", user.getContact().getEmail());
-
+                juser.putString("paidDate", utils.formatDate(payment.getPaidDate() / 1000L, DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
+                juser.putString("paymentId", payment.getPaymentId());
+                juser.putString("plan", planItem.getLevelPlan().name());
+                juser.putString("amountPaid", String.valueOf(payment.getAmountPaid()));
                 final JsonObject pdfReq = new JsonObject();
-                pdfReq.putString(PDFVerticle.FILE_NAME, user.getAccount().getLogin());
-                pdfReq.putString(PDFVerticle.TEMPLATE, "profile/profile.ftl");
+                pdfReq.putString(PDFVerticle.FILE_NAME, payment.getPaymentId() + "-Qaobee");
+                pdfReq.putString(PDFVerticle.TEMPLATE, "billing/bill.ftl");
                 pdfReq.putObject(PDFVerticle.DATA, juser);
                 vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
+            } else {
+                throw new IllegalArgumentException("unknown bill");
             }
-        };
+        } catch (final IllegalArgumentException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
+        }
+    }
 
-        /**
-         * @apiDescription Generate a PDF from the bill of the current profile
-         * @api {get} /api/1/commons/users/profile/billpdf?id= Generate a PDF from the bill of the current profile
-         * @apiName generateBillPDFHandler
-         * @apiGroup ProfileVerticle
-         * @apiParam {String} plan plan type
-         * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
-         * @apiError HTTP_ERROR wrong request's method
-         */
-        final Handler<Message<String>> generateBillPDFHandler = new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final User user = req.getUser();
-                    Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(req.getParams().get("plan_id").get(0)));
-                    Payment payment = null;
-                    for (Payment p : planItem.getShippingList()) {
-                        if (req.getParams().get("pay_id").get(0).equals(p.getId())) {
-                            payment = p;
-                        }
-                    }
-                    if (payment != null) {
-                        final JsonObject juser = new JsonObject();
-                        if (StringUtils.isNoneBlank(user.getAvatar())) {
-                            juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
-                        }
-                        juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-                        if (user.getAddress() != null) {
-                            if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                                juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
-                            } else {
-                                juser.putString(ADDRESS_FIELD, user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
-                            }
-                        }
-                        juser.putString("firstname", user.getFirstname());
-                        juser.putString("name", user.getName());
-                        juser.putString("username", user.getAccount().getLogin());
-                        juser.putString("phoneNumber", user.getContact().getHome());
-                        juser.putString("email", user.getContact().getEmail());
-                        juser.putString("paidDate", utils.formatDate(payment.getPaidDate() / 1000L, DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-                        juser.putString("paymentId", payment.getPaymentId());
-                        juser.putString("plan", planItem.getLevelPlan().name());
-                        juser.putString("amountPaid", String.valueOf(payment.getAmountPaid()));
-                        final JsonObject pdfReq = new JsonObject();
-                        pdfReq.putString(PDFVerticle.FILE_NAME, payment.getPaymentId() + "-Qaobee");
-                        pdfReq.putString(PDFVerticle.TEMPLATE, "billing/bill.ftl");
-                        pdfReq.putObject(PDFVerticle.DATA, juser);
-                        vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
-                    } else {
-                        throw new IllegalArgumentException("unknown bill");
-                    }
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
-                }
+    private void generatePDFHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        final User user = req.getUser();
+        final JsonObject juser = new JsonObject();
+        if (StringUtils.isNoneBlank(user.getAvatar())) {
+            juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
+        }
+        juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
+        if (user.getAddress() != null) {
+            if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
+                juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
+            } else {
+                juser.putString(ADDRESS_FIELD, user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
             }
-        };
+        }
+        juser.putString("firstname", user.getFirstname());
+        juser.putString("name", user.getName());
+        juser.putString("username", user.getAccount().getLogin());
+        juser.putString("phoneNumber", user.getContact().getHome());
+        juser.putString("email", user.getContact().getEmail());
 
-        // Update a person's avatar
-        // FIXME : CKE : Est-ce toujours utilisé?
-        final Handler<Message<String>> updateAvatar = new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final JsonObject req = new JsonObject(message.body());
-                JsonObject jsonperson;
-                try {
-                    jsonperson = mongo.getById(req.getString("uid"), User.class);
-                    jsonperson.putString(AVATAR_FIELD, req.getString("filename"));
-                    mongo.save(jsonperson, User.class);
-                    message.reply(jsonperson);
-                } catch (final EncodeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-                } catch (QaobeeException e) {
-                    utils.sendError(message, e);
-                }
+        final JsonObject pdfReq = new JsonObject();
+        pdfReq.putString(PDFVerticle.FILE_NAME, user.getAccount().getLogin());
+        pdfReq.putString(PDFVerticle.TEMPLATE, "profile/profile.ftl");
+        pdfReq.putObject(PDFVerticle.DATA, juser);
+        vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
+    }
+
+    private void updateUserHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject u = new JsonObject(req.getBody());
+            final User user = Json.decodeValue(req.getBody(), User.class);
+            if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
+                final byte[] salt = passwordEncryptionService.generateSalt();
+                user.getAccount().setSalt(salt);
+                user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
+                user.getAccount().setPasswd(null);
+                u.putObject(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
+            } else {
+                JsonObject p = mongo.getById(user.get_id(), User.class.getSimpleName());
+                u.putObject(ACCOUNT_FIELD, p.getObject(ACCOUNT_FIELD));
             }
-        };
-
-        // handlers registration
-        vertx.eventBus().registerHandler(UPDATE, updateUserHandler);
-        vertx.eventBus().registerHandler(GENERATE_PDF, generatePDFHandler);
-        vertx.eventBus().registerHandler(GENERATE_BILL_PDF, generateBillPDFHandler);
-        vertx.eventBus().registerHandler(UPDATE_AVATAR, updateAvatar);
+            mongo.save(u, User.class.getSimpleName());
+            message.reply(u.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 
     /**
@@ -269,18 +246,15 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @return handler
      */
     private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
-        return new Handler<AsyncResult<Message<JsonObject>>>() {
-            @Override
-            public void handle(final AsyncResult<Message<JsonObject>> pdfResp) {
-                if (pdfResp.failed()) {
-                    LOG.error(pdfResp.cause().getMessage(), pdfResp.cause());
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
-                } else {
-                    final JsonObject json = new JsonObject();
-                    json.putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE);
-                    json.putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF));
-                    message.reply(json.encode());
-                }
+        return pdfResp -> {
+            if (pdfResp.failed()) {
+                LOG.error(pdfResp.cause().getMessage(), pdfResp.cause());
+                utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
+            } else {
+                final JsonObject json = new JsonObject();
+                json.putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE);
+                json.putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF));
+                message.reply(json.encode());
             }
         };
     }

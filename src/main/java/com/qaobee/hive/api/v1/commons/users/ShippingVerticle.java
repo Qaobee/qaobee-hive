@@ -50,7 +50,6 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.http.HttpClientResponse;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
@@ -121,44 +120,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
          * @apiParam {object} payment Payment object : see https://gitlab.com/qaobee/com.qaobee.payplug/wikis/notification_url
          * @apiSuccess {object} status Status
          */
-        vertx.eventBus().registerHandler(IPN, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    final JsonObject body = new JsonObject(req.getBody());
-                    if (!body.getObject(METADATA_FIELD).containsField(PARAM_PLAN_ID)
-                            || !body.getObject(METADATA_FIELD).containsField(CUSTOMER_ID_FIELD)
-                            || StringUtils.isBlank(body.getObject(METADATA_FIELD).getString(PARAM_PLAN_ID))
-                            || StringUtils.isBlank(body.getObject(METADATA_FIELD).getString(CUSTOMER_ID_FIELD))
-                            ) {
-                        throw new IllegalArgumentException("some metadatas are missing");
-                    }
-                    int planId = Integer.parseInt(body.getObject(METADATA_FIELD).getString(PARAM_PLAN_ID));
-                    final JsonObject user = mongo.getById(body.getObject(METADATA_FIELD).getString(CUSTOMER_ID_FIELD), User.class);
-                    final User u = Json.decodeValue(user.encode(), User.class);
-                    if (body.getObject("failure") != null) {
-                        // -> Send a mail with the payment url link
-                        sendPaymentMail(body, planId, u, message);
-                    } else {
-                        if ("payment".equals(body.getString("object"))) {
-                            makePayment(body, user, u, planId, message);
-                        } else {
-                            utils.sendStatus(false, message);
-                        }
-                    }
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(IPN, this::ipnHandler);
 
         /**
          * @apiDescription Do a payment
@@ -169,53 +131,23 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
          * @apiHeader {String} token
          * @apiSuccess {object} status Status with a redirect link if any
          */
-        vertx.eventBus().registerHandler(PAY, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    final JsonObject body = new JsonObject(req.getBody());
-                    final int planId = Integer.parseInt(body.getString(PARAM_PLAN_ID));
-                    if (req.getUser().getAccount().getListPlan().size() <= planId) {
-                        utils.sendError(message, new QaobeeException(ExceptionCodes.INVALID_PARAMETER, planId + " is not present"));
-                        return;
-                    }
-                    Plan plan = req.getUser().getAccount().getListPlan().get(planId);
-                    int amount = 0;
-                    if (getContainer().config().getObject(RUNTIME).getObject("plan").containsField(plan.getLevelPlan().name())) {
-                        amount = getContainer().config().getObject(RUNTIME).getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price");
-                    }
-                    if (amount == 0) {
-                        // FREEMIUM, nothing to do
-                        utils.sendStatus(true, message);
-                        return;
-                    }
-                    sendPayplugPayment(req, planId, amount, message, generatePayment(amount, req, planId).encode());
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(PAY, this::payHandler);
 
         /**
          * Periodic timer, each day it runs
          */
 
-        vertx.setPeriodic(1000 * 60 * 60 * 24L, new Handler<Long>() {
-            @Override
-            public void handle(Long timerID) {
-                // oh we are ticking each 24h after the startup time
-                // First, let's collect all the guys
-                DBObject statusQuery = new BasicDBObject(STATUS, "paid");
-                // TODO : change paid level plan here
-                DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
-                DBObject query = new BasicDBObject("account.listPlan", fields);
-                DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
-                while (result.hasNext()) {
-                    DBObject p = result.next();
-                    vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, new JsonObject(p.toString()));
-                }
+        vertx.setPeriodic(1000 * 60 * 60 * 24L, timerID -> {
+            // oh we are ticking each 24h after the startup time
+            // First, let's collect all the guys
+            DBObject statusQuery = new BasicDBObject(STATUS, "paid");
+            // TODO : change paid level plan here
+            DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
+            DBObject query = new BasicDBObject("account.listPlan", fields);
+            DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
+            while (result.hasNext()) {
+                DBObject p = result.next();
+                vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, new JsonObject(p.toString()));
             }
         });
 
@@ -248,20 +180,74 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         });
     }
 
-    private void sendPayplugPayment(final RequestWrapper req, final int planId, final long amount, final Message<String> message, String requestBody) {
-        client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
-            @Override
-            public void handle(final HttpClientResponse resp) {
-                if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
-                    resp.bodyHandler(new Handler<Buffer>() {
-                        @Override
-                        public void handle(Buffer buffer) {
-                            handlePayplugPaymentResponse(buffer, req, planId, amount, message);
-                        }
-                    });
+    private void payHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            final JsonObject body = new JsonObject(req.getBody());
+            final int planId = Integer.parseInt(body.getString(PARAM_PLAN_ID));
+            if (req.getUser().getAccount().getListPlan().size() <= planId) {
+                utils.sendError(message, new QaobeeException(ExceptionCodes.INVALID_PARAMETER, planId + " is not present"));
+                return;
+            }
+            Plan plan = req.getUser().getAccount().getListPlan().get(planId);
+            int amount = 0;
+            if (getContainer().config().getObject(RUNTIME).getObject("plan").containsField(plan.getLevelPlan().name())) {
+                amount = getContainer().config().getObject(RUNTIME).getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price");
+            }
+            if (amount == 0) {
+                // FREEMIUM, nothing to do
+                utils.sendStatus(true, message);
+                return;
+            }
+            sendPayplugPayment(req, planId, amount, message, generatePayment(amount, req, planId).encode());
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+
+    private void ipnHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            final JsonObject body = new JsonObject(req.getBody());
+            if (!body.getObject(METADATA_FIELD).containsField(PARAM_PLAN_ID)
+                    || !body.getObject(METADATA_FIELD).containsField(CUSTOMER_ID_FIELD)
+                    || StringUtils.isBlank(body.getObject(METADATA_FIELD).getString(PARAM_PLAN_ID))
+                    || StringUtils.isBlank(body.getObject(METADATA_FIELD).getString(CUSTOMER_ID_FIELD))
+                    ) {
+                throw new IllegalArgumentException("some metadatas are missing");
+            }
+            int planId = Integer.parseInt(body.getObject(METADATA_FIELD).getString(PARAM_PLAN_ID));
+            final JsonObject user = mongo.getById(body.getObject(METADATA_FIELD).getString(CUSTOMER_ID_FIELD), User.class);
+            final User u = Json.decodeValue(user.encode(), User.class);
+            if (body.getObject("failure") != null) {
+                // -> Send a mail with the payment url link
+                sendPaymentMail(body, planId, u, message);
+            } else {
+                if ("payment".equals(body.getString("object"))) {
+                    makePayment(body, user, u, planId, message);
                 } else {
-                    utils.sendError(message, new QaobeeException(ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage()));
+                    utils.sendStatus(false, message);
                 }
+            }
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        } catch (final IllegalArgumentException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+
+    private void sendPayplugPayment(final RequestWrapper req, final int planId, final long amount, final Message<String> message, String requestBody) {
+        client.post(config.getString("basePath") + "/payments", resp -> {
+            if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
+                resp.bodyHandler(buffer -> handlePayplugPaymentResponse(buffer, req, planId, amount, message));
+            } else {
+                utils.sendError(message, new QaobeeException(ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage()));
             }
         })
                 .putHeader("Authorization", "Bearer " + config.getString("api_key"))
@@ -313,54 +299,48 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     }
 
     private void sendPayplugRecurringPayment(final JsonObject user, final int planId, final long amount, final Message<JsonObject> message, String requestBody) {
-        client.post(config.getString("basePath") + "/payments", new Handler<HttpClientResponse>() {
-                    @Override
-                    public void handle(final HttpClientResponse resp) {
-                        if (resp.statusCode() >= 200 &&resp.statusCode() < 400) {
-                            resp.bodyHandler(new Handler<Buffer>() {
-                                @Override
-                                public void handle(Buffer buffer) {
-                                    // The entire response body has been received
-                                    JsonObject res = new JsonObject(buffer.toString());
-                                    ((JsonObject) user.getObject(ACCOUNT_FIELD)
-                                            .getArray(LIST_PLAN_FIELD)
-                                            .get(planId))
-                                            .putNumber("amountPaid", amount);
-                                    ((JsonObject) user.getObject(ACCOUNT_FIELD)
-                                            .getArray(LIST_PLAN_FIELD)
-                                            .get(planId))
-                                            .putString(PAYMENT_ID_FIELD, res.getString("id"));
-                                    ((JsonObject) user.getObject(ACCOUNT_FIELD)
-                                            .getArray(LIST_PLAN_FIELD)
-                                            .get(planId))
-                                            .putString("periodicity", MONTHLY);
-                                    if (res.getObject("card").getString("id", null) != null) {
-                                        ((JsonObject) user.getObject(ACCOUNT_FIELD)
-                                                .getArray(LIST_PLAN_FIELD)
-                                                .get(planId))
-                                                .putObject(CARD_INFO_FIELD, res.getObject("card"));
-                                    }
-                                    try {
-                                        ((JsonObject) user.getObject(ACCOUNT_FIELD)
-                                                .getArray(LIST_PLAN_FIELD)
-                                                .get(planId))
-                                                .putString("cardId", res.getString("id"));
-                                        mongo.save(user, User.class);
-                                        utils.sendStatusJson(true, message);
-                                    } catch (QaobeeException e) {
-                                        LOG.error(e.getMessage(), e);
-                                        utils.sendErrorJ(message, e.getCode(), e.getMessage());
-                                    }
-                                }
-                            });
-                        } else {
-                            LOG.error(resp.statusCode() + " : " + resp.statusMessage());
-                            utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR,
-                                    resp.statusCode() + " : " +
-                                            resp.statusMessage());
-                        }
+        client.post(config.getString("basePath") + "/payments", resp -> {
+            if (resp.statusCode() >= 200 &&resp.statusCode() < 400) {
+                resp.bodyHandler(buffer -> {
+                    // The entire response body has been received
+                    JsonObject res = new JsonObject(buffer.toString());
+                    ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                            .getArray(LIST_PLAN_FIELD)
+                            .get(planId))
+                            .putNumber("amountPaid", amount);
+                    ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                            .getArray(LIST_PLAN_FIELD)
+                            .get(planId))
+                            .putString(PAYMENT_ID_FIELD, res.getString("id"));
+                    ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                            .getArray(LIST_PLAN_FIELD)
+                            .get(planId))
+                            .putString("periodicity", MONTHLY);
+                    if (res.getObject("card").getString("id", null) != null) {
+                        ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                                .getArray(LIST_PLAN_FIELD)
+                                .get(planId))
+                                .putObject(CARD_INFO_FIELD, res.getObject("card"));
                     }
-                }
+                    try {
+                        ((JsonObject) user.getObject(ACCOUNT_FIELD)
+                                .getArray(LIST_PLAN_FIELD)
+                                .get(planId))
+                                .putString("cardId", res.getString("id"));
+                        mongo.save(user, User.class);
+                        utils.sendStatusJson(true, message);
+                    } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                        utils.sendErrorJ(message, e.getCode(), e.getMessage());
+                    }
+                });
+            } else {
+                LOG.error(resp.statusCode() + " : " + resp.statusMessage());
+                utils.sendErrorJ(message, ExceptionCodes.HTTP_ERROR,
+                        resp.statusCode() + " : " +
+                                resp.statusMessage());
+            }
+        }
         )
                 .putHeader("Authorization", "Bearer " + config.getString("api_key"))
                 .putHeader(HTTP.CONTENT_TYPE, "application/json")
@@ -378,7 +358,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
             req.getUser().getAccount().getListPlan().get(planId).setPaymentId(res.getString("id"));
             req.getUser().getAccount().getListPlan().get(planId).setPeriodicity(MONTHLY);
             if (res.getObject("card").getString("id", null) != null) {
-                req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.<Card>decodeValue(res.getObject("card").encode(), Card.class));
+                req.getUser().getAccount().getListPlan().get(planId).setCardInfo(Json.decodeValue(res.getObject("card").encode(), Card.class));
             }
             mongo.save(req.getUser());
             JsonObject messageResponse = new JsonObject()
@@ -427,20 +407,16 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                 u.getAccount().getListPlan().get(planId),
                 body.getObject("failure").getString("code"), getContainer().config()));
 
-        vertx.eventBus()
-                .send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
-                    @Override
-                    public void handle(final Message<JsonObject> tplResp) {
-                        final String tplRes = tplResp.body().getString("result");
-                        final JsonObject emailReq = new JsonObject();
-                        emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
-                        emailReq.putString("to", u.getContact().getEmail());
-                        emailReq.putString("subject", Messages.getString("mail.payment.subject", body.getObject(METADATA_FIELD).getString(LOCALE_FIELD)));
-                        emailReq.putString("content_type", "text/html");
-                        emailReq.putString("body", tplRes);
-                        vertx.eventBus().publish("mailer.mod", emailReq);
-                        utils.sendStatus(false, message);
-                    }
+        vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, (Handler<Message<JsonObject>>) tplResp -> {
+                    final String tplRes = tplResp.body().getString("result");
+                    final JsonObject emailReq = new JsonObject();
+                    emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
+                    emailReq.putString("to", u.getContact().getEmail());
+                    emailReq.putString("subject", Messages.getString("mail.payment.subject", body.getObject(METADATA_FIELD).getString(LOCALE_FIELD)));
+                    emailReq.putString("content_type", "text/html");
+                    emailReq.putString("body", tplRes);
+                    vertx.eventBus().publish("mailer.mod", emailReq);
+                    utils.sendStatus(false, message);
                 });
     }
 
@@ -481,24 +457,20 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
                     body.getObject(METADATA_FIELD).getString(LOCALE_FIELD),
                     u.getAccount().getListPlan().get(planId), getContainer().config()));
 
-            vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq,
-                    new Handler<Message<JsonObject>>() {
-                        @Override
-                        public void handle(final Message<JsonObject> tplResp) {
-                            final String tplRes = tplResp.body().getString("result");
-                            final JsonObject emailReq = new JsonObject();
-                            emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
-                            emailReq.putString("to", u.getContact().getEmail());
-                            emailReq.putString("subject",
-                                    Messages.getString("mail.payment.subject",
-                                            body.getObject(METADATA_FIELD).getString(LOCALE_FIELD)));
-                            emailReq.putString("content_type", "text/html");
-                            emailReq.putString("body", tplRes);
-                            vertx.eventBus().publish("mailer.mod", emailReq);
-                            final JsonObject resp = new JsonObject();
-                            resp.putBoolean(STATUS, true);
-                            utils.sendStatus(true, message);
-                        }
+            vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, (Handler<Message<JsonObject>>) tplResp -> {
+                        final String tplRes = tplResp.body().getString("result");
+                        final JsonObject emailReq = new JsonObject();
+                        emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
+                        emailReq.putString("to", u.getContact().getEmail());
+                        emailReq.putString("subject",
+                                Messages.getString("mail.payment.subject",
+                                        body.getObject(METADATA_FIELD).getString(LOCALE_FIELD)));
+                        emailReq.putString("content_type", "text/html");
+                        emailReq.putString("body", tplRes);
+                        vertx.eventBus().publish("mailer.mod", emailReq);
+                        final JsonObject resp = new JsonObject();
+                        resp.putBoolean(STATUS, true);
+                        utils.sendStatus(true, message);
                     });
         } else {
             // WTF, it's not paid !!! bloody hell !

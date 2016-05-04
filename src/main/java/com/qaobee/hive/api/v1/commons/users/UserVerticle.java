@@ -143,66 +143,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError NON_ACTIVE the user is not active
          * @apiError HTTP_ERROR wrong request method
          */
-        vertx.eventBus().registerHandler(LOGIN, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    final JsonObject infos = new JsonObject(req.getBody());
-
-                    if (StringUtils.isBlank(infos.getString(PARAM_LOGIN)) || StringUtils.isBlank(infos.getString(PARAM_PWD))) {
-                        final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
-                        LOG.error(e.getMessage(), e);
-                        utils.sendError(message, e);
-                    } else {
-                        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add(ACCOUNT_LOGIN_FIELD,
-                                infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
-                        if (res.size() != 1) {
-                            final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
-                            utils.sendError(message, e);
-                        } else {
-                            // we take the first one (should be only one)
-                            final JsonObject jsonPerson = res.get(0);
-                            final User user = Json.decodeValue(jsonPerson.encode(), User.class);
-                            final byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(infos.getString(PARAM_PWD), user.getAccount().getSalt());
-                            if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
-                                final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
-                                LOG.error(e.getMessage(), e);
-                                utils.sendError(message, e);
-                            } else {
-                                if (user.getAccount().isActive()) {
-                                    // trial period test
-                                    if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user)) {
-                                        user.getAccount().getListPlan().get(0).setStatus("notpaid");
-                                    }
-                                    user.getAccount().setToken(UUID.randomUUID().toString());
-                                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                                    if (infos.containsField(MOBILE_TOKEN)) {
-                                        user.getAccount().setMobileToken(infos.getString(MOBILE_TOKEN));
-                                    }
-                                    mongo.save(user);
-                                    JsonObject jUser = new JsonObject(Json.encode(user));
-                                    jUser.getObject(ACCOUNT_FIELD).removeField(PASSWD_FIELD);
-                                    jUser.getObject(ACCOUNT_FIELD).removeField("password");
-                                    jUser.getObject(ACCOUNT_FIELD).removeField("salt");
-                                    message.reply(jUser.toString());
-                                } else {
-                                    utils.sendError(message, ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", req.getLocale()));
-                                }
-                            }
-                        }
-
-                    }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
-
+        vertx.eventBus().registerHandler(LOGIN, this::loginHandler);
         /**
          * @apiDescription User logout
          * @api {get} /api/1/commons/users/user/logout User logout
@@ -213,34 +154,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request method
          */
-        vertx.eventBus().registerHandler(LOGOUT, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", req.getHeaders().get("token").get(0)).get(), null, null, 0, 0, User.class);
-                    if (res.size() != 1) {
-                        utils.sendStatus(false, message);
-                    } else {
-                        // we take the first one (should be only one)
-                        final JsonObject jsonperson = res.get(0);
-                        final User user = Json.decodeValue(jsonperson.encode(), User.class);
-                        user.getAccount().setToken(null);
-                        user.getAccount().setTokenRenewDate(0L);
-                        user.getAccount().setMobileToken(null);
-                        mongo.save(user);
-                        utils.sendStatus(true, message);
-                    }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
-
+        vertx.eventBus().registerHandler(LOGOUT, this::logoutHandler);
         /**
          * @apiDescription Mail generation for password renew
          * @api {post} /api/1/commons/users/user/newpasswd Password renew
@@ -252,56 +166,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request method
          * @apiError MAIL_EXCEPTION email problem
          */
-        vertx.eventBus().registerHandler(PASSWD_RENEW, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    final JsonObject infos = new JsonObject(req.getBody());
-                    final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add(ACCOUNT_LOGIN_FIELD, infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
-                    if (res.size() != 1) {
-                        final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", req.getLocale()));
-                        LOG.error(e.getMessage(), e);
-                        utils.sendError(message, e);
-                    } else {
-                        final JsonObject jsonperson = res.get(0);
-                        final User user = Json.decodeValue(jsonperson.encode(), User.class);
-                        user.getAccount().setActivationPasswd(UUID.randomUUID().toString().replaceAll("-", ""));
-                        mongo.save(user);
-
-                        final JsonObject tplReq = new JsonObject();
-                        tplReq.putString(TemplatesVerticle.TEMPLATE, "newPasswd.html");
-                        tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateNewpasswdBody(user, req.getLocale(), getContainer().config()));
-
-                        vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, (Handler<Message<JsonObject>>) tplResp -> {
-                            final String tplRes = tplResp.body().getString("result");
-                            final JsonObject emailReq = new JsonObject();
-                            emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
-                            emailReq.putString("to", user.getContact().getEmail());
-                            emailReq.putString("subject", Messages.getString("mail.newpasswd.subject"));
-                            emailReq.putString("content_type", "text/html");
-                            emailReq.putString("body", tplRes);
-                            vertx.eventBus().publish("mailer.mod", emailReq);
-                            final JsonObject resp = new JsonObject();
-                            resp.putBoolean("status", true);
-                            message.reply(resp.encode());
-                        });
-                    }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
-
+        vertx.eventBus().registerHandler(PASSWD_RENEW, this::passwordRenewHandler);
         /**
          * @apiDescription Check activation code supplied in the renew password email
          * @api {get} /api/v1/commons/users/user/passwdcheck Check activation code
@@ -313,42 +178,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
          * @apiError HTTP_ERROR wrong request method
          */
-        vertx.eventBus().registerHandler(PASSWD_RENEW_CHK, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    final String id = req.getParams().get("id").get(0);
-                    final String code = req.getParams().get("code").get(0);
-                    JsonObject jsonUser = mongo.getById(id, User.class);
-                    // User not found
-                    if (jsonUser == null) {
-                        utils.sendStatus(false, message);
-                    }
-
-                    final User user;
-                    if (jsonUser != null) {
-                        user = Json.decodeValue(jsonUser.encode(), User.class);
-                        if (code.equals(user.getAccount().getActivationPasswd())) {
-                            final JsonObject jsonResp = new JsonObject();
-                            jsonResp.putBoolean("status", true);
-                            jsonResp.putObject("user", mongo.getById(id, User.class));
-                            message.reply(jsonResp.encode());
-                        } else {
-                            // Code doesn't match
-                            utils.sendStatus(false, message);
-                        }
-                    }
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
-
+        vertx.eventBus().registerHandler(PASSWD_RENEW_CHK, this::passwordRenewCheckHandler);
         /**
          * @apiDescription Update password after renew ask
          * @api {post} /api/v1/commons/users/user/resetPasswd Update password
@@ -359,56 +189,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request method
          */
-        vertx.eventBus().registerHandler(PASSWD_RESET, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    final JsonObject json = new JsonObject(req.getBody());
-                    final String id = json.getString("id");
-                    final String code = json.getString("code");
-                    final String passwd = json.getString(PASSWD_FIELD);
-                    final boolean injunit = json.getBoolean("junit", false);
-                    final boolean byPassActivationCode = json.getBoolean("byPassActivationCode", false);
-                    ReCaptchaResponse reCaptchaResponse = null;
-                    if (!injunit) {
-                        final JsonObject catcha = json.getObject("captcha");
-                        final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-                        reCaptcha.setPrivateKey(getContainer().config().getObject(RUNTIME).getString("recaptcha.pkey"));
-                        final String challenge = catcha.getString("challenge");
-                        final String uresponse = catcha.getString("response");
-                        reCaptchaResponse = reCaptcha.checkAnswer(getContainer().config().getObject(RUNTIME).getString("recaptcha.site"), challenge, uresponse);
-                    }
-                    if (!injunit && !reCaptchaResponse.isValid()) {
-                        utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
-                    } else {
-                        final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
-                        /* update password by profil menu */
-                        if (byPassActivationCode) {
-                            user.getAccount().setPasswd(passwd);
-                            mongo.save(personUtils.prepareUpsert(user));
-                            utils.sendStatus(true, message);
-                        } else {
-                            /* update password by home public */
-                            if (code.equals(user.getAccount().getActivationPasswd())) {
-                                user.getAccount().setPasswd(passwd);
-                                mongo.save(personUtils.prepareUpsert(user));
-                                utils.sendStatus(true, message);
-                            } else {
-                                utils.sendStatus(false, message);
-                            }
-                        }
-                    }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
-
+        vertx.eventBus().registerHandler(PASSWD_RESET,this::passwordResetHandler);
         /**
          * @apiDescription Fetch the current logged user
          * @api {get} /api/1/commons/users/user/current Fetch the current logged user
@@ -421,23 +202,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
          */
-        vertx.eventBus().registerHandler(CURRENT, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                User user = req.getUser();
-                JsonObject jUser = new JsonObject(Json.encode(user));
-                jUser.getObject(ACCOUNT_FIELD).removeField(PASSWD_FIELD);
-                jUser.getObject(ACCOUNT_FIELD).removeField("password");
-                jUser.getObject(ACCOUNT_FIELD).removeField("salt");
-                message.reply(jUser.toString());
-            }
-        });
+        vertx.eventBus().registerHandler(CURRENT, this::currentUserHandler);
         /**
          * @apiDescription Fetch meta information
          * @api {get} /api/1/commons/users/user/meta Fetch meta information
@@ -448,41 +213,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
          */
-        vertx.eventBus().registerHandler(META, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject user = mongo.getById(req.getUser().get_id(), User.class);
-                    final JsonObject activity = ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray("listPlan").get(0)).getObject("activity");
-                    req.getParams().put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
-                    whenEventBus.send(SB_SandBoxVerticle.GET_BY_OWNER, Json.encode(req)).then(objectMessage -> {
-                        if (objectMessage.body() instanceof ReplyException) {
-                            utils.sendError(message, (ReplyException) objectMessage.body());
-                        } else {
-                            JsonObject sandbox = new JsonObject((String) objectMessage.body());
-                            req.getParams().put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(sandbox.getString("sandboxCfgId")));
-                            whenEventBus.send(SB_SandBoxCfgVerticle.GET, Json.encode(req)).then(objectMessage1 -> {
-                                if (objectMessage1.body() instanceof ReplyException) {
-                                    utils.sendError(message, (ReplyException) objectMessage1.body());
-                                } else {
-                                    message.reply((String) objectMessage1.body());
-                                }
-                                return null;
-                            });
-                        }
-                        return null;
-                    });
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
-
+        vertx.eventBus().registerHandler(META, this::getMetaHandler);
         /**
          * @apiDescription Fetch user information by its id
          * @api {get} /api/1/commons/users/user/user Fetch user by id
@@ -493,31 +224,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
          */
-        vertx.eventBus().registerHandler(USER_INFO, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject u = mongo.getById(req.getParams().get("id").get(0), User.class);
-                    u.removeField("salt");
-                    u.removeField(PASSWD_FIELD);
-                    u.removeField("password");
-                    message.reply(u.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
-
+        vertx.eventBus().registerHandler(USER_INFO, this::userInfoHandler);
         /**
          * @apiDescription Fetch user information by its Login
          * @api {get} /api/1/commons/users/user/user Fetch user by login
@@ -528,31 +235,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
          */
-        vertx.eventBus().registerHandler(USER_BY_LOGIN, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                // Creation of request
-                CriteriaBuilder criterias = new CriteriaBuilder();
-                criterias.add(ACCOUNT_LOGIN_FIELD, req.getParams().get("login").get(0).toLowerCase());
-                JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
-                if (jsonArray == null || jsonArray.size() == 0) {
-                    utils.sendError(message, ExceptionCodes.DATA_ERROR, "Login inconnu");
-                    return;
-                }
-                if (jsonArray.size() > 1) {
-                    utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné");
-                    return;
-                }
-                message.reply(jsonArray.get(0).toString());
-            }
-        });
-
+        vertx.eventBus().registerHandler(USER_BY_LOGIN, this::userByLoginHandler);
         /**
          * @apiDescription SSO login by mobile token (token provided at the login phase corresponding to the device id)
          * @api {post} /api/1/commons/users/user/sso SSO login by mobile token
@@ -564,38 +247,292 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request method
          * @apiError NOT_LOGGED invalid token
          */
-        vertx.eventBus().registerHandler(LOGIN_BY_TOKEN, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject request = new JsonObject(req.getBody());
-                    CriteriaBuilder cb = new CriteriaBuilder();
-                    cb.add("account.mobileToken", request.getString(MOBILE_TOKEN));
-                    cb.add(ACCOUNT_LOGIN_FIELD, request.getString(PARAM_LOGIN).toLowerCase());
-                    final JsonArray res = mongo.findByCriterias(cb.get(), null, null, 0, 0, User.class);
-                    if (res.size() != 1) {
-                        throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
+        vertx.eventBus().registerHandler(LOGIN_BY_TOKEN, this::userByTokenHandler);
+    }
+
+    private void userByTokenHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject request = new JsonObject(req.getBody());
+            CriteriaBuilder cb = new CriteriaBuilder();
+            cb.add("account.mobileToken", request.getString(MOBILE_TOKEN));
+            cb.add(ACCOUNT_LOGIN_FIELD, request.getString(PARAM_LOGIN).toLowerCase());
+            final JsonArray res = mongo.findByCriterias(cb.get(), null, null, 0, 0, User.class);
+            if (res.size() != 1) {
+                throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
+            } else {
+                // we take the first one (should be only one)
+                final JsonObject jsonPerson = res.get(0);
+                final User user = Json.decodeValue(jsonPerson.encode(), User.class);
+                user.getAccount().setToken(UUID.randomUUID().toString());
+                user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                mongo.save(user);
+                message.reply(Json.encode(user));
+            }
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void userByLoginHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        // Creation of request
+        CriteriaBuilder criterias = new CriteriaBuilder();
+        criterias.add(ACCOUNT_LOGIN_FIELD, req.getParams().get("login").get(0).toLowerCase());
+        JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, User.class);
+        if (jsonArray == null || jsonArray.size() == 0) {
+            utils.sendError(message, ExceptionCodes.DATA_ERROR, "Login inconnu");
+            return;
+        }
+        if (jsonArray.size() > 1) {
+            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné");
+            return;
+        }
+        message.reply(jsonArray.get(0).toString());
+    }
+
+    private void userInfoHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject u = mongo.getById(req.getParams().get("id").get(0), User.class);
+            u.removeField("salt");
+            u.removeField(PASSWD_FIELD);
+            u.removeField("password");
+            message.reply(u.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void getMetaHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject user = mongo.getById(req.getUser().get_id(), User.class);
+            final JsonObject activity = ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray("listPlan").get(0)).getObject("activity");
+            req.getParams().put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
+            whenEventBus.send(SB_SandBoxVerticle.GET_BY_OWNER, Json.encode(req)).then(objectMessage -> {
+                if (objectMessage.body() instanceof ReplyException) {
+                    utils.sendError(message, (ReplyException) objectMessage.body());
+                } else {
+                    JsonObject sandbox = new JsonObject((String) objectMessage.body());
+                    req.getParams().put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(sandbox.getString("sandboxCfgId")));
+                    whenEventBus.send(SB_SandBoxCfgVerticle.GET, Json.encode(req)).then(objectMessage1 -> {
+                        if (objectMessage1.body() instanceof ReplyException) {
+                            utils.sendError(message, (ReplyException) objectMessage1.body());
+                        } else {
+                            message.reply((String) objectMessage1.body());
+                        }
+                        return null;
+                    });
+                }
+                return null;
+            });
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void currentUserHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        User user = req.getUser();
+        JsonObject jUser = new JsonObject(Json.encode(user));
+        jUser.getObject(ACCOUNT_FIELD).removeField(PASSWD_FIELD);
+        jUser.getObject(ACCOUNT_FIELD).removeField("password");
+        jUser.getObject(ACCOUNT_FIELD).removeField("salt");
+        message.reply(jUser.encode());
+    }
+
+    private void passwordResetHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            final JsonObject json = new JsonObject(req.getBody());
+            final String id = json.getString("id");
+            final String code = json.getString("code");
+            final String passwd = json.getString(PASSWD_FIELD);
+            final boolean injunit = json.getBoolean("junit", false);
+            final boolean byPassActivationCode = json.getBoolean("byPassActivationCode", false);
+            ReCaptchaResponse reCaptchaResponse = null;
+            if (!injunit) {
+                final JsonObject catcha = json.getObject("captcha");
+                final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
+                reCaptcha.setPrivateKey(getContainer().config().getObject(RUNTIME).getString("recaptcha.pkey"));
+                final String challenge = catcha.getString("challenge");
+                final String uresponse = catcha.getString("response");
+                reCaptchaResponse = reCaptcha.checkAnswer(getContainer().config().getObject(RUNTIME).getString("recaptcha.site"), challenge, uresponse);
+            }
+            if (!injunit && !reCaptchaResponse.isValid()) {
+                utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
+            } else {
+                final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
+                        /* update password by profil menu */
+                if (byPassActivationCode) {
+                    user.getAccount().setPasswd(passwd);
+                    mongo.save(personUtils.prepareUpsert(user));
+                    utils.sendStatus(true, message);
+                } else {
+                            /* update password by home public */
+                    if (code.equals(user.getAccount().getActivationPasswd())) {
+                        user.getAccount().setPasswd(passwd);
+                        mongo.save(personUtils.prepareUpsert(user));
+                        utils.sendStatus(true, message);
                     } else {
-                        // we take the first one (should be only one)
-                        final JsonObject jsonPerson = res.get(0);
-                        final User user = Json.decodeValue(jsonPerson.encode(), User.class);
-                        user.getAccount().setToken(UUID.randomUUID().toString());
-                        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                        mongo.save(user);
-                        message.reply(Json.encode(user));
+                        utils.sendStatus(false, message);
                     }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
                 }
             }
-        });
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void passwordRenewCheckHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            final String id = req.getParams().get("id").get(0);
+            final String code = req.getParams().get("code").get(0);
+            JsonObject jsonUser = mongo.getById(id, User.class);
+            // User not found
+            if (jsonUser == null) {
+                utils.sendStatus(false, message);
+            }
+            if (jsonUser != null) {
+                final User user = Json.decodeValue(jsonUser.encode(), User.class);
+                if (code.equals(user.getAccount().getActivationPasswd())) {
+                    final JsonObject jsonResp = new JsonObject()
+                            .putBoolean("status", true)
+                            .putObject("user", mongo.getById(id, User.class));
+                    message.reply(jsonResp.encode());
+                } else {
+                    // Code doesn't match
+                    utils.sendStatus(false, message);
+                }
+            }
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void passwordRenewHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            final JsonObject infos = new JsonObject(req.getBody());
+            final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add(ACCOUNT_LOGIN_FIELD, infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
+            if (res.size() != 1) {
+                final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", req.getLocale()));
+                LOG.error(e.getMessage(), e);
+                utils.sendError(message, e);
+            } else {
+                final JsonObject jsonperson = res.get(0);
+                final User user = Json.decodeValue(jsonperson.encode(), User.class);
+                user.getAccount().setActivationPasswd(UUID.randomUUID().toString().replaceAll("-", ""));
+                mongo.save(user);
+
+                final JsonObject tplReq = new JsonObject();
+                tplReq.putString(TemplatesVerticle.TEMPLATE, "newPasswd.html");
+                tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateNewpasswdBody(user, req.getLocale(), getContainer().config()));
+
+                vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, (Handler<Message<JsonObject>>) tplResp -> {
+                    final String tplRes = tplResp.body().getString("result");
+                    final JsonObject emailReq = new JsonObject();
+                    emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
+                    emailReq.putString("to", user.getContact().getEmail());
+                    emailReq.putString("subject", Messages.getString("mail.newpasswd.subject"));
+                    emailReq.putString("content_type", "text/html");
+                    emailReq.putString("body", tplRes);
+                    vertx.eventBus().publish("mailer.mod", emailReq);
+                    final JsonObject resp = new JsonObject();
+                    resp.putBoolean("status", true);
+                    message.reply(resp.encode());
+                });
+            }
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void logoutHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", req.getHeaders().get("token").get(0)).get(), null, null, 0, 0, User.class);
+            if (res.size() != 1) {
+                utils.sendStatus(false, message);
+            } else {
+                // we take the first one (should be only one)
+                final JsonObject jsonperson = res.get(0);
+                final User user = Json.decodeValue(jsonperson.encode(), User.class);
+                user.getAccount().setToken(null);
+                user.getAccount().setTokenRenewDate(0L);
+                user.getAccount().setMobileToken(null);
+                mongo.save(user);
+                utils.sendStatus(true, message);
+            }
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        } catch (final Exception e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+
+    private void loginHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            final JsonObject infos = new JsonObject(req.getBody());
+
+            if (StringUtils.isBlank(infos.getString(PARAM_LOGIN)) || StringUtils.isBlank(infos.getString(PARAM_PWD))) {
+                final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
+                LOG.error(e.getMessage(), e);
+                utils.sendError(message, e);
+            } else {
+                final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add(ACCOUNT_LOGIN_FIELD,
+                        infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
+                if (res.size() != 1) {
+                    final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
+                    utils.sendError(message, e);
+                } else {
+                    // we take the first one (should be only one)
+                    final JsonObject jsonPerson = res.get(0);
+                    final User user = Json.decodeValue(jsonPerson.encode(), User.class);
+                    final byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(infos.getString(PARAM_PWD), user.getAccount().getSalt());
+                    if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
+                        final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
+                        LOG.error(e.getMessage(), e);
+                        utils.sendError(message, e);
+                    } else {
+                        if (user.getAccount().isActive()) {
+                            // trial period test
+                            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user)) {
+                                user.getAccount().getListPlan().get(0).setStatus("notpaid");
+                            }
+                            user.getAccount().setToken(UUID.randomUUID().toString());
+                            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                            if (infos.containsField(MOBILE_TOKEN)) {
+                                user.getAccount().setMobileToken(infos.getString(MOBILE_TOKEN));
+                            }
+                            mongo.save(user);
+                            JsonObject jUser = new JsonObject(Json.encode(user));
+                            jUser.getObject(ACCOUNT_FIELD).removeField(PASSWD_FIELD);
+                            jUser.getObject(ACCOUNT_FIELD).removeField("password");
+                            jUser.getObject(ACCOUNT_FIELD).removeField("salt");
+                            message.reply(jUser.toString());
+                        } else {
+                            utils.sendError(message, ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", req.getLocale()));
+                        }
+                    }
+                }
+
+            }
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 
     /**

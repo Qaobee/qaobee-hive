@@ -30,6 +30,7 @@ import java.util.List;
  *
  * @author Jerome
  */
+@Deprecated
 public class InternalQueryBuilder {
 
     /**

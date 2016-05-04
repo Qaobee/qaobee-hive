@@ -283,8 +283,7 @@ public class MongoDBImpl implements MongoDB {
         DBObject query = new BasicDBObject();
         if (criteria != null) {
             final BasicDBList and = new BasicDBList();
-            for (Iterator<String> iterator = criteria.keySet().iterator(); iterator.hasNext(); ) {
-                String k = iterator.next();
+            for (String k : criteria.keySet()) {
                 if (criteria.get(k) instanceof String && ((String) criteria.get(k)).startsWith("//")) {
                     and.add(new BasicDBObject(k, Pattern.compile(((String) criteria.get(k)).substring(2))));
                 } else {

@@ -163,11 +163,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Inject
     private ActivityBusiness activityBusiness;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.vertx.java.platform.Verticle#start()
-     */
     @Override
     @VerticleHandler({
             @Rule(address = LOGIN_TEST, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY),
@@ -179,7 +174,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
         /**
          * @apiDescription Test the existence of a username in the db
          * @api {get} /api/1/commons/users/signup/logintest
@@ -190,25 +184,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        vertx.eventBus().registerHandler(LOGIN_EXISTS, new Handler<Message<JsonObject>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<JsonObject> message) {
-                final JsonObject jsonReq = new JsonObject(message.body().encode());
-                final String login = jsonReq.getString(PARAM_LOGIN).toLowerCase();
-                final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
-                if (res.size() > 0) {
-                    utils.sendStatusJson(true, message);
-                } else {
-                    utils.sendStatusJson(false, message);
-                }
-            }
-        });
-
+        vertx.eventBus().registerHandler(LOGIN_EXISTS, this::existingLoginHandler);
         /**
          * @apiDescription Login unicity test for rest request
          * @api {get} /api/1/commons/users/signup/loginExists Login unicity test
@@ -219,21 +195,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        vertx.eventBus().registerHandler(LOGIN_TEST, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                final String login = new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase();
-                final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
-                utils.sendStatus(res.size() > 0, message);
-            }
-        });
-
+        vertx.eventBus().registerHandler(LOGIN_TEST, this::loginTestHandler);
         /**
          * @apiDescription Register a new account
          * @api {put} /api/1/commons/users/signup/register Register a new account
@@ -247,121 +209,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiError NON_UNIQUE_LOGIN Non unique login
          * @apiError MAIL_EXCEPTION problème d'envoi d'email
          */
-        vertx.eventBus().registerHandler(REGISTER, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    // Gets JSon request
-                    final JsonObject json = new JsonObject(req.getBody());
-                    // Captcha management
-                    final boolean bypassCaptcha = json.getBoolean(PARAM_JUNIT, json.getBoolean(PARAM_MOBILE, false));
-                    final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-                    reCaptcha.setPrivateKey(getContainer().config().getObject(RUNTIME).getString("recaptcha.pkey"));
-                    ReCaptchaResponse reCaptchaResponse = null;
-                    if (!bypassCaptcha) {
-                        reCaptchaResponse = reCaptcha
-                                .checkAnswer(getContainer().config().getObject(RUNTIME).getString("recaptcha.site"),
-                                        json.getObject(PARAM_CAPTCHA).getString("challenge"), json.getObject(PARAM_CAPTCHA).getString("response"));
-                    }
-                    // If captcha needed and wrong captcha : Error and end transaction
-                    if (!bypassCaptcha && !reCaptchaResponse.isValid()) {
-                        utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
-                        return;
-                    }
-                    final User user = Json.decodeValue(json.encode(), User.class);
-                    // Check user informations
-                    usersBusiness.checkUserInformations(user, req.getLocale());
-
-                    // check if email is correct
-                    if (authCheck.testEmail(user.getContact().getEmail(), req.getLocale())) {
-                        // unique login test
-                        vertx.eventBus().send(LOGIN_EXISTS, new JsonObject().putString(PARAM_LOGIN, user.getAccount().getLogin()), new Handler<Message<JsonObject>>() {
-
-                            @Override
-                            public void handle(final Message<JsonObject> usernameExistResp) {
-                                if (usernameExistResp.body().getBoolean("status", false)) {
-                                    utils.sendError(message, new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", req.getLocale())));
-                                } else {
-                                    try { // NOSONAR
-                                        user.getAccount().setActive(false);
-                                        user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
-                                        final Plan plan = Json.decodeValue(json.getObject(PARAM_PLAN).encode(), Plan.class);
-                                        if (user.getAccount().getListPlan() == null) {
-                                            user.getAccount().setListPlan(new ArrayList<Plan>());
-                                        }
-                                        plan.setStatus("open");
-                                        plan.setStartPeriodDate(System.currentTimeMillis());
-                                        // Si on vient du mobile, on connait le plan, mais pas par le web
-                                        if (plan.getActivity() != null) {
-                                            JsonObject activity = mongo.getById(plan.getActivity().get_id(), Activity.class);
-                                            plan.setActivity(Json.<Activity>decodeValue(activity.encode(), Activity.class));
-                                        }
-                                        user.getAccount().getListPlan().add(plan);
-
-                                        final String id = mongo.save(personUtils.prepareUpsert(user));
-                                        if (id != null) {
-                                            user.set_id(id);
-
-                                            final JsonObject tplReq = new JsonObject();
-                                            tplReq.putString(TemplatesVerticle.TEMPLATE, "newAccount.html");
-                                            tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateActivationBody(user, req.getLocale(), getContainer().config()));
-
-                                            vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
-                                                @Override
-                                                public void handle(final Message<JsonObject> tplResp) {
-                                                    final String tplRes = tplResp.body().getString("result");
-                                                    final JsonObject emailReq = new JsonObject();
-                                                    emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
-                                                    emailReq.putString("to", user.getContact().getEmail());
-                                                    emailReq.putString("subject", Messages.getString("mail.account.validation.subject"));
-                                                    emailReq.putString("content_type", "text/html");
-                                                    emailReq.putString("body", tplRes);
-
-                                                    // Envoi du mail si pas en test jUnit
-                                                    if (json.getBoolean("junit", false)) {
-                                                        LOG.debug(emailReq.encode());
-                                                    } else {
-                                                        vertx.eventBus().publish("mailer.mod", emailReq);
-                                                    }
-
-                                                    final JsonObject res = new JsonObject();
-                                                    try { // NOSONAR
-                                                        res.putObject("person", mongo.getById(id, User.class));
-                                                        res.putString("planId", plan.getPaymentId());
-                                                        message.reply(res.encode());
-                                                    } catch (final EncodeException e) {
-                                                        LOG.error(e.getMessage(), e);
-                                                        utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-                                                    } catch (final QaobeeException e) {
-                                                        LOG.error(e.getMessage(), e);
-                                                        utils.sendError(message, e);
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    } catch (final QaobeeException e) {
-                                        LOG.error(e.getMessage(), e);
-                                        utils.sendError(message, e);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final IllegalArgumentException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.MAIL_EXCEPTION, e.getMessage());
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(REGISTER, this::registerHandler);
 
         /**
          * @apiDescription Account validation check
@@ -374,32 +222,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        vertx.eventBus().registerHandler(ACCOUNT_CHECK, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    final String id = req.getParams().get("id").get(0);
-                    final String activationCode = req.getParams().get("code").get(0);
-                    final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
-                    if (user.getAccount().getActivationCode().equals(activationCode)) {
-                        user.getAccount().setActive(true);
-                        mongo.save(user);
-                        utils.sendStatus(true, message);
-                    } else {
-                        utils.sendStatus(false, message);
-                    }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendStatus(false, message);
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(ACCOUNT_CHECK, this::accountCheckHandler);
 
         /**
          * @apiDescription First connection account check
@@ -412,40 +235,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        vertx.eventBus().registerHandler(FIRST_CONNECTION_CHECK, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    Map<String, List<String>> params = req.getParams();
-                    final String id = params.get(PARAM_ID).get(0);
-                    final String activationCode = params.get(PARAM_CODE).get(0);
-                    User user = getUser(id, message, req.getLocale());
-                    if (user != null) {
-                        if (user.getAccount().isActive()) {
-                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
-                        } else if (!user.getAccount().isFirstConnexion()) {
-                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
-                        } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
-                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
-                        } else {
-                            user.getAccount().setToken(UUID.randomUUID().toString());
-                            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                            mongo.save(user);
-                            message.reply(Json.encode(user));
-                        }
-                    }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(FIRST_CONNECTION_CHECK, this::firstConnectionCheckHandler);
 
         /**
          * @apiDescription Finalizes signup
@@ -460,220 +250,356 @@ public class SignupVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} user {"status", true|false}
          * @apiError HTTP_ERROR wrong request's method
          */
-        vertx.eventBus().registerHandler(FINALIZE_SIGNUP, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    final JsonObject jsonReq = new JsonObject(req.getBody());
-                    // JSon User
-                    final JsonObject jsonUser = jsonReq.getObject(PARAM_USER);
-                    // Converts jSon to Bean (extra parameters are ignored)
-                    User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
-                    // FIXME : to JRO : Est-ce utile?
-                    userUpdate.set_id(jsonUser.getString("_id"));
+        vertx.eventBus().registerHandler(FINALIZE_SIGNUP, this::finalizeSignupHandler);
+    }
 
-                    // Code activation
-                    final String activationCode = jsonReq.getString(PARAM_CODE);
+    private void finalizeSignupHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            final JsonObject jsonReq = new JsonObject(req.getBody());
+            // JSon User
+            final JsonObject jsonUser = jsonReq.getObject(PARAM_USER);
+            // Converts jSon to Bean (extra parameters are ignored)
+            User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
+            // FIXME : to JRO : Est-ce utile?
+            userUpdate.set_id(jsonUser.getString("_id"));
+            // Code activation
+            final String activationCode = jsonReq.getString(PARAM_CODE);
+            // JSon Activity
+            final String activityId = jsonReq.getString(PARAM_ACTIVITY);
+            // JSon Structure
+            JsonObject structure = jsonReq.getObject(PARAM_STRUCTURE);
+            if (jsonReq.getObject(PARAM_STRUCTURE).containsField("_id")) {
+                structure = mongo.getById(jsonReq.getObject(PARAM_STRUCTURE).getString("_id"), Structure.class);
+            } else {
+                // FIXME : to JRO : Mais alpha2 n'existe pas !!!
+                Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("address").getObject("country").getString("alpha2"));
+                structure.putObject("country", new JsonObject(Json.encode(country)));
+                structure.getObject("address").putString("country", country.getLabel());
+                structure.putObject("activity", new JsonObject(Json.encode(activityBusiness.getActivityFromId(activityId))));
+            }
+            Structure structureObj = Json.decodeValue(structure.encode(), Structure.class);
+            // JSon Category Age
+            JsonObject categoryAge = jsonReq.getObject(PARAM_CATEGORY_AGE);
+            CategoryAge categoryAgeObj = Json.decodeValue(categoryAge.encode(), CategoryAge.class);
+            // Country
+            final String countryId = jsonReq.getString("country", "CNTR-250-FR-FRA");
+            User user = getUser(userUpdate.get_id(), message, req.getLocale());
+            if (user != null) {
+                if (user.getAccount().isActive()) {
+                    utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
+                } else if (!user.getAccount().isFirstConnexion()) {
+                    utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
+                } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
+                    utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
+                } else {
+                    // MaJ User
+                    user.getAccount().setActive(true);
+                    user.getAccount().setFirstConnexion(false);
+                    user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
+                    // récupération des activities des plans
+                    user.getAccount().getListPlan().stream().filter(plan -> plan.getActivity() != null).forEachOrdered(plan -> {
+                        Activity activity = activityBusiness.getActivityFromId(plan.getActivity().get_id());
+                        if (activity != null) {
+                            plan.setActivity(activity);
+                        }
+                    });
+                    user.setBirthdate(userUpdate.getBirthdate());
+                    user.setContact(userUpdate.getContact());
+                    user.setCountry(structureObj.getCountry());
+                    user.setNationality(structureObj.getCountry());
+                    user.setFirstname(userUpdate.getFirstname());
+                    user.setGender(userUpdate.getGender());
+                    user.setName(userUpdate.getName());
+                    user.setAddress(userUpdate.getAddress());
 
-                    // JSon Activity
-                    final String activityId = jsonReq.getString(PARAM_ACTIVITY);
+                    // Création Sandbox
+                    SB_SandBox sbSandBox = new SB_SandBox();
+                    sbSandBox.setActivityId(activityId);
+                    sbSandBox.setOwner(user.get_id());
+                    sbSandBox.set_id(mongo.save(sbSandBox));
 
-                    // JSon Structure
-                    JsonObject structure = jsonReq.getObject(PARAM_STRUCTURE);
-                    if (jsonReq.getObject(PARAM_STRUCTURE).containsField("_id")) {
-                        structure = mongo.getById(jsonReq.getObject(PARAM_STRUCTURE).getString("_id"), Structure.class);
-                    } else {
-                        // FIXME : to JRO : Mais alpha2 n'existe pas !!!
-                        Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("address").getObject("country").getString("alpha2"));
-                        structure.putObject("country", new JsonObject(Json.encode(country)));
-                        structure.getObject("address").putString("country", country.getLabel());
-                        structure.putObject("activity", new JsonObject(Json.encode(activityBusiness.getActivityFromId(activityId))));
-                    }
-                    Structure structureObj = Json.decodeValue(structure.encode(), Structure.class);
+                    JsonArray tabParametersSignup;
+                    DBObject match;
+                    DBObject project;
+                    // $MATCH section
+                    BasicDBObject dbObjectParent = new BasicDBObject();
+                    dbObjectParent.put("activityId", activityId);
+                    dbObjectParent.put("countryId", countryId);
+                    match = new BasicDBObject("$match", dbObjectParent);
+                    // $PROJECT section
+                    dbObjectParent = new BasicDBObject();
+                    dbObjectParent.put("_id", 0);
+                    dbObjectParent.put("parametersSignup", 1);
+                    project = new BasicDBObject("$project", dbObjectParent);
+                    List<DBObject> pipelineAggregation = Arrays.asList(match, project);
+                    tabParametersSignup = mongo.aggregate("parametersSignup", pipelineAggregation, ActivityCfg.class);
 
-                    // JSon Category Age
-                    JsonObject categoryAge = jsonReq.getObject(PARAM_CATEGORY_AGE);
-                    CategoryAge categoryAgeObj = Json.decodeValue(categoryAge.encode(), CategoryAge.class);
+                    // Création SB_Person
+                    List<String> listPersonsId = new ArrayList<>();
+                    if (tabParametersSignup != null && tabParametersSignup.size() > 0) {
+                        JsonObject parametersSignup = tabParametersSignup.get(0);
+                        if (parametersSignup.containsField("parametersSignup") && parametersSignup.getObject("parametersSignup").containsField("players")) {
+                            JsonArray tabPlayers = parametersSignup.getObject("parametersSignup").getArray("players");
 
-                    // Country
-                    final String countryId = jsonReq.getString("country", "CNTR-250-FR-FRA");
+                            for (int i = 0; i < tabPlayers.size(); i++) {
+                                JsonObject player = tabPlayers.get(i);
+                                for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
+                                    SB_Person sbPerson = new SB_Person();
+                                    sbPerson.setFirstname("Numero " + (listPersonsId.size() + 1));
+                                    sbPerson.setName("Joueur");
+                                    sbPerson.setBirthcity(structureObj.getAddress().getCity());
+                                    sbPerson.setBirthcountry(structureObj.getCountry());
+                                    sbPerson.setBirthdate(utils.randomDate(categoryAgeObj.getAgeMin(), categoryAgeObj.getAgeMax() > 65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
+                                    sbPerson.setNationality(structureObj.getCountry());
+                                    sbPerson.setGender(categoryAgeObj.getGenre());
+                                    sbPerson.setSandboxId(sbSandBox.get_id());
+                                    sbPerson.setContact(new Contact());
 
-                    LOG.debug("ID: " + userUpdate.get_id() + ", code:" + activationCode + ", structure: " + structure + ", activity:" + activityId);
-                    User user = getUser(userUpdate.get_id(), message, req.getLocale());
-                    if (user != null) {
-                        if (user.getAccount().isActive()) {
-                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
-                        } else if (!user.getAccount().isFirstConnexion()) {
-                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
-                        } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
-                            utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
-                        } else {
-                            // MaJ User
-                            user.getAccount().setActive(true);
-                            user.getAccount().setFirstConnexion(false);
-                            user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
-                            // récupération des activities des plans
-                            for (Plan plan : user.getAccount().getListPlan()) {
-                                if (plan.getActivity() != null) {
-                                    Activity activity = activityBusiness.getActivityFromId(plan.getActivity().get_id());
-                                    if (activity != null) {
-                                        plan.setActivity(activity);
-                                    }
+                                    Status status = new Status();
+                                    status.setAvailability(new Availability("available", "available"));
+                                    status.setHeight((int) Math.round(Math.random() * 30) + 150);
+                                    status.setLaterality(Math.random() > 0.5 ? "right-handed" : "left-handed");
+                                    status.setStateForm("good");
+                                    status.setWeight((int) Math.round(Math.random() * 20) + 70);
+                                    sbPerson.setStatus(status);
+
+                                    sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
+                                    sbPerson.getStatus().setPositionType(player.getString("positionType"));
+                                    listPersonsId.add(mongo.save(sbPerson));
                                 }
                             }
-                            user.setBirthdate(userUpdate.getBirthdate());
-                            user.setContact(userUpdate.getContact());
-                            user.setCountry(structureObj.getCountry());
-                            user.setNationality(structureObj.getCountry());
-                            user.setFirstname(userUpdate.getFirstname());
-                            user.setGender(userUpdate.getGender());
-                            user.setName(userUpdate.getName());
-                            user.setAddress(userUpdate.getAddress());
-
-                            // Création Sandbox
-                            SB_SandBox sbSandBox = new SB_SandBox();
-                            sbSandBox.setActivityId(activityId);
-                            sbSandBox.setOwner(user.get_id());
-                            sbSandBox.set_id(mongo.save(sbSandBox));
-
-                            JsonArray tabParametersSignup;
-                            DBObject match;
-                            DBObject project;
-                            // $MATCH section
-                            BasicDBObject dbObjectParent = new BasicDBObject();
-                            dbObjectParent.put("activityId", activityId);
-                            dbObjectParent.put("countryId", countryId);
-                            match = new BasicDBObject("$match", dbObjectParent);
-                            // $PROJECT section
-                            dbObjectParent = new BasicDBObject();
-                            dbObjectParent.put("_id", 0);
-                            dbObjectParent.put("parametersSignup", 1);
-                            project = new BasicDBObject("$project", dbObjectParent);
-                            List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-                            tabParametersSignup = mongo.aggregate("parametersSignup", pipelineAggregation, ActivityCfg.class);
-
-                            // Création SB_Person
-                            List<String> listPersonsId = new ArrayList<>();
-                            if (tabParametersSignup != null && tabParametersSignup.size() > 0) {
-                                JsonObject parametersSignup = tabParametersSignup.get(0);
-                                if (parametersSignup.containsField("parametersSignup") && parametersSignup.getObject("parametersSignup").containsField("players")) {
-                                    JsonArray tabPlayers = parametersSignup.getObject("parametersSignup").getArray("players");
-
-                                    for (int i = 0; i < tabPlayers.size(); i++) {
-                                        JsonObject player = tabPlayers.get(i);
-                                        for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
-                                            SB_Person sbPerson = new SB_Person();
-                                            sbPerson.setFirstname("Numero " + (listPersonsId.size() + 1));
-                                            sbPerson.setName("Joueur");
-                                            sbPerson.setBirthcity(structureObj.getAddress().getCity());
-                                            sbPerson.setBirthcountry(structureObj.getCountry());
-                                            sbPerson.setBirthdate(utils.randomDate(categoryAgeObj.getAgeMin(), categoryAgeObj.getAgeMax() > 65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
-                                            sbPerson.setNationality(structureObj.getCountry());
-                                            sbPerson.setGender(categoryAgeObj.getGenre());
-                                            sbPerson.setSandboxId(sbSandBox.get_id());
-                                            sbPerson.setContact(new Contact());
-
-                                            Status status = new Status();
-                                            status.setAvailability(new Availability("available", "available"));
-                                            status.setHeight((int) Math.round(Math.random() * 30) + 150);
-                                            status.setLaterality(Math.random() > 0.5 ? "right-handed" : "left-handed");
-                                            status.setStateForm("good");
-                                            status.setWeight((int) Math.round(Math.random() * 20) + 70);
-                                            sbPerson.setStatus(status);
-
-                                            sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
-                                            sbPerson.getStatus().setPositionType(player.getString("positionType"));
-                                            listPersonsId.add(mongo.save(sbPerson));
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Création SandBoxCfg
-                            SB_SandBoxCfg sbSandBoxCfg = new SB_SandBoxCfg();
-
-                            sbSandBoxCfg.setActivity(activityBusiness.getActivityFromId(activityId));
-                            sbSandBoxCfg.setSandbox(sbSandBox);
-                            sbSandBoxCfg.setStructure(structureObj);
-                            // Search Season
-                            Map<String, Object> criterias = new HashMap<>();
-                            criterias.put("activityId", activityId);
-                            criterias.put("countryId", countryId);
-                            JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
-
-                            long currentDate = System.currentTimeMillis();
-                            if (resultJson == null || resultJson.size() == 0) {
-                                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
-                            }
-                            for (int i = 0; i < resultJson.size(); i++) {
-                                JsonObject s = resultJson.get(i);
-                                if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
-                                    sbSandBoxCfg.setSeason((Season) Json.decodeValue(s.encode(), Season.class));
-                                    break;
-                                }
-                            }
-
-                            // Sauvegarde SB_Cfg
-                            sbSandBoxCfg.set_id(mongo.save(sbSandBoxCfg));
-
-                            // Sauvegarde Sandbox avec ID sandbox Cfg
-                            sbSandBox.setSandboxCfgId(sbSandBoxCfg.get_id());
-                            mongo.save(sbSandBox);
-
-                            // Création Sandbox Effective
-                            SB_Effective sbEffective = new SB_Effective();
-                            sbEffective.setSandBoxCfgId(sbSandBoxCfg.get_id());
-                            sbEffective.setLabel("Défaut");
-                            sbEffective.setCategoryAge(categoryAgeObj);
-
-                            // SB_Effective -> members
-                            for (String playerId : listPersonsId) {
-                                Member member = new Member();
-                                member.setRole(new Role("player", "Joueur"));
-                                member.setPersonId(playerId);
-                                sbEffective.addMember(member);
-                            }
-                            sbEffective.set_id(mongo.save(sbEffective));
-                            user.setEffectiveDefault(sbEffective.get_id());
-
-                            // Création SB_Teams
-                            // My team
-                            SB_Team team = new SB_Team();
-                            team.setEffectiveId(sbEffective.get_id());
-                            team.setSandboxId(sbSandBox.get_id());
-                            team.setLabel("Mon équipe");
-                            team.setEnable(true);
-                            team.setAdversary(false);
-                            mongo.save(team);
-                            mongo.save(user);
-
-                            JsonObject notification = new JsonObject();
-                            notification.putString("id", user.get_id());
-                            notification.putString("target", User.class.getSimpleName());
-                            notification.putObject("notification", new JsonObject()
-                                    .putString("content", Messages.getString("first.connection.notification.content"))
-                                    .putString("title", Messages.getString("first.connection.notification.title"))
-                                    .putString("from_user_id", getContainer().config().getObject(RUNTIME).getString("admin.id"))
-                            );
-                            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-                            message.reply(Json.encode(user));
                         }
                     }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                } catch (final Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+
+                    // Création SandBoxCfg
+                    SB_SandBoxCfg sbSandBoxCfg = new SB_SandBoxCfg();
+                    sbSandBoxCfg.setActivity(activityBusiness.getActivityFromId(activityId));
+                    sbSandBoxCfg.setSandbox(sbSandBox);
+                    sbSandBoxCfg.setStructure(structureObj);
+                    // Search Season
+                    Map<String, Object> criterias = new HashMap<>();
+                    criterias.put("activityId", activityId);
+                    criterias.put("countryId", countryId);
+                    JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
+                    long currentDate = System.currentTimeMillis();
+                    if (resultJson == null || resultJson.size() == 0) {
+                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
+                    }
+                    for (int i = 0; i < resultJson.size(); i++) {
+                        JsonObject s = resultJson.get(i);
+                        if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
+                            sbSandBoxCfg.setSeason(Json.decodeValue(s.encode(), Season.class));
+                            break;
+                        }
+                    }
+                    // Sauvegarde SB_Cfg
+                    sbSandBoxCfg.set_id(mongo.save(sbSandBoxCfg));
+                    // Sauvegarde Sandbox avec ID sandbox Cfg
+                    sbSandBox.setSandboxCfgId(sbSandBoxCfg.get_id());
+                    mongo.save(sbSandBox);
+                    // Création Sandbox Effective
+                    SB_Effective sbEffective = new SB_Effective();
+                    sbEffective.setSandBoxCfgId(sbSandBoxCfg.get_id());
+                    sbEffective.setLabel("Défaut");
+                    sbEffective.setCategoryAge(categoryAgeObj);
+                    // SB_Effective -> members
+                    for (String playerId : listPersonsId) {
+                        Member member = new Member();
+                        member.setRole(new Role("player", "Joueur"));
+                        member.setPersonId(playerId);
+                        sbEffective.addMember(member);
+                    }
+                    sbEffective.set_id(mongo.save(sbEffective));
+                    user.setEffectiveDefault(sbEffective.get_id());
+                    // Création SB_Teams
+                    // My team
+                    SB_Team team = new SB_Team();
+                    team.setEffectiveId(sbEffective.get_id());
+                    team.setSandboxId(sbSandBox.get_id());
+                    team.setLabel("Mon équipe");
+                    team.setEnable(true);
+                    team.setAdversary(false);
+                    mongo.save(team);
+                    mongo.save(user);
+                    JsonObject notification = new JsonObject();
+                    notification.putString("id", user.get_id());
+                    notification.putString("target", User.class.getSimpleName());
+                    notification.putObject("notification", new JsonObject()
+                            .putString("content", Messages.getString("first.connection.notification.content"))
+                            .putString("title", Messages.getString("first.connection.notification.title"))
+                            .putString("from_user_id", getContainer().config().getObject(RUNTIME).getString("admin.id"))
+                    );
+                    vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+                    message.reply(Json.encode(user));
                 }
             }
-        });
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void firstConnectionCheckHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            Map<String, List<String>> params = req.getParams();
+            final String id = params.get(PARAM_ID).get(0);
+            final String activationCode = params.get(PARAM_CODE).get(0);
+            User user = getUser(id, message, req.getLocale());
+            if (user != null) {
+                if (user.getAccount().isActive()) {
+                    utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", req.getLocale()));
+                } else if (!user.getAccount().isFirstConnexion()) {
+                    utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", req.getLocale()));
+                } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
+                    utils.sendError(message, ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", req.getLocale()));
+                } else {
+                    user.getAccount().setToken(UUID.randomUUID().toString());
+                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                    mongo.save(user);
+                    message.reply(Json.encode(user));
+                }
+            }
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
+        }
+    }
+
+    private void accountCheckHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            final String id = req.getParams().get("id").get(0);
+            final String activationCode = req.getParams().get("code").get(0);
+            final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
+            if (user.getAccount().getActivationCode().equals(activationCode)) {
+                user.getAccount().setActive(true);
+                mongo.save(user);
+                utils.sendStatus(true, message);
+            } else {
+                utils.sendStatus(false, message);
+            }
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendStatus(false, message);
+        }
+    }
+
+    private void registerHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            // Gets JSon request
+            final JsonObject json = new JsonObject(req.getBody());
+            // Captcha management
+            final boolean bypassCaptcha = json.getBoolean(PARAM_JUNIT, json.getBoolean(PARAM_MOBILE, false));
+            final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
+            reCaptcha.setPrivateKey(getContainer().config().getObject(RUNTIME).getString("recaptcha.pkey"));
+            ReCaptchaResponse reCaptchaResponse = null;
+            if (!bypassCaptcha) {
+                reCaptchaResponse = reCaptcha
+                        .checkAnswer(getContainer().config().getObject(RUNTIME).getString("recaptcha.site"),
+                                json.getObject(PARAM_CAPTCHA).getString("challenge"), json.getObject(PARAM_CAPTCHA).getString("response"));
+            }
+            // If captcha needed and wrong captcha : Error and end transaction
+            if (!bypassCaptcha && !reCaptchaResponse.isValid()) {
+                utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
+                return;
+            }
+            final User user = Json.decodeValue(json.encode(), User.class);
+            // Check user informations
+            usersBusiness.checkUserInformations(user, req.getLocale());
+            // check if email is correct
+            if (authCheck.testEmail(user.getContact().getEmail(), req.getLocale())) {
+                // unique login test
+                vertx.eventBus().send(LOGIN_EXISTS, new JsonObject().putString(PARAM_LOGIN, user.getAccount().getLogin()), (Handler<Message<JsonObject>>) usernameExistResp -> {
+                    if (usernameExistResp.body().getBoolean("status", false)) {
+                        utils.sendError(message, new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", req.getLocale())));
+                    } else {
+                        try { // NOSONAR
+                            user.getAccount().setActive(false);
+                            user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
+                            final Plan plan = Json.decodeValue(json.getObject(PARAM_PLAN).encode(), Plan.class);
+                            if (user.getAccount().getListPlan() == null) {
+                                user.getAccount().setListPlan(new ArrayList<>());
+                            }
+                            plan.setStatus("open");
+                            plan.setStartPeriodDate(System.currentTimeMillis());
+                            // Si on vient du mobile, on connait le plan, mais pas par le web
+                            if (plan.getActivity() != null) {
+                                JsonObject activity = mongo.getById(plan.getActivity().get_id(), Activity.class);
+                                plan.setActivity(Json.decodeValue(activity.encode(), Activity.class));
+                            }
+                            user.getAccount().getListPlan().add(plan);
+                            final String id = mongo.save(personUtils.prepareUpsert(user));
+                            if (id != null) {
+                                user.set_id(id);
+
+                                final JsonObject tplReq = new JsonObject();
+                                tplReq.putString(TemplatesVerticle.TEMPLATE, "newAccount.html");
+                                tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateActivationBody(user, req.getLocale(), getContainer().config()));
+
+                                vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, (Handler<Message<JsonObject>>) tplResp -> {
+                                    final String tplRes = tplResp.body().getString("result");
+                                    final JsonObject emailReq = new JsonObject();
+                                    emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
+                                    emailReq.putString("to", user.getContact().getEmail());
+                                    emailReq.putString("subject", Messages.getString("mail.account.validation.subject"));
+                                    emailReq.putString("content_type", "text/html");
+                                    emailReq.putString("body", tplRes);
+
+                                    // Envoi du mail si pas en test jUnit
+                                    if (json.getBoolean("junit", false)) {
+                                        LOG.debug(emailReq.encode());
+                                    } else {
+                                        vertx.eventBus().publish("mailer.mod", emailReq);
+                                    }
+
+                                    final JsonObject res = new JsonObject();
+                                    try { // NOSONAR
+                                        res.putObject("person", mongo.getById(id, User.class));
+                                        res.putString("planId", plan.getPaymentId());
+                                        message.reply(res.encode());
+                                    } catch (final EncodeException e) {
+                                        LOG.error(e.getMessage(), e);
+                                        utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
+                                    } catch (final QaobeeException e) {
+                                        LOG.error(e.getMessage(), e);
+                                        utils.sendError(message, e);
+                                    }
+                                });
+                            }
+                        } catch (final QaobeeException e) {
+                            LOG.error(e.getMessage(), e);
+                            utils.sendError(message, e);
+                        }
+                    }
+                });
+            }
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        } catch (final IllegalArgumentException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.MAIL_EXCEPTION, e.getMessage());
+        }
+    }
+
+    private void loginTestHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        final String login = new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase();
+        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
+        utils.sendStatus(res.size() > 0, message);
+    }
+
+    private void existingLoginHandler(Message<JsonObject> message) {
+        final String login = message.body().getString(PARAM_LOGIN).toLowerCase();
+        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
+        if (res.size() > 0) {
+            utils.sendStatusJson(true, message);
+        } else {
+            utils.sendStatusJson(false, message);
+        }
     }
 
     /**
