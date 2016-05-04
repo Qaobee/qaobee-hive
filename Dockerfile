@@ -14,6 +14,4 @@ ADD scripts/docker-runVertx.sh /home/qaobee/docker-runVertx.sh
 RUN chmod +x /home/qaobee/docker-runVertx.sh
 WORKDIR /home/qaobee
 EXPOSE 8080
-#RUN export vertx_run_options="-instances 5 -conf /home/qaobee/conf.json"
-#RUN export VERTX_OPTS="-XX:PermSize=128m -XX:MaxPermSize=256m -Xms512m -Xmx1g -XX:+UseParallelGC"
 CMD ["/home/qaobee/docker-runVertx.sh"]
