@@ -83,12 +83,18 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
 
     @Override
     @VerticleHandler({
-            @Rule(address = LIST, method = Constantes.GET, logged = true),
-            @Rule(address = DEL, method = Constantes.DELETE, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = READ, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST),
-            @Rule(address = ADD_TO_USER, method = Constantes.POST, logged = true, mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"}, scope = Rule.Param.BODY),
-            @Rule(address = ADD_TO_SANDBOX, method = Constantes.POST, logged = true, mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"}, scope = Rule.Param.BODY),
-    })
+                             @Rule(address = LIST, method = Constantes.GET, logged = true),
+                             @Rule(address = DEL, method = Constantes.DELETE, logged = true,
+                                   mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST),
+                             @Rule(address = READ, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST),
+                             @Rule(address = ADD_TO_USER, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
+                                   scope = Rule.Param.BODY),
+                             @Rule(address = ADD_TO_SANDBOX, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
+                                   scope = Rule.Param.BODY),
+                     })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
@@ -103,35 +109,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Array} notification com.qaobee.hive.business.model.commons.users.communication.Notification
          * @apiError HTTP_ERROR wrong request's method
          */
-        vertx.eventBus().registerHandler(LIST, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    int start = 0;
-                    if (req.getParams() != null && req.getParams().containsKey(PARAM_START)) {
-                        start = Integer.parseInt(req.getParams().get(PARAM_START).get(0));
-                    }
-                    CriteriaBuilder cb = new CriteriaBuilder()
-                            .add(TARGET_ID, req.getUser().get_id())
-                            .add(DELETED, false);
-                    JsonArray notifications = mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, Notification.class);
-                    int limit = notifications.size();
-                    if (req.getParams() != null && req.getParams().containsKey(PARAM_LIMIT)) {
-                        limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
-                    }
-                    JsonArray jnotif = new JsonArray();
-                    for (int i = start; i < start + limit; i++) {
-                        ((JsonObject) notifications.get(i)).putObject(SENDER_ID, getUser(((JsonObject) notifications.get(i)).getString(SENDER_ID)));
-                        jnotif.add(notifications.get(i));
-                    }
-                    message.reply(jnotif.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(LIST, this::notificationListHandler);
         /**
          * @apiDescription Delete a notification
          * @api {put} /api/v1/commons/communication/notifications/del/?id=:id commons.communication.notifications.del
@@ -141,22 +119,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status
          * @apiError HTTP_ERROR wrong request's method
          */
-        vertx.eventBus().registerHandler(DEL, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
-                    n.putBoolean(DELETED, true);
-                    mongo.save(n, Notification.class);
-                    vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
-                    utils.sendStatus(true, message);
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(DEL, this::deleteHandler);
         /**
          * @apiDescription Mark a notification as read
          * @api {put} /api/v1/commons/communication/notifications/read/?id=:id commons.communication.notifications.read
@@ -166,22 +129,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Object} status
          * @apiError HTTP_ERROR wrong request's method
          */
-        vertx.eventBus().registerHandler(READ, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
-                    n.putBoolean("read", !n.getBoolean("read"));
-                    mongo.save(n, Notification.class);
-                    vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
-                    utils.sendStatus(true, message);
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(READ, this::markAsReadHandler);
         /**
          * Add a notification to a collection
          * <p>Message : <pre>
@@ -196,90 +144,133 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
          *     }
          * </pre></p>
          */
-        vertx.eventBus().registerHandler(NOTIFY, new Handler<Message<JsonObject>>() {
-            @Override
-            public void handle(final Message<JsonObject> message) {
-                try {
-                    utils.testMandatoryParams(message.body().encode(), "id", TARGET, NOTIFICATION);
-                    String id = message.body().getString("id");
-                    String collection = message.body().getString(TARGET);
-                    JsonObject notification = message.body().getObject(NOTIFICATION);
-                    JsonObject target = mongo.getById(id, collection);
-                    if(target == null) {
-                        utils.sendStatusJson(false, message);
-                    } else {
-                        switch (collection) {
-                            case "User":
-                                addNotificationToUser(id, notification);
-                                break;
-                            case "SB_SandBoxCfg":
-                                for (int i = 0; i < target.getArray("members").size(); i++)
-                                    addNotificationToUser(((JsonObject) target.getArray("members").get(0)).getString("personId"), notification);
-                                break;
-                            default:
-                                break;
-                        }
-                        utils.sendStatusJson(true, message);
-                    }
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendStatusJson(false, message);
+        vertx.eventBus().registerHandler(NOTIFY, this::notifyHandler);
+
+        vertx.eventBus().registerHandler(ADD_TO_USER, this::addNotificationToUserHandler);
+
+        vertx.eventBus().registerHandler(ADD_TO_SANDBOX, this::addNotificationToSandBoxHandler);
+    }
+
+    private void addNotificationToSandBoxHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject notification = new JsonObject(req.getBody());
+        JsonObject request = new JsonObject()
+                .putString("id", notification.getString(TARGET_ID))
+                .putString(TARGET, SB_SandBoxCfg.class.getSimpleName())
+                .putObject(NOTIFICATION, new JsonObject(req.getBody()));
+        vertx.eventBus().send(NOTIFY, request, (Handler<Message<JsonObject>>) event ->
+                utils.sendStatus(event.body().getBoolean("status", false), message)
+        );
+    }
+
+    private void addNotificationToUserHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject notification = new JsonObject(req.getBody());
+        JsonObject request = new JsonObject()
+                .putString("id", notification.getString(TARGET_ID))
+                .putString(TARGET, User.class.getSimpleName())
+                .putObject(NOTIFICATION, notification);
+        vertx.eventBus().send(NOTIFY, request, (Handler<Message<JsonObject>>) event ->
+                utils.sendStatus(event.body().getBoolean("status", false), message)
+        );
+    }
+
+    private void notifyHandler(Message<JsonObject> message) {
+        try {
+            utils.testMandatoryParams(message.body().encode(), "id", TARGET, NOTIFICATION);
+            String id = message.body().getString("id");
+            String collection = message.body().getString(TARGET);
+            JsonObject notification = message.body().getObject(NOTIFICATION);
+            JsonObject target = mongo.getById(id, collection);
+            if (target == null) {
+                utils.sendStatusJson(false, message);
+            } else {
+                switch (collection) {
+                    case "User":
+                        addNotificationToUser(id, notification);
+                        break;
+                    case "SB_SandBoxCfg":
+                        for (int i = 0; i < target.getArray("members").size(); i++)
+                            addNotificationToUser(((JsonObject) target.getArray("members").get(0)).getString("personId"), notification);
+                        break;
+                    default:
+                        break;
                 }
+                utils.sendStatusJson(true, message);
             }
-        });
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendStatusJson(false, message);
+        }
+    }
 
-        vertx.eventBus().registerHandler(ADD_TO_USER, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                JsonObject notification = new JsonObject(req.getBody());
-                JsonObject request = new JsonObject()
-                        .putString("id", notification.getString(TARGET_ID))
-                        .putString(TARGET, User.class.getSimpleName())
-                        .putObject(NOTIFICATION, notification);
-                vertx.eventBus().send(NOTIFY, request, new Handler<Message<JsonObject>>() {
-                    @Override
-                    public void handle(Message<JsonObject> event) {
-                        utils.sendStatus(event.body().getBoolean("status", false), message);
-                    }
-                });
-            }
-        });
+    private void markAsReadHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
+            n.putBoolean("read", !n.getBoolean("read"));
+            mongo.save(n, Notification.class);
+            vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
+            utils.sendStatus(true, message);
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-        vertx.eventBus().registerHandler(ADD_TO_SANDBOX, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                JsonObject notification = new JsonObject(req.getBody());
-                JsonObject request = new JsonObject()
-                        .putString("id", notification.getString(TARGET_ID))
-                        .putString(TARGET, SB_SandBoxCfg.class.getSimpleName())
-                        .putObject(NOTIFICATION, new JsonObject(req.getBody()));
-                vertx.eventBus().send(NOTIFY, request, new Handler<Message<JsonObject>>() {
-                    @Override
-                    public void handle(Message<JsonObject> event) {
-                        utils.sendStatus(event.body().getBoolean("status", false), message);
-                    }
-                });
+    private void deleteHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
+            n.putBoolean(DELETED, true);
+            mongo.save(n, Notification.class);
+            vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
+            utils.sendStatus(true, message);
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void notificationListHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            int start = 0;
+            if (req.getParams() != null && req.getParams().containsKey(PARAM_START)) {
+                start = Integer.parseInt(req.getParams().get(PARAM_START).get(0));
             }
-        });
+            CriteriaBuilder cb = new CriteriaBuilder()
+                    .add(TARGET_ID, req.getUser().get_id())
+                    .add(DELETED, false);
+            JsonArray notifications = mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, Notification.class);
+            int limit = notifications.size();
+            if (req.getParams() != null && req.getParams().containsKey(PARAM_LIMIT)) {
+                limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
+            }
+            JsonArray jnotif = new JsonArray();
+            for (int i = start; i < start + limit; i++) {
+                ((JsonObject) notifications.get(i)).putObject(SENDER_ID, getUser(((JsonObject) notifications.get(i)).getString(SENDER_ID)));
+                jnotif.add(notifications.get(i));
+            }
+            message.reply(jnotif.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 
     private JsonObject getUser(String id) throws QaobeeException {
         List<String> wl = Arrays.asList("_id", "name", "firstname", "avatar");
         JsonObject u = mongo.getById(id, User.class);
         JsonObject cu = new JsonObject();
-        for (String f : u.getFieldNames()) {
-            if (wl.contains(f)) {
-                cu.putValue(f, u.getValue(f));
-            }
-        }
+        u.getFieldNames().stream().filter(wl::contains).forEachOrdered(f -> cu.putValue(f, u.getValue(f)));
         return cu;
     }
 
     /**
      * @param id           id user
      * @param notification notification object
+     *
      * @throws QaobeeException exception
      */
     private void addNotificationToUser(String id, JsonObject notification) throws QaobeeException {

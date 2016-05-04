@@ -31,7 +31,6 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
@@ -62,8 +61,6 @@ public class TeamVerticle extends AbstractGuiceVerticle {
      * Id of the team
      */
     public static final String PARAM_ID = "_id";
-
-    // List of parameters */
     /**
      * Label of the team
      */
@@ -81,7 +78,6 @@ public class TeamVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_EFFECTIVEID = "effectiveId";
     private static final Logger LOG = LoggerFactory.getLogger(TeamVerticle.class);
-    /* Injections */
     @Inject
     private MongoDB mongo;
     @Inject
@@ -114,23 +110,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        final Handler<Message<String>> add = new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject params = new JsonObject(req.getBody());
-                    // Insert a team
-                    final String id = mongo.save(params, Team.class);
-                    params.putString("_id", id);
-                    message.reply(params.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
-                }
-            }
-        };
+        vertx.eventBus().registerHandler(ADD, this::addTeamHandler);
 
         /**
          * @api {get} /api/1/commons/referencial/team/get Read data of a Team
@@ -147,21 +127,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        final Handler<Message<String>> get = new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Team.class);
-                    message.reply(json.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        };
-
+        vertx.eventBus().registerHandler(GET, this::getTeamHandler);
         /**
          * @api {post} /api/1/commons/referencial/team/update
          * @apiVersion 0.1.0
@@ -180,27 +146,45 @@ public class TeamVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        final Handler<Message<String>> update = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(UPDATE, this::updateTeamHandler);
+    }
 
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject params = new JsonObject(req.getBody());
-                    // Update a team
-                    mongo.save(params, Team.class);
-                    message.reply(params.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
-                }
-            }
-        };
+    private void updateTeamHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject params = new JsonObject(req.getBody());
+            // Update a team
+            mongo.save(params, Team.class);
+            message.reply(params.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
+        }
+    }
 
-        // Handlers registration
-        vertx.eventBus().registerHandler(ADD, add);
-        vertx.eventBus().registerHandler(GET, get);
-        vertx.eventBus().registerHandler(UPDATE, update);
+    private void getTeamHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Team.class);
+            message.reply(json.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void addTeamHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject params = new JsonObject(req.getBody());
+            // Insert a team
+            final String id = mongo.save(params, Team.class);
+            params.putString("_id", id);
+            message.reply(params.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
+        }
     }
 
 }

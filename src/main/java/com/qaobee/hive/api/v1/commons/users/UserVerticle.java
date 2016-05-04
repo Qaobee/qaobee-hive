@@ -18,8 +18,6 @@
  */
 package com.qaobee.hive.api.v1.commons.users;
 
-import com.englishtown.promises.Promise;
-import com.englishtown.promises.Runnable;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxCfgVerticle;
@@ -130,7 +128,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
         /**
          * @apiDescription Login user
          * @api {post} /api/1/commons/users/user/login Login user
@@ -147,11 +144,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request method
          */
         vertx.eventBus().registerHandler(LOGIN, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -222,11 +214,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
          * @apiError HTTP_ERROR wrong request method
          */
         vertx.eventBus().registerHandler(LOGOUT, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
             @Override
             public void handle(final Message<String> message) {
                 final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -291,21 +278,18 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         tplReq.putString(TemplatesVerticle.TEMPLATE, "newPasswd.html");
                         tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateNewpasswdBody(user, req.getLocale(), getContainer().config()));
 
-                        vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, new Handler<Message<JsonObject>>() {
-                            @Override
-                            public void handle(final Message<JsonObject> tplResp) {
-                                final String tplRes = tplResp.body().getString("result");
-                                final JsonObject emailReq = new JsonObject();
-                                emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
-                                emailReq.putString("to", user.getContact().getEmail());
-                                emailReq.putString("subject", Messages.getString("mail.newpasswd.subject"));
-                                emailReq.putString("content_type", "text/html");
-                                emailReq.putString("body", tplRes);
-                                vertx.eventBus().publish("mailer.mod", emailReq);
-                                final JsonObject resp = new JsonObject();
-                                resp.putBoolean("status", true);
-                                message.reply(resp.encode());
-                            }
+                        vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, (Handler<Message<JsonObject>>) tplResp -> {
+                            final String tplRes = tplResp.body().getString("result");
+                            final JsonObject emailReq = new JsonObject();
+                            emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
+                            emailReq.putString("to", user.getContact().getEmail());
+                            emailReq.putString("subject", Messages.getString("mail.newpasswd.subject"));
+                            emailReq.putString("content_type", "text/html");
+                            emailReq.putString("body", tplRes);
+                            vertx.eventBus().publish("mailer.mod", emailReq);
+                            final JsonObject resp = new JsonObject();
+                            resp.putBoolean("status", true);
+                            message.reply(resp.encode());
                         });
                     }
                 } catch (final QaobeeException e) {
@@ -472,28 +456,22 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     JsonObject user = mongo.getById(req.getUser().get_id(), User.class);
                     final JsonObject activity = ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray("listPlan").get(0)).getObject("activity");
                     req.getParams().put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
-                    whenEventBus.send(SB_SandBoxVerticle.GET_BY_OWNER, Json.encode(req)).then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
-                        @Override
-                        public Promise<Message<Object>, Void> run(Message<Object> objectMessage) {
-                            if (objectMessage.body() instanceof ReplyException) {
-                                utils.sendError(message, (ReplyException) objectMessage.body());
-                            } else {
-                                JsonObject sandbox = new JsonObject((String) objectMessage.body());
-                                req.getParams().put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(sandbox.getString("sandboxCfgId")));
-                                whenEventBus.send(SB_SandBoxCfgVerticle.GET, Json.encode(req)).then(new Runnable<Promise<Message<Object>, Void>, Message<Object>>() {
-                                    @Override
-                                    public Promise<Message<Object>, Void> run(Message objectMessage) {
-                                        if (objectMessage.body() instanceof ReplyException) {
-                                            utils.sendError(message, (ReplyException) objectMessage.body());
-                                        } else {
-                                            message.reply((String) objectMessage.body());
-                                        }
-                                        return null;
-                                    }
-                                });
-                            }
-                            return null;
+                    whenEventBus.send(SB_SandBoxVerticle.GET_BY_OWNER, Json.encode(req)).then(objectMessage -> {
+                        if (objectMessage.body() instanceof ReplyException) {
+                            utils.sendError(message, (ReplyException) objectMessage.body());
+                        } else {
+                            JsonObject sandbox = new JsonObject((String) objectMessage.body());
+                            req.getParams().put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(sandbox.getString("sandboxCfgId")));
+                            whenEventBus.send(SB_SandBoxCfgVerticle.GET, Json.encode(req)).then(objectMessage1 -> {
+                                if (objectMessage1.body() instanceof ReplyException) {
+                                    utils.sendError(message, (ReplyException) objectMessage1.body());
+                                } else {
+                                    message.reply((String) objectMessage1.body());
+                                }
+                                return null;
+                            });
                         }
+                        return null;
                     });
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);

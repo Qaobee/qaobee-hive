@@ -37,7 +37,6 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -102,21 +101,10 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ADDRESS = "address";
     private static final Logger LOG = LoggerFactory.getLogger(StructureVerticle.class);
-
-    /* Injections */
-    /**
-     * The Mongo.
-     */
     @Inject
     private MongoDB mongo;
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
-    /**
-     * Country Business
-     */
     @Inject
     private CountryBusiness countryBusiness;
 
@@ -125,21 +113,20 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     @Override
     @VerticleHandler({
-            @Rule(address = ADD, method = Constantes.POST, logged = true,
-                    mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-                    scope = Rule.Param.BODY),
-            @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
-                    scope = Rule.Param.REQUEST),
-            @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
-                    mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY),
-            @Rule(address = UPDATE, method = Constantes.POST, logged = true,
-                    mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-                    scope = Rule.Param.BODY),
-    })
+                             @Rule(address = ADD, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+                                   scope = Rule.Param.BODY),
+                             @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+                                   scope = Rule.Param.REQUEST),
+                             @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY),
+                             @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+                                   mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+                                   scope = Rule.Param.BODY),
+                     })
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
         /**
          * @api {post} /api/1/commons/referencial/structure/add Add structure
          * @apiVersion 0.1.0
@@ -161,23 +148,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        vertx.eventBus().registerHandler(ADD, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject params = new JsonObject(req.getBody());
-                    // Insert a structure
-                    final String id = mongo.save(params, Structure.class);
-                    params.putString("_id", id);
-                    message.reply(params.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(ADD, this::addStructureHandler);
 
         /**
          * @api {get} /api/1/commons/referencial/structure/get Read data of a Structure
@@ -194,20 +165,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Structure.class);
-                    message.reply(json.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(GET, this::getStructureHandler);
 
         /**
          * @api {post} /api/1/commons/referencial/structure/getList Returns list of structures from criterias
@@ -224,45 +182,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {Structure}   structure            The Structure found.
          *
          */
-        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    JsonObject params = new JsonObject(req.getBody());
-                    String activity = params.getString(PARAM_ACTIVITY);
-                    JsonObject address = params.getObject(PARAM_ADDRESS);
-                    Country country = countryBusiness.getCountryFromAlpha2(address.getString("countryAlpha2", "FR"));
-                    if (country == null) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                                "No Country defined for (" + address.getString("countryAlpha2") + ")");
-                    }
-                    // Aggregat section
-                    DBObject match;
-                    BasicDBObject dbObjectParent;
-                    // $MACTH section
-                    dbObjectParent = new BasicDBObject();
-                    // Activity ID
-                    dbObjectParent.put("activity._id", activity);
-                    // Country ID
-                    dbObjectParent.put("country._id", country.get_id());
-                    // City OR Zipcode
-                    BasicDBList dbList = new BasicDBList();
-                    dbList.add(new BasicDBObject("address.city", address.getString("city").toUpperCase()));
-                    dbList.add(new BasicDBObject("address.zipcode", address.getString("zipcode")));
-                    dbObjectParent.put("$or", dbList.toArray());
-                    match = new BasicDBObject("$match", dbObjectParent);
-                    // Pipeline
-                    List<DBObject> pipelineAggregation = Collections.singletonList(match);
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Structure.class);
-                    message.reply(resultJSon.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(GET_LIST, this::getListOfStructuresHandler);
 
         /**
          * @api {post} /api/1/commons/referencial/structure/update Update a structure
@@ -286,22 +206,80 @@ public class StructureVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        vertx.eventBus().registerHandler(UPDATE, new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(UPDATE, this::updateStructureHandler);
+    }
 
-            @Override
-            public void handle(final Message<String> message) {
-                LOG.debug("update() - Structure");
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject params = new JsonObject(req.getBody());
-                    // Update a structure
-                    mongo.save(params, Structure.class);
-                    message.reply(params.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
-                }
+    private void updateStructureHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject params = new JsonObject(req.getBody());
+            // Update a structure
+            mongo.save(params, Structure.class);
+            message.reply(params.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
+        }
+    }
+
+    private void getListOfStructuresHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            JsonObject params = new JsonObject(req.getBody());
+            String activity = params.getString(PARAM_ACTIVITY);
+            JsonObject address = params.getObject(PARAM_ADDRESS);
+            Country country = countryBusiness.getCountryFromAlpha2(address.getString("countryAlpha2", "FR"));
+            if (country == null) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR,
+                        "No Country defined for (" + address.getString("countryAlpha2") + ")");
             }
-        });
+            // Aggregat section
+            DBObject match;
+            BasicDBObject dbObjectParent;
+            // $MACTH section
+            dbObjectParent = new BasicDBObject();
+            // Activity ID
+            dbObjectParent.put("activity._id", activity);
+            // Country ID
+            dbObjectParent.put("country._id", country.get_id());
+            // City OR Zipcode
+            BasicDBList dbList = new BasicDBList();
+            dbList.add(new BasicDBObject("address.city", address.getString("city").toUpperCase()));
+            dbList.add(new BasicDBObject("address.zipcode", address.getString("zipcode")));
+            dbObjectParent.put("$or", dbList.toArray());
+            match = new BasicDBObject("$match", dbObjectParent);
+            // Pipeline
+            List<DBObject> pipelineAggregation = Collections.singletonList(match);
+            final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Structure.class);
+            message.reply(resultJSon.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void getStructureHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Structure.class);
+            message.reply(json.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void addStructureHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject params = new JsonObject(req.getBody());
+            // Insert a structure
+            final String id = mongo.save(params, Structure.class);
+            params.putString("_id", id);
+            message.reply(params.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
+        }
     }
 }

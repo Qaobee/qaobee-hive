@@ -19,8 +19,7 @@
 package com.qaobee.hive.api;
 
 import com.englishtown.promises.Promise;
-import com.englishtown.promises.Runnable;
-import com.englishtown.promises.Value;
+import com.englishtown.promises.When;
 import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
@@ -42,7 +41,6 @@ import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Future;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.buffer.Buffer;
-import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.eventbus.ReplyException;
 import org.vertx.java.core.http.HttpServer;
@@ -87,11 +85,7 @@ public class Main extends AbstractGuiceVerticle {
     public void start(final Future<Void> startedResult) {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        final Map<String, String> envs = container.env();
-        final JsonObject config = container.config();
-        final HttpServer server = vertx.createHttpServer();
         final RouteMatcher rm = new RouteMatcher();
-        final EventBus eb = vertx.eventBus();
 
         /**
          * @api {get} /file/:collection/:id  Get an asset from a collection
@@ -105,26 +99,7 @@ public class Main extends AbstractGuiceVerticle {
          * @apiParam {String} collection Mandatory The collection.
          * @apiParam {String} id Mandatory The Asset-ID.
          */
-        rm.get("/file/:collection/:id", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(final HttpServerRequest req) {
-                enableCors(req);
-                final JsonObject request = new JsonObject()
-                        .putString(COLLECTION, req.params().get(COLLECTION))
-                        .putString("id", req.params().get("id"));
-                eb.send(AssetVerticle.GET, request, new Handler<Message<JsonObject>>() {
-                    @Override
-                    public void handle(Message<JsonObject> message) {
-                        if (message.body().containsField(CONTENT_LENGTH)) {
-                            req.response().putHeader(CONTENT_LENGTH, message.body().getString(CONTENT_LENGTH))
-                                    .end(new Buffer(message.body().getBinary("asset")));
-                        } else {
-                            req.response().setStatusCode(404).end(message.body().getString(MESSAGE));
-                        }
-                    }
-                });
-            }
-        });
+        rm.get("/file/:collection/:id", this::getAssetHandler);
         /**
          * @apiDescription Put an asset in a collection
          * @api {post} /file/:collection/:field/:uid
@@ -138,162 +113,183 @@ public class Main extends AbstractGuiceVerticle {
          *
          * @apiError NOT_LOGGED user not logged
          */
-        rm.post("/file/:collection/:field/:uid", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(final HttpServerRequest req) {
-                startTimer("main.avatar");
+        rm.post("/file/:collection/:field/:uid", this::assetUploadHandler);
+        rm.optionsWithRegEx(".*", req -> {
+            if (container.config().getObject("cors").getBoolean("enabled", false)) {
                 enableCors(req);
-                final JsonObject request = new JsonObject()
-                .putString(COLLECTION, req.params().get(COLLECTION))
-                        .putString("field", req.params().get("field"))
-                        .putString("uid", req.params().get("uid"))
-                        .putString("token", req.headers().get("token"))
-                        .putString("locale", req.headers().get(ACCEPT_LANGUAGE));
-                // We first pause the request so we don't receive any data between now and when the file is opened
-                String datadir = System.getProperty("user.home");
-                if (envs.containsKey("OPENSHIFT_DATA_DIR")) {
-                    datadir = envs.get("OPENSHIFT_DATA_DIR");
-                }
-                final File dir = new File(datadir + "/upload");
-                if (!dir.exists()) {
-                    boolean res = dir.mkdirs();
-                    LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
-                }
-                request.putString("datadir", datadir);
-                req.expectMultiPart(true).uploadHandler(getUploadHandler(request, dir, req));
             }
-        }).optionsWithRegEx(".*", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(final HttpServerRequest req) {
-                if (config.getObject("cors").getBoolean("enabled", false)) {
-                    enableCors(req);
-                }
-                req.response().end();
-            }
+            req.response().end();
         });
-
-        // Cors
-
-        rm.get("/", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(HttpServerRequest event) {
-                event.response().end("Welcome to Qaobee Hive");
-            }
-        });
+        rm.get("/", event -> event.response().end("Welcome to Qaobee Hive"));
         // API Rest
-        rm.allWithRegEx("^/api/.*", new Handler<HttpServerRequest>() {
-            @Override
-            public void handle(final HttpServerRequest req) {
-                req.bodyHandler(new Handler<Buffer>() {
-                    @Override
-                    public void handle(final Buffer event) {
-                        final RequestWrapper wrapper = new RequestWrapper();
-                        wrapper.setBody(event.toString());
-                        wrapper.setMethod(req.method());
-                        wrapper.setHeaders(utils.toMap(req.headers()));
-                        wrapper.setParams(utils.toMap(req.params()));
-                        wrapper.setLocale(req.headers().get(ACCEPT_LANGUAGE));
-                        List<String> path = Arrays.asList(req.path().split("/"));
-                        path = path.subList(3, path.size());
-                        wrapper.setPath(path);
-                        startTimer(StringUtils.join(wrapper.getPath(), '.'));
-                        // Remontée de métriques : nombre de requêtes
-                        final JsonObject json = new JsonObject()
-                                .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
-                                .putString("action", "mark");
-                        eb.send("metrix", json);
-                        String busAddress = config.getObject(RUNTIME).getInteger("version") + "." + StringUtils.join(path, '.');
-                        boolean succeded = true;
-                        if (rules.containsKey(busAddress)) {
-                            succeded = testRequest(req, busAddress, wrapper);
-                        }
-                        if (succeded) {
-                            eb.sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, new Handler<AsyncResult<Message<String>>>() {
-                                @Override
-                                public void handle(final AsyncResult<Message<String>> message) {
-                                    stopTimer(StringUtils.join(wrapper.getPath(), '.'));
-                                    handleResult(message, req);
-                                }
+        rm.allWithRegEx("^/api/.*", this::apiHandler);
+        // Load Verticles
+        List<Promise<String, Void>> promises = loadVerticles();
+        runWebServer(promises, rm, startedResult);
+    }
 
-                            });
-                        }
-                    }
-                });
+    /**
+     *  @param promises Promises
+     * @param rm Route matcher
+     * @param startResult Start result
+     */
+    private void runWebServer(List<Promise<String, Void>> promises, Handler<HttpServerRequest> rm, Future<Void> startResult) {
+        final HttpServer server = vertx.createHttpServer();
+        new When<String, Void>().all(promises, value -> {
+            server.requestHandler(rm);
+            String ip = container.config().getObject(RUNTIME).getString("defaultHost");
+            int port = container.config().getObject(RUNTIME).getInteger("defaultPort");
+            if (container.env().containsKey("OPENSHIFT_VERTX_IP")) {
+                ip = container.env().get("OPENSHIFT_VERTX_IP");
             }
+            if (container.env().containsKey("OPENSHIFT_VERTX_PORT")) {
+                port = Integer.parseInt(container.env().get("OPENSHIFT_VERTX_PORT"));
+            }
+            sockJSServer = vertx.createSockJSServer(server);
+            JsonObject wsConfig = new JsonObject().putString("prefix", "/eventbus");
+            JsonArray outboundPermitted = new JsonArray();
+            JsonArray inboundPermitted = new JsonArray();
+            outboundPermitted.add(new JsonObject());
+            inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
+            sockJSServer.setHook(new ServerHook(container.config().getObject(RUNTIME).getString("site.url")));
+            sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
+            server.listen(port, ip);
+            LOG.info("The http server is started on : " + ip + ":" + port);
+            startResult.setResult(null);
+            return null;
+        }, value -> {
+            LOG.error(value.error.getMessage());
+            startResult.setFailure(value.error);
+            return null;
         });
+    }
 
+    /**
+     *
+     * @return start promises
+     */
+    private List<Promise<String, Void>> loadVerticles() {
         final List<Promise<String, Void>> promises = new ArrayList<>();
         // Loading modules
-        promises.add(whenContainer.deployWorkerVerticle(com.bloidonia.vertx.metrics.MetricsModule.class.getCanonicalName(), config.getObject("metrix.mod"), 1, true));
-        promises.add(whenContainer.deployWorkerVerticle(Mailer.class.getCanonicalName(), config.getObject("mailer.mod"), 1, true));
+        promises.add(whenContainer.deployWorkerVerticle(com.bloidonia.vertx.metrics.MetricsModule.class.getCanonicalName(), container.config().getObject("metrix.mod"), 1, true));
+        promises.add(whenContainer.deployWorkerVerticle(Mailer.class.getCanonicalName(), container.config().getObject("mailer.mod"), 1, true));
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
         for (final Class<?> restMod : restModules) {
             manageRules(restMod);
             if (restMod.getAnnotation(DeployableVerticle.class).isWorker())
-                promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), config, 2, true));
+                promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), container.config(), 2, true));
             else
-                promises.add(whenContainer.deployVerticle(restMod.getName(), config));
+                promises.add(whenContainer.deployVerticle(restMod.getName(), container.config()));
         }
-        when.all(promises, new com.englishtown.promises.Runnable<Promise<List<String>, Void>, List<String>>() {
-            @Override
-            public Promise<List<String>, Void> run(final List<String> value) {
-                server.requestHandler(rm);
-                String ip = config.getObject(RUNTIME).getString("defaultHost");
-                int port = config.getObject(RUNTIME).getInteger("defaultPort");
-                if (envs.containsKey("OPENSHIFT_VERTX_IP")) {
-                    ip = envs.get("OPENSHIFT_VERTX_IP");
-                }
-                if (envs.containsKey("OPENSHIFT_VERTX_PORT")) {
-                    port = Integer.parseInt(envs.get("OPENSHIFT_VERTX_PORT"));
-                }
-                sockJSServer = vertx.createSockJSServer(server);
-                JsonObject wsConfig = new JsonObject().putString("prefix", "/eventbus");
-                JsonArray outboundPermitted = new JsonArray();
-                JsonArray inboundPermitted = new JsonArray();
-                outboundPermitted.add(new JsonObject());
-                inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
-                sockJSServer.setHook(new ServerHook(config.getObject(RUNTIME).getString("site.url")));
-                sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
-                server.listen(port, ip);
-                LOG.info("The http server is started on : " + ip + ":" + port);
-                startedResult.setResult(null);
-                return null;
+        return promises;
+
+    }
+
+    /**
+     *
+     * @param req Request
+     */
+    private void apiHandler(HttpServerRequest req) {
+        req.bodyHandler(event -> {
+            final RequestWrapper wrapper = new RequestWrapper();
+            wrapper.setBody(event.toString());
+            wrapper.setMethod(req.method());
+            wrapper.setHeaders(utils.toMap(req.headers()));
+            wrapper.setParams(utils.toMap(req.params()));
+            wrapper.setLocale(req.headers().get(ACCEPT_LANGUAGE));
+            List<String> path = Arrays.asList(req.path().split("/"));
+            path = path.subList(3, path.size());
+            wrapper.setPath(path);
+            startTimer(StringUtils.join(wrapper.getPath(), '.'));
+            // Collect metrics : number of requests
+            final JsonObject json = new JsonObject()
+                    .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
+                    .putString("action", "mark");
+            vertx.eventBus().send("metrix", json);
+            String busAddress = container.config().getObject(RUNTIME).getInteger("version") + "." + StringUtils.join(path, '.');
+            boolean succeed = true;
+            if (rules.containsKey(busAddress)) {
+                succeed = testRequest(req, busAddress, wrapper);
             }
-        }, new Runnable<Promise<List<String>, Void>, Value<List<String>>>() {
-            @Override
-            public Promise<List<String>, Void> run(final Value<List<String>> value) {
-                LOG.error(value.error.getMessage());
-                return null;
+            if (succeed) {
+                vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, message -> {
+                    stopTimer(StringUtils.join(wrapper.getPath(), '.'));
+                    handleResult(message, req);
+                });
             }
         });
     }
 
-    private Handler<HttpServerFileUpload> getUploadHandler(final JsonObject request, final File dir, final HttpServerRequest req) {
-        return new Handler<HttpServerFileUpload>() {
-            @Override
-            public void handle(final HttpServerFileUpload upload) {
-                final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
-                request.putString("filename", filename).putString("contentType", upload.contentType());
-                if (vertx.fileSystem().existsSync(filename)) {
-                    vertx.fileSystem().deleteSync(filename);
-                }
-                upload.streamToFileSystem(filename).endHandler(new Handler<Void>() {
-                    @Override
-                    public void handle(Void event) {
-                        upload.pause();
-                        vertx.eventBus().send(AssetVerticle.ADD, request, new Handler<Message<JsonObject>>() {
-                            @Override
-                            public void handle(Message<JsonObject> message) {
-                                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON)
-                                        .setStatusCode(message.body().getInteger("statusCode"))
-                                        .end(message.body().getString(MESSAGE));
-                                stopTimer("main.avatar");
-                            }
-                        });
-                    }
-                });
+    /**
+     *
+     * @param req Request
+     */
+    private void assetUploadHandler(HttpServerRequest req) {
+        startTimer("main.avatar");
+        enableCors(req);
+        final JsonObject request = new JsonObject()
+                .putString(COLLECTION, req.params().get(COLLECTION))
+                .putString("field", req.params().get("field"))
+                .putString("uid", req.params().get("uid"))
+                .putString("token", req.headers().get("token"))
+                .putString("locale", req.headers().get(ACCEPT_LANGUAGE));
+        // We first pause the request so we don't receive any data between now and when the file is opened
+        String datadir = System.getProperty("user.home");
+        if (container.env().containsKey("OPENSHIFT_DATA_DIR")) {
+            datadir = container.env().get("OPENSHIFT_DATA_DIR");
+        }
+        final File dir = new File(datadir + "/upload");
+        if (!dir.exists()) {
+            boolean res = dir.mkdirs();
+            LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
+        }
+        request.putString("datadir", datadir);
+        req.expectMultiPart(true).uploadHandler(getUploadHandler(request, dir, req));
+    }
+
+    /**
+     *
+     * @param req Request
+     */
+    private void getAssetHandler(HttpServerRequest req) {
+        enableCors(req);
+        final JsonObject request = new JsonObject()
+                .putString(COLLECTION, req.params().get(COLLECTION))
+                .putString("id", req.params().get("id"));
+        vertx.eventBus().send(AssetVerticle.GET, request, (Handler<Message<JsonObject>>) message -> {
+            if (message.body().containsField(CONTENT_LENGTH)) {
+                req.response().putHeader(CONTENT_LENGTH, message.body().getString(CONTENT_LENGTH))
+                        .end(new Buffer(message.body().getBinary("asset")));
+            } else {
+                req.response().setStatusCode(404).end(message.body().getString(MESSAGE));
             }
+        });
+    }
+
+    /**
+     *
+     * @param request Request
+     * @param dir Directory
+     * @param req HTTP Request
+     * @return Handler
+     */
+    private Handler<HttpServerFileUpload> getUploadHandler(final JsonObject request, final File dir, final HttpServerRequest req) {
+        return upload -> {
+            final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
+            request.putString("filename", filename).putString("contentType", upload.contentType());
+            if (vertx.fileSystem().existsSync(filename)) {
+                vertx.fileSystem().deleteSync(filename);
+            }
+            upload.streamToFileSystem(filename).endHandler(event -> {
+                upload.pause();
+                vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<JsonObject>>) message -> {
+                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON)
+                            .setStatusCode(message.body().getInteger("statusCode"))
+                            .end(message.body().getString(MESSAGE));
+                    stopTimer("main.avatar");
+                });
+            });
         };
     }
 
@@ -379,9 +375,9 @@ public class Main extends AbstractGuiceVerticle {
      * @param message Vert.X message
      * @param req     Request
      */
-    private static void handleResult(AsyncResult<Message<String>> message, HttpServerRequest req) {
+    private static void handleResult(AsyncResult<Message<Object>> message, HttpServerRequest req) {
         if (message.succeeded()) {
-            final String response = message.result().body();
+            final String response = (String) message.result().body();
             if (response.startsWith("[") || !response.startsWith("{")) {
                 enableCors(req);
                 req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
