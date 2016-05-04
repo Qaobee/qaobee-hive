@@ -21,7 +21,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.referencial.Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -105,7 +105,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Team}   team            The Team updated.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+    @Rule(address = UPDATE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID}, scope = Rule.Param.BODY)
     private void updateTeamHandler(Message<String> message) {
         try {
@@ -131,7 +131,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Team}   team            The Team found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
     private void getTeamHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -156,7 +156,7 @@ public class TeamVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Team}   team            The Team added with the id.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = ADD, method = Constantes.POST, logged = true,
+    @Rule(address = ADD, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_SANBOXID, PARAM_EFFECTIVEID}, scope = Rule.Param.BODY)
     private void addTeamHandler(Message<String> message) {
         try {

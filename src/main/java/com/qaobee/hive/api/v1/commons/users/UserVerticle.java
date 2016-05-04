@@ -25,7 +25,7 @@ import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -159,7 +159,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      * @apiError NOT_LOGGED invalid token
      */
-    @Rule(address = LOGIN_BY_TOKEN, method = Constantes.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN}, scope = Rule.Param.BODY)
+    @Rule(address = LOGIN_BY_TOKEN, method = Constants.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN}, scope = Rule.Param.BODY)
     private void loginByTokenHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -195,7 +195,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      * @apiError NOT_LOGGED invalid token
      */
-    @Rule(address = USER_BY_LOGIN, method = Constantes.GET, logged = true, admin = true, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.REQUEST)
+    @Rule(address = USER_BY_LOGIN, method = Constants.GET, logged = true, admin = true, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.REQUEST)
     private void userByLoginHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         // Creation of request
@@ -223,7 +223,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      * @apiError NOT_LOGGED invalid token
      */
-    @Rule(address = USER_INFO, method = Constantes.GET, logged = true, mandatoryParams = {"id"}, scope = Rule.Param.REQUEST)
+    @Rule(address = USER_INFO, method = Constants.GET, logged = true, mandatoryParams = {"id"}, scope = Rule.Param.REQUEST)
     private void userInfoHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -248,7 +248,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      * @apiError NOT_LOGGED invalid token
      */
-    @Rule(address = META, method = Constantes.GET, logged = true)
+    @Rule(address = META, method = Constants.GET, logged = true)
     private void getMetaHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -290,7 +290,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      * @apiError NOT_LOGGED invalid token
      */
-    @Rule(address = CURRENT, method = Constantes.GET, logged = true)
+    @Rule(address = CURRENT, method = Constants.GET, logged = true)
     private void currentUserHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         User user = req.getUser();
@@ -311,7 +311,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      * @apiError HTTP_ERROR wrong request method
      */
-    @Rule(address = PASSWD_RESET, method = Constantes.POST, mandatoryParams = {"id", "code", PASSWD_FIELD}, scope = Rule.Param.BODY)
+    @Rule(address = PASSWD_RESET, method = Constants.POST, mandatoryParams = {"id", "code", PASSWD_FIELD}, scope = Rule.Param.BODY)
     private void passwordResetHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -367,7 +367,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
      * @apiError HTTP_ERROR wrong request method
      */
-    @Rule(address = PASSWD_RENEW_CHK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
+    @Rule(address = PASSWD_RENEW_CHK, method = Constants.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
     private void passwordRenewCheckHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -407,7 +407,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      * @apiError MAIL_EXCEPTION email problem
      */
-    @Rule(address = PASSWD_RENEW, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
+    @Rule(address = PASSWD_RENEW, method = Constants.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
     private void passwordRenewHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -457,7 +457,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      * @apiError HTTP_ERROR wrong request method
      */
-    @Rule(address = LOGOUT, method = Constantes.GET, logged = true, mandatoryParams = {TOKEN}, scope = Rule.Param.HEADER)
+    @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = {TOKEN}, scope = Rule.Param.HEADER)
     private void logoutHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -498,7 +498,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NON_ACTIVE the user is not active
      * @apiError HTTP_ERROR wrong request method
      */
-    @Rule(address = LOGIN, method = Constantes.POST)
+    @Rule(address = LOGIN, method = Constants.POST)
     private void loginHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {

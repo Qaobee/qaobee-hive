@@ -25,7 +25,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -111,7 +111,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Person API
      * @apiSuccess {Array} list of persons
      */
-    @Rule(address = GET_LIST_SANDBOX, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET_LIST_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST)
     private void getPersonListBySandboxHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -137,7 +137,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Person API
      * @apiSuccess {Array} list of persons
      */
-    @Rule(address = GET_LIST, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_LIST_ID, PARAM_LIST_FIELD}, scope = Rule.Param.BODY)
+    @Rule(address = GET_LIST, method = Constants.POST, logged = true, mandatoryParams = {PARAM_LIST_ID, PARAM_LIST_FIELD}, scope = Rule.Param.BODY)
     private void getPersonListHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -168,7 +168,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
-    @Rule(address = UPDATE, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY)
+    @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY)
     private void updatePersonHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject json = new JsonObject(req.getBody());
@@ -186,7 +186,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} id
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.REQUEST)
     private void getPersonHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -206,7 +206,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Person API
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
-    @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {"person"}, scope = Rule.Param.BODY)
+    @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {"person"}, scope = Rule.Param.BODY)
     private void addPersonHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

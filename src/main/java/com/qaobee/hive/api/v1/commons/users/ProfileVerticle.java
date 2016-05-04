@@ -25,7 +25,7 @@ import com.qaobee.hive.business.model.commons.users.account.Payment;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -115,7 +115,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = GENERATE_BILL_PDF, method = Constantes.GET, logged = true, mandatoryParams = {"plan_id", "pay_id"}, scope = Rule.Param.REQUEST)
+    @Rule(address = GENERATE_BILL_PDF, method = Constants.GET, logged = true, mandatoryParams = {"plan_id", "pay_id"}, scope = Rule.Param.REQUEST)
     private void generateBillPDFHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -171,7 +171,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = GENERATE_PDF, method = Constantes.GET, logged = true)
+    @Rule(address = GENERATE_PDF, method = Constants.GET, logged = true)
     private void generatePDFHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final User user = req.getUser();
@@ -210,7 +210,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiError PASSWD_EXCEPTION Password exception
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = UPDATE, method = Constantes.POST, logged = true)
+    @Rule(address = UPDATE, method = Constants.POST, logged = true)
     private void updateUserHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {

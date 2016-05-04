@@ -22,7 +22,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.Season;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -98,7 +98,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
      * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
-    @Rule(address = GET_CURRENT, method = Constantes.GET, logged = true,
+    @Rule(address = GET_CURRENT, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
             scope = Rule.Param.REQUEST)
     private void getCurrentSeasonHandler(Message<String> message) {
@@ -141,7 +141,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiGroup Season API
      * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
-    @Rule(address = GET_LIST_BY_ACTIVITY, method = Constantes.GET, logged = true,
+    @Rule(address = GET_LIST_BY_ACTIVITY, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
             scope = Rule.Param.REQUEST)
     private void getListByActivityHandler(Message<String> message) {
@@ -175,7 +175,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} _id Mandatory The season Id.
      * @apiSuccess {Season} the object found
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
     private void getSeasonHandler(Message<String> message) {
         try {

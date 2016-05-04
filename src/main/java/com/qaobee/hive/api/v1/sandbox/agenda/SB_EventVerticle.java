@@ -23,7 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.agenda.SB_Event;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
@@ -159,7 +159,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} id
      * @apiSuccess {Object} event com.qaobee.swarn.business.model.tranversal.event.event;
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
     private void getEventHandler(Message<String> message) {
         try {
@@ -178,7 +178,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup SB_Event API
      * @apiSuccess {SB_Event} SB_Event updated
      */
-    @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+    @Rule(address = UPDATE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
             scope = Rule.Param.BODY)
     private void updateEventHandler(Message<String> message) {
@@ -200,7 +200,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup SB_Event API
      * @apiSuccess {SB_Event} SB_Event create
      */
-    @Rule(address = ADD, method = Constantes.POST, logged = true,
+    @Rule(address = ADD, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
             scope = Rule.Param.BODY)
     private void addEventHandler(Message<String> message) {
@@ -229,7 +229,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Array} list of SB_Event
      */
-    @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID},
             scope = Rule.Param.BODY)
     private void getEventListHandler(Message message) {

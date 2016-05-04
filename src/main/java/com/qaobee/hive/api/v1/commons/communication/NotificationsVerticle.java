@@ -6,7 +6,7 @@ import com.qaobee.hive.business.model.commons.users.communication.Notification;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -106,7 +106,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      *     }
      * </pre></p>
      */
-    @Rule(address = ADD_TO_SANDBOX, method = Constantes.POST, logged = true,
+    @Rule(address = ADD_TO_SANDBOX, method = Constants.POST, logged = true,
             mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
             scope = Rule.Param.BODY)
     private void addNotificationToSandBoxHandler(Message<String> message) {
@@ -135,7 +135,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      *     }
      * </pre></p>
      */
-    @Rule(address = ADD_TO_USER, method = Constantes.POST, logged = true,
+    @Rule(address = ADD_TO_USER, method = Constants.POST, logged = true,
             mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
             scope = Rule.Param.BODY)
     private void addNotificationToUserHandler(Message<String> message) {
@@ -188,7 +188,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = READ, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
     private void markAsReadHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -212,7 +212,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = DEL, method = Constantes.DELETE, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
     private void deleteHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -238,7 +238,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array} notification com.qaobee.hive.business.model.commons.users.communication.Notification
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = LIST, method = Constantes.GET, logged = true)
+    @Rule(address = LIST, method = Constants.GET, logged = true)
     private void notificationListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {

@@ -27,7 +27,7 @@ import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -136,7 +136,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Structure}   structure            The Structure updated.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = UPDATE, method = Constantes.POST, logged = true,
+    @Rule(address = UPDATE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
             scope = Rule.Param.BODY)
     private void updateStructureHandler(Message<String> message) {
@@ -163,7 +163,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiParam {Object} address The address
      * @apiSuccess {Structure}   structure            The Structure found.
      */
-    @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY)
     private void getListOfStructuresHandler(Message<String> message) {
         try {
@@ -212,7 +212,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Structure}   structure            The Structure found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
     private void getStructureHandler(Message<String> message) {
         try {
@@ -242,7 +242,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Structure}   structure            The Structure added with the id.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = ADD, method = Constantes.POST, logged = true,
+    @Rule(address = ADD, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
             scope = Rule.Param.BODY)
     private void addStructureHandler(Message<String> message) {

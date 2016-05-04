@@ -28,7 +28,7 @@ import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.guice.GuiceModule;
@@ -243,7 +243,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         Habilitation habilitation = new Habilitation();
         habilitation.set_id("123456");
         habilitation.setDescription("admin Qaobee");
-        habilitation.setKey(Constantes.ADMIN_HABILIT);
+        habilitation.setKey(Constants.ADMIN_HABILIT);
         user.getAccount().setHabilitations(new ArrayList<Habilitation>());
         user.getAccount().getHabilitations().add(habilitation);
         try {
@@ -476,7 +476,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
 
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
+        req.setMethod(Constants.GET);
 
         final HashMap<String, List<String>> params = new HashMap<>();
 
@@ -497,7 +497,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     protected JsonObject getCountry(String id) {
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
-        req.setMethod(Constantes.GET);
+        req.setMethod(Constants.GET);
         final HashMap<String, List<String>> params = new HashMap<>();
         /* Retreive object */
         params.put(CountryVerticle.PARAM_ID, Collections.singletonList(id));

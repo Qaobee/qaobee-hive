@@ -23,7 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.referencial.ChampionShip;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
@@ -150,7 +150,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = UPDATE, method = Constantes.POST, logged = true, admin = true,
+    @Rule(address = UPDATE, method = Constants.POST, logged = true, admin = true,
             mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
                     PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void updateChampionshipHandler(Message<String> message) {
@@ -184,7 +184,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = ADD, method = Constantes.POST, logged = true, admin = true,
+    @Rule(address = ADD, method = Constants.POST, logged = true, admin = true,
             mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
                     PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void addChampionshipHandler(Message<String> message) {
@@ -209,7 +209,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
     private void getChampionshipHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -232,7 +232,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiParam {Participant} participant : participant (optionnal)
      * @apiSuccess {Array} list of championships
      */
-    @Rule(address = GET_LIST, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
+    @Rule(address = GET_LIST, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
     private void getListChampionshipsHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

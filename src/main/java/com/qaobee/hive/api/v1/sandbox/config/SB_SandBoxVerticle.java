@@ -23,7 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -112,7 +112,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      *
      */
-    @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_SB_CFG_ID},
+    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_SB_CFG_ID},
             scope = Rule.Param.BODY)
     private void updateHandler(Message<String> message) {
         try {
@@ -134,7 +134,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      *
      */
-    @Rule(address = ADD, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_USER_ID, PARAM_ACTIVITY_ID},
+    @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_USER_ID, PARAM_ACTIVITY_ID},
             scope = Rule.Param.BODY)
     private void addHandler(Message<String> message) {
         try {
@@ -161,7 +161,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {String} activityId Mandatory The sandBox activity.
      * @apiSuccess {sandBox}   sandBox    The sandBox updated.
      */
-    @Rule(address = GET_LIST_BY_OWNER, method = Constantes.GET, logged = true)
+    @Rule(address = GET_LIST_BY_OWNER, method = Constants.GET, logged = true)
     private void getListByOwnerHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -192,7 +192,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {String} activityId Mandatory The sandBox activity.
      * @apiSuccess {sandBox}   sandBox    The sandBox updated.
      */
-    @Rule(address = GET_BY_OWNER, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
+    @Rule(address = GET_BY_OWNER, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
             scope = Rule.Param.REQUEST)
     private void getByOwnerHandler(Message<String> message) {
         try {

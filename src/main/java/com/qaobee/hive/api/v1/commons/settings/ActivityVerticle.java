@@ -22,7 +22,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
@@ -89,7 +89,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      * @apiError INVALID_PARAMETER Parameters not found
      */
-    @Rule(address = GET_LIST_ENABLE, method = Constantes.GET)
+    @Rule(address = GET_LIST_ENABLE, method = Constants.GET)
     private void getEnableActivitiesHandler(Message message) {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put("enable", true);
@@ -106,7 +106,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiDescription get all activity
      * @apiSuccess {List}   activities            List all activity
      */
-    @Rule(address = GET_LIST, method = Constantes.GET)
+    @Rule(address = GET_LIST, method = Constants.GET)
     private void getListHandler(Message message) {
         JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
         message.reply(resultJson.encode());
@@ -123,7 +123,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Activity} activity The Activity found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
     private void getActivityHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

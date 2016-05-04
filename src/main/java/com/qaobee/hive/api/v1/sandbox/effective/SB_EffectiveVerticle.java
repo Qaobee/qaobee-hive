@@ -23,7 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -108,7 +108,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Effective}   effective    The effective added.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = ADD, method = Constantes.POST, logged = true)
+    @Rule(address = ADD, method = Constants.POST, logged = true)
     private void addEffectiveHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -132,7 +132,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {Effective} effective Mandatory The effective to update.
      * @apiSuccess {Effective}   effective    The effective updated.
      */
-    @Rule(address = UPDATE, method = Constantes.PUT, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.BODY)
+    @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.BODY)
     private void updateEffectiveHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject json = new JsonObject(req.getBody());
@@ -154,7 +154,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {List}   effectives            The list of effectives found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET_LIST, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_SANDBOXCFG_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET_LIST, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOXCFG_ID}, scope = Rule.Param.REQUEST)
     private void getEffectiveListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -191,7 +191,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Effective}   effective    The effective found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
     private void getEffectiveHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

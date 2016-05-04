@@ -23,7 +23,7 @@ import com.englishtown.promises.When;
 import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
@@ -205,7 +205,7 @@ public class Main extends AbstractGuiceVerticle {
             vertx.eventBus().send("metrix", json);
             String busAddress = container.config().getObject(RUNTIME).getInteger("version") + "." + StringUtils.join(path, '.');
             if (rules.containsKey(busAddress) && testRequest(req, busAddress, wrapper)) {
-                vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, message -> {
+                vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> {
                     stopTimer(StringUtils.join(wrapper.getPath(), '.'));
                     handleResult(message, req);
                 });

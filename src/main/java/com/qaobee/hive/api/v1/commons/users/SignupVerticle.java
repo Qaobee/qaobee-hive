@@ -42,7 +42,7 @@ import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -193,7 +193,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} user {"status", true|false}
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = FINALIZE_SIGNUP, method = Constantes.POST, logged = true,
+    @Rule(address = FINALIZE_SIGNUP, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
             scope = Rule.Param.BODY)
     private void finalizeSignupHandler(Message<String> message) {
@@ -394,7 +394,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = FIRST_CONNECTION_CHECK, method = Constantes.GET, mandatoryParams = {PARAM_ID, PARAM_CODE}, scope = Rule.Param.REQUEST)
+    @Rule(address = FIRST_CONNECTION_CHECK, method = Constants.GET, mandatoryParams = {PARAM_ID, PARAM_CODE}, scope = Rule.Param.REQUEST)
     private void firstConnectionCheckHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -433,7 +433,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = ACCOUNT_CHECK, method = Constantes.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
+    @Rule(address = ACCOUNT_CHECK, method = Constants.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
     private void accountCheckHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -466,7 +466,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiError NON_UNIQUE_LOGIN Non unique login
      * @apiError MAIL_EXCEPTION problème d'envoi d'email
      */
-    @Rule(address = REGISTER, method = Constantes.PUT)
+    @Rule(address = REGISTER, method = Constants.PUT)
     private void registerHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -576,7 +576,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = LOGIN_TEST, method = Constantes.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
+    @Rule(address = LOGIN_TEST, method = Constants.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
     private void loginTestHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final String login = new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase();

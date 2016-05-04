@@ -21,7 +21,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -109,7 +109,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      * @apiParam {String} effectiveId Mandatory The effective Id
      * @apiSuccess {Array}   teams           The set of SB_Team found.
      */
-    @Rule(address = GET_LIST, method = Constantes.GET, logged = true,
+    @Rule(address = GET_LIST, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_SANDBOX_ID, PARAM_EFFECTIVE_ID, PARAM_ENABLE, PARAM_ADVERSARY}, scope = Rule.Param.REQUEST)
     private void getTeamListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -136,7 +136,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      * @apiParam {String} id Mandatory The SB_team Id
      * @apiSuccess {SB_team}   team            The SB_Team found.
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
     private void getTeamHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -156,7 +156,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      * @apiParam {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
      * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
      */
-    @Rule(address = UPDATE, method = Constantes.PUT, logged = true)
+    @Rule(address = UPDATE, method = Constants.PUT, logged = true)
     private void updateTeamHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject json = new JsonObject(req.getBody());
@@ -173,7 +173,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      * @apiGroup Team API
      * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
      */
-    @Rule(address = ADD, method = Constantes.POST, logged = true)
+    @Rule(address = ADD, method = Constants.POST, logged = true)
     private void addTeamHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

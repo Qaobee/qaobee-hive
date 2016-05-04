@@ -23,7 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.stats.SB_Stats;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -137,7 +137,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {Array} stats Mandatory The stats object to add.
      * @apiSuccess {Stats}   stats    The stats added.
      */
-    @Rule(address = ADD_STAT_BULK, method = Constantes.PUT, logged = true)
+    @Rule(address = ADD_STAT_BULK, method = Constants.PUT, logged = true)
     private void addBulkHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -169,7 +169,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Stats}   stats    The stats added.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = ADD_STAT, method = Constantes.PUT, logged = true, mandatoryParams = {CODE_FIELD, TIMER_FIELD, OWNER_FIELD},
+    @Rule(address = ADD_STAT, method = Constants.PUT, logged = true, mandatoryParams = {CODE_FIELD, TIMER_FIELD, OWNER_FIELD},
             scope = Rule.Param.BODY)
     private void addHandler(Message<String> message) {
         try {
@@ -201,7 +201,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {Array} limitResult Optional the max number element to return
      * @apiSuccess {Array}   Stats    The detail value statistics found.
      */
-    @Rule(address = GET_LISTDETAIL_VALUES, method = Constantes.POST, logged = true,
+    @Rule(address = GET_LISTDETAIL_VALUES, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
             scope = Rule.Param.BODY)
     private void getListDetailValue(Message<String> message) {
@@ -269,7 +269,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {Array} limitResult Optional the max number element to return
      * @apiSuccess {Array}   Stats    The statistics found.
      */
-    @Rule(address = GET_STAT_GROUPBY, method = Constantes.POST, logged = true,
+    @Rule(address = GET_STAT_GROUPBY, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
             scope = Rule.Param.BODY)
     private void getStatsGroupedByHandler(Message<String> message) {

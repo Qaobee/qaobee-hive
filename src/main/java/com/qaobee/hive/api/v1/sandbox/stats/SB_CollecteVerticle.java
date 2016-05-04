@@ -22,7 +22,7 @@ import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
@@ -134,7 +134,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} id
      * @apiSuccess {Object} collecte
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
     private void getHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -152,7 +152,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup SB_Collecet API
      * @apiSuccess {SB_Collecte} SB_Collecte updated
      */
-    @Rule(address = UPDATE, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
+    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
     private void updateHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject object = new JsonObject(req.getBody());
@@ -167,7 +167,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup SB_Collecet API
      * @apiSuccess {SB_Collecte} SB_Collecte create
      */
-    @Rule(address = ADD, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
+    @Rule(address = ADD, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
     private void addHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -192,7 +192,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Array} list of SB_Collecte
      */
-    @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID}, scope = Rule.Param.BODY)
     private void getListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

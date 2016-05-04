@@ -23,7 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -89,7 +89,7 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} seaonId SandBoxCfg season
      * @apiParam {String} sandBoxId sandbox Id
      */
-    @Rule(address = GETLIST, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID},
+    @Rule(address = GETLIST, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID},
             scope = Rule.Param.REQUEST)
     private void getSandoxCfgListHandler(Message<String> message) {
         try {
@@ -114,7 +114,7 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup SandBoxCfg API
      * @apiParam {String} _id SandBoxCfg id
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
     private void getSandboxCfgHandler(Message<String> message) {
         try {

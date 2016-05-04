@@ -32,7 +32,7 @@ import com.qaobee.hive.business.model.shipping.HostedPayment;
 import com.qaobee.hive.business.model.shipping.Payment;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -161,7 +161,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiSuccess {object} status Status with a redirect link if any
      */
-    @Rule(address = PAY, method = Constantes.POST, logged = true, mandatoryParams = {PARAM_PLAN_ID}, scope = Rule.Param.BODY)
+    @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = {PARAM_PLAN_ID}, scope = Rule.Param.BODY)
     private void payHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -196,7 +196,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @apiParam {object} payment Payment object : see https://gitlab.com/qaobee/com.qaobee.payplug/wikis/notification_url
      * @apiSuccess {object} status Status
      */
-    @Rule(address = IPN, method = Constantes.POST, mandatoryParams = {"id", "id", METADATA_FIELD, "created_at"}, scope = Rule.Param.BODY)
+    @Rule(address = IPN, method = Constants.POST, mandatoryParams = {"id", "id", METADATA_FIELD, "created_at"}, scope = Rule.Param.BODY)
     private void ipnHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {

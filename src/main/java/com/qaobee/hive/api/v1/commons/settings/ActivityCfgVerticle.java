@@ -25,7 +25,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -99,7 +99,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      * @apiParam {long} date the current date
      * @apiParam {String} paramFieldList the list of value
      */
-    @Rule(address = PARAMS, method = Constantes.GET, logged = true,
+    @Rule(address = PARAMS, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST}, scope = Rule.Param.REQUEST)
     private void getActivityCfgParamsHandler(Message<String> message) {
         try {
@@ -156,7 +156,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      * @apiGroup ActivityCfg API
      * @apiParam {String} activityId Activity Id
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true,
+    @Rule(address = GET, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE}, scope = Rule.Param.REQUEST)
     private void getActivityCfgHandler(Message<String> message) {
         try {

@@ -24,7 +24,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.settings.IndicatorCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -110,7 +110,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiParam {Array} listIndicators Mandatory list of indicator's codes
      * @apiSuccess {List}   indicators            The list of indicators found.
      */
-    @Rule(address = GET_BY_CODE, method = Constantes.POST, logged = true,
+    @Rule(address = GET_BY_CODE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
             scope = Rule.Param.BODY)
     private void getIndicatorByCodeHandler(Message<String> message) {
@@ -157,7 +157,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiParam {List} screen Mandatory The list of screen name.
      * @apiSuccess {List}   indicators            The list of indicators found.
      */
-    @Rule(address = GET_LIST, method = Constantes.POST, logged = true,
+    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
             scope = Rule.Param.BODY)
     private void getIndicatorsListHandler(Message<String> message) {
@@ -214,7 +214,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Indicator}   indicator            The Indicator found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constantes.GET, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
     private void getIndicatorHandler(Message<String> message) {
         try {

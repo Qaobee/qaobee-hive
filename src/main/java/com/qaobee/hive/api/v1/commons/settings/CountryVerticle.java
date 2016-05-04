@@ -23,7 +23,7 @@ import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -106,7 +106,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {List}   countries            The list of countries found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET_LIST, method = Constantes.GET, mandatoryParams = {PARAM_LOCAL},
+    @Rule(address = GET_LIST, method = Constants.GET, mandatoryParams = {PARAM_LOCAL},
             scope = Rule.Param.REQUEST)
     private void getListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -143,7 +143,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Country}   country            The Country found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET_ALPHA2, method = Constantes.GET, mandatoryParams = {PARAM_ALPHA2},
+    @Rule(address = GET_ALPHA2, method = Constants.GET, mandatoryParams = {PARAM_ALPHA2},
             scope = Rule.Param.REQUEST)
     private void getAlpha2Handler(Message<String> message) {
         try {
@@ -171,7 +171,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Country}   country            The Country found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constantes.GET, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
     private void getCountryHandler(Message<String> message) {
         try {

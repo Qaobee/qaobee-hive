@@ -6,7 +6,7 @@ import com.asana.models.User;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -87,7 +87,7 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} param URL encoded string from feedback.js
      * @apiSuccess {Object} status boolean status
      */
-    @Rule(address = POST_FEEDBACK, method = Constantes.POST)
+    @Rule(address = POST_FEEDBACK, method = Constants.POST)
     private void postFeedbackHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

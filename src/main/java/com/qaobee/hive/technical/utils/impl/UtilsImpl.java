@@ -19,7 +19,7 @@
 package com.qaobee.hive.technical.utils.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -211,7 +211,7 @@ public class UtilsImpl implements Utils {
             JsonObject userToSave = new JsonObject();
             final User user = Json.decodeValue(jsonUser.encode(), User.class);
             userToSave.putString("_id", user.get_id());
-            if (Constantes.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
+            if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
                 userToSave.putString("account.token", null);
                 user.getAccount().setToken(null);
                 userToSave.putNumber("account.tokenRenewDate", 0L);
@@ -238,7 +238,7 @@ public class UtilsImpl implements Utils {
     @Override
     public User isLoggedAndAdmin(RequestWrapper request) throws QaobeeException {
         User user = isUserLogged(request);
-        if (!habilitUtils.hasHabilitation(user, Constantes.ADMIN_HABILIT)) { // are we admin ?
+        if (!habilitUtils.hasHabilitation(user, Constants.ADMIN_HABILIT)) { // are we admin ?
             throw new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", request.getLocale()));
         }
         return user;

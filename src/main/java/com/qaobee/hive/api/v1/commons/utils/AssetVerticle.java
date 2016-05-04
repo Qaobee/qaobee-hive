@@ -26,7 +26,7 @@ import com.mongodb.gridfs.GridFSInputFile;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.constantes.Constantes;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -113,13 +113,13 @@ public class AssetVerticle extends AbstractGuiceVerticle {
             }
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
-            resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
-            resp.putString(Constantes.MESSAGE, e.getMessage());
+            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
+            resp.putString(Constants.MESSAGE, e.getMessage());
             message.reply(resp);
         } catch (final IllegalArgumentException e) {
             LOG.error(e.getMessage(), e);
-            resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
-            resp.putString(Constantes.MESSAGE, e.getMessage());
+            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
+            resp.putString(Constants.MESSAGE, e.getMessage());
             message.reply(resp);
         }
     }
@@ -145,7 +145,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
 
             if (res.size() != 1) {
                 FileUtils.deleteQuietly(new File(message.body().getString(FILENAME_FIELD)));
-                resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.NOT_LOGGED.getCode()).putString(Constantes.MESSAGE, Messages.getString("not.logged", message.body().getString("locale")));
+                resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.NOT_LOGGED.getCode()).putString(Constants.MESSAGE, Messages.getString("not.logged", message.body().getString("locale")));
             } else {
                 GridFS img = new GridFS(mongo.getDb(), "Assets");
                 GridFSInputFile gfsFile = img.createFile(FileUtils.readFileToByteArray(new File(message.body().getString(FILENAME_FIELD))));
@@ -166,8 +166,8 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     mongo.update(personToSave, User.class);
                 }
 
-                resp.putNumber(Constantes.STATUS_CODE, 200);
-                resp.putString(Constantes.MESSAGE, personToSave.encode());
+                resp.putNumber(Constants.STATUS_CODE, 200);
+                resp.putString(Constants.MESSAGE, personToSave.encode());
                 if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
                     vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
                 }
@@ -175,24 +175,24 @@ public class AssetVerticle extends AbstractGuiceVerticle {
             }
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
-            resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
-            resp.putString(Constantes.MESSAGE, e.getMessage());
+            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
+            resp.putString(Constants.MESSAGE, e.getMessage());
             if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
                 vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
             }
             message.reply(resp);
         } catch (final IllegalArgumentException e) {
             LOG.error(e.getMessage(), e);
-            resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
-            resp.putString(Constantes.MESSAGE, e.getMessage());
+            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
+            resp.putString(Constants.MESSAGE, e.getMessage());
             if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
                 vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
             }
             message.reply(resp);
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
-            resp.putNumber(Constantes.STATUS_CODE, ExceptionCodes.DATA_ERROR.getCode());
-            resp.putString(Constantes.MESSAGE, e.getMessage());
+            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.DATA_ERROR.getCode());
+            resp.putString(Constants.MESSAGE, e.getMessage());
             if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
                 vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
             }
