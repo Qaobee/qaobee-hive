@@ -34,7 +34,6 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -119,20 +118,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        final Handler<Message<String>> get = new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Country.class);
-                    message.reply(json.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        };
+        vertx.eventBus().registerHandler(GET, this::getCountryHandler);
 
         /**
          * @api {get} /api/1/commons/settings/country/getAlpha2 Read data of an Country
@@ -149,24 +135,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        final Handler<Message<String>> getAlpha2 = new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    Country country = countryBusiness.getCountryFromAlpha2(req.getParams().get(PARAM_ALPHA2).get(0));
-                    if (country == null) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                                "No Country defined for (" + req.getParams().get(PARAM_ALPHA2).get(0) + ")");
-                    }
-                    message.reply(Json.encode(country));
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        };
+        vertx.eventBus().registerHandler(GET_ALPHA2, this::getAlpha2Handler);
 
         /**
          * @api {get} /api/1/commons/settings/country/getList Read data of an Country
@@ -183,39 +152,56 @@ public class CountryVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        final Handler<Message<String>> getList = new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET_LIST, this::getListHandler);
+    }
 
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    Map<String, Object> criterias = new HashMap<>();
-                    criterias.put(PARAM_LOCAL, req.getParams().get(PARAM_LOCAL).get(0));
-                    String label = "undefined";
-                    // label
-                    if (req.getParams().containsKey(PARAM_LABEL) && StringUtils.isNotBlank(req.getParams().get(PARAM_LABEL).get(0))) {
-                        label = req.getParams().get(PARAM_LABEL).get(0);
-                        criterias.put(PARAM_LABEL, label);
-                    }
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Country.class);
-                    if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                                "No Country defined for (" + label + ")");
-                    }
-                    message.reply(resultJson.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
+    private void getListHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            Map<String, Object> criterias = new HashMap<>();
+            criterias.put(PARAM_LOCAL, req.getParams().get(PARAM_LOCAL).get(0));
+            String label = "undefined";
+            // label
+            if (req.getParams().containsKey(PARAM_LABEL) && StringUtils.isNotBlank(req.getParams().get(PARAM_LABEL).get(0))) {
+                label = req.getParams().get(PARAM_LABEL).get(0);
+                criterias.put(PARAM_LABEL, label);
             }
-        };
+            JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Country.class);
+            if (resultJson == null || resultJson.size() == 0) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR,
+                        "No Country defined for (" + label + ")");
+            }
+            message.reply(resultJson.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
 
-  /*
-         * Handlers registration
-   */
-        vertx.eventBus().registerHandler(GET, get);
-        vertx.eventBus().registerHandler(GET_ALPHA2, getAlpha2);
-        vertx.eventBus().registerHandler(GET_LIST, getList);
+    private void getAlpha2Handler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            Country country = countryBusiness.getCountryFromAlpha2(req.getParams().get(PARAM_ALPHA2).get(0));
+            if (country == null) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR,
+                        "No Country defined for (" + req.getParams().get(PARAM_ALPHA2).get(0) + ")");
+            }
+            message.reply(Json.encode(country));
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void getCountryHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Country.class);
+            message.reply(json.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 
 }

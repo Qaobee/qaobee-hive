@@ -31,7 +31,6 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -99,19 +98,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Activity.class);
-                    message.reply(json.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(GET, this::getActivityHandler);
 
         /**
          * @api {get} /api/v1/commons/settings/activity/getList List all activities
@@ -125,14 +112,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {List}   activities            List all activity
          *
          */
-        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
-                message.reply(resultJson.encode());
-            }
-        });
+        vertx.eventBus().registerHandler(GET_LIST, this::getListHandler);
 
         /**
          * @api {get} /api/v1/commons/settings/activity/getListEnable List of enabled activities
@@ -148,15 +128,29 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
          * @apiError DATA_ERROR Error on DB request
          * @apiError INVALID_PARAMETER Parameters not found
          */
-        vertx.eventBus().registerHandler(GET_LIST_ENABLE, new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET_LIST_ENABLE, this::getEnableActivitiesHandler);
+    }
 
-            @Override
-            public void handle(final Message<String> message) {
-                Map<String, Object> criterias = new HashMap<>();
-                criterias.put("enable", true);
-                JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
-                message.reply(resultJson.encode());
-            }
-        });
+    private void getEnableActivitiesHandler(Message message) {
+        Map<String, Object> criterias = new HashMap<>();
+        criterias.put("enable", true);
+        JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
+        message.reply(resultJson.encode());
+    }
+
+    private void getListHandler(Message message) {
+        JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
+        message.reply(resultJson.encode());
+    }
+
+    private void getActivityHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Activity.class);
+            message.reply(json.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 }

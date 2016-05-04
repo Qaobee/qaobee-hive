@@ -34,7 +34,6 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -133,21 +132,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          *
          * @apiError DATA_ERROR Error on DB request
          */
-        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), IndicatorCfg.class);
-                    message.reply(json.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
-
+        vertx.eventBus().registerHandler(GET, this::getIndicatorHandler);
         /**
          * @api {get} /api/1/commons/settings/indicator/getList Get a list of indicators
          * @apiVersion 0.1.0
@@ -164,56 +149,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {List}   indicators            The list of indicators found.
          *
          */
-        vertx.eventBus().registerHandler(GET_LIST, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject params = new JsonObject(req.getBody());
-                    // Activity ID
-                    String activityId = params.getString(PARAM_ACTIVITY_ID);
-                    // Country ID
-                    String countryId = params.getString(PARAM_COUNTRY_ID);
-                    // SCREEN
-                    JsonArray screen = params.getArray(PARAM_SCREEN);
-                    DBObject match;
-                    DBObject project;
-                    BasicDBObject dbObjectParent;
-                    BasicDBObject dbObjectChild;
-                    // $MATCH section
-                    dbObjectParent = new BasicDBObject();
-                    // - activity code
-                    dbObjectParent.put("activityId", activityId);
-                    // - country
-                    dbObjectParent.put("countryId", countryId);
-                    // - SCREEN
-                    dbObjectChild = new BasicDBObject("$in", screen.toArray());
-                    dbObjectParent.put("listScreen", dbObjectChild);
-                    match = new BasicDBObject("$match", dbObjectParent);
-                    // $PROJECT section
-                    dbObjectParent = new BasicDBObject();
-                    dbObjectParent.put("_id", 1);
-                    dbObjectParent.put("code", 1);
-                    dbObjectParent.put("activityId", 1);
-                    dbObjectParent.put("indicatorType", 1);
-                    dbObjectParent.put("listScreen", 1);
-                    dbObjectParent.put("listField", 1);
-                    dbObjectParent.put("listValues", 1);
-                    project = new BasicDBObject("$project", dbObjectParent);
-                    List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
-                    message.reply(resultJSon.encode());
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(GET_LIST, this::getIndicatorsListHandler);
 
         /**
          * @api {get} /api/1/commons/settings/indicator/getByCode Get indicators by code
@@ -231,44 +167,92 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
          * @apiSuccess {List}   indicators            The list of indicators found.
          *
          */
-        vertx.eventBus().registerHandler(GET_BY_CODE, new Handler<Message<String>>() {
-            /*
-             * (non-Javadoc)
-             *
-             * @see org.vertx.java.core.Handler#handle(java.lang.Object)
-             */
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    JsonObject params = new JsonObject(req.getBody());
-                    // Indicator code
-                    String activityId = params.getString(PARAM_ACTIVITY_ID);
-                    // Country ID
-                    String countryId = params.getString(PARAM_COUNTRY_ID);
-                    // List of indicators
-                    JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
-                    DBObject match;
-                    BasicDBObject dbObjectParent;
-                    BasicDBObject dbObjectChild;
-                    // $MATCH section
-                    dbObjectParent = new BasicDBObject();
-                    // - activity code
-                    dbObjectParent.put("activityId", activityId);
-                    // - country
-                    dbObjectParent.put("countryId", countryId);
-                    // - code
-                    dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
-                    dbObjectParent.put("code", dbObjectChild);
-                    match = new BasicDBObject("$match", dbObjectParent);
-                    List<DBObject> pipelineAggregation = Collections.singletonList(match);
-                    final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
-                    message.reply(resultJSon.encode());
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(GET_BY_CODE, this::getIndicatorByCodeHandler);
+    }
+
+    private void getIndicatorByCodeHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject params = new JsonObject(req.getBody());
+            // Indicator code
+            String activityId = params.getString(PARAM_ACTIVITY_ID);
+            // Country ID
+            String countryId = params.getString(PARAM_COUNTRY_ID);
+            // List of indicators
+            JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
+            DBObject match;
+            BasicDBObject dbObjectParent;
+            BasicDBObject dbObjectChild;
+            // $MATCH section
+            dbObjectParent = new BasicDBObject();
+            // - activity code
+            dbObjectParent.put("activityId", activityId);
+            // - country
+            dbObjectParent.put("countryId", countryId);
+            // - code
+            dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
+            dbObjectParent.put("code", dbObjectChild);
+            match = new BasicDBObject("$match", dbObjectParent);
+            List<DBObject> pipelineAggregation = Collections.singletonList(match);
+            final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
+            message.reply(resultJSon.encode());
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+
+    private void getIndicatorsListHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject params = new JsonObject(req.getBody());
+            // Activity ID
+            String activityId = params.getString(PARAM_ACTIVITY_ID);
+            // Country ID
+            String countryId = params.getString(PARAM_COUNTRY_ID);
+            // SCREEN
+            JsonArray screen = params.getArray(PARAM_SCREEN);
+            DBObject match;
+            DBObject project;
+            BasicDBObject dbObjectParent;
+            BasicDBObject dbObjectChild;
+            // $MATCH section
+            dbObjectParent = new BasicDBObject();
+            // - activity code
+            dbObjectParent.put("activityId", activityId);
+            // - country
+            dbObjectParent.put("countryId", countryId);
+            // - SCREEN
+            dbObjectChild = new BasicDBObject("$in", screen.toArray());
+            dbObjectParent.put("listScreen", dbObjectChild);
+            match = new BasicDBObject("$match", dbObjectParent);
+            // $PROJECT section
+            dbObjectParent = new BasicDBObject();
+            dbObjectParent.put("_id", 1);
+            dbObjectParent.put("code", 1);
+            dbObjectParent.put("activityId", 1);
+            dbObjectParent.put("indicatorType", 1);
+            dbObjectParent.put("listScreen", 1);
+            dbObjectParent.put("listField", 1);
+            dbObjectParent.put("listValues", 1);
+            project = new BasicDBObject("$project", dbObjectParent);
+            List<DBObject> pipelineAggregation = Arrays.asList(match, project);
+            final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, IndicatorCfg.class);
+            message.reply(resultJSon.encode());
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+
+    private void getIndicatorHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), IndicatorCfg.class);
+            message.reply(json.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 }
