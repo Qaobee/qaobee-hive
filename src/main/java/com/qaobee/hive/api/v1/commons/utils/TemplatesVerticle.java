@@ -25,7 +25,6 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import freemarker.template.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.file.impl.PathAdjuster;
 import org.vertx.java.core.impl.VertxInternal;
@@ -54,6 +53,7 @@ public class TemplatesVerticle extends AbstractGuiceVerticle {
     private static final String TEMPLATE_PATH = "mailTemplates";
     @Inject
     private Utils utils;
+    private Configuration cfg;
 
     /**
      * Start void.
@@ -62,48 +62,41 @@ public class TemplatesVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-
-        final Configuration cfg = new Configuration(new Version("2.3.23"));
-
+        cfg = new Configuration(new Version("2.3.23"));
         // Where do we load the templates from:
         try {
             cfg.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, TEMPLATE_PATH)));
         } catch (final IOException e) {
             LOG.error(e.getMessage(), e);
         }
-
         // Some other recommended settings:
         cfg.setIncompatibleImprovements(new Version(2, 3, 20));
         cfg.setDefaultEncoding("UTF-8");
         cfg.setLocale(Locale.US);
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 
-        vertx.eventBus().registerHandler(TEMPLATE_GENERATE, new Handler<Message<JsonObject>>() {
-            @Override
-            public void handle(final Message<JsonObject> message) {
-                final Map<String, Object> input = new HashMap<>();
+        vertx.eventBus().registerHandler(TEMPLATE_GENERATE, this::generatePDFHandler);
+    }
 
-                try {
-                    if (!message.body().containsField(DATA) || !message.body().containsField(TEMPLATE)) {
-                        message.fail(ExceptionCodes.MANDATORY_FIELD.getCode(), "wrong json format");
-                        return;
-                    }
-                    final JsonObject data = message.body().getObject(DATA);
-
-                    input.putAll(data.toMap());
-                    final Writer writer = new StringWriter();
-                    final Template template = cfg.getTemplate(message.body().getString(TEMPLATE));
-                    template.process(input, writer);
-                    final JsonObject res = new JsonObject();
-                    final String resTpl = writer.toString();
-                    res.putString("result", resTpl);
-
-                    message.reply(res);
-                } catch (IOException | TemplateException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
+    private void generatePDFHandler(Message<JsonObject> message) {
+        final Map<String, Object> input = new HashMap<>();
+        try {
+            if (!message.body().containsField(DATA) || !message.body().containsField(TEMPLATE)) {
+                message.fail(ExceptionCodes.MANDATORY_FIELD.getCode(), "wrong json format");
+                return;
             }
-        });
+            final JsonObject data = message.body().getObject(DATA);
+            input.putAll(data.toMap());
+            final Writer writer = new StringWriter();
+            final Template template = cfg.getTemplate(message.body().getString(TEMPLATE));
+            template.process(input, writer);
+            final JsonObject res = new JsonObject();
+            final String resTpl = writer.toString();
+            res.putString("result", resTpl);
+            message.reply(res);
+        } catch (IOException | TemplateException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+        }
     }
 }

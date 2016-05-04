@@ -129,8 +129,8 @@ public class Main extends AbstractGuiceVerticle {
     }
 
     /**
-     *  @param promises Promises
-     * @param rm Route matcher
+     * @param promises    Promises
+     * @param rm          Route matcher
      * @param startResult Start result
      */
     private void runWebServer(List<Promise<String, Void>> promises, Handler<HttpServerRequest> rm, Future<Void> startResult) {
@@ -165,7 +165,6 @@ public class Main extends AbstractGuiceVerticle {
     }
 
     /**
-     *
      * @return start promises
      */
     private List<Promise<String, Void>> loadVerticles() {
@@ -175,19 +174,18 @@ public class Main extends AbstractGuiceVerticle {
         promises.add(whenContainer.deployWorkerVerticle(Mailer.class.getCanonicalName(), container.config().getObject("mailer.mod"), 1, true));
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
-        for (final Class<?> restMod : restModules) {
-            manageRules(restMod);
-            if (restMod.getAnnotation(DeployableVerticle.class).isWorker())
+        restModules.forEach(restMod -> {
+            if (restMod.getAnnotation(DeployableVerticle.class).isWorker()) {
                 promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), container.config(), 2, true));
-            else
+            } else {
                 promises.add(whenContainer.deployVerticle(restMod.getName(), container.config()));
-        }
+            }
+            manageRules(restMod);
+        });
         return promises;
-
     }
 
     /**
-     *
      * @param req Request
      */
     private void apiHandler(HttpServerRequest req) {
@@ -208,21 +206,18 @@ public class Main extends AbstractGuiceVerticle {
                     .putString("action", "mark");
             vertx.eventBus().send("metrix", json);
             String busAddress = container.config().getObject(RUNTIME).getInteger("version") + "." + StringUtils.join(path, '.');
-            boolean succeed = true;
-            if (rules.containsKey(busAddress)) {
-                succeed = testRequest(req, busAddress, wrapper);
-            }
-            if (succeed) {
+            if (rules.containsKey(busAddress) && testRequest(req, busAddress, wrapper)) {
                 vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constantes.TIMEOUT, message -> {
                     stopTimer(StringUtils.join(wrapper.getPath(), '.'));
                     handleResult(message, req);
                 });
+            } else {
+                manage404Error(req);
             }
         });
     }
 
     /**
-     *
      * @param req Request
      */
     private void assetUploadHandler(HttpServerRequest req) {
@@ -249,7 +244,6 @@ public class Main extends AbstractGuiceVerticle {
     }
 
     /**
-     *
      * @param req Request
      */
     private void getAssetHandler(HttpServerRequest req) {
@@ -268,10 +262,9 @@ public class Main extends AbstractGuiceVerticle {
     }
 
     /**
-     *
      * @param request Request
-     * @param dir Directory
-     * @param req HTTP Request
+     * @param dir     Directory
+     * @param req     HTTP Request
      * @return Handler
      */
     private Handler<HttpServerFileUpload> getUploadHandler(final JsonObject request, final File dir, final HttpServerRequest req) {
@@ -419,13 +412,17 @@ public class Main extends AbstractGuiceVerticle {
                 }
                 req.response().end(exStr);
             } else {
-                final JsonObject jsonResp = new JsonObject();
-                jsonResp.putBoolean("status", false);
-                jsonResp.putString(MESSAGE, "Nothing here");
-                jsonResp.putNumber("httpCode", 404);
-                req.response().end(jsonResp.encode());
+               manage404Error(req);
             }
         }
+    }
+
+    private static void manage404Error(HttpServerRequest req) {
+        final JsonObject jsonResp = new JsonObject();
+        jsonResp.putBoolean("status", false);
+        jsonResp.putString(MESSAGE, "Nothing here");
+        jsonResp.putNumber("httpCode", 404);
+        req.response().end(jsonResp.encode());
     }
 
 

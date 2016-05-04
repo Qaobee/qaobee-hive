@@ -29,7 +29,6 @@ import freemarker.template.Version;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.file.impl.PathAdjuster;
 import org.vertx.java.core.impl.VertxInternal;
@@ -38,7 +37,6 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.inject.Inject;
 import java.io.*;
-import java.util.Map;
 
 /**
  * The Class PDFVerticle.
@@ -59,6 +57,57 @@ public class PDFVerticle extends AbstractGuiceVerticle {
     @Inject
     private Utils utils;
 
+    @Override
+    public void start() {
+        super.start();
+        LOG.debug(this.getClass().getName() + " started");
+        vertx.eventBus().registerHandler(GENERATE_PDF, this::generatePDFHandler);
+    }
+
+    private void generatePDFHandler(Message<JsonObject> message) {
+        try {
+            if (!message.body().containsField(DATA) || !message.body().containsField(TEMPLATE) || !message.body().containsField(FILE_NAME)) {
+                message.fail(ExceptionCodes.MANDATORY_FIELD.getCode(), "wrong json format");
+                return;
+            }
+            final JsonObject data = message.body().getObject(DATA);
+            // READING CSS
+
+            final StringBuilder cssStr = new StringBuilder();
+            for (final Object c : container.config().getObject("pdf").getArray("css").toList()) {
+                cssStr.append(FileUtils.readFileToString(new File(PathAdjuster.adjust((VertxInternal) vertx, (String) c))));
+            }
+            data.putString("css", cssStr.toString());
+            final String result = process(message.body().getString(TEMPLATE), data);
+            String datadir = System.getProperty("user.home");
+            if (container.env().containsKey("OPENSHIFT_DATA_DIR")) {
+                datadir = container.env().get("OPENSHIFT_DATA_DIR");
+            }
+            File dir = new File(datadir + "/tmp/");
+            if(!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            final File temp = new File(datadir + "/tmp/" + message.body().getString(FILE_NAME) + ".pdf");
+            if (temp.exists()) {
+                boolean res = temp.delete();
+                LOG.debug(String.valueOf(res));
+            }
+            final OutputStream os = new FileOutputStream(temp);
+            final ITextRenderer renderer = new ITextRenderer();
+            renderer.getSharedContext().setReplacedElementFactory(new MediaReplacedElementFactory(renderer.getSharedContext().getReplacedElementFactory()));
+            renderer.setDocumentFromString(result);
+            renderer.layout();
+            renderer.createPDF(os);
+            final JsonObject res = new JsonObject();
+            res.putString(PDF, temp.getAbsolutePath());
+            message.reply(res);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+
     /**
      * Process.
      *
@@ -72,61 +121,5 @@ public class PDFVerticle extends AbstractGuiceVerticle {
         Template template = cfg.getTemplate(templatePath);
         template.process(params.toMap(), out);
         return out.getBuffer().toString();
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        final Map<String, String> envs = container.env();
-        LOG.debug(this.getClass().getName() + " started");
-        final Handler<Message<JsonObject>> generatePDFHandler = new Handler<Message<JsonObject>>() {
-            @Override
-            public void handle(final Message<JsonObject> message) {
-                try {
-                    if (!message.body().containsField(DATA) || !message.body().containsField(TEMPLATE) || !message.body().containsField(FILE_NAME)) {
-                        message.fail(ExceptionCodes.MANDATORY_FIELD.getCode(), "wrong json format");
-                        return;
-                    }
-                    final JsonObject data = message.body().getObject(DATA);
-                    // READING CSS
-
-                    final StringBuilder cssStr = new StringBuilder();
-                    for (final Object c : container.config().getObject("pdf").getArray("css").toList()) {
-                        cssStr.append(FileUtils.readFileToString(new File(PathAdjuster.adjust((VertxInternal) vertx, (String) c))));
-                    }
-                    data.putString("css", cssStr.toString());
-                    final String result = process(message.body().getString(TEMPLATE), data);
-                    String datadir = System.getProperty("user.home");
-                    if (envs.containsKey("OPENSHIFT_DATA_DIR")) {
-                        datadir = envs.get("OPENSHIFT_DATA_DIR");
-                    }
-                    File dir = new File(datadir + "/tmp/");
-                    if(!dir.exists()) {
-                        dir.mkdirs();
-                    }
-
-                    final File temp = new File(datadir + "/tmp/" + message.body().getString(FILE_NAME) + ".pdf");
-                    if (temp.exists()) {
-                        boolean res = temp.delete();
-                        LOG.debug(String.valueOf(res));
-                    }
-                    final OutputStream os = new FileOutputStream(temp);
-                    final ITextRenderer renderer = new ITextRenderer();
-                    renderer.getSharedContext().setReplacedElementFactory(new MediaReplacedElementFactory(renderer.getSharedContext().getReplacedElementFactory()));
-                    renderer.setDocumentFromString(result);
-                    renderer.layout();
-                    renderer.createPDF(os);
-                    final JsonObject res = new JsonObject();
-                    res.putString(PDF, temp.getAbsolutePath());
-                    message.reply(res);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                }
-            }
-        };
-
-        // Handlers declaration
-        vertx.eventBus().registerHandler(GENERATE_PDF, generatePDFHandler);
     }
 }

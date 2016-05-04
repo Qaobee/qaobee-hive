@@ -32,7 +32,6 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -76,20 +75,10 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * Country ID
      */
     public static final String PARAM_COUNTRY_ID = "countryId";
-    /**
-     * Reference date
-     */
-    public static final String PARAM_DATE = "date";
     private static final Logger LOG = LoggerFactory.getLogger(SeasonVerticle.class);
-    /**
-     * The Mongo.
-     */
-/* Injections */
+    private static final String END_DATE_FIELD = "endDate";
     @Inject
     private MongoDB mongo;
-    /**
-     * The Utils.
-     */
     @Inject
     private Utils utils;
 
@@ -120,20 +109,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
          * @apiParam {String} _id Mandatory The season Id.
          * @apiSuccess {Season} the object found
          */
-        vertx.eventBus().registerHandler(GET, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                try {
-                    final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                    final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Season.class);
-                    message.reply(json.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(GET, this::getSeasonHandler);
 
         /**
          * @apiDescription Retrieve all seasons for one activity and one country
@@ -145,31 +121,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
          * @apiGroup Season API
          * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
          */
-        vertx.eventBus().registerHandler(GET_LIST_BY_ACTIVITY, new Handler<Message<String>>() {
-
-            @Override
-            public void handle(final Message<String> message) {
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    // Activity ID
-                    String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
-                    // Country ID
-                    String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
-                    // Creation of the request
-                    Map<String, Object> criterias = new HashMap<>();
-                    criterias.put("activityId", activityId);
-                    criterias.put("countryId", countryId);
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
-                    if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
-                    }
-                    message.reply(resultJson.encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }
-        });
+        vertx.eventBus().registerHandler(GET_LIST_BY_ACTIVITY, this::getListByActivityHandler);
 
         /**
          * @apiDescription Retrieve current season for one activity and one country
@@ -181,40 +133,70 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
          * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
          * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
          */
-        vertx.eventBus().registerHandler(GET_CURRENT, new Handler<Message<String>>() {
+        vertx.eventBus().registerHandler(GET_CURRENT, this::getCurrentSeasonHandler);
+    }
 
-            @Override
-            public void handle(final Message<String> message) {
-                LOG.debug("getCurrentHandler() - Season");
-                final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-                try {
-                    // Activity ID
-                    String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
-                    // Country ID
-                    String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
-                    // Creation of the request
-                    Map<String, Object> criterias = new HashMap<>();
-                    criterias.put("activityId", activityId);
-                    criterias.put("countryId", countryId);
-                    JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
-                    long currentDate = System.currentTimeMillis();
-                    if (resultJson == null || resultJson.size() == 0) {
-                        throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
-                    }
-                    for (int i = 0; i < resultJson.size(); i++) {
-                        JsonObject s = resultJson.get(i);
-                        if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
-                            message.reply(s.encode());
-                            return;
-                        }
-                    }
-                    message.reply(new JsonObject().encode());
-                } catch (final QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
+    private void getCurrentSeasonHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            // Activity ID
+            String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
+            // Country ID
+            String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
+            // Creation of the request
+            Map<String, Object> criterias = new HashMap<>();
+            criterias.put(PARAM_ACTIVITY_ID, activityId);
+            criterias.put(PARAM_COUNTRY_ID, countryId);
+            JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, Season.class);
+            long currentDate = System.currentTimeMillis();
+            if (resultJson == null || resultJson.size() == 0) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
+            }
+            for (int i = 0; i < resultJson.size(); i++) {
+                JsonObject s = resultJson.get(i);
+                if (s.getLong(END_DATE_FIELD, 0) > currentDate && s.getLong("startDate") < currentDate) {
+                    message.reply(s.encode());
+                    return;
                 }
             }
-        });
+            message.reply(new JsonObject().encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void getListByActivityHandler(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            // Activity ID
+            String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
+            // Country ID
+            String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
+            // Creation of the request
+            Map<String, Object> criterias = new HashMap<>();
+            criterias.put(PARAM_ACTIVITY_ID, activityId);
+            criterias.put(PARAM_COUNTRY_ID, countryId);
+            JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, Season.class);
+            if (resultJson == null || resultJson.size() == 0) {
+                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
+            }
+            message.reply(resultJson.encode());
+        } catch (final QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    private void getSeasonHandler(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Season.class);
+            message.reply(json.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 
 }
