@@ -204,11 +204,13 @@ public class Main extends AbstractGuiceVerticle {
                     .putString("action", "mark");
             vertx.eventBus().send("metrix", json);
             String busAddress = container.config().getObject(RUNTIME).getInteger("version") + "." + StringUtils.join(path, '.');
-            if (rules.containsKey(busAddress) && testRequest(req, busAddress, wrapper)) {
-                vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> {
-                    stopTimer(StringUtils.join(wrapper.getPath(), '.'));
-                    handleResult(message, req);
-                });
+            if (rules.containsKey(busAddress)) {
+                if(testRequest(req, busAddress, wrapper)) {
+                    vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> {
+                        stopTimer(StringUtils.join(wrapper.getPath(), '.'));
+                        handleResult(message, req);
+                    });
+                }
             } else {
                 manage404Error(req);
             }
