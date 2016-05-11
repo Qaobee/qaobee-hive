@@ -42,14 +42,14 @@ public class Comment {
     private long datCreate;
 
     /**
-     * Content.
+     * content.
      */
-    private String Content;
+    private String content;
 
     /**
-     * Content max size.
+     * content max size.
      */
-    private int ContentMaxsize;
+    private int contentMaxsize;
 
     /**
      * Comment's status.
@@ -98,7 +98,7 @@ public class Comment {
      * @return the content
      */
     public final String getContent() {
-        return Content;
+        return content;
     }
 
     /**
@@ -107,7 +107,7 @@ public class Comment {
      * @param content the new content
      */
     public final void setContent(final String content) {
-        Content = content;
+        this.content = content;
     }
 
     /**
@@ -116,7 +116,7 @@ public class Comment {
      * @return the content maxsize
      */
     public final int getContentMaxsize() {
-        return ContentMaxsize;
+        return contentMaxsize;
     }
 
     /**
@@ -125,7 +125,7 @@ public class Comment {
      * @param contentMaxsize the new content maxsize
      */
     public final void setContentMaxsize(final int contentMaxsize) {
-        ContentMaxsize = contentMaxsize;
+        this.contentMaxsize = contentMaxsize;
     }
 
     /**

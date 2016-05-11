@@ -40,7 +40,7 @@ public class Participant {
     /**
      * Structure ID
      */
-    private String StructureId;
+    private String structureId;
     /**
      * Participant Type
      */
@@ -88,7 +88,7 @@ public class Participant {
      * @return String : structure ID
      */
     public String getStructureId() {
-        return StructureId;
+        return structureId;
     }
 
     /**
@@ -97,7 +97,7 @@ public class Participant {
      * @param structureId (String) : structure ID
      */
     public void setStructureId(String structureId) {
-        StructureId = structureId;
+        this.structureId = structureId;
     }
 
     /**

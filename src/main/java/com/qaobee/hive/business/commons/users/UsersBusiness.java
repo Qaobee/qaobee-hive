@@ -20,23 +20,13 @@ package com.qaobee.hive.business.commons.users;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 
-import java.util.regex.Pattern;
-
 /**
  * The interface Users business.
  *
  * @author jerome
  */
+@FunctionalInterface
 public interface UsersBusiness {
-
-    /**
-     * The constant VALID_NAME_REGEX.
-     */
-    Pattern VALID_NAME_REGEX = Pattern.compile("^([a-z'àâéèêôùûç\\ \\-]+)$", Pattern.CASE_INSENSITIVE);
-    /**
-     * The constant VALID_LOGIN_REGEX.
-     */
-    Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9\\.\\-]+)$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Check user informations boolean.

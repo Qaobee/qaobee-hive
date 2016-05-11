@@ -113,7 +113,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     /**
      * Periodic timer, each day it runs
      */
-    private void periodicHandler(Long aLong) {
+    private void periodicHandler(Long aLong) { // NOSONAR
         // oh we are ticking each 24h after the startup time
         // First, let's collect all the guys
         DBObject statusQuery = new BasicDBObject(STATUS, "paid");
@@ -126,7 +126,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         }
     }
 
-    private void triggeredPaymentHandler(Message<JsonObject> message) {
+    private void triggeredPaymentHandler(Message<JsonObject> message) { // NOSONAR
         final JsonObject user = message.body();
         JsonArray listPlan = user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD);
         for (int i = 0; i < listPlan.size(); i++) {
@@ -160,7 +160,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {object} status Status with a redirect link if any
      */
     @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = {PARAM_PLAN_ID}, scope = Rule.Param.BODY)
-    private void payHandler(Message<String> message) {
+    private void payHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject body = new JsonObject(req.getBody());
@@ -195,7 +195,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {object} status Status
      */
     @Rule(address = IPN, method = Constants.POST, mandatoryParams = {"id", "id", METADATA_FIELD, "created_at"}, scope = Rule.Param.BODY)
-    private void ipnHandler(Message<String> message) {
+    private void ipnHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject body = new JsonObject(req.getBody());

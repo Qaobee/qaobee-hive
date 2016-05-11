@@ -26,12 +26,17 @@ import com.qaobee.hive.technical.utils.AuthCheck;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
+import java.util.regex.Pattern;
 
 /**
+ * The type Users business.
+ *
  * @author jerome
  */
 public class UsersBusinessImpl implements UsersBusiness {
 
+    private static final Pattern VALID_NAME_REGEX = Pattern.compile("^([a-z'àâéèêôùûç \\-]+)$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9\\.\\-]+)$", Pattern.CASE_INSENSITIVE);
     @Inject
     private AuthCheck authCheck;
 

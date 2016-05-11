@@ -40,24 +40,24 @@ public class ServerHook implements EventBusBridgeHook {
 
     @Override
     public boolean handleSendOrPub(SockJSSocket sock, boolean send, JsonObject msg, String address) {
-        LOG.info("handleSendOrPub, sock = " + sock + ", send = " + send + ", address = " + address);
+        LOG.info(String.format("handleSendOrPub, sock = %s, send = %s, address = %s", sock, send, address));
         return true;
     }
 
     @Override
     public boolean handlePreRegister(SockJSSocket sock, String address) {
-        LOG.info("handlePreRegister, sock = " + sock + ", address = " + address);
+        LOG.info(String.format("handlePreRegister, sock = %s, address = %s", sock, address));
         return true;
     }
 
     @Override
     public void handlePostRegister(SockJSSocket sock, String address) {
-        LOG.info("handlePostRegister, sock = " + sock + ", address = " + address);
+        LOG.info(String.format("handlePostRegister, sock = %s, address = %s", sock, address));
     }
 
     @Override
     public boolean handleUnregister(SockJSSocket sock, String address) {
-        LOG.info("handleUnregister, sock = " + sock + ", address = " + address);
+        LOG.info(String.format("handleUnregister, sock = %s, address = %s", sock, address));
         return true;
     }
 

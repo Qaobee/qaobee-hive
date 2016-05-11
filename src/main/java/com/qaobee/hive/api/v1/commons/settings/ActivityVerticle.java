@@ -90,7 +90,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiError INVALID_PARAMETER Parameters not found
      */
     @Rule(address = GET_LIST_ENABLE, method = Constants.GET)
-    private void getEnableActivitiesHandler(Message message) {
+    private void getEnableActivitiesHandler(Message message) { // NOSONAR
         Map<String, Object> criterias = new HashMap<>();
         criterias.put("enable", true);
         JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
@@ -107,7 +107,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {List}   activities            List all activity
      */
     @Rule(address = GET_LIST, method = Constants.GET)
-    private void getListHandler(Message message) {
+    private void getListHandler(Message message) { // NOSONAR
         JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
         message.reply(resultJson.encode());
     }
@@ -124,7 +124,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = GET, method = Constants.GET, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    private void getActivityHandler(Message<String> message) {
+    private void getActivityHandler(Message<String> message) { // NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Activity.class);

@@ -112,7 +112,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Array} list of persons
      */
     @Rule(address = GET_LIST_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST)
-    private void getPersonListBySandboxHandler(Message<String> message) {
+    private void getPersonListBySandboxHandler(Message<String> message) {// NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             CriteriaBuilder criteria = new CriteriaBuilder()
@@ -138,7 +138,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Array} list of persons
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true, mandatoryParams = {PARAM_LIST_ID, PARAM_LIST_FIELD}, scope = Rule.Param.BODY)
-    private void getPersonListHandler(Message<String> message) {
+    private void getPersonListHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
@@ -148,10 +148,10 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
             BasicDBObject dbObjectChild = new BasicDBObject("$in", listId.toArray());
             dbObjectParent.put("_id", dbObjectChild);
             DBObject match = new BasicDBObject("$match", dbObjectParent);
-                    dbObjectParent = new BasicDBObject();
-                    for (Object field : listfield) {
-                        dbObjectParent.put((String) field, "$" + field);
-                    }
+            dbObjectParent = new BasicDBObject();
+            for (Object field : listfield) {
+                dbObjectParent.put((String) field, "$" + field);
+            }
             DBObject project = new BasicDBObject("$project", dbObjectParent);
             List<DBObject> pipelineAggregation = Arrays.asList(match, project);
             final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, SB_Person.class);
@@ -172,7 +172,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY)
-    private void updatePersonHandler(Message<String> message) {
+    private void updatePersonHandler(Message<String> message) {// NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject json = new JsonObject(req.getBody());
         final String id = mongo.update(json, SB_Person.class);
@@ -190,7 +190,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.REQUEST)
-    private void getPersonHandler(Message<String> message) {
+    private void getPersonHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             utils.testMandatoryParams(req.getParams(), PARAM_PERSON_ID);
@@ -210,7 +210,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {"person"}, scope = Rule.Param.BODY)
-    private void addPersonHandler(Message<String> message) {
+    private void addPersonHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject dataContainer = new JsonObject(req.getBody());

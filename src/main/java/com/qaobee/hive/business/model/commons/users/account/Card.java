@@ -6,8 +6,8 @@ package com.qaobee.hive.business.model.commons.users.account;
 public class Card {
     private String last4;
     private String country;
-    private int exp_month;
-    private int exp_year;
+    private int exp_month; // NOSONAR
+    private int exp_year; // NOSONAR
     private String brand;
     private String id;
 
@@ -52,7 +52,7 @@ public class Card {
      *
      * @return the exp month
      */
-    public int getExp_month() {
+    public int getExp_month() { // NOSONAR
         return exp_month;
     }
 
@@ -61,7 +61,7 @@ public class Card {
      *
      * @param exp_month the exp month
      */
-    public void setExp_month(int exp_month) {
+    public void setExp_month(int exp_month) { // NOSONAR
         this.exp_month = exp_month;
     }
 
@@ -70,7 +70,7 @@ public class Card {
      *
      * @return the exp year
      */
-    public int getExp_year() {
+    public int getExp_year() { // NOSONAR
         return exp_year;
     }
 
@@ -79,7 +79,7 @@ public class Card {
      *
      * @param exp_year the exp year
      */
-    public void setExp_year(int exp_year) {
+    public void setExp_year(int exp_year) { // NOSONAR
         this.exp_year = exp_year;
     }
 

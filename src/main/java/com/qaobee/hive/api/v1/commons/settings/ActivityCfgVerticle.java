@@ -101,7 +101,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = PARAMS, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST}, scope = Rule.Param.REQUEST)
-    private void getActivityCfgParamsHandler(Message<String> message) {
+    private void getActivityCfgParamsHandler(Message<String> message) { // NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             // Activity ID
@@ -118,9 +118,9 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
             // $MATCH section
             dbObjectParent = new BasicDBObject();
             // - activityId
-            dbObjectParent.put("activityId", activityId);
+            dbObjectParent.put(PARAM_ACTIVITY_ID, activityId);
             // - countryId
-            dbObjectParent.put("countryId", countryId);
+            dbObjectParent.put(PARAM_COUNTRY_ID, countryId);
             // - date between start and end dates
             dbObjectParent.put("startDate", new BasicDBObject("$lte", dateRef));
             dbObjectParent.put("endDate", new BasicDBObject("$gte", dateRef));
@@ -158,7 +158,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE}, scope = Rule.Param.REQUEST)
-    private void getActivityCfgHandler(Message<String> message) {
+    private void getActivityCfgHandler(Message<String> message) { // NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             // Activity ID
@@ -169,8 +169,8 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
             Long dateRef = Long.parseLong(req.getParams().get(PARAM_DATE).get(0));
             // Creation of request
             CriteriaBuilder criterias = new CriteriaBuilder();
-            criterias.add("activityId", activityId);
-            criterias.add("countryId", countryId);
+            criterias.add(PARAM_ACTIVITY_ID, activityId);
+            criterias.add(PARAM_COUNTRY_ID, countryId);
             criterias.between("startDate", "endDate", dateRef);
             // Call to mongo
             JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, ActivityCfg.class);

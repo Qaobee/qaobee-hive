@@ -101,7 +101,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
     @Rule(address = GET_CURRENT, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
             scope = Rule.Param.REQUEST)
-    private void getCurrentSeasonHandler(Message<String> message) {
+    private void getCurrentSeasonHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             // Activity ID
@@ -144,7 +144,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
     @Rule(address = GET_LIST_BY_ACTIVITY, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
             scope = Rule.Param.REQUEST)
-    private void getListByActivityHandler(Message<String> message) {
+    private void getListByActivityHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             // Activity ID
@@ -177,7 +177,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
-    private void getSeasonHandler(Message<String> message) {
+    private void getSeasonHandler(Message<String> message) { // NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Season.class);

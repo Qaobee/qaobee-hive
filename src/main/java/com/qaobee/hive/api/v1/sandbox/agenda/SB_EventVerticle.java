@@ -161,7 +161,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
-    private void getEventHandler(Message<String> message) {
+    private void getEventHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_Event.class).encode());
@@ -181,7 +181,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = UPDATE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
             scope = Rule.Param.BODY)
-    private void updateEventHandler(Message<String> message) {
+    private void updateEventHandler(Message<String> message) {// NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject event = new JsonObject(req.getBody());
@@ -203,7 +203,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = ADD, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
             scope = Rule.Param.BODY)
-    private void addEventHandler(Message<String> message) {
+    private void addEventHandler(Message<String> message) {// NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject event = new JsonObject(req.getBody());
@@ -232,9 +232,9 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID},
             scope = Rule.Param.BODY)
-    private void getEventListHandler(Message message) {
+    private void getEventListHandler(Message<String> message) {// NOSONAR
         try {
-            final RequestWrapper req = Json.decodeValue((String) message.body(), RequestWrapper.class);
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
             // Aggregat section
             DBObject match;

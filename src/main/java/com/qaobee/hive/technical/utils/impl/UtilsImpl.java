@@ -156,7 +156,7 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void testMandatoryParams(Map<String, ?> mapParams, String... fields) {
+    public void testMandatoryParams(Map<String, ?> mapParams, String... fields) throws QaobeeException {
         final List<String> missingFields = new ArrayList<>();
         Map<String, ?> map = new HashMap<>();
         if (mapParams != null) {
@@ -178,13 +178,13 @@ public class UtilsImpl implements Utils {
             }
         }
         if (!missingFields.isEmpty()) {
-            throw new IllegalArgumentException("Missing mandatory parameters : " + missingFields);
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "Missing mandatory parameters : " + missingFields);
         }
     }
 
     @Override
-    public void testMandatoryParams(String body, final String... fields) throws IllegalArgumentException {
-        testMandatoryParams(new JsonObject(StringUtils.isBlank(body)?"{}":body).toMap(), fields);
+    public void testMandatoryParams(String body, final String... fields) throws QaobeeException {
+        testMandatoryParams(new JsonObject(StringUtils.isBlank(body) ? "{}" : body).toMap(), fields);
     }
 
     @Override

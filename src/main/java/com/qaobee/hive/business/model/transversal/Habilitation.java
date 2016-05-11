@@ -37,7 +37,7 @@ public class Habilitation implements Serializable {
     /**
      * Internal identifier
      */
-    private String _id;
+    private String _id; // NOSONAR
     /**
      * Key
      */
@@ -88,7 +88,7 @@ public class Habilitation implements Serializable {
      *
      * @return String : ID
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -97,7 +97,7 @@ public class Habilitation implements Serializable {
      *
      * @param _id (String) : ID
      */
-    public void set_id(final String _id) {
+    public void set_id(final String _id) { // NOSONAR
         this._id = _id;
     }
 }

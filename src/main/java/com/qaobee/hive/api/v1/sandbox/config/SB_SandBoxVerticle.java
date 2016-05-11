@@ -114,7 +114,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_SB_CFG_ID},
             scope = Rule.Param.BODY)
-    private void updateHandler(Message<String> message) {
+    private void updateHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject body = new JsonObject(req.getBody());
@@ -136,7 +136,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_USER_ID, PARAM_ACTIVITY_ID},
             scope = Rule.Param.BODY)
-    private void addHandler(Message<String> message) {
+    private void addHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject jsonReq = new JsonObject(req.getBody());
@@ -162,7 +162,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {sandBox}   sandBox    The sandBox updated.
      */
     @Rule(address = GET_LIST_BY_OWNER, method = Constants.GET, logged = true)
-    private void getListByOwnerHandler(Message<String> message) {
+    private void getListByOwnerHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             CriteriaBuilder cb = new CriteriaBuilder();
@@ -194,7 +194,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = GET_BY_OWNER, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
             scope = Rule.Param.REQUEST)
-    private void getByOwnerHandler(Message<String> message) {
+    private void getByOwnerHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             Map<String, List<String>> params = req.getParams();

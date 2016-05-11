@@ -84,7 +84,7 @@ public class TemplatesVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(TEMPLATE_GENERATE, this::generatePDFHandler);
     }
 
-    private void generatePDFHandler(Message<JsonObject> message) {
+    private void generatePDFHandler(Message<JsonObject> message) {// NOSONAR
         final Map<String, Object> input = new HashMap<>();
         try {
             if (!message.body().containsField(DATA) || !message.body().containsField(TEMPLATE)) {

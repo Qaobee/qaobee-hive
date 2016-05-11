@@ -22,15 +22,15 @@ package com.qaobee.hive.business.model.commons.settings;
  *
  * @author jerome
  */
-public interface ParametersGame {
+public class ParametersGame {
 
-    String NB_MAX_PLAYERS = "nbMaxPlayers";
-    String NB_MIN_PLAYERS = "nbMinPlayers";
-    String NB_PERIODS = "nbPeriods";
-    String PERIODE_DURATION = "periodDuration";
-    String NB_TIMEOUT = "nbTimeout";
-    String TIMEOUT_DURATION = "timeoutDuration";
-    String YELLOW_CARDS_MAX = "yellowCardsMax";
-    String EXCLUSION_TEMPO = "exclusionTempo";
-    String HALF_TIME_DURATION = "halfTimeDuration";
+    public static final String NB_MAX_PLAYERS = "nbMaxPlayers";
+    public static final String NB_MIN_PLAYERS = "nbMinPlayers";
+    public static final String NB_PERIODS = "nbPeriods";
+    public static final String PERIODE_DURATION = "periodDuration";
+    public static final String NB_TIMEOUT = "nbTimeout";
+    public static final String TIMEOUT_DURATION = "timeoutDuration";
+    public static final String YELLOW_CARDS_MAX = "yellowCardsMax";
+    public static final String EXCLUSION_TEMPO = "exclusionTempo";
+    public static final String HALF_TIME_DURATION = "halfTimeDuration";
 }

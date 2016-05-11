@@ -161,7 +161,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = LOGIN_BY_TOKEN, method = Constants.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN}, scope = Rule.Param.BODY)
-    private void loginByTokenHandler(Message<String> message) {
+    private void loginByTokenHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject request = new JsonObject(req.getBody());
@@ -184,7 +184,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     user.getAccount().setTokenRenewDate(System.currentTimeMillis());
                 }
                 mongo.save(user);
-                if(canLogin) {
+                if (canLogin) {
                     message.reply(Json.encode(user));
                 } else {
                     throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
@@ -207,7 +207,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = USER_BY_LOGIN, method = Constants.GET, logged = true, admin = true, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.REQUEST)
-    private void userByLoginHandler(Message<String> message) {
+    private void userByLoginHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         // Creation of request
         CriteriaBuilder criterias = new CriteriaBuilder();
@@ -235,7 +235,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = USER_INFO, method = Constants.GET, logged = true, mandatoryParams = {"id"}, scope = Rule.Param.REQUEST)
-    private void userInfoHandler(Message<String> message) {
+    private void userInfoHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject u = mongo.getById(req.getParams().get("id").get(0), User.class);
@@ -260,7 +260,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = META, method = Constants.GET, logged = true)
-    private void getMetaHandler(Message<String> message) {
+    private void getMetaHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject user = mongo.getById(req.getUser().get_id(), User.class);
@@ -302,7 +302,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = CURRENT, method = Constants.GET, logged = true)
-    private void currentUserHandler(Message<String> message) {
+    private void currentUserHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         User user = req.getUser();
         JsonObject jUser = new JsonObject(Json.encode(user));
@@ -323,7 +323,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = PASSWD_RESET, method = Constants.POST, mandatoryParams = {"id", "code", PASSWD_FIELD}, scope = Rule.Param.BODY)
-    private void passwordResetHandler(Message<String> message) {
+    private void passwordResetHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject json = new JsonObject(req.getBody());
@@ -379,7 +379,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = PASSWD_RENEW_CHK, method = Constants.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
-    private void passwordRenewCheckHandler(Message<String> message) {
+    private void passwordRenewCheckHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final String id = req.getParams().get("id").get(0);
@@ -419,7 +419,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError MAIL_EXCEPTION email problem
      */
     @Rule(address = PASSWD_RENEW, method = Constants.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
-    private void passwordRenewHandler(Message<String> message) {
+    private void passwordRenewHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject infos = new JsonObject(req.getBody());
@@ -469,7 +469,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = {TOKEN}, scope = Rule.Param.HEADER)
-    private void logoutHandler(Message<String> message) {
+    private void logoutHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", req.getHeaders().get("token").get(0)).get(), null, null, 0, 0, User.class);
@@ -510,54 +510,43 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = LOGIN, method = Constants.POST)
-    private void loginHandler(Message<String> message) {
+    private void loginHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject infos = new JsonObject(req.getBody());
-
             if (StringUtils.isBlank(infos.getString(PARAM_LOGIN)) || StringUtils.isBlank(infos.getString(PARAM_PWD))) {
-                final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
-                LOG.error(e.getMessage(), e);
-                utils.sendError(message, e);
-            } else {
-                final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add(ACCOUNT_LOGIN_FIELD,
-                        infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
-                if (res.size() != 1) {
-                    final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
-                    utils.sendError(message, e);
-                } else {
-                    // we take the first one (should be only one)
-                    final JsonObject jsonPerson = res.get(0);
-                    final User user = Json.decodeValue(jsonPerson.encode(), User.class);
-                    final byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(infos.getString(PARAM_PWD), user.getAccount().getSalt());
-                    if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
-                        final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
-                        LOG.error(e.getMessage(), e);
-                        utils.sendError(message, e);
-                    } else {
-                        if (user.getAccount().isActive()) {
-                            // trial period test
-                            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user, getContainer().config())) {
-                                user.getAccount().getListPlan().get(0).setStatus("notpaid");
-                            }
-                            user.getAccount().setToken(UUID.randomUUID().toString());
-                            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                            if (infos.containsField(MOBILE_TOKEN)) {
-                                user.getAccount().setMobileToken(infos.getString(MOBILE_TOKEN));
-                            }
-                            mongo.save(user);
-                            JsonObject jUser = new JsonObject(Json.encode(user));
-                            jUser.getObject(ACCOUNT_FIELD).removeField(PASSWD_FIELD);
-                            jUser.getObject(ACCOUNT_FIELD).removeField("password");
-                            jUser.getObject(ACCOUNT_FIELD).removeField("salt");
-                            message.reply(jUser.toString());
-                        } else {
-                            utils.sendError(message, ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", req.getLocale()));
-                        }
-                    }
-                }
-
+                throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
             }
+            final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add(ACCOUNT_LOGIN_FIELD,
+                    infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
+            if (res.size() != 1) {
+                throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
+            }
+            // we take the first one (should be only one)
+            final JsonObject jsonPerson = res.get(0);
+            final User user = Json.decodeValue(jsonPerson.encode(), User.class);
+            final byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(infos.getString(PARAM_PWD), user.getAccount().getSalt());
+            if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
+                throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
+            }
+            if (!user.getAccount().isActive()) {
+                throw new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", req.getLocale()));
+            }
+            // trial period test
+            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user, getContainer().config())) {
+                user.getAccount().getListPlan().get(0).setStatus("notpaid");
+            }
+            user.getAccount().setToken(UUID.randomUUID().toString());
+            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+            if (infos.containsField(MOBILE_TOKEN)) {
+                user.getAccount().setMobileToken(infos.getString(MOBILE_TOKEN));
+            }
+            mongo.save(user);
+            JsonObject jUser = new JsonObject(Json.encode(user));
+            jUser.getObject(ACCOUNT_FIELD).removeField(PASSWD_FIELD);
+            jUser.getObject(ACCOUNT_FIELD).removeField("password");
+            jUser.getObject(ACCOUNT_FIELD).removeField("salt");
+            message.reply(jUser.toString());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -573,7 +562,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         cal.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
         Calendar cal2 = Calendar.getInstance();
         cal2.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
-        cal2.add(Calendar.MONTH,  conf.getObject(RUNTIME).getInteger("trial.duration", 1));
+        cal2.add(Calendar.MONTH, conf.getObject(RUNTIME).getInteger("trial.duration", 1));
         return "open".equals(user.getAccount().getListPlan().get(0).getStatus()) && cal.before(cal2);
     }
 }

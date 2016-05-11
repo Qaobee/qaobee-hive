@@ -29,7 +29,7 @@ public class ShapeCondition {
     /**
      * Internal identifier
      */
-    private String _id;
+    private String _id; // NOSONAR
     /**
      * Code
      */
@@ -48,7 +48,7 @@ public class ShapeCondition {
      *
      * @return String : ID
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -57,7 +57,7 @@ public class ShapeCondition {
      *
      * @param _id (String) : ID
      */
-    public void set_id(String _id) {
+    public void set_id(String _id) { // NOSONAR
         this._id = _id;
     }
 

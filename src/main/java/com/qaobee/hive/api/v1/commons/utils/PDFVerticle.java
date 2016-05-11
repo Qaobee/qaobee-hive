@@ -53,7 +53,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
     public static final String CONTENT_TYPE = "application/pdf";
     private static final Logger LOG = LoggerFactory.getLogger(PDFVerticle.class);
     private static final String TEMPLATE_PATH = "pdfTemplates/";
-    Configuration cfg = new Configuration(new Version("2.3.23"));
+    private Configuration cfg = new Configuration(new Version("2.3.23"));
     @Inject
     private Utils utils;
 
@@ -64,7 +64,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GENERATE_PDF, this::generatePDFHandler);
     }
 
-    private void generatePDFHandler(Message<JsonObject> message) {
+    private void generatePDFHandler(Message<JsonObject> message) {// NOSONAR
         try {
             if (!message.body().containsField(DATA) || !message.body().containsField(TEMPLATE) || !message.body().containsField(FILE_NAME)) {
                 message.fail(ExceptionCodes.MANDATORY_FIELD.getCode(), "wrong json format");
@@ -72,7 +72,6 @@ public class PDFVerticle extends AbstractGuiceVerticle {
             }
             final JsonObject data = message.body().getObject(DATA);
             // READING CSS
-
             final StringBuilder cssStr = new StringBuilder();
             for (final Object c : container.config().getObject("pdf").getArray("css").toList()) {
                 cssStr.append(FileUtils.readFileToString(new File(PathAdjuster.adjust((VertxInternal) vertx, (String) c))));
@@ -85,9 +84,8 @@ public class PDFVerticle extends AbstractGuiceVerticle {
             }
             File dir = new File(datadir + "/tmp/");
             if(!dir.exists()) {
-                dir.mkdirs();
+                assert dir.mkdirs();
             }
-
             final File temp = new File(datadir + "/tmp/" + message.body().getString(FILE_NAME) + ".pdf");
             if (temp.exists()) {
                 boolean res = temp.delete();

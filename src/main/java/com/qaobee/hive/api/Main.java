@@ -24,7 +24,6 @@ import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -186,7 +185,7 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @param req Request
      */
-    private void apiHandler(HttpServerRequest req) {
+    private void apiHandler(HttpServerRequest req) { // NOSONAR
         req.bodyHandler(event -> {
             final RequestWrapper wrapper = new RequestWrapper();
             wrapper.setBody(event.toString());
@@ -220,7 +219,7 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @param req Request
      */
-    private void assetUploadHandler(HttpServerRequest req) {
+    private void assetUploadHandler(HttpServerRequest req) { // NOSONAR
         startTimer("main.avatar");
         enableCors(req);
         final JsonObject request = new JsonObject()
@@ -246,7 +245,7 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @param req Request
      */
-    private void getAssetHandler(HttpServerRequest req) {
+    private void getAssetHandler(HttpServerRequest req) { // NOSONAR
         enableCors(req);
         final JsonObject request = new JsonObject()
                 .putString(COLLECTION, req.params().get(COLLECTION))
@@ -328,10 +327,6 @@ public class Main extends AbstractGuiceVerticle {
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             handleError(req, e);
-            return false;
-        } catch (final IllegalArgumentException e) {
-            LOG.error(e.getMessage(), e);
-            handleError(req, new QaobeeException(ExceptionCodes.MANDATORY_FIELD, e.getMessage()));
             return false;
         }
         return true;

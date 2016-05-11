@@ -23,7 +23,6 @@ import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -109,7 +108,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     @Rule(address = ADD_TO_SANDBOX, method = Constants.POST, logged = true,
             mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
             scope = Rule.Param.BODY)
-    private void addNotificationToSandBoxHandler(Message<String> message) {
+    private void addNotificationToSandBoxHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
         JsonObject request = new JsonObject()
@@ -138,7 +137,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     @Rule(address = ADD_TO_USER, method = Constants.POST, logged = true,
             mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
             scope = Rule.Param.BODY)
-    private void addNotificationToUserHandler(Message<String> message) {
+    private void addNotificationToUserHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
         JsonObject request = new JsonObject()
@@ -150,7 +149,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         );
     }
 
-    private void notifyHandler(Message<JsonObject> message) {
+    private void notifyHandler(Message<JsonObject> message) { // NOSONAR
         try {
             utils.testMandatoryParams(message.body().encode(), "id", TARGET, NOTIFICATION);
             String id = message.body().getString("id");
@@ -189,7 +188,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
-    private void markAsReadHandler(Message<String> message) {
+    private void markAsReadHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
@@ -213,7 +212,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
-    private void deleteHandler(Message<String> message) {
+    private void deleteHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
@@ -239,7 +238,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = LIST, method = Constants.GET, logged = true)
-    private void notificationListHandler(Message<String> message) {
+    private void notificationListHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             int start = 0;
@@ -267,10 +266,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     }
 
     private JsonObject getUser(String id) throws QaobeeException {
-        List<String> wl = Arrays.asList("_id", "name", "firstname", "avatar");
         JsonObject u = mongo.getById(id, User.class);
         JsonObject cu = new JsonObject();
-        u.getFieldNames().stream().filter(wl::contains).forEachOrdered(f -> cu.putValue(f, u.getValue(f)));
+        u.getFieldNames().stream()
+                .filter(Arrays.asList("_id", "name", "firstname", "avatar")::contains)
+                .forEachOrdered(f -> cu.putValue(f, u.getValue(f)));
         return cu;
     }
 

@@ -90,12 +90,11 @@ public class AssetVerticle extends AbstractGuiceVerticle {
      *  }</pre>
      *  </p>
      */
-    private void getAssetHandler(Message<JsonObject> message) {
+    private void getAssetHandler(Message<JsonObject> message) { // NOSONAR
         JsonObject resp = new JsonObject();
         try {
             utils.testMandatoryParams(message.body().toMap(), COLLECTION_FIELD, "id");
             GridFS img = new GridFS(mongo.getDb(), "Assets");
-
             if ("SB_Person".equals(message.body().getString(COLLECTION_FIELD)) || "User".equals(message.body().getString(COLLECTION_FIELD))) {
                 GridFSDBFile imageForOutput = img.findOne(new ObjectId(message.body().getString("id")));
                 if (imageForOutput != null && imageForOutput.getChunkSize() > 0) {
@@ -116,9 +115,9 @@ public class AssetVerticle extends AbstractGuiceVerticle {
             resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
             resp.putString(Constants.MESSAGE, e.getMessage());
             message.reply(resp);
-        } catch (final IllegalArgumentException e) {
+        } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
-            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
+            resp.putNumber(Constants.STATUS_CODE, e.getCode().getCode());
             resp.putString(Constants.MESSAGE, e.getMessage());
             message.reply(resp);
         }
@@ -137,12 +136,11 @@ public class AssetVerticle extends AbstractGuiceVerticle {
      *  }</pre>
      *  </p>
      */
-    private void addAssetHandler(Message<JsonObject> message) {
+    private void addAssetHandler(Message<JsonObject> message) { // NOSONAR
         JsonObject resp = new JsonObject();
         try {
             utils.testMandatoryParams(message.body().toMap(), UID_FIELD, AbstractGuiceVerticle.TOKEN, FILENAME_FIELD, COLLECTION_FIELD, "field", "contentType");
             final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString(AbstractGuiceVerticle.TOKEN)).get(), null, null, 0, 0, User.class);
-
             if (res.size() != 1) {
                 FileUtils.deleteQuietly(new File(message.body().getString(FILENAME_FIELD)));
                 resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.NOT_LOGGED.getCode()).putString(Constants.MESSAGE, Messages.getString("not.logged", message.body().getString("locale")));
@@ -181,17 +179,9 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                 vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
             }
             message.reply(resp);
-        } catch (final IllegalArgumentException e) {
-            LOG.error(e.getMessage(), e);
-            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
-            resp.putString(Constants.MESSAGE, e.getMessage());
-            if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
-                vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
-            }
-            message.reply(resp);
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
-            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.DATA_ERROR.getCode());
+            resp.putNumber(Constants.STATUS_CODE, e.getCode().getCode());
             resp.putString(Constants.MESSAGE, e.getMessage());
             if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
                 vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));

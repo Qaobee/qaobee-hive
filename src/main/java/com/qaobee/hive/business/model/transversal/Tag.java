@@ -29,7 +29,7 @@ public class Tag {
     /**
      * Internal identifier
      */
-    private String _id;
+    private String _id; // NOSONAR
     /**
      * Label
      */
@@ -44,7 +44,7 @@ public class Tag {
      *
      * @return String : ID
      */
-    public String get_id() {
+    public String get_id() { // NOSONAR
         return _id;
     }
 
@@ -53,7 +53,7 @@ public class Tag {
      *
      * @param _id (String) : ID
      */
-    public void set_id(String _id) {
+    public void set_id(String _id) { // NOSONAR
         this._id = _id;
     }
 

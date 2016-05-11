@@ -94,7 +94,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     }
 
     // FIXME : CKE : Est-ce toujours utilisé?
-    private void updateAvatar(Message<String> message) {
+    private void updateAvatar(Message<String> message) { // NOSONAR
         try {
             final JsonObject req = new JsonObject(message.body());
             JsonObject jsonperson = mongo.getById(req.getString("uid"), User.class);
@@ -116,7 +116,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = GENERATE_BILL_PDF, method = Constants.GET, logged = true, mandatoryParams = {"plan_id", "pay_id"}, scope = Rule.Param.REQUEST)
-    private void generateBillPDFHandler(Message<String> message) {
+    private void generateBillPDFHandler(Message<String> message) { // NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final User user = req.getUser();
@@ -172,7 +172,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = GENERATE_PDF, method = Constants.GET, logged = true)
-    private void generatePDFHandler(Message<String> message) {
+    private void generatePDFHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final User user = req.getUser();
         final JsonObject juser = new JsonObject();
@@ -211,7 +211,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true)
-    private void updateUserHandler(Message<String> message) {
+    private void updateUserHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject u = new JsonObject(req.getBody());

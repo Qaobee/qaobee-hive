@@ -136,12 +136,12 @@ public interface MongoDB {
     /**
      * Find document by criteria with minimal fields and a sort order.
      *
-     * @param criteria   (Map(String, Object))	: criteria
-     * @param fields     (List(String)) 			: fields to include (null if all fields)
-     * @param sort       (String)						: sort field (null if no sort)
-     * @param order      (int)						: sort order
-     * @param limit      (int)						: limit (0 if no limit)
-     * @param collection (Class)				: collection
+     * @param criteria   (Map(String, Object)) : criteria
+     * @param fields     (List(String))    : fields to include (null if all fields)
+     * @param sort       (String)      : sort field (null if no sort)
+     * @param order      (int)      : sort order
+     * @param limit      (int)      : limit (0 if no limit)
+     * @param collection (Class)    : collection
      * @return JsonArray : an array
      */
     JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, Class<?> collection);

@@ -117,7 +117,7 @@ public interface Utils {
      *
      * @param yearOldMin min year from today
      * @param yearOldMax max year from today
-     * @return timestamp
+     * @return timestamp long
      */
     long randomDate(int yearOldMin, int yearOldMax);
 
@@ -152,18 +152,18 @@ public interface Utils {
      *
      * @param map    request's parameters
      * @param fields array of fields to test
-     * @throws IllegalArgumentException explain missing fields
+     * @throws QaobeeException explain missing fields
      */
-    void testMandatoryParams(Map<String, ?> map, String... fields) throws IllegalArgumentException;
+    void testMandatoryParams(Map<String, ?> map, String... fields) throws QaobeeException;
 
     /**
      * Test mandatory params.
      *
      * @param json   request's json body
      * @param fields array of fields to test
-     * @throws IllegalArgumentException explain missing fields
+     * @throws QaobeeException explain missing fields
      */
-    void testMandatoryParams(String json, String... fields) throws IllegalArgumentException;
+    void testMandatoryParams(String json, String... fields) throws QaobeeException;
 
     /**
      * Is user logged.

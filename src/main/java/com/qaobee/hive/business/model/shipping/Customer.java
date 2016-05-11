@@ -6,8 +6,8 @@ package com.qaobee.hive.business.model.shipping;
 public class Customer {
 
     private String email;
-    private String first_name;
-    private String last_name;
+    private String first_name; // NOSONAR
+    private String last_name; // NOSONAR
 
     /**
      * Gets email.
@@ -32,7 +32,7 @@ public class Customer {
      *
      * @return the first name
      */
-    public String getFirst_name() {
+    public String getFirst_name() { // NOSONAR
         return first_name;
     }
 
@@ -41,7 +41,7 @@ public class Customer {
      *
      * @param first_name the first name
      */
-    public void setFirst_name(String first_name) {
+    public void setFirst_name(String first_name) { // NOSONAR
         this.first_name = first_name;
     }
 
@@ -50,7 +50,7 @@ public class Customer {
      *
      * @return the last name
      */
-    public String getLast_name() {
+    public String getLast_name() { // NOSONAR
         return last_name;
     }
 
@@ -59,7 +59,7 @@ public class Customer {
      *
      * @param last_name the last name
      */
-    public void setLast_name(String last_name) {
+    public void setLast_name(String last_name) { // NOSONAR
         this.last_name = last_name;
     }
 }

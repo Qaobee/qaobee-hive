@@ -135,7 +135,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Object} collecte
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    private void getHandler(Message<String> message) {
+    private void getHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), COLLECTION_NAME).encode());
@@ -153,7 +153,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {SB_Collecte} SB_Collecte updated
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
-    private void updateHandler(Message<String> message) {
+    private void updateHandler(Message<String> message) {// NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject object = new JsonObject(req.getBody());
         mongo.update(object, COLLECTION_NAME);
@@ -168,7 +168,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {SB_Collecte} SB_Collecte create
      */
     @Rule(address = ADD, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
-    private void addHandler(Message<String> message) {
+    private void addHandler(Message<String> message) {// NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject object = new JsonObject(req.getBody());
@@ -194,7 +194,7 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID}, scope = Rule.Param.BODY)
-    private void getListHandler(Message<String> message) {
+    private void getListHandler(Message<String> message) {// NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject params = new JsonObject(req.getBody());

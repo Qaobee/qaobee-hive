@@ -25,6 +25,7 @@ import com.qaobee.hive.technical.utils.AuthCheck;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Class AuthDAO.
@@ -32,6 +33,7 @@ import java.util.regex.Matcher;
  * @author xavier
  */
 public final class AuthCheckImpl implements AuthCheck {
+    private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Validate.

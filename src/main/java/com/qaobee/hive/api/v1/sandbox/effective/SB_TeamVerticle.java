@@ -111,7 +111,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      */
     @Rule(address = GET_LIST, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_SANDBOX_ID, PARAM_EFFECTIVE_ID, PARAM_ENABLE, PARAM_ADVERSARY}, scope = Rule.Param.REQUEST)
-    private void getTeamListHandler(Message<String> message) {
+    private void getTeamListHandler(Message<String> message) {// NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         CriteriaBuilder criteria = new CriteriaBuilder()
                 .add(PARAM_SANDBOX_ID, req.getParams().get(PARAM_SANDBOX_ID).get(0))
@@ -137,7 +137,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      * @apiSuccess {SB_team}   team            The SB_Team found.
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    private void getTeamHandler(Message<String> message) {
+    private void getTeamHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_Team.class).encode());
@@ -157,7 +157,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
      */
     @Rule(address = UPDATE, method = Constants.PUT, logged = true)
-    private void updateTeamHandler(Message<String> message) {
+    private void updateTeamHandler(Message<String> message) {// NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject json = new JsonObject(req.getBody());
         final String id = mongo.update(json, SB_Team.class);
@@ -174,7 +174,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {  // NOSONAR
      * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
      */
     @Rule(address = ADD, method = Constants.POST, logged = true)
-    private void addTeamHandler(Message<String> message) {
+    private void addTeamHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject json = new JsonObject(req.getBody());

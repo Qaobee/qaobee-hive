@@ -9,14 +9,14 @@ import java.util.Map;
  */
 public class Payment {
     private int amount;
-    private boolean save_card;
+    private boolean save_card; // NOSONAR
     private Customer customer;
-    private HostedPayment hosted_payment;
-    private String notification_url;
-    private boolean force_3ds;
+    private HostedPayment hosted_payment; // NOSONAR
+    private String notification_url; // NOSONAR
+    private boolean force_3ds; // NOSONAR
     private String currency;
-    private String payment_method;
-    private Map<String, String> metadata = new HashMap<String, String>();
+    private String payment_method; // NOSONAR
+    private Map<String, String> metadata = new HashMap<>();
 
     /**
      * Gets amount.
@@ -41,7 +41,7 @@ public class Payment {
      *
      * @return the boolean
      */
-    public boolean isSave_card() {
+    public boolean isSave_card() { // NOSONAR
         return save_card;
     }
 
@@ -50,7 +50,7 @@ public class Payment {
      *
      * @param save_card the save card
      */
-    public void setSave_card(boolean save_card) {
+    public void setSave_card(boolean save_card) { // NOSONAR
         this.save_card = save_card;
     }
 
@@ -77,7 +77,7 @@ public class Payment {
      *
      * @return the hosted payment
      */
-    public HostedPayment getHosted_payment() {
+    public HostedPayment getHosted_payment() { // NOSONAR
         return hosted_payment;
     }
 
@@ -86,7 +86,7 @@ public class Payment {
      *
      * @param hosted_payment the hosted payment
      */
-    public void setHosted_payment(HostedPayment hosted_payment) {
+    public void setHosted_payment(HostedPayment hosted_payment) { // NOSONAR
         this.hosted_payment = hosted_payment;
     }
 
@@ -95,7 +95,7 @@ public class Payment {
      *
      * @return the notification url
      */
-    public String getNotification_url() {
+    public String getNotification_url() { // NOSONAR
         return notification_url;
     }
 
@@ -104,7 +104,7 @@ public class Payment {
      *
      * @param notification_url the notification url
      */
-    public void setNotification_url(String notification_url) {
+    public void setNotification_url(String notification_url) { // NOSONAR
         this.notification_url = notification_url;
     }
 
@@ -113,7 +113,7 @@ public class Payment {
      *
      * @return the boolean
      */
-    public boolean isForce_3ds() {
+    public boolean isForce_3ds() { // NOSONAR
         return force_3ds;
     }
 
@@ -122,7 +122,7 @@ public class Payment {
      *
      * @param force_3ds the force 3 ds
      */
-    public void setForce_3ds(boolean force_3ds) {
+    public void setForce_3ds(boolean force_3ds) { // NOSONAR
         this.force_3ds = force_3ds;
     }
 
@@ -149,7 +149,7 @@ public class Payment {
      *
      * @return the payment method
      */
-    public String getPayment_method() {
+    public String getPayment_method() { // NOSONAR
         return payment_method;
     }
 
@@ -158,7 +158,7 @@ public class Payment {
      *
      * @param payment_method the payment method
      */
-    public void setPayment_method(String payment_method) {
+    public void setPayment_method(String payment_method) { // NOSONAR
         this.payment_method = payment_method;
     }
 

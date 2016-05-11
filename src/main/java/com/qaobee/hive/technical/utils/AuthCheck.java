@@ -21,16 +21,11 @@ package com.qaobee.hive.technical.utils;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 
-import java.util.regex.Pattern;
-
 /**
  * The interface Auth check.
  */
+@FunctionalInterface
 public interface AuthCheck {
-    /**
-     * The Constant VALID_EMAIL_ADDRESS_REGEX.
-     */
-    Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     /**
      * Permet de vérifier une adresse e-mail.

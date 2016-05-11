@@ -108,7 +108,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET_LIST, method = Constants.GET, mandatoryParams = {PARAM_LOCAL},
             scope = Rule.Param.REQUEST)
-    private void getListHandler(Message<String> message) {
+    private void getListHandler(Message<String> message) { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             Map<String, Object> criterias = new HashMap<>();
@@ -145,7 +145,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET_ALPHA2, method = Constants.GET, mandatoryParams = {PARAM_ALPHA2},
             scope = Rule.Param.REQUEST)
-    private void getAlpha2Handler(Message<String> message) {
+    private void getAlpha2Handler(Message<String> message) { // NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             Country country = countryBusiness.getCountryFromAlpha2(req.getParams().get(PARAM_ALPHA2).get(0));
@@ -173,7 +173,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET, method = Constants.GET, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
-    private void getCountryHandler(Message<String> message) {
+    private void getCountryHandler(Message<String> message) { // NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Country.class);

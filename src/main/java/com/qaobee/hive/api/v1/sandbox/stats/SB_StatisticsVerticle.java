@@ -138,7 +138,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Stats}   stats    The stats added.
      */
     @Rule(address = ADD_STAT_BULK, method = Constants.PUT, logged = true)
-    private void addBulkHandler(Message<String> message) {
+    private void addBulkHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonArray documents = new JsonArray(req.getBody());
@@ -171,7 +171,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     @Rule(address = ADD_STAT, method = Constants.PUT, logged = true, mandatoryParams = {CODE_FIELD, TIMER_FIELD, OWNER_FIELD},
             scope = Rule.Param.BODY)
-    private void addHandler(Message<String> message) {
+    private void addHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject stat = new JsonObject(req.getBody());
@@ -204,7 +204,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_LISTDETAIL_VALUES, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
             scope = Rule.Param.BODY)
-    private void getListDetailValue(Message<String> message) {
+    private void getListDetailValue(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
@@ -272,7 +272,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_STAT_GROUPBY, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
             scope = Rule.Param.BODY)
-    private void getStatsGroupedByHandler(Message<String> message) {
+    private void getStatsGroupedByHandler(Message<String> message) {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
