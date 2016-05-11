@@ -134,14 +134,6 @@ public interface MongoDB {
     Map<String, Boolean> getMinimal(List<String> minimal);
 
     /**
-     * Remove a document from a collection.
-     *
-     * @param id         document id
-     * @param collection the collection
-     */
-    void deleteById(String id, Class<?> collection);
-
-    /**
      * Find document by criteria with minimal fields and a sort order.
      *
      * @param criteria   (Map(String, Object))	: criteria
@@ -167,24 +159,13 @@ public interface MongoDB {
     JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection);
 
     /**
-     * Find by in clause.
-     *
-     * @param in         the in
-     * @param sort       the sort
-     * @param order      the order
-     * @param limit      the limit
-     * @param collection the collection
-     * @return the json array
-     */
-    JsonArray findByInClause(List<String> in, String sort, int order, int limit, Class<?> collection);
-
-    /**
      * Aggregate json array.
      *
      * @param field      the field
      * @param pipeline   the pipeline
      * @param collection the collection
      * @return the json array
+     * @throws QaobeeException the qaobee exception
      */
     JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection) throws QaobeeException;
 
@@ -195,6 +176,7 @@ public interface MongoDB {
      * @param pipeline   the pipeline
      * @param collection the collection
      * @return the json array
+     * @throws QaobeeException the qaobee exception
      */
     JsonArray aggregate(String field, List<DBObject> pipeline, String collection) throws QaobeeException;
 

@@ -30,7 +30,6 @@ import org.vertx.java.core.json.impl.Json;
 import javax.net.ssl.SSLSocketFactory;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -39,13 +38,10 @@ import java.util.regex.Pattern;
  * @author xavier
  */
 public class MongoDBImpl implements MongoDB {
-
-    protected static final Logger LOG = Logger.getLogger(MongoDBImpl.class.getName());
-
     private DB db;
     private JsonObject config;
     private WriteConcern writeConcern;
-
+    private static final String NOT_FOUND_MESS = "%s not found in %s";
     /**
      * Instantiates a new Mongo dB impl.
      *
@@ -135,7 +131,7 @@ public class MongoDBImpl implements MongoDB {
      * @return the list
      * @throws UnknownHostException the unknown host exception
      */
-    private List<ServerAddress> makeSeeds(final JsonArray seedsProperty) throws UnknownHostException {
+    private static List<ServerAddress> makeSeeds(final JsonArray seedsProperty) throws UnknownHostException {
         final List<ServerAddress> seeds = new ArrayList<>();
         for (final Object elem : seedsProperty) {
             final JsonObject address = (JsonObject) elem;
@@ -200,7 +196,7 @@ public class MongoDBImpl implements MongoDB {
         return getUpsertedId(res, genID, document);
     }
 
-    private String getUpsertedId(WriteResult res, String genID, JsonObject document) throws QaobeeException {
+    private static String getUpsertedId(WriteResult res, String genID, JsonObject document) throws QaobeeException {
         if (res.getN() > 0) {
             if (genID != null) {
                 return genID;
@@ -232,7 +228,7 @@ public class MongoDBImpl implements MongoDB {
     public JsonObject getById(final String id, final Class<?> collection) throws QaobeeException {
         final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id));
         if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, id + " not found in " + collection.getSimpleName());
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NOT_FOUND_MESS, id, collection.getSimpleName()));
         } else {
             return new JsonObject(res.next().toMap());
         }
@@ -243,7 +239,7 @@ public class MongoDBImpl implements MongoDB {
     public JsonObject getById(final String id, final String collection) throws QaobeeException {
         final DBCursor res = db.getCollection(collection).find(new BasicDBObject("_id", id));
         if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, id + " not found in " + collection);
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NOT_FOUND_MESS, id, collection));
         } else {
             return new JsonObject(res.next().toMap());
         }
@@ -254,7 +250,7 @@ public class MongoDBImpl implements MongoDB {
     public JsonObject getById(final String id, final Class<?> collection, final List<String> minimal) throws QaobeeException {
         final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id), new BasicDBObject(getMinimal(minimal)));
         if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, id + " not found in " + collection);
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NOT_FOUND_MESS, id, collection));
         } else {
             return new JsonObject(res.next().toMap());
         }
@@ -270,12 +266,6 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
-    public void deleteById(final String id, final Class<?> collection) {
-        final DBCollection coll = db.getCollection(collection.getSimpleName());
-        coll.remove(new BasicDBObject("_id", id));
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
     public JsonArray findByCriterias(final Map<String, Object> criteria, final List<String> fields, final String sort, final int order, final int limit,
                                      final Class<?> collection) {
@@ -283,13 +273,13 @@ public class MongoDBImpl implements MongoDB {
         DBObject query = new BasicDBObject();
         if (criteria != null) {
             final BasicDBList and = new BasicDBList();
-            for (String k : criteria.keySet()) {
+            criteria.keySet().forEach(k -> {
                 if (criteria.get(k) instanceof String && ((String) criteria.get(k)).startsWith("//")) {
                     and.add(new BasicDBObject(k, Pattern.compile(((String) criteria.get(k)).substring(2))));
                 } else {
                     and.add(new BasicDBObject(k, criteria.get(k)));
                 }
-            }
+            });
             query = new BasicDBObject("$and", and);
         }
 
@@ -315,28 +305,6 @@ public class MongoDBImpl implements MongoDB {
     @Override
     public JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection) {
         return findByCriterias(null, fields, sort, order, limit, collection);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonArray findByInClause(List<String> in, String sort, int order, int limit, Class<?> collection) {
-        final DBCollection coll = db.getCollection(collection.getSimpleName());
-        final BasicDBList docIds = new BasicDBList();
-        docIds.addAll(in);
-        final DBObject inClause = new BasicDBObject("$in", docIds);
-        DBObject query = new BasicDBObject("$in", inClause);
-        DBCursor res = coll.find(query);
-        if (limit > 0) {
-            res = res.limit(limit);
-        }
-        if (sort != null) {
-            res = res.sort(new BasicDBObject(sort, order));
-        }
-        final JsonArray json = new JsonArray();
-        while (res.hasNext()) {
-            json.add(new JsonObject(res.next().toMap()));
-        }
-        return json;
     }
 
     @Override
