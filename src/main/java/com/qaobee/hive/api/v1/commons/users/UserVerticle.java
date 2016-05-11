@@ -120,6 +120,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private static final String ACCOUNT_FIELD = "account";
     private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     private static final String ACCOUNT_LOGIN_FIELD = "account.login";
+    private static final java.lang.String BAD_LOGIN_MESS = "bad.login";
     @Inject
     private MongoDB mongo;
     @Inject
@@ -169,16 +170,25 @@ public class UserVerticle extends AbstractGuiceVerticle {
             cb.add(ACCOUNT_LOGIN_FIELD, request.getString(PARAM_LOGIN).toLowerCase());
             final JsonArray res = mongo.findByCriterias(cb.get(), null, null, 0, 0, User.class);
             if (res.size() != 1) {
-                throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
+                throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
             } else {
                 // we take the first one (should be only one)
-                // TODO MX : résoudre le problème de la période d'essai
+                boolean canLogin = true;
                 final JsonObject jsonPerson = res.get(0);
                 final User user = Json.decodeValue(jsonPerson.encode(), User.class);
-                user.getAccount().setToken(UUID.randomUUID().toString());
-                user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user, getContainer().config())) {
+                    user.getAccount().getListPlan().get(0).setStatus("notpaid");
+                    canLogin = false;
+                } else {
+                    user.getAccount().setToken(UUID.randomUUID().toString());
+                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                }
                 mongo.save(user);
-                message.reply(Json.encode(user));
+                if(canLogin) {
+                    message.reply(Json.encode(user));
+                } else {
+                    throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
+                }
             }
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
@@ -506,14 +516,14 @@ public class UserVerticle extends AbstractGuiceVerticle {
             final JsonObject infos = new JsonObject(req.getBody());
 
             if (StringUtils.isBlank(infos.getString(PARAM_LOGIN)) || StringUtils.isBlank(infos.getString(PARAM_PWD))) {
-                final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
+                final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
                 LOG.error(e.getMessage(), e);
                 utils.sendError(message, e);
             } else {
                 final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add(ACCOUNT_LOGIN_FIELD,
                         infos.getString(PARAM_LOGIN).toLowerCase()).get(), null, null, 0, 0, User.class);
                 if (res.size() != 1) {
-                    final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
+                    final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
                     utils.sendError(message, e);
                 } else {
                     // we take the first one (should be only one)
@@ -521,7 +531,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     final User user = Json.decodeValue(jsonPerson.encode(), User.class);
                     final byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(infos.getString(PARAM_PWD), user.getAccount().getSalt());
                     if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
-                        final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
+                        final QaobeeException e = new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, req.getLocale()));
                         LOG.error(e.getMessage(), e);
                         utils.sendError(message, e);
                     } else {
