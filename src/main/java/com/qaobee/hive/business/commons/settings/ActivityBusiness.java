@@ -24,6 +24,7 @@ import com.qaobee.hive.business.model.commons.settings.Activity;
  *
  * @author jerome
  */
+@FunctionalInterface
 public interface ActivityBusiness {
 
     /**

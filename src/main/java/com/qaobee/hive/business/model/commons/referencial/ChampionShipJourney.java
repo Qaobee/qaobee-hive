@@ -18,8 +18,28 @@
 package com.qaobee.hive.business.model.commons.referencial;
 
 /**
+ * The type Champion ship journey.
+ *
  * @author cke
  */
 public class ChampionShipJourney {
+    private String _id; // NOSONAR
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
+    public String get_id() { // NOSONAR
+        return _id;
+    }
+
+    /**
+     * Sets id.
+     *
+     * @param _id the id
+     */
+    public void set_id(String _id) { // NOSONAR
+        this._id = _id;
+    }
 }
