@@ -211,6 +211,40 @@ public class UserTest extends VertxJunitSupport {
     }
 
     /**
+     * Login by mobile token trial period.
+     */
+    @Test
+    public void loginByMobileTokenTrialPeriod() {
+        try {
+            User u = generateUser();
+            u.getAccount().getListPlan().get(0).setStatus("open");
+            mongo.save(u);
+            String token = UUID.randomUUID().toString();
+
+            final JsonObject params = new JsonObject();
+            params.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
+            params.putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+            params.putString(UserVerticle.MOBILE_TOKEN, token);
+
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+
+            final JsonObject params2 = new JsonObject();
+            params2.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
+            params2.putString(UserVerticle.MOBILE_TOKEN, token);
+
+            given().body(params2.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    /**
      * Login by mobile token wrong hTTP method.
      */
     @Test
@@ -259,6 +293,73 @@ public class UserTest extends VertxJunitSupport {
                 .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                 .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+    }
+
+    /**
+     * Login by mobile token not paid.
+     */
+    @Test
+    public void loginByMobileTokenNotPaid() {
+        try {
+            User u = generateUser();
+            u.getAccount().getListPlan().get(0).setStatus("notpaid");
+            mongo.save(u);
+            String token = UUID.randomUUID().toString();
+            final JsonObject params = new JsonObject();
+            params.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
+            params.putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+            params.putString(UserVerticle.MOBILE_TOKEN, token);
+
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+
+            final JsonObject params2 = new JsonObject();
+            params2.putString(UserVerticle.PARAM_LOGIN, "badLogin");
+            params2.putString(UserVerticle.MOBILE_TOKEN, token);
+
+            given().body(params2.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                    .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                    .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Login by mobile token trial period ended.
+     */
+    @Test
+    public void loginByMobileTokenTrialPeriodEnded() {
+        try {
+            User u = generateUser();
+            u.getAccount().getListPlan().get(0).setStatus("open");
+            u.getAccount().getListPlan().get(0).setEndPeriodDate(0);
+            mongo.save(u);
+            String token = UUID.randomUUID().toString();
+            final JsonObject params = new JsonObject();
+            params.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
+            params.putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+            params.putString(UserVerticle.MOBILE_TOKEN, token);
+
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+
+            final JsonObject params2 = new JsonObject();
+            params2.putString(UserVerticle.PARAM_LOGIN, "badLogin");
+            params2.putString(UserVerticle.MOBILE_TOKEN, token);
+
+            given().body(params2.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                    .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                    .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
     }
 
     /**

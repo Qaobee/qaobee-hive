@@ -99,7 +99,7 @@
             "paidDate": 1459714012000,
             "startPeriodDate": 1459184846640,
             "endPeriodDate": 0,
-            "status": "notpaid",
+            "status": "paid",
             "periodicity": null,
             "activity": {
               "_id": "ACT-HAND",

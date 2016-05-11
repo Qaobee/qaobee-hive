@@ -115,6 +115,11 @@ public class AssetVerticle extends AbstractGuiceVerticle {
             resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
             resp.putString(Constants.MESSAGE, e.getMessage());
             message.reply(resp);
+        } catch (final IllegalArgumentException e) {
+            LOG.error(e.getMessage(), e);
+            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
+            resp.putString(Constants.MESSAGE, e.getMessage());
+            message.reply(resp);
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             resp.putNumber(Constants.STATUS_CODE, e.getCode().getCode());
@@ -174,6 +179,14 @@ public class AssetVerticle extends AbstractGuiceVerticle {
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
+            resp.putString(Constants.MESSAGE, e.getMessage());
+            if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
+                vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
+            }
+            message.reply(resp);
+        } catch (final IllegalArgumentException e) {
+            LOG.error(e.getMessage(), e);
+            resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
             resp.putString(Constants.MESSAGE, e.getMessage());
             if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
                 vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
