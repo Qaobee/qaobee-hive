@@ -528,14 +528,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                     emailReq.putString("subject", Messages.getString("mail.account.validation.subject"));
                                     emailReq.putString("content_type", "text/html");
                                     emailReq.putString("body", tplRes);
-
-                                    // Envoi du mail si pas en test jUnit
-                                    if (json.getBoolean("junit", false)) {
-                                        LOG.debug(emailReq.encode());
-                                    } else {
-                                        vertx.eventBus().publish("mailer.mod", emailReq);
-                                    }
-
+                                    vertx.eventBus().publish("mailer.mod", emailReq);
                                     final JsonObject res = new JsonObject();
                                     try { // NOSONAR
                                         res.putObject("person", mongo.getById(id, User.class));

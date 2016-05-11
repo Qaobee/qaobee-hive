@@ -172,6 +172,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("bad.login", req.getLocale()));
             } else {
                 // we take the first one (should be only one)
+                // TODO MX : résoudre le problème de la période d'essai
                 final JsonObject jsonPerson = res.get(0);
                 final User user = Json.decodeValue(jsonPerson.encode(), User.class);
                 user.getAccount().setToken(UUID.randomUUID().toString());
@@ -526,7 +527,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     } else {
                         if (user.getAccount().isActive()) {
                             // trial period test
-                            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user)) {
+                            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user, getContainer().config())) {
                                 user.getAccount().getListPlan().get(0).setStatus("notpaid");
                             }
                             user.getAccount().setToken(UUID.randomUUID().toString());
@@ -555,14 +556,14 @@ public class UserVerticle extends AbstractGuiceVerticle {
 
     /**
      * @param user User
-     * @return in triel period
+     * @return in trial period
      */
-    private static boolean testTrial(User user) {
+    private static boolean testTrial(User user, JsonObject conf) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
         Calendar cal2 = Calendar.getInstance();
         cal2.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
-        cal2.add(Calendar.MONTH, 1);
+        cal2.add(Calendar.MONTH,  conf.getObject(RUNTIME).getInteger("trial.duration", 1));
         return "open".equals(user.getAccount().getListPlan().get(0).getStatus()) && cal.before(cal2);
     }
 }

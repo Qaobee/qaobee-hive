@@ -60,12 +60,10 @@ public class SB_Person { // NOSONAR
     /**
      * Birth country
      */
-    // TODO Country or String ?
     private Country birthcountry;
     /**
      * Nationality
      */
-    // TODO Country or String ?
     private Country nationality;
     /**
      * Address

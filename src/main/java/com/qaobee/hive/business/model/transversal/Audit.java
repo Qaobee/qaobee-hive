@@ -31,7 +31,6 @@ public class Audit {
     /**
      * Author
      */
-    //TODO user en entier ou un smallUser ?
     private User author;
     /**
      * Create date

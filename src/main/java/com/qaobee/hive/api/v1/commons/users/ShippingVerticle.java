@@ -117,7 +117,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         // oh we are ticking each 24h after the startup time
         // First, let's collect all the guys
         DBObject statusQuery = new BasicDBObject(STATUS, "paid");
-        // TODO : change paid level plan here
         DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
         DBObject query = new BasicDBObject("account.listPlan", fields);
         DBCursor result = mongo.getDb().getCollection(User.class.getSimpleName()).find(query);
@@ -132,7 +131,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         JsonArray listPlan = user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD);
         for (int i = 0; i < listPlan.size(); i++) {
             JsonObject plan = listPlan.get(i);
-            // TODO : change paid level plan here
             if (plan != null && plan.containsField(LEVEL_PLAN_FIELD)
                     && plan.containsField(CARD_INFO_FIELD)
                     && plan.getObject(CARD_INFO_FIELD) != null
@@ -430,7 +428,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
             }
             JsonObject payment = new JsonObject();
 
-            // TODO : Verify if created_at evolve with recurring payments
+            // TODO : MX : Verify if created_at evolve with recurring payments
             payment.putNumber(PAID_DATE_FIELD, body.getLong("created_at") * 1000L);
             payment.putNumber("amountPaid", body.getLong("amount") / 100L);
             payment.putObject(CARD_INFO_FIELD, body.getObject("card"));
