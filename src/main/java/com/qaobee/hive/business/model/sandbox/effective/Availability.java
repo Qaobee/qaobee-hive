@@ -57,6 +57,7 @@ public class Availability {
      * Constructor without parameter.
      */
     public Availability() {
+        // empty
     }
 
     /**

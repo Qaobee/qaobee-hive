@@ -25,6 +25,7 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 /**
  * The interface Person utils.
  */
+@FunctionalInterface
 public interface PersonUtils {
     /**
      * Prepare upsert.

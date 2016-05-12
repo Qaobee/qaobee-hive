@@ -49,6 +49,11 @@ public @interface DeployableVerticle {
      * The type Verticle loader.
      */
     class VerticleLoader {
+
+        private VerticleLoader() {
+            // empty
+        }
+
         /**
          * Scan package.
          *
