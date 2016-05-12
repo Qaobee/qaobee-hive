@@ -3,7 +3,7 @@
     "version": 1,
     "site.url": "http://localhost:3000/",
     "defaultHost": "0.0.0.0",
-    "defaultPort": 8080,
+    "defaultPort": 8888,
     "mail.site.url.api": "#/signup",
     "mail.send": true,
     "mail.to": "marin.xavier@gmail.com",
