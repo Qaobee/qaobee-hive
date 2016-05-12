@@ -153,7 +153,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     @Rule(address = UPDATE, method = Constants.POST, logged = true, admin = true,
             mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
                     PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
-    private void updateChampionshipHandler(Message<String> message) { // NOSONAR
+    private void updateChampionshipHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject championship = new JsonObject(req.getBody());
@@ -187,7 +187,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     @Rule(address = ADD, method = Constants.POST, logged = true, admin = true,
             mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
                     PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
-    private void addChampionshipHandler(Message<String> message) { // NOSONAR
+    private void addChampionshipHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject championship = new JsonObject(req.getBody());
@@ -210,7 +210,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    private void getChampionshipHandler(Message<String> message) { // NOSONAR
+    private void getChampionshipHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), ChampionShip.class).encode());
@@ -233,7 +233,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array} list of championships
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
-    private void getListChampionshipsHandler(Message<String> message) { // NOSONAR
+    private void getListChampionshipsHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());

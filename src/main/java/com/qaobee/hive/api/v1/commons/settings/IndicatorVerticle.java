@@ -113,7 +113,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
     @Rule(address = GET_BY_CODE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
             scope = Rule.Param.BODY)
-    private void getIndicatorByCodeHandler(Message<String> message) { // NOSONAR
+    private void getIndicatorByCodeHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject params = new JsonObject(req.getBody());
@@ -160,7 +160,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
             scope = Rule.Param.BODY)
-    private void getIndicatorsListHandler(Message<String> message) { // NOSONAR
+    private void getIndicatorsListHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject params = new JsonObject(req.getBody());
@@ -215,7 +215,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    private void getIndicatorHandler(Message<String> message) { // NOSONAR
+    private void getIndicatorHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), IndicatorCfg.class);

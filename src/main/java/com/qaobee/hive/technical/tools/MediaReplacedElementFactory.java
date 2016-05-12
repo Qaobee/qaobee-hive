@@ -18,8 +18,8 @@
  */
 package com.qaobee.hive.technical.tools;
 
-import com.lowagie.text.BadElementException;
 import com.lowagie.text.Image;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,11 @@ import org.xhtmlrenderer.pdf.ITextImageElement;
 import org.xhtmlrenderer.render.BlockBox;
 import org.xhtmlrenderer.simple.extend.FormSubmissionListener;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.UUID;
 
 /**
  * A factory for creating MediaReplacedElement objects.
@@ -49,14 +51,17 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
      * The super factory.
      */
     private final ReplacedElementFactory superFactory;
+    private File dir;
 
     /**
      * Instantiates a new media replaced element factory.
      *
      * @param superFactory the super factory
+     * @param dir tmp dir
      */
-    public MediaReplacedElementFactory(final ReplacedElementFactory superFactory) {
+    public MediaReplacedElementFactory(final ReplacedElementFactory superFactory, File dir) {
         this.superFactory = superFactory;
+        this.dir = dir;
     }
 
     /**
@@ -80,14 +85,20 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
         final String className = element.getAttribute("class");
         // Replace any <div class="media" data-src="image.png" /> with the
         // binary data of `image.png` into the PDF.
-        if ("div".equals(nodeName) && "media".equals(className)) {
+        if ("div".equals(nodeName) && className.startsWith("media")) {
             if (!element.hasAttribute("data-src")) {
                 LOG.error("An element with class `media` is missing a `data-src` attribute indicating the media file.");
                 return null;
             }
             InputStream input = null;
             try {
-                input = new FileInputStream(element.getAttribute("data-src"));
+                File media = new File(dir.getAbsolutePath() +"/"+ UUID.randomUUID().toString());
+                if(element.getAttribute("data-src").startsWith("http")) {
+                    FileUtils.copyURLToFile(new URL(element.getAttribute("data-src")), media);
+                } else {
+                    media = new File(element.getAttribute("data-src"));
+                }
+                input = new FileInputStream(media);
                 final byte[] bytes = IOUtils.toByteArray(input);
                 final Image image = Image.getInstance(bytes);
                 final FSImage fsImage = new ITextFSImage(image);
@@ -95,7 +106,7 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
                     fsImage.scale(cssWidth, cssHeight);
                 }
                 return new ITextImageElement(fsImage);
-            } catch (BadElementException | IOException e) {
+            } catch (Exception e) {
                 LOG.error("There was a problem trying to read a template embedded graphic.", e);
             } finally {
                 IOUtils.closeQuietly(input);

@@ -17,7 +17,7 @@
             flex: 1 0 auto;
         }
 
-        #avatar {
+        .logo {
             width: 177px;
             height: auto;
             margin: 10px;
@@ -30,21 +30,14 @@
     <nav class="top-nav green darken-1" role="navigation">
         <div class="container">
             <div class="nav-wrapper">
-                <a href="/#/" class="brand-logo"><img src="https://www.qaobee.com/assets/images/logo-mini.png"
-                                                      height="30px"/></a>
-                <ul class="right">
-                    <li><a href="https://twitter.com/Qaobee"
-                           target="_blank"
-                           class="white-text"><i
-                            class="fa fa-twitter-square fa-2x"></i></a></li>
-                </ul>
-
+                <a href="/#/" class="brand-logo">
+                    <div class="media logo" data-src="https://www.qaobee.com/assets/images/logo-mini.png"/></a>
             </div>
         </div>
     </nav>
 </header>
 <main>
-    <div id="main-container">
+    <div class="main-container">
         <div class="row">
             <div class="row">
                 <strong>${firstname!''} ${name!''}</strong>

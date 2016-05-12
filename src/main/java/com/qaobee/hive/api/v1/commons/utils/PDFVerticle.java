@@ -64,7 +64,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
         vertx.eventBus().registerHandler(GENERATE_PDF, this::generatePDFHandler);
     }
 
-    private void generatePDFHandler(Message<JsonObject> message) {// NOSONAR
+    private void generatePDFHandler(Message<JsonObject> message) {
         try {
             if (!message.body().containsField(DATA) || !message.body().containsField(TEMPLATE) || !message.body().containsField(FILE_NAME)) {
                 message.fail(ExceptionCodes.MANDATORY_FIELD.getCode(), "wrong json format");
@@ -74,7 +74,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
             // READING CSS
             final StringBuilder cssStr = new StringBuilder();
             for (final Object c : container.config().getObject("pdf").getArray("css").toList()) {
-                cssStr.append(FileUtils.readFileToString(new File(PathAdjuster.adjust((VertxInternal) vertx, (String) c))));
+                cssStr.append(FileUtils.readFileToString(new File(PathAdjuster.adjust((VertxInternal) vertx, (String) c)), "UTF-8"));
             }
             data.putString("css", cssStr.toString());
             final String result = process(message.body().getString(TEMPLATE), data);
@@ -88,12 +88,11 @@ public class PDFVerticle extends AbstractGuiceVerticle {
             }
             final File temp = new File(datadir + "/tmp/" + message.body().getString(FILE_NAME) + ".pdf");
             if (temp.exists()) {
-                boolean res = temp.delete();
-                LOG.debug(String.valueOf(res));
+                assert temp.delete();
             }
             final OutputStream os = new FileOutputStream(temp);
             final ITextRenderer renderer = new ITextRenderer();
-            renderer.getSharedContext().setReplacedElementFactory(new MediaReplacedElementFactory(renderer.getSharedContext().getReplacedElementFactory()));
+            renderer.getSharedContext().setReplacedElementFactory(new MediaReplacedElementFactory(renderer.getSharedContext().getReplacedElementFactory(), dir));
             renderer.setDocumentFromString(result);
             renderer.layout();
             renderer.createPDF(os);

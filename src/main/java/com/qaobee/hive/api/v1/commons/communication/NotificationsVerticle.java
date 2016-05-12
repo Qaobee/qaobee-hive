@@ -108,7 +108,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     @Rule(address = ADD_TO_SANDBOX, method = Constants.POST, logged = true,
             mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
             scope = Rule.Param.BODY)
-    private void addNotificationToSandBoxHandler(Message<String> message) { // NOSONAR
+    private void addNotificationToSandBoxHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
         JsonObject request = new JsonObject()
@@ -137,7 +137,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     @Rule(address = ADD_TO_USER, method = Constants.POST, logged = true,
             mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
             scope = Rule.Param.BODY)
-    private void addNotificationToUserHandler(Message<String> message) { // NOSONAR
+    private void addNotificationToUserHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
         JsonObject request = new JsonObject()
@@ -149,7 +149,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         );
     }
 
-    private void notifyHandler(Message<JsonObject> message) { // NOSONAR
+    private void notifyHandler(Message<JsonObject> message) { 
         try {
             utils.testMandatoryParams(message.body().encode(), "id", TARGET, NOTIFICATION);
             String id = message.body().getString("id");
@@ -188,7 +188,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
-    private void markAsReadHandler(Message<String> message) { // NOSONAR
+    private void markAsReadHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
@@ -212,7 +212,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
-    private void deleteHandler(Message<String> message) { // NOSONAR
+    private void deleteHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject n = mongo.getById(req.getParams().get(PARAM_NOTIF_ID).get(0), Notification.class);
@@ -238,7 +238,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = LIST, method = Constants.GET, logged = true)
-    private void notificationListHandler(Message<String> message) { // NOSONAR
+    private void notificationListHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             int start = 0;

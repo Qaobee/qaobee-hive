@@ -118,7 +118,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     public static final String MOBILE_TOKEN = "mobileToken";
     private static final Logger LOG = LoggerFactory.getLogger(UserVerticle.class);
     private static final String ACCOUNT_FIELD = "account";
-    private static final String PASSWD_FIELD = "passwd"; // NOSONAR
+    private static final String PASSWD_FIELD = "passwd"; 
     private static final String ACCOUNT_LOGIN_FIELD = "account.login";
     private static final java.lang.String BAD_LOGIN_MESS = "bad.login";
     @Inject
@@ -161,7 +161,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = LOGIN_BY_TOKEN, method = Constants.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN}, scope = Rule.Param.BODY)
-    private void loginByTokenHandler(Message<String> message) { // NOSONAR
+    private void loginByTokenHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject request = new JsonObject(req.getBody());
@@ -207,7 +207,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = USER_BY_LOGIN, method = Constants.GET, logged = true, admin = true, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.REQUEST)
-    private void userByLoginHandler(Message<String> message) { // NOSONAR
+    private void userByLoginHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         // Creation of request
         CriteriaBuilder criterias = new CriteriaBuilder();
@@ -235,7 +235,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = USER_INFO, method = Constants.GET, logged = true, mandatoryParams = {"id"}, scope = Rule.Param.REQUEST)
-    private void userInfoHandler(Message<String> message) { // NOSONAR
+    private void userInfoHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject u = mongo.getById(req.getParams().get("id").get(0), User.class);
@@ -260,7 +260,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = META, method = Constants.GET, logged = true)
-    private void getMetaHandler(Message<String> message) { // NOSONAR
+    private void getMetaHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject user = mongo.getById(req.getUser().get_id(), User.class);
@@ -302,7 +302,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NOT_LOGGED invalid token
      */
     @Rule(address = CURRENT, method = Constants.GET, logged = true)
-    private void currentUserHandler(Message<String> message) { // NOSONAR
+    private void currentUserHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         User user = req.getUser();
         JsonObject jUser = new JsonObject(Json.encode(user));
@@ -323,7 +323,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = PASSWD_RESET, method = Constants.POST, mandatoryParams = {"id", "code", PASSWD_FIELD}, scope = Rule.Param.BODY)
-    private void passwordResetHandler(Message<String> message) { // NOSONAR
+    private void passwordResetHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject json = new JsonObject(req.getBody());
@@ -379,7 +379,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = PASSWD_RENEW_CHK, method = Constants.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
-    private void passwordRenewCheckHandler(Message<String> message) { // NOSONAR
+    private void passwordRenewCheckHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final String id = req.getParams().get("id").get(0);
@@ -419,7 +419,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError MAIL_EXCEPTION email problem
      */
     @Rule(address = PASSWD_RENEW, method = Constants.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
-    private void passwordRenewHandler(Message<String> message) { // NOSONAR
+    private void passwordRenewHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject infos = new JsonObject(req.getBody());
@@ -469,7 +469,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = {TOKEN}, scope = Rule.Param.HEADER)
-    private void logoutHandler(Message<String> message) { // NOSONAR
+    private void logoutHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", req.getHeaders().get("token").get(0)).get(), null, null, 0, 0, User.class);
@@ -510,7 +510,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = LOGIN, method = Constants.POST)
-    private void loginHandler(Message<String> message) { // NOSONAR
+    private void loginHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject infos = new JsonObject(req.getBody());

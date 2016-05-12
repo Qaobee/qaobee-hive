@@ -55,7 +55,7 @@ dependencies {
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
     compile "io.vertx:lang-groovy:$groovyLangModVersion@jar"
 
-    compile 'org.mongodb:mongo-java-driver:3.2.2'
+    compile 'org.mongodb:mongo-java-driver:2.13.2'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'commons-io:commons-io:2.5'
     compile 'org.apache.commons:commons-email:1.4'
@@ -80,7 +80,7 @@ dependencies {
 
 
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.3'
-    testCompile 'junit:junit:4.12'
+    testCompile "junit:junit:$junitVersion"
     testCompile name: 'vertx-junit-annotations-2.1RC2'
     testCompile 'org.mock-server:mockserver-netty:3.10.4'
     testCompile 'com.jayway.restassured:rest-assured:2.9.0'

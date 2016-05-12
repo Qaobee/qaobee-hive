@@ -198,7 +198,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = FINALIZE_SIGNUP, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
             scope = Rule.Param.BODY)
-    private void finalizeSignupHandler(Message<String> message) { // NOSONAR
+    private void finalizeSignupHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject jsonReq = new JsonObject(req.getBody());
@@ -401,7 +401,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = FIRST_CONNECTION_CHECK, method = Constants.GET, mandatoryParams = {PARAM_ID, PARAM_CODE}, scope = Rule.Param.REQUEST)
-    private void firstConnectionCheckHandler(Message<String> message) { // NOSONAR
+    private void firstConnectionCheckHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             Map<String, List<String>> params = req.getParams();
@@ -440,7 +440,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = ACCOUNT_CHECK, method = Constants.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
-    private void accountCheckHandler(Message<String> message) { // NOSONAR
+    private void accountCheckHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final String id = req.getParams().get("id").get(0);
@@ -473,7 +473,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiError MAIL_EXCEPTION problème d'envoi d'email
      */
     @Rule(address = REGISTER, method = Constants.PUT)
-    private void registerHandler(Message<String> message) { // NOSONAR
+    private void registerHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             // Gets JSon request
@@ -503,7 +503,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     if (usernameExistResp.body().getBoolean("status", false)) {
                         utils.sendError(message, new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", req.getLocale())));
                     } else {
-                        try { // NOSONAR
+                        try { 
                             user.getAccount().setActive(false);
                             user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
                             final Plan plan = Json.decodeValue(json.getObject(PARAM_PLAN).encode(), Plan.class);
@@ -536,7 +536,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                     emailReq.putString("body", tplRes);
                                     vertx.eventBus().publish("mailer.mod", emailReq);
                                     final JsonObject res = new JsonObject();
-                                    try { // NOSONAR
+                                    try { 
                                         res.putObject("person", mongo.getById(id, User.class));
                                         res.putString("planId", plan.getPaymentId());
                                         message.reply(res.encode());
@@ -576,7 +576,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = LOGIN_TEST, method = Constants.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
-    private void loginTestHandler(Message<String> message) { // NOSONAR
+    private void loginTestHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final String login = new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase();
         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
@@ -593,7 +593,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      * @apiError HTTP_ERROR wrong request's method
      */
-    private void existingLoginHandler(Message<JsonObject> message) { // NOSONAR
+    private void existingLoginHandler(Message<JsonObject> message) { 
         final String login = message.body().getString(PARAM_LOGIN).toLowerCase();
         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
         if (res.size() > 0) {

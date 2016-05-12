@@ -126,7 +126,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         }
     }
 
-    private void triggeredPaymentHandler(Message<JsonObject> message) { // NOSONAR
+    private void triggeredPaymentHandler(Message<JsonObject> message) { 
         final JsonObject user = message.body();
         JsonArray listPlan = user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD);
         for (int i = 0; i < listPlan.size(); i++) {
@@ -160,7 +160,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {object} status Status with a redirect link if any
      */
     @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = {PARAM_PLAN_ID}, scope = Rule.Param.BODY)
-    private void payHandler(Message<String> message) { // NOSONAR
+    private void payHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject body = new JsonObject(req.getBody());
@@ -195,7 +195,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {object} status Status
      */
     @Rule(address = IPN, method = Constants.POST, mandatoryParams = {"id", "id", METADATA_FIELD, "created_at"}, scope = Rule.Param.BODY)
-    private void ipnHandler(Message<String> message) { // NOSONAR
+    private void ipnHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject body = new JsonObject(req.getBody());

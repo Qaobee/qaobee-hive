@@ -90,7 +90,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
      *  }</pre>
      *  </p>
      */
-    private void getAssetHandler(Message<JsonObject> message) { // NOSONAR
+    private void getAssetHandler(Message<JsonObject> message) { 
         JsonObject resp = new JsonObject();
         try {
             utils.testMandatoryParams(message.body().toMap(), COLLECTION_FIELD, "id");
@@ -141,7 +141,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
      *  }</pre>
      *  </p>
      */
-    private void addAssetHandler(Message<JsonObject> message) { // NOSONAR
+    private void addAssetHandler(Message<JsonObject> message) { 
         JsonObject resp = new JsonObject();
         try {
             utils.testMandatoryParams(message.body().toMap(), UID_FIELD, AbstractGuiceVerticle.TOKEN, FILENAME_FIELD, COLLECTION_FIELD, "field", "contentType");

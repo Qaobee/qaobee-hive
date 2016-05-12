@@ -68,10 +68,118 @@ public class Main extends AbstractGuiceVerticle {
     private static final String COLLECTION = "collection";
     private static final String APPLICATION_JSON = "application/json";
     private static final String MESSAGE = "message";
+    private static Map<String, Rule> rules = new HashMap<>();
     @Inject
     private Utils utils;
     private SockJSServer sockJSServer;
-    private static Map<String, Rule> rules = new HashMap<>();
+
+    /**
+     * @param req request
+     * @param e   exception
+     */
+    private static void handleError(HttpServerRequest req, QaobeeException e) {
+        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+        req.response().setStatusCode(e.getCode().getCode());
+        JsonObject jsonEx = new JsonObject(Json.encode(e));
+        jsonEx.removeField("stackTrace");
+        jsonEx.removeField("suppressed");
+        req.response().end(jsonEx.encode());
+    }
+
+    /**
+     * @param restMod Class to scan
+     */
+    private static void manageRules(Class<?> restMod) {
+        Reflections reflections = new Reflections(restMod, new MethodAnnotationsScanner());
+        reflections.getMethodsAnnotatedWith(Rule.class).forEach(m -> {
+            Rule r = m.getAnnotation(Rule.class);
+            if (!rules.containsKey(r.address())) {
+                rules.put(r.address(), r);
+                LOG.info("Registring : " + r.address());
+            }
+        });
+    }
+
+    /**
+     * @param message Vert.X message
+     * @param req     Request
+     */
+    private static void handleResult(AsyncResult<Message<Object>> message, HttpServerRequest req) {
+        if (message.succeeded()) {
+            final String response = (String) message.result().body();
+            if (response.startsWith("[") || !response.startsWith("{")) {
+                enableCors(req);
+                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+                req.response().end(response);
+            } else {
+                final JsonObject json = new JsonObject(response);
+                if (json.containsField(FILE_SERVE)) {
+                    final File f = new File(json.getString(FILE_SERVE));
+                    req.response().putHeader("Content-Description", "File Transfer");
+                    req.response().putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE));
+                    req.response().putHeader("Content-Disposition", "attachment; filename=" + f.getName());
+                    req.response().putHeader("Expires", "0");
+                    req.response().putHeader("Cache-Control", "must-revalidate");
+                    req.response().putHeader("Pragma", "public");
+                    req.response().putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
+                    enableCors(req);
+                    req.response().sendFile(f.getAbsolutePath());
+                } else {
+                    enableCors(req);
+                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+                    req.response().end(response);
+                }
+            }
+        } else {
+            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+            final ReplyException ex = (ReplyException) message.cause();
+            req.response().setStatusCode(404);
+            enableCors(req);
+            if (ex.failureCode() > 0) {
+                req.response().setStatusCode(ex.failureCode());
+            }
+            if (ex.getMessage() != null) {
+                String exStr = ex.getMessage();
+                if (ex.getMessage().startsWith("{")) {
+                    JsonObject jsonEx = new JsonObject(ex.getMessage());
+                    jsonEx.removeField("stackTrace");
+                    jsonEx.removeField("suppressed");
+                    exStr = jsonEx.encode();
+                }
+                req.response().end(exStr);
+            } else {
+                manage404Error(req);
+            }
+        }
+    }
+
+    private static void manage404Error(HttpServerRequest req) {
+        final JsonObject jsonResp = new JsonObject();
+        jsonResp.putBoolean("status", false);
+        jsonResp.putString(MESSAGE, "Nothing here");
+        jsonResp.putNumber("httpCode", 404);
+        req.response().end(jsonResp.encode());
+    }
+
+    /**
+     * Enable cors.
+     *
+     * @param req the req
+     */
+    private static void enableCors(final HttpServerRequest req) {
+        req.response().headers().add("Access-Control-Allow-Origin", "*");
+        req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+        req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
+    }
+
+    /**
+     * Gets rules.
+     *
+     * @return the rules
+     */
+    public static Map<String, Rule> getRules() {
+        return rules;
+    }
 
     /**
      * Start void.
@@ -185,7 +293,7 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @param req Request
      */
-    private void apiHandler(HttpServerRequest req) { // NOSONAR
+    private void apiHandler(HttpServerRequest req) {
         req.bodyHandler(event -> {
             final RequestWrapper wrapper = new RequestWrapper();
             wrapper.setBody(event.toString());
@@ -204,7 +312,7 @@ public class Main extends AbstractGuiceVerticle {
             vertx.eventBus().send("metrix", json);
             String busAddress = container.config().getObject(RUNTIME).getInteger("version") + "." + StringUtils.join(path, '.');
             if (rules.containsKey(busAddress)) {
-                if(testRequest(req, busAddress, wrapper)) {
+                if (testRequest(req, busAddress, wrapper)) {
                     vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> {
                         stopTimer(StringUtils.join(wrapper.getPath(), '.'));
                         handleResult(message, req);
@@ -219,7 +327,7 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @param req Request
      */
-    private void assetUploadHandler(HttpServerRequest req) { // NOSONAR
+    private void assetUploadHandler(HttpServerRequest req) {
         startTimer("main.avatar");
         enableCors(req);
         final JsonObject request = new JsonObject()
@@ -245,7 +353,7 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @param req Request
      */
-    private void getAssetHandler(HttpServerRequest req) { // NOSONAR
+    private void getAssetHandler(HttpServerRequest req) {
         enableCors(req);
         final JsonObject request = new JsonObject()
                 .putString(COLLECTION, req.params().get(COLLECTION))
@@ -330,114 +438,5 @@ public class Main extends AbstractGuiceVerticle {
             return false;
         }
         return true;
-    }
-
-    /**
-     * @param req request
-     * @param e   exception
-     */
-    private static void handleError(HttpServerRequest req, QaobeeException e) {
-        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-        req.response().setStatusCode(e.getCode().getCode());
-        JsonObject jsonEx = new JsonObject(Json.encode(e));
-        jsonEx.removeField("stackTrace");
-        jsonEx.removeField("suppressed");
-        req.response().end(jsonEx.encode());
-    }
-
-    /**
-     * @param restMod Class to scan
-     */
-    private static void manageRules(Class<?> restMod) {
-        Reflections reflections = new Reflections(restMod, new MethodAnnotationsScanner());
-        reflections.getMethodsAnnotatedWith(Rule.class).forEach(m-> {
-            Rule r = m.getAnnotation(Rule.class);
-            if (!rules.containsKey(r.address())) {
-                rules.put(r.address(), r);
-                LOG.info("Registring : " + r.address());
-            }
-        });
-    }
-
-    /**
-     * @param message Vert.X message
-     * @param req     Request
-     */
-    private static void handleResult(AsyncResult<Message<Object>> message, HttpServerRequest req) {
-        if (message.succeeded()) {
-            final String response = (String) message.result().body();
-            if (response.startsWith("[") || !response.startsWith("{")) {
-                enableCors(req);
-                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                req.response().end(response);
-            } else {
-                final JsonObject json = new JsonObject(response);
-                if (json.containsField(FILE_SERVE)) {
-                    final File f = new File(json.getString(FILE_SERVE));
-                    req.response().putHeader("Content-Description", "File Transfer");
-                    req.response().putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE));
-                    req.response().putHeader("Content-Disposition", "attachment; filename=" + f.getName());
-                    req.response().putHeader("Expires", "0");
-                    req.response().putHeader("Cache-Control", "must-revalidate");
-                    req.response().putHeader("Pragma", "public");
-                    req.response().putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
-                    enableCors(req);
-                    req.response().sendFile(f.getAbsolutePath());
-                } else {
-                    enableCors(req);
-                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                    req.response().end(response);
-                }
-            }
-        } else {
-            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-            final ReplyException ex = (ReplyException) message.cause();
-            req.response().setStatusCode(404);
-            enableCors(req);
-            if (ex.failureCode() > 0) {
-                req.response().setStatusCode(ex.failureCode());
-            }
-            if (ex.getMessage() != null) {
-                String exStr = ex.getMessage();
-                if (ex.getMessage().startsWith("{")) {
-                    JsonObject jsonEx = new JsonObject(ex.getMessage());
-                    jsonEx.removeField("stackTrace");
-                    jsonEx.removeField("suppressed");
-                    exStr = jsonEx.encode();
-                }
-                req.response().end(exStr);
-            } else {
-                manage404Error(req);
-            }
-        }
-    }
-
-    private static void manage404Error(HttpServerRequest req) {
-        final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean("status", false);
-        jsonResp.putString(MESSAGE, "Nothing here");
-        jsonResp.putNumber("httpCode", 404);
-        req.response().end(jsonResp.encode());
-    }
-
-
-    /**
-     * Enable cors.
-     *
-     * @param req the req
-     */
-    private static void enableCors(final HttpServerRequest req) {
-        req.response().headers().add("Access-Control-Allow-Origin", "*");
-        req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-        req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
-    }
-
-    /**
-     * Gets rules.
-     *
-     * @return the rules
-     */
-    public static Map<String, Rule> getRules() {
-        return rules;
     }
 }

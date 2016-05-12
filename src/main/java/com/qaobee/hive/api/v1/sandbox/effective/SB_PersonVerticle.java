@@ -48,7 +48,7 @@ import java.util.List;
  * The type Person verticle.
  */
 @DeployableVerticle
-public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
+public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_PersonVerticle.class);
     /**
      * Handler to get a set of persons
@@ -112,7 +112,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Array} list of persons
      */
     @Rule(address = GET_LIST_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST)
-    private void getPersonListBySandboxHandler(Message<String> message) {// NOSONAR
+    private void getPersonListBySandboxHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             CriteriaBuilder criteria = new CriteriaBuilder()
@@ -138,7 +138,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Array} list of persons
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true, mandatoryParams = {PARAM_LIST_ID, PARAM_LIST_FIELD}, scope = Rule.Param.BODY)
-    private void getPersonListHandler(Message<String> message) {// NOSONAR
+    private void getPersonListHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
@@ -172,7 +172,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY)
-    private void updatePersonHandler(Message<String> message) {// NOSONAR
+    private void updatePersonHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject json = new JsonObject(req.getBody());
         final String id = mongo.update(json, SB_Person.class);
@@ -190,7 +190,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.REQUEST)
-    private void getPersonHandler(Message<String> message) {// NOSONAR
+    private void getPersonHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             utils.testMandatoryParams(req.getParams(), PARAM_PERSON_ID);
@@ -210,7 +210,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {"person"}, scope = Rule.Param.BODY)
-    private void addPersonHandler(Message<String> message) {// NOSONAR
+    private void addPersonHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject dataContainer = new JsonObject(req.getBody());

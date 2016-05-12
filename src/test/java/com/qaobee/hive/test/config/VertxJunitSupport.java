@@ -82,7 +82,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     /**
      * The constant BASE_URL.
      */
-    protected static final String BASE_URL = "http://localhost:8080";
+    protected static final String BASE_URL = "http://localhost:8888";
     /**
      * The constant moduleConfig.
      */

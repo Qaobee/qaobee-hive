@@ -17,7 +17,13 @@
             flex: 1 0 auto;
         }
 
-        #avatar {
+        .avatar {
+            width: 177px;
+            height: auto;
+            margin: 10px;
+            vertical-align: middle;
+        }
+        .logo {
             width: 177px;
             height: auto;
             margin: 10px;
@@ -26,32 +32,24 @@
     </style>
 </head>
 <body>
+
 <header>
     <nav class="top-nav green darken-1" role="navigation">
         <div class="container">
             <div class="nav-wrapper">
-                <a href="/#/" class="brand-logo"><img src="http://www.qaobee.com/assets/images/logo-mini.png"
-                                                      height="30px"/></a>
-                <ul class="right">
-                    <li><a href="https://twitter.com/Qaobee"
-                           target="_blank"
-                           class="white-text"><i
-                            class="fa fa-twitter-square fa-2x"></i></a></li>
-                </ul>
-
+                <a href="/#/" class="brand-logo">
+                    <div class="media logo" data-src="https://www.qaobee.com/assets/images/logo-mini.png"/></a>
             </div>
         </div>
     </nav>
 </header>
 <main>
-    <div id="main-container">
+    <div class="main-container">
         <h1><#if avatar??>
-            <div id="avatar" class="media" data-src="${avatar}"/></#if>
-        ${firstname!''} ${name!''}
+            <div class="media avatar" data-src="${avatar}"/></#if> ${firstname!''} ${name!''}
             <small>${username!''}</small>
         </h1>
-        <hr/>
-    ${birthdate!''}
+        <hr/> ${birthdate!''}
         <br/> ${address!''}
         <br/> ${phoneNumber!''} / ${email!''}
     </div>

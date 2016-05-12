@@ -45,7 +45,7 @@ import java.util.Map;
  * The type Sand box cfg verticle.
  */
 @DeployableVerticle
-public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
+public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant GET.
      */
@@ -91,7 +91,7 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     @Rule(address = GETLIST, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID},
             scope = Rule.Param.REQUEST)
-    private void getSandoxCfgListHandler(Message<String> message) {// NOSONAR
+    private void getSandoxCfgListHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             Map<String, Object> criterias = new HashMap<>();
@@ -116,7 +116,7 @@ public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
-    private void getSandboxCfgHandler(Message<String> message) {// NOSONAR
+    private void getSandboxCfgHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_SandBoxCfg.class);

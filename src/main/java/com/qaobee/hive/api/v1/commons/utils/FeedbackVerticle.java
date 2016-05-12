@@ -49,11 +49,11 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(POST_FEEDBACK,this::postFeedbackHandler)
+                .registerHandler(POST_FEEDBACK, this::postFeedbackHandler)
                 .registerHandler("internal.feedback.send", this::internarFeebackHandler);
     }
 
-    private void internarFeebackHandler(Message<JsonObject> message) {// NOSONAR
+    private void internarFeebackHandler(Message<JsonObject> message) {
         try {
             JsonObject data = message.body();
             Client client = Client.basicAuth(config.getString("apikey"));
@@ -88,7 +88,7 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status boolean status
      */
     @Rule(address = POST_FEEDBACK, method = Constants.POST)
-    private void postFeedbackHandler(Message<String> message) {// NOSONAR
+    private void postFeedbackHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             String[] postRequest = req.getBody().split("=");

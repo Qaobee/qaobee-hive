@@ -139,7 +139,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     @Rule(address = UPDATE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
             scope = Rule.Param.BODY)
-    private void updateStructureHandler(Message<String> message) { // NOSONAR
+    private void updateStructureHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject params = new JsonObject(req.getBody());
@@ -165,7 +165,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY)
-    private void getListOfStructuresHandler(Message<String> message) { // NOSONAR
+    private void getListOfStructuresHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
@@ -214,7 +214,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
-    private void getStructureHandler(Message<String> message) { // NOSONAR
+    private void getStructureHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Structure.class);
@@ -245,7 +245,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     @Rule(address = ADD, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
             scope = Rule.Param.BODY)
-    private void addStructureHandler(Message<String> message) { // NOSONAR
+    private void addStructureHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject params = new JsonObject(req.getBody());

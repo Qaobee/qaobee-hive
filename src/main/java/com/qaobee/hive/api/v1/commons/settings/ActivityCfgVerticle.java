@@ -101,7 +101,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = PARAMS, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST}, scope = Rule.Param.REQUEST)
-    private void getActivityCfgParamsHandler(Message<String> message) { // NOSONAR
+    private void getActivityCfgParamsHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             // Activity ID
@@ -158,7 +158,7 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE}, scope = Rule.Param.REQUEST)
-    private void getActivityCfgHandler(Message<String> message) { // NOSONAR
+    private void getActivityCfgHandler(Message<String> message) { 
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             // Activity ID

@@ -47,7 +47,7 @@ import java.util.Map;
  * The type Effective verticle.
  */
 @DeployableVerticle
-public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
+public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant GET.
      */
@@ -109,7 +109,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = ADD, method = Constants.POST, logged = true)
-    private void addEffectiveHandler(Message<String> message) {// NOSONAR
+    private void addEffectiveHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject json = new JsonObject(req.getBody());
@@ -133,7 +133,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Effective}   effective    The effective updated.
      */
     @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.BODY)
-    private void updateEffectiveHandler(Message<String> message) {// NOSONAR
+    private void updateEffectiveHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject json = new JsonObject(req.getBody());
         final String id = mongo.update(json, SB_Effective.class);
@@ -155,7 +155,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = GET_LIST, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOXCFG_ID}, scope = Rule.Param.REQUEST)
-    private void getEffectiveListHandler(Message<String> message) {// NOSONAR
+    private void getEffectiveListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             Map<String, List<String>> params = req.getParams();
@@ -192,7 +192,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    private void getEffectiveHandler(Message<String> message) {// NOSONAR
+    private void getEffectiveHandler(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             Map<String, List<String>> params = req.getParams();
