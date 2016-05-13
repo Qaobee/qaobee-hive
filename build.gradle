@@ -93,6 +93,7 @@ task apidoc(type: Exec) {
 test {
     include 'com/qaobee/hive/test/api/**'
 }
+
 sonarqube {
     check
     properties {
@@ -102,14 +103,10 @@ sonarqube {
         // This is the Sonar Server
         property 'sonar.host.url', 'http://flufy.hd.free.fr/sonarqube'
         property 'sonar.projectKey', 'com.qaobee:qaobee-hive'
-
-        // JDBC Properties
-        property 'sonar.jdbc.url', 'jdbc:mysql://localhost:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance'
-        property 'sonar.jdbc.username', 'sonar'
-        property 'sonar.jdbc.password', 'sonar'
         property 'sonar.profile', 'Sonar way'
     }
 }
+
 /*
 If you're uploading stuff to Maven, Gradle needs to generate a POM.
 Please edit the details below.

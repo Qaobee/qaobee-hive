@@ -118,7 +118,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     public static final String MOBILE_TOKEN = "mobileToken";
     private static final Logger LOG = LoggerFactory.getLogger(UserVerticle.class);
     private static final String ACCOUNT_FIELD = "account";
-    private static final String PASSWD_FIELD = "passwd"; 
+    private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     private static final String ACCOUNT_LOGIN_FIELD = "account.login";
     private static final java.lang.String BAD_LOGIN_MESS = "bad.login";
     @Inject
