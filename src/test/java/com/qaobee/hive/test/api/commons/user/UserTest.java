@@ -424,7 +424,7 @@ public class UserTest extends VertxJunitSupport {
         try {
             mongo.save(user);
             GregorianCalendar today = new GregorianCalendar();
-            int year = today.get(GregorianCalendar.MONTH) < 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
+            int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) -1 : today.get(GregorianCalendar.YEAR);
             given().header(TOKEN, user.getAccount().getToken())
                     .param(UserVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .when().get(getURL(UserVerticle.META))
