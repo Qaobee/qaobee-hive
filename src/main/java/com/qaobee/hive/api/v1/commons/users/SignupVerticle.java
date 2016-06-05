@@ -351,7 +351,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 notification.putObject("notification", new JsonObject()
                         .putString("content", Messages.getString("first.connection.notification.content"))
                         .putString("title", Messages.getString("first.connection.notification.title"))
-                        .putString("from_user_id", getContainer().config().getObject(RUNTIME).getString("admin.id"))
+                        .putString("senderId", getContainer().config().getObject(RUNTIME).getString("admin.id"))
                 );
                 vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
                 message.reply(Json.encode(user));

@@ -255,7 +255,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             }
             JsonArray jnotif = new JsonArray();
             for (int i = start; i < start + limit; i++) {
-                ((JsonObject) notifications.get(i)).putObject(SENDER_ID, getUser(((JsonObject) notifications.get(i)).getString("from_user_id")));
+                ((JsonObject) notifications.get(i)).putObject(SENDER_ID, getUser(((JsonObject) notifications.get(i)).getString(SENDER_ID)));
                 jnotif.add(notifications.get(i));
             }
             message.reply(jnotif.encode());
