@@ -27,11 +27,11 @@ public interface JSDataMongoTest {
     String DATA_TEAM_HAND = "data_SB_team_Hand.js";
     String DATA_EVENT_HAND = "data_SB_event_Hand_tests.js";
 
-    String DATA_PERSON_HAND = "data_SB_person_Hand_CESSON.js";
+    String DATA_PERSON_HAND = "data_users_hand_cesson.js";
     String DATA_STRUCTURE = "data_structures.js";
     String DATA_USERS = "data_users.js";
-    String DATA_USER_QAOBEE = "data_users_qaobee.js";
-    String DATA_SANDBOXES_HAND = "data_SB_sandbox_Hand.js";
+    String DATA_USER_QAOBEE = "data_users_qaobee_cke.js";
+    String DATA_SANDBOXES_HAND = "data_users_hand_cesson.js";
 
     /* Training */
     String DATA_CYCLE = "data_SB_training_cycle.js";

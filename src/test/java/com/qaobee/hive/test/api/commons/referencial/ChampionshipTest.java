@@ -21,6 +21,7 @@ import com.qaobee.hive.api.v1.commons.referencial.ChampionshipVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -33,11 +34,13 @@ import static org.hamcrest.Matchers.*;
  *
  * @author jerome
  */
+@Ignore
 public class ChampionshipTest extends VertxJunitSupport {
 
     /**
      * Gets list championships.
      */
+    @Ignore
     @Test
     public void getListChampionships() {
         // Populate default value
@@ -151,6 +154,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     /**
      * Gets list championships with infra.
      */
+    @Ignore
     @Test
     public void getListChampionshipsWithInfra() {
         // Populate default value
@@ -202,6 +206,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     /**
      * Gets championship.
      */
+    @Ignore
     @Test
     public void getChampionship() {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
@@ -343,6 +348,7 @@ public class ChampionshipTest extends VertxJunitSupport {
     /**
      * Update championship.
      */
+    @Ignore
     @Test
     public void updateChampionship() {
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);

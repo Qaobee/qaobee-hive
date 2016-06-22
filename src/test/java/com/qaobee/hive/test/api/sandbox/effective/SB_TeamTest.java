@@ -45,7 +45,7 @@ public class SB_TeamTest extends VertxJunitSupport {
      */
     @Test
     public void getMyTeamsList() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         final Map<String, String> params = new HashMap<>();
         params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
         params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
@@ -85,7 +85,7 @@ public class SB_TeamTest extends VertxJunitSupport {
      */
     @Test
     public void getMyTeamsListeWithMissingParameters() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_TeamVerticle.GET_LIST).mandatoryParams());
         final Map<String, String> params = new HashMap<>();
@@ -112,7 +112,7 @@ public class SB_TeamTest extends VertxJunitSupport {
      */
     @Test
     public void getMyAdversaryTeamsList() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         final Map<String, String> params = new HashMap<>();
         params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
         params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
@@ -141,7 +141,7 @@ public class SB_TeamTest extends VertxJunitSupport {
      */
     @Test
     public void getById() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
                 .queryParam(SB_TeamVerticle.PARAM_ID, "552d5e08644a77b3a20afdfe")
                 .when().get(getURL(SB_TeamVerticle.GET))
@@ -227,7 +227,7 @@ public class SB_TeamTest extends VertxJunitSupport {
      */
     @Test
     public void updateTeam() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_TEAM_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
 
         JsonObject team = new JsonObject(given().header(TOKEN, user.getAccount().getToken())

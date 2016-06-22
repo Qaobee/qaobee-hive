@@ -39,7 +39,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void getListMembersByCategory() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         String id = "558b0fc0bd2e39cdab651e21";
         given().header(TOKEN, user.getAccount().getToken())
@@ -56,7 +56,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void getListMembersByUnknowCategory() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         String id = "558b0fc0bd2e39cdab651e21";
         given().header(TOKEN, user.getAccount().getToken())
@@ -118,7 +118,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void getEffective() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         String id = "550b31f925da07681592db23";
         given().header(TOKEN, user.getAccount().getToken())
@@ -180,7 +180,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void addEffective() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         JsonObject effective = generateEffective();
         given().header(TOKEN, user.getAccount().getToken())
@@ -216,7 +216,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void updateEffectiveRemoveOneMember() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         String id = "550b31f925da07681592db23";
         JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
@@ -246,7 +246,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void updateEffectiveAddOneMember() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         String id = "550b31f925da07681592db23";
         JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
@@ -295,7 +295,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void updateEffectiveWithMissingParameters() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         JsonObject effective = generateEffective();
         given().header(TOKEN, user.getAccount().getToken())

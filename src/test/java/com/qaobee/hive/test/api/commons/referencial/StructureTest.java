@@ -23,6 +23,7 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.vertx.java.core.json.JsonObject;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -33,6 +34,7 @@ import static org.hamcrest.Matchers.*;
  *
  * @author cke
  */
+ @Ignore
 public class StructureTest extends VertxJunitSupport {
 
     /**
