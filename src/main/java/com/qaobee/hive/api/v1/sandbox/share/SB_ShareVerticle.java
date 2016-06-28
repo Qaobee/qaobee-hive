@@ -5,8 +5,10 @@ import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
+import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -17,15 +19,18 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.DecodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 
 /**
  * The type Sb share verticle.
  */
+@DeployableVerticle
 public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_ShareVerticle.class);
 
@@ -99,15 +104,17 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANBOXID}, scope = Rule.Param.REQUEST)
     private void getShare(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject request = new JsonObject(req.getBody());
         try {
-            JsonObject sandbox = mongo.getById(request.getString(PARAM_SANBOXID), SB_SandBox.class);
+            JsonObject sandbox = mongo.getById(req.getParams().get(PARAM_SANBOXID).get(0), SB_SandBox.class);
             String sandboxCfgId = sandbox.getString("sandboxCfgId");
             sandbox.putObject("sandboxCfg", getEnrichedSandboxCfg(sandboxCfgId));
             message.reply(sandbox.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
+        } catch (DecodeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e));
         }
     }
 
@@ -200,6 +207,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
             return;
         }
         JsonArray result = new JsonArray();
+        // TODO : Ajouter les sandbox en mode invité
         sandboxes.forEach(s -> {
             try {
                 ((JsonObject) s).putObject("sandboxCfg", getEnrichedSandboxCfg(((JsonObject) s).getString("sandboxCfgId")));
@@ -216,7 +224,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         JsonArray members = new JsonArray();
         sandboxCfg.getArray("members").forEach(m -> {
             try {
-                members.add(mongo.getById((String) m, User.class));
+                members.add(mongo.getById((String) m, User.class, Arrays.asList("_id", "name", "avatar", "firstname", "contact", "country")));
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
             }
