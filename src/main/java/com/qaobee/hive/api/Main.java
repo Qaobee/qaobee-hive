@@ -158,7 +158,7 @@ public class Main extends AbstractGuiceVerticle {
         jsonResp.putBoolean("status", false);
         jsonResp.putString(MESSAGE, "Nothing here");
         jsonResp.putNumber("httpCode", 404);
-        req.response().end(jsonResp.encode());
+        req.response().setStatusCode(404).end(jsonResp.encode());
     }
 
     /**
