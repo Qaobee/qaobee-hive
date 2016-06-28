@@ -1,6 +1,7 @@
 package com.qaobee.hive.api.v1.sandbox.share;
 
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
@@ -9,6 +10,7 @@ import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -52,6 +54,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * The constant PARAM_USERID.
      */
     public static final String PARAM_USERID = "userId";
+    private static final String INTERNAL_SHARE = "internal.sandbox.share";
 
     /**
      * The Utils.
@@ -69,8 +72,22 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 .registerHandler(GET_FRIEND_LIST, this::getFriendList)
                 .registerHandler(ADD_FRIEND, this::addFriend)
                 .registerHandler(DEL_FRIEND, this::delFriend)
-                .registerHandler(GET, this::getShare);
+                .registerHandler(GET, this::getShare)
+                .registerHandler(INTERNAL_SHARE, this::internalShare);
     }
+
+    private void internalShare(Message<JsonObject> message) {
+        JsonObject notification = new JsonObject()
+                .putString("id", message.body().getString(PARAM_USERID))
+                .putString("target", User.class.getSimpleName())
+                .putObject("notification", new JsonObject()
+                        .putString("content", Messages.getString(message.body().getString("root") + ".content", message.body().getString("locale")))
+                        .putString("title", Messages.getString(message.body().getString("root") + ".title", message.body().getString("locale")))
+                        .putString("senderId", message.body().getString("uid"))
+                );
+        vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+    }
+
     /**
      * @apiDescription Get an enriched SB_SandBoxCfg
      * @api {post} /api/1/sandbox/share/get Get an enriched SB_SandBoxCfg
@@ -118,6 +135,12 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 }
             });
             sandboxCfg.putArray("members", members);
+            vertx.eventBus().send(INTERNAL_SHARE, new JsonObject()
+                    .putString(PARAM_USERID, request.getString(PARAM_USERID))
+                    .putString("root", "notification.sandbox.del")
+                    .putString("locale", req.getLocale())
+                    .putString("uid", req.getUser().get_id())
+            );
             mongo.update(sandboxCfg, SB_SandBoxCfg.class);
             sandbox.putObject("sandboxCfg", getEnrichedSandboxCfg(sandboxCfgId));
             message.reply(sandbox.encode());
@@ -146,6 +169,12 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
             JsonObject sandboxCfg = mongo.getById(sandboxCfgId, SB_SandBoxCfg.class);
             sandboxCfg.getArray("members").add(request.getString(PARAM_USERID));
             mongo.update(sandboxCfg, SB_SandBoxCfg.class);
+            vertx.eventBus().send(INTERNAL_SHARE, new JsonObject()
+                    .putString(PARAM_USERID, request.getString(PARAM_USERID))
+                    .putString("root", "notification.sandbox.add")
+                    .putString("locale", req.getLocale())
+                    .putString("uid", req.getUser().get_id())
+            );
             sandbox.putObject("sandboxCfg", getEnrichedSandboxCfg(sandboxCfgId));
             message.reply(sandbox.encode());
         } catch (QaobeeException e) {
