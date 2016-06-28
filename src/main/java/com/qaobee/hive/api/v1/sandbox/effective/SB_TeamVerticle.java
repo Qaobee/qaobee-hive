@@ -18,6 +18,9 @@
 package com.qaobee.hive.api.v1.sandbox.effective;
 
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Team;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
@@ -25,12 +28,14 @@ import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
@@ -162,6 +167,23 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
         final JsonObject json = new JsonObject(req.getBody());
         final String id = mongo.update(json, SB_Team.class);
         json.putString("_id", id);
+        try {
+            String sandBoxCfgId = mongo.getById(json.getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+            JsonObject notification = new JsonObject();
+            notification.putString("id", sandBoxCfgId);
+            notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+            notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
+            notification.putObject("notification", new JsonObject()
+                    .putString("content", Messages.getString("notification.team.update.content", req.getLocale(),
+                            json.getString("label"),
+                            "/#/private/updateTeam/" + json.getString("_id") + "/" + json.getBoolean("adversary")))
+                    .putString("title", Messages.getString("notification.team.update.title", req.getLocale()))
+                    .putString("senderId", req.getUser().get_id())
+            );
+            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+        }
         message.reply(json.encode());
     }
 
@@ -180,6 +202,23 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
             final JsonObject json = new JsonObject(req.getBody());
             final String id = mongo.save(json, SB_Team.class);
             json.putString("_id", id);
+            try {
+                String sandBoxCfgId = mongo.getById(json.getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+                JsonObject notification = new JsonObject();
+                notification.putString("id", sandBoxCfgId);
+                notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+                notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
+                notification.putObject("notification", new JsonObject()
+                        .putString("content", Messages.getString("notification.team.add.content", req.getLocale(),
+                                json.getString("label"),
+                                "/#/private/updateTeam/" + json.getString("_id") + "/" + json.getBoolean("adversary")))
+                        .putString("title", Messages.getString("notification.team.add.title", req.getLocale()))
+                        .putString("senderId", req.getUser().get_id())
+                );
+                vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+            } catch (QaobeeException e) {
+                LOG.error(e.getMessage(), e);
+            }
             message.reply(json.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
