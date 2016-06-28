@@ -22,6 +22,9 @@ package com.qaobee.hive.api.v1.sandbox.effective;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
@@ -30,6 +33,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -174,10 +178,27 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY)
     private void updatePersonHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        final JsonObject json = new JsonObject(req.getBody());
-        final String id = mongo.update(json, SB_Person.class);
-        json.putString("_id", id);
-        message.reply(json.encode());
+        final JsonObject personJson = new JsonObject(req.getBody());
+        final String id = mongo.update(personJson, SB_Person.class);
+        personJson.putString("_id", id);
+        try {
+            String sandBoxCfgId = mongo.getById(personJson.getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+            JsonObject notification = new JsonObject();
+            notification.putString("id", sandBoxCfgId);
+            notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+            notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
+            notification.putObject("notification", new JsonObject()
+                    .putString("content", Messages.getString("notification.person.update.content", req.getLocale(),
+                            personJson.getString("firstname") + " " + personJson.getString("name"),
+                            "/#/private/viewPlayer/" + personJson.getString("_id")))
+                    .putString("title", Messages.getString("notification.person.update.title", req.getLocale()))
+                    .putString("senderId", req.getUser().get_id())
+            );
+            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        message.reply(personJson.encode());
     }
 
     /**
@@ -217,6 +238,23 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
             final JsonObject personJson = new JsonObject(dataContainer.getElement("person").toString());
             final String id = mongo.save(personJson, SB_Person.class);
             personJson.putString("_id", id);
+            try {
+                String sandBoxCfgId = mongo.getById(personJson.getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+                JsonObject notification = new JsonObject();
+                notification.putString("id", sandBoxCfgId);
+                notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+                notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
+                notification.putObject("notification", new JsonObject()
+                        .putString("content", Messages.getString("notification.person.add.content", req.getLocale(),
+                                personJson.getString("firstname") + " " + personJson.getString("name"),
+                                "/#/private/viewPlayer/" + personJson.getString("_id")))
+                        .putString("title", Messages.getString("notification.person.add.title", req.getLocale()))
+                        .putString("senderId", req.getUser().get_id())
+                );
+                vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+            } catch (QaobeeException e) {
+                LOG.error(e.getMessage(), e);
+            }
             message.reply(personJson.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
