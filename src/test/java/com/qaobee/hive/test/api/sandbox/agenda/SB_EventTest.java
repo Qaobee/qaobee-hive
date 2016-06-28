@@ -44,6 +44,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void addEvent() {
+        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject();
         params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
@@ -54,7 +55,7 @@ public class SB_EventTest extends VertxJunitSupport {
         params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L);
         params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1435701600100L);
         final JsonObject owner = new JsonObject();
-        owner.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
+        owner.putString("sandboxId", "558b0efebd2e39cdab651e1f");
         owner.putString("effectiveId", "550b31f925da07681592db23");
         params.putObject(SB_EventVerticle.PARAM_OWNER, owner);
 
@@ -283,7 +284,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void updateEvent() {
-        populate(POPULATE_ONLY, DATA_EVENT_HAND);
+        populate(POPULATE_ONLY, DATA_EVENT_HAND, DATA_USERS, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
         JsonObject event = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
