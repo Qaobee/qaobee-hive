@@ -107,8 +107,8 @@ public class IndicatorTest extends VertxJunitSupport {
         User user = generateLoggedUser();
 
         final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
         params.putArray(IndicatorVerticle.PARAM_SCREEN, new JsonArray(new String[]{"COLLECTE"}));
 
         given().header(TOKEN, user.getAccount().getToken())
@@ -148,7 +148,7 @@ public class IndicatorTest extends VertxJunitSupport {
         User user = generateLoggedUser();
 
         final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
         params.putArray(IndicatorVerticle.PARAM_SCREEN, new JsonArray(new String[]{"COLLECTE"}));
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
@@ -156,7 +156,7 @@ public class IndicatorTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
         params.removeField(IndicatorVerticle.PARAM_ACTIVITY_ID);
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
@@ -164,7 +164,7 @@ public class IndicatorTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
         params.removeField(IndicatorVerticle.PARAM_SCREEN);
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
@@ -181,8 +181,8 @@ public class IndicatorTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
         params.putArray(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[]{"hightPerson"}));
 
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
@@ -222,8 +222,8 @@ public class IndicatorTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
         params.putArray(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[]{"blabla"}));
 
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
@@ -240,7 +240,7 @@ public class IndicatorTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(0));
 
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
         params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, "123");
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .body(params.encode())
@@ -257,8 +257,8 @@ public class IndicatorTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
 
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .body(params.encode())
@@ -274,7 +274,7 @@ public class IndicatorTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
+        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
         params.removeField(IndicatorVerticle.PARAM_ACTIVITY_ID);
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .body(params.encode())

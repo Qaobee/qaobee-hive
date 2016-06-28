@@ -17,6 +17,7 @@
  */
 package com.qaobee.hive.test.api.commons.referencial;
 
+import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.commons.referencial.ChampionshipVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -25,6 +26,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -104,12 +108,16 @@ public class ChampionshipTest extends VertxJunitSupport {
         final JsonObject params = new JsonObject();
         params.putString(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
         params.putString(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
-
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(ChampionshipVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(ChampionshipVerticle.GET_LIST).mandatoryParams());
+        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(params.encode());
+            params2.removeField(k);
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**

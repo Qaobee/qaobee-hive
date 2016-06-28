@@ -94,17 +94,15 @@ public class SB_TeamTest extends VertxJunitSupport {
         params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
         params.put(SB_TeamVerticle.PARAM_ADVERSARY, "false");
 
-        for (String k : params.keySet()) {
-            if (mandatoryParams.contains(k)) {
-                Map<String, String> params2 = new HashMap<>(params);
-                params2.remove(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .queryParams(params2)
-                        .when().get(getURL(SB_TeamVerticle.GET_LIST))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        params.keySet().stream().filter(mandatoryParams::contains).forEach(k -> {
+            Map<String, String> params2 = new HashMap<>(params);
+            params2.remove(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParams(params2)
+                    .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**

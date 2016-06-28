@@ -114,17 +114,15 @@ public class SB_EventTest extends VertxJunitSupport {
         owner.putString("effectiveId", "550b31f925da07681592db23");
         params.putObject(SB_EventVerticle.PARAM_OWNER, owner);
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.ADD).mandatoryParams());
-        for (String k : params.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(params.encode());
-                params2.removeField(k);
-                given().header(TOKEN, u.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().post(getURL(SB_EventVerticle.ADD))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(params.encode());
+            params2.removeField(k);
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_EventVerticle.ADD))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -204,17 +202,15 @@ public class SB_EventTest extends VertxJunitSupport {
         params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.GET_LIST).mandatoryParams());
-        for (String k : params.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(params.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().post(getURL(SB_EventVerticle.GET_LIST))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(params.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_EventVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -344,16 +340,14 @@ public class SB_EventTest extends VertxJunitSupport {
                 .body(SB_EventVerticle.PARAM_LABEL, is("Amical")).extract().asString());
         event.putString(SB_EventVerticle.PARAM_LABEL, "toto");
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.UPDATE).mandatoryParams());
-        for (String k : event.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(event.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().post(getURL(SB_EventVerticle.UPDATE))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        event.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(event.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_EventVerticle.UPDATE))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 }

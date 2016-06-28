@@ -232,17 +232,15 @@ public class SandBoxTest extends VertxJunitSupport {
                 .putString(SB_SandBoxVerticle.PARAM_USER_ID, user.get_id());
 
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_SandBoxVerticle.ADD).mandatoryParams());
-        for (String k : params.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(params.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().put(getURL(SB_SandBoxVerticle.ADD))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(params.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().put(getURL(SB_SandBoxVerticle.ADD))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     //- --------------
@@ -305,17 +303,15 @@ public class SandBoxTest extends VertxJunitSupport {
                 .putString(SB_SandBoxVerticle.PARAM_SB_CFG_ID, "123456");
 
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_SandBoxVerticle.UPDATE).mandatoryParams());
-        for (String k : params.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(params.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().post(getURL(SB_SandBoxVerticle.UPDATE))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(params.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_SandBoxVerticle.UPDATE))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**

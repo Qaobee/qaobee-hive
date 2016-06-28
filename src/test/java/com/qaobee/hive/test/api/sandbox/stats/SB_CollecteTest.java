@@ -107,17 +107,15 @@ public class SB_CollecteTest extends VertxJunitSupport {
         final JsonObject collecte = generateCollect(event);
 
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollecteVerticle.ADD).mandatoryParams());
-        for (String k : collecte.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(collecte.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().post(getURL(SB_CollecteVerticle.ADD))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        collecte.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(collecte.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_CollecteVerticle.ADD))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -183,17 +181,15 @@ public class SB_CollecteTest extends VertxJunitSupport {
                 .putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
 
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollecteVerticle.GET_LIST).mandatoryParams());
-        for (String k : params.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(params.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().post(getURL(SB_CollecteVerticle.GET_LIST))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(params.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_CollecteVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**

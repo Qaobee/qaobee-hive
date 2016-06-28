@@ -95,17 +95,15 @@ public class SB_PersonTest extends VertxJunitSupport {
                         "550a060ddb8f8b6e2f51f4e1", "550a0614db8f8b6e2f51f4e2", "550a061bdb8f8b6e2f51f4e3", "550a0620db8f8b6e2f51f4e4", "550a0620db8f8b6e2f51f4e5"}));
         params.putArray(SB_PersonVerticle.PARAM_LIST_FIELD, new JsonArray(new String[]{"_id", "name", "firstname", "avatar", "status"}));
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_PersonVerticle.GET_LIST).mandatoryParams());
-        for (String k : params.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(params.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().post(getURL(SB_PersonVerticle.GET_LIST))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(params.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_PersonVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**

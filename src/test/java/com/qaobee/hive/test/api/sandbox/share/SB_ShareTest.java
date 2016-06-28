@@ -12,9 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 /**
  * The type Sb share test.
@@ -160,5 +158,71 @@ public class SB_ShareTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         });
+    }
+
+    /**
+     * Gets sandbox with non logged user.
+     */
+    @Test
+    public void getSandboxWithNonLoggedUser() {
+        given().when().get(getURL(SB_ShareVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets sandbox with wrong http method.
+     */
+    @Test
+    public void getSandboxWithWrongHttpMethod() {
+        given().when().post(getURL(SB_ShareVerticle.GET))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
+
+    /**
+     * Gets sandbox with missing params.
+     */
+    @Test
+    public void getSandboxWithMissingParams() {
+        User u = generateLoggedUser();
+        given().header(TOKEN, u.getAccount().getToken())
+                .when().post(getURL(SB_ShareVerticle.GET))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Gets shared sandboxes.
+     */
+    @Test
+    public void getSharedSandboxes() {
+        populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        given().header(TOKEN, user.getAccount().getToken())
+                .when().get(getURL(SB_ShareVerticle.GET_FRIEND_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1));
+        // TODO : ajouter les sandbowes en mode partage
+    }
+
+    /**
+     * Gets shared sandboxes with non logged user.
+     */
+    @Test
+    public void getSharedSandboxesWithNonLoggedUser() {
+        given().when().get(getURL(SB_ShareVerticle.GET_FRIEND_LIST))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets shared sandboxes with wrong http method.
+     */
+    @Test
+    public void getSharedSandboxesWithWrongHttpMethod() {
+        given().when().post(getURL(SB_ShareVerticle.GET_FRIEND_LIST))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 }

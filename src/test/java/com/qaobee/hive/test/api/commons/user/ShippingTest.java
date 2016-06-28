@@ -3,7 +3,6 @@ package com.qaobee.hive.test.api.commons.user;
 import com.qaobee.hive.api.v1.commons.users.ShippingVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -698,7 +697,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .respond(HttpResponse.response()
                         .withStatusCode(201)
                         .withBody(generateMockBody(u, 0)));
-        u.getAccount().setListPlan(new ArrayList<Plan>());
+        u.getAccount().setListPlan(new ArrayList<>());
 
         JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
         Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));

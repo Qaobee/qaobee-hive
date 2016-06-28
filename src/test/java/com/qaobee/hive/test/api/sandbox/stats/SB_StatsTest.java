@@ -90,17 +90,15 @@ public class SB_StatsTest extends VertxJunitSupport {
                 .putArray(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[]{"originShootAtt"}))
                 .putArray(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray(new String[]{"5f82c510-2c89-46b0-b87d-d3b59e748615"}));
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES).mandatoryParams());
-        for (String k : params.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(params.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(params.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -159,17 +157,15 @@ public class SB_StatsTest extends VertxJunitSupport {
                 .putArray(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[]{"originShootAtt"}))
                 .putArray(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray(new String[]{"5f82c510-2c89-46b0-b87d-d3b59e748615"}));
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_StatisticsVerticle.GET_STAT_GROUPBY).mandatoryParams());
-        for (String k : params.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(params.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().post(getURL(SB_StatisticsVerticle.GET_STAT_GROUPBY))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(params.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_StatisticsVerticle.GET_STAT_GROUPBY))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -230,17 +226,15 @@ public class SB_StatsTest extends VertxJunitSupport {
         User user = generateLoggedUser();
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_StatisticsVerticle.ADD_STAT).mandatoryParams());
         JsonObject s = generateStat(user, "fake", 1);
-        for (String k : s.getFieldNames()) {
-            if (mandatoryParams.contains(k)) {
-                JsonObject params2 = new JsonObject(s.encode());
-                params2.removeField(k);
-                given().header(TOKEN, user.getAccount().getToken())
-                        .body(params2.encode())
-                        .when().put(getURL(SB_StatisticsVerticle.ADD_STAT))
-                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            }
-        }
+        s.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(s.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().put(getURL(SB_StatisticsVerticle.ADD_STAT))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
