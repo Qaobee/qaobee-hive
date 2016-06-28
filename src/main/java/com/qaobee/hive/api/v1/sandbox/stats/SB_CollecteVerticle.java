@@ -20,11 +20,15 @@ package com.qaobee.hive.api.v1.sandbox.stats;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -154,10 +158,26 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
     private void updateHandler(Message<String> message) {
+        try {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject object = new JsonObject(req.getBody());
         mongo.update(object, COLLECTION_NAME);
+            // Récupération SandboxCfgId
+            String sandBoxCfgId = mongo.getById(object.getObject("eventRef").getObject("owner").getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+            JsonObject notification = new JsonObject();
+            notification.putString("id", sandBoxCfgId);
+            notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+            notification.putObject("notification", new JsonObject()
+                    .putString("content", Messages.getString("notification.collect.update.content", req.getLocale(), object.getObject("eventRef").getString("label")))
+                    .putString("title", Messages.getString("notification.collect.update.title", req.getLocale()))
+                    .putString("senderId", req.getUser().get_id())
+            );
+            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
         message.reply(object.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
     }
 
     /**
@@ -174,6 +194,18 @@ public class SB_CollecteVerticle extends AbstractGuiceVerticle {// NOSONAR
             JsonObject object = new JsonObject(req.getBody());
             final String id = mongo.save(object, COLLECTION_NAME);
             object.putString("_id", id);
+
+            // Récupération SandboxCfgId
+            String sandBoxCfgId = mongo.getById(object.getObject("eventRef").getObject("owner").getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+            JsonObject notification = new JsonObject();
+            notification.putString("id", sandBoxCfgId);
+            notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+            notification.putObject("notification", new JsonObject()
+                    .putString("content", Messages.getString("notification.collect.start.content", req.getLocale(), object.getObject("eventRef").getString("label")))
+                    .putString("title", Messages.getString("notification.collect.start.title", req.getLocale()))
+                    .putString("senderId", req.getUser().get_id())
+            );
+            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
             message.reply(object.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);

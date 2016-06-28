@@ -22,7 +22,9 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -164,8 +166,14 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                         addNotificationToUser(id, notification);
                         break;
                     case "SB_SandBoxCfg":
+                        List<String> exclude = new ArrayList<>();
+                        if(message.body().containsField("exclude")) {
+                            message.body().getArray("exclude").forEach(item -> exclude.add((String) item));
+                        }
                         for (int i = 0; i < target.getArray("members").size(); i++)
-                            addNotificationToUser(((JsonObject) target.getArray("members").get(0)).getString("personId"), notification);
+                            if(!exclude.contains(((JsonObject) target.getArray("members").get(0)).getString("personId"))) {
+                                addNotificationToUser(((JsonObject) target.getArray("members").get(0)).getString("personId"), notification);
+                            }
                         break;
                     default:
                         break;
