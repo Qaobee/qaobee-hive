@@ -15,17 +15,21 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
  */
-package com.qaobee.hive.api.v1.sandbox.agenda;
+package com.qaobee.hive.api.v1.sandbox.event;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
+import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.business.model.sandbox.agenda.SB_Event;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -50,19 +54,19 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * The constant GET_LIST.
      */
-    public static final String GET_LIST = Module.VERSION + ".sandbox.agenda.event.list";
+    public static final String GET_LIST = Module.VERSION + ".sandbox.event.event.list";
     /**
      * The constant ADD.
      */
-    public static final String ADD = Module.VERSION + ".sandbox.agenda.event.add";
+    public static final String ADD = Module.VERSION + ".sandbox.event.event.add";
     /**
      * The constant GET.
      */
-    public static final String GET = Module.VERSION + ".sandbox.agenda.event.get";
+    public static final String GET = Module.VERSION + ".sandbox.event.event.get";
     /**
      * The constant UPDATE.
      */
-    public static final String UPDATE = Module.VERSION + ".sandbox.agenda.event.update";
+    public static final String UPDATE = Module.VERSION + ".sandbox.event.event.update";
     /**
      * Event Group ID
      */
@@ -153,7 +157,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     /**
      * @apiDescription Retrieve Event by this Id
-     * @api {get} /api/1/sandbox/agenda/event/get Get event by Id
+     * @api {get} /api/1/sandbox/event/event/get Get event by Id
      * @apiName getEventHandler
      * @apiGroup Event API
      * @apiParam {String} id
@@ -173,7 +177,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     /**
      * @apiDescription Update an event.
-     * @api {post} /api/1/sandbox/agenda/event/update Update an SB_Event
+     * @api {post} /api/1/sandbox/event/event/update Update an SB_Event
      * @apiName update
      * @apiGroup SB_Event API
      * @apiSuccess {SB_Event} SB_Event updated
@@ -186,6 +190,17 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
         try {
             JsonObject event = new JsonObject(req.getBody());
             mongo.save(event, SB_Event.class);
+            String sandBoxCfgId = mongo.getById(event.getObject("owner").getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+            JsonObject notification = new JsonObject();
+            notification.putString("id", sandBoxCfgId);
+            notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+            notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
+            notification.putObject("notification", new JsonObject()
+                    .putString("content", Messages.getString("notification.event.update.content", req.getLocale(), event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
+                    .putString("title", Messages.getString("notification.event.update.title", req.getLocale()))
+                    .putString("senderId", req.getUser().get_id())
+            );
+            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
             message.reply(event.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
@@ -195,7 +210,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     /**
      * @apiDescription Add an SB_Event.
-     * @api {post} /api/1/sandbox/agenda/event/add Add an SB_Event
+     * @api {post} /api/1/sandbox/event/event/add Add an SB_Event
      * @apiName add
      * @apiGroup SB_Event API
      * @apiSuccess {SB_Event} SB_Event create
@@ -209,6 +224,17 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
             JsonObject event = new JsonObject(req.getBody());
             final String id = mongo.save(event, SB_Event.class);
             event.putString("_id", id);
+            String sandBoxCfgId = mongo.getById(event.getObject("owner").getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+            JsonObject notification = new JsonObject();
+            notification.putString("id", sandBoxCfgId);
+            notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+            notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
+            notification.putObject("notification", new JsonObject()
+                    .putString("content", Messages.getString("notification.event.add.content", req.getLocale(), event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
+                    .putString("title", Messages.getString("notification.event.add.title", req.getLocale()))
+                    .putString("senderId", req.getUser().get_id())
+            );
+            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
             message.reply(event.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
@@ -218,7 +244,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     /**
      * @apiDescription retrieve all events for one or  many owner
-     * @api {post} /api/1/sandbox/agenda/event/list Get all SB_Event
+     * @api {post} /api/1/sandbox/event/event/list Get all SB_Event
      * @apiName getListOwner
      * @apiGroup SB_Event API
      * @apiParam {String} startDate start date

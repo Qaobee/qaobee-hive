@@ -18,7 +18,7 @@
 package com.qaobee.hive.test.api.sandbox.effective;
 
 import com.qaobee.hive.api.Main;
-import com.qaobee.hive.api.v1.sandbox.agenda.SB_EventVerticle;
+import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_TeamVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
