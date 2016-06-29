@@ -522,9 +522,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                             if (id != null) {
                                 user.set_id(id);
 
-                                final JsonObject tplReq = new JsonObject();
-                                tplReq.putString(TemplatesVerticle.TEMPLATE, "newAccount.html");
-                                tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateActivationBody(user, req.getLocale(), getContainer().config()));
+                                final JsonObject tplReq = new JsonObject()
+                                        .putString(TemplatesVerticle.TEMPLATE, "newAccount.html")
+                                        .putObject(TemplatesVerticle.DATA, mailUtils.generateActivationBody(user, req.getLocale(), getContainer().config()));
 
                                 vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, (Handler<Message<JsonObject>>) tplResp -> {
                                     final String tplRes = tplResp.body().getString("result");
@@ -536,7 +536,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                     emailReq.putString("body", tplRes);
                                     vertx.eventBus().publish("mailer.mod", emailReq);
                                     final JsonObject res = new JsonObject();
-                                    try { 
+                                    try {
                                         res.putObject("person", mongo.getById(id, User.class));
                                         res.putString("planId", plan.getPaymentId());
                                         message.reply(res.encode());
