@@ -23,7 +23,8 @@ import com.google.inject.Injector;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.parsing.Parser;
-import com.mongodb.MongoException;
+import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -33,10 +34,13 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.guice.GuiceModule;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.ReplyException;
 import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonObject;
@@ -49,13 +53,13 @@ import org.vertx.java.test.utils.DeploymentUtils;
 import org.vertx.java.test.utils.QueueReplyHandler;
 
 import javax.inject.Inject;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
 
@@ -71,7 +75,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     /**
      * The Constant LOCALE.
      */
-    public static final String LOCALE = "fr_FR";
+    protected static final String LOCALE = "fr_FR";
     protected static final String CODE = "code";
     protected static final String TOKEN = "token";
     protected static final String STATUS = "status";
@@ -87,7 +91,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * The constant moduleConfig.
      */
     protected static JsonObject moduleConfig;
-    private static final Logger LOG = Logger.getLogger(VertxJunitSupport.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(VertxJunitSupport.class);
     private static final String POPULATE_WITHOUT = "without";
     private static final String POPULATE_ALL = "all";
     private final LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<>();
@@ -187,6 +191,22 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         return user;
     }
 
+
+    protected User loggedUser(String id) {
+        User user = null;
+        try {
+            user = Json.decodeValue(mongo.getById(id, User.class.getSimpleName()).encode(), User.class);
+            user.getAccount().setToken(UUID.randomUUID().toString());
+            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+            user.getAccount().setActive(true);
+            mongo.save(user);
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            Assert.fail(e.getMessage());
+        }
+        return user;
+    }
+
     /**
      * Generate logged user.
      *
@@ -207,7 +227,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
         try {
             user.set_id(userId);
-            user.getAccount().setToken("12345");
+            user.getAccount().setToken(UUID.randomUUID().toString());
             user.getAccount().setTokenRenewDate(System.currentTimeMillis());
             user.getAccount().setActive(true);
             final String id = mongo.save(user);
@@ -279,15 +299,15 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     protected String sendOnBus(final String address, final RequestWrapper req) {
         long timeout = 150L;
-        getEventBus().send(address, Json.encode(req), new QueueReplyHandler<>(queue, timeout));
+        getEventBus().send(address, Json.encode(req), new QueueReplyHandler<Object>(queue, timeout));
         try {
             final Object result = queue.poll(timeout, TimeUnit.SECONDS);
             if (result instanceof ReplyException) {
                 try {
                     final JsonObject error = new JsonObject(((ReplyException) result).getMessage());
-                    LOG.log(Level.SEVERE, error.getString("code") + " : " + error.getString("message"));
+                    LOG.error(error.getString("code") + " : " + error.getString("message"), error);
                 } catch (final EncodeException e) {
-                    LOG.log(Level.SEVERE, ((ReplyException) result).getMessage());
+                    LOG.error(((ReplyException) result).getMessage(), e);
                     Assert.fail(e.getMessage());
                 }
                 return ((ReplyException) result).getMessage();
@@ -315,7 +335,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     protected String sendOnBus(String address, RequestWrapper req, String token) {
         if (req.getHeaders() == null) {
-            req.setHeaders(new HashMap<String, List<String>>());
+            req.setHeaders(new HashMap<>());
         }
         req.getHeaders().put("token", Collections.singletonList(token));
         return sendOnBus(address, req);
@@ -332,7 +352,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     protected JsonObject sendOnBus(String address, JsonObject query) {
         long timeout = 150L;
-        getEventBus().send(address, query, new QueueReplyHandler<>(queue, timeout));
+        getEventBus().send(address, query, new QueueReplyHandler<Object>(queue, timeout));
         try {
             final Object result = queue.poll(timeout, TimeUnit.SECONDS);
             if (result instanceof ReplyException) {
@@ -367,15 +387,13 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param mongoFiles        (String[]) : array of filenames
      */
     private void populate(String populateType, String relativeDirectory, String... mongoFiles) {
-        boolean comments = false;
         for(String s : mongoFiles) {
             LOG.info("Populating " + s);
         }
         File[] listFiles = (new File("scripts/mongo" + relativeDirectory)).listFiles();
         if (listFiles != null && listFiles.length > 0) {
-            BufferedReader reader = null;
             List<String> mongoFilesList = new ArrayList<>();
-            if (mongoFiles != null && mongoFiles.length > 0) {
+            if (mongoFiles.length > 0) {
                 mongoFilesList = Arrays.asList(mongoFiles);
             }
             for (File scriptMongo : listFiles) {
@@ -394,70 +412,16 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
                 } else if (POPULATE_WITHOUT.equals(populateType) && mongoFilesList.contains(scriptMongo.getName())) {
                     continue;
                 }
-
+                BasicDBObject obj = new BasicDBObject();
                 try {
-                    StringBuilder sb = new StringBuilder(1000);
-                    reader = new BufferedReader(new InputStreamReader(new FileInputStream(scriptMongo)));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        line = line.trim();
-                        if (line.startsWith("//")) {
-                            continue;
-                        }
-                        if (line.startsWith("/*") && line.endsWith("*/")) {
-                            continue;
-                        }
-                        if (line.startsWith("/*")) {
-                            comments = true;
-                            continue;
-                        }
-                        if (line.startsWith("*/")) {
-                            comments = false;
-                            continue;
-                        }
-                        if (comments) {
-                            continue;
-                        }
-
-                        if (line.contains("//")) {
-                            line = line.substring(0, line.indexOf("//"));
-                        }
-
-                        sb.append(line);
-
-                        if (line.trim().endsWith(";")) {
-                            if (sb.toString().trim().startsWith("var ")) {
-                                sb = new StringBuilder(1000);
-                                continue;
-                            }
-                            if (sb.toString().contains(" _id")) {
-                                String replace = sb.toString().replace(" _id", " \"test" + System.currentTimeMillis() + "\"");
-                                sb = new StringBuilder(replace);
-                            }
-                            if (sb.toString().contains(" id")) {
-                                String replace = sb.toString().replace(" id", " \"test" + System.currentTimeMillis() + "\"");
-                                sb = new StringBuilder(replace);
-                            }
-                            try {
-                                mongo.getDb().doEval(sb.toString());
-                            } catch (MongoException e) {
-                                System.out.println(sb.toString());
-                                e.printStackTrace();
-                            }
-                            sb = new StringBuilder(1000);
-                        }
+                    obj.append("eval", FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8")));
+                    CommandResult res = mongo.getDb().command(obj);
+                    if(!res.ok()) {
+                        Assert.fail(res.getErrorMessage());
                     }
-
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (IOException e) {
-                            getContainer().logger().error(e.getMessage(), e);
-                        }
-                    }
+                    LOG.error(e.getMessage(), e);
+                    Assert.fail(e.getMessage());
                 }
             }
         }
@@ -473,13 +437,10 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @return activity activity
      */
     protected JsonObject getActivity(String id, User user) {
-
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constants.GET);
-
         final HashMap<String, List<String>> params = new HashMap<>();
-
 		/* Retreive object */
         params.put(ActivityVerticle.PARAM_ID, Collections.singletonList(id));
         req.setParams(params);

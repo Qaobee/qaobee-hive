@@ -46,8 +46,8 @@ db.User.insert({
     "firstname": "Yerime",
     "avatar": null,
     "gender": "gender.male",
-    "birthdate": NumberLong(-21434400000),
-    "nationality": {"_id" : "CNTR-250-FR-FRA" , "codeOSCE" : NumberInt(250) , "label" : "France" , "local" : "fr"},
+    "birthdate": -21434400000,
+    "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": 250, "label": "France", "local": "fr"},
     "effectiveDefault":"550b31f925da07681592db23",
     "address": {
         "formatedAddress": "",
@@ -66,15 +66,15 @@ db.User.insert({
         "activationCode": "6d23f95b647d47d9ab35f92bc12819dc",
         "activationPasswd": null,
         "active": true,
-        "expirationDate": NumberLong(0),
+        "expirationDate": 0,
         "firstConnexion": false,
         "login": "crmhb1",
         "passwd": null,
         "password": "xHvS+ICtNg/1rrrj49WT+A/y9MA=",
         "salt": "CPAaJ8ydx6I=",
-        "timestamp": NumberLong(1406738914448),
+        "timestamp": 1406738914448,
         "token": null,
-        "tokenRenewDate": NumberLong(0),
+        "tokenRenewDate": 0,
         "habilitations": null,
 
         "listPlan": [{
@@ -82,7 +82,7 @@ db.User.insert({
             "levelPlan" : "FREEMIUM",
             "amountPaid" : 9,
             "paidDate" : 0,
-            "startPeriodDate" : NumberLong(1466590012943),
+            "startPeriodDate": 1466590012943,
             "endPeriodDate" : 0,
             "status" : "open",
             "periodicity" : "monthly",
@@ -102,7 +102,7 @@ db.User.insert({
         "habilitations" : null,
         "mobileToken" : null
     },
-    "timestamp" : NumberLong(1444854317672)
+    "timestamp": 1444854317672
 });
 
 /*
@@ -174,7 +174,7 @@ db.SB_SandBoxCfg.insert({
             "fax": "",
             "email": "sandrine@cesson-handball.com"
         },
-        "country": {"_id": "CNTR-250-FR-FRA", "codeOSCE": NumberInt(250), "label": "France", "local": "fr"},
+        "country": {"_id": "CNTR-250-FR-FRA", "codeOSCE": 250, "label": "France", "local": "fr"},
         "avatar": null
     },
     "teams": []
@@ -196,7 +196,7 @@ db.SB_Person.insert({
     "firstname" : "Damir",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(556236000000),
+    "birthdate": 556236000000,
     "birthcity" : "Zagreb, Croatie",
     "nationality" : "Croatie",
     "address" : {
@@ -221,9 +221,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" : NumberInt(95),
-        "height" : NumberInt(193),
-        "squadnumber" : NumberInt(33),
+        "weight": 95,
+        "height": 193,
+        "squadnumber": 33,
         "positionType" : "center-backcourt",
         "laterality" : "Droitier"
     }
@@ -236,7 +236,7 @@ db.SB_Person.insert({
     "firstname" : "Kevin",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(691714800000),
+    "birthdate": 691714800000,
     "birthcity" : "Saint-Raphaël, France",
     "nationality" : "France",
     "address" : {
@@ -261,9 +261,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(108),
-        "height" :  NumberInt(191),
-        "squadnumber" : NumberInt(16),
+        "weight": 108,
+        "height": 191,
+        "squadnumber": 16,
         "positionType" : "goalkeeper",
         "laterality" : "Droitier"
     }
@@ -276,7 +276,7 @@ db.SB_Person.insert({
     "firstname" : "Romain",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(601426800000),
+    "birthdate": 601426800000,
     "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
@@ -301,9 +301,9 @@ db.SB_Person.insert({
             "cause" : "injured"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(83),
-        "height" :  NumberInt(189),
-        "squadnumber" : NumberInt(13),
+        "weight": 83,
+        "height": 189,
+        "squadnumber": 13,
         "positionType" : "left-backcourt",
         "laterality" : "Droitier"
     }
@@ -316,7 +316,7 @@ db.SB_Person.insert({
     "firstname" : "Maxime",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(523663200000),
+    "birthdate": 523663200000,
     "birthcity" : "Rennes, France",
     "nationality" : "France",
    "address" : {
@@ -341,9 +341,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(77),
-        "height" :  NumberInt(179),
-        "squadnumber" : NumberInt(3),
+        "weight": 77,
+        "height": 179,
+        "squadnumber": 3,
         "positionType" : "right-wingman",
         "laterality" : "Gaucher"
     }
@@ -356,7 +356,7 @@ db.SB_Person.insert({
     "firstname" : "Benoir",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(444870000000),
+    "birthdate": 444870000000,
     "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
@@ -381,9 +381,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(82),
-        "height" :  NumberInt(183),
-        "squadnumber" : NumberInt(35),
+        "weight": 82,
+        "height": 183,
+        "squadnumber": 35,
         "positionType" : "left-wingman",
         "laterality" : "Droitier"
     }
@@ -396,7 +396,7 @@ db.SB_Person.insert({
     "firstname" : "Romaric",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(686271600000),
+    "birthdate": 686271600000,
     "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
@@ -421,9 +421,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(106),
-        "height" :  NumberInt(207),
-        "squadnumber" : NumberInt(56),
+        "weight": 106,
+        "height": 207,
+        "squadnumber": 56,
         "positionType" : "pivot",
         "laterality" : "Droitier"
     }
@@ -436,7 +436,7 @@ db.SB_Person.insert({
     "firstname" : "Sylvain",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(564706800000),
+    "birthdate": 564706800000,
     "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
@@ -461,9 +461,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(87),
-        "height" :  NumberInt(185),
-        "squadnumber" : NumberInt(11),
+        "weight": 87,
+        "height": 185,
+        "squadnumber": 11,
         "positionType" : "left-wingman",
         "laterality" : "Droitier"
     }
@@ -476,7 +476,7 @@ db.SB_Person.insert({
     "firstname" : "Mathieu",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(401580000000),
+    "birthdate": 401580000000,
     "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
@@ -501,9 +501,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(93),
-        "height" :  NumberInt(178),
-        "squadnumber" : NumberInt(23),
+        "weight": 93,
+        "height": 178,
+        "squadnumber": 23,
         "positionType" : "pivot",
         "laterality" : "Droitier"
     }
@@ -516,7 +516,7 @@ db.SB_Person.insert({
     "firstname" : "Léo",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(712274400000),
+    "birthdate": 712274400000,
     "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
@@ -541,9 +541,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(85),
-        "height" :  NumberInt(180),
-        "squadnumber" : NumberInt(15),
+        "weight": 85,
+        "height": 180,
+        "squadnumber": 15,
         "positionType" : "right-wingman",
         "laterality" : "Gaucher"
     }
@@ -556,7 +556,7 @@ db.SB_Person.insert({
     "firstname" : "Istvan",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(430437600000),
+    "birthdate": 430437600000,
     "birthcity" : "Budapest, Hongrie",
     "nationality" : "Hongrie",
     "address" : {
@@ -581,9 +581,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(101),
-        "height" :  NumberInt(197),
-        "squadnumber" : NumberInt(19),
+        "weight": 101,
+        "height": 197,
+        "squadnumber": 19,
         "positionType" : "right-backcourt",
         "laterality" : "Gaucher"
     }
@@ -596,7 +596,7 @@ db.SB_Person.insert({
     "firstname" : "Mickaël",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(486079200000),
+    "birthdate": 486079200000,
     "birthcity" : "Strasbourg, France",
     "nationality" : "France",
     "address" : {
@@ -621,9 +621,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(87),
-        "height" :  NumberInt(190),
-        "squadnumber" : NumberInt(4),
+        "weight": 87,
+        "height": 190,
+        "squadnumber": 4,
         "positionType" : "goalkeeper",
         "laterality" : "Droitier"
     }
@@ -636,7 +636,7 @@ db.SB_Person.insert({
     "firstname" : "mikele",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(504745200000),
+    "birthdate": 504745200000,
     "birthcity" : "Rome, Italie",
     "nationality" : "Italie",
     "address" : {
@@ -661,9 +661,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(94),
-        "height" :  NumberInt(190),
-        "squadnumber" : NumberInt(17),
+        "weight": 94,
+        "height": 190,
+        "squadnumber": 17,
         "positionType" : "right-backcourt",
         "laterality" : "Gaucher"
     }
@@ -676,7 +676,7 @@ db.SB_Person.insert({
     "firstname" : "Jérémy",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(529714800000),
+    "birthdate": 529714800000,
     "birthcity" : "Rennes, France",
     "nationality" : "France",
     "address" : {
@@ -701,9 +701,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(85),
-        "height" :  NumberInt(188),
-        "squadnumber" : NumberInt(5),
+        "weight": 85,
+        "height": 188,
+        "squadnumber": 5,
         "positionType" : "center-backcourt",
         "laterality" : "Droitier"
     }
@@ -716,7 +716,7 @@ db.SB_Person.insert({
     "firstname" : "Dusko",
     "avatar" : null,
     "gender" : "Homme",
-    "birthdate" : NumberLong(524527200000),
+    "birthdate": 524527200000,
     "birthcity" : "Sarajevo, Fédération de Bosnie-et-Herzégovine, Bosnie-Herzégovine",
     "nationality" : "Bosnie-Herzégovine",
     "address" : {
@@ -741,9 +741,9 @@ db.SB_Person.insert({
             "cause" : "available"
         },
         "stateForm" : "middling",
-        "weight" :  NumberInt(100),
-        "height" :  NumberInt(198),
-        "squadnumber" : NumberInt(10),
+        "weight": 100,
+        "height": 198,
+        "squadnumber": 10,
         "positionType" : "left-backcourt",
         "laterality" : "Droitier"
     }
@@ -757,9 +757,9 @@ db.SB_Person.insert({
             "value" : "available",
             "cause" : "available"
         },
-        "squadnumber" : NumberInt(10),
-        "weight" : NumberInt(84),
-        "height" : NumberInt(81),
+        "squadnumber": 10,
+        "weight": 84,
+        "height": 81,
         "laterality" : "Droitier",
         "stateForm" : "good",
         "positionType" : "center-backcourt"
@@ -780,7 +780,7 @@ db.SB_Person.insert({
     },
     "firstname" : "Chris1",
     "name" : "Kervella",
-    "birthdate" : NumberLong(110415600000),
+    "birthdate": 110415600000,
     "gender" : "Homme",
     "nationality" : "France",
     "birthCity" : "Brest, France",
@@ -795,9 +795,9 @@ db.SB_Person.insert({
             "value" : "available",
             "cause" : "available"
         },
-        "squadnumber" : NumberInt(10),
-        "weight" : NumberInt(84),
-        "height" : NumberInt(81),
+        "squadnumber": 10,
+        "weight": 84,
+        "height": 81,
         "laterality" : "Droitier",
         "stateForm" : "good",
         "positionType" : "center-backcourt"
@@ -818,7 +818,7 @@ db.SB_Person.insert({
     },
     "firstname" : "Chris2",
     "name" : "Kervella",
-    "birthdate" : NumberLong(425944800000),
+    "birthdate": 425944800000,
     "gender" : "Homme",
     "nationality" : "France",
     "birthCity" : "Brest, France",
@@ -833,9 +833,9 @@ db.SB_Person.insert({
             "value" : "available",
             "cause" : "available"
         },
-        "squadnumber" : NumberInt(10),
-        "weight" : NumberInt(84),
-        "height" : NumberInt(81),
+        "squadnumber": 10,
+        "weight": 84,
+        "height": 81,
         "laterality" : "Droitier",
         "stateForm" : "good",
         "positionType" : "center-backcourt"
@@ -856,7 +856,7 @@ db.SB_Person.insert({
     },
     "firstname" : "Chris3",
     "name" : "Kervella",
-    "birthdate" : NumberLong(741564000000),
+    "birthdate": 741564000000,
     "gender" : "Homme",
     "nationality" : "France",
     "birthCity" : "Brest, France",
@@ -878,10 +878,10 @@ db.SB_Effective.insert({
     "categoryAge" : {
         "code" : "sen",
         "label" : "Senior Gars",
-        "ageMax" : NumberInt(150),
-        "ageMin" : NumberInt(18),
+        "ageMax": 150,
+        "ageMin": 18,
         "genre" : "Homme",
-        "order" : NumberInt(1)
+        "order": 1
     },
     "members" : [{ "personId": "550a05dadb8f8b6e2f51f4db","role" : {"code": "player", "label": "Joueur"}},
                  { "personId": "550a05e3db8f8b6e2f51f4dc","role" : {"code": "player", "label": "Joueur"}},
