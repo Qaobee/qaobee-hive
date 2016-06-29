@@ -264,7 +264,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         habilitation.set_id("123456");
         habilitation.setDescription("admin Qaobee");
         habilitation.setKey(Constants.ADMIN_HABILIT);
-        user.getAccount().setHabilitations(new ArrayList<Habilitation>());
+        user.getAccount().setHabilitations(new ArrayList<>());
         user.getAccount().getHabilitations().add(habilitation);
         try {
             mongo.save(user);
