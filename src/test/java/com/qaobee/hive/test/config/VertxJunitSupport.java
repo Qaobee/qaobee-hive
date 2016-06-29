@@ -414,10 +414,10 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
                 }
                 BasicDBObject obj = new BasicDBObject();
                 try {
-                    obj.append("eval", FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8")));
+                    obj.append("eval", FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8")) + "\n");
                     CommandResult res = mongo.getDb().command(obj);
                     if(!res.ok()) {
-                        Assert.fail(res.getErrorMessage());
+                        Assert.fail("[ " +scriptMongo.getAbsolutePath()+ " ]" + res.getErrorMessage());
                     }
                 } catch (IOException e) {
                     LOG.error(e.getMessage(), e);
