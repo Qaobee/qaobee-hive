@@ -187,7 +187,7 @@ public class SB_ShareTest extends VertxJunitSupport {
     public void getSandboxWithMissingParams() {
         User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
-                .when().post(getURL(SB_ShareVerticle.GET))
+                .when().get(getURL(SB_ShareVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
