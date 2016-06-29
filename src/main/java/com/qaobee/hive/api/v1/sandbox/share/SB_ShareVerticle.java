@@ -1,5 +1,6 @@
 package com.qaobee.hive.api.v1.sandbox.share;
 
+import com.mongodb.BasicDBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -59,8 +60,23 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * The constant PARAM_USERID.
      */
     public static final String PARAM_USERID = "userId";
-    private static final String INTERNAL_SHARE = "internal.sandbox.share";
+    public static final String PARAM_ROLE_CODE = "role_code";
+    public static final String PARAM_ROLE_LABEL = "role_label";
 
+    private static final String INTERNAL_SHARE = "internal.sandbox.share";
+    private static final String FIELD_ID = "_id";
+    private static final String FIELD_LOCALE = "locale";
+    private static final String FIELD_OWNER = "owner";
+    private static final String FIELD_SBCFG_ID = "sandboxCfgId";
+    private static final String FIELD_SBCFG = "sandboxCfg";
+    private static final String FIELD_MEMBERS = "members";
+    private static final String FIELD_FIRSTNAME = "firstname";
+    private static final String FIELD_NAME = "name";
+    private static final String FIELD_AVATAR = "avatar";
+    private static final String FIELD_CONTACT = "contact";
+    private static final String FIELD_COUNTRY = "country";
+    private static final String FIELD_ROOT = "root";
+    private static final String FIELD_UID = "uid";
     /**
      * The Utils.
      */
@@ -86,9 +102,9 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 .putString("id", message.body().getString(PARAM_USERID))
                 .putString("target", User.class.getSimpleName())
                 .putObject("notification", new JsonObject()
-                        .putString("content", Messages.getString(message.body().getString("root") + ".content", message.body().getString("locale")))
-                        .putString("title", Messages.getString(message.body().getString("root") + ".title", message.body().getString("locale")))
-                        .putString("senderId", message.body().getString("uid"))
+                        .putString("content", Messages.getString(message.body().getString(FIELD_ROOT) + ".content", message.body().getString(FIELD_LOCALE)))
+                        .putString("title", Messages.getString(message.body().getString(FIELD_ROOT) + ".title", message.body().getString(FIELD_LOCALE)))
+                        .putString("senderId", message.body().getString(FIELD_UID))
                 );
         vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
     }
@@ -106,8 +122,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject sandbox = mongo.getById(req.getParams().get(PARAM_SANBOXID).get(0), SB_SandBox.class);
-            String sandboxCfgId = sandbox.getString("sandboxCfgId");
-            sandbox.putObject("sandboxCfg", getEnrichedSandboxCfg(sandboxCfgId));
+            String sandboxCfgId = sandbox.getString(FIELD_SBCFG_ID);
+            sandbox.putObject(FIELD_SBCFG, getEnrichedSandboxCfg(sandboxCfgId));
             message.reply(sandbox.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
@@ -133,23 +149,23 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         JsonObject request = new JsonObject(req.getBody());
         try {
             JsonObject sandbox = mongo.getById(request.getString(PARAM_SANBOXID), SB_SandBox.class);
-            String sandboxCfgId = sandbox.getString("sandboxCfgId");
+            String sandboxCfgId = sandbox.getString(FIELD_SBCFG_ID);
             JsonObject sandboxCfg = mongo.getById(sandboxCfgId, SB_SandBoxCfg.class);
             JsonArray members = new JsonArray();
-            sandboxCfg.getArray("members").forEach(m -> {
-                if(!(m).equals(request.getString(PARAM_USERID))) {
+            sandboxCfg.getArray(FIELD_MEMBERS).forEach(m -> {
+                if(!((JsonObject) m).getString("personId").equals(request.getString(PARAM_USERID))) {
                     members.add(m);
                 }
             });
-            sandboxCfg.putArray("members", members);
+            sandboxCfg.putArray(FIELD_MEMBERS, members);
             vertx.eventBus().send(INTERNAL_SHARE, new JsonObject()
                     .putString(PARAM_USERID, request.getString(PARAM_USERID))
-                    .putString("root", "notification.sandbox.del")
-                    .putString("locale", req.getLocale())
-                    .putString("uid", req.getUser().get_id())
+                    .putString(FIELD_ROOT, "notification.sandbox.del")
+                    .putString(FIELD_LOCALE, req.getLocale())
+                    .putString(FIELD_UID, req.getUser().get_id())
             );
             mongo.update(sandboxCfg, SB_SandBoxCfg.class);
-            sandbox.putObject("sandboxCfg", getEnrichedSandboxCfg(sandboxCfgId));
+            sandbox.putObject(FIELD_SBCFG, getEnrichedSandboxCfg(sandboxCfgId));
             message.reply(sandbox.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
@@ -162,27 +178,36 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @api {post} /api/1/sandbox/share/add Add a member to a SB_SandBoxCfg
      * @apiParam {String} userId User id to add as a member
      * @apiParam {String} sandboxId Targeted sandbox
+     * @apiParam {String} role_code Role code
+     * @apiParam {String} role_label Role label
      * @apiName addFriend
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = ADD_FRIEND, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID}, scope = Rule.Param.BODY)
+    @Rule(address = ADD_FRIEND, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID, PARAM_ROLE_CODE, PARAM_ROLE_LABEL}, scope = Rule.Param.BODY)
     private void addFriend(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject request = new JsonObject(req.getBody());
         try {
             JsonObject sandbox = mongo.getById(request.getString(PARAM_SANBOXID), SB_SandBox.class);
-            String sandboxCfgId = sandbox.getString("sandboxCfgId");
+            String sandboxCfgId = sandbox.getString(FIELD_SBCFG_ID);
             JsonObject sandboxCfg = mongo.getById(sandboxCfgId, SB_SandBoxCfg.class);
-            sandboxCfg.getArray("members").add(request.getString(PARAM_USERID));
+            sandboxCfg.getArray(FIELD_MEMBERS).add(
+                    new JsonObject()
+                            .putString("personId", request.getString(PARAM_USERID))
+                            .putObject("role", new JsonObject()
+                                    .putString("code", request.getString(PARAM_ROLE_CODE))
+                                    .putString("label", request.getString(PARAM_ROLE_LABEL))
+                            )
+            );
             mongo.update(sandboxCfg, SB_SandBoxCfg.class);
             vertx.eventBus().send(INTERNAL_SHARE, new JsonObject()
                     .putString(PARAM_USERID, request.getString(PARAM_USERID))
-                    .putString("root", "notification.sandbox.add")
-                    .putString("locale", req.getLocale())
-                    .putString("uid", req.getUser().get_id())
+                    .putString(FIELD_ROOT, "notification.sandbox.add")
+                    .putString(FIELD_LOCALE, req.getLocale())
+                    .putString(FIELD_UID, req.getUser().get_id())
             );
-            sandbox.putObject("sandboxCfg", getEnrichedSandboxCfg(sandboxCfgId));
+            sandbox.putObject(FIELD_SBCFG, getEnrichedSandboxCfg(sandboxCfgId));
             message.reply(sandbox.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
@@ -200,17 +225,44 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_FRIEND_LIST, method = Constants.GET, logged = true)
     private void getFriendList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonArray sandboxes = mongo.findByCriterias(new CriteriaBuilder().add("owner", req.getUser().get_id()).get(),
-                null, null, -1, 0, SB_SandBox.class);
-        if (sandboxes == null || sandboxes.size() == 0) {
-            message.reply("[]");
-            return;
-        }
+
         JsonArray result = new JsonArray();
-        // TODO : Ajouter les sandbox en mode invité
+        JsonArray sandboxes = mongo.findByCriterias(new CriteriaBuilder().add(FIELD_OWNER, req.getUser().get_id()).get(),
+                null, null, -1, 0, SB_SandBox.class);
+        BasicDBObject elemMatch = new BasicDBObject();
+        elemMatch.put("personId", req.getUser().get_id());
+        BasicDBObject array = new BasicDBObject();
+        array.put("$elemMatch", elemMatch);
+        BasicDBObject query = new BasicDBObject();
+        query.put("members", array);
+
+        mongo.getDb().getCollection(SB_SandBoxCfg.class.getSimpleName()).find(query).forEach(sbCfg -> {
+            JsonObject sandboxCfg = new JsonObject(sbCfg.toString());
+            JsonArray members = new JsonArray();
+            sandboxCfg.getArray(FIELD_MEMBERS).forEach(m -> {
+                try {
+                    members.add(mongo.getById(((JsonObject) m).getString("personId"), User.class, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            });
+            sandboxCfg.putArray(FIELD_MEMBERS, members);
+            mongo.findByCriterias(new CriteriaBuilder().add(FIELD_SBCFG_ID, sbCfg.get(FIELD_ID)).get(), null, null, -1, 0, SB_SandBox.class).forEach(sb -> {
+                        try {
+                            ((JsonObject) sb).putObject(FIELD_OWNER, mongo.getById(((JsonObject) sb).getString(FIELD_OWNER), User.class, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
+                        } catch (QaobeeException e) {
+                            LOG.error(e.getMessage(), e);
+                        }
+                        ((JsonObject) sb).putObject(FIELD_SBCFG, sandboxCfg);
+                        result.add(sb);
+                    }
+            );
+        });
+
         sandboxes.forEach(s -> {
             try {
-                ((JsonObject) s).putObject("sandboxCfg", getEnrichedSandboxCfg(((JsonObject) s).getString("sandboxCfgId")));
+                ((JsonObject) s).putObject(FIELD_OWNER, mongo.getById(((JsonObject) s).getString(FIELD_OWNER), User.class, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
+                ((JsonObject) s).putObject(FIELD_SBCFG, getEnrichedSandboxCfg(((JsonObject) s).getString(FIELD_SBCFG_ID)));
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
             }
@@ -222,14 +274,14 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private JsonObject getEnrichedSandboxCfg(String sandboxCfgId) throws QaobeeException {
         JsonObject sandboxCfg = mongo.getById(sandboxCfgId, SB_SandBoxCfg.class);
         JsonArray members = new JsonArray();
-        sandboxCfg.getArray("members").forEach(m -> {
+        sandboxCfg.getArray(FIELD_MEMBERS).forEach(m -> {
             try {
-                members.add(mongo.getById((String) m, User.class, Arrays.asList("_id", "name", "avatar", "firstname", "contact", "country")));
+                members.add(mongo.getById(((JsonObject) m).getString("personId"), User.class, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
             }
         });
-        sandboxCfg.putArray("members", members);
+        sandboxCfg.putArray(FIELD_MEMBERS, members);
         return sandboxCfg;
     }
 }

@@ -24,11 +24,14 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void addAMemberToASandbox() {
-        populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final JsonObject params = new JsonObject();
-        params.putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f");
-        params.putString(SB_ShareVerticle.PARAM_USERID, "5509ef1fdb8f8b6e2f51f4ce");
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
+        User user = loggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        User user2 = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
+        final JsonObject params = new JsonObject()
+                .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                .putString(SB_ShareVerticle.PARAM_USERID, user2.get_id())
+                .putString(SB_ShareVerticle.PARAM_ROLE_CODE, "acoach")
+                .putString(SB_ShareVerticle.PARAM_ROLE_LABEL, "Coach Adjoint");
 
         String id = given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
@@ -43,6 +46,12 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("sandboxCfg.members", hasSize(1));
+
+        given().header(TOKEN, user2.getAccount().getToken())
+                .when().get(getURL(SB_ShareVerticle.GET_FRIEND_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1))
+                .body("owner._id", hasItem(user.get_id()));
     }
 
     /**
@@ -71,9 +80,11 @@ public class SB_ShareTest extends VertxJunitSupport {
     @Test
     public void addAMemberToASandboxWithMissingParams() {
         User u = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f");
-        params.putString(SB_ShareVerticle.PARAM_USERID, "b50b3325-fdbd-41bf-bda4-81c827982001");
+        final JsonObject params = new JsonObject()
+                .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                .putString(SB_ShareVerticle.PARAM_USERID, "12345")
+                .putString(SB_ShareVerticle.PARAM_ROLE_CODE, "acoach")
+                .putString(SB_ShareVerticle.PARAM_ROLE_LABEL, "Coach Adjoint");
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_ShareVerticle.ADD_FRIEND).mandatoryParams());
         params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
             JsonObject params2 = new JsonObject(params.encode());
@@ -93,9 +104,12 @@ public class SB_ShareTest extends VertxJunitSupport {
     public void removeAMemberToASandbox() {
         populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        final JsonObject params = new JsonObject();
-        params.putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f");
-        params.putString(SB_ShareVerticle.PARAM_USERID, "5509ef1fdb8f8b6e2f51f4ce");
+        User user2 = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
+        final JsonObject params = new JsonObject()
+                .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                .putString(SB_ShareVerticle.PARAM_USERID, user2.get_id())
+                .putString(SB_ShareVerticle.PARAM_ROLE_CODE, "acoach")
+                .putString(SB_ShareVerticle.PARAM_ROLE_LABEL, "Coach Adjoint");
 
         String id = given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
@@ -145,9 +159,9 @@ public class SB_ShareTest extends VertxJunitSupport {
     @Test
     public void removeAMemberToASandboxWithMissingParams() {
         User u = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f");
-        params.putString(SB_ShareVerticle.PARAM_USERID, "b50b3325-fdbd-41bf-bda4-81c827982001");
+        final JsonObject params = new JsonObject()
+                .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                .putString(SB_ShareVerticle.PARAM_USERID, "12345");
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_ShareVerticle.DEL_FRIEND).mandatoryParams());
         params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
             JsonObject params2 = new JsonObject(params.encode());
@@ -190,20 +204,6 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .when().get(getURL(SB_ShareVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
-
-    /**
-     * Gets shared sandboxes.
-     */
-    @Test
-    public void getSharedSandboxes() {
-        populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        given().header(TOKEN, user.getAccount().getToken())
-                .when().get(getURL(SB_ShareVerticle.GET_FRIEND_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(1));
-        // TODO : ajouter les sandbowes en mode partage
     }
 
     /**
