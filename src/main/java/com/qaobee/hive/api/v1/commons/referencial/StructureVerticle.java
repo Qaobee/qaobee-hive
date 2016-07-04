@@ -66,7 +66,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     public static final String ADD = Module.VERSION + ".commons.referencial.structure.add";
     /* List of handlers */
     /**
-     * The Constant GET.
+     * The Constant GET_SANDOX_SHARING.
      */
     public static final String GET = Module.VERSION + ".commons.referencial.structure.get";
     /**

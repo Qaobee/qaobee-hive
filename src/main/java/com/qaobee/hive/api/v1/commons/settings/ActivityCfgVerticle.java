@@ -50,7 +50,7 @@ import java.util.List;
 @DeployableVerticle
 public class ActivityCfgVerticle extends AbstractGuiceVerticle {
     /**
-     * The constant GET.
+     * The constant GET_SANDOX_SHARING.
      */
     public static final String GET = Module.VERSION + ".commons.settings.activitycfg.get";
     /**

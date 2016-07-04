@@ -36,21 +36,21 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_ShareVerticle.class);
 
     /**
-     * The constant GET_FRIEND_LIST.
+     * The constant GET_SANDBOX_LIST.
      */
-    public static final String GET_FRIEND_LIST = Module.VERSION + ".sandbox.share.list";
+    public static final String GET_SANDBOX_LIST = Module.VERSION + ".share.sandbox.list";
     /**
-     * The constant ADD_FRIEND.
+     * The constant ADD_TO_SANDBOX.
      */
-    public static final String ADD_FRIEND = Module.VERSION + ".sandbox.share.add";
+    public static final String ADD_TO_SANDBOX = Module.VERSION + ".share.sandbox.add";
     /**
-     * The constant DEL_FRIEND.
+     * The constant REMOVE_FROM_SANDBOX.
      */
-    public static final String DEL_FRIEND = Module.VERSION + ".sandbox.share.del";
+    public static final String REMOVE_FROM_SANDBOX = Module.VERSION + ".share.sandbox.del";
     /**
-     * The constant GET.
+     * The constant GET_SANDOX_SHARING.
      */
-    public static final String GET = Module.VERSION + ".sandbox.share.get";
+    public static final String GET_SANDOX_SHARING = Module.VERSION + ".share.sandbox.get";
 
     /**
      * The constant PARAM_SANBOXID.
@@ -63,7 +63,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     public static final String PARAM_ROLE_CODE = "role_code";
     public static final String PARAM_ROLE_LABEL = "role_label";
 
-    private static final String INTERNAL_SHARE = "internal.sandbox.share";
+    private static final String INTERNAL_SHARE_NOTIFICATION = "internal.sandbox.share";
     private static final String FIELD_ID = "_id";
     private static final String FIELD_LOCALE = "locale";
     private static final String FIELD_OWNER = "owner";
@@ -90,14 +90,14 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(GET_FRIEND_LIST, this::getFriendList)
-                .registerHandler(ADD_FRIEND, this::addFriend)
-                .registerHandler(DEL_FRIEND, this::delFriend)
-                .registerHandler(GET, this::getShare)
-                .registerHandler(INTERNAL_SHARE, this::internalShare);
+                .registerHandler(GET_SANDBOX_LIST, this::getListOfSharedSandboxes)
+                .registerHandler(ADD_TO_SANDBOX, this::addUserToSandbox)
+                .registerHandler(REMOVE_FROM_SANDBOX, this::removeUserFromSandbox)
+                .registerHandler(GET_SANDOX_SHARING, this::getSandboxSharing)
+                .registerHandler(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification);
     }
 
-    private void internalShare(Message<JsonObject> message) {
+    private void internalShareNotification(Message<JsonObject> message) {
         JsonObject notification = new JsonObject()
                 .putString("id", message.body().getString(PARAM_USERID))
                 .putString("target", User.class.getSimpleName())
@@ -111,14 +111,14 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     /**
      * @apiDescription Get an enriched SB_SandBoxCfg
-     * @api {post} /api/1/sandbox/share/get Get an enriched SB_SandBoxCfg
+     * @api {post} /api/1/share/sandbox/get Get an enriched SB_SandBoxCfg
      * @apiParam {String} sandboxId Targeted sandbox
-     * @apiName getShare
+     * @apiName getSandboxSharing
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANBOXID}, scope = Rule.Param.REQUEST)
-    private void getShare(Message<String> message) {
+    @Rule(address = GET_SANDOX_SHARING, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANBOXID}, scope = Rule.Param.REQUEST)
+    private void getSandboxSharing(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject sandbox = mongo.getById(req.getParams().get(PARAM_SANBOXID).get(0), SB_SandBox.class);
@@ -136,15 +136,15 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     /**
      * @apiDescription Remove a member to a SB_SandBoxCfg
-     * @api {post} /api/1/sandbox/share/del Remove a member to a SB_SandBoxCfg
+     * @api {post} /api/1/share/sandbox/del Remove a member to a SB_SandBoxCfg
      * @apiParam {String} userId User id to add as a member
      * @apiParam {String} sandboxId Targeted sandbox
-     * @apiName delFriend
+     * @apiName removeUserFromSandbox
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = DEL_FRIEND, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID}, scope = Rule.Param.BODY)
-    private void delFriend(Message<String> message) {
+    @Rule(address = REMOVE_FROM_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID}, scope = Rule.Param.BODY)
+    private void removeUserFromSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject request = new JsonObject(req.getBody());
         try {
@@ -158,7 +158,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 }
             });
             sandboxCfg.putArray(FIELD_MEMBERS, members);
-            vertx.eventBus().send(INTERNAL_SHARE, new JsonObject()
+            vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
                     .putString(PARAM_USERID, request.getString(PARAM_USERID))
                     .putString(FIELD_ROOT, "notification.sandbox.del")
                     .putString(FIELD_LOCALE, req.getLocale())
@@ -175,17 +175,17 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     /**
      * @apiDescription Add a member to a SB_SandBoxCfg
-     * @api {post} /api/1/sandbox/share/add Add a member to a SB_SandBoxCfg
+     * @api {post} /api/1/share/sandbox/add Add a member to a SB_SandBoxCfg
      * @apiParam {String} userId User id to add as a member
      * @apiParam {String} sandboxId Targeted sandbox
      * @apiParam {String} role_code Role code
      * @apiParam {String} role_label Role label
-     * @apiName addFriend
+     * @apiName addUserToSandbox
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = ADD_FRIEND, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID, PARAM_ROLE_CODE, PARAM_ROLE_LABEL}, scope = Rule.Param.BODY)
-    private void addFriend(Message<String> message) {
+    @Rule(address = ADD_TO_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID, PARAM_ROLE_CODE, PARAM_ROLE_LABEL}, scope = Rule.Param.BODY)
+    private void addUserToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject request = new JsonObject(req.getBody());
         try {
@@ -201,7 +201,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                             )
             );
             mongo.update(sandboxCfg, SB_SandBoxCfg.class);
-            vertx.eventBus().send(INTERNAL_SHARE, new JsonObject()
+            vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
                     .putString(PARAM_USERID, request.getString(PARAM_USERID))
                     .putString(FIELD_ROOT, "notification.sandbox.add")
                     .putString(FIELD_LOCALE, req.getLocale())
@@ -217,13 +217,13 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     /**
      * @apiDescription Get list of enriched sandboxes for the current user
-     * @api {get} /api/1/sandbox/share/list Get list of enriched sandboxes for the current user
-     * @apiName getFriendList
+     * @api {get} /api/1/share/sandbox/list Get list of enriched sandboxes for the current user
+     * @apiName getListOfSharedSandboxes
      * @apiGroup Share API
      * @apiSuccess {Array} sandboxes list of enriched sandboxes;
      */
-    @Rule(address = GET_FRIEND_LIST, method = Constants.GET, logged = true)
-    private void getFriendList(Message<String> message) {
+    @Rule(address = GET_SANDBOX_LIST, method = Constants.GET, logged = true)
+    private void getListOfSharedSandboxes(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
 
         JsonArray result = new JsonArray();

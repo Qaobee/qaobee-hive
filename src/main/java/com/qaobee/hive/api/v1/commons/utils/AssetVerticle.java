@@ -60,7 +60,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
      */
     public static final String ADD = "asset.add";
     /**
-     * The constant GET.
+     * The constant GET_SANDOX_SHARING.
      */
     public static final String GET = "asset.get";
     private static final Logger LOG = LoggerFactory.getLogger(AssetVerticle.class);

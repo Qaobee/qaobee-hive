@@ -47,7 +47,7 @@ import java.util.Map;
 @DeployableVerticle
 public class SB_SandBoxCfgVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
-     * The constant GET.
+     * The constant GET_SANDOX_SHARING.
      */
     public static final String GET = Module.VERSION + ".sandbox.config.sandboxCfg.get";
     /**
