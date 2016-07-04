@@ -108,7 +108,7 @@ public class SeasonTest extends VertxJunitSupport {
                 .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
                 .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
                 .then().assertThat().statusCode(200)
-                .body("", hasSize(3));
+                .body("", hasSize(4));
     }
 
     /**
