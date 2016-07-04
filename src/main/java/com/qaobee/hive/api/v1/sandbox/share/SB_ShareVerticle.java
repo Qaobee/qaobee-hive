@@ -60,7 +60,13 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * The constant PARAM_USERID.
      */
     public static final String PARAM_USERID = "userId";
+    /**
+     * The constant PARAM_ROLE_CODE.
+     */
     public static final String PARAM_ROLE_CODE = "role_code";
+    /**
+     * The constant PARAM_ROLE_LABEL.
+     */
     public static final String PARAM_ROLE_LABEL = "role_label";
 
     private static final String INTERNAL_SHARE_NOTIFICATION = "internal.sandbox.share";
@@ -224,13 +230,15 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiName getListOfSharedSandboxes
      * @apiHeader {String} token
      * @apiGroup Share API
-     * @apiSuccess {Array} sandboxes list of enriched sandboxes;
+     * @apiSuccess {Object} sandboxes list of enriched sandboxes owned and as member;
      */
     @Rule(address = GET_SANDBOX_LIST, method = Constants.GET, logged = true)
     private void getListOfSharedSandboxes(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject result = new JsonObject()
+                .putArray("member", new JsonArray())
+                .putArray("owner", new JsonArray());
 
-        JsonArray result = new JsonArray();
         JsonArray sandboxes = mongo.findByCriterias(new CriteriaBuilder().add(FIELD_OWNER, req.getUser().get_id()).get(),
                 null, null, -1, 0, SB_SandBox.class);
         BasicDBObject elemMatch = new BasicDBObject();
@@ -258,7 +266,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                             LOG.error(e.getMessage(), e);
                         }
                         ((JsonObject) sb).putObject(FIELD_SBCFG, sandboxCfg);
-                        result.add(sb);
+                        result.getArray("member").add(sb);
                     }
             );
         });
@@ -270,7 +278,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
             }
-            result.add(s);
+            result.getArray("owner").add(s);
         });
         message.reply(result.encode());
     }
