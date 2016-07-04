@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
@@ -161,6 +160,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiGroup NotificationsVerticle
      * @apiParam {String} id notification id
      * @apiSuccess {Object} status
+     * @apiHeader {String} token
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
@@ -181,6 +181,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiName delNotificationHandler
      * @apiGroup NotificationsVerticle
      * @apiParam {String} id notification id
+     * @apiHeader {String} token
      * @apiSuccess {Object} status
      * @apiError HTTP_ERROR wrong request's method
      */
@@ -204,6 +205,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiParam {number} limit limit
      * @apiName getUserNotifications
      * @apiGroup NotificationsVerticle
+     * @apiHeader {String} token
      * @apiSuccess {Array} notification com.qaobee.hive.business.model.commons.users.communication.Notification
      * @apiError HTTP_ERROR wrong request's method
      */
@@ -219,8 +221,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             if (req.getParams() != null && req.getParams().containsKey(PARAM_LIMIT)) {
                 limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
             }
-            JsonArray jnotif = notificationsDAO.getList(req.getUser().get_id(), start, limit);
-            message.reply(jnotif.encode());
+            message.reply(notificationsDAO.getList(req.getUser().get_id(), start, limit).encode());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
