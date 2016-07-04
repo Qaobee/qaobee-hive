@@ -49,6 +49,12 @@ db.User.insert({
     "birthdate": -21434400000,
     "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": 250, "label": "France", "local": "fr"},
     "effectiveDefault":"550b31f925da07681592db23",
+    "country": {
+        "_id": "CNTR-250-FR-FRA",
+        "codeOSCE": 250,
+        "label": "France",
+        "local": "fr"
+    },
     "address": {
         "formatedAddress": "",
         "place": "3, allée de Champagné",
@@ -99,7 +105,6 @@ db.User.insert({
             "shippingList" : null,
             "paiementURL" : "https://www.payplug.com/pay/test/cnoSU0Pc8bURVwS0TF5yF"
         }],
-        "habilitations" : null,
         "mobileToken" : null
     },
     "timestamp": 1444854317672
