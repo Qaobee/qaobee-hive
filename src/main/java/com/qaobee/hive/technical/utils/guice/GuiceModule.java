@@ -38,6 +38,7 @@ import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
 import com.qaobee.hive.technical.utils.guice.services.impl.FilesImpl;
 import com.qaobee.hive.technical.utils.impl.*;
+import org.vertx.java.core.Vertx;
 import org.vertx.java.core.json.JsonObject;
 
 /**
@@ -49,14 +50,16 @@ public class GuiceModule extends AbstractModule {
      * The Config.
      */
     private JsonObject config;
+    private Vertx vertx;
 
     /**
      * Instantiates a new Guice module.
      *
      * @param config the config
      */
-    public GuiceModule(JsonObject config) {
+    public GuiceModule(JsonObject config, Vertx vertx) {
         this.config = config;
+        this.vertx = vertx;
     }
 
     /**
@@ -69,6 +72,7 @@ public class GuiceModule extends AbstractModule {
         bind(JsonObject.class).annotatedWith(Names.named("payplug")).toInstance(config.getObject("payplug"));
         bind(JsonObject.class).annotatedWith(Names.named("asana")).toInstance(config.getObject("asana"));
 
+        bind(Vertx.class).toInstance(vertx);
         // TECHNICAL MODULES
         bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);

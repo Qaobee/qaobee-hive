@@ -47,7 +47,7 @@ import java.util.Map;
 @DeployableVerticle
 public class ActivityVerticle extends AbstractGuiceVerticle {
     /**
-     * The Constant GET_SANDOX_SHARING.
+     * The Constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.activity.get";
     /**

@@ -168,7 +168,7 @@ public class Main extends AbstractGuiceVerticle {
      */
     private static void enableCors(final HttpServerRequest req) {
         req.response().headers().add("Access-Control-Allow-Origin", "*");
-        req.response().headers().add("Access-Control-Allow-Methods", "GET_SANDOX_SHARING, POST, DELETE, PUT");
+        req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
         req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
     }
 

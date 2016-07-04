@@ -50,7 +50,7 @@ import java.util.Map;
 @DeployableVerticle
 public class CountryVerticle extends AbstractGuiceVerticle {
     /**
-     * The Constant GET_SANDOX_SHARING.
+     * The Constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.country.get";
     /**
@@ -58,7 +58,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      */
     public static final String GET_ALPHA2 = Module.VERSION + ".commons.settings.country.getAlpha2";
     /**
-     * The Constant GET_SANDOX_SHARING.
+     * The Constant GET.
      */
     public static final String GET_LIST = Module.VERSION + ".commons.settings.country.getList";
     /**

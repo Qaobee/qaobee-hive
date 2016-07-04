@@ -51,7 +51,7 @@ import java.util.List;
 @DeployableVerticle
 public class IndicatorVerticle extends AbstractGuiceVerticle {
     /**
-     * The Constant GET_SANDOX_SHARING.
+     * The Constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.indicator.get";
     /**

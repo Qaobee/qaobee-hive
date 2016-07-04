@@ -164,7 +164,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     @Before
     public void printInfo() {
-        Injector injector = Guice.createInjector(new GuiceModule(moduleConfig));
+        Injector injector = Guice.createInjector(new GuiceModule(moduleConfig, getVertx()));
         injector.injectMembers(this);
         System.out.println("About to execute : " + name.getMethodName());
         mongo.getDb().dropDatabase();

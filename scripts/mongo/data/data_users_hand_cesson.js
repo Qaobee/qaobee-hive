@@ -147,13 +147,13 @@ db.SB_SandBoxCfg.insert({
     },
     "members": [],
     "season": {
-        "_id": "558b0ceaf9285df5b7553fc6",
-        "code": "SAI-2015",
-        "label": "SAISON 2015-2016",
-        "startDate": 1435701600000,
-        "endDate": 1467237600000,
-        "activityId": "ACT-HAND",
-        "countryId": "CNTR-250-FR-FRA"
+        "_id" : "558b0ceaf9285df5b7553fc8",
+        "code" : "SAI-2016",
+        "label" : "SAISON 2016-2017",
+        "startDate" : NumberLong(1467324000000),
+        "endDate" : NumberLong(1498773600000),
+        "activityId" : "ACT-HAND",
+        "countryId" : "CNTR-250-FR-FRA"
     },
     "structure": {
         "_id": "541168295971d35c1f2d1b5f",

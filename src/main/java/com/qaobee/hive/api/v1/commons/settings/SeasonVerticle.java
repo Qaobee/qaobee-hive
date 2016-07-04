@@ -48,7 +48,7 @@ import java.util.Map;
 @DeployableVerticle
 public class SeasonVerticle extends AbstractGuiceVerticle {
     /**
-     * The Constant GET_SANDOX_SHARING.
+     * The Constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.season.get";
     /**

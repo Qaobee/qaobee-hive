@@ -91,4 +91,17 @@ db.Season.insert({
     "activityId" : "ACT-HAND",
     "countryId" : "CNTR-250-FR-FRA"
 });
+
+_id = new ObjectId().valueOf();
+db.Season.insert({
+    "_id" : "558b0ceaf9285df5b7553fc8",
+    "code" : "SAI-2016",
+    "label" : "SAISON 2016-2017",
+    /* Start : 01/07/2016*/
+    "startDate" : NumberLong(1467324000000),
+    /* End : 30/06/2017*/
+    "endDate" : NumberLong(1498773600000),
+    "activityId" : "ACT-HAND",
+    "countryId" : "CNTR-250-FR-FRA"
+});
 // ////////////////////////////////////////////////////////

@@ -60,7 +60,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String ADD = Module.VERSION + ".sandbox.event.event.add";
     /**
-     * The constant GET_SANDOX_SHARING.
+     * The constant GET.
      */
     public static final String GET = Module.VERSION + ".sandbox.event.event.get";
     /**

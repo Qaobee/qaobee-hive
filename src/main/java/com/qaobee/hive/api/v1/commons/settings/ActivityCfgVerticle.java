@@ -43,7 +43,7 @@ import javax.inject.Inject;
 @DeployableVerticle
 public class ActivityCfgVerticle extends AbstractGuiceVerticle {
     /**
-     * The constant GET_SANDOX_SHARING.
+     * The constant GET.
      */
     public static final String GET = Module.VERSION + ".commons.settings.activitycfg.get";
     /**
