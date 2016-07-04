@@ -33,9 +33,9 @@ public final class Constants {
      */
     public static final long DEFAULT_SESSION_TIMEOUT = 30L * 60L * 1000L;
     /**
-     * The Constant GET_SANDOX_SHARING.
+     * The Constant GET
      */
-    public static final String GET = "GET_SANDOX_SHARING";
+    public static final String GET = "GET";
     /**
      * The Constant POST.
      */

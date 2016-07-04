@@ -28,6 +28,8 @@ import com.qaobee.hive.business.commons.settings.impl.ActivityBusinessImpl;
 import com.qaobee.hive.business.commons.settings.impl.CountryBusinessImpl;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.commons.users.impl.UsersBusinessImpl;
+import com.qaobee.hive.dao.ActivityCfgDAO;
+import com.qaobee.hive.dao.impl.ActivityCfgDAOImpl;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.tools.PasswordEncryptionServiceImpl;
@@ -80,6 +82,9 @@ public class GuiceModule extends AbstractModule {
         bind(UsersBusiness.class).to(UsersBusinessImpl.class).in(Singleton.class);
         bind(ActivityBusiness.class).to(ActivityBusinessImpl.class).in(Singleton.class);
         bind(CountryBusiness.class).to(CountryBusinessImpl.class).in(Singleton.class);
+
+        // DAO
+        bind(ActivityCfgDAO.class).to(ActivityCfgDAOImpl.class).in(Singleton.class);
 
     }
 }
