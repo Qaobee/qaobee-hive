@@ -114,6 +114,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @api {post} /api/1/share/sandbox/get Get an enriched SB_SandBoxCfg
      * @apiParam {String} sandboxId Targeted sandbox
      * @apiName getSandboxSharing
+     * @apiHeader {String} token
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
@@ -137,9 +138,10 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * @apiDescription Remove a member to a SB_SandBoxCfg
      * @api {post} /api/1/share/sandbox/del Remove a member to a SB_SandBoxCfg
-     * @apiParam {String} userId User id to add as a member
+     * @apiParam {String} userId User id to remeve
      * @apiParam {String} sandboxId Targeted sandbox
      * @apiName removeUserFromSandbox
+     * @apiHeader {String} token
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
@@ -181,6 +183,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} role_code Role code
      * @apiParam {String} role_label Role label
      * @apiName addUserToSandbox
+     * @apiHeader {String} token
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
@@ -219,6 +222,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiDescription Get list of enriched sandboxes for the current user
      * @api {get} /api/1/share/sandbox/list Get list of enriched sandboxes for the current user
      * @apiName getListOfSharedSandboxes
+     * @apiHeader {String} token
      * @apiGroup Share API
      * @apiSuccess {Array} sandboxes list of enriched sandboxes;
      */
