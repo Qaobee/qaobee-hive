@@ -4,6 +4,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.referencial.ChampionshipVerticle;
 import com.qaobee.hive.business.model.commons.referencial.ChampionShip;
+import com.qaobee.hive.dao.ChampionshipDAO;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import org.vertx.java.core.json.JsonArray;
@@ -17,7 +18,7 @@ import java.util.Map;
 /**
  * The type Championship dao.
  */
-public class ChampionshipDAOImpl implements com.qaobee.hive.dao.ChampionshipDAO {
+public class ChampionshipDAOImpl implements ChampionshipDAO {
 
     @Inject
     private MongoDB mongo;
@@ -30,9 +31,8 @@ public class ChampionshipDAOImpl implements com.qaobee.hive.dao.ChampionshipDAO 
 
     @Override
     public JsonObject addChampionship(JsonObject championship) throws QaobeeException {
-        JsonObject res = championship;
-        res.putString("_id", mongo.save(championship, ChampionShip.class));
-        return res;
+        championship.putString("_id", mongo.save(championship, ChampionShip.class));
+        return championship;
     }
 
     @Override

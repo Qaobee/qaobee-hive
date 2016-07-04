@@ -18,13 +18,9 @@
  */
 package com.qaobee.hive.api.v1.commons.referencial;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
-import com.qaobee.hive.business.model.commons.referencial.Structure;
-import com.qaobee.hive.business.model.commons.settings.Country;
+import com.qaobee.hive.dao.StructureDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -37,13 +33,10 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Module commons - referencial - Structure.
@@ -106,16 +99,18 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     private Utils utils;
     @Inject
     private CountryBusiness countryBusiness;
+    @Inject
+    private StructureDAO structureDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(ADD, this::addStructureHandler)
-                .registerHandler(GET, this::getStructureHandler)
-                .registerHandler(GET_LIST, this::getListOfStructuresHandler)
-                .registerHandler(UPDATE, this::updateStructureHandler);
+                .registerHandler(ADD, this::addStructure)
+                .registerHandler(GET, this::getStructure)
+                .registerHandler(GET_LIST, this::getListOfStructures)
+                .registerHandler(UPDATE, this::updateStructure);
     }
 
     /**
@@ -139,13 +134,10 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     @Rule(address = UPDATE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
             scope = Rule.Param.BODY)
-    private void updateStructureHandler(Message<String> message) { 
+    private void updateStructure(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject params = new JsonObject(req.getBody());
-            // Update a structure
-            mongo.save(params, Structure.class);
-            message.reply(params.encode());
+            message.reply(structureDAO.update(new JsonObject(req.getBody())).encode());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
@@ -165,36 +157,11 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY)
-    private void getListOfStructuresHandler(Message<String> message) { 
+    private void getListOfStructures(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
-            String activity = params.getString(PARAM_ACTIVITY);
-            JsonObject address = params.getObject(PARAM_ADDRESS);
-            Country country = countryBusiness.getCountryFromAlpha2(address.getString("countryAlpha2", "FR"));
-            if (country == null) {
-                throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                        "No Country defined for (" + address.getString("countryAlpha2") + ")");
-            }
-            // Aggregat section
-            DBObject match;
-            BasicDBObject dbObjectParent;
-            // $MACTH section
-            dbObjectParent = new BasicDBObject();
-            // Activity ID
-            dbObjectParent.put("activity._id", activity);
-            // Country ID
-            dbObjectParent.put("country._id", country.get_id());
-            // City OR Zipcode
-            BasicDBList dbList = new BasicDBList();
-            dbList.add(new BasicDBObject("address.city", address.getString("city").toUpperCase()));
-            dbList.add(new BasicDBObject("address.zipcode", address.getString("zipcode")));
-            dbObjectParent.put("$or", dbList.toArray());
-            match = new BasicDBObject("$match", dbObjectParent);
-            // Pipeline
-            List<DBObject> pipelineAggregation = Collections.singletonList(match);
-            final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, Structure.class);
-            message.reply(resultJSon.encode());
+            message.reply(structureDAO.getListOfStructures(params.getString(PARAM_ACTIVITY), params.getObject(PARAM_ADDRESS)).encode());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -214,11 +181,10 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
-    private void getStructureHandler(Message<String> message) { 
+    private void getStructure(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Structure.class);
-            message.reply(json.encode());
+            message.reply(structureDAO.getStructure(req.getParams().get(PARAM_ID).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -245,14 +211,10 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     @Rule(address = ADD, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
             scope = Rule.Param.BODY)
-    private void addStructureHandler(Message<String> message) { 
+    private void addStructure(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject params = new JsonObject(req.getBody());
-            // Insert a structure
-            final String id = mongo.save(params, Structure.class);
-            params.putString("_id", id);
-            message.reply(params.encode());
+            message.reply(structureDAO.addStructure(new JsonObject(req.getBody())).encode());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
