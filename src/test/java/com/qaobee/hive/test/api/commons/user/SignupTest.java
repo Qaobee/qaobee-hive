@@ -582,7 +582,7 @@ public class SignupTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("name", notNullValue())
                 .body("name", is(p.getString("name")))
-                .body("effectiveDefault", notNullValue())
+                .body("sandboxDefault", notNullValue())
                 .body("account.active", is(true));
     }
 
