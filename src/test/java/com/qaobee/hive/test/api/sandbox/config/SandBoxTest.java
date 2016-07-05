@@ -44,7 +44,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxByOwner() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
@@ -91,7 +91,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxByOwnerWithWrongParameters() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, "bla")
@@ -105,7 +105,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxByOwnerWithWrongUser() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
@@ -119,7 +119,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxByOwnerWithWrongActivity() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-FOOT", user).getField(ActivityVerticle.PARAM_ID))
@@ -133,7 +133,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxListByOwner() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, user.get_id())
@@ -173,7 +173,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxListByOwnerWithWrongParameters() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, user.get_id())
@@ -187,7 +187,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void addSandBox() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
         JsonObject params = new JsonObject()
                 .putString(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, "ACT-WATER-PONEY")
@@ -225,7 +225,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void addSandBoxWithMissingParams() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
         JsonObject params = new JsonObject()
                 .putString(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, "ACT-WATER-PONEY")
@@ -250,7 +250,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void updateSandBox() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         JsonObject sb = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))

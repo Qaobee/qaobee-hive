@@ -44,7 +44,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void getById() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
         final JsonObject params = new JsonObject()
                 .putArray(SB_PersonVerticle.PARAM_LIST_ID, new JsonArray(
                         new String[]{"550a05dadb8f8b6e2f51f4db", "550a05e3db8f8b6e2f51f4dc",
@@ -111,7 +111,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void getListPersonSandbox() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
         given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
                 .queryParam(SB_PersonVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f")
                 .when().get(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
@@ -169,7 +169,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void addPerson() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         JsonObject person = new JsonObject().putObject("person", generatePerson());
         given().header(TOKEN, user.getAccount().getToken())
@@ -205,7 +205,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void addPersonWithMissingParameter() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         given().header(TOKEN, user.getAccount().getToken())
                 .when().put(getURL(SB_PersonVerticle.ADD))
@@ -218,7 +218,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void updatePerson() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_PERSON_HAND);
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         String id = "550a05dadb8f8b6e2f51f4db";
         JsonObject person = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
@@ -262,7 +262,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void updatePersonWithMissingParameters() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_EFFECTIVE_HAND);
+        populate(POPULATE_ONLY, DATA_EFFECTIVE_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         given().header(TOKEN, user.getAccount().getToken())
                 .when().put(getURL(SB_EffectiveVerticle.UPDATE))
