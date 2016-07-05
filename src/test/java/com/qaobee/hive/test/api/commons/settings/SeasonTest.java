@@ -106,7 +106,7 @@ public class SeasonTest extends VertxJunitSupport {
                 .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
                 .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
                 .then().assertThat().statusCode(200)
-                .body("", hasSize(3));
+                .body("", hasSize(4));
     }
 
     /**
@@ -178,7 +178,7 @@ public class SeasonTest extends VertxJunitSupport {
                 .when().get(getURL(SeasonVerticle.GET_CURRENT))
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
-                .body("label", is("SAISON 2015-2016"));
+                .body("label", is("SAISON 2016-2017"));
     }
 
     /**
