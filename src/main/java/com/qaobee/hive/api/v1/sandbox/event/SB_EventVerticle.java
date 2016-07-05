@@ -17,33 +17,22 @@
  */
 package com.qaobee.hive.api.v1.sandbox.event;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
-import com.qaobee.hive.business.model.sandbox.agenda.SB_Event;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
+import com.qaobee.hive.dao.EventDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
 
 /**
  * The type Event verticle.
@@ -69,10 +58,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String UPDATE = Module.VERSION + ".sandbox.event.event.update";
     /**
-     * Event Group ID
-     */
-    public static final String PARAM_LIST_ID = "listId";
-    /**
      * Event ID
      */
     public static final String PARAM_ID = "_id";
@@ -93,17 +78,9 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String PARAM_END_DATE = "endDate";
     /**
-     * link id
-     */
-    public static final String PARAM_LINK_ID = "id";
-    /**
      * link Type
      */
     public static final String PARAM_LINK_TYPE = "type";
-    /**
-     * The constant PARAM_LINK.
-     */
-    public static final String PARAM_LINK = "link";
     /**
      * Event Owner
      */
@@ -121,14 +98,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String PARAM_OWNER_TEAMID = "ownerteamId";
     /**
-     * participants
-     */
-    public static final String PARAM_PARTICIPANTS_CLAUSE = "participantClause";
-    /**
-     * list clause group by
-     */
-    public static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
-    /**
      * list clause SORT by
      */
     public static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
@@ -137,39 +106,37 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String PARAM_LIMIT_RESULT = "limitResult";
     private static final Logger LOG = LoggerFactory.getLogger(SB_EventVerticle.class);
-    /**
-     * The Utils.
-     */
     @Inject
-    protected Utils utils;
+    private Utils utils;
     @Inject
-    private MongoDB mongo;
+    private EventDAO eventDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(GET_LIST, this::getEventListHandler)
-                .registerHandler(ADD, this::addEventHandler)
-                .registerHandler(UPDATE, this::updateEventHandler)
-                .registerHandler(GET, this::getEventHandler);
+                .registerHandler(GET_LIST, this::getEventList)
+                .registerHandler(ADD, this::addEvent)
+                .registerHandler(UPDATE, this::updateEvent)
+                .registerHandler(GET, this::getEvent);
     }
 
     /**
      * @apiDescription Retrieve Event by this Id
      * @api {get} /api/1/sandbox/event/event/get Get event by Id
-     * @apiName getEventHandler
+     * @apiName getEvent
      * @apiGroup Event API
+     * @apiHeader {String} token
      * @apiParam {String} id
      * @apiSuccess {Object} event com.qaobee.swarn.business.model.tranversal.event.event;
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
-    private void getEventHandler(Message<String> message) {
+    private void getEvent(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_Event.class).encode());
+            message.reply(eventDAO.getEvent(req.getParams().get(PARAM_ID).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -179,30 +146,22 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * @apiDescription Update an event.
      * @api {post} /api/1/sandbox/event/event/update Update an SB_Event
-     * @apiName update
+     * @apiName updateEvent
+     * @apiHeader {String} token
+     * @apiParam {String} label Event label
+     * @apiParam {String} activityId Event activity id
+     * @apiParam {String} owner Event owner
+     * @apiParam {Number} startDate Event start date
      * @apiGroup SB_Event API
      * @apiSuccess {SB_Event} SB_Event updated
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
             scope = Rule.Param.BODY)
-    private void updateEventHandler(Message<String> message) {
+    private void updateEvent(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            JsonObject event = new JsonObject(req.getBody());
-            mongo.save(event, SB_Event.class);
-            String sandBoxId = mongo.getById(event.getObject("owner").getString("sandboxId"), SB_SandBox.class).getString("sandboxId");
-            JsonObject notification = new JsonObject();
-            notification.putString("id", sandBoxId);
-            notification.putString("target", SB_SandBox.class.getSimpleName());
-            notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
-            notification.putObject("notification", new JsonObject()
-                    .putString("content", Messages.getString("notification.event.update.content", req.getLocale(), event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
-                    .putString("title", Messages.getString("notification.event.update.title", req.getLocale()))
-                    .putString("senderId", req.getUser().get_id())
-            );
-            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-            message.reply(event.encode());
+            message.reply(eventDAO.updateEvent(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -212,31 +171,22 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * @apiDescription Add an SB_Event.
      * @api {post} /api/1/sandbox/event/event/add Add an SB_Event
-     * @apiName add
+     * @apiName addEvent
+     * @apiHeader {String} token
+     * @apiParam {String} label Event label
+     * @apiParam {String} activityId Event activity id
+     * @apiParam {String} owner Event owner
+     * @apiParam {Number} startDate Event start date
      * @apiGroup SB_Event API
      * @apiSuccess {SB_Event} SB_Event create
      */
     @Rule(address = ADD, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
             scope = Rule.Param.BODY)
-    private void addEventHandler(Message<String> message) {
+    private void addEvent(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            JsonObject event = new JsonObject(req.getBody());
-            final String id = mongo.save(event, SB_Event.class);
-            event.putString("_id", id);
-            String sandBoxId = mongo.getById(event.getObject("owner").getString("sandboxId"), SB_SandBox.class).getString("sandboxId");
-            JsonObject notification = new JsonObject();
-            notification.putString("id", sandBoxId);
-            notification.putString("target", SB_SandBox.class.getSimpleName());
-            notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
-            notification.putObject("notification", new JsonObject()
-                    .putString("content", Messages.getString("notification.event.add.content", req.getLocale(), event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
-                    .putString("title", Messages.getString("notification.event.add.title", req.getLocale()))
-                    .putString("senderId", req.getUser().get_id())
-            );
-            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-            message.reply(event.encode());
+            message.reply(eventDAO.addEvent(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -246,10 +196,10 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * @apiDescription retrieve all events for one or  many owner
      * @api {post} /api/1/sandbox/event/event/list Get all SB_Event
-     * @apiName getListOwner
+     * @apiName getEventList
      * @apiGroup SB_Event API
-     * @apiParam {String} startDate start date
-     * @apiParam {String} endDate end date
+     * @apiParam {Number} startDate start date
+     * @apiParam {Number} endDate end date
      * @apiParam {Array} linkType Link type
      * @apiParam {String} activityId Activity Id
      * @apiParam {Array} owner Owner
@@ -259,59 +209,10 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID},
             scope = Rule.Param.BODY)
-    private void getEventListHandler(Message<String> message) {
+    private void getEventList(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject params = new JsonObject(req.getBody());
-            // Aggregat section
-            DBObject match;
-            DBObject sort;
-            DBObject limit;
-            BasicDBObject dbObjectChild;
-            // $MACTH section
-            BasicDBObject dbObjectParent = new BasicDBObject();
-            // Event Activity
-            dbObjectParent.put(PARAM_ACTIVITY_ID, params.getString(PARAM_ACTIVITY_ID));
-            // Event sandboxId
-            dbObjectParent.put("owner.sandboxId", params.getString(PARAM_OWNER_SANBOXID));
-            if (params.getString(PARAM_OWNER_EFFECTIVEID) != null && !"".equals(params.getString(PARAM_OWNER_EFFECTIVEID).trim())) {
-                dbObjectParent.put("owner.effectiveId", params.getString(PARAM_OWNER_EFFECTIVEID));
-            }
-            if (params.getString(PARAM_OWNER_TEAMID) != null && !"".equals(params.getString(PARAM_OWNER_TEAMID).trim())) {
-                dbObjectParent.put("owner.teamId", params.getString(PARAM_OWNER_TEAMID));
-            }
-            DBObject o = new BasicDBObject();
-            o.put("$gte", params.getLong(PARAM_START_DATE));
-            o.put("$lt", params.getLong(PARAM_END_DATE));
-            dbObjectParent.put("startDate", o);
-            // Link.type
-            if (params.containsField(PARAM_LINK_TYPE)) {
-                dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_LINK_TYPE).toArray());
-                dbObjectParent.put("link.type", dbObjectChild);
-            }
-            match = new BasicDBObject("$match", dbObjectParent);
-            // $SORT section
-            dbObjectParent = new BasicDBObject();
-            if (params.containsField(PARAM_LIST_SORTBY)) {
-                for (Object item : params.getArray(PARAM_LIST_SORTBY)) {
-                    JsonObject field = (JsonObject) item;
-                    dbObjectParent.put(field.getString("fieldName"), field.getInteger("sortOrder"));
-                }
-            } else {
-                dbObjectParent.put("_id", 1);
-            }
-            sort = new BasicDBObject("$sort", dbObjectParent);
-            // $limit section
-            List<DBObject> pipelineAggregation;
-            if (params.containsField(PARAM_LIMIT_RESULT)) {
-                int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
-                limit = new BasicDBObject("$limit", limitNumber);
-                pipelineAggregation = Arrays.asList(match, sort, limit);
-            } else {
-                pipelineAggregation = Arrays.asList(match, sort);
-            }
-            final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Event.class);
-            message.reply(resultJSon.encode());
+            message.reply(eventDAO.getEventList(new JsonObject(req.getBody())).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
