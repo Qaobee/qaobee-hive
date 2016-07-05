@@ -29,8 +29,7 @@ public interface JSDataMongoTest {
 
     String DATA_PERSON_HAND = "data_users_hand_cesson.js";
     String DATA_STRUCTURE = "data_structures.js";
-    String DATA_USERS = "data_users.js";
-    String DATA_USER_QAOBEE = "data_users_qaobee_cke.js";
+    String DATA_USER_QAOBEE = "data_users_qaobee.js";
     String DATA_SANDBOXES_HAND = "data_users_hand_cesson.js";
 
     /* Training */

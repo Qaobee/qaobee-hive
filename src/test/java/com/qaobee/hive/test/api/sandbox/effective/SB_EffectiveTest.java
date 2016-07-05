@@ -104,7 +104,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void getListMembersByCategoryWithWrongParameters() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, "bla")
@@ -166,7 +166,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void getEffectiveWithWrongParameters() {
-        populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_EffectiveVerticle.PARAM_ID, "bla")

@@ -184,7 +184,6 @@ public class SB_TeamTest extends VertxJunitSupport {
      */
     @Test
     public void addTeam() {
-        populate(POPULATE_ONLY, DATA_USERS);
         final JsonObject params = new JsonObject()
                 .putString(SB_EventVerticle.PARAM_LABEL, "TheNewTeam")
                 .putString(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f")

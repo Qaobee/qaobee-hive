@@ -24,7 +24,7 @@ public interface ShareDAO {
      * @return the enriched sandbox cfg
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject getEnrichedSandboxCfg(String sandboxCfgId) throws QaobeeException;
+    JsonObject getEnrichedSandbox(JsonObject sandboxCfgId) throws QaobeeException;
 
     /**
      * Remove user from sandbox.

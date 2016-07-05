@@ -71,7 +71,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * Sandbox config id
      */
-    public static final String PARAM_SANDBOX_ID = "sandBoxId";
+    public static final String PARAM_SANDBOX_ID = "sandboxId";
     /**
      * Category Age Code
      */

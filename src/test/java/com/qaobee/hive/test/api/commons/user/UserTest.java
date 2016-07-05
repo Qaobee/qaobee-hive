@@ -18,22 +18,22 @@
  */
 package com.qaobee.hive.test.api.commons.user;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+
+import java.io.File;
+import java.util.UUID;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.vertx.java.core.json.JsonObject;
+
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Assert;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
-
-import java.io.File;
-import java.util.GregorianCalendar;
-import java.util.UUID;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 
 
 /**
@@ -423,18 +423,12 @@ public class UserTest extends VertxJunitSupport {
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
             mongo.save(user);
-            GregorianCalendar today = new GregorianCalendar();
-            int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) -1 : today.get(GregorianCalendar.YEAR);
             given().header(TOKEN, user.getAccount().getToken())
                     .param(UserVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .when().get(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(200)
-                    .body("activity", notNullValue())
-                    .body("structure", notNullValue())
-                    .body("season", notNullValue())
-                    .body("season.activityId", is("ACT-HAND"))
-                    .body("season.countryId", is("CNTR-250-FR-FRA"))
-                    .body("season.code", is("SAI-" + year));
+                    .body("activityId", notNullValue())
+                    .body("structure", notNullValue());
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
