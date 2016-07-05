@@ -41,9 +41,9 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void getListMembersByCategory() {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        String id = "558b0fc0bd2e39cdab651e21";
+        String id = "558b0efebd2e39cdab651e1f";
         given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, id)
+                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, id)
                 .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "sen")
                 .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
@@ -58,9 +58,9 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void getListMembersByUnknowCategory() {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        String id = "558b0fc0bd2e39cdab651e21";
+        String id = "558b0efebd2e39cdab651e1f";
         given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, id)
+                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, id)
                 .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "zzz")
                 .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
@@ -107,7 +107,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_USERS, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOXCFG_ID, "bla")
+                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, "bla")
                 .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));

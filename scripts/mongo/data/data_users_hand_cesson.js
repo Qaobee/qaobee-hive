@@ -121,13 +121,7 @@ db.SB_SandBox.remove({"_id": "558b0efebd2e39cdab651e1f"});
  */
 db.SB_SandBox.insert({
     "_id": "558b0efebd2e39cdab651e1f",
-    "activity": {
-        "_id": "ACT-HAND",
-        "code": "ACT-HAND",
-        "label": "admin.settings.activity.handball.label",
-        "enable": true,
-        "activityType": "TEAM_SPORT"
-    },
+    "activityId": "ACT-HAND",
     "owner": "5509ef1fdb8f8b6e2f51f4ce",
     "members": [],
     "structure": {

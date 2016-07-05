@@ -19,12 +19,23 @@
 
 package com.qaobee.hive.api.v1.sandbox.effective;
 
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
@@ -37,16 +48,6 @@ import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * The type Person verticle.
@@ -182,10 +183,10 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
         final String id = mongo.update(personJson, SB_Person.class);
         personJson.putString("_id", id);
         try {
-            String sandBoxCfgId = mongo.getById(personJson.getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+            String sandBoxId = mongo.getById(personJson.getString("sandboxId"), SB_SandBox.class).getString("sandboxId");
             JsonObject notification = new JsonObject();
-            notification.putString("id", sandBoxCfgId);
-            notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+            notification.putString("id", sandBoxId);
+            notification.putString("target", SB_SandBox.class.getSimpleName());
             notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
             notification.putObject("notification", new JsonObject()
                     .putString("content", Messages.getString("notification.person.update.content", req.getLocale(),
@@ -239,10 +240,10 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
             final String id = mongo.save(personJson, SB_Person.class);
             personJson.putString("_id", id);
             try {
-                String sandBoxCfgId = mongo.getById(personJson.getString("sandboxId"), SB_SandBox.class).getString("sandboxCfgId");
+                String sandBoxId = mongo.getById(personJson.getString("sandboxId"), SB_SandBox.class).getString("sandboxId");
                 JsonObject notification = new JsonObject();
-                notification.putString("id", sandBoxCfgId);
-                notification.putString("target", SB_SandBoxCfg.class.getSimpleName());
+                notification.putString("id", sandBoxId);
+                notification.putString("target", SB_SandBox.class.getSimpleName());
                 notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
                 notification.putObject("notification", new JsonObject()
                         .putString("content", Messages.getString("notification.person.add.content", req.getLocale(),

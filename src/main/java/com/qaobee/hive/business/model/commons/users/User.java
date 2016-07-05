@@ -88,9 +88,9 @@ public class User {
      */
     private List<Notification> notifications;
     /**
-     * User's effective by default
+     * User's sandbox by default
      */
-    private String effectiveDefault;
+    private String sandboxDefault;
 
     /**
      * Returns the internal identifier.
@@ -326,22 +326,19 @@ public class User {
         this.birthdate = birthdate;
     }
 
-    /**
-     * Returns the default effective ID.
-     *
-     * @return String : default effective
-     */
-    public String getEffectiveDefault() {
-        return effectiveDefault;
-    }
+	/**
+	 * @return the sandboxDefault
+	 */
+	public String getSandboxDefault() {
+		return sandboxDefault;
+	}
 
-    /**
-     * Defines the default effective ID.
-     *
-     * @param effectiveDefault (String) : default effective
-     */
-    public void setEffectiveDefault(String effectiveDefault) {
-        this.effectiveDefault = effectiveDefault;
-    }
+	/**
+	 * @param sandboxDefault the sandboxDefault to set
+	 */
+	public void setSandboxDefault(String sandboxDefault) {
+		this.sandboxDefault = sandboxDefault;
+	}
 
+    
 }

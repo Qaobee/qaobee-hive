@@ -18,6 +18,23 @@
  */
 package com.qaobee.hive.api.v1.commons.users;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
@@ -27,11 +44,13 @@ import com.qaobee.hive.business.commons.settings.ActivityBusiness;
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
-import com.qaobee.hive.business.model.commons.settings.*;
+import com.qaobee.hive.business.model.commons.settings.Activity;
+import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
+import com.qaobee.hive.business.model.commons.settings.CategoryAge;
+import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.business.model.sandbox.effective.Availability;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Effective;
 import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
@@ -54,19 +73,9 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.util.*;
 
 /**
  * The Class SignupVerticle.
@@ -265,6 +274,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 SB_SandBox sbSandBox = new SB_SandBox();
                 sbSandBox.setActivityId(activityId);
                 sbSandBox.setOwner(user.get_id());
+                sbSandBox.setStructure(structureObj);
                 sbSandBox.set_id(mongo.save(sbSandBox));
 
                 JsonArray tabParametersSignup;
@@ -294,36 +304,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                         }
                     }
                 }
-
-                // Création SandBoxCfg
-                SB_SandBoxCfg sbSandBoxCfg = new SB_SandBoxCfg();
-                sbSandBoxCfg.setActivity(activityBusiness.getActivityFromId(activityId));
-                sbSandBoxCfg.setSandbox(sbSandBox);
-                sbSandBoxCfg.setStructure(structureObj);
-                // Search Season
-                Map<String, Object> criterias = new HashMap<>();
-                criterias.put("activityId", activityId);
-                criterias.put("countryId", countryId);
-                JsonArray resultJson = mongo.findByCriterias(criterias, null, "endDate", -1, -1, Season.class);
-                long currentDate = System.currentTimeMillis();
-                if (resultJson == null || resultJson.size() == 0) {
-                    throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
-                }
-                for (int i = 0; i < resultJson.size(); i++) {
-                    JsonObject s = resultJson.get(i);
-                    if (s.getLong("endDate", 0) > currentDate && s.getLong("startDate") < currentDate) {
-                        sbSandBoxCfg.setSeason(Json.decodeValue(s.encode(), Season.class));
-                        break;
-                    }
-                }
-                // Sauvegarde SB_Cfg
-                sbSandBoxCfg.set_id(mongo.save(sbSandBoxCfg));
-                // Sauvegarde Sandbox avec ID sandbox Cfg
-                sbSandBox.setSandboxCfgId(sbSandBoxCfg.get_id());
-                mongo.save(sbSandBox);
-                // Création Sandbox Effective
+                
+                // Création Effective
                 SB_Effective sbEffective = new SB_Effective();
-                sbEffective.setSandBoxCfgId(sbSandBoxCfg.get_id());
+                sbEffective.setSandBoxId(sbSandBox.get_id());
+                
                 sbEffective.setLabel("Défaut");
                 sbEffective.setCategoryAge(categoryAgeObj);
                 // SB_Effective -> members
@@ -334,7 +319,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     sbEffective.addMember(member);
                 }
                 sbEffective.set_id(mongo.save(sbEffective));
-                user.setEffectiveDefault(sbEffective.get_id());
+                
+                sbSandBox.setEffectiveDefault(sbEffective.get_id());
+                user.setSandboxDefault(sbSandBox.get_id());
                 // Création SB_Teams
                 // My team
                 SB_Team team = new SB_Team();

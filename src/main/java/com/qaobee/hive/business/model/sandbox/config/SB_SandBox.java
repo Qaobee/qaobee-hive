@@ -18,7 +18,11 @@
  */
 package com.qaobee.hive.business.model.sandbox.config;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.qaobee.hive.business.model.commons.referencial.Structure;
+import com.qaobee.hive.business.model.transversal.Member;
 
 /**
  * Bean that describes a SandBox.
@@ -41,9 +45,19 @@ public class SB_SandBox { // NOSONAR
      */
     private String activityId;
     /**
-     * Sandbox Cfg ID
+     * Structure
      */
-    private String sandboxCfgId;
+    private Structure structure;
+    
+    /**
+     * List of Members
+     */
+    private List<Member> members;
+    
+    /**
+     * effective Default
+     */
+    private String effectiveDefault;
 
     /**
      * Returns the owner.
@@ -99,21 +113,45 @@ public class SB_SandBox { // NOSONAR
         this._id = _id;
     }
 
-    /**
-     * Returns the sandbox config ID.
-     *
-     * @return String : sandbox config ID
-     */
-    public String getSandboxCfgId() {
-        return sandboxCfgId;
-    }
+	/**
+	 * @return the structure
+	 */
+	public Structure getStructure() {
+		return structure;
+	}
 
-    /**
-     * Defines the sandbox config ID.
-     *
-     * @param sandboxCfgId (String) : sandbox config ID
-     */
-    public void setSandboxCfgId(String sandboxCfgId) {
-        this.sandboxCfgId = sandboxCfgId;
-    }
+	/**
+	 * @param structure the structure to set
+	 */
+	public void setStructure(Structure structure) {
+		this.structure = structure;
+	}
+
+	/**
+	 * @return the members
+	 */
+	public List<Member> getMembers() {
+		return members;
+	}
+
+	/**
+	 * @param members the members to set
+	 */
+	public void setMembers(List<Member> members) {
+		this.members = members;
+	}
+
+	/**
+	 * @return the effectiveDefault
+	 */
+	public String getEffectiveDefault() {
+		return effectiveDefault;
+	}
+
+	/**
+	 * @param effectiveDefault the effectiveDefault to set
+	 */
+	public void setEffectiveDefault(String effectiveDefault) {
+		this.effectiveDefault = effectiveDefault;
+	}
 }
