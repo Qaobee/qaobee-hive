@@ -33,7 +33,7 @@ public final class Constants {
      */
     public static final long DEFAULT_SESSION_TIMEOUT = 30L * 60L * 1000L;
     /**
-     * The Constant GET.
+     * The Constant GET
      */
     public static final String GET = "GET";
     /**

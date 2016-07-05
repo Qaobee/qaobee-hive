@@ -28,6 +28,8 @@ import com.qaobee.hive.business.commons.settings.impl.ActivityBusinessImpl;
 import com.qaobee.hive.business.commons.settings.impl.CountryBusinessImpl;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.commons.users.impl.UsersBusinessImpl;
+import com.qaobee.hive.dao.*;
+import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.tools.PasswordEncryptionServiceImpl;
@@ -36,6 +38,7 @@ import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
 import com.qaobee.hive.technical.utils.guice.services.impl.FilesImpl;
 import com.qaobee.hive.technical.utils.impl.*;
+import org.vertx.java.core.Vertx;
 import org.vertx.java.core.json.JsonObject;
 
 /**
@@ -47,14 +50,16 @@ public class GuiceModule extends AbstractModule {
      * The Config.
      */
     private JsonObject config;
+    private Vertx vertx;
 
     /**
      * Instantiates a new Guice module.
      *
      * @param config the config
      */
-    public GuiceModule(JsonObject config) {
+    public GuiceModule(JsonObject config, Vertx vertx) {
         this.config = config;
+        this.vertx = vertx;
     }
 
     /**
@@ -67,6 +72,7 @@ public class GuiceModule extends AbstractModule {
         bind(JsonObject.class).annotatedWith(Names.named("payplug")).toInstance(config.getObject("payplug"));
         bind(JsonObject.class).annotatedWith(Names.named("asana")).toInstance(config.getObject("asana"));
 
+        bind(Vertx.class).toInstance(vertx);
         // TECHNICAL MODULES
         bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
@@ -81,5 +87,11 @@ public class GuiceModule extends AbstractModule {
         bind(ActivityBusiness.class).to(ActivityBusinessImpl.class).in(Singleton.class);
         bind(CountryBusiness.class).to(CountryBusinessImpl.class).in(Singleton.class);
 
+        // DAO
+        bind(ActivityCfgDAO.class).to(ActivityCfgDAOImpl.class).in(Singleton.class);
+        bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
+        bind(NotificationsDAO.class).to(NotificationsDAOImpl.class).in(Singleton.class);
+        bind(ChampionshipDAO.class).to(ChampionshipDAOImpl.class).in(Singleton.class);
+        bind(StructureDAO.class).to(StructureDAOImpl.class).in(Singleton.class);
     }
 }

@@ -82,8 +82,11 @@
       "contact": {
         "email": "toto@qaobee.com"
       },
-      "country": {
-        "local": "fr"
+      "country" : {
+        "_id" : "CNTR-250-FR-FRA",
+        "codeOSCE" : 250,
+        "label" : "France",
+        "local" : "fr"
       },
       "account": {
         "passwd": "toto",

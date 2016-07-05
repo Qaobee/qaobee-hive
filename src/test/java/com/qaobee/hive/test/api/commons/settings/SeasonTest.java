@@ -25,6 +25,8 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
 
+import java.util.GregorianCalendar;
+
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -172,6 +174,8 @@ public class SeasonTest extends VertxJunitSupport {
     public void getCurrentSeasonTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
         User user = generateLoggedUser();
+        GregorianCalendar today = new GregorianCalendar();
+        int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) -1 : today.get(GregorianCalendar.YEAR);
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
                 .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
@@ -179,6 +183,7 @@ public class SeasonTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
                 .body("label", is("SAISON 2016-2017"));
+                .body("code", is("SAI-" + year));
     }
 
     /**

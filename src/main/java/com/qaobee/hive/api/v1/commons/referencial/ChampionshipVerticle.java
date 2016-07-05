@@ -17,29 +17,22 @@
  */
 package com.qaobee.hive.api.v1.commons.referencial;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.referencial.ChampionShip;
+import com.qaobee.hive.dao.ChampionshipDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The type Championship verticle.
@@ -117,23 +110,23 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     @Inject
     private Utils utils;
     @Inject
-    private MongoDB mongo;
+    private ChampionshipDAO championshipDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(GET_LIST, this::getListChampionshipsHandler)
-                .registerHandler(GET, this::getChampionshipHandler)
-                .registerHandler(ADD, this::addChampionshipHandler)
-                .registerHandler(UPDATE, this::updateChampionshipHandler);
+                .registerHandler(GET_LIST, this::getListChampionships)
+                .registerHandler(GET, this::getChampionship)
+                .registerHandler(ADD, this::addChampionship)
+                .registerHandler(UPDATE, this::updateChampionship);
     }
 
     /**
      * @apiDescription Update a championship.
      * @api {post} /api/1/commons/referencial/championship/update Update a championship
-     * @apiName updateChampionshipHandler
+     * @apiName updateChampionship
      * @apiGroup Championship API
      * @apiPermission TBD
      * @apiParam {String} id : identifier of the championship
@@ -145,6 +138,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} activityId : ID activity
      * @apiParam {CategoryAge} categoryAge : age category
      * @apiParam {String} seasonCode : season
+     * @apiHeader {String} token
      * @apiParam {Array(Participant)} participants : list of participants (at least one)
      * @apiParam {Array(Journey)} journeys (optional) : list of journeys
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
@@ -153,12 +147,10 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     @Rule(address = UPDATE, method = Constants.POST, logged = true, admin = true,
             mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
                     PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
-    private void updateChampionshipHandler(Message<String> message) { 
+    private void updateChampionship(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject championship = new JsonObject(req.getBody());
-            mongo.save(championship, ChampionShip.class);
-            message.reply(championship.encode());
+            message.reply(championshipDAO.updateChampionship(new JsonObject(req.getBody())).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -168,7 +160,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     /**
      * @apiDescription Add a championship.
      * @api {post} /api/1/commons/referencial/championship/add Add a championship
-     * @apiName addChampionshipHandler
+     * @apiName addChampionship
      * @apiGroup Championship API
      * @apiPermission TBD
      * @apiParam {String} label : championship label
@@ -179,6 +171,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} activityId : ID activity
      * @apiParam {CategoryAge} categoryAge : age category
      * @apiParam {String} seasonCode : season
+     * @apiHeader {String} token
      * @apiParam {Array(Participant)} participants : list of participants (at least one)
      * @apiParam {Array(Journey)} journeys (optional) : list of journeys
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
@@ -187,12 +180,10 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     @Rule(address = ADD, method = Constants.POST, logged = true, admin = true,
             mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
                     PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
-    private void addChampionshipHandler(Message<String> message) { 
+    private void addChampionship(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject championship = new JsonObject(req.getBody());
-            championship.putString("_id", mongo.save(championship, ChampionShip.class));
-            message.reply(championship.encode());
+            message.reply(championshipDAO.addChampionship(new JsonObject(req.getBody())).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -202,7 +193,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     /**
      * @apiDescription Retrieve a championship by its id.
      * @api {post} /api/1/commons/referencial/championship/get Get a championship
-     * @apiName getChampionshipHandler
+     * @apiName getChampionship
      * @apiGroup Championship API
      * @apiPermission TBD
      * @apiParam {String} id
@@ -210,10 +201,10 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    private void getChampionshipHandler(Message<String> message) { 
+    private void getChampionship(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), ChampionShip.class).encode());
+            message.reply(championshipDAO.getChampionship(req.getParams().get(PARAM_ID).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -223,7 +214,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     /**
      * @apiDescription retrieve all championships.
      * @api {post} /api/1/commons/referencial/championship/list Get all championships
-     * @apiName getListChampionshipsHandler
+     * @apiName getListChampionships
      * @apiGroup Championship API
      * @apiPermission TBD
      * @apiParam {String} activityId : activity code
@@ -233,46 +224,10 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array} list of championships
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
-    private void getListChampionshipsHandler(Message<String> message) { 
+    private void getListChampionships(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject params = new JsonObject(req.getBody());
-            Map<String, Object> mapParams = params.toMap();
-            // Aggregat section
-            DBObject match;
-            BasicDBObject dbObjectParent;
-            BasicDBObject dbObjectChild;
-            //$MACTH section
-            dbObjectParent = new BasicDBObject();
-            // Activity ID
-            dbObjectParent.put("activityId", mapParams.get(PARAM_ACTIVITY));
-            // Category Age Code
-            dbObjectParent.put("categoryAge.code", mapParams.get(PARAM_CATEGORY_AGE));
-            // Structure ID
-            dbObjectParent.put("participants.structureId", mapParams.get(PARAM_STRUCTURE));
-            // Participant
-            if (mapParams.containsKey(PARAM_PARTICIPANT)) {
-                @SuppressWarnings("unchecked") Map<String, Object> mapParticipant = (Map<String, Object>) mapParams.get(PARAM_PARTICIPANT);
-                dbObjectChild = new BasicDBObject();
-                if (mapParticipant.containsKey("id")) {
-                    dbObjectChild.put("participants.id", mapParticipant.get("id"));
-                }
-                if (mapParticipant.containsKey("structureId")) {
-                    dbObjectChild.put("participants.structureId", mapParticipant.get("structureId"));
-                }
-                if (mapParticipant.containsKey("name")) {
-                    dbObjectChild.put("participants.name", mapParticipant.get("name"));
-                }
-                if (mapParticipant.containsKey("type")) {
-                    dbObjectChild.put("participants.type", mapParticipant.get("type"));
-                }
-                dbObjectParent.put("$and", Collections.singletonList(dbObjectChild));
-            }
-            match = new BasicDBObject("$match", dbObjectParent);
-            // Pipeline
-            List<DBObject> pipelineAggregation = Collections.singletonList(match);
-            final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
-            message.reply(resultJSon.encode());
+            message.reply(championshipDAO.getListChampionships(new JsonObject(req.getBody())).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

@@ -164,7 +164,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     @Before
     public void printInfo() {
-        Injector injector = Guice.createInjector(new GuiceModule(moduleConfig));
+        Injector injector = Guice.createInjector(new GuiceModule(moduleConfig, getVertx()));
         injector.injectMembers(this);
         System.out.println("About to execute : " + name.getMethodName());
         mongo.getDb().dropDatabase();
@@ -264,7 +264,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         habilitation.set_id("123456");
         habilitation.setDescription("admin Qaobee");
         habilitation.setKey(Constants.ADMIN_HABILIT);
-        user.getAccount().setHabilitations(new ArrayList<Habilitation>());
+        user.getAccount().setHabilitations(new ArrayList<>());
         user.getAccount().getHabilitations().add(habilitation);
         try {
             mongo.save(user);

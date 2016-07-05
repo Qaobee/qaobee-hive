@@ -49,6 +49,12 @@ db.User.insert({
     "birthdate": -21434400000,
     "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": 250, "label": "France", "local": "fr"},
     "sandboxDefault":"558b0efebd2e39cdab651e1f",
+    "country": {
+        "_id": "CNTR-250-FR-FRA",
+        "codeOSCE": 250,
+        "label": "France",
+        "local": "fr"
+    },
     "address": {
         "formatedAddress": "",
         "place": "3, allée de Champagné",
@@ -99,7 +105,6 @@ db.User.insert({
             "shippingList" : null,
             "paiementURL" : "https://www.payplug.com/pay/test/cnoSU0Pc8bURVwS0TF5yF"
         }],
-        "habilitations" : null,
         "mobileToken" : null
     },
     "timestamp": 1444854317672
@@ -124,6 +129,7 @@ db.SB_SandBox.insert({
         "activityType": "TEAM_SPORT"
     },
     "owner": "5509ef1fdb8f8b6e2f51f4ce",
+    "members": [],
     "structure": {
         "_id": "541168295971d35c1f2d1b5f",
         "label": "CESSON RENNES METROPOLE HB",
