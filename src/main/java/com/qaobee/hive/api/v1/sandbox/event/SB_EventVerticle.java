@@ -129,7 +129,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Event API
      * @apiHeader {String} token
      * @apiParam {String} id
-     * @apiSuccess {Object} event com.qaobee.swarn.business.model.tranversal.event.event;
+     * @apiSuccess {Object} event event;
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
@@ -153,7 +153,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} owner Event owner
      * @apiParam {Number} startDate Event start date
      * @apiGroup SB_Event API
-     * @apiSuccess {SB_Event} SB_Event updated
+     * @apiSuccess {Object} event updated event
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
@@ -169,7 +169,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     }
 
     /**
-     * @apiDescription Add an SB_Event.
+     * @apiDescription Add an event.
      * @api {post} /api/1/sandbox/event/event/add Add an SB_Event
      * @apiName addEvent
      * @apiHeader {String} token
@@ -178,7 +178,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} owner Event owner
      * @apiParam {Number} startDate Event start date
      * @apiGroup SB_Event API
-     * @apiSuccess {SB_Event} SB_Event create
+     * @apiSuccess {Object} event created event
      */
     @Rule(address = ADD, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
@@ -195,7 +195,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     /**
      * @apiDescription retrieve all events for one or  many owner
-     * @api {post} /api/1/sandbox/event/event/list Get all SB_Event
+     * @api {post} /api/1/sandbox/event/event/list Get all events
      * @apiName getEventList
      * @apiGroup SB_Event API
      * @apiParam {Number} startDate start date
@@ -204,7 +204,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} activityId Activity Id
      * @apiParam {Array} owner Owner
      * @apiHeader {String} token
-     * @apiSuccess {Array} list of SB_Event
+     * @apiSuccess {Array} list of events
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID},
