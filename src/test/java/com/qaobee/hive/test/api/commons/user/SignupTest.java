@@ -673,20 +673,6 @@ public class SignupTest extends VertxJunitSupport {
                 .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
-/*
-        param.putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"));
-        JsonObject structure = getStructure();
-        structure.removeField("_id");
-        param.putObject(SignupVerticle.PARAM_STRUCTURE, structure);
-        given().header(TOKEN, token)
-                .body(param.encode())
-                .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
-                .then().assertThat().statusCode(200)
-                .body("name", notNullValue())
-                .body("name", is(p.getString("name")))
-                .body("effectiveDefault", notNullValue())
-                .body("account.active", is(true));
-                */
     }
 
     /**
