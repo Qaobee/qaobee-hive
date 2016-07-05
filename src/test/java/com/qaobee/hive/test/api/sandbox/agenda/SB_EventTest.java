@@ -46,18 +46,18 @@ public class SB_EventTest extends VertxJunitSupport {
     public void addEvent() {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
-        params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        final JsonObject link = new JsonObject();
-        link.putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship");
-        params.putObject("link", link);
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1435701600100L);
-        final JsonObject owner = new JsonObject();
-        owner.putString("sandboxId", "558b0efebd2e39cdab651e1f");
-        owner.putString("effectiveId", "550b31f925da07681592db23");
-        params.putObject(SB_EventVerticle.PARAM_OWNER, owner);
+        final JsonObject params = new JsonObject()
+                .putString(SB_EventVerticle.PARAM_LABEL, "labelValue")
+                .putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                .putObject("link", new JsonObject()
+                        .putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship")
+                )
+                .putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L)
+                .putNumber(SB_EventVerticle.PARAM_END_DATE, 1435701600100L)
+                .putObject(SB_EventVerticle.PARAM_OWNER, new JsonObject()
+                        .putString("sandboxId", "558b0efebd2e39cdab651e1f")
+                        .putString("effectiveId", "550b31f925da07681592db23")
+                );
 
         String id = given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
@@ -101,18 +101,18 @@ public class SB_EventTest extends VertxJunitSupport {
     @Test
     public void addEventWithMissingParams() {
         User u = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putString(SB_EventVerticle.PARAM_LABEL, "labelValue");
-        final JsonObject link = new JsonObject();
-        link.putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship");
-        params.putObject("link", link);
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1435701600100L);
-        final JsonObject owner = new JsonObject();
-        owner.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
-        owner.putString("effectiveId", "550b31f925da07681592db23");
-        params.putObject(SB_EventVerticle.PARAM_OWNER, owner);
+        final JsonObject params = new JsonObject()
+                .putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                .putString(SB_EventVerticle.PARAM_LABEL, "labelValue")
+                .putObject("link", new JsonObject()
+                        .putString(SB_EventVerticle.PARAM_LINK_TYPE, "championship")
+                )
+                .putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L)
+                .putNumber(SB_EventVerticle.PARAM_END_DATE, 1435701600100L)
+                .putObject(SB_EventVerticle.PARAM_OWNER, new JsonObject()
+                        .putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
+                );
+
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.ADD).mandatoryParams());
         params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
             JsonObject params2 = new JsonObject(params.encode());
@@ -133,14 +133,14 @@ public class SB_EventTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject();
-        params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000L);
-        params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
-        params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
-        params.putNumber(SB_EventVerticle.PARAM_LIMIT_RESULT, 5);
-        params.putArray(SB_EventVerticle.PARAM_LIST_SORTBY, new JsonArray().add(new JsonObject()
+        params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                .putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}))
+                .putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L)
+                .putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000L)
+                .putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
+                .putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23")
+                .putNumber(SB_EventVerticle.PARAM_LIMIT_RESULT, 5)
+                .putArray(SB_EventVerticle.PARAM_LIST_SORTBY, new JsonArray().add(new JsonObject()
                         .putString("fieldName", SB_EventVerticle.PARAM_LABEL)
                         .putNumber("sortOrder", -1)
                 )
@@ -194,13 +194,14 @@ public class SB_EventTest extends VertxJunitSupport {
     public void getListEventWithMissingParameters() {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND");
-        params.putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}));
-        params.putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L);
-        params.putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000L);
-        params.putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f");
-        params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
+        final JsonObject params = new JsonObject()
+                .putString(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                .putArray(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray(new String[]{"championship"}))
+                .putNumber(SB_EventVerticle.PARAM_START_DATE, 1435701600000L)
+                .putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000L)
+                .putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
+                .putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
+
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.GET_LIST).mandatoryParams());
         params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
             JsonObject params2 = new JsonObject(params.encode());

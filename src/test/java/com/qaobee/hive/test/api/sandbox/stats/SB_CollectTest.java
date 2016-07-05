@@ -19,7 +19,7 @@ package com.qaobee.hive.test.api.sandbox.stats;
 
 import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
-import com.qaobee.hive.api.v1.sandbox.stats.SB_CollecteVerticle;
+import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -34,173 +34,173 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Sb collecte test.
+ * The type Sb Collect test.
  *
  * @author cke
  */
-public class SB_CollecteTest extends VertxJunitSupport {
+public class SB_CollectTest extends VertxJunitSupport {
     /**
-     * Add collecte.
+     * Add collect.
      */
     @Test
-    public void addCollecte() {
-        populate(POPULATE_ONLY, DATA_USER_QAOBEE);
+    public void addCollect() {
+        populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND, DATA_EVENT_HAND);
         User user = generateLoggedUser();
 
         JsonObject event = new JsonObject(
                 given().header(TOKEN, user.getAccount().getToken())
-                        .queryParam(SB_EventVerticle.PARAM_ID, "e254897f-cf3a-48b8-bed5-a4d4664ab4a4")
+                        .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
                         .when().get(getURL(SB_EventVerticle.GET))
                         .then().assertThat().statusCode(200)
                         .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
                         .body("activityId", is("ACT-HAND"))
                         .extract().asString());
 
-        final JsonObject collecte = generateCollect(event);
+        final JsonObject Collect = generateCollect(event);
 
         given().header(TOKEN, user.getAccount().getToken())
-                .body(collecte.encode())
-                .when().post(getURL(SB_CollecteVerticle.ADD))
+                .body(Collect.encode())
+                .when().post(getURL(SB_CollectVerticle.ADD))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body("eventRef.address.city", is("Guilers"));
+                .body("eventRef.address.city", is("Brest"));
     }
 
 
     /**
-     * Add collecte with non logged user.
+     * Add Collect with non logged user.
      */
     @Test
-    public void addCollecteWithNonLoggedUser() {
-        given().when().post(getURL(SB_CollecteVerticle.ADD))
+    public void addCollectWithNonLoggedUser() {
+        given().when().post(getURL(SB_CollectVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Add collecte with wrong http method.
+     * Add Collect with wrong http method.
      */
     @Test
-    public void addCollecteWithWrongHttpMethod() {
-        given().when().get(getURL(SB_CollecteVerticle.ADD))
+    public void addCollectWithWrongHttpMethod() {
+        given().when().get(getURL(SB_CollectVerticle.ADD))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
 
     /**
-     * Add collecte with missing parameters.
+     * Add Collect with missing parameters.
      */
     @Test
-    public void addCollecteWithMissingParameters() {
+    public void addCollectWithMissingParameters() {
         populate(POPULATE_ONLY, DATA_USER_QAOBEE);
         User user = generateLoggedUser();
 
         JsonObject event = new JsonObject(
                 given().header(TOKEN, user.getAccount().getToken())
-                        .queryParam(SB_EventVerticle.PARAM_ID, "e254897f-cf3a-48b8-bed5-a4d4664ab4a4")
+                        .queryParam(SB_EventVerticle.PARAM_ID, "5660c53ac630d9b391c0c4ec")
                         .when().get(getURL(SB_EventVerticle.GET))
                         .then().assertThat().statusCode(200)
                         .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
                         .body("activityId", is("ACT-HAND"))
                         .extract().asString());
 
-        final JsonObject collecte = generateCollect(event);
+        final JsonObject Collect = generateCollect(event);
 
-        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollecteVerticle.ADD).mandatoryParams());
-        collecte.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
-            JsonObject params2 = new JsonObject(collecte.encode());
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollectVerticle.ADD).mandatoryParams());
+        Collect.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(Collect.encode());
             params2.removeField(k);
             given().header(TOKEN, user.getAccount().getToken())
                     .body(params2.encode())
-                    .when().post(getURL(SB_CollecteVerticle.ADD))
+                    .when().post(getURL(SB_CollectVerticle.ADD))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         });
     }
 
     /**
-     * Gets list collecte.
+     * Gets list Collect.
      */
     @Test
-    public void getListCollecte() {
+    public void getListCollect() {
         populate(POPULATE_ONLY, DATA_USER_QAOBEE);
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject()
-                .putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1448491800000L)
-                .putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1448492500000L)
-                .putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9")
-                .putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
+                .putNumber(SB_CollectVerticle.PARAM_START_DATE, 1448491800000L)
+                .putNumber(SB_CollectVerticle.PARAM_END_DATE, 1448492500000L)
+                .putString(SB_CollectVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9")
+                .putString(SB_CollectVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
 
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
-                .when().post(getURL(SB_CollecteVerticle.GET_LIST))
+                .when().post(getURL(SB_CollectVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(1))
                 .body("eventRef.label", hasItem("Journée 10"));
 
-        params.putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "TOTO");
+        params.putString(SB_CollectVerticle.PARAM_SANDBOX_ID, "TOTO");
 
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
-                .when().post(getURL(SB_CollecteVerticle.GET_LIST))
+                .when().post(getURL(SB_CollectVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(0));
 
     }
 
     /**
-     * Gets list collecte with non logged user.
+     * Gets list Collect with non logged user.
      */
     @Test
-    public void getListCollecteWithNonLoggedUser() {
-        given().when().post(getURL(SB_CollecteVerticle.GET_LIST))
+    public void getListCollectWithNonLoggedUser() {
+        given().when().post(getURL(SB_CollectVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets list collecte with wrong http method.
+     * Gets list Collect with wrong http method.
      */
     @Test
-    public void getListCollecteWithWrongHttpMethod() {
-        given().when().get(getURL(SB_CollecteVerticle.GET_LIST))
+    public void getListCollectWithWrongHttpMethod() {
+        given().when().get(getURL(SB_CollectVerticle.GET_LIST))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
 
     /**
-     * Gets list collecte with missing parameters.
+     * Gets list Collect with missing parameters.
      */
     @Test
-    public void getListCollecteWithMissingParameters() {
+    public void getListCollectWithMissingParameters() {
         User user = generateLoggedUser();
         final JsonObject params = new JsonObject()
-                .putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1448491800000L)
-                .putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1448492500000L)
-                .putString(SB_CollecteVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9")
-                .putString(SB_CollecteVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
+                .putNumber(SB_CollectVerticle.PARAM_START_DATE, 1448491800000L)
+                .putNumber(SB_CollectVerticle.PARAM_END_DATE, 1448492500000L)
+                .putString(SB_CollectVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9")
+                .putString(SB_CollectVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
 
-        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollecteVerticle.GET_LIST).mandatoryParams());
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollectVerticle.GET_LIST).mandatoryParams());
         params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
             JsonObject params2 = new JsonObject(params.encode());
             params2.removeField(k);
             given().header(TOKEN, user.getAccount().getToken())
                     .body(params2.encode())
-                    .when().post(getURL(SB_CollecteVerticle.GET_LIST))
+                    .when().post(getURL(SB_CollectVerticle.GET_LIST))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         });
     }
 
     /**
-     * Gets collecte by id.
+     * Gets Collect by id.
      */
     @Test
-    public void getCollecteById() {
+    public void getCollectById() {
         populate(POPULATE_ONLY, DATA_USER_QAOBEE);
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(SB_CollecteVerticle.PARAM_ID, "565e0f0dbcda594d193e24db")
-                .when().get(getURL(SB_CollecteVerticle.GET))
+                .queryParam(SB_CollectVerticle.PARAM_ID, "565e0f0dbcda594d193e24db")
+                .when().get(getURL(SB_CollectVerticle.GET))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("status", is("done"));
@@ -208,46 +208,46 @@ public class SB_CollecteTest extends VertxJunitSupport {
 
 
     /**
-     * Gets collecte by id with non logged user.
+     * Gets Collect by id with non logged user.
      */
     @Test
-    public void getCollecteByIdWithNonLoggedUser() {
-        given().when().get(getURL(SB_CollecteVerticle.GET))
+    public void getCollectByIdWithNonLoggedUser() {
+        given().when().get(getURL(SB_CollectVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets collecte by id with wrong http method.
+     * Gets Collect by id with wrong http method.
      */
     @Test
-    public void getCollecteByIdWithWrongHttpMethod() {
-        given().when().post(getURL(SB_CollecteVerticle.GET))
+    public void getCollectByIdWithWrongHttpMethod() {
+        given().when().post(getURL(SB_CollectVerticle.GET))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
 
     /**
-     * Gets collecte by id with missing parameters.
+     * Gets Collect by id with missing parameters.
      */
     @Test
-    public void getCollecteByIdWithMissingParameters() {
+    public void getCollectByIdWithMissingParameters() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().get(getURL(SB_CollecteVerticle.GET))
+                .when().get(getURL(SB_CollectVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     private JsonObject generateCollect(JsonObject event) {
         return new JsonObject()
-                .putObject("eventRef", event)
-                .putArray("players", new JsonArray()
+                .putObject(SB_CollectVerticle.PARAM_EVENT, event)
+                .putArray(SB_CollectVerticle.PARAM_PLAYERS, new JsonArray()
                         .addString("1ce4591d-74a8-46e9-af80-d633f9344d27")
                         .addString("26baf31a-f153-41b0-9e1d-c32cb9e859dd")
                         .addString("43e62ae5-2a92-4e1a-9b9a-d1a399c096bd")
                         .addString("46bea3c9-a3c0-4f4e-91fc-0bd2797b48df"))
-                .putNumber(SB_CollecteVerticle.PARAM_START_DATE, 1435701600000L)
-                .putNumber(SB_CollecteVerticle.PARAM_END_DATE, 1435701600100L)
+                .putNumber(SB_CollectVerticle.PARAM_START_DATE, 1435701600000L)
+                .putNumber(SB_CollectVerticle.PARAM_END_DATE, 1435701600100L)
                 .putObject("observers", new JsonObject()
                         .putObject("observer", new JsonObject()
                                 .putString("userId", "b50b3325-fdbd-41bf-bda4-81c827982001")

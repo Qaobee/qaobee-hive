@@ -1562,7 +1562,7 @@ db.SB_Event.insert({
 /*
  * Alimentation collection SB_Collecte : CKE
  */
-db.SB_Collecte.insert({"_id" : "56410c65446d5807c2732e9d",
+db.SB_Collect.insert({"_id" : "56410c65446d5807c2732e9d",
     "status" : "done",
     "eventRef" : {
         "_id" : "59bb6da2-b9d2-4453-856d-52a0fb98eac1",
@@ -1633,7 +1633,7 @@ db.SB_Collecte.insert({"_id" : "56410c65446d5807c2732e9d",
 /*
  * Alimentation collection SB_Collecte : CKE
  */
-db.SB_Collecte.insert({"_id" : "565e0f0dbcda594d193e24db",
+db.SB_Collect.insert({"_id" : "565e0f0dbcda594d193e24db",
     "status" : "done",
     "eventRef" : {
         "_id" : "35d65151-2fe5-48e1-a219-8534412b6bca",
