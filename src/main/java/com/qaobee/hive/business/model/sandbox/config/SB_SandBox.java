@@ -18,11 +18,11 @@
  */
 package com.qaobee.hive.business.model.sandbox.config;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.transversal.Member;
+
+import java.util.List;
 
 /**
  * Bean that describes a SandBox.
