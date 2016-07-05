@@ -44,7 +44,7 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .when().get(getURL(SB_ShareVerticle.GET_SANDOX_SHARING))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body("sandboxCfg.members", hasSize(1));
+                .body("members", hasSize(1));
 
         given().header(TOKEN, user2.getAccount().getToken())
                 .when().get(getURL(SB_ShareVerticle.GET_SANDBOX_LIST))
@@ -120,14 +120,14 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .when().get(getURL(SB_ShareVerticle.GET_SANDOX_SHARING))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body("sandboxCfg.members", hasSize(1));
+                .body("members", hasSize(1));
 
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(SB_ShareVerticle.REMOVE_FROM_SANDBOX))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body("sandboxCfg.members", hasSize(0));
+                .body("members", hasSize(0));
     }
 
     /**

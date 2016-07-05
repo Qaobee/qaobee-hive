@@ -3,7 +3,6 @@ package com.qaobee.hive.dao.impl;
 import com.mongodb.BasicDBObject;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
 import com.qaobee.hive.dao.ActivityCfgDAO;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -24,8 +23,6 @@ public class ShareDAOImpl implements ShareDAO {
     private static final Logger LOG = LoggerFactory.getLogger(ShareDAOImpl.class);
     private static final String FIELD_ID = "_id";
     private static final String FIELD_OWNER = "owner";
-    private static final String FIELD_SBCFG_ID = "sandboxCfgId";
-    private static final String FIELD_SBCFG = "sandboxCfg";
     private static final String FIELD_MEMBERS = "members";
     private static final String FIELD_FIRSTNAME = "firstname";
     private static final String FIELD_NAME = "name";
@@ -41,49 +38,41 @@ public class ShareDAOImpl implements ShareDAO {
 
     @Override
     public JsonObject getSandboxSharing(String sandboxId) throws QaobeeException {
-        JsonObject sandbox = mongo.getById(sandboxId, SB_SandBox.class);
-        String sandboxCfgId = sandbox.getString(FIELD_SBCFG_ID);
-        sandbox.putObject(FIELD_SBCFG, getEnrichedSandboxCfg(sandboxCfgId));
-        return sandbox;
+        return getEnrichedSandbox(mongo.getById(sandboxId, SB_SandBox.class));
     }
 
     @Override
-    public JsonObject getEnrichedSandboxCfg(String sandboxCfgId) throws QaobeeException {
-        JsonObject sandboxCfg = mongo.getById(sandboxCfgId, SB_SandBoxCfg.class);
+    public JsonObject getEnrichedSandbox(JsonObject sandbox) throws QaobeeException {
         JsonArray members = new JsonArray();
-        sandboxCfg.getArray(FIELD_MEMBERS).forEach(m -> {
+        sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
             try {
                 members.add(mongo.getById(((JsonObject) m).getString(FIELD_PERSON_ID), User.class, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
             }
         });
-        sandboxCfg.putArray(FIELD_MEMBERS, members);
-        return sandboxCfg;
+        sandbox.putArray(FIELD_MEMBERS, members);
+        sandbox.putObject(FIELD_OWNER, mongo.getById(sandbox.getString(FIELD_OWNER), User.class, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
+        return sandbox;
     }
 
     @Override
     public JsonObject removeUserFromSandbox(String sandboxId, String userId) throws QaobeeException {
         JsonObject sandbox = mongo.getById(sandboxId, SB_SandBox.class);
-        String sandboxCfgId = sandbox.getString(FIELD_SBCFG_ID);
-        JsonObject sandboxCfg = mongo.getById(sandboxCfgId, SB_SandBoxCfg.class);
         JsonArray members = new JsonArray();
-        sandboxCfg.getArray(FIELD_MEMBERS).forEach(m -> {
+        sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
             if (!((JsonObject) m).getString(FIELD_PERSON_ID).equals(userId)) {
                 members.add(m);
             }
         });
-        sandboxCfg.putArray(FIELD_MEMBERS, members);
-        mongo.update(sandboxCfg, SB_SandBoxCfg.class);
-        sandbox.putObject(FIELD_SBCFG, getEnrichedSandboxCfg(sandboxCfgId));
-        return sandbox;
+        sandbox.putArray(FIELD_MEMBERS, members);
+        sandbox.putString("_id", mongo.update(sandbox, SB_SandBox.class));
+        return getEnrichedSandbox(sandbox);
     }
 
     @Override
     public JsonObject addUserToSandbox(String sandboxId, String userId, String roleCode) throws QaobeeException {
         JsonObject sandbox = mongo.getById(sandboxId, SB_SandBox.class);
-        String sandboxCfgId = sandbox.getString(FIELD_SBCFG_ID);
-        JsonObject sandboxCfg = mongo.getById(sandboxCfgId, SB_SandBoxCfg.class);
         final JsonObject[] role = {new JsonObject().putString("code", roleCode)};
         JsonObject owner = mongo.getById(sandbox.getString(FIELD_OWNER), User.class);
         if (owner.containsField(FIELD_COUNTRY) && owner.getObject(FIELD_COUNTRY) != null && owner.getObject(FIELD_COUNTRY).containsField(FIELD_ID)) {
@@ -98,13 +87,12 @@ public class ShareDAOImpl implements ShareDAO {
                 }
             });
         }
-        sandboxCfg.getArray(FIELD_MEMBERS).add(new JsonObject()
+        sandbox.getArray(FIELD_MEMBERS).add(new JsonObject()
                 .putString(FIELD_PERSON_ID, userId)
                 .putObject("role", role[0])
         );
-        mongo.update(sandboxCfg, SB_SandBoxCfg.class);
-        sandbox.putObject(FIELD_SBCFG, getEnrichedSandboxCfg(sandboxCfgId));
-        return sandbox;
+        sandbox.putString("_id", mongo.update(sandbox, SB_SandBox.class));
+        return getEnrichedSandbox(sandbox);
     }
 
     @Override
@@ -121,40 +109,19 @@ public class ShareDAOImpl implements ShareDAO {
         array.put("$elemMatch", elemMatch);
         BasicDBObject query = new BasicDBObject();
         query.put(FIELD_MEMBERS, array);
-
-        mongo.getDb().getCollection(SB_SandBoxCfg.class.getSimpleName()).find(query).forEach(sbCfg -> {
-            JsonObject sandboxCfg = new JsonObject(sbCfg.toString());
-            JsonArray members = new JsonArray();
-            sandboxCfg.getArray(FIELD_MEMBERS).forEach(m -> {
-                try {
-                    members.add(mongo.getById(((JsonObject) m).getString(FIELD_PERSON_ID), User.class, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                }
-            });
-            sandboxCfg.putArray(FIELD_MEMBERS, members);
-            mongo.findByCriterias(new CriteriaBuilder().add(FIELD_SBCFG_ID, sbCfg.get(FIELD_ID)).get(), null, null, -1, 0, SB_SandBox.class).forEach(sb -> {
-                        try {
-                            ((JsonObject) sb).putObject(FIELD_OWNER, mongo.getById(((JsonObject) sb).getString(FIELD_OWNER), User.class, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
-                        } catch (QaobeeException e) {
-                            LOG.error(e.getMessage(), e);
-                        }
-                        ((JsonObject) sb).putObject(FIELD_SBCFG, sandboxCfg);
-                        result.getArray(FIELD_MEMBERS).add(sb);
-                    }
-            );
-        });
-
         sandboxes.forEach(s -> {
             try {
-                ((JsonObject) s).putObject(FIELD_OWNER, mongo.getById(((JsonObject) s).getString(FIELD_OWNER),
-                        User.class,
-                        Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
-                ((JsonObject) s).putObject(FIELD_SBCFG, getEnrichedSandboxCfg(((JsonObject) s).getString(FIELD_SBCFG_ID)));
+                result.getArray(FIELD_OWNER).add(getEnrichedSandbox((JsonObject) s));
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
             }
-            result.getArray(FIELD_OWNER).add(s);
+        });
+        mongo.getDb().getCollection(SB_SandBox.class.getSimpleName()).find(query).forEach(sandboxRes -> {
+            try {
+                result.getArray(FIELD_MEMBERS).add(getEnrichedSandbox(new JsonObject(sandboxRes.toString())));
+            } catch (QaobeeException e) {
+                LOG.error(e.getMessage(), e);
+            }
         });
         return result;
     }
