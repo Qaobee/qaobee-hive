@@ -71,7 +71,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * Sandbox config id
      */
-    public static final String PARAM_SANDBOXCFG_ID = "sandBoxCfgId";
+    public static final String PARAM_SANDBOX_ID = "sandBoxId";
     /**
      * Category Age Code
      */
@@ -154,13 +154,13 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {List}   effectives            The list of effectives found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET_LIST, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOXCFG_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET_LIST, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST)
     private void getEffectiveListHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             Map<String, List<String>> params = req.getParams();
             Map<String, Object> criterias = new HashMap<>();
-            criterias.put(PARAM_SANDBOXCFG_ID, params.get(PARAM_SANDBOXCFG_ID).get(0));
+            criterias.put(PARAM_SANDBOX_ID, params.get(PARAM_SANDBOX_ID).get(0));
             // category code
             String code = null;
             if (params.get(PARAM_CATEGORY_AGE_CODE) != null && !StringUtils.isBlank(params.get(PARAM_CATEGORY_AGE_CODE).get(0))) {
@@ -170,7 +170,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
             JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Effective.class);
             if (resultJson == null || resultJson.size() == 0) {
                 throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                        "No Effective found " + "for ( sandBoxCfgId : " + params.get(PARAM_SANDBOXCFG_ID).get(0) + " " + (code != null ? "and for category : " + code + ")" : ")"));
+                        "No Effective found " + "for ( sandBoxCfgId : " + params.get(PARAM_SANDBOX_ID).get(0) + " " + (code != null ? "and for category : " + code + ")" : ")"));
             }
             message.reply(resultJson.encode());
         } catch (final QaobeeException e) {

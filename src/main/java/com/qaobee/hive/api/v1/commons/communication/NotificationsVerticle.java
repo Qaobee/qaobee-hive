@@ -1,8 +1,17 @@
 package com.qaobee.hive.api.v1.commons.communication;
 
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBoxCfg;
+import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.dao.NotificationsDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
@@ -11,14 +20,6 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
 
 /**
  * The type Notifications verticle.
@@ -106,7 +107,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         vertx.eventBus().send(NOTIFY, new JsonObject()
                 .putString("id", new JsonObject(req.getBody()).getString(TARGET_ID))
-                .putString(TARGET, SB_SandBoxCfg.class.getSimpleName())
+                .putString(TARGET, SB_SandBox.class.getSimpleName())
                 .putObject(NOTIFICATION, new JsonObject(req.getBody())), (Handler<Message<JsonObject>>) event ->
                 utils.sendStatus(event.body().getBoolean("status", false), message)
         );

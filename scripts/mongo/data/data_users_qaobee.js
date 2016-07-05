@@ -202,13 +202,7 @@ db.SB_SandBox.remove({"_id": "561ec20b409937a6b439d4e9"});
  */
 db.SB_SandBox.insert({
     "_id": "561ec20b409937a6b439d4e9",
-    "activity": {
-        "_id": "ACT-HAND",
-        "code": "ACT-HAND",
-        "label": "admin.settings.activity.handball.label",
-        "enable": true,
-        "activityType": "TEAM_SPORT"
-    },
+    "activityId": "ACT-HAND",
     "owner": "b50b3325-fdbd-41bf-bda4-81c827982001",
     "members": [],
     "structure": {
@@ -1787,13 +1781,7 @@ db.SB_SandBox.remove({"_id": "562026b8758f1cc6a4753307"});
  */
 db.SB_SandBox.insert({
     "_id": "562026b8758f1cc6a4753307",
-    "activity": {
-        "_id": "ACT-HAND",
-        "code": "ACT-HAND",
-        "label": "admin.settings.activity.handball.label",
-        "enable": true,
-        "activityType": "TEAM_SPORT"
-    },
+    "activityId": "ACT-HAND",
     "owner": "b50b3325-fdbd-41bf-bda4-81c827982003",
     "structure": {
         "_id": "5620281c758f1cc6a475330c",

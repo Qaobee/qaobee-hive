@@ -42,7 +42,7 @@ public class SB_Effective { // NOSONAR
     /**
      * Sandbox's id
      */
-    private String sandBoxCfgId;
+    private String sandBoxId;
     /**
      * Age category.
      */
@@ -127,21 +127,21 @@ public class SB_Effective { // NOSONAR
     }
 
     /**
-     * Returns the sandbox config ID.
+     * Returns the sandbox ID.
      *
      * @return String : ID
      */
-    public String getSandBoxCfgId() {
-        return sandBoxCfgId;
+    public String getSandBoxId() {
+        return sandBoxId;
     }
 
     /**
-     * Defines the sandbox cinfig ID.
+     * Defines the sandbox ID.
      *
-     * @param sandBoxCfgId (String) : ID
+     * @param sandBoxId (String) : ID
      */
-    public void setSandBoxCfgId(String sandBoxCfgId) {
-        this.sandBoxCfgId = sandBoxCfgId;
+    public void setSandBoxId(String sandBoxId) {
+        this.sandBoxId = sandBoxId;
     }
 
     /**

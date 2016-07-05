@@ -41,8 +41,8 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                 case "User":
                     addNotificationToUser(id, notification);
                     break;
-                case "SB_SandBoxCfg":
-                    addNotificationToSandboxCfg(target,notification, exclude);
+                case "SB_SandBox":
+                    addNotificationToSandbox(target,notification, exclude);
                     break;
                 default:
                     break;
@@ -51,7 +51,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
         }
     }
 
-    private void addNotificationToSandboxCfg(JsonObject target, JsonObject notification, JsonArray exclude) throws QaobeeException {
+    private void addNotificationToSandbox(JsonObject target, JsonObject notification, JsonArray exclude) throws QaobeeException {
         List<Object> excludeList = new ArrayList<>();
         if(exclude != null) {
             exclude.forEach(excludeList::add);

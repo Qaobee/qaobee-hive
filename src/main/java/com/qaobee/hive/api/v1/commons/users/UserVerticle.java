@@ -18,9 +18,25 @@
  */
 package com.qaobee.hive.api.v1.commons.users;
 
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.eventbus.ReplyException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Base64;
+import org.vertx.java.core.json.impl.Json;
+
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
-import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxCfgVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -37,23 +53,9 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Base64;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.UUID;
 
 /**
  * The type User verticle.
@@ -270,16 +272,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 if (objectMessage.body() instanceof ReplyException) {
                     utils.sendError(message, (ReplyException) objectMessage.body());
                 } else {
-                    JsonObject sandbox = new JsonObject((String) objectMessage.body());
-                    req.getParams().put(SB_SandBoxCfgVerticle.PARAM_ID, Collections.singletonList(sandbox.getString("sandboxCfgId")));
-                    whenEventBus.send(SB_SandBoxCfgVerticle.GET, Json.encode(req)).then(objectMessage1 -> {
-                        if (objectMessage1.body() instanceof ReplyException) {
-                            utils.sendError(message, (ReplyException) objectMessage1.body());
-                        } else {
-                            message.reply((String) objectMessage1.body());
-                        }
-                        return null;
-                    });
+                	message.reply((String) objectMessage.body());
                 }
                 return null;
             });
