@@ -92,9 +92,8 @@ db.Season.insert({
     "countryId" : "CNTR-250-FR-FRA"
 });
 
-_id = new ObjectId().valueOf();
 db.Season.insert({
-    "_id" : "558b0ceaf9285df5b7553fc8",
+    "_id" : "577a85eeeb4488b5f6000c84",
     "code" : "SAI-2016",
     "label" : "SAISON 2016-2017",
     /* Start : 01/07/2016*/

@@ -182,6 +182,7 @@ public class SeasonTest extends VertxJunitSupport {
                 .when().get(getURL(SeasonVerticle.GET_CURRENT))
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
+                .body("label", is("SAISON 2016-2017"))
                 .body("code", is("SAI-" + year));
     }
 
