@@ -48,7 +48,7 @@ db.User.insert({
     "gender": "gender.male",
     "birthdate": -21434400000,
     "nationality": {"_id": "CNTR-250-FR-FRA", "codeOSCE": 250, "label": "France", "local": "fr"},
-    "effectiveDefault":"550b31f925da07681592db23",
+    "sandboxDefault":"558b0efebd2e39cdab651e1f",
     "country": {
         "_id": "CNTR-250-FR-FRA",
         "codeOSCE": 250,
@@ -121,18 +121,6 @@ db.SB_SandBox.remove({"_id": "558b0efebd2e39cdab651e1f"});
  */
 db.SB_SandBox.insert({
     "_id": "558b0efebd2e39cdab651e1f",
-    "activityId": "ACT-HAND",
-    "owner": "5509ef1fdb8f8b6e2f51f4ce",
-    "sandboxCfgId": "558b0fc0bd2e39cdab651e21"
-});
-
-/*
- * Vidage de la collection SB_SandBoxCfg cesson handball
- */
-db.SB_SandBoxCfg.remove({"_id": "558b0fc0bd2e39cdab651e21"});
-
-db.SB_SandBoxCfg.insert({
-    "_id": "558b0fc0bd2e39cdab651e21",
     "activity": {
         "_id": "ACT-HAND",
         "code": "ACT-HAND",
@@ -140,21 +128,8 @@ db.SB_SandBoxCfg.insert({
         "enable": true,
         "activityType": "TEAM_SPORT"
     },
-    "sandbox": {
-        "_id": "558b0efebd2e39cdab651e1f",
-        "activityId": "ACT-HAND",
-        "owner": "5509ef1fdb8f8b6e2f51f4ce"
-    },
+    "owner": "5509ef1fdb8f8b6e2f51f4ce",
     "members": [],
-    "season": {
-        "_id" : "558b0ceaf9285df5b7553fc8",
-        "code" : "SAI-2016",
-        "label" : "SAISON 2016-2017",
-        "startDate" : NumberLong(1467324000000),
-        "endDate" : NumberLong(1498773600000),
-        "activityId" : "ACT-HAND",
-        "countryId" : "CNTR-250-FR-FRA"
-    },
     "structure": {
         "_id": "541168295971d35c1f2d1b5f",
         "label": "CESSON RENNES METROPOLE HB",
@@ -182,8 +157,10 @@ db.SB_SandBoxCfg.insert({
         "country": {"_id": "CNTR-250-FR-FRA", "codeOSCE": 250, "label": "France", "local": "fr"},
         "avatar": null
     },
-    "teams": []
+    "members": [],
+    "effectiveDefault":"550b31f925da07681592db23",
 });
+
 
 /*
  * Vidage de la collection SB_Person
@@ -878,7 +855,7 @@ db.SB_Effective.remove({ "_id" : "550b31f925da07681592db23"});
  */
 db.SB_Effective.insert({
     "_id" : "550b31f925da07681592db23",
-    "sandBoxCfgId" : "558b0fc0bd2e39cdab651e21",
+    "sandboxId" : "558b0efebd2e39cdab651e1f",
     "label": "Cesson A",
     "categoryAge" : {
         "code" : "sen",
