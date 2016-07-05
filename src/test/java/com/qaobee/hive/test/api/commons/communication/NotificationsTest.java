@@ -309,7 +309,7 @@ public class NotificationsTest extends VertxJunitSupport {
         n.setTitle("Message");
         n.setSenderId(u.get_id());
         n.setTimestamp(System.currentTimeMillis());
-        n.setTargetId("558b0fc0bd2e39cdab651e21");
+        n.setTargetId("558b0efebd2e39cdab651e1f");
 
         given().header(TOKEN, u.getAccount().getToken())
                .body(Json.encode(n))
