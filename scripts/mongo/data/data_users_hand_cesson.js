@@ -151,7 +151,6 @@ db.SB_SandBox.insert({
         "country": {"_id": "CNTR-250-FR-FRA", "codeOSCE": 250, "label": "France", "local": "fr"},
         "avatar": null
     },
-    "members": [],
     "effectiveDefault":"550b31f925da07681592db23",
 });
 

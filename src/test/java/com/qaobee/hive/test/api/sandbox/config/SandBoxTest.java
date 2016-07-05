@@ -44,7 +44,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxByOwner() {
-        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))

@@ -197,7 +197,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
             Map<String, List<String>> params = req.getParams();
             CriteriaBuilder cb = new CriteriaBuilder()
                     .add(PARAM_OWNER_ID, req.getUser().get_id())
-                    .add(PARAM_ACTIVITY_ID, params.get(PARAM_ACTIVITY_ID).get(0));
+                    .add("structure." + PARAM_ACTIVITY_ID + "._id", params.get(PARAM_ACTIVITY_ID).get(0));
             JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
             if (resultJson == null || resultJson.size() == 0) {
                 throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + req.getUser().get_id()
