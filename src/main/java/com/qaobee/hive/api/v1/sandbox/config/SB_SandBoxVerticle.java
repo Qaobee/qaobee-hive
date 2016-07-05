@@ -79,11 +79,8 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant PARAM_ACTIVITY_ID.
      */
-    public static final String PARAM_ACTIVITY_ID = "activityId";
-    /**
-     * The constant PARAM_SEASON_ID.
-     */
-    public static final String PARAM_SEASON_ID = "seasonId";
+    public static final String PARAM_ACTIVITY_ID = "activity";
+    
     /**
      * The constant PARAM_USER.
      */
