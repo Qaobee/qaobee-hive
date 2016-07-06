@@ -307,7 +307,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 
                 // Création Effective
                 SB_Effective sbEffective = new SB_Effective();
-                sbEffective.setSandBoxId(sbSandBox.get_id());
+                sbEffective.setSandboxId(sbSandBox.get_id());
                 
                 sbEffective.setLabel("Défaut");
                 sbEffective.setCategoryAge(categoryAgeObj);
@@ -321,7 +321,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 sbEffective.set_id(mongo.save(sbEffective));
                 
                 sbSandBox.setEffectiveDefault(sbEffective.get_id());
+                mongo.save(sbSandBox);
+                
                 user.setSandboxDefault(sbSandBox.get_id());
+                mongo.save(user);
+                
                 // Création SB_Teams
                 // My team
                 SB_Team team = new SB_Team();
@@ -331,7 +335,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 team.setEnable(true);
                 team.setAdversary(false);
                 mongo.save(team);
-                mongo.save(user);
+                
                 JsonObject notification = new JsonObject();
                 notification.putString("id", user.get_id());
                 notification.putString("target", User.class.getSimpleName());

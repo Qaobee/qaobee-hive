@@ -42,7 +42,8 @@ public class SB_Effective { // NOSONAR
     /**
      * Sandbox's id
      */
-    private String sandBoxId;
+    private String sandboxId;
+    
     /**
      * Age category.
      */
@@ -131,8 +132,8 @@ public class SB_Effective { // NOSONAR
      *
      * @return String : ID
      */
-    public String getSandBoxId() {
-        return sandBoxId;
+    public String getSandboxId() {
+        return sandboxId;
     }
 
     /**
@@ -140,8 +141,8 @@ public class SB_Effective { // NOSONAR
      *
      * @param sandBoxId (String) : ID
      */
-    public void setSandBoxId(String sandBoxId) {
-        this.sandBoxId = sandBoxId;
+    public void setSandboxId(String sandBoxId) {
+        this.sandboxId = sandBoxId;
     }
 
     /**
