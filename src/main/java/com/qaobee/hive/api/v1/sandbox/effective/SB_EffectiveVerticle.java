@@ -170,7 +170,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
             JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, SB_Effective.class);
             if (resultJson == null || resultJson.size() == 0) {
                 throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                        "No Effective found " + "for ( sandBoxCfgId : " + params.get(PARAM_SANDBOX_ID).get(0) + " " + (code != null ? "and for category : " + code + ")" : ")"));
+                        "No Effective found " + "for ( sandboxId : " + params.get(PARAM_SANDBOX_ID).get(0) + " " + (code != null ? "and for category : " + code + ")" : ")"));
             }
             message.reply(resultJson.encode());
         } catch (final QaobeeException e) {
