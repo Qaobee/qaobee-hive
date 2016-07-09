@@ -23,7 +23,6 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.business.commons.settings.CountryBusiness;
-import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.dao.StructureDAO;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -38,6 +37,7 @@ import java.util.List;
 
 public class StructureDAOImpl implements StructureDAO {
 
+    private static final String COLLECTION = "Structure";
     @Inject
     private MongoDB mongo;
     @Inject
@@ -45,7 +45,7 @@ public class StructureDAOImpl implements StructureDAO {
 
     @Override
     public JsonObject update(JsonObject structure) throws QaobeeException {
-        mongo.save(structure, Structure.class);
+        mongo.save(structure, COLLECTION);
         return structure;
     }
 
@@ -72,17 +72,17 @@ public class StructureDAOImpl implements StructureDAO {
         match = new BasicDBObject("$match", dbObjectParent);
         // Pipeline
         List<DBObject> pipelineAggregation = Collections.singletonList(match);
-       return mongo.aggregate("_id", pipelineAggregation, Structure.class);
+       return mongo.aggregate("_id", pipelineAggregation, COLLECTION);
     }
 
     @Override
     public JsonObject getStructure(String id) throws QaobeeException {
-        return mongo.getById(id, Structure.class);
+        return mongo.getById(id, COLLECTION);
     }
 
     @Override
     public JsonObject addStructure(JsonObject structure) throws QaobeeException {
-        final String id = mongo.save(structure, Structure.class);
+        final String id = mongo.save(structure, COLLECTION);
         structure.putString("_id", id);
         return structure;
     }

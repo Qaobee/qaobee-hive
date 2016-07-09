@@ -22,7 +22,6 @@ package com.qaobee.hive.dao.impl;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.referencial.ChampionshipVerticle;
-import com.qaobee.hive.business.model.commons.referencial.ChampionShip;
 import com.qaobee.hive.dao.ChampionshipDAO;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -39,24 +38,25 @@ import java.util.Map;
  */
 public class ChampionshipDAOImpl implements ChampionshipDAO {
 
+    private static final String COLLECTION = "ChampionShip";
     @Inject
     private MongoDB mongo;
 
     @Override
     public JsonObject updateChampionship(JsonObject championship) throws QaobeeException {
-        mongo.save(championship, ChampionShip.class);
+        mongo.save(championship, COLLECTION);
         return championship;
     }
 
     @Override
     public JsonObject addChampionship(JsonObject championship) throws QaobeeException {
-        championship.putString("_id", mongo.save(championship, ChampionShip.class));
+        championship.putString("_id", mongo.save(championship, COLLECTION));
         return championship;
     }
 
     @Override
     public JsonObject getChampionship(String id) throws QaobeeException {
-        return mongo.getById(id, ChampionShip.class);
+        return mongo.getById(id, COLLECTION);
     }
 
     @Override
@@ -95,6 +95,6 @@ public class ChampionshipDAOImpl implements ChampionshipDAO {
         match = new BasicDBObject("$match", dbObjectParent);
         // Pipeline
         List<DBObject> pipelineAggregation = Collections.singletonList(match);
-        return mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
+        return mongo.aggregate("_id", pipelineAggregation, COLLECTION);
     }
 }

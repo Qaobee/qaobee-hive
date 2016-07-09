@@ -22,7 +22,6 @@ package com.qaobee.hive.dao.impl;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgVerticle;
-import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
 import com.qaobee.hive.dao.ActivityCfgDAO;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -39,6 +38,8 @@ import java.util.List;
  * The type Activity cfg dao.
  */
 public class ActivityCfgDAOImpl implements ActivityCfgDAO {
+    private static final String COLLECTION = "ActivityCfg";
+
     @Inject
     private MongoDB mongo;
 
@@ -63,7 +64,7 @@ public class ActivityCfgDAOImpl implements ActivityCfgDAO {
         dbObjectParent.put(paramField, 1);
         project = new BasicDBObject("$project", dbObjectParent);
         List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-        final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, ActivityCfg.class);
+        final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, COLLECTION);
         if (resultJSon == null) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Resultset for field '" + paramField + "' is null (" + activityId + "/" + countryId + "/" + dateRef + ")");
         }
@@ -81,7 +82,7 @@ public class ActivityCfgDAOImpl implements ActivityCfgDAO {
         criterias.add(ActivityCfgVerticle.PARAM_COUNTRY_ID, countryId);
         criterias.between("startDate", "endDate", dateRef);
         // Call to mongo
-        JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, ActivityCfg.class);
+        JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, COLLECTION);
         if (resultJSon == null || resultJSon.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
         }

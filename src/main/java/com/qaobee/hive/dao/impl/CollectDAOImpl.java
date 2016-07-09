@@ -24,7 +24,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.dao.CollectDAO;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -42,7 +41,7 @@ import java.util.List;
  * The type Collect dao.
  */
 public class CollectDAOImpl implements CollectDAO {
-    private static final String COLLECTION_NAME = "SB_Collect";
+    private static final String COLLECTION = "SB_Collect";
 
     @Inject
     private MongoDB mongo;
@@ -51,15 +50,15 @@ public class CollectDAOImpl implements CollectDAO {
 
     @Override
     public JsonObject get(String id) throws QaobeeException {
-        return mongo.getById(id, COLLECTION_NAME);
+        return mongo.getById(id, COLLECTION);
     }
 
     @Override
     public JsonObject update(JsonObject collect, String currentUserId, String locale) throws QaobeeException {
-        collect.putString("_id", mongo.update(collect, COLLECTION_NAME));
+        collect.putString("_id", mongo.update(collect, COLLECTION));
         JsonObject notification = new JsonObject();
         notification.putString("id", collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID));
-        notification.putString("target", SB_SandBox.class.getSimpleName());
+        notification.putString("target", "SB_SandBox");
         notification.putObject("notification", new JsonObject()
                 .putString("content", Messages.getString("notification.collect.update.content", locale, collect.getObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                 .putString("title", Messages.getString("notification.collect.update.title", locale))
@@ -71,10 +70,10 @@ public class CollectDAOImpl implements CollectDAO {
 
     @Override
     public JsonObject add(JsonObject collect, String currentUserId, String locale) throws QaobeeException {
-        collect.putString("_id", mongo.save(collect, COLLECTION_NAME));
+        collect.putString("_id", mongo.save(collect, COLLECTION));
         JsonObject notification = new JsonObject();
         notification.putString("id", collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID));
-        notification.putString("target", SB_SandBox.class.getSimpleName());
+        notification.putString("target", "SB_SandBox");
         notification.putObject("notification", new JsonObject()
                 .putString("content", Messages.getString("notification.collect.start.content", locale, collect.getObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                 .putString("title", Messages.getString("notification.collect.start.title", locale))
@@ -107,6 +106,6 @@ public class CollectDAOImpl implements CollectDAO {
         match = new BasicDBObject("$match", dbObjectParent);
         List<DBObject> pipelineAggregation;
         pipelineAggregation = Collections.singletonList(match);
-        return mongo.aggregate("_id", pipelineAggregation, COLLECTION_NAME);
+        return mongo.aggregate("_id", pipelineAggregation, COLLECTION);
     }
 }

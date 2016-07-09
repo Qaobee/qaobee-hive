@@ -24,7 +24,6 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -59,8 +58,6 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ID = "_id";
     private static final Logger LOG = LoggerFactory.getLogger(ActivityVerticle.class);
-    @Inject
-    private MongoDB mongo;
     @Inject
     private Utils utils;
     @Inject
