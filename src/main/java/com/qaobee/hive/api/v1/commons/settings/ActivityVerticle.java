@@ -98,7 +98,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET_LIST, method = Constants.GET)
     private void getList(Message message) {
-        message.reply(activityDAO.getList().encode());
+        message.reply(activityDAO.getActivityList().encode());
     }
 
     /**
@@ -115,7 +115,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
     private void get(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(activityDAO.get(req.getParams().get(PARAM_ID).get(0)).encode());
+            message.reply(activityDAO.getActivity(req.getParams().get(PARAM_ID).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

@@ -29,6 +29,9 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type Activity dao.
+ */
 public class ActivityDAOImpl implements ActivityDAO{
 
     private static final String COLLECTION = "Activity";
@@ -43,12 +46,12 @@ public class ActivityDAOImpl implements ActivityDAO{
         return mongo.findByCriterias(criterias, null, null, -1, -1, COLLECTION);
     }
     @Override
-    public JsonArray getList() {
+    public JsonArray getActivityList() {
         return mongo.findByCriterias(null, null, null, -1, -1, COLLECTION);
     }
 
     @Override
-    public JsonObject get(String id) throws QaobeeException {
+    public JsonObject getActivity(String id) throws QaobeeException {
         return mongo.getById(id, COLLECTION);
     }
 }

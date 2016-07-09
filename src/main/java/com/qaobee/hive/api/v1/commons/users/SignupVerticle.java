@@ -18,36 +18,16 @@
  */
 package com.qaobee.hive.api.v1.commons.users;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
-import com.qaobee.hive.business.commons.settings.ActivityBusiness;
-import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
-import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
@@ -59,6 +39,8 @@ import com.qaobee.hive.business.model.transversal.Contact;
 import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
+import com.qaobee.hive.dao.ActivityDAO;
+import com.qaobee.hive.dao.CountryDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -73,9 +55,19 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Handler;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import java.util.*;
 
 /**
  * The Class SignupVerticle.
@@ -174,9 +166,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Inject
     private UsersBusiness usersBusiness;
     @Inject
-    private CountryBusiness countryBusiness;
+    private CountryDAO countryBusiness;
     @Inject
-    private ActivityBusiness activityBusiness;
+    private ActivityDAO activityDAO;
 
     @Override
     public void start() {
@@ -226,11 +218,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             if (jsonReq.getObject(PARAM_STRUCTURE).containsField("_id")) {
                 structure = mongo.getById(jsonReq.getObject(PARAM_STRUCTURE).getString("_id"), Structure.class);
             } else {
-                // FIXME : to JRO : Mais alpha2 n'existe pas !!!
-                Country country = countryBusiness.getCountryFromAlpha2(structure.getObject("address").getObject(COUNTRY_FIELD).getString("alpha2"));
+                JsonObject country = countryBusiness.getCountryFromAlpha2(structure.getObject("address").getObject(COUNTRY_FIELD).getString("alpha2"));
                 structure.putObject(COUNTRY_FIELD, new JsonObject(Json.encode(country)));
-                structure.getObject("address").putString(COUNTRY_FIELD, country.getLabel());
-                structure.putObject("activity", new JsonObject(Json.encode(activityBusiness.getActivityFromId(activityId))));
+                structure.getObject("address").putString(COUNTRY_FIELD, country.getString("label"));
+                structure.putObject("activity", activityDAO.getActivity(activityId));
             }
             Structure structureObj = Json.decodeValue(structure.encode(), Structure.class);
             // JSon Category Age
@@ -256,7 +247,12 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
                 // récupération des activities des plans
                 user.getAccount().getListPlan().stream().filter(plan -> plan.getActivity() != null).forEachOrdered(plan -> {
-                    Activity activity = activityBusiness.getActivityFromId(plan.getActivity().get_id());
+                    Activity activity = null;
+                    try {
+                        activity = Json.decodeValue(activityDAO.getActivity(plan.getActivity().get_id()).encode(), Activity.class);
+                    } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                    }
                     if (activity != null) {
                         plan.setActivity(activity);
                     }

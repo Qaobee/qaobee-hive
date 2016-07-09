@@ -308,7 +308,7 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
-    public JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection) {
+    public JsonArray findAll(List<String> fields, String sort, int order, int limit, String collection) {
         return findByCriterias(null, fields, sort, order, limit, collection);
     }
 

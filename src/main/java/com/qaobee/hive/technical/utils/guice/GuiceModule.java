@@ -22,10 +22,6 @@ package com.qaobee.hive.technical.utils.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
-import com.qaobee.hive.business.commons.settings.ActivityBusiness;
-import com.qaobee.hive.business.commons.settings.CountryBusiness;
-import com.qaobee.hive.business.commons.settings.impl.ActivityBusinessImpl;
-import com.qaobee.hive.business.commons.settings.impl.CountryBusinessImpl;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.commons.users.impl.UsersBusinessImpl;
 import com.qaobee.hive.dao.*;
@@ -84,8 +80,6 @@ public class GuiceModule extends AbstractModule {
         bind(Files.class).to(FilesImpl.class).in(Singleton.class);
         // BUSINESS MODULES
         bind(UsersBusiness.class).to(UsersBusinessImpl.class).in(Singleton.class);
-        bind(ActivityBusiness.class).to(ActivityBusinessImpl.class).in(Singleton.class);
-        bind(CountryBusiness.class).to(CountryBusinessImpl.class).in(Singleton.class);
 
         // DAO
         bind(ActivityCfgDAO.class).to(ActivityCfgDAOImpl.class).in(Singleton.class);
@@ -96,5 +90,6 @@ public class GuiceModule extends AbstractModule {
         bind(StructureDAO.class).to(StructureDAOImpl.class).in(Singleton.class);
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
         bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
+        bind(CountryDAO.class).to(CountryDAOImpl.class).in(Singleton.class);
     }
 }

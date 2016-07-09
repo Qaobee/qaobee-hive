@@ -24,29 +24,33 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 /**
- * The interface Activity dao.
+ * The interface Country dao.
  */
-public interface ActivityDAO {
+public interface CountryDAO {
     /**
-     * Gets enabled.
+     * Gets country from alpha 2.
      *
-     * @return the enabled
+     * @param alpha2 the alpha 2
+     * @return the country from alpha 2
      */
-    JsonArray getEnabled();
+    JsonObject getCountryFromAlpha2(String alpha2);
 
     /**
-     * Gets list.
+     * Gets country list.
      *
-     * @return the list
-     */
-    JsonArray getActivityList();
-
-    /**
-     * Get json object.
-     *
-     * @param id the id
-     * @return the json object
+     * @param locale the locale
+     * @param label  the label
+     * @return the country list
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject getActivity(String id) throws QaobeeException;
+    JsonArray getCountryList(String locale, String label) throws QaobeeException;
+
+    /**
+     * Gets country.
+     *
+     * @param id the id
+     * @return the country
+     * @throws QaobeeException the qaobee exception
+     */
+    JsonObject getCountry(String id) throws QaobeeException;
 }

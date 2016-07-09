@@ -170,7 +170,7 @@ public interface MongoDB {
      * @param collection collection
      * @return an array
      */
-    JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection);
+    JsonArray findAll(List<String> fields, String sort, int order, int limit, String collection);
 
     /**
      * Aggregate json array.
