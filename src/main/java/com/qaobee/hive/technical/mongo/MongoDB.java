@@ -147,6 +147,20 @@ public interface MongoDB {
     JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, Class<?> collection);
 
     /**
+     * Find by criterias json array.
+     *
+     * @param criteria   the criteria
+     * @param fields     the fields
+     * @param sort       the sort
+     * @param order      the order
+     * @param limit      the limit
+     * @param collection the collection
+     * @return the json array
+     */
+    JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit,
+                              String collection);
+
+    /**
      * Find all documents with minimal fields and a sort order.
      *
      * @param fields     fields to include

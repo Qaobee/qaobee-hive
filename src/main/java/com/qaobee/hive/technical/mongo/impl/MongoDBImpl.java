@@ -266,10 +266,15 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
+    public JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, Class<?> collection) {
+        return findByCriterias(criteria, fields, sort, order, limit, collection.getSimpleName());
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public JsonArray findByCriterias(final Map<String, Object> criteria, final List<String> fields, final String sort, final int order, final int limit,
-                                     final Class<?> collection) {
-        final DBCollection coll = db.getCollection(collection.getSimpleName());
+                                     final String collection) {
+        final DBCollection coll = db.getCollection(collection);
         DBObject query = new BasicDBObject();
         if (criteria != null) {
             final BasicDBList and = new BasicDBList();
