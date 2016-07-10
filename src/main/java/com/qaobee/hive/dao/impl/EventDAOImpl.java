@@ -90,7 +90,7 @@ public class EventDAOImpl implements EventDAO {
 
     @Override
     public JsonArray getEventList(JsonObject params) throws QaobeeException {
-        // Aggregat section
+        // Aggregate section
         DBObject match;
         DBObject sort;
         DBObject limit;
