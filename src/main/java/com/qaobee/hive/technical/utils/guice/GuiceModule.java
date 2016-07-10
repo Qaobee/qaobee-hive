@@ -91,5 +91,6 @@ public class GuiceModule extends AbstractModule {
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
         bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
         bind(CountryDAO.class).to(CountryDAOImpl.class).in(Singleton.class);
+        bind(IndicatorDAO.class).to(IndicatorDAOImpl.class).in(Singleton.class);
     }
 }
