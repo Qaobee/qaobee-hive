@@ -27,6 +27,7 @@ import java.io.Serializable;
  *
  * @author xavier
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Notification implements Serializable {
 

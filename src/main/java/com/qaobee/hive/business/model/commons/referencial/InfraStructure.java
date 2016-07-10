@@ -26,6 +26,7 @@ import com.qaobee.hive.business.model.transversal.Audit;
  *
  * @author cke
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InfraStructure {
 

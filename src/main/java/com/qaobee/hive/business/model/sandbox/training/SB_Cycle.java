@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * The Class Cycle.
  */
+@Deprecated
 public class SB_Cycle extends TrainingAbstract { // NOSONAR
 
     /**

@@ -24,6 +24,7 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
  * @author cke
  */
 
+@Deprecated
 public class Comment {
 
     /**

@@ -28,6 +28,7 @@ import java.util.List;
  *
  * @author cke | Jerome
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_Stats { // NOSONAR
 

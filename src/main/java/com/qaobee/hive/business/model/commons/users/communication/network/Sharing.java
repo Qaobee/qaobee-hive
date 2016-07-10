@@ -27,6 +27,7 @@ import java.util.List;
  *
  * @author cke
  */
+@Deprecated
 public class Sharing {
 
     /**

@@ -23,6 +23,7 @@ import com.qaobee.hive.business.model.sandbox.effective.Availability;
 /**
  * @author jerome
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Status {
 

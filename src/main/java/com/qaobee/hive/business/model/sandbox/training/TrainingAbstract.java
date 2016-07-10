@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * The Class TrainingAbstract.
  */
+@Deprecated
 public class TrainingAbstract {
 
     /**

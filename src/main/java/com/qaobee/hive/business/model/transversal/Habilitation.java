@@ -26,6 +26,7 @@ import java.io.Serializable;
  *
  * @author xavier
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Habilitation implements Serializable {
 

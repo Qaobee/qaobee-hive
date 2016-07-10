@@ -22,6 +22,7 @@ package com.qaobee.hive.business.model.commons.settings;
  *
  * @author jerome
  */
+@Deprecated
 public class ParametersGame {
 
     /**

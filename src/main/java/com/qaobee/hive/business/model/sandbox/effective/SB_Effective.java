@@ -32,6 +32,7 @@ import java.util.List;
  *
  * @author jerome
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_Effective { // NOSONAR
 

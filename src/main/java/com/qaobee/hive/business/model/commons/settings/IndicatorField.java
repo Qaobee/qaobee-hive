@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author cke
  * @see IndicatorCfg
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IndicatorField {
 

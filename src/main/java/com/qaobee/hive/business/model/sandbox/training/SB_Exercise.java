@@ -26,6 +26,7 @@ import java.io.File;
  *
  * @author Mohamed EL MARZGIOUI
  */
+@Deprecated
 public class SB_Exercise extends TrainingAbstract { // NOSONAR
 
     /**

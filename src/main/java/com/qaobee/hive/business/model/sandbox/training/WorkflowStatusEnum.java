@@ -21,6 +21,7 @@ package com.qaobee.hive.business.model.sandbox.training;
 /**
  * The Enum WorkflowStatusEnum.
  */
+@Deprecated
 public enum WorkflowStatusEnum {
 
     /**

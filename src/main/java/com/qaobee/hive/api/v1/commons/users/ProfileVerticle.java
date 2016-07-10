@@ -20,31 +20,24 @@ package com.qaobee.hive.api.v1.commons.users;
 import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.business.model.commons.users.account.Payment;
-import com.qaobee.hive.business.model.commons.users.account.Plan;
+import com.qaobee.hive.dao.UserDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.AsyncResult;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Base64;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.text.DateFormat;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 
@@ -55,6 +48,7 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
  */
 @DeployableVerticle
 public class ProfileVerticle extends AbstractGuiceVerticle {
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileVerticle.class);
     /**
      * The Constant UPDATE.
      */
@@ -71,36 +65,26 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * The Constant UPDATE_AVATAR.
      */
     private static final String UPDATE_AVATAR = "user.update.avatar";
-    private static final Logger LOG = LoggerFactory.getLogger(ProfileVerticle.class);
-    private static final String ACCOUNT_FIELD = "account";
-    private static final String AVATAR_FIELD = "avatar";
-    private static final String ADDRESS_FIELD = "address";
     @Inject
-    private MongoDB mongo;
+    private UserDAO userDAO;
     @Inject
     private Utils utils;
-    @Inject
-    private PasswordEncryptionService passwordEncryptionService;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(UPDATE, this::updateUserHandler)
-                .registerHandler(GENERATE_PDF, this::generatePDFHandler)
-                .registerHandler(GENERATE_BILL_PDF, this::generateBillPDFHandler)
+                .registerHandler(UPDATE, this::updateUser)
+                .registerHandler(GENERATE_PDF, this::generateProfilePDF)
+                .registerHandler(GENERATE_BILL_PDF, this::generateBillPDF)
                 .registerHandler(UPDATE_AVATAR, this::updateAvatar);
     }
 
-    // FIXME : CKE : Est-ce toujours utilisé?
     private void updateAvatar(Message<String> message) {
         try {
             final JsonObject req = new JsonObject(message.body());
-            JsonObject jsonperson = mongo.getById(req.getString("uid"), User.class);
-            jsonperson.putString(AVATAR_FIELD, req.getString("filename"));
-            mongo.save(jsonperson, User.class);
-            message.reply(jsonperson);
+            message.reply(userDAO.updateAvatar(req.getString("uid"), req.getString("filename")).encode());
         } catch (QaobeeException e) {
             utils.sendError(message, e);
         }
@@ -109,125 +93,54 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     /**
      * @apiDescription Generate a PDF from the bill of the current profile
      * @api {get} /api/1/commons/users/profile/billpdf?id= Generate a PDF from the bill of the current profile
-     * @apiName generateBillPDFHandler
+     * @apiName generateBillPDF
      * @apiGroup ProfileVerticle
      * @apiParam {String} plan plan type
      * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
-     * @apiError HTTP_ERROR wrong request's method
+     * @apiHeader {String} token
      */
     @Rule(address = GENERATE_BILL_PDF, method = Constants.GET, logged = true, mandatoryParams = {"plan_id", "pay_id"}, scope = Rule.Param.REQUEST)
-    private void generateBillPDFHandler(Message<String> message) {
+    private void generateBillPDF(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final User user = req.getUser();
-            Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(req.getParams().get("plan_id").get(0)));
-            Payment payment = null;
-            for (Payment p : planItem.getShippingList()) {
-                if (req.getParams().get("pay_id").get(0).equals(p.getId())) {
-                    payment = p;
-                }
-            }
-            if (payment != null) {
-                final JsonObject juser = new JsonObject();
-                if (StringUtils.isNoneBlank(user.getAvatar())) {
-                    juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
-                }
-                juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-                if (user.getAddress() != null) {
-                    if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                        juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
-                    } else {
-                        juser.putString(ADDRESS_FIELD, user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
-                    }
-                }
-                juser.putString("firstname", user.getFirstname());
-                juser.putString("name", user.getName());
-                juser.putString("username", user.getAccount().getLogin());
-                juser.putString("phoneNumber", user.getContact().getHome());
-                juser.putString("email", user.getContact().getEmail());
-                juser.putString("paidDate", utils.formatDate(payment.getPaidDate() / 1000L, DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-                juser.putString("paymentId", payment.getPaymentId());
-                juser.putString("plan", planItem.getLevelPlan().name());
-                juser.putString("amountPaid", String.valueOf(payment.getAmountPaid()));
-                final JsonObject pdfReq = new JsonObject();
-                pdfReq.putString(PDFVerticle.FILE_NAME, payment.getPaymentId() + "-Qaobee");
-                pdfReq.putString(PDFVerticle.TEMPLATE, "billing/bill.ftl");
-                pdfReq.putObject(PDFVerticle.DATA, juser);
-                vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
-            } else {
-                throw new IllegalArgumentException("unknown bill");
-            }
-        } catch (final IllegalArgumentException e) {
+            vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, userDAO.generateBillPDF(req.getUser(),
+                    req.getParams().get("pay_id").get(0),
+                    req.getParams().get("plan_id").get(0),
+                    req.getLocale()), 10000L, getPdfHandler(message));
+        } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
-            utils.sendError(message, ExceptionCodes.MANDATORY_FIELD, e.getMessage());
+            utils.sendError(message, e);
         }
     }
 
     /**
      * @apiDescription Generate a PDF from the current profile
      * @api {get} /api/1/commons/users/profile/pdf Generate a PDF from the current profile
-     * @apiName generatePDFHandler
+     * @apiName generateProfilePDF
      * @apiGroup ProfileVerticle
      * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
-     * @apiError HTTP_ERROR wrong request's method
+     * @apiHeader {String} token
      */
     @Rule(address = GENERATE_PDF, method = Constants.GET, logged = true)
-    private void generatePDFHandler(Message<String> message) {
+    private void generateProfilePDF(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        final User user = req.getUser();
-        final JsonObject juser = new JsonObject();
-        if (StringUtils.isNoneBlank(user.getAvatar())) {
-            juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
-        }
-        juser.putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, req.getLocale()));
-        if (user.getAddress() != null) {
-            if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
-            } else {
-                juser.putString(ADDRESS_FIELD, user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
-            }
-        }
-        juser.putString("firstname", user.getFirstname());
-        juser.putString("name", user.getName());
-        juser.putString("username", user.getAccount().getLogin());
-        juser.putString("phoneNumber", user.getContact().getHome());
-        juser.putString("email", user.getContact().getEmail());
-
-        final JsonObject pdfReq = new JsonObject();
-        pdfReq.putString(PDFVerticle.FILE_NAME, user.getAccount().getLogin());
-        pdfReq.putString(PDFVerticle.TEMPLATE, "profile/profile.ftl");
-        pdfReq.putObject(PDFVerticle.DATA, juser);
-        vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, pdfReq, 10000L, getPdfHandler(message));
+        vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, userDAO.generateProfilePDF(req.getUser(), req.getLocale()), 10000L, getPdfHandler(message));
     }
 
     /**
      * @apiDescription User update
      * @api {post} /api/1/commons/users/profile update user
-     * @apiName updateUserHandler
+     * @apiName updateUser
      * @apiGroup ProfileVerticle
      * @apiParam {Object} User com.qaobee.hive.business.model.commons.users.User
      * @apiSuccess {Object} User com.qaobee.hive.business.model.commons.users.User
-     * @apiError PASSWD_EXCEPTION Password exception
-     * @apiError HTTP_ERROR wrong request's method
+     * @apiHeader {String} token
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true)
-    private void updateUserHandler(Message<String> message) {
+    private void updateUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            JsonObject u = new JsonObject(req.getBody());
-            final User user = Json.decodeValue(req.getBody(), User.class);
-            if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
-                final byte[] salt = passwordEncryptionService.generateSalt();
-                user.getAccount().setSalt(salt);
-                user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
-                user.getAccount().setPasswd(null);
-                u.putObject(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
-            } else {
-                JsonObject p = mongo.getById(user.get_id(), User.class.getSimpleName());
-                u.putObject(ACCOUNT_FIELD, p.getObject(ACCOUNT_FIELD));
-            }
-            mongo.save(u, User.class.getSimpleName());
-            message.reply(u.encode());
+            message.reply(userDAO.updateUser(new JsonObject(req.getBody())).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -246,10 +159,10 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 LOG.error(pdfResp.cause().getMessage(), pdfResp.cause());
                 utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
             } else {
-                final JsonObject json = new JsonObject();
-                json.putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE);
-                json.putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF));
-                message.reply(json.encode());
+                message.reply(new JsonObject()
+                        .putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
+                        .putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF))
+                        .encode());
             }
         };
     }

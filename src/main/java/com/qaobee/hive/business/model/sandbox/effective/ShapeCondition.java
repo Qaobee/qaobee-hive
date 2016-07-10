@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Bean that describes a shape condition.
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ShapeCondition {
 

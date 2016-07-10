@@ -22,6 +22,7 @@ package com.qaobee.hive.business.model.commons.referencial;
  *
  * @author cke
  */
+@Deprecated
 public class ChampionShipJourney {
     private String _id; // NOSONAR
 

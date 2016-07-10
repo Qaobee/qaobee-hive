@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author Jerome
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
 

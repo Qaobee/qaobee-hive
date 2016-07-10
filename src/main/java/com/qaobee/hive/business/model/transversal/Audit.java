@@ -25,6 +25,7 @@ import com.qaobee.hive.business.model.commons.users.User;
  *
  * @author cke
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Audit {
 

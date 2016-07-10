@@ -23,6 +23,7 @@ package com.qaobee.hive.business.model.sandbox.training;
  *
  * @author cke
  */
+@Deprecated
 public class ExerciseSession extends TrainingAbstract {
 
     /**

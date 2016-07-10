@@ -21,6 +21,7 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
 /**
  * The Enum CommentStatusEnum.
  */
+@Deprecated
 public enum CommentStatusEnum {
 
     /**

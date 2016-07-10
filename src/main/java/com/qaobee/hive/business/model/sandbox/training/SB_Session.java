@@ -25,6 +25,7 @@ import java.util.List;
  *
  * @author cke
  */
+@Deprecated
 public class SB_Session extends TrainingAbstract { // NOSONAR
 
     /**

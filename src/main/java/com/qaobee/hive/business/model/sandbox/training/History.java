@@ -26,6 +26,7 @@ import java.util.Date;
 /**
  * The type History.
  */
+@Deprecated
 public class History {
     /**
      * The author.
