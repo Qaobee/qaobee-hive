@@ -22,6 +22,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.TemplatesDAO;
+import com.qaobee.hive.dao.UserDAO;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
@@ -33,7 +34,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -133,7 +133,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
     @Inject
-    private PersonUtils personUtils;
+    private UserDAO userDAO;
     @Inject
     private TemplatesDAO templatesDAO;
 
@@ -344,13 +344,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
                         /* update password by profil menu */
                 if (byPassActivationCode) {
                     user.getAccount().setPasswd(passwd);
-                    mongo.save(personUtils.prepareUpsert(user));
+                    mongo.save(userDAO.prepareUpsert(user));
                     utils.sendStatus(true, message);
                 } else {
                             /* update password by home public */
                     if (code.equals(user.getAccount().getActivationPasswd())) {
                         user.getAccount().setPasswd(passwd);
-                        mongo.save(personUtils.prepareUpsert(user));
+                        mongo.save(userDAO.prepareUpsert(user));
                         utils.sendStatus(true, message);
                     } else {
                         utils.sendStatus(false, message);

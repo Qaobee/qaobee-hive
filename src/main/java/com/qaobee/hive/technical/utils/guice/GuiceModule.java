@@ -22,8 +22,6 @@ package com.qaobee.hive.technical.utils.guice;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
-import com.qaobee.hive.business.commons.users.UsersBusiness;
-import com.qaobee.hive.business.commons.users.impl.UsersBusinessImpl;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -82,9 +80,7 @@ public class GuiceModule extends AbstractModule {
         // TECHNICAL MODULES
         bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
-        bind(AuthCheck.class).to(AuthCheckImpl.class).in(Singleton.class);
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
-        bind(PersonUtils.class).to(PersonUtilsImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
         bind(Files.class).to(FilesImpl.class).in(Singleton.class);
@@ -102,7 +98,6 @@ public class GuiceModule extends AbstractModule {
         cfg.setLocale(Locale.US);
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfg));
-        bind(UsersBusiness.class).to(UsersBusinessImpl.class).in(Singleton.class);
 
         // DAO
         bind(ActivityCfgDAO.class).to(ActivityCfgDAOImpl.class).in(Singleton.class);
@@ -118,5 +113,6 @@ public class GuiceModule extends AbstractModule {
         bind(SeasonDAO.class).to(SeasonDAOImpl.class).in(Singleton.class);
         bind(UserDAO.class).to(UserDAOImpl.class).in(Singleton.class);
         bind(ShippingDAO.class).to(ShippingDAOImpl.class).in(Singleton.class);
+        bind(SignupDAO.class).to(SignupDAOImpl.class).in(Singleton.class);
     }
 }

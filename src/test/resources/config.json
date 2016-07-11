@@ -14,6 +14,7 @@
     "recaptcha.site": "http://www.qaobee.com",
     "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
     "trial.duration" : 1,
+    "recaptcha" : false,
     "plan": {
       "FREEMIUM": {
         "price": 9

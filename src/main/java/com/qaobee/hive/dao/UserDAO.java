@@ -66,4 +66,40 @@ public interface UserDAO {
      * @throws QaobeeException the qaobee exception
      */
     JsonObject updateUser(JsonObject user) throws QaobeeException;
+
+    /**
+     * Check user informations boolean.
+     *
+     * @param user   the user
+     * @param locale the locale
+     * @return the boolean
+     * @throws QaobeeException the qaobee exception
+     */
+    boolean checkUserInformations(User user, String locale) throws QaobeeException;
+
+    /**
+     * Existing login.
+     *
+     * @param login the login
+     */
+    boolean existingLogin(String login);
+
+    /**
+     * Permet de vérifier une adresse e-mail.
+     *
+     * @param email  the email
+     * @param locale the locale
+     * @return valid or not
+     * @throws QaobeeException the qaobee exception
+     */
+    boolean testEmail(String email, String locale) throws QaobeeException;
+
+    /**
+     * Prepare upsert.
+     *
+     * @param u a user
+     * @return a prepared person for upsert
+     * @throws QaobeeException the qaobee exception
+     */
+    User prepareUpsert(User u) throws QaobeeException;
 }
