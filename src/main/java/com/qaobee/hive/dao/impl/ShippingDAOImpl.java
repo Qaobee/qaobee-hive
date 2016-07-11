@@ -51,7 +51,11 @@ import org.vertx.java.core.json.impl.Json;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
+/**
+ * The type Shipping dao.
+ */
 public class ShippingDAOImpl implements ShippingDAO {
     private static final Logger LOG = LoggerFactory.getLogger(ShippingDAO.class);
 
@@ -125,7 +129,7 @@ public class ShippingDAOImpl implements ShippingDAO {
     }
 
     @Override
-    public void pay(User user, int planId, String locale, Message<String> handler) throws QaobeeException {
+    public CompletableFuture<JsonObject> pay(User user, int planId, String locale) throws QaobeeException {
         if (user.getAccount().getListPlan().size() <= planId) {
             throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, planId + " is not present");
         }
@@ -135,8 +139,11 @@ public class ShippingDAOImpl implements ShippingDAO {
             amount = runtime.getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price");
         }
         if (amount != 0) {
-            sendPayplugPayment(user, planId, amount, generatePayment(amount, user, planId, locale), handler);
+            return sendPayplugPayment(user, planId, amount, generatePayment(amount, user, planId, locale));
         }
+        CompletableFuture<JsonObject> future = new CompletableFuture<>();
+        future.complete(new JsonObject().putBoolean(Constants.STATUS, true));
+        return future;
     }
 
     @Override
@@ -200,7 +207,16 @@ public class ShippingDAOImpl implements ShippingDAO {
         }
     }
 
-    private void sendPayplugPayment(final User user, final int planId, final long amount, JsonObject requestBody, Message<String> handler) {
+    private CompletableFuture<JsonObject> sendPayplugPayment(final User user, final int planId, final long amount, JsonObject requestBody) {
+        CompletableFuture<JsonObject> future = new CompletableFuture<>();
+        future.handle((ok, ex) -> {
+            if (ok != null) {
+                return ok;
+            } else {
+                ex.printStackTrace();
+                return null;
+            }
+        });
         HttpClient client = vertx.createHttpClient().setKeepAlive(true);
         client.setHost(payplug.getString("baseUrl"));
         client.setPort(payplug.getInteger("port"));
@@ -212,19 +228,20 @@ public class ShippingDAOImpl implements ShippingDAO {
             if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
                 resp.bodyHandler(buffer -> {
                     try {
-                        handler.reply(handlePayplugPaymentResponse(buffer, user, planId, amount).encode());
+                        future.complete(handlePayplugPaymentResponse(buffer, user, planId, amount));
                     } catch (QaobeeException e) {
-                        utils.sendError(handler, e);
+                        future.completeExceptionally(e);
                     }
                 });
             } else {
-                utils.sendError(handler, new QaobeeException(ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage()));
+                future.completeExceptionally(new QaobeeException(ExceptionCodes.HTTP_ERROR, resp.statusCode() + " : " + resp.statusMessage()));
             }
         })
                 .putHeader("Authorization", "Bearer " + payplug.getString("api_key"))
                 .putHeader(HTTP.CONTENT_TYPE, "application/json")
                 .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody.encode().length()))
                 .write(requestBody.encode()).end();
+        return future;
     }
 
     private void sendPayplugRecurringPayment(final JsonObject user, final int planId, final long amount, String requestBody, Message<JsonObject> message) {
@@ -297,7 +314,6 @@ public class ShippingDAOImpl implements ShippingDAO {
                 .putString(PAYMENT_URL_FIELD, res.getObject(HOSTED_PAYMENT_FIELD).getString(PAYMENT_URL_FIELD));
         user.getAccount().getListPlan().get(planId).setCardId(res.getString("id"));
         return messageResponse;
-
     }
 
     private JsonObject generatePayment(int amount, User user, int planId, String locale) {

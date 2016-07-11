@@ -92,7 +92,13 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject body = new JsonObject(req.getBody());
-            shippingDAO.pay(req.getUser(), Integer.parseInt(body.getString(PARAM_PLAN_ID)), req.getLocale(), message);
+            shippingDAO.pay(req.getUser(), Integer.parseInt(body.getString(PARAM_PLAN_ID)), req.getLocale()).whenComplete((value, error) -> {
+                if (value != null) {
+                    message.reply(value.encode());
+                } else {
+                    utils.sendError(message, (QaobeeException) error);
+                }
+            });
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

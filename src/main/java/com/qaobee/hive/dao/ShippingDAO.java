@@ -25,12 +25,44 @@ import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
+import java.util.concurrent.CompletableFuture;
+
+/**
+ * The interface Shipping dao.
+ */
 public interface ShippingDAO {
+    /**
+     * Periodic payment json array.
+     *
+     * @return the json array
+     */
     JsonArray periodicPayment();
 
+    /**
+     * Triggered payment.
+     *
+     * @param user    the user
+     * @param message the message
+     */
     void triggeredPayment(JsonObject user, Message<JsonObject> message);
 
-    void pay(User user, int planId, String locale, Message<String> handler) throws QaobeeException;
+    /**
+     * Pay.
+     *
+     * @param user   the user
+     * @param planId the plan id
+     * @param locale the locale
+     * @return the completable future
+     * @throws QaobeeException the qaobee exception
+     */
+    CompletableFuture<JsonObject> pay(User user, int planId, String locale) throws QaobeeException;
 
+    /**
+     * Ipn boolean.
+     *
+     * @param body the body
+     * @return the boolean
+     * @throws QaobeeException the qaobee exception
+     */
     boolean ipn(JsonObject body) throws QaobeeException;
 }
