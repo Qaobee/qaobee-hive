@@ -40,7 +40,8 @@ public interface ShippingDAO {
     /**
      * Triggered payment.
      *
-     * @param user    the user
+     * @param user the user
+     * @return the completable future
      */
     CompletableFuture<Boolean> triggeredPayment(JsonObject user);
 

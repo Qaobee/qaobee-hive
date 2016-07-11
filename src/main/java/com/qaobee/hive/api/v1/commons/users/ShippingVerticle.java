@@ -44,9 +44,21 @@ import javax.inject.Inject;
 @DeployableVerticle(isWorker = false)
 public class ShippingVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(ShippingVerticle.class);
+    /**
+     * The constant PAY.
+     */
     public static final String PAY = Module.VERSION + ".commons.users.shipping.pay";
+    /**
+     * The constant IPN.
+     */
     public static final String IPN = Module.VERSION + ".commons.users.shipping.ipn";
+    /**
+     * The constant TRIGGERED_RECURING_PAYMENT.
+     */
     public static final String TRIGGERED_RECURING_PAYMENT = "inner.recuring_payment";
+    /**
+     * The constant PARAM_PLAN_ID.
+     */
     public static final String PARAM_PLAN_ID = "plan_id";
     private static final String METADATA_FIELD = "metadata";
 
