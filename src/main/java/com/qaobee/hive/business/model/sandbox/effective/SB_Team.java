@@ -31,7 +31,6 @@ import java.util.List;
  * @author Nada Vujanic-Maquin
  * @version V1.2
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_Team { // NOSONAR
 

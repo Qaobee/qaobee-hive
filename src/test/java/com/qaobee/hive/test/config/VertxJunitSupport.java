@@ -32,7 +32,6 @@ import com.qaobee.hive.business.model.transversal.Habilitation;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.utils.guice.GuiceModule;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -164,7 +163,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     @Before
     public void printInfo() {
-        Injector injector = Guice.createInjector(new GuiceModule(moduleConfig, getVertx()));
+        Injector injector = Guice.createInjector(new GuiceTestModule(moduleConfig));
         injector.injectMembers(this);
         System.out.println("About to execute : " + name.getMethodName());
         mongo.getDb().dropDatabase();

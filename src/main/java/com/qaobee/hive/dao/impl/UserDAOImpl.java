@@ -44,21 +44,12 @@ public class UserDAOImpl implements UserDAO {
     private static final String ACCOUNT_FIELD = "account";
     private static final String AVATAR_FIELD = "avatar";
     private static final String ADDRESS_FIELD = "address";
-    /**
-     * The Mongo.
-     */
     @Inject
-    MongoDB mongo;
-    /**
-     * The Utils.
-     */
+    private MongoDB mongo;
     @Inject
-    Utils utils;
-    /**
-     * The Password encryption service.
-     */
+    private Utils utils;
     @Inject
-    PasswordEncryptionService passwordEncryptionService;
+    private PasswordEncryptionService passwordEncryptionService;
 
     @Override
     public JsonObject updateAvatar(String uid, String filename) throws QaobeeException {

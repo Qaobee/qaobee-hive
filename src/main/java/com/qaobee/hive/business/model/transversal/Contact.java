@@ -23,7 +23,6 @@ package com.qaobee.hive.business.model.transversal;
  *
  * @author cke
  */
-@Deprecated
 public class Contact {
 
     /**

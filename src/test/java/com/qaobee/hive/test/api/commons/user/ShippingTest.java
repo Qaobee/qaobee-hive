@@ -351,8 +351,8 @@ public class ShippingTest extends VertxJunitSupport {
         notification.getObject("metadata").putString("plan_id", "bwahaha");
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
@@ -364,8 +364,8 @@ public class ShippingTest extends VertxJunitSupport {
         notification.getObject("metadata").putString("plan_id", "8");
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
@@ -729,26 +729,25 @@ public class ShippingTest extends VertxJunitSupport {
      */
 
     private JsonObject buildNotificationRequest(String paymentId, User u) {
-        JsonObject notification = new JsonObject();
-        notification.putString("id", "123456");
-        notification.putNumber("amount", 900L);
-        notification.putString("object", "payment");
-        notification.putBoolean("is_paid", true);
-        JsonObject metadata = new JsonObject();
-        metadata.putString("customer_id", u.get_id());
-        metadata.putString("plan_id", "0");
-        metadata.putString("locale", "fr_FR");
-        notification.putObject("metadata", metadata);
-        JsonObject card = new JsonObject();
-        card.putString("last4", "1800");
-        card.putString("country", "FR");
-        card.putString("brand", "Mastercard");
-        card.putNumber("exp_month", 9);
-        card.putNumber("exp_year", 2017);
-        notification.putObject("card", card);
-        notification.putNumber("created_at", new Date().getTime());
-        notification.putString("payment_id", paymentId);
-        return notification;
+        return new JsonObject()
+                .putString("id", "123456")
+                .putNumber("amount", 900L)
+                .putString("object", "payment")
+                .putBoolean("is_paid", true)
+                .putObject("metadata", new JsonObject()
+                        .putString("customer_id", u.get_id())
+                        .putString("plan_id", "0")
+                        .putString("locale", "fr_FR")
+                )
+                .putObject("card", new JsonObject()
+                        .putString("last4", "1800")
+                        .putString("country", "FR")
+                        .putString("brand", "Mastercard")
+                        .putNumber("exp_month", 9)
+                        .putNumber("exp_year", 2017)
+                )
+                .putNumber("created_at", new Date().getTime())
+                .putString("payment_id", paymentId);
     }
 
     /**

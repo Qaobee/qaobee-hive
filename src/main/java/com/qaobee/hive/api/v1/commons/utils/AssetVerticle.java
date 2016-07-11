@@ -144,8 +144,8 @@ public class AssetVerticle extends AbstractGuiceVerticle {
     private void addAssetHandler(Message<JsonObject> message) { 
         JsonObject resp = new JsonObject();
         try {
-            utils.testMandatoryParams(message.body().toMap(), UID_FIELD, AbstractGuiceVerticle.TOKEN, FILENAME_FIELD, COLLECTION_FIELD, "field", "contentType");
-            final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString(AbstractGuiceVerticle.TOKEN)).get(), null, null, 0, 0, User.class);
+            utils.testMandatoryParams(message.body().toMap(), UID_FIELD, Constants.TOKEN, FILENAME_FIELD, COLLECTION_FIELD, "field", "contentType");
+            final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", message.body().getString(Constants.TOKEN)).get(), null, null, 0, 0, User.class);
             if (res.size() != 1) {
                 FileUtils.deleteQuietly(new File(message.body().getString(FILENAME_FIELD)));
                 resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.NOT_LOGGED.getCode()).putString(Constants.MESSAGE, Messages.getString("not.logged", message.body().getString("locale")));
@@ -169,8 +169,8 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     mongo.update(personToSave, User.class);
                 }
 
-                resp.putNumber(Constants.STATUS_CODE, 200);
-                resp.putString(Constants.MESSAGE, personToSave.encode());
+                resp.putNumber(Constants.STATUS_CODE, 200)
+                        .putString(Constants.MESSAGE, personToSave.encode());
                 if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
                     vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
                 }

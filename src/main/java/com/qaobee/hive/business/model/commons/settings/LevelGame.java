@@ -25,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author jeremy
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LevelGame {
 

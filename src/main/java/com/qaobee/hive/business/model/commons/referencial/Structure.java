@@ -31,7 +31,6 @@ import com.qaobee.hive.business.model.transversal.Contact;
  * @author Nada Vujanic-Maquin
  */
 
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Structure {
 

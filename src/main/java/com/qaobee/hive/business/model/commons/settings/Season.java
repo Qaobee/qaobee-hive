@@ -29,7 +29,6 @@ import java.util.Calendar;
  *
  * @author Jerome
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Season {
 

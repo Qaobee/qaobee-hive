@@ -22,7 +22,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
-import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.business.commons.users.UsersBusiness;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
@@ -41,6 +40,8 @@ import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.dao.ActivityDAO;
 import com.qaobee.hive.dao.CountryDAO;
+import com.qaobee.hive.dao.TemplatesDAO;
+import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -67,6 +68,7 @@ import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.*;
 
 /**
@@ -154,6 +156,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     public static final String PARAM_PLAN = "plan";
     private static final Logger LOG = LoggerFactory.getLogger(SignupVerticle.class);
     @Inject
+    @Named("runtime")
+    private JsonObject runtime;
+    @Inject
     private MongoDB mongo;
     @Inject
     private MailUtils mailUtils;
@@ -169,6 +174,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     private CountryDAO countryBusiness;
     @Inject
     private ActivityDAO activityDAO;
+    @Inject
+    private TemplatesDAO templatesDAO;
 
     @Override
     public void start() {
@@ -338,7 +345,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 notification.putObject("notification", new JsonObject()
                         .putString("content", Messages.getString("notification.first.connection.content", req.getLocale()))
                         .putString("title", Messages.getString("notification.first.connection.title", req.getLocale()))
-                        .putString("senderId", getContainer().config().getObject(RUNTIME).getString("admin.id"))
+                        .putString("senderId", runtime.getString("admin.id"))
                 );
                 vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
                 message.reply(Json.encode(user));
@@ -468,11 +475,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             // Captcha management
             final boolean bypassCaptcha = json.getBoolean(PARAM_JUNIT, json.getBoolean(PARAM_MOBILE, false));
             final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-            reCaptcha.setPrivateKey(getContainer().config().getObject(RUNTIME).getString("recaptcha.pkey"));
+            reCaptcha.setPrivateKey(runtime.getString("recaptcha.pkey"));
             ReCaptchaResponse reCaptchaResponse = null;
             if (!bypassCaptcha) {
                 reCaptchaResponse = reCaptcha
-                        .checkAnswer(getContainer().config().getObject(RUNTIME).getString("recaptcha.site"),
+                        .checkAnswer(runtime.getString("recaptcha.site"),
                                 json.getObject(PARAM_CAPTCHA).getString("challenge"), json.getObject(PARAM_CAPTCHA).getString("response"));
             }
             // If captcha needed and wrong captcha : Error and end transaction
@@ -509,21 +516,19 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                             if (id != null) {
                                 user.set_id(id);
 
+                                try {
                                 final JsonObject tplReq = new JsonObject()
-                                        .putString(TemplatesVerticle.TEMPLATE, "newAccount.html")
-                                        .putObject(TemplatesVerticle.DATA, mailUtils.generateActivationBody(user, req.getLocale(), getContainer().config()));
+                                        .putString(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
+                                        .putObject(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(user, req.getLocale()));
 
-                                vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, (Handler<Message<JsonObject>>) tplResp -> {
-                                    final String tplRes = tplResp.body().getString("result");
-                                    final JsonObject emailReq = new JsonObject();
-                                    emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
-                                    emailReq.putString("to", user.getContact().getEmail());
-                                    emailReq.putString("subject", Messages.getString("mail.account.validation.subject"));
-                                    emailReq.putString("content_type", "text/html");
-                                    emailReq.putString("body", tplRes);
+                                    final JsonObject emailReq = new JsonObject()
+                                            .putString("from", runtime.getString("mail.from"))
+                                            .putString("to", user.getContact().getEmail())
+                                            .putString("subject", Messages.getString("mail.account.validation.subject"))
+                                            .putString("content_type", "text/html")
+                                            .putString("body", templatesDAO.generatePDFHandler(tplReq).getString("result"));
                                     vertx.eventBus().publish("mailer.mod", emailReq);
                                     final JsonObject res = new JsonObject();
-                                    try {
                                         res.putObject("person", mongo.getById(id, User.class));
                                         res.putString("planId", plan.getPaymentId());
                                         message.reply(res.encode());
@@ -534,7 +539,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                         LOG.error(e.getMessage(), e);
                                         utils.sendError(message, e);
                                     }
-                                });
                             }
                         } catch (final QaobeeException e) {
                             LOG.error(e.getMessage(), e);
@@ -565,7 +569,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = LOGIN_TEST, method = Constants.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
     private void loginTestHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        final String login = new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase();
+        JsonObject body = new JsonObject(req.getBody());
+        final String login = body.getString(PARAM_LOGIN).toLowerCase();
         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
         utils.sendStatus(res.size() > 0, message);
     }

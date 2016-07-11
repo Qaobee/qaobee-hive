@@ -52,6 +52,7 @@ import org.vertx.java.core.sockjs.SockJSServer;
 import org.vertx.mods.Mailer;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.util.*;
 
@@ -71,6 +72,9 @@ public class Main extends AbstractGuiceVerticle {
     private static Map<String, Rule> rules = new HashMap<>();
     @Inject
     private Utils utils;
+    @Inject
+    @Named("runtime")
+    private JsonObject runtime;
     private SockJSServer sockJSServer;
 
     /**
@@ -115,13 +119,13 @@ public class Main extends AbstractGuiceVerticle {
                 final JsonObject json = new JsonObject(response);
                 if (json.containsField(FILE_SERVE)) {
                     final File f = new File(json.getString(FILE_SERVE));
-                    req.response().putHeader("Content-Description", "File Transfer");
-                    req.response().putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE));
-                    req.response().putHeader("Content-Disposition", "attachment; filename=" + f.getName());
-                    req.response().putHeader("Expires", "0");
-                    req.response().putHeader("Cache-Control", "must-revalidate");
-                    req.response().putHeader("Pragma", "public");
-                    req.response().putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
+                    req.response().putHeader("Content-Description", "File Transfer")
+                            .putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE))
+                            .putHeader("Content-Disposition", "attachment; filename=" + f.getName())
+                            .putHeader("Expires", "0")
+                            .putHeader("Cache-Control", "must-revalidate")
+                            .putHeader("Pragma", "public")
+                            .putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
                     enableCors(req);
                     req.response().sendFile(f.getAbsolutePath());
                 } else {
@@ -242,8 +246,8 @@ public class Main extends AbstractGuiceVerticle {
         final HttpServer server = vertx.createHttpServer();
         new When<String, Void>().all(promises, value -> {
             server.requestHandler(rm);
-            String ip = container.config().getObject(RUNTIME).getString("defaultHost");
-            int port = container.config().getObject(RUNTIME).getInteger("defaultPort");
+            String ip = runtime.getString("defaultHost");
+            int port = runtime.getInteger("defaultPort");
             if (container.env().containsKey("OPENSHIFT_VERTX_IP")) {
                 ip = container.env().get("OPENSHIFT_VERTX_IP");
             }
@@ -256,7 +260,7 @@ public class Main extends AbstractGuiceVerticle {
             JsonArray inboundPermitted = new JsonArray();
             outboundPermitted.add(new JsonObject());
             inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
-            sockJSServer.setHook(new ServerHook(container.config().getObject(RUNTIME).getString("site.url")));
+            sockJSServer.setHook(new ServerHook(runtime.getString("site.url")));
             sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
             server.listen(port, ip);
             LOG.info("The http server is started on : " + ip + ":" + port);
@@ -310,7 +314,7 @@ public class Main extends AbstractGuiceVerticle {
                     .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
                     .putString("action", "mark");
             vertx.eventBus().send("metrix", json);
-            String busAddress = container.config().getObject(RUNTIME).getInteger("version") + "." + StringUtils.join(path, '.');
+            String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
             if (rules.containsKey(busAddress)) {
                 if (testRequest(req, busAddress, wrapper)) {
                     vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> {

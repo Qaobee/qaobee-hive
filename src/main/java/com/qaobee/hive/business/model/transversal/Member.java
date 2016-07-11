@@ -25,7 +25,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author Nada Vujanic-Maquin
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Member {
 

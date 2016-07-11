@@ -30,7 +30,6 @@ import java.util.List;
  *
  * @author cke
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SB_Person { // NOSONAR
 

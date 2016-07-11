@@ -22,7 +22,6 @@ package com.qaobee.hive.business.model.shipping;
 /**
  * The type Customer.
  */
-@Deprecated
 public class Customer {
 
     private String email;

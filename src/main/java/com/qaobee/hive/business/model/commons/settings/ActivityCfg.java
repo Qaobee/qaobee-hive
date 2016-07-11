@@ -31,7 +31,6 @@ import java.util.Map;
  *
  * @author cke
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ActivityCfg {
 

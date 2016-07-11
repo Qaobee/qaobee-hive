@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author cke
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Tag {
     /**

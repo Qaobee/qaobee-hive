@@ -26,7 +26,6 @@ import com.qaobee.hive.business.model.transversal.Audit;
  *
  * @author jerome
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Activity {
 

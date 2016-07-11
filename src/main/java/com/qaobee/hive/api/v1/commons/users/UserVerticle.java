@@ -18,27 +18,11 @@
  */
 package com.qaobee.hive.api.v1.commons.users;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.UUID;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Base64;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.utils.TemplatesVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.dao.TemplatesDAO;
+import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -53,9 +37,23 @@ import com.qaobee.hive.technical.utils.PersonUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.eventbus.ReplyException;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Base64;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.UUID;
 
 /**
  * The type User verticle.
@@ -124,6 +122,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private static final String ACCOUNT_LOGIN_FIELD = "account.login";
     private static final java.lang.String BAD_LOGIN_MESS = "bad.login";
     @Inject
+    @Named("runtime")
+    private JsonObject runtime;
+    @Inject
     private MongoDB mongo;
     @Inject
     private MailUtils mailUtils;
@@ -133,6 +134,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private PasswordEncryptionService passwordEncryptionService;
     @Inject
     private PersonUtils personUtils;
+    @Inject
+    private TemplatesDAO templatesDAO;
 
     @Override
     public void start() {
@@ -178,7 +181,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 boolean canLogin = true;
                 final JsonObject jsonPerson = res.get(0);
                 final User user = Json.decodeValue(jsonPerson.encode(), User.class);
-                if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user, getContainer().config())) {
+                if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user)) {
                     user.getAccount().getListPlan().get(0).setStatus("notpaid");
                     canLogin = false;
                 } else {
@@ -329,10 +332,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
             if (!injunit) {
                 final JsonObject catcha = json.getObject("captcha");
                 final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-                reCaptcha.setPrivateKey(getContainer().config().getObject(RUNTIME).getString("recaptcha.pkey"));
+                reCaptcha.setPrivateKey(runtime.getString("recaptcha.pkey"));
                 final String challenge = catcha.getString("challenge");
                 final String uresponse = catcha.getString("response");
-                reCaptchaResponse = reCaptcha.checkAnswer(getContainer().config().getObject(RUNTIME).getString("recaptcha.site"), challenge, uresponse);
+                reCaptchaResponse = reCaptcha.checkAnswer(runtime.getString("recaptcha.site"), challenge, uresponse);
             }
             if (!injunit && !reCaptchaResponse.isValid()) {
                 utils.sendError(message, ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
@@ -427,23 +430,20 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 user.getAccount().setActivationPasswd(UUID.randomUUID().toString().replaceAll("-", ""));
                 mongo.save(user);
 
-                final JsonObject tplReq = new JsonObject();
-                tplReq.putString(TemplatesVerticle.TEMPLATE, "newPasswd.html");
-                tplReq.putObject(TemplatesVerticle.DATA, mailUtils.generateNewpasswdBody(user, req.getLocale(), getContainer().config()));
+                final JsonObject tplReq = new JsonObject()
+                        .putString(TemplatesDAOImpl.TEMPLATE, "newPasswd.html")
+                        .putObject(TemplatesDAOImpl.DATA, mailUtils.generateNewpasswdBody(user, req.getLocale()));
 
-                vertx.eventBus().send(TemplatesVerticle.TEMPLATE_GENERATE, tplReq, (Handler<Message<JsonObject>>) tplResp -> {
-                    final String tplRes = tplResp.body().getString("result");
-                    final JsonObject emailReq = new JsonObject();
-                    emailReq.putString("from", getContainer().config().getObject(RUNTIME).getString("mail.from"));
-                    emailReq.putString("to", user.getContact().getEmail());
-                    emailReq.putString("subject", Messages.getString("mail.newpasswd.subject"));
-                    emailReq.putString("content_type", "text/html");
-                    emailReq.putString("body", tplRes);
+                    final JsonObject emailReq = new JsonObject()
+                            .putString("from", runtime.getString("mail.from"))
+                            .putString("to", user.getContact().getEmail())
+                            .putString("subject", Messages.getString("mail.newpasswd.subject"))
+                            .putString("content_type", "text/html")
+                            .putString("body", templatesDAO.generatePDFHandler(tplReq).getString("result"));
                     vertx.eventBus().publish("mailer.mod", emailReq);
                     final JsonObject resp = new JsonObject();
                     resp.putBoolean("status", true);
                     message.reply(resp.encode());
-                });
             }
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
@@ -461,7 +461,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      * @apiError HTTP_ERROR wrong request method
      */
-    @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = {TOKEN}, scope = Rule.Param.HEADER)
+    @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = {Constants.TOKEN}, scope = Rule.Param.HEADER)
     private void logoutHandler(Message<String> message) { 
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -526,7 +526,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 throw new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", req.getLocale()));
             }
             // trial period test
-            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user, getContainer().config())) {
+            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user)) {
                 user.getAccount().getListPlan().get(0).setStatus("notpaid");
             }
             user.getAccount().setToken(UUID.randomUUID().toString());
@@ -550,12 +550,12 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @param user User
      * @return in trial period
      */
-    private static boolean testTrial(User user, JsonObject conf) {
+    private boolean testTrial(User user) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
         Calendar cal2 = Calendar.getInstance();
         cal2.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
-        cal2.add(Calendar.MONTH, conf.getObject(RUNTIME).getInteger("trial.duration", 1));
+        cal2.add(Calendar.MONTH, runtime.getInteger("trial.duration", 1));
         return "open".equals(user.getAccount().getListPlan().get(0).getStatus()) && cal.before(cal2);
     }
 }

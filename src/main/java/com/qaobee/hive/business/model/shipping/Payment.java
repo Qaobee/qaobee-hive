@@ -26,7 +26,6 @@ import java.util.Map;
  * The type Payment.
  * https://www.payplug.com/docs/api/?powershell#the-payment-object
  */
-@Deprecated
 public class Payment {
     private int amount;
     private boolean save_card; // NOSONAR

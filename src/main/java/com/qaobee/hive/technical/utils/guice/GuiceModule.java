@@ -34,26 +34,35 @@ import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
 import com.qaobee.hive.technical.utils.guice.services.impl.FilesImpl;
 import com.qaobee.hive.technical.utils.impl.*;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
+import org.vertx.java.core.file.impl.PathAdjuster;
+import org.vertx.java.core.impl.VertxInternal;
 import org.vertx.java.core.json.JsonObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Locale;
 
 /**
  * The type Guice module.
  */
 public class GuiceModule extends AbstractModule {
-
-    /**
-     * The Config.
-     */
+    private static final Logger LOG = LoggerFactory.getLogger(GuiceModule.class);
     private JsonObject config;
     private Vertx vertx;
+    private Configuration cfg;
 
     /**
      * Instantiates a new Guice module.
      *
      * @param config the config
      */
-    public GuiceModule(JsonObject config, Vertx vertx) {
+    GuiceModule(JsonObject config, Vertx vertx) {
         this.config = config;
         this.vertx = vertx;
     }
@@ -67,6 +76,7 @@ public class GuiceModule extends AbstractModule {
         bind(JsonObject.class).annotatedWith(Names.named("mongo.persistor")).toInstance(config.getObject("mongo.persistor"));
         bind(JsonObject.class).annotatedWith(Names.named("payplug")).toInstance(config.getObject("payplug"));
         bind(JsonObject.class).annotatedWith(Names.named("asana")).toInstance(config.getObject("asana"));
+        bind(JsonObject.class).annotatedWith(Names.named("runtime")).toInstance(config.getObject("runtime"));
 
         bind(Vertx.class).toInstance(vertx);
         // TECHNICAL MODULES
@@ -79,6 +89,19 @@ public class GuiceModule extends AbstractModule {
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
         bind(Files.class).to(FilesImpl.class).in(Singleton.class);
         // BUSINESS MODULES
+        cfg = new Configuration(new Version("2.3.23"));
+        // Where do we load the templates from:
+        try {
+            cfg.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, "mailTemplates")));
+        } catch (final IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        // Some other recommended settings:
+        cfg.setIncompatibleImprovements(new Version(2, 3, 20));
+        cfg.setDefaultEncoding("UTF-8");
+        cfg.setLocale(Locale.US);
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfg));
         bind(UsersBusiness.class).to(UsersBusinessImpl.class).in(Singleton.class);
 
         // DAO
@@ -94,5 +117,6 @@ public class GuiceModule extends AbstractModule {
         bind(IndicatorDAO.class).to(IndicatorDAOImpl.class).in(Singleton.class);
         bind(SeasonDAO.class).to(SeasonDAOImpl.class).in(Singleton.class);
         bind(UserDAO.class).to(UserDAOImpl.class).in(Singleton.class);
+        bind(ShippingDAO.class).to(ShippingDAOImpl.class).in(Singleton.class);
     }
 }

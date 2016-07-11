@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  * @author jerome
  */
-@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CommonType {
 

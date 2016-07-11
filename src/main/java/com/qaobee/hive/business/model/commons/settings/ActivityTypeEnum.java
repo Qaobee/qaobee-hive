@@ -23,7 +23,6 @@ package com.qaobee.hive.business.model.commons.settings;
  *
  * @author Jerome
  */
-@Deprecated
 public enum ActivityTypeEnum {
 
     /**

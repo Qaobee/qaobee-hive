@@ -22,7 +22,6 @@ package com.qaobee.hive.business.model.shipping;
 /**
  * The type Hosted payment.
  */
-@Deprecated
 public class HostedPayment {
     private String return_url; // NOSONAR
     private String cancel_url; // NOSONAR
