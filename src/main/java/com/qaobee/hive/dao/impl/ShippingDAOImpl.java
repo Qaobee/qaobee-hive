@@ -42,7 +42,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.buffer.Buffer;
-import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -105,7 +104,8 @@ public class ShippingDAOImpl implements ShippingDAO {
     }
 
     @Override
-    public void triggeredPayment(JsonObject user, final Message<JsonObject> message) {
+    public CompletableFuture<Boolean> triggeredPayment(JsonObject user) {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
         JsonArray listPlan = user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD);
         for (int i = 0; i < listPlan.size(); i++) {
             JsonObject plan = listPlan.get(i);
@@ -115,17 +115,18 @@ public class ShippingDAOImpl implements ShippingDAO {
                     && !"null".equals(plan.getObject(CARD_INFO_FIELD).getString("id"))) {
                 String s = plan.getString("periodicity", "");
                 if (MONTHLY.equals(s)) {
-                    triggerMonthly(plan, user, i, message);
+                   return triggerMonthly(plan, user, i);
                 } else {
-                    utils.sendStatusJson(false, message);
+                    future.complete(false);
                 }
             } else {
-                utils.sendStatusJson(false, message);
+                future.complete(false);
             }
         }
         if (listPlan.size() == 0) {
-            utils.sendStatusJson(false, message);
+            future.complete(false);
         }
+        return future;
     }
 
     @Override
@@ -167,7 +168,8 @@ public class ShippingDAOImpl implements ShippingDAO {
         }
     }
 
-    private void triggerMonthly(JsonObject plan, JsonObject user, int planId, Message<JsonObject> message) {
+    private CompletableFuture<Boolean> triggerMonthly(JsonObject plan, JsonObject user, int planId) {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
         long paidDate = plan.getLong(PAID_DATE_FIELD);
         Calendar initialPaidDate = Calendar.getInstance();
         initialPaidDate.setTime(new Date(paidDate));
@@ -183,7 +185,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                 amount = runtime.getObject("plan").getObject(plan.getString(LEVEL_PLAN_FIELD)).getInteger("price");
             }
             if (amount == 0) {
-                utils.sendStatusJson(true, message);
+               future.complete(true);
             }
             payment.setAmount(amount * 100);
             payment.setCurrency("EUR");
@@ -201,22 +203,15 @@ public class ShippingDAOImpl implements ShippingDAO {
             payment.setMetadata(metaDatas);
             payment.setSave_card(false);
             payment.setForce_3ds(true);
-            sendPayplugRecurringPayment(user, planId, amount, new JsonObject(Json.encode(payment)).encode(), message);
+            return sendPayplugRecurringPayment(user, planId, amount, new JsonObject(Json.encode(payment)).encode());
         } else {
-            utils.sendStatusJson(false, message);
+            future.complete(false);
         }
+        return future;
     }
 
     private CompletableFuture<JsonObject> sendPayplugPayment(final User user, final int planId, final long amount, JsonObject requestBody) {
         CompletableFuture<JsonObject> future = new CompletableFuture<>();
-        future.handle((ok, ex) -> {
-            if (ok != null) {
-                return ok;
-            } else {
-                ex.printStackTrace();
-                return null;
-            }
-        });
         HttpClient client = vertx.createHttpClient().setKeepAlive(true);
         client.setHost(payplug.getString("baseUrl"));
         client.setPort(payplug.getInteger("port"));
@@ -244,7 +239,8 @@ public class ShippingDAOImpl implements ShippingDAO {
         return future;
     }
 
-    private void sendPayplugRecurringPayment(final JsonObject user, final int planId, final long amount, String requestBody, Message<JsonObject> message) {
+    private CompletableFuture<Boolean> sendPayplugRecurringPayment(final JsonObject user, final int planId, final long amount, String requestBody) {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
         HttpClient client = vertx.createHttpClient().setKeepAlive(true);
         client.setHost(payplug.getString("baseUrl"));
         client.setPort(payplug.getInteger("port"));
@@ -277,17 +273,15 @@ public class ShippingDAOImpl implements ShippingDAO {
                                         .get(planId))
                                         .putString("cardId", res.getString("id"));
                                 mongo.save(user, COLLECTION);
-                                utils.sendStatusJson(true, message);
+                                future.complete(true);
                             } catch (IllegalArgumentException | QaobeeException e) {
                                 LOG.error(e.getMessage(), e);
-                                utils.sendStatusJson(false, message);
+                                future.completeExceptionally(e);
                             }
                         });
                     } else {
-                        QaobeeException e = new QaobeeException(ExceptionCodes.HTTP_ERROR,
-                                resp.statusCode() + " : " + resp.statusMessage());
-                        LOG.error(e.getMessage(), e);
-                        utils.sendStatusJson(false, message);
+                        future.completeExceptionally(new QaobeeException(ExceptionCodes.HTTP_ERROR,
+                                resp.statusCode() + " : " + resp.statusMessage()));
                     }
                 }
         )
@@ -296,6 +290,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                 .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody.length()))
                 .write(requestBody)
                 .end();
+        return future;
     }
 
     private JsonObject handlePayplugPaymentResponse(Buffer buffer, User user, int planId, long amount) throws QaobeeException {

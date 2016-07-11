@@ -21,7 +21,6 @@ package com.qaobee.hive.dao;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.eventbus.Message;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
@@ -42,9 +41,8 @@ public interface ShippingDAO {
      * Triggered payment.
      *
      * @param user    the user
-     * @param message the message
      */
-    void triggeredPayment(JsonObject user, Message<JsonObject> message);
+    CompletableFuture<Boolean> triggeredPayment(JsonObject user);
 
     /**
      * Pay.

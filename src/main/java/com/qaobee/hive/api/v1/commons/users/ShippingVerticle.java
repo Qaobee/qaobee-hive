@@ -74,7 +74,14 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     }
 
     private void triggeredPayment(Message<JsonObject> message) {
-       shippingDAO.triggeredPayment(message.body(), message);
+       shippingDAO.triggeredPayment(message.body()).whenComplete((value, error) -> {
+           if (value != null) {
+              utils.sendStatusJson(value, message);
+           } else {
+               QaobeeException e = (QaobeeException) error;
+               utils.sendErrorJ(message, e.getCode(), e.getMessage());
+           }
+       });
     }
 
     /**
