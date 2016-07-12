@@ -415,25 +415,13 @@ public class Main extends AbstractGuiceVerticle {
             if (rule.admin()) {
                 utils.isLoggedAndAdmin(wrapper);
             }
-            switch (rule.scope()) {
-                case BODY:
-                    utils.testMandatoryParams(wrapper.getBody(), rule.mandatoryParams());
-                    break;
-                case REQUEST:
-                    utils.testMandatoryParams(wrapper.getParams(), rule.mandatoryParams());
-                    break;
-                case HEADER:
-                    utils.testMandatoryParams(wrapper.getHeaders(), rule.mandatoryParams());
-                    break;
-                default:
-                    break;
-            }
+            testParameters(rule, wrapper);
         } catch (final NoSuchMethodException e) {
             LOG.error(e.getMessage(), e);
-            final JsonObject jsonResp = new JsonObject();
-            jsonResp.putBoolean("status", false);
-            jsonResp.putString(MESSAGE, "Nothing here");
-            jsonResp.putNumber("httpCode", 404);
+            final JsonObject jsonResp = new JsonObject()
+                    .putBoolean("status", false)
+                    .putString(MESSAGE, "Nothing here")
+                    .putNumber("httpCode", 404);
             req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
             return false;
         } catch (QaobeeException e) {
@@ -442,5 +430,21 @@ public class Main extends AbstractGuiceVerticle {
             return false;
         }
         return true;
+    }
+
+    private void testParameters(Rule rule, RequestWrapper wrapper) throws QaobeeException {
+        switch (rule.scope()) {
+            case BODY:
+                utils.testMandatoryParams(wrapper.getBody(), rule.mandatoryParams());
+                break;
+            case REQUEST:
+                utils.testMandatoryParams(wrapper.getParams(), rule.mandatoryParams());
+                break;
+            case HEADER:
+                utils.testMandatoryParams(wrapper.getHeaders(), rule.mandatoryParams());
+                break;
+            default:
+                break;
+        }
     }
 }
