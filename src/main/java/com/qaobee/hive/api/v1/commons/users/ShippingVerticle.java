@@ -92,7 +92,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
               utils.sendStatusJson(value, message);
            } else {
                QaobeeException e = (QaobeeException) error;
-               utils.sendErrorJ(message, e.getCode(), e.getMessage());
+               utils.sendErrorJ(message, e);
            }
        });
     }

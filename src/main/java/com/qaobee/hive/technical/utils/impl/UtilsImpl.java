@@ -95,8 +95,12 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void sendErrorJ(final Message<JsonObject> message, final ExceptionCodes code, final String error) {
-        message.fail(code.getCode(), error);
+    public void sendErrorJ(final Message<JsonObject> message, final QaobeeException e) {
+       JsonObject err = new JsonObject(Json.encode(e));
+        if(!err.getBoolean("report")) {
+            err.removeField("stackTrace");
+        }
+        message.fail(e.getCode().getCode(), err.encode());
     }
 
     @Override

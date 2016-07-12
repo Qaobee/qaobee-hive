@@ -355,6 +355,9 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         try {
             final Object result = queue.poll(timeout, TimeUnit.SECONDS);
             if (result instanceof ReplyException) {
+                    if (((ReplyException) result).getMessage().startsWith("{")) {
+                        return new JsonObject(((ReplyException) result).getMessage());
+                    }
                     Assert.fail(((ReplyException) result).getMessage());
             } else if (result instanceof JsonObject) {
                 return ((JsonObject) result);

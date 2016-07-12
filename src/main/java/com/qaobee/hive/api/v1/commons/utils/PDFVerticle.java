@@ -19,6 +19,7 @@ package com.qaobee.hive.api.v1.commons.utils;
 
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.MediaReplacedElementFactory;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -101,7 +102,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
             message.reply(res);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            utils.sendErrorJ(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+            utils.sendErrorJ(message, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage()));
         }
     }
 

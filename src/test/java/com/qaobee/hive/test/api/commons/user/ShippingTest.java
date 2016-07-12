@@ -662,10 +662,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recurring payment with future date test.
+     * Recurring payment with future date.
      */
     @Test
-    public void recurringPaymentWithFutureDateTest() {
+    public void recurringPaymentWithFutureDate() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
@@ -683,10 +683,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recurring payment with not supported periodicity test.
+     * Recurring payment with not supported periodicity.
      */
     @Test
-    public void recurringPaymentWithNotSupportedPeriodicityTest() {
+    public void recurringPaymentWithNotSupportedPeriodicity() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
@@ -704,10 +704,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recurring payment with no plan test.
+     * Recurring payment with no plan.
      */
     @Test
-    public void recurringPaymentWithNoPlanTest() {
+    public void recurringPaymentWithNoPlan() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
@@ -720,6 +720,61 @@ public class ShippingTest extends VertxJunitSupport {
 
         JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
         Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with no payplug servers.
+     */
+    @Test
+    public void recurringPaymentWithNoPayplugServers() {
+        User u = generateLoggedUser();
+        u.getAccount().setListPlan(new ArrayList<>());
+        if (mockServer.isRunning()) {
+            mockServer.stop();
+        }
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with wrong data.
+     */
+    @Test
+    public void recurringPaymentWithWrongData() {
+        User u = generateUser();
+        User u2 = generateLoggedUser("123785");
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().setListPlan(new ArrayList<>());
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u2)));
+        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with bad payplug response.
+     */
+    @Test
+    public void recurringPaymentWithBadPayplugResponse() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(500)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().getListPlan().get(0).setPaidDate(0);
+        u.getAccount().getListPlan().get(0).setCardId("123456");
+        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertEquals(res.encodePrettily(), res.getString("code"), ExceptionCodes.HTTP_ERROR.name());
     }
 
     /**

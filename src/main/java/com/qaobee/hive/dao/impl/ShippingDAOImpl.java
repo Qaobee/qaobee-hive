@@ -274,7 +274,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                                         .putString("cardId", res.getString("id"));
                                 mongo.save(user, COLLECTION);
                                 future.complete(true);
-                            } catch (IllegalArgumentException | QaobeeException e) {
+                            } catch (QaobeeException e) {
                                 LOG.error(e.getMessage(), e);
                                 future.completeExceptionally(e);
                             }

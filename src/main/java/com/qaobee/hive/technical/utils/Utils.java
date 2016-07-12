@@ -83,11 +83,10 @@ public interface Utils {
     /**
      * Send error j.
      *
-     * @param message un message
-     * @param code    une erreur
-     * @param error   un libellé d'erreur
+     * @param message the message
+     * @param e       the e
      */
-    void sendErrorJ(Message<JsonObject> message, ExceptionCodes code, String error);
+    void sendErrorJ(Message<JsonObject> message, QaobeeException e);
 
     /**
      * Save and resize image.
