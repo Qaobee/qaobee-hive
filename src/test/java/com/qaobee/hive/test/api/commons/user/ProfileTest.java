@@ -23,7 +23,6 @@ import com.qaobee.hive.api.v1.commons.users.ProfileVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
 import org.junit.Test;
@@ -217,30 +216,5 @@ public class ProfileTest extends VertxJunitSupport {
                .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
-
-    @Test
-    public void generateBillingPDFWithErrorData() {
-        User u = generateLoggedUser();
-        u.setGender("androgyn");
-        u.getAccount().getListPlan().get(0).setLevelPlan(null);
-        try {
-            mongo.save(u);
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(Json.encode(u))
-                .when().post(getURL(ProfileVerticle.UPDATE))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()))
-                .body("gender", is("androgyn"));
-
-        given().header(TOKEN, u.getAccount().getToken())
-                .param("plan_id", 0)
-                .param("pay_id", u.getAccount().getListPlan().get(0).getShippingList().get(0).getId())
-               .get(getURL(ProfileVerticle.GENERATE_BILL_PDF))
-               .then().assertThat().statusCode(ExceptionCodes.INTERNAL_ERROR.getCode())
-               .body(CODE, is(ExceptionCodes.INTERNAL_ERROR.toString()));
     }
 }

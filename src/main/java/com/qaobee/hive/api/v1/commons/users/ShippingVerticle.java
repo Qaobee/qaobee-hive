@@ -81,7 +81,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     /**
      * Periodic timer, each day it runs
      */
-    private void periodicHandler(Long aLong) {
+    private void periodicHandler(long l) {
+        LOG.info("Running each " + l);
         shippingDAO.periodicPayment().forEach(user -> vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, (JsonObject) user));
     }
 
