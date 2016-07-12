@@ -275,7 +275,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                 if (objectMessage.body() instanceof ReplyException) {
                     utils.sendError(message, (ReplyException) objectMessage.body());
                 } else {
-                	message.reply((String) objectMessage.body());
+                    message.reply((String) objectMessage.body());
                 }
                 return null;
             });

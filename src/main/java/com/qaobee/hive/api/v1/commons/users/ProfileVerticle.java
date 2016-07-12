@@ -61,10 +61,6 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * The Constant GENERATE_BILL_PDF.
      */
     public static final String GENERATE_BILL_PDF = Module.VERSION + ".commons.users.profile.billpdf";
-    /**
-     * The Constant UPDATE_AVATAR.
-     */
-    private static final String UPDATE_AVATAR = "user.update.avatar";
     @Inject
     private UserDAO userDAO;
     @Inject
@@ -126,7 +122,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} User com.qaobee.hive.business.model.commons.users.User
      * @apiHeader {String} token
      */
-    @Rule(address = UPDATE, method = Constants.POST, logged = true)
+    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {"_id"}, scope = Rule.Param.BODY)
     private void updateUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -137,12 +133,6 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
         }
     }
 
-    /**
-     * Get a message handler
-     *
-     * @param message Vertx message
-     * @return handler
-     */
     private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
         return pdfResp -> {
             if (pdfResp.failed()) {

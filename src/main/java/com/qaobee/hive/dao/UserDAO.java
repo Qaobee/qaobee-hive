@@ -90,10 +90,9 @@ public interface UserDAO {
      *
      * @param email  the email
      * @param locale the locale
-     * @return valid or not
      * @throws QaobeeException the qaobee exception
      */
-    boolean testEmail(String email, String locale) throws QaobeeException;
+    void testEmail(String email, String locale) throws QaobeeException;
 
     /**
      * Prepare upsert.

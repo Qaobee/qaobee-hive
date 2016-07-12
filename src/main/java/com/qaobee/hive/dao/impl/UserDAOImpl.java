@@ -77,39 +77,38 @@ public class UserDAOImpl implements UserDAO {
                 payment = p;
             }
         }
-        if (payment != null) {
-            final JsonObject juser = new JsonObject().putString("firstname", user.getFirstname())
-                    .putString("name", user.getName())
-                    .putString("username", user.getAccount().getLogin())
-                    .putString("phoneNumber", user.getContact().getHome())
-                    .putString("email", user.getContact().getEmail())
-                    .putString("paidDate", utils.formatDate(payment.getPaidDate() / 1000L, DateFormat.MEDIUM, DateFormat.MEDIUM, locale))
-                    .putString("paymentId", payment.getPaymentId())
-                    .putString("plan", planItem.getLevelPlan().name())
-                    .putString("amountPaid", String.valueOf(payment.getAmountPaid()))
-                    .putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, locale));
-            if (StringUtils.isNoneBlank(user.getAvatar())) {
-                juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
-            }
-            if (user.getAddress() != null) {
-                if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                    juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
-                } else {
-                    juser.putString(ADDRESS_FIELD, user.getAddress().getPlace()
-                            + " " + user.getAddress().getZipcode()
-                            + " "
-                            + user.getAddress().getCity()
-                            + " "
-                            + user.getAddress().getCountry());
-                }
-            }
-            return new JsonObject()
-                    .putString(PDFVerticle.FILE_NAME, payment.getPaymentId() + "-Qaobee")
-                    .putString(PDFVerticle.TEMPLATE, "billing/bill.ftl")
-                    .putObject(PDFVerticle.DATA, juser);
-        } else {
+        if (payment == null) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "unknown bill");
         }
+        final JsonObject juser = new JsonObject().putString("firstname", user.getFirstname())
+                .putString("name", user.getName())
+                .putString("username", user.getAccount().getLogin())
+                .putString("phoneNumber", user.getContact().getHome())
+                .putString("email", user.getContact().getEmail())
+                .putString("paidDate", utils.formatDate(payment.getPaidDate() / 1000L, DateFormat.MEDIUM, DateFormat.MEDIUM, locale))
+                .putString("paymentId", payment.getPaymentId())
+                .putString("plan", planItem.getLevelPlan().name())
+                .putString("amountPaid", String.valueOf(payment.getAmountPaid()))
+                .putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, locale));
+        if (StringUtils.isNoneBlank(user.getAvatar())) {
+            juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
+        }
+        if (user.getAddress() != null) {
+            if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
+                juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
+            } else {
+                juser.putString(ADDRESS_FIELD, user.getAddress().getPlace()
+                        + " " + user.getAddress().getZipcode()
+                        + " "
+                        + user.getAddress().getCity()
+                        + " "
+                        + user.getAddress().getCountry());
+            }
+        }
+        return new JsonObject()
+                .putString(PDFVerticle.FILE_NAME, payment.getPaymentId() + "-Qaobee")
+                .putString(PDFVerticle.TEMPLATE, "billing/bill.ftl")
+                .putObject(PDFVerticle.DATA, juser);
     }
 
     @Override
@@ -139,6 +138,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public JsonObject updateUser(JsonObject u) throws QaobeeException {
         final User user = Json.decodeValue(u.encode(), User.class);
+        JsonObject p = mongo.getById(user.get_id(), COLLECTION);
         if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
             final byte[] salt = passwordEncryptionService.generateSalt();
             user.getAccount().setSalt(salt);
@@ -146,7 +146,6 @@ public class UserDAOImpl implements UserDAO {
             user.getAccount().setPasswd(null);
             u.putObject(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
         } else {
-            JsonObject p = mongo.getById(user.get_id(), COLLECTION);
             u.putObject(ACCOUNT_FIELD, p.getObject(ACCOUNT_FIELD));
         }
         mongo.save(u, COLLECTION);
@@ -158,31 +157,9 @@ public class UserDAOImpl implements UserDAO {
         if (user == null || user.getAccount() == null || user.getContact() == null) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.required", locale));
         }
-        // Name
-        if (StringUtils.isBlank(user.getName())) {
-            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.name.required", locale));
-        } else if (user.getName().trim().length() < 2) {
-            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.name.short", locale));
-        } else if (!VALID_NAME_REGEX.matcher(user.getName().trim()).find()) {
-            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.name.format", locale));
-        }
-        // Firstname
-        if (StringUtils.isBlank(user.getFirstname())) {
-            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.firstname.required", locale));
-        } else if (user.getFirstname().trim().length() < 2) {
-            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.firstname.short", locale));
-        } else if (!VALID_NAME_REGEX.matcher(user.getFirstname().trim()).find()) {
-            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.firstname.format", locale));
-        }
-        // Login
-        if (StringUtils.isBlank(user.getAccount().getLogin())) {
-            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.login.required", locale));
-        } else if (user.getAccount().getLogin().length() < 4) {
-            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.login.short", locale));
-        } else if (!VALID_LOGIN_REGEX.matcher(user.getAccount().getLogin().trim()).find()) {
-            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.login.format", locale));
-        }
-        // e-Mail
+        checkUserName(user.getName(), locale);
+        checkUserFirstname(user.getFirstname(), locale);
+        checkUserLogin(user.getAccount().getLogin(), locale);
         testEmail(user.getContact().getEmail(), locale);
         // Password
         if (StringUtils.isBlank(user.getAccount().getPasswd())) {
@@ -193,6 +170,36 @@ public class UserDAOImpl implements UserDAO {
         return true;
     }
 
+    private static void checkUserLogin(String login, String locale) throws QaobeeException {
+        if (StringUtils.isBlank(login)) {
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.login.required", locale));
+        } else if (login.length() < 4) {
+            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.login.short", locale));
+        } else if (!VALID_LOGIN_REGEX.matcher(login.trim()).find()) {
+            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.login.format", locale));
+        }
+    }
+
+    private static void checkUserFirstname(String firstname, String locale) throws QaobeeException {
+        if (StringUtils.isBlank(firstname)) {
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.firstname.required", locale));
+        } else if (firstname.trim().length() < 2) {
+            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.firstname.short", locale));
+        } else if (!VALID_NAME_REGEX.matcher(firstname.trim()).find()) {
+            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.firstname.format", locale));
+        }
+    }
+
+    private static void checkUserName(String name, String locale) throws QaobeeException {
+        if (StringUtils.isBlank(name)) {
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.name.required", locale));
+        } else if (name.trim().length() < 2) {
+            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.name.short", locale));
+        } else if (!VALID_NAME_REGEX.matcher(name.trim()).find()) {
+            throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.name.format", locale));
+        }
+    }
+
     @Override
     public boolean existingLogin(String login) {
         final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, COLLECTION);
@@ -200,14 +207,13 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean testEmail(String email, String locale) throws QaobeeException {
+    public void testEmail(String email, String locale) throws QaobeeException {
         if (!VALID_EMAIL_ADDRESS_REGEX.matcher(email.replaceAll("\\[at\\]", "@")).find()) {
             throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("email.bad.format", locale));
         }
         if (StringUtils.isBlank(email)) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("email.required", locale));
         }
-        return true;
     }
 
     @Override
