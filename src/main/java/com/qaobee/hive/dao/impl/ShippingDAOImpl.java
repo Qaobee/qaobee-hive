@@ -219,6 +219,7 @@ public class ShippingDAOImpl implements ShippingDAO {
         if (payplug.getInteger("port") == 443) {
             client.setSSL(true).setTrustAll(true);
         }
+        client.exceptionHandler(ex -> future.completeExceptionally(new QaobeeException(ExceptionCodes.HTTP_ERROR, ex.getMessage())));
         client.post(payplug.getString("basePath") + "/payments", resp -> {
             if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
                 resp.bodyHandler(buffer -> {
@@ -235,7 +236,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                 .putHeader("Authorization", "Bearer " + payplug.getString("api_key"))
                 .putHeader(HTTP.CONTENT_TYPE, "application/json")
                 .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody.encode().length()))
-                .write(requestBody.encode()).end();
+                .end(requestBody.encode());
         return future;
     }
 
@@ -244,6 +245,10 @@ public class ShippingDAOImpl implements ShippingDAO {
         HttpClient client = vertx.createHttpClient().setKeepAlive(true);
         client.setHost(payplug.getString("baseUrl"));
         client.setPort(payplug.getInteger("port"));
+        if (payplug.getInteger("port") == 443) {
+            client.setSSL(true).setTrustAll(true);
+        }
+        client.exceptionHandler(ex -> future.completeExceptionally(new QaobeeException(ExceptionCodes.HTTP_ERROR, ex.getMessage())));
         client.post(payplug.getString("basePath") + "/payments", resp -> {
                     if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
                         resp.bodyHandler(buffer -> {
@@ -288,8 +293,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                 .putHeader("Authorization", "Bearer " + payplug.getString("api_key"))
                 .putHeader(HTTP.CONTENT_TYPE, "application/json")
                 .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody.length()))
-                .write(requestBody)
-                .end();
+                .end(requestBody);
         return future;
     }
 

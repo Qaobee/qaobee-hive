@@ -57,6 +57,10 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      */
     public static final String TRIGGERED_RECURING_PAYMENT = "inner.recuring_payment";
     /**
+     * The constant PERIODIC_RECURING_PAYMENT.
+     */
+    public static final String PERIODIC_RECURING_PAYMENT = "inner.periodic.recuring_payment";
+    /**
      * The constant PARAM_PLAN_ID.
      */
     public static final String PARAM_PLAN_ID = "plan_id";
@@ -74,16 +78,26 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         vertx.eventBus()
                 .registerHandler(IPN, this::ipn)
                 .registerHandler(PAY, this::pay)
-                .registerHandler(TRIGGERED_RECURING_PAYMENT, this::triggeredPayment);
+                .registerHandler(TRIGGERED_RECURING_PAYMENT, this::triggeredPayment)
+                .registerHandler(PERIODIC_RECURING_PAYMENT, this::periodicTriggeredPayment);
         vertx.setPeriodic(1000 * 60 * 60 * 24L, this::periodicHandler);
     }
+
+
 
     /**
      * Periodic timer, each day it runs
      */
     private void periodicHandler(long l) {
         LOG.info("Running each " + l);
+        periodicTriggeredPayment(null);
+    }
+
+    private void periodicTriggeredPayment(Message<JsonObject> message) {
         shippingDAO.periodicPayment().forEach(user -> vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, (JsonObject) user));
+        if(message != null) {
+            message.reply(new JsonObject().putBoolean(Constants.STATUS, true));
+        }
     }
 
     private void triggeredPayment(Message<JsonObject> message) {

@@ -350,7 +350,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @return the json object
      */
     protected JsonObject sendOnBus(String address, JsonObject query) {
-        long timeout = 150L;
+        long timeout = 5L;
         getEventBus().send(address, query, new QueueReplyHandler<Object>(queue, timeout));
         try {
             final Object result = queue.poll(timeout, TimeUnit.SECONDS);
