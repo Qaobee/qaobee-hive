@@ -52,6 +52,7 @@ public class UserDAOImpl implements UserDAO {
     private static final Pattern VALID_NAME_REGEX = Pattern.compile("^([a-z'àâéèêôùûç \\-]+)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9\\.\\-]+)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+    private static final String COLLECTION = "User";
     @Inject
     private MongoDB mongo;
     @Inject
@@ -61,9 +62,9 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public JsonObject updateAvatar(String uid, String filename) throws QaobeeException {
-        JsonObject jsonperson = mongo.getById(uid, User.class)
+        JsonObject jsonperson = mongo.getById(uid, COLLECTION)
                 .putString(AVATAR_FIELD, filename);
-        mongo.save(jsonperson, User.class);
+        mongo.save(jsonperson, COLLECTION);
         return jsonperson;
     }
 
@@ -145,10 +146,10 @@ public class UserDAOImpl implements UserDAO {
             user.getAccount().setPasswd(null);
             u.putObject(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
         } else {
-            JsonObject p = mongo.getById(user.get_id(), User.class.getSimpleName());
+            JsonObject p = mongo.getById(user.get_id(), COLLECTION);
             u.putObject(ACCOUNT_FIELD, p.getObject(ACCOUNT_FIELD));
         }
-        mongo.save(u, User.class.getSimpleName());
+        mongo.save(u, COLLECTION);
         return u;
     }
 
@@ -194,7 +195,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean existingLogin(String login) {
-        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, User.class);
+        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, COLLECTION);
         return res.size() > 0;
     }
 
@@ -227,5 +228,16 @@ public class UserDAOImpl implements UserDAO {
             user.set_id(null);
         }
         return user;
+    }
+
+    /**
+     * Gets user.
+     *
+     * @param id the id
+     * @return the user
+     */
+    @Override
+    public JsonObject getUser(String id) throws QaobeeException {
+        return mongo.getById(id, COLLECTION);
     }
 }

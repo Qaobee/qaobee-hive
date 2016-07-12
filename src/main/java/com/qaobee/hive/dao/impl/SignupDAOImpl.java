@@ -36,10 +36,7 @@ import com.qaobee.hive.business.model.transversal.Contact;
 import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
-import com.qaobee.hive.dao.ActivityDAO;
-import com.qaobee.hive.dao.CountryDAO;
-import com.qaobee.hive.dao.SignupDAO;
-import com.qaobee.hive.dao.UserDAO;
+import com.qaobee.hive.dao.*;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -67,10 +64,8 @@ public class SignupDAOImpl implements SignupDAO {
     private static final Logger LOG = LoggerFactory.getLogger(SignupDAOImpl.class);
     private static final String COUNTRY_FIELD = "country";
     private static final String PARAMERTER_FIELD = "parametersSignup";
-    /**
-     * The constant PARAM_PLAN.
-     */
-    public static final String PARAM_PLAN = "plan";
+    private static final String USER_COLLECTION = "User";
+    private static final String PARAM_PLAN = "plan";
     @Inject
     private ActivityDAO activityDAO;
     @Inject
@@ -81,6 +76,8 @@ public class SignupDAOImpl implements SignupDAO {
     private Utils utils;
     @Inject
     private UserDAO userDAO;
+    @Inject
+    private StructureDAO structureDAO;
 
     @Inject
     @Named("runtime")
@@ -93,7 +90,7 @@ public class SignupDAOImpl implements SignupDAO {
         // FIXME : to JRO : Est-ce utile?
         userUpdate.set_id(jsonUser.getString("_id"));
         if (structure.containsField("_id")) {
-            structure = mongo.getById(structure.getString("_id"), Structure.class);
+            structure.mergeIn(structureDAO.getStructure(structure.getString("_id")));
         } else {
             JsonObject country = countryDAO.getCountryFromAlpha2(structure.getObject("address").getObject(COUNTRY_FIELD).getString("alpha2"));
             structure.putObject(COUNTRY_FIELD, new JsonObject(Json.encode(country)));
@@ -204,7 +201,7 @@ public class SignupDAOImpl implements SignupDAO {
 
     @Override
     public boolean accountCheck(String id, String activationCode) throws QaobeeException {
-        final User user = Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
+        final User user = Json.decodeValue(mongo.getById(id, USER_COLLECTION).encode(), User.class);
         if (user.getAccount().getActivationCode().equals(activationCode)) {
             user.getAccount().setActive(true);
             mongo.save(user);
@@ -217,9 +214,8 @@ public class SignupDAOImpl implements SignupDAO {
     public JsonObject register(JsonObject reCaptchaJson, JsonObject userJson, String locale) throws QaobeeException {
         final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
         reCaptcha.setPrivateKey(runtime.getString("recaptcha.pkey"));
-        ReCaptchaResponse reCaptchaResponse = null;
         if (runtime.getBoolean("recaptcha")) {
-            reCaptchaResponse = reCaptcha.checkAnswer(runtime.getString("recaptcha.site"),
+            ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(runtime.getString("recaptcha.site"),
                     reCaptchaJson.getString("challenge"),
                     reCaptchaJson.getString("response"));
             if(!reCaptchaResponse.isValid()) {
@@ -249,13 +245,12 @@ public class SignupDAOImpl implements SignupDAO {
         }
         user.getAccount().getListPlan().add(plan);
             user.set_id(mongo.save(userDAO.prepareUpsert(user)));
-        final JsonObject res = new JsonObject()
-                .putObject("person", mongo.getById(user.get_id(), User.class))
+        return new JsonObject()
+                .putObject("person", mongo.getById(user.get_id(), USER_COLLECTION))
                 .putString("planId", plan.getPaymentId());
-        return res;
     }
 
-    private void testAccount(User user, String activationCode, String locale) throws QaobeeException {
+    private static void testAccount(User user, String activationCode, String locale) throws QaobeeException {
         if (user.getAccount().isActive()) {
             throw new QaobeeException(ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", locale));
         } else if (!user.getAccount().isFirstConnexion()) {
@@ -294,8 +289,9 @@ public class SignupDAOImpl implements SignupDAO {
 
     private User getUser(String id, String locale) throws QaobeeException {
         try {
-            return Json.decodeValue(mongo.getById(id, User.class).encode(), User.class);
+            return Json.decodeValue(userDAO.getUser(id).encode(), User.class);
         } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", locale));
         }
     }

@@ -81,6 +81,7 @@ public interface UserDAO {
      * Existing login.
      *
      * @param login the login
+     * @return the boolean
      */
     boolean existingLogin(String login);
 
@@ -102,4 +103,12 @@ public interface UserDAO {
      * @throws QaobeeException the qaobee exception
      */
     User prepareUpsert(User u) throws QaobeeException;
+
+    /**
+     * Gets user.
+     *
+     * @param id the id
+     * @return the user
+     */
+    JsonObject getUser(String id) throws QaobeeException;
 }
