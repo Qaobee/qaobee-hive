@@ -847,11 +847,24 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void uploadAvatarWithNotLoggedUser() {
-        given().multiPart(new File("src/test/resources/avatar.jpg")).
-                pathParam("uid", generateUser().get_id()).
-                when().
-                post(BASE_URL + "/file/User/avatar/{uid}")
+        given().multiPart(new File("src/test/resources/avatar.jpg"))
+                .pathParam("uid", generateUser().get_id())
+                .when()
+                .post(BASE_URL + "/file/User/avatar/{uid}")
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
+    }
+
+    /**
+     * Upload avatar with wrong token.
+     */
+    @Test
+    public void uploadAvatarWithWrongToken() {
+        given().multiPart(new File("src/test/resources/avatar.jpg")).
+                pathParam("uid", generateUser().get_id())
+                .header(TOKEN, "11111")
+                .when()
+                .post(BASE_URL + "/file/User/avatar/{uid}")
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
     }
 
     /**
@@ -863,6 +876,10 @@ public class UserTest extends VertxJunitSupport {
                 .get(BASE_URL + "/file/User/{avatar}")
                 .then().assertThat().statusCode(404);
     }
+
+    /**
+     * Gets avatar with wrong collection.
+     */
     @Test
     public void getAvatarWithWrongCollection() {
        given().pathParam("avatar", "bla")

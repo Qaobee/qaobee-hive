@@ -179,8 +179,8 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                 if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
                     vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
                 }
-                message.reply(resp);
             }
+            message.reply(resp);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INTERNAL_ERROR.getCode());
