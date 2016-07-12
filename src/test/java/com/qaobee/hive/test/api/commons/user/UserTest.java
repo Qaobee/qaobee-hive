@@ -18,22 +18,21 @@
  */
 package com.qaobee.hive.test.api.commons.user;
 
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-
-import java.io.File;
-import java.util.UUID;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
-
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import org.junit.Assert;
+import org.junit.Test;
+import org.vertx.java.core.json.JsonObject;
+
+import java.io.File;
+import java.util.UUID;
+
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 
 /**
@@ -122,10 +121,10 @@ public class UserTest extends VertxJunitSupport {
     }
 
     /**
-     * Bad login test.
+     * Bad login
      */
     @Test
-    public void badLoginTest() {
+    public void badLogin() {
         final JsonObject params = new JsonObject();
         params.putString(UserVerticle.PARAM_LOGIN, "badlogin");
 
@@ -806,10 +805,10 @@ public class UserTest extends VertxJunitSupport {
     }
 
     /**
-     * Upload avatar test.
+     * Upload avatar
      */
     @Test
-    public void uploadAvatarTest() {
+    public void uploadAvatar() {
         User user = generateLoggedUser();
         String avatarId = given().header(TOKEN, user.getAccount().getToken())
                 .multiPart(new File("src/test/resources/avatar.jpg")).
@@ -831,10 +830,10 @@ public class UserTest extends VertxJunitSupport {
     }
 
     /**
-     * Upload avatar with wrong user id test.
+     * Upload avatar with wrong user id
      */
     @Test
-    public void uploadAvatarWithWrongUserIdTest() {
+    public void uploadAvatarWithWrongUserId() {
         given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .multiPart(new File("src/test/resources/avatar.jpg")).
                 pathParam("uid", "blabla").
@@ -844,10 +843,10 @@ public class UserTest extends VertxJunitSupport {
     }
 
     /**
-     * Upload avatar with not logged user test.
+     * Upload avatar with not logged user
      */
     @Test
-    public void uploadAvatarWithNotLoggedUserTest() {
+    public void uploadAvatarWithNotLoggedUser() {
         given().multiPart(new File("src/test/resources/avatar.jpg")).
                 pathParam("uid", generateUser().get_id()).
                 when().
@@ -856,12 +855,18 @@ public class UserTest extends VertxJunitSupport {
     }
 
     /**
-     * Get avatar with wrong avatar id test.
+     * Get avatar with wrong avatar id
      */
     @Test
-    public void getAvatarWithWrongAvatarIdTest() {
+    public void getAvatarWithWrongAvatarId() {
         given().pathParam("avatar", "blabla")
                 .get(BASE_URL + "/file/User/{avatar}")
+                .then().assertThat().statusCode(404);
+    }
+    @Test
+    public void getAvatarWithWrongCollection() {
+       given().pathParam("avatar", "bla")
+                .get(BASE_URL + "/file/toto/{avatar}")
                 .then().assertThat().statusCode(404);
     }
 

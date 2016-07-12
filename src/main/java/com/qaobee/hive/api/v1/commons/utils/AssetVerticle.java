@@ -55,6 +55,7 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
  */
 @DeployableVerticle
 public class AssetVerticle extends AbstractGuiceVerticle {
+    private static final Logger LOG = LoggerFactory.getLogger(AssetVerticle.class);
     /**
      * The constant ADD.
      */
@@ -63,7 +64,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
      * The constant GET.
      */
     public static final String GET = "asset.get";
-    private static final Logger LOG = LoggerFactory.getLogger(AssetVerticle.class);
+
     private static final String COLLECTION_FIELD = "collection";
     private static final String FILENAME_FIELD = "filename";
     private static final String UID_FIELD = "uid";
@@ -104,10 +105,14 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     resp.putString(HttpHeaders.Names.CONTENT_LENGTH, Integer.toString(asset.length));
                     resp.putBinary("asset", asset);
                 } else {
-                    byte[] asset = FileUtils.readFileToByteArray(new File("web/user.png"));
-                    resp.putString(HttpHeaders.Names.CONTENT_LENGTH, Integer.toString(asset.length));
-                    resp.putBinary("asset", asset);
+                    resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
+                    resp.putString(Constants.MESSAGE, "Not found");
+                    message.reply(resp);
                 }
+                message.reply(resp);
+            } else {
+                resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
+                resp.putString(Constants.MESSAGE, "Not found");
                 message.reply(resp);
             }
         } catch (IOException e) {
@@ -118,7 +123,7 @@ public class AssetVerticle extends AbstractGuiceVerticle {
         } catch (final IllegalArgumentException e) {
             LOG.error(e.getMessage(), e);
             resp.putNumber(Constants.STATUS_CODE, ExceptionCodes.INVALID_PARAMETER.getCode());
-            resp.putString(Constants.MESSAGE, e.getMessage());
+            resp.putString(Constants.MESSAGE, "Not found");
             message.reply(resp);
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
