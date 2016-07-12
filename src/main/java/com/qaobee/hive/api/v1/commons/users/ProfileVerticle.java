@@ -77,17 +77,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
         vertx.eventBus()
                 .registerHandler(UPDATE, this::updateUser)
                 .registerHandler(GENERATE_PDF, this::generateProfilePDF)
-                .registerHandler(GENERATE_BILL_PDF, this::generateBillPDF)
-                .registerHandler(UPDATE_AVATAR, this::updateAvatar);
-    }
-
-    private void updateAvatar(Message<String> message) {
-        try {
-            final JsonObject req = new JsonObject(message.body());
-            message.reply(userDAO.updateAvatar(req.getString("uid"), req.getString("filename")).encode());
-        } catch (QaobeeException e) {
-            utils.sendError(message, e);
-        }
+                .registerHandler(GENERATE_BILL_PDF, this::generateBillPDF);
     }
 
     /**

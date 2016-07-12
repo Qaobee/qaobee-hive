@@ -67,7 +67,6 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * Country ID
      */
     public static final String PARAM_COUNTRY_ID = "countryId";
-    private static final String END_DATE_FIELD = "endDate";
     @Inject
     private SeasonDAO seasonDAO;
     @Inject
