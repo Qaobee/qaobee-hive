@@ -114,5 +114,6 @@ public class GuiceModule extends AbstractModule {
         bind(UserDAO.class).to(UserDAOImpl.class).in(Singleton.class);
         bind(ShippingDAO.class).to(ShippingDAOImpl.class).in(Singleton.class);
         bind(SignupDAO.class).to(SignupDAOImpl.class).in(Singleton.class);
+        bind(SandBoxDAO.class).to(SandBoxDAOImpl.class).in(Singleton.class);
     }
 }

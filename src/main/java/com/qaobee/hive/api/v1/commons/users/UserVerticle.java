@@ -19,8 +19,8 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.UserDAO;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
@@ -43,7 +43,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Base64;
@@ -52,7 +51,6 @@ import org.vertx.java.core.json.impl.Json;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -136,6 +134,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private UserDAO userDAO;
     @Inject
     private TemplatesDAO templatesDAO;
+    @Inject
+    private SandBoxDAO sandBoxDAO;
 
     @Override
     public void start() {
@@ -270,15 +270,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         try {
             JsonObject user = mongo.getById(req.getUser().get_id(), User.class);
             final JsonObject activity = ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray("listPlan").get(0)).getObject("activity");
-            req.getParams().put(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, Collections.singletonList(activity.getString("_id")));
-            whenEventBus.send(SB_SandBoxVerticle.GET_BY_OWNER, Json.encode(req)).then(objectMessage -> {
-                if (objectMessage.body() instanceof ReplyException) {
-                    utils.sendError(message, (ReplyException) objectMessage.body());
-                } else {
-                    message.reply((String) objectMessage.body());
-                }
-                return null;
-            });
+            message.reply(sandBoxDAO.getByOwner(activity.getString("_id"), req.getUser().get_id()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
