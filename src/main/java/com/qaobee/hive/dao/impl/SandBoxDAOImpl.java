@@ -1,6 +1,5 @@
 package com.qaobee.hive.dao.impl;
 
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -52,7 +51,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         } else {
             cb.add(PARAM_OWNER_ID, loggedUserId);
         }
-        JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
+        JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, COLLECTION);
         if (resultJson == null || resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + loggedUserId);
         }
@@ -64,7 +63,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         CriteriaBuilder cb = new CriteriaBuilder()
                 .add(PARAM_OWNER_ID, userId)
                 .add("structure." + PARAM_ACTIVITY_ID + "._id", activityId);
-        JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
+        JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, COLLECTION);
         if (resultJson == null || resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + userId
                     + " ,and activityId : " + activityId);
