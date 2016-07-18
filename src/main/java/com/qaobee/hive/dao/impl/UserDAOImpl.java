@@ -297,7 +297,7 @@ public class UserDAOImpl implements UserDAO {
         JsonObject meta = sandBoxDAO.getByOwner(activity.getString("_id"), userId);
         meta.putObject("season", seasonDAO.getCurrentSeason(activity.getString("_id"), meta.getObject("structure").getObject("country").getString("_id")));
         meta.putArray("teams", teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null));
+        meta.putObject("activity", activity);
         return meta;
-
     }
 }

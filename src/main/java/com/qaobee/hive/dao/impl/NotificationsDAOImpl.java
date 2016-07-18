@@ -82,7 +82,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
         }
         for (int i = 0; i < target.getArray(FIELD_MEMBERS).size(); i++) {
             if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(0)).getString("personId"))) {
-                res = res & addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(0)).getString("personId"), notification);
+                res = res && addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(0)).getString("personId"), notification);
             }
         }
         return res;

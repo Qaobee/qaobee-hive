@@ -203,12 +203,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private void getMeta(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            final JsonObject activity = ((JsonObject) userDAO.getUser(req.getUser().get_id())
-                    .getObject(ACCOUNT_FIELD)
-                    .getArray("listPlan").get(0))
-                    .getObject("activity");
-            userDAO.getMeta(req.getUser().get_id());
-            message.reply(sandBoxDAO.getByOwner(activity.getString("_id"), req.getUser().get_id()).encode());
+            message.reply(userDAO.getMeta(req.getUser().get_id()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
