@@ -45,7 +45,22 @@ public interface TemplatesDAO {
      */
     String generatePDF(JsonObject data, String template) throws QaobeeException;
 
+    /**
+     * Generate mail json object.
+     *
+     * @param body the body
+     * @return the json object
+     * @throws QaobeeException the qaobee exception
+     */
     JsonObject generateMail(JsonObject body) throws QaobeeException;
 
+    /**
+     * Generate mail json object.
+     *
+     * @param data     the data
+     * @param template the template
+     * @return the json object
+     * @throws QaobeeException the qaobee exception
+     */
     JsonObject generateMail(JsonObject data, String template) throws QaobeeException;
 }

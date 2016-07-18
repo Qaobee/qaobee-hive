@@ -115,6 +115,8 @@ public class Sharing {
     }
 
     /**
+     * Gets user.
+     *
      * @return the user
      */
     public User getUser() {
@@ -122,6 +124,8 @@ public class Sharing {
     }
 
     /**
+     * Sets user.
+     *
      * @param user the user to set
      */
     public void setUser(User user) {

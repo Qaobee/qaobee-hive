@@ -137,6 +137,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Gets category age.
+     *
      * @return the categoryAge
      */
     public CategoryAge getCategoryAge() {
@@ -225,6 +227,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Gets dat create.
+     *
      * @return the datCreate
      */
     public long getDatCreate() {
@@ -232,6 +236,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Sets dat create.
+     *
      * @param datCreate the datCreate to set
      */
     public void setDatCreate(long datCreate) {
@@ -239,6 +245,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Gets history list.
+     *
      * @return the historyList
      */
     public List<History> getHistoryList() {
@@ -246,6 +254,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Sets history list.
+     *
      * @param historyList the historyList to set
      */
     public void setHistoryList(List<History> historyList) {
@@ -253,6 +263,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Gets author.
+     *
      * @return the author
      */
     public User getAuthor() {
@@ -260,6 +272,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Sets author.
+     *
      * @param author the author to set
      */
     public void setAuthor(User author) {
@@ -267,6 +281,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Gets audit.
+     *
      * @return the audit
      */
     public Audit getAudit() {
@@ -274,6 +290,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Sets audit.
+     *
      * @param audit the audit to set
      */
     public void setAudit(Audit audit) {
@@ -281,6 +299,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Gets tags.
+     *
      * @return the tags
      */
     public List<Tag> getTags() {
@@ -288,6 +308,8 @@ public class TrainingAbstract {
     }
 
     /**
+     * Sets tags.
+     *
      * @param tags the tags to set
      */
     public void setTags(List<Tag> tags) {

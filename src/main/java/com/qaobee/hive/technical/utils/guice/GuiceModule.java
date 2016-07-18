@@ -59,11 +59,13 @@ public class GuiceModule extends AbstractModule {
     private JsonObject config;
     private Vertx vertx;
     private JsonObject env;
+
     /**
      * Instantiates a new Guice module.
      *
      * @param config the config
-     * @param env env vars
+     * @param vertx  the vertx
+     * @param env    env vars
      */
     GuiceModule(JsonObject config, Vertx vertx, Map<String, String> env) {
         this.config = config;
@@ -133,5 +135,6 @@ public class GuiceModule extends AbstractModule {
         bind(PersonDAO.class).to(PersonDAOImpl.class).in(Singleton.class);
         bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
         bind(TeamDAO.class).to(TeamDAOImpl.class).in(Singleton.class);
+        bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
     }
 }

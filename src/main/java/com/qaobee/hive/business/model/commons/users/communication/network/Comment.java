@@ -23,7 +23,6 @@ package com.qaobee.hive.business.model.commons.users.communication.network;
  *
  * @author cke
  */
-
 @Deprecated
 public class Comment {
 
@@ -148,6 +147,8 @@ public class Comment {
     }
 
     /**
+     * Gets author id.
+     *
      * @return the authorId
      */
     public String getAuthorId() {
@@ -155,6 +156,8 @@ public class Comment {
     }
 
     /**
+     * Sets author id.
+     *
      * @param authorId the authorId to set
      */
     public void setAuthorId(String authorId) {

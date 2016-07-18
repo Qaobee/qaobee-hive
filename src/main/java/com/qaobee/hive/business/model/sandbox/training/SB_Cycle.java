@@ -42,6 +42,8 @@ public class SB_Cycle extends TrainingAbstract { // NOSONAR
     private long endDate;
 
     /**
+     * Gets session list.
+     *
      * @return the sessionList
      */
     public List<SB_Session> getSessionList() {
@@ -49,6 +51,8 @@ public class SB_Cycle extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets session list.
+     *
      * @param sessionList the sessionList to set
      */
     public void setSessionList(List<SB_Session> sessionList) {
@@ -56,6 +60,8 @@ public class SB_Cycle extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Gets start date.
+     *
      * @return the startDate
      */
     public long getStartDate() {
@@ -63,6 +69,8 @@ public class SB_Cycle extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets start date.
+     *
      * @param startDate the startDate to set
      */
     public void setStartDate(long startDate) {
@@ -70,6 +78,8 @@ public class SB_Cycle extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Gets end date.
+     *
      * @return the endDate
      */
     public long getEndDate() {
@@ -77,6 +87,8 @@ public class SB_Cycle extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets end date.
+     *
      * @param endDate the endDate to set
      */
     public void setEndDate(long endDate) {

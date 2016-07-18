@@ -32,7 +32,13 @@ import org.vertx.java.platform.Verticle;
  */
 public class AbstractGuiceVerticle extends Verticle {
     private static final String MONKO_CONF_KEY = "mongo.persistor";
+    /**
+     * The When event bus.
+     */
     protected WhenEventBus whenEventBus;
+    /**
+     * The When container.
+     */
     protected DefaultWhenContainer whenContainer;
 
     /**

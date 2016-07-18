@@ -207,7 +207,7 @@ public class Account {
     /**
      * Returns the password in String format.
      *
-     * @return String: password
+     * @return String : password
      */
     public String getPasswd() {
         return passwd;

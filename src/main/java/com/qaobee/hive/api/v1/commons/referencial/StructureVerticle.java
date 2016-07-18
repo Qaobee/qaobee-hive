@@ -39,16 +39,8 @@ import javax.inject.Inject;
 /**
  * Module commons - referencial - Structure.
  *
- * @author Nada Vujanic-Maquin<br>
- *         <br>
- *         <strong>Description de la classe:</strong>
- *         <ul>
- *         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>
- *         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>
- *         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>
- *         </ul>
+ * @author Nada Vujanic-Maquin<br>         <br>         <strong>Description de la classe:</strong>         <ul>         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>         </ul>
  */
-
 @DeployableVerticle
 public class StructureVerticle extends AbstractGuiceVerticle {
     /**

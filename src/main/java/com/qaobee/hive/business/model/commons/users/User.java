@@ -326,17 +326,21 @@ public class User {
         this.birthdate = birthdate;
     }
 
-	/**
-	 * @return the sandboxDefault
-	 */
-	public String getSandboxDefault() {
+    /**
+     * Gets sandbox default.
+     *
+     * @return the sandboxDefault
+     */
+    public String getSandboxDefault() {
 		return sandboxDefault;
 	}
 
-	/**
-	 * @param sandboxDefault the sandboxDefault to set
-	 */
-	public void setSandboxDefault(String sandboxDefault) {
+    /**
+     * Sets sandbox default.
+     *
+     * @param sandboxDefault the sandboxDefault to set
+     */
+    public void setSandboxDefault(String sandboxDefault) {
 		this.sandboxDefault = sandboxDefault;
 	}
 

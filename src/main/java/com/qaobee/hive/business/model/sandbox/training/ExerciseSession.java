@@ -37,6 +37,8 @@ public class ExerciseSession extends TrainingAbstract {
     private SB_Exercise exercise;
 
     /**
+     * Gets exercise.
+     *
      * @return the exercise
      */
     public SB_Exercise getExercise() {
@@ -44,6 +46,8 @@ public class ExerciseSession extends TrainingAbstract {
     }
 
     /**
+     * Sets exercise.
+     *
      * @param exercise the exercise to set
      */
     public void setExercise(SB_Exercise exercise) {

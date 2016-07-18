@@ -1,3 +1,22 @@
+/*
+ *   __________________
+ *    Qaobee
+ *    __________________
+ *
+ *    Copyright (c) 2015.  Qaobee
+ *    All Rights Reserved.
+ *
+ *    NOTICE: All information contained here is, and remains
+ *    the property of Qaobee and its suppliers,
+ *    if any. The intellectual and technical concepts contained
+ *    here are proprietary to Qaobee and its suppliers and may
+ *    be covered by U.S. and Foreign Patents, patents in process,
+ *    and are protected by trade secret or copyright law.
+ *    Dissemination of this information or reproduction of this material
+ *    is strictly forbidden unless prior written permission is obtained
+ *    from Qaobee.
+ */
+
 /*************************************************************************
  * Qaobee
  * __________________
@@ -37,11 +56,29 @@ import javax.inject.Inject;
 @DeployableVerticle()
 public class PDFVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(PDFVerticle.class);
+    /**
+     * The constant GENERATE_PDF.
+     */
     public static final String GENERATE_PDF = "internal.pdf.generate";
+    /**
+     * The constant DATA.
+     */
     public static final String DATA = "data";
+    /**
+     * The constant TEMPLATE.
+     */
     public static final String TEMPLATE = "template";
+    /**
+     * The constant FILE_NAME.
+     */
     public static final String FILE_NAME = "filename";
+    /**
+     * The constant PDF.
+     */
     public static final String PDF = "pdf";
+    /**
+     * The constant CONTENT_TYPE.
+     */
     public static final String CONTENT_TYPE = "application/pdf";
     @Inject
     private Utils utils;

@@ -34,6 +34,8 @@ public class SB_Session extends TrainingAbstract { // NOSONAR
     private List<ExerciseSession> exerciseSessionList;
 
     /**
+     * Gets exercise session list.
+     *
      * @return the exerciseSessionList
      */
     public List<ExerciseSession> getExerciseSessionList() {
@@ -41,6 +43,8 @@ public class SB_Session extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets exercise session list.
+     *
      * @param exerciseSessionList the exerciseSessionList to set
      */
     public void setExerciseSessionList(List<ExerciseSession> exerciseSessionList) {

@@ -114,6 +114,8 @@ public class SB_SandBox { // NOSONAR
     }
 
     /**
+     * Gets structure.
+     *
      * @return the structure
      */
     public Structure getStructure() {
@@ -121,6 +123,8 @@ public class SB_SandBox { // NOSONAR
     }
 
     /**
+     * Sets structure.
+     *
      * @param structure the structure to set
      */
     public void setStructure(Structure structure) {
@@ -128,6 +132,8 @@ public class SB_SandBox { // NOSONAR
     }
 
     /**
+     * Gets members.
+     *
      * @return the members
      */
     public List<Member> getMembers() {
@@ -135,6 +141,8 @@ public class SB_SandBox { // NOSONAR
     }
 
     /**
+     * Sets members.
+     *
      * @param members the members to set
      */
     public void setMembers(List<Member> members) {
@@ -142,6 +150,8 @@ public class SB_SandBox { // NOSONAR
     }
 
     /**
+     * Gets effective default.
+     *
      * @return the effectiveDefault
      */
     public String getEffectiveDefault() {
@@ -149,6 +159,8 @@ public class SB_SandBox { // NOSONAR
     }
 
     /**
+     * Sets effective default.
+     *
      * @param effectiveDefault the effectiveDefault to set
      */
     public void setEffectiveDefault(String effectiveDefault) {

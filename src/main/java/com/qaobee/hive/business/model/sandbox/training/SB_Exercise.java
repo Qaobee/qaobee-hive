@@ -58,6 +58,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     private String criteriaSuccess;
 
     /**
+     * Gets file.
+     *
      * @return the file
      */
     public File getFile() {
@@ -65,6 +67,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets file.
+     *
      * @param file the file to set
      */
     public void setFile(File file) {
@@ -72,6 +76,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Gets objective.
+     *
      * @return the objective
      */
     public String getObjective() {
@@ -79,6 +85,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets objective.
+     *
      * @param objective the objective to set
      */
     public void setObjective(String objective) {
@@ -86,6 +94,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Gets setting up.
+     *
      * @return the settingUp
      */
     public String getSettingUp() {
@@ -93,6 +103,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets setting up.
+     *
      * @param settingUp the settingUp to set
      */
     public void setSettingUp(String settingUp) {
@@ -100,6 +112,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Gets execution variables.
+     *
      * @return the executionVariables
      */
     public String getExecutionVariables() {
@@ -107,6 +121,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets execution variables.
+     *
      * @param executionVariables the executionVariables to set
      */
     public void setExecutionVariables(String executionVariables) {
@@ -114,6 +130,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Gets instructions.
+     *
      * @return the instructions
      */
     public String getInstructions() {
@@ -121,6 +139,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets instructions.
+     *
      * @param instructions the instructions to set
      */
     public void setInstructions(String instructions) {
@@ -128,6 +148,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Gets criteria success.
+     *
      * @return the criteriaSuccess
      */
     public String getCriteriaSuccess() {
@@ -135,6 +157,8 @@ public class SB_Exercise extends TrainingAbstract { // NOSONAR
     }
 
     /**
+     * Sets criteria success.
+     *
      * @param criteriaSuccess the criteriaSuccess to set
      */
     public void setCriteriaSuccess(String criteriaSuccess) {

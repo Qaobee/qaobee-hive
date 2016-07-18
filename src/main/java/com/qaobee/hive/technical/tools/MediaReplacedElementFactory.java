@@ -57,7 +57,7 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
      * Instantiates a new media replaced element factory.
      *
      * @param superFactory the super factory
-     * @param dir tmp dir
+     * @param dir          tmp dir
      */
     public MediaReplacedElementFactory(final ReplacedElementFactory superFactory, File dir) {
         this.superFactory = superFactory;

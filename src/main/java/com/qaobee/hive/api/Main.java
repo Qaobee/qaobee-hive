@@ -66,6 +66,9 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
  * @author Xavier.Marin
  */
 public class Main extends AbstractGuiceVerticle {
+    /**
+     * The constant FILE_SERVE.
+     */
     public static final String FILE_SERVE = "fileserve";
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
     private static final String COLLECTION = "collection";

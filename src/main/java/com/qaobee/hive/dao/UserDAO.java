@@ -130,6 +130,13 @@ public interface UserDAO {
      */
     JsonObject getUserInfo(String id) throws QaobeeException;
 
+    /**
+     * Gets meta.
+     *
+     * @param userId the user id
+     * @return the meta
+     * @throws QaobeeException the qaobee exception
+     */
     JsonObject getMeta(String userId) throws QaobeeException;
 
 }

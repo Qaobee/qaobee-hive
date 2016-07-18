@@ -42,6 +42,7 @@ public class MongoDBImpl implements MongoDB {
     private JsonObject config;
     private WriteConcern writeConcern;
     private static final String NOT_FOUND_MESS = "%s not found in %s";
+
     /**
      * Instantiates a new Mongo dB impl.
      *
