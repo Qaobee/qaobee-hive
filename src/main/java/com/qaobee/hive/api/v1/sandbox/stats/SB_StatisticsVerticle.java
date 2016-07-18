@@ -24,7 +24,6 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -103,12 +102,9 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_StatisticsVerticle.class);
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
-    private static final String VALUE_FIELD = "value";
     private static final String TIMER_FIELD = "timer";
     @Inject
     private Utils utils;
-    @Inject
-    private MongoDB mongo;
     @Inject
     private StatisticsDAO statisticsDAO;
 
