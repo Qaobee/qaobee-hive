@@ -14,6 +14,7 @@ import org.vertx.java.core.file.impl.PathAdjuster;
 import org.vertx.java.core.impl.VertxInternal;
 import org.vertx.java.core.json.JsonObject;
 import org.xhtmlrenderer.pdf.ITextRenderer;
+import org.xhtmlrenderer.util.XRRuntimeException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -77,7 +78,7 @@ public class PdfDAOImpl implements PdfDAO {
             final JsonObject res = new JsonObject();
             res.putString(PDF, temp.getAbsolutePath());
             return res;
-        } catch (DocumentException | IOException e) {
+        } catch (XRRuntimeException | DocumentException | IOException e) {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e);
         }

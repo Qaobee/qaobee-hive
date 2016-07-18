@@ -23,6 +23,7 @@ import com.qaobee.hive.api.v1.commons.users.ProfileVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
 import org.junit.Test;
@@ -140,6 +141,24 @@ public class ProfileTest extends VertxJunitSupport {
                                   .then().assertThat().statusCode(200)
                                   .extract().asByteArray();
         Assert.assertTrue(byteArray.length > 0);
+    }
+
+    /**
+     * Generate profile pdf with wrong datas.
+     */
+    @Test
+    public void generateProfilePDFWithWrongDatas() {
+        User u = generateLoggedUser();
+        u.setName("<&#\"\\-+}]à@");
+        try {
+            mongo.save(u);
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        given().header(TOKEN, u.getAccount().getToken())
+                .get(getURL(ProfileVerticle.GENERATE_PDF))
+                .then().assertThat().statusCode(ExceptionCodes.INTERNAL_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.INTERNAL_ERROR.toString()));
     }
 
     /**
