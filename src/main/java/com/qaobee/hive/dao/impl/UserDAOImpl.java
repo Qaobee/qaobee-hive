@@ -49,6 +49,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String ACCOUNT_FIELD = "account";
     private static final String AVATAR_FIELD = "avatar";
     private static final String ADDRESS_FIELD = "address";
+    private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     private static final Pattern VALID_NAME_REGEX = Pattern.compile("^([a-z'àâéèêôùûç \\-]+)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9\\.\\-]+)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -245,5 +246,29 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public JsonObject getUser(String id) throws QaobeeException {
         return mongo.getById(id, COLLECTION);
+    }
+
+    @Override
+    public JsonObject getUserByLogin(String login) throws QaobeeException {
+        // Creation of request
+        CriteriaBuilder criterias = new CriteriaBuilder();
+        criterias.add("account.login", login.toLowerCase());
+        JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, COLLECTION);
+        if (jsonArray == null || jsonArray.size() == 0) {
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Login inconnu");
+        }
+        if (jsonArray.size() > 1) {
+            throw new QaobeeException(ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné");
+        }
+        return jsonArray.get(0);
+    }
+
+    @Override
+    public JsonObject getUserInfo(String id) throws QaobeeException {
+        JsonObject u = getUser(id);
+        u.removeField("salt");
+        u.removeField(PASSWD_FIELD);
+        u.removeField("password");
+        return u;
     }
 }

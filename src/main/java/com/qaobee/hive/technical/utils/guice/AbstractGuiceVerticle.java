@@ -46,7 +46,7 @@ public class AbstractGuiceVerticle extends Verticle {
             container.config().getObject(MONKO_CONF_KEY).putString("password", container.env().get("OPENSHIFT_MONGODB_DB_PASSWORD"));
             container.config().getObject(MONKO_CONF_KEY).putString("username", container.env().get("OPENSHIFT_MONGODB_DB_USERNAME"));
         }
-        Injector injector = Guice.createInjector(new GuiceModule(container.config(), vertx));
+        Injector injector = Guice.createInjector(new GuiceModule(container.config(), vertx, container.env()));
         injector.injectMembers(this);
         whenEventBus = new DefaultWhenEventBus(vertx, container);
         whenContainer = new DefaultWhenContainer(container);

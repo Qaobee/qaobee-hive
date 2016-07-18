@@ -1,0 +1,53 @@
+package com.qaobee.hive.dao.impl;
+
+import com.qaobee.hive.dao.EffectiveDAO;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.MongoDB;
+import org.vertx.java.core.json.JsonArray;
+import org.vertx.java.core.json.JsonObject;
+
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * The type Effective dao.
+ */
+public class EffectiveDAOImpl implements EffectiveDAO {
+    private static final String COLLECTION = "SB_Effective";
+    private static final String PARAM_SANDBOX_ID = "sandboxId";
+    private static final String PARAM_CATEGORY_AGE_CODE = "categoryAge.code";
+    @Inject
+    private MongoDB mongo;
+
+    @Override
+    public JsonObject add(JsonObject effective) throws QaobeeException {
+        return effective.putString("_id", mongo.save(effective, COLLECTION));
+    }
+
+    @Override
+    public JsonObject update(JsonObject effective) {
+        return effective.putString("_id", mongo.update(effective, COLLECTION));
+    }
+
+    @Override
+    public JsonArray getEffectiveList(String sandboxId, String categoryAgeCode) throws QaobeeException {
+        Map<String, Object> criterias = new HashMap<>();
+        criterias.put(PARAM_SANDBOX_ID, sandboxId);
+        if (categoryAgeCode != null) {
+            criterias.put(PARAM_CATEGORY_AGE_CODE, categoryAgeCode);
+        }
+        JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, COLLECTION);
+        if (resultJson == null || resultJson.size() == 0) {
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR,
+                    "No Effective found " + "for ( sandBoxId : " + sandboxId + " " + (categoryAgeCode != null ? "and for category : " + categoryAgeCode + ")" : ")"));
+        }
+        return resultJson;
+    }
+
+    @Override
+    public JsonObject getEffective(String id) throws QaobeeException {
+        return mongo.getById(id, COLLECTION);
+    }
+}

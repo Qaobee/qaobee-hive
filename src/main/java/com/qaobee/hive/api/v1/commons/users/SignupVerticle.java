@@ -108,10 +108,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_CATEGORY_AGE = "categoryAge";
     /**
-     * Parameter Mobile
-     */
-    public static final String PARAM_MOBILE = "mobile";
-    /**
      * Parameter Captcha
      */
     public static final String PARAM_CAPTCHA = "captcha";
@@ -265,7 +261,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     .putString("to", res.getObject("person").getObject("contact").getString("email"))
                     .putString("subject", Messages.getString("mail.account.validation.subject"))
                     .putString("content_type", "text/html")
-                    .putString("body", templatesDAO.generatePDFHandler(tplReq).getString("result"));
+                    .putString("body", templatesDAO.generateMail(tplReq).getString("result"));
             vertx.eventBus().publish("mailer.mod", emailReq);
             message.reply(res.encode());
         } catch (final QaobeeException e) {

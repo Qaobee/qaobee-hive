@@ -27,11 +27,15 @@ import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.PasswordEncryptionService;
 import com.qaobee.hive.technical.tools.PasswordEncryptionServiceImpl;
-import com.qaobee.hive.technical.utils.*;
+import com.qaobee.hive.technical.utils.HabilitUtils;
+import com.qaobee.hive.technical.utils.MailUtils;
+import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
 import com.qaobee.hive.technical.utils.guice.services.impl.FilesImpl;
-import com.qaobee.hive.technical.utils.impl.*;
+import com.qaobee.hive.technical.utils.impl.HabilitUtilsImpl;
+import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
+import com.qaobee.hive.technical.utils.impl.UtilsImpl;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
@@ -45,6 +49,7 @@ import org.vertx.java.core.json.JsonObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * The type Guice module.
@@ -53,16 +58,18 @@ public class GuiceModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(GuiceModule.class);
     private JsonObject config;
     private Vertx vertx;
-    private Configuration cfg;
-
+    private JsonObject env;
     /**
      * Instantiates a new Guice module.
      *
      * @param config the config
+     * @param env env vars
      */
-    GuiceModule(JsonObject config, Vertx vertx) {
+    GuiceModule(JsonObject config, Vertx vertx, Map<String, String> env) {
         this.config = config;
         this.vertx = vertx;
+        this.env = new JsonObject();
+        env.keySet().forEach(k -> this.env.putString(k, env.get(k)));
     }
 
     /**
@@ -75,6 +82,8 @@ public class GuiceModule extends AbstractModule {
         bind(JsonObject.class).annotatedWith(Names.named("payplug")).toInstance(config.getObject("payplug"));
         bind(JsonObject.class).annotatedWith(Names.named("asana")).toInstance(config.getObject("asana"));
         bind(JsonObject.class).annotatedWith(Names.named("runtime")).toInstance(config.getObject("runtime"));
+        bind(JsonObject.class).annotatedWith(Names.named("pdf")).toInstance(config.getObject("pdf"));
+        bind(JsonObject.class).annotatedWith(Names.named("env")).toInstance(env);
 
         bind(Vertx.class).toInstance(vertx);
         // TECHNICAL MODULES
@@ -85,19 +94,20 @@ public class GuiceModule extends AbstractModule {
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
         bind(Files.class).to(FilesImpl.class).in(Singleton.class);
         // BUSINESS MODULES
-        cfg = new Configuration(new Version("2.3.23"));
+        Configuration cfgMails = new Configuration(new Version("2.3.23"));
         // Where do we load the templates from:
         try {
-            cfg.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, "mailTemplates")));
+            cfgMails.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, "mailTemplates/")));
+            cfgMails.setIncompatibleImprovements(new Version(2, 3, 20));
+            cfgMails.setDefaultEncoding("UTF-8");
+            cfgMails.setLocale(Locale.US);
+            cfgMails.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+            Configuration cfgPDF = new Configuration(new Version("2.3.23"));
+            cfgPDF.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, "pdfTemplates/")));
+            bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
         } catch (final IOException e) {
             LOG.error(e.getMessage(), e);
         }
-        // Some other recommended settings:
-        cfg.setIncompatibleImprovements(new Version(2, 3, 20));
-        cfg.setDefaultEncoding("UTF-8");
-        cfg.setLocale(Locale.US);
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfg));
 
         // DAO
         bind(ActivityCfgDAO.class).to(ActivityCfgDAOImpl.class).in(Singleton.class);
@@ -115,5 +125,12 @@ public class GuiceModule extends AbstractModule {
         bind(ShippingDAO.class).to(ShippingDAOImpl.class).in(Singleton.class);
         bind(SignupDAO.class).to(SignupDAOImpl.class).in(Singleton.class);
         bind(SandBoxDAO.class).to(SandBoxDAOImpl.class).in(Singleton.class);
+        bind(SecurityDAO.class).to(SecurityDAOImpl.class).in(Singleton.class);
+        bind(AssetDAO.class).to(AssetDAOImpl.class).in(Singleton.class);
+        bind(FeedbackDAO.class).to(FeedbackDAOImpl.class).in(Singleton.class);
+        bind(FeedbackDAO.class).to(FeedbackDAOImpl.class).in(Singleton.class);
+        bind(EffectiveDAO.class).to(EffectiveDAOImpl.class).in(Singleton.class);
+        bind(PersonDAO.class).to(PersonDAOImpl.class).in(Singleton.class);
+        bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
     }
 }

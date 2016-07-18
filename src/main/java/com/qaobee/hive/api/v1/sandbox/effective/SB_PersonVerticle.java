@@ -19,35 +19,23 @@
 
 package com.qaobee.hive.api.v1.sandbox.effective;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
-import com.qaobee.hive.business.model.sandbox.effective.SB_Person;
+import com.qaobee.hive.dao.PersonDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
 
 /**
  * The type Person verticle.
@@ -95,38 +83,35 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     private MongoDB mongo;
     @Inject
     private Utils utils;
+    @Inject
+    private PersonDAO personDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(ADD, this::addPersonHandler)
-                .registerHandler(GET, this::getPersonHandler)
-                .registerHandler(UPDATE, this::updatePersonHandler)
-                .registerHandler(GET_LIST, this::getPersonListHandler)
-                .registerHandler(GET_LIST_SANDBOX, this::getPersonListBySandboxHandler);
+                .registerHandler(ADD, this::addPerson)
+                .registerHandler(GET, this::getPerson)
+                .registerHandler(UPDATE, this::updatePerson)
+                .registerHandler(GET_LIST, this::getPersonList)
+                .registerHandler(GET_LIST_SANDBOX, this::getPersonListBySandbox);
     }
 
     /**
      * @apiDescription Return list of person as member of group
      * @api {post} /api/1/sandbox/effective/person/list Get list of persons
      * @apiVersion 0.1.0
-     * @apiName getListPerson
+     * @apiName getPersonListBySandbox
      * @apiGroup Person API
+     * @apiHeader {String} token
      * @apiSuccess {Array} list of persons
      */
     @Rule(address = GET_LIST_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST)
-    private void getPersonListBySandboxHandler(Message<String> message) {
+    private void getPersonListBySandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            CriteriaBuilder criteria = new CriteriaBuilder()
-                    .add(PARAM_SANDBOX_ID, req.getParams().get(PARAM_SANDBOX_ID).get(0));
-            JsonArray resultJson = mongo.findByCriterias(criteria.get(), null, null, -1, -1, SB_Person.class);
-            if (resultJson == null || resultJson.size() == 0) {
-                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No person found for sandboxId (" + req.getParams().get(PARAM_SANDBOX_ID).get(0) + ")");
-            }
-            message.reply(resultJson.encode());
+            message.reply(personDAO.getPersonListBySandbox(req.getParams().get(PARAM_SANDBOX_ID).get(0)).encode());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -138,29 +123,17 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiDescription Return list of person as member of group
      * @api {post} /api/1/sandbox/effective/person/list Get list of persons
      * @apiVersion 0.1.0
-     * @apiName getListPerson
+     * @apiName getPersonList
      * @apiGroup Person API
+     * @apiHeader {String} token
      * @apiSuccess {Array} list of persons
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true, mandatoryParams = {PARAM_LIST_ID, PARAM_LIST_FIELD}, scope = Rule.Param.BODY)
-    private void getPersonListHandler(Message<String> message) {
+    private void getPersonList(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
-            JsonArray listId = params.getArray(PARAM_LIST_ID);
-            JsonArray listfield = params.getArray(PARAM_LIST_FIELD);
-            BasicDBObject dbObjectParent = new BasicDBObject();
-            BasicDBObject dbObjectChild = new BasicDBObject("$in", listId.toArray());
-            dbObjectParent.put("_id", dbObjectChild);
-            DBObject match = new BasicDBObject("$match", dbObjectParent);
-            dbObjectParent = new BasicDBObject();
-            for (Object field : listfield) {
-                dbObjectParent.put((String) field, "$" + field);
-            }
-            DBObject project = new BasicDBObject("$project", dbObjectParent);
-            List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-            final JsonArray resultJSon = mongo.aggregate(null, pipelineAggregation, SB_Person.class);
-            message.reply(resultJSon.encode());
+            message.reply(personDAO.getPersonList(params.getArray(PARAM_LIST_ID), params.getArray(PARAM_LIST_FIELD)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e.getCode(), e.getMessage());
@@ -173,50 +146,35 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiVersion 0.1.0
      * @apiName updatePerson
      * @apiGroup Person API
+     * @apiHeader {String} token
      * @apiParam {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY)
-    private void updatePersonHandler(Message<String> message) {
+    private void updatePerson(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        final JsonObject personJson = new JsonObject(req.getBody());
-        final String id = mongo.update(personJson, SB_Person.class);
-        personJson.putString("_id", id);
         try {
-            String sandBoxId = mongo.getById(personJson.getString("sandboxId"), SB_SandBox.class).getString("sandboxId");
-            JsonObject notification = new JsonObject();
-            notification.putString("id", sandBoxId);
-            notification.putString("target", SB_SandBox.class.getSimpleName());
-            notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
-            notification.putObject("notification", new JsonObject()
-                    .putString("content", Messages.getString("notification.person.update.content", req.getLocale(),
-                            personJson.getString("firstname") + " " + personJson.getString("name"),
-                            "/#/private/viewPlayer/" + personJson.getString("_id")))
-                    .putString("title", Messages.getString("notification.person.update.title", req.getLocale()))
-                    .putString("senderId", req.getUser().get_id())
-            );
-            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+        message.reply(personDAO.updatePerson(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
         }
-        message.reply(personJson.encode());
     }
 
     /**
      * @apiDescription Retrieve Person by this Id
      * @api {get} /api/1/sandbox/effective/person/get Get Person by Id
      * @apiVersion 0.1.0
-     * @apiName getPersonById
+     * @apiName getPerson
      * @apiGroup Person API
      * @apiParam {String} id
+     * @apiHeader {String} token
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.REQUEST)
-    private void getPersonHandler(Message<String> message) {
+    private void getPerson(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            utils.testMandatoryParams(req.getParams(), PARAM_PERSON_ID);
-            message.reply(mongo.getById(req.getParams().get(PARAM_PERSON_ID).get(0), SB_Person.class).encode());
+            message.reply(personDAO.getPerson(req.getParams().get(PARAM_PERSON_ID).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -228,35 +186,16 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @api {put} /api/1/sandbox/effective/person/add Add Person
      * @apiVersion 0.1.0
      * @apiName addPerson
+     * @apiHeader {String} token
      * @apiGroup Person API
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
     @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {"person"}, scope = Rule.Param.BODY)
-    private void addPersonHandler(Message<String> message) {
+    private void addPerson(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject dataContainer = new JsonObject(req.getBody());
-            final JsonObject personJson = new JsonObject(dataContainer.getElement("person").toString());
-            final String id = mongo.save(personJson, SB_Person.class);
-            personJson.putString("_id", id);
-            try {
-                String sandBoxId = mongo.getById(personJson.getString("sandboxId"), SB_SandBox.class).getString("sandboxId");
-                JsonObject notification = new JsonObject();
-                notification.putString("id", sandBoxId);
-                notification.putString("target", SB_SandBox.class.getSimpleName());
-                notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
-                notification.putObject("notification", new JsonObject()
-                        .putString("content", Messages.getString("notification.person.add.content", req.getLocale(),
-                                personJson.getString("firstname") + " " + personJson.getString("name"),
-                                "/#/private/viewPlayer/" + personJson.getString("_id")))
-                        .putString("title", Messages.getString("notification.person.add.title", req.getLocale()))
-                        .putString("senderId", req.getUser().get_id())
-                );
-                vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-            } catch (QaobeeException e) {
-                LOG.error(e.getMessage(), e);
-            }
-            message.reply(personJson.encode());
+            final JsonObject body = new JsonObject(req.getBody());
+            message.reply(personDAO.addPerson(body.getObject("person"), req.getUser().get_id(), req.getLocale()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

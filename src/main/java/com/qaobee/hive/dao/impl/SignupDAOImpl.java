@@ -41,7 +41,6 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.utils.Utils;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.slf4j.Logger;
@@ -52,10 +51,7 @@ import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The type Signup dao.
@@ -72,8 +68,6 @@ public class SignupDAOImpl implements SignupDAO {
     private MongoDB mongo;
     @Inject
     private CountryDAO countryDAO;
-    @Inject
-    private Utils utils;
     @Inject
     private UserDAO userDAO;
     @Inject
@@ -267,7 +261,7 @@ public class SignupDAOImpl implements SignupDAO {
             sbPerson.setName("Joueur");
             sbPerson.setBirthcity(structureObj.getAddress().getCity());
             sbPerson.setBirthcountry(structureObj.getCountry());
-            sbPerson.setBirthdate(utils.randomDate(categoryAgeObj.getAgeMin(), categoryAgeObj.getAgeMax() > 65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
+            sbPerson.setBirthdate(randomDate(categoryAgeObj.getAgeMin(), categoryAgeObj.getAgeMax() > 65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
             sbPerson.setNationality(structureObj.getCountry());
             sbPerson.setGender(categoryAgeObj.getGenre());
             sbPerson.setSandboxId(sbSandBox.get_id());
@@ -294,5 +288,18 @@ public class SignupDAOImpl implements SignupDAO {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", locale));
         }
+    }
+
+    private long randomDate(int yearOldMin, int yearOldMax) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        if (yearOldMin >= yearOldMax) {
+            calendar.add(GregorianCalendar.YEAR, -1 * yearOldMin);
+        } else {
+            calendar.add(GregorianCalendar.YEAR, -1 * ((int) Math.round(Math.random() * (yearOldMax - yearOldMin)) + yearOldMin));
+        }
+        calendar.set(GregorianCalendar.DAY_OF_YEAR, (int) Math.round(Math.random() * 365));
+
+        return calendar.getTimeInMillis();
     }
 }

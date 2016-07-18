@@ -108,6 +108,25 @@ public interface UserDAO {
      *
      * @param id the id
      * @return the user
+     * @throws QaobeeException the qaobee exception
      */
     JsonObject getUser(String id) throws QaobeeException;
+
+    /**
+     * Gets user by login.
+     *
+     * @param login the login
+     * @return the user by login
+     * @throws QaobeeException the qaobee exception
+     */
+    JsonObject getUserByLogin(String login) throws QaobeeException;
+
+    /**
+     * Gets user info.
+     *
+     * @param id the id
+     * @return the user info
+     * @throws QaobeeException the qaobee exception
+     */
+    JsonObject getUserInfo(String id) throws QaobeeException;
 }

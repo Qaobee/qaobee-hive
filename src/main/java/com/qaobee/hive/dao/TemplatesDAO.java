@@ -33,5 +33,19 @@ public interface TemplatesDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject generatePDFHandler(JsonObject body) throws QaobeeException;
+    String generatePDF(JsonObject body) throws QaobeeException;
+
+    /**
+     * Generate pdf json object.
+     *
+     * @param data     the data
+     * @param template the template
+     * @return the json object
+     * @throws QaobeeException the qaobee exception
+     */
+    String generatePDF(JsonObject data, String template) throws QaobeeException;
+
+    JsonObject generateMail(JsonObject body) throws QaobeeException;
+
+    JsonObject generateMail(JsonObject data, String template) throws QaobeeException;
 }

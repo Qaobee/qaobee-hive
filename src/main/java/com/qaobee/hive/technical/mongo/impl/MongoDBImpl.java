@@ -183,17 +183,7 @@ public class MongoDBImpl implements MongoDB {
 
     @Override
     public String save(final JsonObject document, final Class<?> collection) throws QaobeeException {
-        final DBCollection coll = db.getCollection(collection.getSimpleName());
-        String genID;
-        if (document.getField("_id") == null) {
-            genID = UUID.randomUUID().toString();
-            document.putString("_id", genID);
-        } else {
-            genID = document.getField("_id");
-        }
-        final DBObject obj = new BasicDBObject(document.toMap());
-        final WriteResult res = coll.save(obj, getWriteConcern());
-        return getUpsertedId(res, genID, document);
+        return save(document, collection.getSimpleName());
     }
 
     private static String getUpsertedId(WriteResult res, String genID, JsonObject document) throws QaobeeException {

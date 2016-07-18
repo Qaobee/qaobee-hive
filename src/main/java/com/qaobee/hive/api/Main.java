@@ -21,9 +21,11 @@ package com.qaobee.hive.api;
 import com.englishtown.promises.Promise;
 import com.englishtown.promises.When;
 import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
+import com.qaobee.hive.dao.AssetDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -72,6 +74,8 @@ public class Main extends AbstractGuiceVerticle {
     private static Map<String, Rule> rules = new HashMap<>();
     @Inject
     private Utils utils;
+    @Inject
+    private AssetDAO assetDAO;
     @Inject
     @Named("runtime")
     private JsonObject runtime;
@@ -381,16 +385,23 @@ public class Main extends AbstractGuiceVerticle {
     private Handler<HttpServerFileUpload> getUploadHandler(final JsonObject request, final File dir, final HttpServerRequest req) {
         return upload -> {
             final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
-            request.putString("filename", filename).putString("contentType", upload.contentType());
+            request.putString("filename", filename).putString(CONTENT_TYPE, upload.contentType());
             if (vertx.fileSystem().existsSync(filename)) {
                 vertx.fileSystem().deleteSync(filename);
             }
             upload.streamToFileSystem(filename).endHandler(event -> {
                 upload.pause();
-                vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<JsonObject>>) message -> {
-                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON)
-                            .setStatusCode(message.body().getInteger("statusCode"))
-                            .end(message.body().getString(MESSAGE));
+                vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<Object>>) message -> {
+                    JsonObject resp =new JsonObject();
+                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+                    if (message.body() instanceof ReplyException) {
+                        resp = new JsonObject(((ReplyException) message.body()).getMessage());
+                        req.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
+                                .end(resp.getString(MESSAGE, ""));
+                    } else if (message.body() instanceof JsonObject) {
+                        resp = (JsonObject) message.body();
+                        req.response().setStatusCode(200).end(resp.encode());
+                    }
                     stopTimer("main.avatar");
                 });
             });

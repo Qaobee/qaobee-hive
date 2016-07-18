@@ -24,7 +24,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
     private MongoDB mongo;
 
     @Override
-    public JsonObject update(String id, String sandboxCfgId) throws QaobeeException {
+    public JsonObject updateSandboxCfgId(String id, String sandboxCfgId) throws QaobeeException {
         final JsonObject sandbox = mongo.getById(id, COLLECTION);
         if (sandbox == null) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for id :" + id);
@@ -69,5 +69,10 @@ public class SandBoxDAOImpl implements SandBoxDAO {
                     + " ,and activityId : " + activityId);
         }
         return resultJson.get(0);
+    }
+
+    @Override
+    public JsonObject update(JsonObject sandbox) {
+        return sandbox.putString("_id", mongo.update(sandbox, COLLECTION));
     }
 }

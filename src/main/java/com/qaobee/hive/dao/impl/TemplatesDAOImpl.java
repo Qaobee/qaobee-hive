@@ -49,35 +49,64 @@ public class TemplatesDAOImpl implements TemplatesDAO {
      * The constant TEMPLATE.
      */
     public static final String TEMPLATE = "template";
-    private Configuration cfg;
+    private Configuration cfgMail;
+    private Configuration cfgPDF;
 
     /**
      * Instantiates a new Templates dao.
      *
-     * @param cfg the cfg
+     * @param cfgMail the mail cfg
+     * @param cfgPDF  the pdf config
      */
-    public TemplatesDAOImpl(Configuration cfg) {
-        this.cfg = cfg;
+    public TemplatesDAOImpl(Configuration cfgMail, Configuration cfgPDF) {
+        this.cfgMail = cfgMail;
+        this.cfgPDF = cfgPDF;
     }
 
     @Override
-    public JsonObject generatePDFHandler(JsonObject body) throws QaobeeException {
-        final Map<String, Object> input = new HashMap<>();
-        final JsonObject res = new JsonObject();
+    public String generatePDF(JsonObject body) throws QaobeeException {
+        if (!body.containsField(DATA) || !body.containsField(TEMPLATE)) {
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "wrong json format");
+        }
+        return generatePDF(body.getObject(DATA), body.getString(TEMPLATE));
+    }
+
+    @Override
+    public String generatePDF(JsonObject data, String template) throws QaobeeException {
         try {
-            if (!body.containsField(DATA) || !body.containsField(TEMPLATE)) {
-                throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "wrong json format");
-            }
-            input.putAll(body.getObject(DATA).toMap());
-            final Writer writer = new StringWriter();
-            final Template template = cfg.getTemplate(body.getString(TEMPLATE));
-            template.process(input, writer);
-            final String resTpl = writer.toString();
-            res.putString("result", resTpl);
+            StringWriter out = new StringWriter();
+            Template tpls = cfgPDF.getTemplate(template);
+            tpls.process(data.toMap(), out);
+            return out.getBuffer().toString();
         } catch (IOException | TemplateException e) {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e);
         }
-        return res;
+    }
+
+    @Override
+    public JsonObject generateMail(JsonObject body) throws QaobeeException {
+        if (!body.containsField(DATA) || !body.containsField(TEMPLATE)) {
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "wrong json format");
+        }
+        return generateMail(body.getObject(DATA), body.getString(TEMPLATE));
+    }
+
+    @Override
+    public JsonObject generateMail(JsonObject data, String template) throws QaobeeException {
+        try {
+            final JsonObject res = new JsonObject();
+            final Map<String, Object> input = new HashMap<>();
+            input.putAll(data.toMap());
+            final Writer writer = new StringWriter();
+            final Template tmpl = cfgMail.getTemplate(template);
+            tmpl.process(input, writer);
+            final String resTpl = writer.toString();
+            res.putString("result", resTpl);
+            return res;
+        } catch (IOException | TemplateException e) {
+            LOG.error(e.getMessage(), e);
+            throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e);
+        }
     }
 }

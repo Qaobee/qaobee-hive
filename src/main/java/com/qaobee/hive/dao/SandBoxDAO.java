@@ -18,7 +18,7 @@ public interface SandBoxDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject update(String id, String sandboxCfgId) throws QaobeeException;
+    JsonObject updateSandboxCfgId(String id, String sandboxCfgId) throws QaobeeException;
 
     /**
      * Add json object.
@@ -49,4 +49,12 @@ public interface SandBoxDAO {
      * @throws QaobeeException the qaobee exception
      */
     JsonObject getByOwner(String activityId, String userId) throws QaobeeException;
+
+    /**
+     * Update json object.
+     *
+     * @param sandbox the sandbox
+     * @return the json object
+     */
+    JsonObject update(JsonObject sandbox);
 }

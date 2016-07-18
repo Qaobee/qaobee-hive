@@ -23,10 +23,36 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
+/**
+ * The interface Season dao.
+ */
 public interface SeasonDAO {
+    /**
+     * Gets current season.
+     *
+     * @param activityId the activity id
+     * @param countryId  the country id
+     * @return the current season
+     * @throws QaobeeException the qaobee exception
+     */
     JsonObject getCurrentSeason(String activityId, String countryId) throws QaobeeException;
 
+    /**
+     * Gets list by activity.
+     *
+     * @param activityId the activity id
+     * @param countryId  the country id
+     * @return the list by activity
+     * @throws QaobeeException the qaobee exception
+     */
     JsonArray getListByActivity(String activityId, String countryId) throws QaobeeException;
 
+    /**
+     * Gets season.
+     *
+     * @param id the id
+     * @return the season
+     * @throws QaobeeException the qaobee exception
+     */
     JsonObject getSeason(String id) throws QaobeeException;
 }

@@ -73,7 +73,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * The constant PARAM_ACTIVITY_ID.
      */
     public static final String PARAM_ACTIVITY_ID = "activity";
-    
+
     /**
      * The constant PARAM_USER.
      */
@@ -102,7 +102,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     }
 
     /**
-     *
      * @apiDescription Update sandbox sandboxCfg id
      * @api {post} /api/1/sandbox/config/sandbox/update Update sandbox sandboxCfg id
      * @apiVersion 0.1.0
@@ -112,15 +111,14 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {String} _id sandbox id
      * @apiParam {String} sandboxCfgId sandboxCfg id
      * @apiSuccess {Object} sandbox
-     *
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_SB_CFG_ID},
-            scope = Rule.Param.BODY)
+          scope = Rule.Param.BODY)
     private void update(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject body = new JsonObject(req.getBody());
-            message.reply( sandBoxDAO.update(body.getString(PARAM_ID), body.getString(PARAM_SB_CFG_ID)).encode());
+            message.reply(sandBoxDAO.updateSandboxCfgId(body.getString(PARAM_ID), body.getString(PARAM_SB_CFG_ID)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -128,7 +126,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     }
 
     /**
-     *
      * @apiDescription Add sandbox
      * @api {put} /api/1/sandbox/config/sandbox/add Update sandbox sandboxCfg id
      * @apiVersion 0.1.0
@@ -138,10 +135,9 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {String} uid User id
      * @apiParam {String} activity activity id
      * @apiSuccess {Object} sandbox
-     *
      */
     @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_USER_ID, PARAM_ACTIVITY_ID},
-            scope = Rule.Param.BODY)
+          scope = Rule.Param.BODY)
     private void add(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -183,7 +179,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {sandBox}   sandBox    The sandBox updated.
      */
     @Rule(address = GET_BY_OWNER, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void getByOwner(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

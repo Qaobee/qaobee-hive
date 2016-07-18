@@ -348,13 +348,12 @@ public class ShippingDAOImpl implements ShippingDAO {
                         body.getObject(METADATA_FIELD).getString(LOCALE_FIELD),
                         u.getAccount().getListPlan().get(planId),
                         body.getObject("failure").getString("code")));
-        final String tplRes = templatesDAO.generatePDFHandler(tplReq).getString("result");
         final JsonObject emailReq = new JsonObject()
                 .putString("from", runtime.getString("mail.from"))
                 .putString("to", u.getContact().getEmail())
                 .putString("subject", Messages.getString("mail.payment.subject", body.getObject(METADATA_FIELD).getString(LOCALE_FIELD)))
                 .putString("content_type", "text/html")
-                .putString("body", tplRes);
+                .putString("body", templatesDAO.generateMail(tplReq).getString("result"));
         vertx.eventBus().publish("mailer.mod", emailReq);
     }
 
@@ -395,7 +394,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                             body.getObject(METADATA_FIELD).getString(LOCALE_FIELD),
                             u.getAccount().getListPlan().get(planId)));
 
-            final String tplRes = templatesDAO.generatePDFHandler(tplReq).getString("result");
+            final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
             final JsonObject emailReq = new JsonObject()
                     .putString("from", runtime.getString("mail.from"))
                     .putString("to", u.getContact().getEmail())
