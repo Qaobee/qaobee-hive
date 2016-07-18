@@ -25,6 +25,7 @@ import org.vertx.java.core.json.JsonObject;
 /**
  * The interface Feedback dao.
  */
+@FunctionalInterface
 public interface FeedbackDAO {
     /**
      * Send feedback.

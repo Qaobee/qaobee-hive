@@ -25,6 +25,7 @@ import org.vertx.java.core.json.JsonObject;
 /**
  * The interface Pdf dao.
  */
+@FunctionalInterface
 public interface PdfDAO {
     /**
      * Generate pdf json object.

@@ -102,12 +102,7 @@ public class AssetDAOImpl implements AssetDAO {
                 GridFSDBFile imageForOutput = img.findOne(new ObjectId(id));
                 if (imageForOutput != null && imageForOutput.getChunkSize() > 0) {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    try {
                         imageForOutput.writeTo(bos);
-                    } catch (IOException e) {
-                        LOG.error(e.getMessage(), e);
-                        throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-                    }
                     byte[] asset = bos.toByteArray();
                     return new JsonObject()
                             .putString(HttpHeaders.Names.CONTENT_LENGTH, Integer.toString(asset.length))
@@ -121,6 +116,9 @@ public class AssetDAOImpl implements AssetDAO {
         }catch(IllegalArgumentException e) {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Not found");
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+            throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage());
         }
     }
 }
