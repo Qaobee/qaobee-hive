@@ -392,15 +392,13 @@ public class Main extends AbstractGuiceVerticle {
             upload.streamToFileSystem(filename).endHandler(event -> {
                 upload.pause();
                 vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<Object>>) message -> {
-                    JsonObject resp =new JsonObject();
                     req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
                     if (message.body() instanceof ReplyException) {
-                        resp = new JsonObject(((ReplyException) message.body()).getMessage());
+                        JsonObject resp = new JsonObject(((ReplyException) message.body()).getMessage());
                         req.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
                                 .end(resp.getString(MESSAGE, ""));
                     } else if (message.body() instanceof JsonObject) {
-                        resp = (JsonObject) message.body();
-                        req.response().setStatusCode(200).end(resp.encode());
+                        req.response().setStatusCode(200).end(((JsonObject) message.body()).encode());
                     }
                     stopTimer("main.avatar");
                 });

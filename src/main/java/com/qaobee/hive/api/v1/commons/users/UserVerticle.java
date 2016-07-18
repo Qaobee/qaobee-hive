@@ -207,6 +207,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
                     .getObject(ACCOUNT_FIELD)
                     .getArray("listPlan").get(0))
                     .getObject("activity");
+            userDAO.getMeta(req.getUser().get_id());
             message.reply(sandBoxDAO.getByOwner(activity.getString("_id"), req.getUser().get_id()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);

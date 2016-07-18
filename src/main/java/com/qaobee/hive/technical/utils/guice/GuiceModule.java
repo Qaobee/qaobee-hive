@@ -132,5 +132,6 @@ public class GuiceModule extends AbstractModule {
         bind(EffectiveDAO.class).to(EffectiveDAOImpl.class).in(Singleton.class);
         bind(PersonDAO.class).to(PersonDAOImpl.class).in(Singleton.class);
         bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
+        bind(TeamDAO.class).to(TeamDAOImpl.class).in(Singleton.class);
     }
 }

@@ -23,6 +23,8 @@ import com.qaobee.hive.dao.NotificationsDAO;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -37,6 +39,7 @@ import java.util.UUID;
  * The type Notifications dao.
  */
 public class NotificationsDAOImpl implements NotificationsDAO {
+    private static final Logger LOG = LoggerFactory.getLogger(NotificationsDAOImpl.class);
     private static final String WS_NOTIFICATION_PREFIX = "qaobee.notification.";
     private static final String SENDER_ID = "senderId";
     private static final String TARGET_ID = "targetId";
@@ -50,46 +53,56 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     private Vertx vertx;
 
     @Override
-    public boolean notify(String id, String collection, JsonObject notification, JsonArray exclude) throws QaobeeException {
-        JsonObject target = mongo.getById(id, collection);
-        if (target == null) {
-           return false;
-        } else {
-            switch (collection) {
-                case "User":
-                    addNotificationToUser(id, notification);
-                    break;
-                case "SB_SandBox":
-                    addNotificationToSandbox(target,notification, exclude);
-                    break;
-                default:
-                    break;
+    public boolean notify(String id, String collection, JsonObject notification, JsonArray exclude) {
+        try {
+            JsonObject target = mongo.getById(id, collection);
+            if (target == null) {
+                return false;
+            } else {
+                switch (collection) {
+                    case "User":
+                        return addNotificationToUser(id, notification);
+                    case "SB_SandBox":
+                        return addNotificationToSandbox(target, notification, exclude);
+                    default:
+                        return true;
+                }
             }
-            return true;
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
         }
+        return false;
     }
 
-    private void addNotificationToSandbox(JsonObject target, JsonObject notification, JsonArray exclude) throws QaobeeException {
+    private boolean addNotificationToSandbox(JsonObject target, JsonObject notification, JsonArray exclude) {
         List<Object> excludeList = new ArrayList<>();
+        boolean res = true;
         if(exclude != null) {
             exclude.forEach(excludeList::add);
         }
         for (int i = 0; i < target.getArray(FIELD_MEMBERS).size(); i++) {
             if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(0)).getString("personId"))) {
-                addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(0)).getString("personId"), notification);
+                res = res & addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(0)).getString("personId"), notification);
             }
         }
+        return res;
     }
 
     @Override
-    public void addNotificationToUser(String id, JsonObject notification) throws QaobeeException {
-        notification.putString("_id", UUID.randomUUID().toString())
-                .putString(TARGET_ID, id)
-                .putNumber("timestamp", System.currentTimeMillis())
-                .putBoolean("read", false)
-                .putBoolean(DELETED, false);
-        mongo.save(notification, COLLECTION);
-        vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
+    public boolean addNotificationToUser(String id, JsonObject notification) {
+        try {
+            notification.putString("_id", UUID.randomUUID().toString())
+                    .putString(TARGET_ID, id)
+                    .putNumber("timestamp", System.currentTimeMillis())
+                    .putBoolean("read", false)
+                    .putBoolean(DELETED, false);
+            mongo.save(notification, COLLECTION);
+            vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
+            return true;
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return false;
     }
 
     @Override

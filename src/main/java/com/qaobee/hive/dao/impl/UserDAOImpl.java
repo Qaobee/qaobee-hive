@@ -23,7 +23,7 @@ import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Payment;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
-import com.qaobee.hive.dao.UserDAO;
+import com.qaobee.hive.dao.*;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -60,6 +60,21 @@ public class UserDAOImpl implements UserDAO {
     private Utils utils;
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
+    /**
+     * The Sand box dao.
+     */
+    @Inject
+    SandBoxDAO sandBoxDAO;
+    /**
+     * The Season dao.
+     */
+    @Inject
+    SeasonDAO seasonDAO;
+    /**
+     * The Team dao.
+     */
+    @Inject
+    TeamDAO teamDAO;
 
     @Override
     public JsonObject updateAvatar(String uid, String filename) throws QaobeeException {
@@ -270,5 +285,19 @@ public class UserDAOImpl implements UserDAO {
         u.removeField(PASSWD_FIELD);
         u.removeField("password");
         return u;
+    }
+
+    @Override
+    public JsonObject getMeta(String userId) throws QaobeeException {
+        final JsonObject activity = ((JsonObject) getUser(userId)
+                .getObject(ACCOUNT_FIELD)
+                .getArray("listPlan").get(0))
+                .getObject("activity");
+
+        JsonObject meta = sandBoxDAO.getByOwner(activity.getString("_id"), userId);
+        meta.putObject("season", seasonDAO.getCurrentSeason(activity.getString("_id"), meta.getObject("structure").getObject("country").getString("_id")));
+        meta.putArray("teams", teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null));
+        return meta;
+
     }
 }

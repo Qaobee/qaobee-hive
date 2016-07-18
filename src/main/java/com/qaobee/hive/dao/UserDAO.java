@@ -129,4 +129,7 @@ public interface UserDAO {
      * @throws QaobeeException the qaobee exception
      */
     JsonObject getUserInfo(String id) throws QaobeeException;
+
+    JsonObject getMeta(String userId) throws QaobeeException;
+
 }

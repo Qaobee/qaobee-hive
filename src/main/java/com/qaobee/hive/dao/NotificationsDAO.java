@@ -36,9 +36,8 @@ public interface NotificationsDAO {
      * @param notification the notification
      * @param exclude      the exclude
      * @return the boolean
-     * @throws QaobeeException the qaobee exception
      */
-    boolean notify(String id, String collection, JsonObject notification, JsonArray exclude) throws QaobeeException;
+    boolean notify(String id, String collection, JsonObject notification, JsonArray exclude) ;
 
     /**
      * Add notification to user.
@@ -47,7 +46,7 @@ public interface NotificationsDAO {
      * @param notification the notification
      * @throws QaobeeException the qaobee exception
      */
-    void addNotificationToUser(String id, JsonObject notification) throws QaobeeException;
+    boolean addNotificationToUser(String id, JsonObject notification) throws QaobeeException;
 
     /**
      * Mark as read json object.
