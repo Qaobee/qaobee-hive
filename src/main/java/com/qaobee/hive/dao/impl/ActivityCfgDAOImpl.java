@@ -65,9 +65,6 @@ public class ActivityCfgDAOImpl implements ActivityCfgDAO {
         project = new BasicDBObject("$project", dbObjectParent);
         List<DBObject> pipelineAggregation = Arrays.asList(match, project);
         final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, COLLECTION);
-        if (resultJSon == null) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Resultset for field '" + paramField + "' is null (" + activityId + "/" + countryId + "/" + dateRef + ")");
-        }
         if (resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");
         }

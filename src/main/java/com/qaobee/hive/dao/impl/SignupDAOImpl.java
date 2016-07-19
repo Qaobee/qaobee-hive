@@ -86,8 +86,8 @@ public class SignupDAOImpl implements SignupDAO {
         if (structure.containsField("_id")) {
             structure.mergeIn(structureDAO.getStructure(structure.getString("_id")));
         } else {
-            JsonObject country = countryDAO.getCountryFromAlpha2(structure.getObject("address").getObject(COUNTRY_FIELD).getString("alpha2"));
-            structure.putObject(COUNTRY_FIELD, new JsonObject(Json.encode(country)));
+            JsonObject country = countryDAO.getCountryFromAlpha2(structure.getObject(COUNTRY_FIELD).getString("_id").split("-")[2]);
+            structure.putObject(COUNTRY_FIELD, country);
             structure.getObject("address").putString(COUNTRY_FIELD, country.getString("label"));
             structure.putObject("activity", activityDAO.getActivity(activityId));
         }
@@ -145,7 +145,7 @@ public class SignupDAOImpl implements SignupDAO {
 
         // Création SB_Person
         List<String> listPersonsId = new ArrayList<>();
-        if (tabParametersSignup != null && tabParametersSignup.size() > 0) {
+        if (tabParametersSignup.size() > 0) {
             JsonObject parametersSignup = tabParametersSignup.get(0);
             if (parametersSignup.containsField(PARAMERTER_FIELD) && parametersSignup.getObject(PARAMERTER_FIELD).containsField("players")) {
                 JsonArray tabPlayers = parametersSignup.getObject(PARAMERTER_FIELD).getArray("players");

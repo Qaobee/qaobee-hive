@@ -258,8 +258,6 @@ public class SandBoxTest extends VertxJunitSupport {
         });
     }
 
-    //- --------------
-
     /**
      * Update sand box.
      */

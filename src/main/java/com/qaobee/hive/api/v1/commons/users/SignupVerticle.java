@@ -169,13 +169,14 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     body.getObject(PARAM_STRUCTURE), body.getObject(PARAM_CATEGORY_AGE),
                     body.getString(COUNTRY_FIELD, "CNTR-250-FR-FRA"),
                     req.getLocale());
-            JsonObject notification = new JsonObject();
-            notification.putString("id", u.getString("_id"));
-            notification.putString("target", User.class.getSimpleName());
-            notification.putObject("notification", new JsonObject()
-                    .putString("content", Messages.getString("notification.first.connection.content", req.getLocale()))
-                    .putString("title", Messages.getString("notification.first.connection.title", req.getLocale()))
-                    .putString("senderId", runtime.getString("admin.id"))
+            JsonObject notification = new JsonObject()
+                    .putString("id", u.getString("_id"))
+                    .putString("target", "User")
+                    .putObject("notification", new JsonObject()
+                            .putString("content", Messages.getString("notification.first.connection.content", req.getLocale()))
+                            .putString("title", Messages.getString("notification.first.connection.title", req.getLocale()))
+                            .putString("senderId", runtime.getString("admin.id")
+                            )
             );
             vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
             message.reply(u.encode());
