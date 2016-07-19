@@ -119,6 +119,103 @@ public class SB_CollectTest extends VertxJunitSupport {
     }
 
     /**
+     * Update collect.
+     */
+    @Test
+    public void updateCollect() {
+        populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND, DATA_EVENT_HAND);
+        User user = generateLoggedUser();
+
+        JsonObject event = new JsonObject(
+                given().header(TOKEN, user.getAccount().getToken())
+                        .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
+                        .when().get(getURL(SB_EventVerticle.GET))
+                        .then().assertThat().statusCode(200)
+                        .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                        .body("activityId", is("ACT-HAND"))
+                        .extract().asString());
+
+        JsonObject collect = new JsonObject(
+                given().header(TOKEN, user.getAccount().getToken())
+                .body(generateCollect(event).encode())
+                .when().post(getURL(SB_CollectVerticle.ADD))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("eventRef.address.city", is("Brest"))
+                        .extract().asString());
+
+        long endDate = System.currentTimeMillis();
+        collect.putNumber("endDate", endDate);
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(collect.encode())
+                .when().post(getURL(SB_CollectVerticle.UPDATE))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("endDate", is(endDate));
+    }
+
+    /**
+     * Update collect with non logged user.
+     */
+    @Test
+    public void updateCollectWithNonLoggedUser() {
+        given().when().post(getURL(SB_CollectVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Update collect with wrong http method.
+     */
+    @Test
+    public void updateCollectWithWrongHttpMethod() {
+        given().when().get(getURL(SB_CollectVerticle.UPDATE))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
+
+    /**
+     * Update collect with missing parameters.
+     */
+    @Test
+    public void updateCollectWithMissingParameters() {
+        populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND, DATA_EVENT_HAND);
+        User user = generateLoggedUser();
+
+        JsonObject event = new JsonObject(
+                given().header(TOKEN, user.getAccount().getToken())
+                        .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
+                        .when().get(getURL(SB_EventVerticle.GET))
+                        .then().assertThat().statusCode(200)
+                        .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                        .body("activityId", is("ACT-HAND"))
+                        .extract().asString());
+
+        JsonObject collect = new JsonObject(
+                given().header(TOKEN, user.getAccount().getToken())
+                        .body(generateCollect(event).encode())
+                        .when().post(getURL(SB_CollectVerticle.ADD))
+                        .then().assertThat().statusCode(200)
+                        .body("_id", notNullValue())
+                        .body("eventRef.address.city", is("Brest"))
+                        .extract().asString());
+
+        long endDate = System.currentTimeMillis();
+        collect.putNumber("endDate", endDate);
+
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollectVerticle.UPDATE).mandatoryParams());
+        collect.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
+            JsonObject params2 = new JsonObject(collect.encode());
+            params2.removeField(k);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params2.encode())
+                    .when().post(getURL(SB_CollectVerticle.UPDATE))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
+    }
+
+    /**
      * Gets list Collect.
      */
     @Test

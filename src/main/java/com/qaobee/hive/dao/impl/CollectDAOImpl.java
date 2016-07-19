@@ -25,6 +25,7 @@ import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
 import com.qaobee.hive.dao.CollectDAO;
+import com.qaobee.hive.dao.NotificationsDAO;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
@@ -47,6 +48,8 @@ public class CollectDAOImpl implements CollectDAO {
     private MongoDB mongo;
     @Inject
     private Vertx vertx;
+    @Inject
+    private NotificationsDAO notificationsDAO;
 
     @Override
     public JsonObject get(String id) throws QaobeeException {
@@ -56,29 +59,22 @@ public class CollectDAOImpl implements CollectDAO {
     @Override
     public JsonObject update(JsonObject collect, String currentUserId, String locale) throws QaobeeException {
         collect.putString("_id", mongo.update(collect, COLLECTION));
-        JsonObject notification = new JsonObject();
-        notification.putString("id", collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID));
-        notification.putString("target", "SB_SandBox");
-        notification.putObject("notification", new JsonObject()
+        JsonObject notification = new JsonObject()
                 .putString("content", Messages.getString("notification.collect.update.content", locale, collect.getObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                 .putString("title", Messages.getString("notification.collect.update.title", locale))
-                .putString("senderId", currentUserId)
-        );
-        vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+                .putString("senderId", currentUserId);
+        notificationsDAO.notify(collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID), "SB_SandBox", notification, new JsonArray().add(currentUserId));
         return collect;
     }
 
     @Override
     public JsonObject add(JsonObject collect, String currentUserId, String locale) throws QaobeeException {
         collect.putString("_id", mongo.save(collect, COLLECTION));
-        JsonObject notification = new JsonObject();
-        notification.putString("id", collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID));
-        notification.putString("target", "SB_SandBox");
-        notification.putObject("notification", new JsonObject()
+        JsonObject notification = new JsonObject()
                 .putString("content", Messages.getString("notification.collect.start.content", locale, collect.getObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                 .putString("title", Messages.getString("notification.collect.start.title", locale))
-                .putString("senderId", currentUserId)
-        );
+                .putString("senderId", currentUserId);
+        notificationsDAO.notify(collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID), "SB_SandBox", notification, new JsonArray().add(currentUserId));
         vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
         return collect;
     }
