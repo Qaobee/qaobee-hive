@@ -144,6 +144,20 @@ public class ProfileTest extends VertxJunitSupport {
     }
 
     /**
+     * Generate profile pdf with another temp dir.
+     */
+    @Test
+    public void generateProfilePDFWithAnotherTempDir() {
+        System.setProperty("OPENSHIFT_DATA_DIR", System.getProperty("java.io.tmpdir") + "/bla");
+        User u = generateLoggedUser();
+        byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
+                                  .get(getURL(ProfileVerticle.GENERATE_PDF))
+                                  .then().assertThat().statusCode(200)
+                                  .extract().asByteArray();
+        Assert.assertTrue(byteArray.length > 0);
+    }
+
+    /**
      * Generate profile pdf with wrong datas.
      */
     @Test
