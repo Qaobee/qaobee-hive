@@ -89,9 +89,4 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         }
         return resultJson.get(0);
     }
-
-    @Override
-    public JsonObject update(JsonObject sandbox) {
-        return sandbox.putString("_id", mongo.update(sandbox, COLLECTION));
-    }
 }

@@ -69,11 +69,4 @@ public interface SandBoxDAO {
      */
     JsonObject getByOwner(String activityId, String userId) throws QaobeeException;
 
-    /**
-     * Update json object.
-     *
-     * @param sandbox the sandbox
-     * @return the json object
-     */
-    JsonObject update(JsonObject sandbox);
 }
