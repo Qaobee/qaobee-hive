@@ -162,7 +162,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     private void getListByOwner(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(sandBoxDAO.getListByOwner(req.getParams().get("id"), req.getUser().get_id()).encode());
+            message.reply(sandBoxDAO.getListByOwner(req.getParams().get(PARAM_OWNER_ID), req.getUser().get_id()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

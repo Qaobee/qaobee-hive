@@ -65,7 +65,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
     @Override
     public JsonArray getListByOwner(List<String> usersIds, String loggedUserId) throws QaobeeException {
         CriteriaBuilder cb = new CriteriaBuilder();
-        if (usersIds != null && !usersIds.isEmpty() && StringUtils.isNoneBlank(usersIds.get(0))) {
+        if (usersIds != null && StringUtils.isNoneBlank(usersIds.get(0))) {
             cb.add(PARAM_OWNER_ID, usersIds.get(0));
         } else {
             cb.add(PARAM_OWNER_ID, loggedUserId);
