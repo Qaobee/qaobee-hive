@@ -83,7 +83,7 @@ public class ActivityCfgDAOImpl implements ActivityCfgDAO {
         criterias.between("startDate", "endDate", dateRef);
         // Call to mongo
         JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, COLLECTION);
-        if (resultJSon == null || resultJSon.size() == 0) {
+        if (resultJSon.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
         }
         return resultJSon.get(0);

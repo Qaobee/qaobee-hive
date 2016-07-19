@@ -58,7 +58,7 @@ public class EffectiveDAOImpl implements EffectiveDAO {
             criterias.put(PARAM_CATEGORY_AGE_CODE, categoryAgeCode);
         }
         JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, COLLECTION);
-        if (resultJson == null || resultJson.size() == 0) {
+        if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR,
                     "No Effective found " + "for ( sandBoxId : " + sandboxId + " " + (categoryAgeCode != null ? "and for category : " + categoryAgeCode + ")" : ")"));
         }

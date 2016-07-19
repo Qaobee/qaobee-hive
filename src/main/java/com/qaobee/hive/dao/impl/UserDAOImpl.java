@@ -269,7 +269,7 @@ public class UserDAOImpl implements UserDAO {
         CriteriaBuilder criterias = new CriteriaBuilder();
         criterias.add("account.login", login.toLowerCase());
         JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, COLLECTION);
-        if (jsonArray == null || jsonArray.size() == 0) {
+        if (jsonArray.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Login inconnu");
         }
         if (jsonArray.size() > 1) {

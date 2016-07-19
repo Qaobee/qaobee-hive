@@ -52,7 +52,7 @@ public class PersonDAOImpl implements PersonDAO {
     public JsonArray getPersonListBySandbox(String sandboxId) throws QaobeeException {
         CriteriaBuilder criteria = new CriteriaBuilder().add(PARAM_SANDBOX_ID, sandboxId);
         JsonArray resultJson = mongo.findByCriterias(criteria.get(), null, null, -1, -1, COLLECTION);
-        if (resultJson == null || resultJson.size() == 0) {
+        if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No person found for sandboxId (" + sandboxId + ")");
         }
         return resultJson;

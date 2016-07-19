@@ -71,7 +71,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
             cb.add(PARAM_OWNER_ID, loggedUserId);
         }
         JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, COLLECTION);
-        if (resultJson == null || resultJson.size() == 0) {
+        if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + loggedUserId);
         }
         return resultJson;
@@ -83,7 +83,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
                 .add(PARAM_OWNER_ID, userId)
                 .add("structure." + PARAM_ACTIVITY_ID + "._id", activityId);
         JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, COLLECTION);
-        if (resultJson == null || resultJson.size() == 0) {
+        if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + userId
                     + " ,and activityId : " + activityId);
         }

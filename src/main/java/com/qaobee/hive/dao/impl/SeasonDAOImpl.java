@@ -49,7 +49,7 @@ public class SeasonDAOImpl implements SeasonDAO {
         criterias.put(PARAM_COUNTRY_ID, countryId);
         JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, COLLECTION);
         long currentDate = System.currentTimeMillis();
-        if (resultJson == null || resultJson.size() == 0) {
+        if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
         }
         for (int i = 0; i < resultJson.size(); i++) {
@@ -68,7 +68,7 @@ public class SeasonDAOImpl implements SeasonDAO {
         criterias.put(PARAM_ACTIVITY_ID, activityId);
         criterias.put(PARAM_COUNTRY_ID, countryId);
         JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, COLLECTION);
-        if (resultJson == null || resultJson.size() == 0) {
+        if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
         }
         return resultJson;

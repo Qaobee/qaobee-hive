@@ -62,7 +62,7 @@ public class CountryDAOImpl implements CountryDAO {
             criterias.put(CountryVerticle.PARAM_LABEL, label);
         }
         JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, COLLECTION);
-        if (resultJson == null || resultJson.size() == 0) {
+        if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR,
                     "No Country defined for (" + label + ")");
         }
