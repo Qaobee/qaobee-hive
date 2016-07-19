@@ -226,6 +226,8 @@ public class SB_CollectTest extends VertxJunitSupport {
                 .putNumber(SB_CollectVerticle.PARAM_START_DATE, 1448491800000L)
                 .putNumber(SB_CollectVerticle.PARAM_END_DATE, 1448492500000L)
                 .putString(SB_CollectVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9")
+                .putString(SB_CollectVerticle.PARAM_TEAM_ID, "937918db-848e-4a6d-8feb-a7ba6bd60f5a")
+                .putString(SB_CollectVerticle.PARAM_EVENT_ID, "35d65151-2fe5-48e1-a219-8534412b6bca")
                 .putString(SB_CollectVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
 
         given().header(TOKEN, user.getAccount().getToken())
@@ -242,7 +244,6 @@ public class SB_CollectTest extends VertxJunitSupport {
                 .when().post(getURL(SB_CollectVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(0));
-
     }
 
     /**
