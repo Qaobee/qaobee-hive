@@ -120,12 +120,6 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(17))
                 .body("name", hasItem("Batinovic"));
-
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(SB_PersonVerticle.PARAM_SANDBOX_ID, "22")
-                .when().get(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(0));
     }
 
     /**
