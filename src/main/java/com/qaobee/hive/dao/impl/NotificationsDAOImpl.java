@@ -65,7 +65,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                     case "SB_SandBox":
                         return addNotificationToSandbox(target, notification, exclude);
                     default:
-                        return true;
+                        return false;
                 }
             }
         } catch (QaobeeException e) {

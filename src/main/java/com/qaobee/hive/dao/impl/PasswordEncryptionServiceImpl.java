@@ -16,8 +16,9 @@
  *  is strictly forbidden unless prior written permission is obtained
  *  from Qaobee.
  */
-package com.qaobee.hive.technical.tools;
+package com.qaobee.hive.dao.impl;
 
+import com.qaobee.hive.dao.PasswordEncryptionService;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 

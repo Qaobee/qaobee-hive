@@ -28,7 +28,7 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.tools.PasswordEncryptionService;
+import com.qaobee.hive.dao.PasswordEncryptionService;
 import com.qaobee.hive.technical.utils.MailUtils;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;

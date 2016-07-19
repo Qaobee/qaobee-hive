@@ -17,7 +17,7 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.technical.tools;
+package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 
