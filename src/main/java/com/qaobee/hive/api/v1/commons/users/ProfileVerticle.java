@@ -129,7 +129,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     @Rule(address = GENERATE_PDF, method = Constants.GET, logged = true)
     private void generateProfilePDF(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, userDAO.generateProfilePDF(req.getUser(), req.getLocale()), 10000L, getPdfHandler(message));
+        vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, userDAO.generateProfilePDF(req.getUser(), req.getLocale()), 15000L, getPdfHandler(message));
     }
 
     /**

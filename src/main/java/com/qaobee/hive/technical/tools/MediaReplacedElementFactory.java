@@ -91,8 +91,9 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
                 return null;
             }
             InputStream input = null;
+            File media = new File(dir.getAbsolutePath() +"/"+ UUID.randomUUID().toString());
             try {
-                File media = new File(dir.getAbsolutePath() +"/"+ UUID.randomUUID().toString());
+
                 if(element.getAttribute("data-src").startsWith("http")) {
                     FileUtils.copyURLToFile(new URL(element.getAttribute("data-src")), media);
                 } else {
@@ -110,6 +111,7 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
                 LOG.error("There was a problem trying to read a template embedded graphic.", e);
             } finally {
                 IOUtils.closeQuietly(input);
+                FileUtils.deleteQuietly(media);
             }
         }
         return superFactory.createReplacedElement(layoutContext, blockBox, userAgentCallback, cssWidth, cssHeight);

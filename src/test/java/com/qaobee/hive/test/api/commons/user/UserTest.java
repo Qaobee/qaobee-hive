@@ -20,6 +20,7 @@ package com.qaobee.hive.test.api.commons.user;
 
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -654,7 +655,7 @@ public class UserTest extends VertxJunitSupport {
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            JsonObject jsonuser = mongo.getById(user.get_id(), User.class);
+            JsonObject jsonuser = mongo.getById(user.get_id(), DBCollections.USER);
             String code = jsonuser.getObject("account").getString("activationPasswd");
 
             given().param("id", user.get_id()).param("code", code)
@@ -722,7 +723,7 @@ public class UserTest extends VertxJunitSupport {
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            JsonObject jsonuser = mongo.getById(user.get_id(), User.class);
+            JsonObject jsonuser = mongo.getById(user.get_id(), DBCollections.USER);
             String code = jsonuser.getObject("account").getString("activationPasswd");
             given().param("id", user.get_id()).param("code", code)
                     .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
@@ -770,7 +771,7 @@ public class UserTest extends VertxJunitSupport {
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            JsonObject jsonuser = mongo.getById(user.get_id(), User.class);
+            JsonObject jsonuser = mongo.getById(user.get_id(), DBCollections.USER);
             String code = jsonuser.getObject("account").getString("activationPasswd");
             given().param("id", user.get_id()).param("code", code)
                     .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
