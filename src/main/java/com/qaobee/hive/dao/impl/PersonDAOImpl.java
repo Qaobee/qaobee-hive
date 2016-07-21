@@ -23,6 +23,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.dao.NotificationsDAO;
 import com.qaobee.hive.dao.PersonDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -40,7 +41,6 @@ import java.util.List;
  */
 public class PersonDAOImpl implements PersonDAO {
 
-    private static final String COLLECTION = "SB_Person";
     private static final String PARAM_SANDBOX_ID = "sandboxId";
 
     @Inject
@@ -51,7 +51,7 @@ public class PersonDAOImpl implements PersonDAO {
     @Override
     public JsonArray getPersonListBySandbox(String sandboxId) throws QaobeeException {
         CriteriaBuilder criteria = new CriteriaBuilder().add(PARAM_SANDBOX_ID, sandboxId);
-        JsonArray resultJson = mongo.findByCriterias(criteria.get(), null, null, -1, -1, COLLECTION);
+        JsonArray resultJson = mongo.findByCriterias(criteria.get(), null, null, -1, -1, DBCollections.PERSON);
         if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No person found for sandboxId (" + sandboxId + ")");
         }
@@ -70,12 +70,12 @@ public class PersonDAOImpl implements PersonDAO {
         }
         DBObject project = new BasicDBObject("$project", dbObjectParent);
         List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-        return mongo.aggregate(null, pipelineAggregation, COLLECTION);
+        return mongo.aggregate(null, pipelineAggregation, DBCollections.PERSON);
     }
 
     @Override
-    public JsonObject updatePerson(JsonObject person, String userId, String locale) throws QaobeeException {
-        person.putString("_id", mongo.update(person, COLLECTION));
+    public JsonObject updatePerson(JsonObject person, String userId, String locale) {
+        person.putString("_id", mongo.update(person, DBCollections.PERSON));
         if(userId != null && locale != null) {
             JsonObject notification = new JsonObject()
                     .putString("content", Messages.getString("notification.person.update.content", locale,
@@ -83,19 +83,19 @@ public class PersonDAOImpl implements PersonDAO {
                             "/#/private/viewPlayer/" + person.getString("_id")))
                     .putString("title", Messages.getString("notification.person.update.title", locale))
                     .putString("senderId", userId);
-            notificationsDAO.notify(person.getString("sandboxId"), "SB_SandBox", notification, new JsonArray().add(userId));
+            notificationsDAO.notify(person.getString("sandboxId"), DBCollections.SANDBOX, notification, new JsonArray().add(userId));
         }
         return person;
     }
 
     @Override
     public JsonObject getPerson(String id) throws QaobeeException {
-        return mongo.getById(id, COLLECTION);
+        return mongo.getById(id, DBCollections.PERSON);
     }
 
     @Override
     public JsonObject addPerson(JsonObject person, String userId, String locale) throws QaobeeException {
-        person.putString("_id", mongo.save(person, COLLECTION));
+        person.putString("_id", mongo.save(person, DBCollections.PERSON));
         if(userId != null && locale != null) {
             JsonObject notification = new JsonObject()
                     .putString("content", Messages.getString("notification.person.add.content", locale,
@@ -103,7 +103,7 @@ public class PersonDAOImpl implements PersonDAO {
                             "/#/private/viewPlayer/" + person.getString("_id")))
                     .putString("title", Messages.getString("notification.person.add.title", locale))
                     .putString("senderId", userId);
-            notificationsDAO.notify(person.getString("sandboxId"), "SB_SandBox", notification, new JsonArray().add(userId));
+            notificationsDAO.notify(person.getString("sandboxId"), DBCollections.SANDBOX, notification, new JsonArray().add(userId));
         }
         return person;
     }

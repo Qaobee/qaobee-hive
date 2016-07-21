@@ -43,9 +43,8 @@ public interface CollectDAO {
      * @param currentUserId the current user id
      * @param locale        the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject update(JsonObject collect, String currentUserId, String locale) throws QaobeeException;
+    JsonObject update(JsonObject collect, String currentUserId, String locale);
 
     /**
      * Add json object.

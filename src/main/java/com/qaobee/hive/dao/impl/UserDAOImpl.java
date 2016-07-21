@@ -24,6 +24,7 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Payment;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.dao.*;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -51,36 +52,27 @@ public class UserDAOImpl implements UserDAO {
     private static final String ADDRESS_FIELD = "address";
     private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     private static final Pattern VALID_NAME_REGEX = Pattern.compile("^([a-z'àâéèêôùûç \\-]+)$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9\\.\\-]+)$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9.\\-]+)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-    private static final String COLLECTION = "User";
+
     @Inject
     private MongoDB mongo;
     @Inject
     private Utils utils;
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
-    /**
-     * The Sand box dao.
-     */
     @Inject
-    SandBoxDAO sandBoxDAO;
-    /**
-     * The Season dao.
-     */
+    private SandBoxDAO sandBoxDAO;
     @Inject
-    SeasonDAO seasonDAO;
-    /**
-     * The Team dao.
-     */
+    private SeasonDAO seasonDAO;
     @Inject
-    TeamDAO teamDAO;
+    private TeamDAO teamDAO;
 
     @Override
     public JsonObject updateAvatar(String uid, String filename) throws QaobeeException {
-        JsonObject jsonperson = mongo.getById(uid, COLLECTION)
+        JsonObject jsonperson = mongo.getById(uid, DBCollections.USER)
                 .putString(AVATAR_FIELD, filename);
-        mongo.save(jsonperson, COLLECTION);
+        mongo.save(jsonperson, DBCollections.USER);
         return jsonperson;
     }
 
@@ -154,7 +146,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public JsonObject updateUser(JsonObject u) throws QaobeeException {
         final User user = Json.decodeValue(u.encode(), User.class);
-        JsonObject p = mongo.getById(user.get_id(), COLLECTION);
+        JsonObject p = mongo.getById(user.get_id(), DBCollections.USER);
         if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
             final byte[] salt = passwordEncryptionService.generateSalt();
             user.getAccount().setSalt(salt);
@@ -164,7 +156,7 @@ public class UserDAOImpl implements UserDAO {
         } else {
             u.putObject(ACCOUNT_FIELD, p.getObject(ACCOUNT_FIELD));
         }
-        mongo.save(u, COLLECTION);
+        mongo.save(u, DBCollections.USER);
         return u;
     }
 
@@ -218,7 +210,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean existingLogin(String login) {
-        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, COLLECTION);
+        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, DBCollections.USER);
         return res.size() > 0;
     }
 
@@ -260,7 +252,7 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public JsonObject getUser(String id) throws QaobeeException {
-        return mongo.getById(id, COLLECTION);
+        return mongo.getById(id, DBCollections.USER);
     }
 
     @Override
@@ -268,7 +260,7 @@ public class UserDAOImpl implements UserDAO {
         // Creation of request
         CriteriaBuilder criterias = new CriteriaBuilder();
         criterias.add("account.login", login.toLowerCase());
-        JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, COLLECTION);
+        JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.USER);
         if (jsonArray.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Login inconnu");
         }

@@ -20,6 +20,7 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.SeasonDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -37,7 +38,6 @@ public class SeasonDAOImpl implements SeasonDAO {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
     private static final String END_DATE_FIELD = "endDate";
-    private static final String COLLECTION = "Season";
     @Inject
     private MongoDB mongo;
 
@@ -47,7 +47,7 @@ public class SeasonDAOImpl implements SeasonDAO {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(PARAM_ACTIVITY_ID, activityId);
         criterias.put(PARAM_COUNTRY_ID, countryId);
-        JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, COLLECTION);
+        JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, DBCollections.SEASON);
         long currentDate = System.currentTimeMillis();
         if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
@@ -67,7 +67,7 @@ public class SeasonDAOImpl implements SeasonDAO {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(PARAM_ACTIVITY_ID, activityId);
         criterias.put(PARAM_COUNTRY_ID, countryId);
-        JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, COLLECTION);
+        JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, DBCollections.SEASON);
         if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
         }
@@ -76,6 +76,6 @@ public class SeasonDAOImpl implements SeasonDAO {
 
     @Override
     public JsonObject getSeason(String id) throws QaobeeException {
-        return mongo.getById(id, COLLECTION);
+        return mongo.getById(id, DBCollections.SEASON);
     }
 }

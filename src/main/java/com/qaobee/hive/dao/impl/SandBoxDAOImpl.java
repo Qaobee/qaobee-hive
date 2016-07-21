@@ -20,6 +20,7 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.SandBoxDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -35,7 +36,6 @@ import java.util.List;
  * The type Sand box dao.
  */
 public class SandBoxDAOImpl implements SandBoxDAO {
-    private static final String COLLECTION = "SB_SandBox";
     private static final String PARAM_OWNER_ID = "owner";
     private  static final String PARAM_ACTIVITY_ID = "activity";
 
@@ -44,12 +44,12 @@ public class SandBoxDAOImpl implements SandBoxDAO {
 
     @Override
     public JsonObject updateSandboxCfgId(String id, String sandboxCfgId) throws QaobeeException {
-        final JsonObject sandbox = mongo.getById(id, COLLECTION);
+        final JsonObject sandbox = mongo.getById(id, DBCollections.SANDBOX);
         if (sandbox == null) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for id :" + id);
         }
         sandbox.putString("sandboxCfgId", sandboxCfgId);
-        mongo.save(sandbox, COLLECTION);
+        mongo.save(sandbox, DBCollections.SANDBOX);
         return sandbox;
     }
 
@@ -58,7 +58,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         JsonObject sandbox = new JsonObject()
                 .putString("activityId", activityId)
                 .putString("owner", userId);
-        sandbox.putString("_id", mongo.save(sandbox, COLLECTION));
+        sandbox.putString("_id", mongo.save(sandbox, DBCollections.SANDBOX));
         return sandbox;
     }
 
@@ -70,7 +70,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         } else {
             cb.add(PARAM_OWNER_ID, loggedUserId);
         }
-        JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, COLLECTION);
+        JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, DBCollections.SANDBOX);
         if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + loggedUserId);
         }
@@ -82,7 +82,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         CriteriaBuilder cb = new CriteriaBuilder()
                 .add(PARAM_OWNER_ID, userId)
                 .add("structure." + PARAM_ACTIVITY_ID + "._id", activityId);
-        JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, COLLECTION);
+        JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, DBCollections.SANDBOX);
         if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + userId
                     + " ,and activityId : " + activityId);

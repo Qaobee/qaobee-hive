@@ -20,6 +20,7 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.ActivityDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import org.vertx.java.core.json.JsonArray;
@@ -34,8 +35,6 @@ import java.util.Map;
  */
 public class ActivityDAOImpl implements ActivityDAO{
 
-    private static final String COLLECTION = "Activity";
-
     @Inject
     private MongoDB mongo;
 
@@ -43,15 +42,15 @@ public class ActivityDAOImpl implements ActivityDAO{
     public JsonArray getEnabled() {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put("enable", true);
-        return mongo.findByCriterias(criterias, null, null, -1, -1, COLLECTION);
+        return mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.ACTIVITY);
     }
     @Override
     public JsonArray getActivityList() {
-        return mongo.findByCriterias(null, null, null, -1, -1, COLLECTION);
+        return mongo.findByCriterias(null, null, null, -1, -1, DBCollections.ACTIVITY);
     }
 
     @Override
     public JsonObject getActivity(String id) throws QaobeeException {
-        return mongo.getById(id, COLLECTION);
+        return mongo.getById(id, DBCollections.ACTIVITY);
     }
 }

@@ -23,7 +23,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
-import com.qaobee.hive.business.model.commons.settings.ActivityCfg;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
@@ -37,6 +36,7 @@ import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.dao.*;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -60,8 +60,8 @@ public class SignupDAOImpl implements SignupDAO {
     private static final Logger LOG = LoggerFactory.getLogger(SignupDAOImpl.class);
     private static final String COUNTRY_FIELD = "country";
     private static final String PARAMERTER_FIELD = "parametersSignup";
-    private static final String USER_COLLECTION = "User";
     private static final String PARAM_PLAN = "plan";
+
     @Inject
     private ActivityDAO activityDAO;
     @Inject
@@ -72,7 +72,6 @@ public class SignupDAOImpl implements SignupDAO {
     private UserDAO userDAO;
     @Inject
     private StructureDAO structureDAO;
-
     @Inject
     @Named("runtime")
     private JsonObject runtime;
@@ -141,7 +140,7 @@ public class SignupDAOImpl implements SignupDAO {
         dbObjectParent.put(PARAMERTER_FIELD, 1);
         project = new BasicDBObject("$project", dbObjectParent);
         List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-        tabParametersSignup = mongo.aggregate(PARAMERTER_FIELD, pipelineAggregation, ActivityCfg.class);
+        tabParametersSignup = mongo.aggregate(PARAMERTER_FIELD, pipelineAggregation, DBCollections.ACTIVITY_CFG);
 
         // Création SB_Person
         List<String> listPersonsId = new ArrayList<>();
@@ -195,7 +194,7 @@ public class SignupDAOImpl implements SignupDAO {
 
     @Override
     public boolean accountCheck(String id, String activationCode) throws QaobeeException {
-        final User user = Json.decodeValue(mongo.getById(id, USER_COLLECTION).encode(), User.class);
+        final User user = Json.decodeValue(mongo.getById(id, DBCollections.USER).encode(), User.class);
         if (user.getAccount().getActivationCode().equals(activationCode)) {
             user.getAccount().setActive(true);
             mongo.save(user);
@@ -234,13 +233,13 @@ public class SignupDAOImpl implements SignupDAO {
         plan.setStartPeriodDate(System.currentTimeMillis());
         // Si on vient du mobile, on connait le plan, mais pas par le web
         if (plan.getActivity() != null) {
-            JsonObject activity = mongo.getById(plan.getActivity().get_id(), Activity.class);
+            JsonObject activity = mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY);
             plan.setActivity(Json.decodeValue(activity.encode(), Activity.class));
         }
         user.getAccount().getListPlan().add(plan);
             user.set_id(mongo.save(userDAO.prepareUpsert(user)));
         return new JsonObject()
-                .putObject("person", mongo.getById(user.get_id(), USER_COLLECTION))
+                .putObject("person", mongo.getById(user.get_id(), DBCollections.USER))
                 .putString("planId", plan.getPaymentId());
     }
 
@@ -290,7 +289,7 @@ public class SignupDAOImpl implements SignupDAO {
         }
     }
 
-    private long randomDate(int yearOldMin, int yearOldMax) {
+    private static long randomDate(int yearOldMin, int yearOldMax) {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(new Date());
         if (yearOldMin >= yearOldMax) {
@@ -299,7 +298,6 @@ public class SignupDAOImpl implements SignupDAO {
             calendar.add(GregorianCalendar.YEAR, -1 * ((int) Math.round(Math.random() * (yearOldMax - yearOldMin)) + yearOldMin));
         }
         calendar.set(GregorianCalendar.DAY_OF_YEAR, (int) Math.round(Math.random() * 365));
-
         return calendar.getTimeInMillis();
     }
 }

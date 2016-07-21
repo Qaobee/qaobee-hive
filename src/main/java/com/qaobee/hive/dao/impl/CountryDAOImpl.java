@@ -21,6 +21,7 @@ package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.dao.CountryDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -36,7 +37,6 @@ import java.util.Map;
  * The type Country dao.
  */
 public class CountryDAOImpl implements CountryDAO {
-    private static final String COLLECTION = "Country";
     private Map<String, JsonObject> mapCountry = null;
 
     @Inject
@@ -61,7 +61,7 @@ public class CountryDAOImpl implements CountryDAO {
         if (StringUtils.isNotBlank(label)) {
             criterias.put(CountryVerticle.PARAM_LABEL, label);
         }
-        JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, COLLECTION);
+        JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.COUNTRY);
         if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR,
                     "No Country defined for (" + label + ")");
@@ -71,11 +71,11 @@ public class CountryDAOImpl implements CountryDAO {
 
     @Override
     public JsonObject getCountry(String id) throws QaobeeException {
-        return mongo.getById(id, COLLECTION);
+        return mongo.getById(id, DBCollections.COUNTRY);
     }
 
     private void getCountries() {
-        JsonArray resultJson = mongo.findAll(null, null, -1, 0, COLLECTION);
+        JsonArray resultJson = mongo.findAll(null, null, -1, 0, DBCollections.COUNTRY);
         if (resultJson != null) {
             mapCountry = new HashMap<>();
             resultJson.forEach(c -> mapCountry.put(((JsonObject) c).getString("_id").split("-")[2], (JsonObject) c));

@@ -31,6 +31,7 @@ import com.qaobee.hive.business.model.shipping.Payment;
 import com.qaobee.hive.dao.ShippingDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -72,7 +73,7 @@ public class ShippingDAOImpl implements ShippingDAO {
     private static final String CARD_INFO_FIELD = "cardInfo";
     private static final String PAYMENT_ID_FIELD = "paymentId";
     private static final String SHIPPING_LIST_FIELD = "shippingList";
-    private static final String COLLECTION = "User";
+    private static final String BASE_URL_FIELD = "baseUrl";
     @Inject
     private MongoDB mongo;
     @Inject
@@ -97,7 +98,7 @@ public class ShippingDAOImpl implements ShippingDAO {
         DBObject statusQuery = new BasicDBObject(Constants.STATUS, "paid");
         DBObject fields = new BasicDBObject("$elemMatch", statusQuery);
         DBObject query = new BasicDBObject("account.listPlan", fields);
-        DBCursor result = mongo.getDb().getCollection(COLLECTION).find(query);
+        DBCursor result = mongo.getDb().getCollection(DBCollections.USER).find(query);
         JsonArray res = new JsonArray();
         result.forEach(r -> res.add(new JsonObject(result.next().toString())));
         return res;
@@ -152,7 +153,7 @@ public class ShippingDAOImpl implements ShippingDAO {
         utils.testMandatoryParams(body.getObject(METADATA_FIELD).toMap(), PARAM_PLAN_ID, CUSTOMER_ID_FIELD, PARAM_PLAN_ID, CUSTOMER_ID_FIELD);
         try {
             int planId = Integer.parseInt(body.getObject(METADATA_FIELD).getString(PARAM_PLAN_ID));
-            final JsonObject user = mongo.getById(body.getObject(METADATA_FIELD).getString(CUSTOMER_ID_FIELD), COLLECTION);
+            final JsonObject user = mongo.getById(body.getObject(METADATA_FIELD).getString(CUSTOMER_ID_FIELD), DBCollections.USER);
             final User u = Json.decodeValue(user.encode(), User.class);
             if (body.getObject("failure") != null) {
                 // -> Send a mail with the payment url link
@@ -213,9 +214,9 @@ public class ShippingDAOImpl implements ShippingDAO {
     private CompletableFuture<JsonObject> sendPayplugPayment(final User user, final int planId, final long amount, JsonObject requestBody) {
         CompletableFuture<JsonObject> future = new CompletableFuture<>();
         HttpClient client = vertx.createHttpClient().setKeepAlive(true);
-        client.setHost(payplug.getString("baseUrl"));
+        client.setHost(payplug.getString(BASE_URL_FIELD));
         client.setPort(payplug.getInteger("port"));
-        client.setHost(payplug.getString("baseUrl")).setPort(payplug.getInteger("port"));
+        client.setHost(payplug.getString(BASE_URL_FIELD)).setPort(payplug.getInteger("port"));
         if (payplug.getInteger("port") == 443) {
             client.setSSL(true).setTrustAll(true);
         }
@@ -243,7 +244,7 @@ public class ShippingDAOImpl implements ShippingDAO {
     private CompletableFuture<Boolean> sendPayplugRecurringPayment(final JsonObject user, final int planId, final long amount, String requestBody) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         HttpClient client = vertx.createHttpClient().setKeepAlive(true);
-        client.setHost(payplug.getString("baseUrl"));
+        client.setHost(payplug.getString(BASE_URL_FIELD));
         client.setPort(payplug.getInteger("port"));
         if (payplug.getInteger("port") == 443) {
             client.setSSL(true).setTrustAll(true);
@@ -277,7 +278,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                                         .getArray(LIST_PLAN_FIELD)
                                         .get(planId))
                                         .putString("cardId", res.getString("id"));
-                                mongo.save(user, COLLECTION);
+                                mongo.save(user, DBCollections.USER);
                                 future.complete(true);
                             } catch (QaobeeException e) {
                                 LOG.error(e.getMessage(), e);
@@ -387,7 +388,7 @@ public class ShippingDAOImpl implements ShippingDAO {
 
             ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId))
                     .getArray(SHIPPING_LIST_FIELD).add(payment);
-            mongo.save(user, User.class);
+            mongo.save(user, DBCollections.USER);
             final JsonObject tplReq = new JsonObject()
                     .putString(TemplatesDAOImpl.TEMPLATE, "payment.html")
                     .putObject(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(u,
@@ -404,7 +405,6 @@ public class ShippingDAOImpl implements ShippingDAO {
                     .putString("body", tplRes);
             vertx.eventBus().publish("mailer.mod", emailReq);
             return true;
-
         } else {
             LOG.info(body.encode());
         }

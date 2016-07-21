@@ -20,15 +20,16 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.dao.PasswordEncryptionService;
 import com.qaobee.hive.dao.SecurityDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.UserDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.dao.PasswordEncryptionService;
 import com.qaobee.hive.technical.utils.MailUtils;
 import net.tanesha.recaptcha.ReCaptchaImpl;
 import net.tanesha.recaptcha.ReCaptchaResponse;
@@ -51,7 +52,6 @@ import java.util.UUID;
  */
 public class SecurityDAOImpl implements SecurityDAO {
     private static final Logger LOG = LoggerFactory.getLogger(SecurityDAOImpl.class);
-    private static final String COLLECTION = "User";
     private static final String ACCOUNT_LOGIN_FIELD = "account.login";
     private static final java.lang.String BAD_LOGIN_MESS = "bad.login";
 
@@ -76,14 +76,14 @@ public class SecurityDAOImpl implements SecurityDAO {
         CriteriaBuilder cb = new CriteriaBuilder();
         cb.add("account.mobileToken", mobileToken);
         cb.add(ACCOUNT_LOGIN_FIELD, login.toLowerCase());
-        final JsonArray res = mongo.findByCriterias(cb.get(), null, null, 0, 0, COLLECTION);
+        final JsonArray res = mongo.findByCriterias(cb.get(), null, null, 0, 0, DBCollections.USER);
         if (res.size() != 1) {
             throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, login));
         } else {
             // we take the first one (should be only one)
             final JsonObject jsonPerson = res.get(0);
             final User user = Json.decodeValue(jsonPerson.encode(), User.class);
-            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user)) {
+            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && testTrial(user)) {
                 user.getAccount().getListPlan().get(0).setStatus("notpaid");
                 throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale));
             } else {
@@ -164,7 +164,7 @@ public class SecurityDAOImpl implements SecurityDAO {
 
     @Override
     public boolean logout(String token) throws QaobeeException {
-        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, COLLECTION);
+        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, DBCollections.USER);
         if (res.size() != 1) {
             return false;
         }
@@ -199,7 +199,7 @@ public class SecurityDAOImpl implements SecurityDAO {
             throw new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", locale));
         }
         // trial period test
-        if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && !testTrial(user)) {
+        if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && testTrial(user)) {
             user.getAccount().getListPlan().get(0).setStatus("notpaid");
         }
         user.getAccount().setToken(UUID.randomUUID().toString());
@@ -219,6 +219,6 @@ public class SecurityDAOImpl implements SecurityDAO {
         Calendar cal2 = Calendar.getInstance();
         cal2.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
         cal2.add(Calendar.MONTH, runtime.getInteger("trial.duration", 1));
-        return "open".equals(user.getAccount().getListPlan().get(0).getStatus()) && cal.before(cal2);
+        return !"open".equals(user.getAccount().getListPlan().get(0).getStatus()) && cal.before(cal2);
     }
 }

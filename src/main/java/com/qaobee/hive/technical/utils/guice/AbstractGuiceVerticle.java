@@ -19,9 +19,7 @@
 
 package com.qaobee.hive.technical.utils.guice;
 
-import com.englishtown.vertx.promises.WhenEventBus;
 import com.englishtown.vertx.promises.impl.DefaultWhenContainer;
-import com.englishtown.vertx.promises.impl.DefaultWhenEventBus;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.vertx.java.core.json.JsonObject;
@@ -32,10 +30,6 @@ import org.vertx.java.platform.Verticle;
  */
 public class AbstractGuiceVerticle extends Verticle {
     private static final String MONKO_CONF_KEY = "mongo.persistor";
-    /**
-     * The When event bus.
-     */
-    protected WhenEventBus whenEventBus;
     /**
      * The When container.
      */
@@ -54,7 +48,6 @@ public class AbstractGuiceVerticle extends Verticle {
         }
         Injector injector = Guice.createInjector(new GuiceModule(container.config(), vertx, container.env()));
         injector.injectMembers(this);
-        whenEventBus = new DefaultWhenEventBus(vertx, container);
         whenContainer = new DefaultWhenContainer(container);
     }
 

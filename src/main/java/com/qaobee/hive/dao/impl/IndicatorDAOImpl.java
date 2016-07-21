@@ -22,6 +22,7 @@ package com.qaobee.hive.dao.impl;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.dao.IndicatorDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import org.vertx.java.core.json.JsonArray;
@@ -38,7 +39,6 @@ import java.util.List;
 public class IndicatorDAOImpl implements IndicatorDAO {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
-    private static final String COLLECTION = "IndicatorCfg";
     @Inject
     private MongoDB mongo;
 
@@ -58,7 +58,7 @@ public class IndicatorDAOImpl implements IndicatorDAO {
         dbObjectParent.put("code", dbObjectChild);
         match = new BasicDBObject("$match", dbObjectParent);
         List<DBObject> pipelineAggregation = Collections.singletonList(match);
-        return mongo.aggregate("_id", pipelineAggregation, COLLECTION);
+        return mongo.aggregate("_id", pipelineAggregation, DBCollections.INDICATOR_CFG);
     }
 
     @Override
@@ -88,11 +88,11 @@ public class IndicatorDAOImpl implements IndicatorDAO {
         dbObjectParent.put("listValues", 1);
         project = new BasicDBObject("$project", dbObjectParent);
         List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-       return mongo.aggregate("_id", pipelineAggregation, COLLECTION);
+       return mongo.aggregate("_id", pipelineAggregation, DBCollections.INDICATOR_CFG);
     }
 
     @Override
     public JsonObject getIndicator(String id) throws QaobeeException {
-        return mongo.getById(id, COLLECTION);
+        return mongo.getById(id, DBCollections.INDICATOR_CFG);
     }
 }

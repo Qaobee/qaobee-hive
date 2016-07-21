@@ -20,6 +20,7 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.EffectiveDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -34,7 +35,6 @@ import java.util.Map;
  * The type Effective dao.
  */
 public class EffectiveDAOImpl implements EffectiveDAO {
-    private static final String COLLECTION = "SB_Effective";
     private static final String PARAM_SANDBOX_ID = "sandboxId";
     private static final String PARAM_CATEGORY_AGE_CODE = "categoryAge.code";
     @Inject
@@ -42,12 +42,12 @@ public class EffectiveDAOImpl implements EffectiveDAO {
 
     @Override
     public JsonObject add(JsonObject effective) throws QaobeeException {
-        return effective.putString("_id", mongo.save(effective, COLLECTION));
+        return effective.putString("_id", mongo.save(effective, DBCollections.EFFECTIVE));
     }
 
     @Override
     public JsonObject update(JsonObject effective) {
-        return effective.putString("_id", mongo.update(effective, COLLECTION));
+        return effective.putString("_id", mongo.update(effective, DBCollections.EFFECTIVE));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class EffectiveDAOImpl implements EffectiveDAO {
         if (categoryAgeCode != null) {
             criterias.put(PARAM_CATEGORY_AGE_CODE, categoryAgeCode);
         }
-        JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, COLLECTION);
+        JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.EFFECTIVE);
         if (resultJson.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR,
                     "No Effective found " + "for ( sandBoxId : " + sandboxId + " " + (categoryAgeCode != null ? "and for category : " + categoryAgeCode + ")" : ")"));
@@ -67,6 +67,6 @@ public class EffectiveDAOImpl implements EffectiveDAO {
 
     @Override
     public JsonObject getEffective(String id) throws QaobeeException {
-        return mongo.getById(id, COLLECTION);
+        return mongo.getById(id, DBCollections.EFFECTIVE);
     }
 }

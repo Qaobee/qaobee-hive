@@ -142,13 +142,8 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
     private void update(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(collectDAO.update(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        message.reply(collectDAO.update(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
     }
 
     /**

@@ -205,7 +205,7 @@ public class UtilsImpl implements Utils {
         if (StringUtils.isBlank(token)) {
             throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
         }
-        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, User.class);
+        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, "User");
         if (res.size() != 1) {
             throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
         } else {
@@ -225,7 +225,7 @@ public class UtilsImpl implements Utils {
                 user.getAccount().setTokenRenewDate(connectionTime);
             }
             try {
-                mongo.update(userToSave, User.class);
+                mongo.update(userToSave, "User");
                 if (user.getAccount().getTokenRenewDate() == 0) {
                     throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
                 }

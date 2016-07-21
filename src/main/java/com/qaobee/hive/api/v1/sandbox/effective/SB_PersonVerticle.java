@@ -153,11 +153,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY)
     private void updatePerson(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
         message.reply(personDAO.updatePerson(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-        }
     }
 
     /**

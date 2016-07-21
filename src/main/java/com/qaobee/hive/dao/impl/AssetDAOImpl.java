@@ -24,6 +24,7 @@ import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import com.qaobee.hive.dao.AssetDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -63,7 +64,7 @@ public class AssetDAOImpl implements AssetDAO {
             FileUtils.deleteQuietly(new File(filename));
             throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", locale));
         }
-        GridFS img = new GridFS(mongo.getDb(), "Assets");
+        GridFS img = new GridFS(mongo.getDb(), DBCollections.ASSETS);
         GridFSInputFile gfsFile;
         try {
             gfsFile = img.createFile(FileUtils.readFileToByteArray(new File(filename)));
@@ -82,11 +83,11 @@ public class AssetDAOImpl implements AssetDAO {
                 .putString("_id", userId)
                 .putString(field, gfsFile.getId().toString());
         if ("SB_Person".equals(collection)) {
-            mongo.getById(userId, "SB_Person");
-            mongo.update(personToSave, "SB_Person");
+            mongo.getById(userId, DBCollections.PERSON);
+            mongo.update(personToSave, DBCollections.PERSON);
         } else {
-            mongo.getById(userId, "User");
-            mongo.update(personToSave, "User");
+            mongo.getById(userId, DBCollections.USER);
+            mongo.update(personToSave, DBCollections.USER);
         }
         if (vertx.fileSystem().existsSync(filename)) {
             vertx.fileSystem().deleteSync(filename);
@@ -96,9 +97,9 @@ public class AssetDAOImpl implements AssetDAO {
 
     @Override
     public JsonObject getAsset(String collection, String id) throws QaobeeException {
-        GridFS img = new GridFS(mongo.getDb(), "Assets");
+        GridFS img = new GridFS(mongo.getDb(), DBCollections.ASSETS);
         try {
-            if ("SB_Person".equals(collection) || "User".equals(collection)) {
+            if (DBCollections.PERSON.equals(collection) || DBCollections.USER.equals(collection)) {
                 GridFSDBFile imageForOutput = img.findOne(new ObjectId(id));
                 if (imageForOutput != null && imageForOutput.getChunkSize() > 0) {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();

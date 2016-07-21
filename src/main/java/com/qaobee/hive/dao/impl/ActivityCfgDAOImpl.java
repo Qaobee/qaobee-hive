@@ -23,6 +23,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgVerticle;
 import com.qaobee.hive.dao.ActivityCfgDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
@@ -38,7 +39,6 @@ import java.util.List;
  * The type Activity cfg dao.
  */
 public class ActivityCfgDAOImpl implements ActivityCfgDAO {
-    private static final String COLLECTION = "ActivityCfg";
 
     @Inject
     private MongoDB mongo;
@@ -64,7 +64,7 @@ public class ActivityCfgDAOImpl implements ActivityCfgDAO {
         dbObjectParent.put(paramField, 1);
         project = new BasicDBObject("$project", dbObjectParent);
         List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-        final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, COLLECTION);
+        final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, DBCollections.ACTIVITY_CFG);
         if (resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");
         }
@@ -79,7 +79,7 @@ public class ActivityCfgDAOImpl implements ActivityCfgDAO {
         criterias.add(ActivityCfgVerticle.PARAM_COUNTRY_ID, countryId);
         criterias.between("startDate", "endDate", dateRef);
         // Call to mongo
-        JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, COLLECTION);
+        JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.ACTIVITY_CFG);
         if (resultJSon.size() == 0) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
         }

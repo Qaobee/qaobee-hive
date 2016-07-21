@@ -22,10 +22,9 @@ package com.qaobee.hive.dao.impl;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import com.qaobee.hive.dao.StatisticsDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
@@ -38,8 +37,6 @@ import java.util.UUID;
  * The type Statistics dao.
  */
 public class StatisticsDAOImpl implements StatisticsDAO {
-    private static final Logger LOG = LoggerFactory.getLogger(StatisticsDAOImpl.class);
-    private static final String COLLECTION = "SB_Stats";
     private static final String TIMER_FIELD = "timer";
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
@@ -49,7 +46,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
 
     @Override
     public JsonObject addBulk(JsonArray stats) {
-            DBCollection coll = mongo.getDb().getCollection(COLLECTION);
+            DBCollection coll = mongo.getDb().getCollection(DBCollections.STATS);
             BulkWriteOperation bulk = coll.initializeUnorderedBulkOperation();
             for (Object object : stats) {
                 JsonObject jsonO = (JsonObject) object;
@@ -66,7 +63,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         if (!stat.containsField(TIMER_FIELD) || Integer.valueOf(0).equals(stat.getInteger(TIMER_FIELD))) {
             stat.putNumber(TIMER_FIELD, System.currentTimeMillis());
         }
-        stat.putString("_id", mongo.save(stat, COLLECTION));
+        stat.putString("_id", mongo.save(stat, DBCollections.STATS));
         return stat;
     }
 
@@ -102,7 +99,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         } else {
             pipelineAggregation = Arrays.asList(match, sort);
         }
-        return mongo.aggregate("_id", pipelineAggregation, COLLECTION);
+        return mongo.aggregate("_id", pipelineAggregation, DBCollections.STATS);
     }
 
     @Override
@@ -175,6 +172,6 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         DBObject sort = new BasicDBObject("$sort", dbObjectParent);
         List<DBObject> pipelineAggregation;
         pipelineAggregation = limit > 0 ? Arrays.asList(match, group, sort, new BasicDBObject("$limit", limit)) : Arrays.asList(match, group, sort);
-        return mongo.aggregate("_id", pipelineAggregation, COLLECTION);
+        return mongo.aggregate("_id", pipelineAggregation, DBCollections.STATS);
     }
 }

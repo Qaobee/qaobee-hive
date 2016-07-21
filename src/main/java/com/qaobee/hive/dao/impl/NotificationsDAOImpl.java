@@ -20,6 +20,7 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.NotificationsDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -45,7 +46,6 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     private static final String TARGET_ID = "targetId";
     private static final String DELETED = "deleted";
     private static final String FIELD_MEMBERS = "members";
-    private static final String COLLECTION = "Notification";
 
     @Inject
     private MongoDB mongo;
@@ -60,9 +60,9 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                 return false;
             } else {
                 switch (collection) {
-                    case "User":
+                    case DBCollections.USER:
                         return addNotificationToUser(id, notification);
-                    case "SB_SandBox":
+                    case DBCollections.SANDBOX:
                         return addNotificationToSandbox(target, notification, exclude);
                     default:
                         return false;
@@ -96,7 +96,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                     .putNumber("timestamp", System.currentTimeMillis())
                     .putBoolean("read", false)
                     .putBoolean(DELETED, false);
-            mongo.save(notification, COLLECTION);
+            mongo.save(notification, DBCollections.NOTIFICATION);
             vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
             return true;
         } catch (QaobeeException e) {
@@ -107,18 +107,18 @@ public class NotificationsDAOImpl implements NotificationsDAO {
 
     @Override
     public JsonObject markAsRead(String id) throws QaobeeException {
-        JsonObject n = mongo.getById(id, COLLECTION);
+        JsonObject n = mongo.getById(id, DBCollections.NOTIFICATION);
         n.putBoolean("read", !n.getBoolean("read"));
-        mongo.save(n, COLLECTION);
+        mongo.save(n, DBCollections.NOTIFICATION);
         vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
         return n;
     }
 
     @Override
     public JsonObject delete(String id) throws QaobeeException {
-        JsonObject n = mongo.getById(id, COLLECTION);
+        JsonObject n = mongo.getById(id, DBCollections.NOTIFICATION);
         n.putBoolean(DELETED, true);
-        mongo.save(n, COLLECTION);
+        mongo.save(n, DBCollections.NOTIFICATION);
         vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
         return n;
     }
@@ -128,7 +128,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
         CriteriaBuilder cb = new CriteriaBuilder()
                 .add(TARGET_ID, id)
                 .add(DELETED, false);
-        JsonArray notifications = mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, COLLECTION);
+        JsonArray notifications = mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, DBCollections.NOTIFICATION);
 
         JsonArray jnotif = new JsonArray();
         int myLimit = limit;
@@ -143,7 +143,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     }
 
     private JsonObject getUser(String id) throws QaobeeException {
-        JsonObject u = mongo.getById(id, "User");
+        JsonObject u = mongo.getById(id, DBCollections.USER);
         JsonObject cu = new JsonObject();
         u.getFieldNames().stream()
                 .filter(Arrays.asList("_id", "name", "firstname", "avatar")::contains)

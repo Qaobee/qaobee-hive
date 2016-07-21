@@ -53,9 +53,8 @@ public interface PersonDAO {
      * @param userId the user id
      * @param locale the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject updatePerson(JsonObject person, String userId, String locale) throws QaobeeException;
+    JsonObject updatePerson(JsonObject person, String userId, String locale);
 
     /**
      * Gets person.

@@ -205,12 +205,6 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_SANDBOX_LIST, method = Constants.GET, logged = true)
     private void getListOfSharedSandboxes(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-
-        try {
-            message.reply(shareDAO.getListOfSharedSandboxes(req.getUser().get_id()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        message.reply(shareDAO.getListOfSharedSandboxes(req.getUser().get_id()).encode());
     }
 }
