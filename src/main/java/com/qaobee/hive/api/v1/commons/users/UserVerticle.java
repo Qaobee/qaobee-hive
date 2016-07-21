@@ -19,7 +19,6 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.dao.SecurityDAO;
 import com.qaobee.hive.dao.UserDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
@@ -99,14 +98,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * The constant MOBILE_TOKEN.
      */
     public static final String MOBILE_TOKEN = "mobileToken";
-    private static final String ACCOUNT_FIELD = "account";
     private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     @Inject
     private Utils utils;
     @Inject
     private UserDAO userDAO;
-    @Inject
-    private SandBoxDAO sandBoxDAO;
     @Inject
     private SecurityDAO securityDAO;
 

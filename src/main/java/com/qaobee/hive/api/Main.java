@@ -397,7 +397,7 @@ public class Main extends AbstractGuiceVerticle {
                 vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<Object>>) message -> {
                     req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
                     if (message.body() instanceof ReplyException) {
-                        JsonObject resp = new JsonObject(((ReplyException) message.body()).getMessage());
+                        final JsonObject resp = new JsonObject(((ReplyException) message.body()).getMessage());
                         req.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
                                 .end(resp.getString(MESSAGE, ""));
                     } else if (message.body() instanceof JsonObject) {

@@ -3,7 +3,7 @@
 red='\e[0;31m'
 green='\e[0;32m'
 NC='\e[0m' # No Color
-db=' -u admin -p enayHvXDYbty --verbose localhost:48921/hive '
+db=' -u hive -p qaobee2016 --verbose 51.254.217.60:27017/hive '
 
 function pause(){
    read -p "$*"
