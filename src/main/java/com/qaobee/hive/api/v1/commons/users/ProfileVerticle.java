@@ -17,23 +17,6 @@
  *    from Qaobee.
  */
 
-/*************************************************************************
- * Qaobee
- * __________________
- * <p/>
- * [2014] Qaobee
- * All Rights Reserved.
- * <p/>
- * NOTICE: All information contained here is, and remains
- * the property of Qaobee and its suppliers,
- * if any. The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may
- * be covered by U.S. and Foreign Patents, patents in process,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Qaobee.
- */
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.Main;
@@ -154,14 +137,18 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
 
     private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
         return pdfResp -> {
-            if (pdfResp.failed()) {
-                LOG.error(pdfResp.cause().getMessage(), pdfResp.cause());
-                utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, pdfResp.cause().getMessage());
-            } else {
-                message.reply(new JsonObject()
-                        .putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
-                        .putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF))
-                        .encode());
+            try {
+                if (pdfResp.failed()) {
+                    throw pdfResp.cause();
+                } else {
+                    message.reply(new JsonObject()
+                            .putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
+                            .putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF))
+                            .encode());
+                }
+            } catch (Throwable e) {
+                LOG.error(e.getMessage(), e);
+                utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
             }
         };
     }

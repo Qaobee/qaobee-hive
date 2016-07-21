@@ -332,8 +332,8 @@ public class User {
      * @return the sandboxDefault
      */
     public String getSandboxDefault() {
-		return sandboxDefault;
-	}
+        return sandboxDefault;
+    }
 
     /**
      * Sets sandbox default.
@@ -341,8 +341,6 @@ public class User {
      * @param sandboxDefault the sandboxDefault to set
      */
     public void setSandboxDefault(String sandboxDefault) {
-		this.sandboxDefault = sandboxDefault;
-	}
-
-    
+        this.sandboxDefault = sandboxDefault;
+    }
 }

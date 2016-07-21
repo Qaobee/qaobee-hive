@@ -116,34 +116,38 @@ public class Main extends AbstractGuiceVerticle {
      * @param req     Request
      */
     private static void handleResult(AsyncResult<Message<Object>> message, HttpServerRequest req) {
-        if (message.succeeded()) {
-            final String response = (String) message.result().body();
-            if (response.startsWith("[") || !response.startsWith("{")) {
-                enableCors(req);
-                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                req.response().end(response);
-            } else {
-                final JsonObject json = new JsonObject(response);
-                if (json.containsField(FILE_SERVE)) {
-                    final File f = new File(json.getString(FILE_SERVE));
-                    req.response().putHeader("Content-Description", "File Transfer")
-                            .putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE))
-                            .putHeader("Content-Disposition", "attachment; filename=" + f.getName())
-                            .putHeader("Expires", "0")
-                            .putHeader("Cache-Control", "must-revalidate")
-                            .putHeader("Pragma", "public")
-                            .putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
-                    enableCors(req);
-                    req.response().sendFile(f.getAbsolutePath());
-                } else {
+        try {
+            if (message.succeeded()) {
+                final String response = (String) message.result().body();
+                if (response.startsWith("[") || !response.startsWith("{")) {
                     enableCors(req);
                     req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
                     req.response().end(response);
+                } else {
+                    final JsonObject json = new JsonObject(response);
+                    if (json.containsField(FILE_SERVE)) {
+                        final File f = new File(json.getString(FILE_SERVE));
+                        req.response().putHeader("Content-Description", "File Transfer")
+                                .putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE))
+                                .putHeader("Content-Disposition", "attachment; filename=" + f.getName())
+                                .putHeader("Expires", "0")
+                                .putHeader("Cache-Control", "must-revalidate")
+                                .putHeader("Pragma", "public")
+                                .putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
+                        enableCors(req);
+                        req.response().sendFile(f.getAbsolutePath());
+                    } else {
+                        enableCors(req);
+                        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+                        req.response().end(response);
+                    }
                 }
+            } else {
+                throw (ReplyException) message.cause();
             }
-        } else {
+        } catch (ReplyException ex) {
+            LOG.error(ex.getMessage(), ex);
             req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-            final ReplyException ex = (ReplyException) message.cause();
             req.response().setStatusCode(404);
             enableCors(req);
             if (ex.failureCode() > 0) {
@@ -204,18 +208,17 @@ public class Main extends AbstractGuiceVerticle {
         final RouteMatcher rm = new RouteMatcher();
 
         /**
+         * @apiDescription Get an asset from a collection
          * @api {get} /file/:collection/:id  Get an asset from a collection
          * @apiVersion 0.1.0
          * @apiName Get asset
-         * @apiGroup Main API
+         * @apiGroup Main
          * @apiPermission all
-         *
-         * @apiDescription Get an asset from a collection
-         *
          * @apiParam {String} collection Mandatory The collection.
          * @apiParam {String} id Mandatory The Asset-ID.
          */
         rm.get("/file/:collection/:id", this::getAssetHandler);
+
         /**
          * @apiDescription Put an asset in a collection
          * @api {post} /file/:collection/:field/:uid
@@ -226,8 +229,6 @@ public class Main extends AbstractGuiceVerticle {
          * @apiparam {String} token token
          * @apiparam {String} locale locale
          * @apiparam {String} uid document id
-         *
-         * @apiError NOT_LOGGED user not logged
          */
         rm.post("/file/:collection/:field/:uid", this::assetUploadHandler);
         rm.optionsWithRegEx(".*", req -> {

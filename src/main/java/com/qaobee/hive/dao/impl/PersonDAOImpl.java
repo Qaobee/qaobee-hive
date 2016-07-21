@@ -83,7 +83,7 @@ public class PersonDAOImpl implements PersonDAO {
                             "/#/private/viewPlayer/" + person.getString("_id")))
                     .putString("title", Messages.getString("notification.person.update.title", locale))
                     .putString("senderId", userId);
-            notificationsDAO.notify(person.getString("sandboxId"), DBCollections.SANDBOX, notification, new JsonArray().add(userId));
+            notificationsDAO.notify(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId));
         }
         return person;
     }
@@ -103,7 +103,7 @@ public class PersonDAOImpl implements PersonDAO {
                             "/#/private/viewPlayer/" + person.getString("_id")))
                     .putString("title", Messages.getString("notification.person.add.title", locale))
                     .putString("senderId", userId);
-            notificationsDAO.notify(person.getString("sandboxId"), DBCollections.SANDBOX, notification, new JsonArray().add(userId));
+            notificationsDAO.notify(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId));
         }
         return person;
     }

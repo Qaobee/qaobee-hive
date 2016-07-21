@@ -25,8 +25,6 @@ import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.dao.PasswordEncryptionService;
-import com.qaobee.hive.dao.impl.PasswordEncryptionServiceImpl;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.Utils;

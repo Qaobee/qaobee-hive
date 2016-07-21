@@ -52,6 +52,7 @@ public class AssetDAOImpl implements AssetDAO {
     private static final Logger LOG = LoggerFactory.getLogger(AssetDAOImpl.class);
     private static final String COLLECTION = "User";
     private static final String UID_FIELD = "uid";
+    private static final String MESS_NOT_FOUND = "Not found";
     @Inject
     private MongoDB mongo;
     @Inject
@@ -109,14 +110,14 @@ public class AssetDAOImpl implements AssetDAO {
                             .putString(HttpHeaders.Names.CONTENT_LENGTH, Integer.toString(asset.length))
                             .putBinary("asset", asset);
                 } else {
-                    throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Not found");
+                    throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND);
                 }
             } else {
-                throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Not found");
+                throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND);
             }
         }catch(IllegalArgumentException e) {
             LOG.error(e.getMessage(), e);
-            throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Not found");
+            throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage());

@@ -24,7 +24,7 @@ import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 /**
- * Created by xavier on 04/07/16.
+ * The interface Activity cfg dao.
  */
 public interface ActivityCfgDAO {
     /**

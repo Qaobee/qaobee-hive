@@ -16,12 +16,6 @@
  *  is strictly forbidden unless prior written permission is obtained
  *  from Qaobee.
  */
-
-/**
- * @author cke
- * @author cke
- * @author cke
- */
 /**
  * @author cke
  *
