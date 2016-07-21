@@ -33,9 +33,8 @@ public interface StatisticsDAO {
      *
      * @param stats the stats
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject addBulk(JsonArray stats) throws QaobeeException;
+    JsonObject addBulk(JsonArray stats);
 
     /**
      * Add stat json object.

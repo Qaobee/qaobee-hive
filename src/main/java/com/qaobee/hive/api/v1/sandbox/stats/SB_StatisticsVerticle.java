@@ -64,14 +64,6 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
     /**
-     * Value
-     */
-    public static final String PARAM_VALUES = "values";
-    /**
-     * List of parameters for the indicator
-     */
-    public static final String PARAM_LIST_SHOOTSEQID = "listShootSeqId";
-    /**
      * List of owners
      */
     public static final String PARAM_LIST_OWNERS = "listOwners";
@@ -83,22 +75,12 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * End date
      */
     public static final String PARAM_END_DATE = "endDate";
-    /**
-     * COUNT, SUM, AVG
-     */
-    public static final String PARAM_AGGREGAT = "aggregat";
-    /**
-     * list clause group by
-     */
-    public static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
-    /**
-     * list clause SORT by
-     */
-    public static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
-    /**
-     * limit number of result
-     */
-    public static final String PARAM_LIMIT_RESULT = "limitResult";
+    private static final String PARAM_VALUES = "values";
+    private static final String PARAM_LIST_SHOOTSEQID = "listShootSeqId";
+    private static final String PARAM_AGGREGAT = "aggregat";
+    private static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
+    private static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
+    private static final String PARAM_LIMIT_RESULT = "limitResult";
     private static final Logger LOG = LoggerFactory.getLogger(SB_StatisticsVerticle.class);
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
@@ -131,13 +113,8 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = ADD_STAT_BULK, method = Constants.PUT, logged = true)
     private void addBulk(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(statisticsDAO.addBulk(new JsonArray(req.getBody())).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        message.reply(statisticsDAO.addBulk(new JsonArray(req.getBody())).encode());
     }
 
     /**

@@ -22,12 +22,10 @@ package com.qaobee.hive.dao.impl;
 import com.mongodb.*;
 import com.mongodb.util.JSON;
 import com.qaobee.hive.dao.StatisticsDAO;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
@@ -50,8 +48,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private MongoDB mongo;
 
     @Override
-    public JsonObject addBulk(JsonArray stats) throws QaobeeException {
-        try {
+    public JsonObject addBulk(JsonArray stats) {
             DBCollection coll = mongo.getDb().getCollection(COLLECTION);
             BulkWriteOperation bulk = coll.initializeUnorderedBulkOperation();
             for (Object object : stats) {
@@ -62,11 +59,6 @@ public class StatisticsDAOImpl implements StatisticsDAO {
             }
             BulkWriteResult resultBulk = bulk.execute();
             return new JsonObject().putNumber("count", resultBulk.getInsertedCount());
-
-        } catch (EncodeException e) {
-            LOG.error(e.getMessage(), e);
-            throw new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-        }
     }
 
     @Override
