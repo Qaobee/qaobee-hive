@@ -45,19 +45,19 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * Handler for get a list of collecte document
      */
-    public static final String GET_LIST = Module.VERSION + ".sandbox.stats.collecte.list";
+    public static final String GET_LIST = Module.VERSION + ".sandbox.stats.collect.list";
     /**
      * Handler for get individual collecte document
      */
-    public static final String GET = Module.VERSION + ".sandbox.stats.collecte.get";
+    public static final String GET = Module.VERSION + ".sandbox.stats.collect.get";
     /**
      * Handler for adding a collecte document
      */
-    public static final String ADD = Module.VERSION + ".sandbox.stats.collecte.add";
+    public static final String ADD = Module.VERSION + ".sandbox.stats.collect.add";
     /**
      * Handler for update a collecte document
      */
-    public static final String UPDATE = Module.VERSION + ".sandbox.stats.collecte.update";
+    public static final String UPDATE = Module.VERSION + ".sandbox.stats.collect.update";
     /**
      * Collecte ID
      */
