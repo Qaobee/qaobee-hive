@@ -25,13 +25,16 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
+import org.vertx.java.core.http.HttpClient;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +55,9 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     private MongoDB mongo;
     @Inject
     private Vertx vertx;
+    @Inject
+    @Named("firebase")
+    JsonObject firebase;
 
     @Override
     public boolean notify(String id, String collection, JsonObject notification, JsonArray exclude) {
@@ -98,9 +104,34 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                     .putBoolean("read", false)
                     .putBoolean(DELETED, false);
             mongo.save(notification, DBCollections.NOTIFICATION);
-            JsonObject u = getUser(id);
-            if(u.getObject("account").containsField("pushId") && StringUtils.isNotBlank(u.getObject("account").getString("pushId"))) {
+            JsonObject u = mongo.getById(id, DBCollections.USER);
+            if (u != null && u.containsField("account") && u.getObject("account").containsField("pushId") && StringUtils.isNotBlank(u.getObject("account").getString("pushId", ""))) {
                 // Send firebase notification
+                JsonObject requestBody = new JsonObject()
+                        .putObject("notification", new JsonObject()
+                                .putString("title", notification.getString("title"))
+                                .putString("text", notification.getString("content"))
+                        )
+                        .putObject("data", new JsonObject().putString("senderId", notification.getString("senderId")))
+                        .putString("to", u.getObject("account").getString("pushId"));
+                HttpClient client = vertx.createHttpClient().setKeepAlive(true);
+                client.setHost(firebase.getString("host"));
+                client.setPort(firebase.getInteger("port"));
+                client.setSSL(true).setTrustAll(true);
+                client.exceptionHandler(ex -> LOG.error(ex.getMessage(), ex));
+                client.post(firebase.getString("basePath"), resp -> {
+                    if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
+                        resp.bodyHandler(buffer -> {
+
+                        });
+                    } else {
+                        LOG.error(resp.statusCode() + " : " + resp.statusMessage());
+                    }
+                })
+                        .putHeader("Authorization", "key= " + firebase.getString("api_key"))
+                        .putHeader(HTTP.CONTENT_TYPE, "application/json")
+                        .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody.encode().length()))
+                        .end(requestBody.encode());
             }
             vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
             return true;

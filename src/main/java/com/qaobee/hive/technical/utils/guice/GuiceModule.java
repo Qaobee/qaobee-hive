@@ -83,6 +83,7 @@ public class GuiceModule extends AbstractModule {
         bind(JsonObject.class).annotatedWith(Names.named("asana")).toInstance(config.getObject("asana"));
         bind(JsonObject.class).annotatedWith(Names.named("runtime")).toInstance(config.getObject("runtime"));
         bind(JsonObject.class).annotatedWith(Names.named("pdf")).toInstance(config.getObject("pdf"));
+        bind(JsonObject.class).annotatedWith(Names.named("firebase")).toInstance(config.getObject("firebase"));
         bind(JsonObject.class).annotatedWith(Names.named("env")).toInstance(env);
 
         bind(Vertx.class).toInstance(vertx);

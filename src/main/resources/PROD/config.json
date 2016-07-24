@@ -72,5 +72,11 @@
     "sendTimeout": 5000,
     "debug": true,
     "debugAddress": "logger"
+  },
+  "firebase" : {
+    "api_key" : "AIzaSyC7qw9ln164KM1dvSYpVmurep5lMFBliig",
+    "host" : "fcm.googleapis.com",
+    "port" : 443,
+    "basePath" : "/fcm/send"
   }
 }
