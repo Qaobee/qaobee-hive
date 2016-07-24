@@ -98,6 +98,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * The constant MOBILE_TOKEN.
      */
     public static final String MOBILE_TOKEN = "mobileToken";
+    public static final String PUSH_ID = "pushId";
     private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     @Inject
     private Utils utils;
@@ -341,7 +342,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject infos = new JsonObject(req.getBody());
-            message.reply(securityDAO.login(infos.getString(PARAM_LOGIN),infos.getString(PARAM_PWD), infos.getString(MOBILE_TOKEN), req.getLocale()).toString());
+            message.reply(securityDAO.login(infos.getString(PARAM_LOGIN),
+                    infos.getString(PARAM_PWD),
+                    infos.getString(MOBILE_TOKEN),
+                    infos.getString(PUSH_ID),
+                    req.getLocale()).toString());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

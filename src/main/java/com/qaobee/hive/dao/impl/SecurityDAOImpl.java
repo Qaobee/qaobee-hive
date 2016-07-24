@@ -179,7 +179,7 @@ public class SecurityDAOImpl implements SecurityDAO {
     }
 
     @Override
-    public JsonObject login(String login, String password, String mobileToken, String locale) throws QaobeeException {
+    public JsonObject login(String login, String password, String mobileToken, String pushId, String locale) throws QaobeeException {
         JsonObject jsonPerson;
         if (StringUtils.isBlank(login) || StringUtils.isBlank(password)) {
             throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale));
@@ -205,6 +205,9 @@ public class SecurityDAOImpl implements SecurityDAO {
         user.getAccount().setToken(UUID.randomUUID().toString());
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
         user.getAccount().setMobileToken(mobileToken);
+        if(StringUtils.isNotBlank(pushId)) {
+            user.getAccount().setPushId(pushId);
+        }
         mongo.save(user);
         return userDAO.getUserInfo(user.get_id());
     }

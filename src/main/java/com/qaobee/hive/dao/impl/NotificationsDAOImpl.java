@@ -24,6 +24,7 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
@@ -97,6 +98,10 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                     .putBoolean("read", false)
                     .putBoolean(DELETED, false);
             mongo.save(notification, DBCollections.NOTIFICATION);
+            JsonObject u = getUser(id);
+            if(u.getObject("account").containsField("pushId") && StringUtils.isNotBlank(u.getObject("account").getString("pushId"))) {
+                // Send firebase notification
+            }
             vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
             return true;
         } catch (QaobeeException e) {

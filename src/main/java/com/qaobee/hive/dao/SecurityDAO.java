@@ -86,10 +86,11 @@ public interface SecurityDAO {
      * @param login       the login
      * @param password    the password
      * @param mobileToken the mobile token
+     * @param pushId      the push id
      * @param locale      the locale
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject login(String login, String password, String mobileToken, String locale) throws QaobeeException;
+    JsonObject login(String login, String password, String mobileToken, String pushId, String locale) throws QaobeeException;
 
 }

@@ -31,70 +31,23 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 
-    /**
-     * Internal identifier
-     */
     private String _id; // NOSONAR
-    /**
-     * Activation code
-     */
     private String activationCode;
-    /**
-     * Activation password
-     */
     private String activationPasswd;
-    /**
-     * Is account active ?
-     */
     private boolean active;
-    /**
-     * Expiration date
-     */
     private long expirationDate;
-    /**
-     * Is the first connection ?
-     */
     private boolean firstConnexion;
-    /**
-     * Login
-     */
     private String login;
-    /**
-     * Password - String format
-     */
     private String passwd;
-    /**
-     * Password - bytes format
-     */
     private byte[] password;
-    /**
-     * Salt
-     */
     private byte[] salt;
-    /**
-     * Timestamp
-     */
     private long timestamp;
-    /**
-     * Token
-     */
     private String token;
-    /**
-     * Token renew date
-     */
     private long tokenRenewDate;
-    /**
-     * List of plans
-     */
     private List<Plan> listPlan;
-    /**
-     * List of habilitations
-     */
     private List<Habilitation> habilitations;
-    /**
-     * Mobile token
-     */
     private String mobileToken;
+    private String pushId;
 
     /**
      * Returns the activation code.
@@ -382,5 +335,23 @@ public class Account {
      */
     public void setMobileToken(String mobileToken) {
         this.mobileToken = mobileToken;
+    }
+
+    /**
+     * Gets push id.
+     *
+     * @return the push id
+     */
+    public String getPushId() {
+        return pushId;
+    }
+
+    /**
+     * Sets push id.
+     *
+     * @param pushId the push id
+     */
+    public void setPushId(String pushId) {
+        this.pushId = pushId;
     }
 }
