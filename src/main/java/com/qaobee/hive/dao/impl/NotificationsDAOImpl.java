@@ -50,6 +50,8 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     private static final String TARGET_ID = "targetId";
     private static final String DELETED = "deleted";
     private static final String FIELD_MEMBERS = "members";
+    private static final String PUSH_ID = "pushId";
+    private static final String ACCOUNT = "account";
 
     @Inject
     private MongoDB mongo;
@@ -105,15 +107,15 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                     .putBoolean(DELETED, false);
             mongo.save(notification, DBCollections.NOTIFICATION);
             JsonObject u = mongo.getById(id, DBCollections.USER);
-            if (u != null && u.containsField("account") && u.getObject("account").containsField("pushId") && StringUtils.isNotBlank(u.getObject("account").getString("pushId", ""))) {
+            if (u != null && u.containsField(ACCOUNT) && u.getObject(ACCOUNT).containsField(PUSH_ID) && StringUtils.isNotBlank(u.getObject(ACCOUNT).getString(PUSH_ID, ""))) {
                 // Send firebase notification
                 JsonObject requestBody = new JsonObject()
                         .putObject("notification", new JsonObject()
                                 .putString("title", notification.getString("title"))
                                 .putString("text", notification.getString("content"))
                         )
-                        .putObject("data", new JsonObject().putString("senderId", notification.getString("senderId")))
-                        .putString("to", u.getObject("account").getString("pushId"));
+                        .putObject("data", new JsonObject().putString(SENDER_ID, notification.getString(SENDER_ID)))
+                        .putString("to", u.getObject(ACCOUNT).getString(PUSH_ID));
                 HttpClient client = vertx.createHttpClient().setKeepAlive(true);
                 client.setHost(firebase.getString("host"));
                 client.setPort(firebase.getInteger("port"));
