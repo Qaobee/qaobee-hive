@@ -19,26 +19,21 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.settings.Season;
+import com.qaobee.hive.dao.SeasonDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The type Season verticle.
@@ -47,6 +42,7 @@ import java.util.Map;
  */
 @DeployableVerticle
 public class SeasonVerticle extends AbstractGuiceVerticle {
+    private static final Logger LOG = LoggerFactory.getLogger(SeasonVerticle.class);
     /**
      * The Constant GET.
      */
@@ -71,10 +67,8 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * Country ID
      */
     public static final String PARAM_COUNTRY_ID = "countryId";
-    private static final Logger LOG = LoggerFactory.getLogger(SeasonVerticle.class);
-    private static final String END_DATE_FIELD = "endDate";
     @Inject
-    private MongoDB mongo;
+    private SeasonDAO seasonDAO;
     @Inject
     private Utils utils;
 
@@ -83,48 +77,30 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(GET, this::getSeasonHandler)
-                .registerHandler(GET_LIST_BY_ACTIVITY, this::getListByActivityHandler)
-                .registerHandler(GET_CURRENT, this::getCurrentSeasonHandler);
+                .registerHandler(GET, this::getSeason)
+                .registerHandler(GET_LIST_BY_ACTIVITY, this::getListByActivity)
+                .registerHandler(GET_CURRENT, this::getCurrentSeason);
     }
 
     /**
      * @apiDescription Retrieve current season for one activity and one country
      * @api {get} /api/1/commons/settings/season/current Retrieve current seasons
      * @apiVersion 0.1.0
-     * @apiName getCurrentHandler
+     * @apiName getCurrentSeason
      * @apiGroup Season API
      * @apiParam activityId Activity Id
      * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
+     * @apiHeader {String} token
      * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
     @Rule(address = GET_CURRENT, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
             scope = Rule.Param.REQUEST)
-    private void getCurrentSeasonHandler(Message<String> message) {
+    private void getCurrentSeason(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            // Activity ID
-            String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
-            // Country ID
-            String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
-            // Creation of the request
-            Map<String, Object> criterias = new HashMap<>();
-            criterias.put(PARAM_ACTIVITY_ID, activityId);
-            criterias.put(PARAM_COUNTRY_ID, countryId);
-            JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, Season.class);
-            long currentDate = System.currentTimeMillis();
-            if (resultJson == null || resultJson.size() == 0) {
-                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
-            }
-            for (int i = 0; i < resultJson.size(); i++) {
-                JsonObject s = resultJson.get(i);
-                if (s.getLong(END_DATE_FIELD, 0) > currentDate && s.getLong("startDate") < currentDate) {
-                    message.reply(s.encode());
-                    return;
-                }
-            }
-            message.reply(new JsonObject().encode());
+            JsonObject s = seasonDAO.getCurrentSeason(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getParams().get(PARAM_COUNTRY_ID).get(0));
+            message.reply(s.encode());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -135,31 +111,20 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiDescription Retrieve all seasons for one activity and one country
      * @api {get} /api/1/commons/settings/season/getListByActivity Retrieve all seasons
      * @apiVersion 0.1.0
-     * @apiName getListByActivityHandler
+     * @apiName getListByActivity
      * @apiParam activityId Activity Id
      * @apiParam countryId Country Id (ie "CNTR-250-FR-FRA")
      * @apiGroup Season API
+     * @apiHeader {String} token
      * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
     @Rule(address = GET_LIST_BY_ACTIVITY, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
             scope = Rule.Param.REQUEST)
-    private void getListByActivityHandler(Message<String> message) {
+    private void getListByActivity(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            // Activity ID
-            String activityId = req.getParams().get(PARAM_ACTIVITY_ID).get(0);
-            // Country ID
-            String countryId = req.getParams().get(PARAM_COUNTRY_ID).get(0);
-            // Creation of the request
-            Map<String, Object> criterias = new HashMap<>();
-            criterias.put(PARAM_ACTIVITY_ID, activityId);
-            criterias.put(PARAM_COUNTRY_ID, countryId);
-            JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, Season.class);
-            if (resultJson == null || resultJson.size() == 0) {
-                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
-            }
-            message.reply(resultJson.encode());
+            message.reply(seasonDAO.getListByActivity(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getParams().get(PARAM_COUNTRY_ID).get(0)).encode());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -170,18 +135,18 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiDescription get a season to the collection season in settings module
      * @api {get} /api/1/commons/settings/season/get Get season by id
      * @apiVersion 0.1.0
-     * @apiName getHandler
+     * @apiName getSeason
      * @apiGroup Season API
+     * @apiHeader {String} token
      * @apiParam {String} _id Mandatory The season Id.
-     * @apiSuccess {Season} the object found
+     * @apiSuccess {Object} the object found
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
             scope = Rule.Param.REQUEST)
-    private void getSeasonHandler(Message<String> message) {
+    private void getSeason(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Season.class);
-            message.reply(json.encode());
+            message.reply(seasonDAO.getSeason(req.getParams().get(PARAM_ID).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

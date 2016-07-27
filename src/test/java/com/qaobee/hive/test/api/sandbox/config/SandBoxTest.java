@@ -135,12 +135,27 @@ public class SandBoxTest extends VertxJunitSupport {
     public void getSandBoxListByOwner() {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, user.get_id())
                 .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(1))
                 .body("owner", hasItem(user.get_id()));
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, "")
+                .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(1))
+                .body("owner", hasItem(user.get_id()));
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, "bla")
+                .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+
         given().header(TOKEN, user.getAccount().getToken())
                 .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
                 .then().assertThat().statusCode(200)
@@ -243,8 +258,6 @@ public class SandBoxTest extends VertxJunitSupport {
         });
     }
 
-    //- --------------
-
     /**
      * Update sand box.
      */
@@ -270,6 +283,23 @@ public class SandBoxTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body(SB_SandBoxVerticle.PARAM_SB_CFG_ID, is("123456"));
+    }
+
+    /**
+     * Update sand box with wrong id.
+     */
+    @Test
+    public void updateSandBoxWithWrongId() {
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        JsonObject params = new JsonObject()
+                .putString(SB_SandBoxVerticle.PARAM_ID, "bla")
+                .putString(SB_SandBoxVerticle.PARAM_SB_CFG_ID, "123456");
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(SB_SandBoxVerticle.UPDATE))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**

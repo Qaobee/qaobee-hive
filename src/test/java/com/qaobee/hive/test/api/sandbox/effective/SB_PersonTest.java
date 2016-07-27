@@ -25,10 +25,12 @@ import com.qaobee.hive.api.v1.sandbox.effective.SB_PersonVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import org.junit.Assert;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -162,6 +164,89 @@ public class SB_PersonTest extends VertxJunitSupport {
                 .when().get(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
+
+
+    /**
+     * Upload avatar
+     */
+    @Test
+    public void uploadAvatar() {
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        JsonObject person = new JsonObject().putObject("person", generatePerson());
+        String id = given().header(TOKEN, user.getAccount().getToken())
+                .body(person.encode())
+                .when().put(getURL(SB_PersonVerticle.ADD))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("name", is("Ranu")).extract().path("_id");
+
+        String avatarId = given().header(TOKEN, user.getAccount().getToken())
+                .multiPart(new File("src/test/resources/avatar.jpg")).
+                        pathParam("uid", id).
+                        when().
+                        post(BASE_URL + "/file/SB_Person/avatar/{uid}")
+                .then().assertThat().statusCode(200)
+                .body("avatar", notNullValue())
+                .extract().path("avatar");
+
+        byte[] byteArray = given().pathParam("avatar", avatarId)
+                .get(BASE_URL + "/file/SB_Person/{avatar}")
+                .then().assertThat().statusCode(200)
+                .extract().asByteArray();
+
+        Assert.assertEquals("Files must have same size",
+                byteArray.length,
+                getVertx().fileSystem().propsSync("src/test/resources/avatar.jpg").size());
+    }
+
+    /**
+     * Upload avatar with wrong user id
+     */
+    @Test
+    public void uploadAvatarWithWrongUserId() {
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
+                .multiPart(new File("src/test/resources/avatar.jpg")).
+                pathParam("uid", "blabla").
+                when().
+                post(BASE_URL + "/file/SB_Person/avatar/{uid}")
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
+    }
+
+    /**
+     * Upload avatar with not logged user
+     */
+    @Test
+    public void uploadAvatarWithNotLoggedUser() {
+        given().multiPart(new File("src/test/resources/avatar.jpg"))
+                .pathParam("uid", generateUser().get_id())
+                .when()
+                .post(BASE_URL + "/file/SB_Person/avatar/{uid}")
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
+    }
+
+    /**
+     * Upload avatar with wrong token.
+     */
+    @Test
+    public void uploadAvatarWithWrongToken() {
+        given().multiPart(new File("src/test/resources/avatar.jpg")).
+                pathParam("uid", generateUser().get_id())
+                .header(TOKEN, "11111")
+                .when()
+                .post(BASE_URL + "/file/SB_Person/avatar/{uid}")
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
+    }
+
+    /**
+     * Get avatar with wrong avatar id
+     */
+    @Test
+    public void getAvatarWithWrongAvatarId() {
+        given().pathParam("avatar", "blabla")
+                .get(BASE_URL + "/file/SB_Person/{avatar}")
+                .then().assertThat().statusCode(404);
     }
 
     /**

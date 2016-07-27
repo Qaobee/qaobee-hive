@@ -24,9 +24,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
-import com.qaobee.hive.business.model.sandbox.agenda.SB_Event;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.dao.EventDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
@@ -51,16 +50,16 @@ public class EventDAOImpl implements EventDAO {
 
     @Override
     public JsonObject getEvent(String id) throws QaobeeException {
-        return mongo.getById(id, SB_Event.class);
+        return mongo.getById(id, DBCollections.EVENT);
     }
 
     @Override
     public JsonObject updateEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException {
-        mongo.save(event, SB_Event.class);
-        String sandBoxId = mongo.getById(event.getObject("owner").getString(FIELD_SANDBOX_ID), SB_SandBox.class).getString(FIELD_SANDBOX_ID);
+        mongo.save(event, DBCollections.EVENT);
+        String sandBoxId = mongo.getById(event.getObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX).getString(FIELD_SANDBOX_ID);
         JsonObject notification = new JsonObject();
         notification.putString("id", sandBoxId);
-        notification.putString("target", SB_SandBox.class.getSimpleName());
+        notification.putString("target", DBCollections.SANDBOX);
         notification.putArray("exclude", new JsonArray().add(currentUserId));
         notification.putObject("notification", new JsonObject()
                 .putString("content", Messages.getString("notification.event.update.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
@@ -73,11 +72,11 @@ public class EventDAOImpl implements EventDAO {
 
     @Override
     public JsonObject addEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException {
-        event.putString("_id", mongo.save(event, SB_Event.class));
-        String sandBoxId = mongo.getById(event.getObject("owner").getString(FIELD_SANDBOX_ID), SB_SandBox.class).getString(FIELD_SANDBOX_ID);
+        event.putString("_id", mongo.save(event, DBCollections.EVENT));
+        String sandBoxId = mongo.getById(event.getObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX).getString(FIELD_SANDBOX_ID);
         JsonObject notification = new JsonObject();
         notification.putString("id", sandBoxId);
-        notification.putString("target", SB_SandBox.class.getSimpleName());
+        notification.putString("target", DBCollections.SANDBOX);
         notification.putArray("exclude", new JsonArray().add(currentUserId));
         notification.putObject("notification", new JsonObject()
                 .putString("content", Messages.getString("notification.event.add.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
@@ -90,7 +89,7 @@ public class EventDAOImpl implements EventDAO {
 
     @Override
     public JsonArray getEventList(JsonObject params) throws QaobeeException {
-        // Aggregat section
+        // Aggregate section
         DBObject match;
         DBObject sort;
         DBObject limit;
@@ -137,6 +136,6 @@ public class EventDAOImpl implements EventDAO {
         } else {
             pipelineAggregation = Arrays.asList(match, sort);
         }
-        return mongo.aggregate("_id", pipelineAggregation, SB_Event.class);
+        return mongo.aggregate("_id", pipelineAggregation, DBCollections.EVENT);
     }
 }

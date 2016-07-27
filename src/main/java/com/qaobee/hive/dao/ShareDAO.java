@@ -71,7 +71,6 @@ public interface ShareDAO {
      *
      * @param userId the user id
      * @return the list of shared sandboxes owners and members
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getListOfSharedSandboxes(String userId) throws QaobeeException;
+    JsonObject getListOfSharedSandboxes(String userId);
 }

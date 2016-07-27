@@ -14,6 +14,7 @@
     "recaptcha.site": "http://www.qaobee.com",
     "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
     "trial.duration" : 1,
+    "recaptcha" : false,
     "plan": {
       "FREEMIUM": {
         "price": 9
@@ -75,6 +76,12 @@
     "debug": true,
     "debugAddress": "logger"
   },
+  "firebase" : {
+    "api_key" : "AIzaSyC7qw9ln164KM1dvSYpVmurep5lMFBliig",
+    "host" : "fcm.googleapis.com",
+    "port" : 443,
+    "basePath" : "/fcm/send"
+  },
   "junit": {
     "user": {
       "name": "MARIN",
@@ -95,6 +102,7 @@
         "password": "xHvS+ICtNg/1rrrj49WT+A/y9MA=",
         "salt": "CPAaJ8ydx6I=",
         "mobileToken": "123456",
+        "pushId" : "d_L859RmA-Y:APA91bHcP7ixcHrR9vMyHBwNvMxVvejq-2kX9sPGiuXc-BtgnGLU-hrk0CImshe-u85QGkPvVJm8CCkvM_oU41-SxtoOar-46BVb4IXoZsEUt4kyJXZ6BJc8F7T0GoGV6gCt83ZvGleO",
         "listPlan": [
           {
             "paymentId": "pay_jyexVVRKKGJsJAXobSL3q",

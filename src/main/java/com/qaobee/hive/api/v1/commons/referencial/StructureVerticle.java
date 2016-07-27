@@ -19,14 +19,12 @@
 package com.qaobee.hive.api.v1.commons.referencial;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.commons.settings.CountryBusiness;
 import com.qaobee.hive.dao.StructureDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -41,16 +39,8 @@ import javax.inject.Inject;
 /**
  * Module commons - referencial - Structure.
  *
- * @author Nada Vujanic-Maquin<br>
- *         <br>
- *         <strong>Description de la classe:</strong>
- *         <ul>
- *         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>
- *         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>
- *         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>
- *         </ul>
+ * @author Nada Vujanic-Maquin<br>         <br>         <strong>Description de la classe:</strong>         <ul>         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>         </ul>
  */
-
 @DeployableVerticle
 public class StructureVerticle extends AbstractGuiceVerticle {
     /**
@@ -94,11 +84,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     public static final String PARAM_ADDRESS = "address";
     private static final Logger LOG = LoggerFactory.getLogger(StructureVerticle.class);
     @Inject
-    private MongoDB mongo;
-    @Inject
     private Utils utils;
-    @Inject
-    private CountryBusiness countryBusiness;
     @Inject
     private StructureDAO structureDAO;
 

@@ -20,28 +20,21 @@
 package com.qaobee.hive.api.v1.sandbox.config;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
+import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The type Sand box cfg verticle.
@@ -80,7 +73,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * The constant PARAM_ACTIVITY_ID.
      */
     public static final String PARAM_ACTIVITY_ID = "activity";
-    
+
     /**
      * The constant PARAM_USER.
      */
@@ -89,39 +82,43 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * The constant PARAM_SB_CFG_ID.
      */
     public static final String PARAM_SB_CFG_ID = "sandboxCfgId";
+
     private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxVerticle.class);
-    @Inject
-    private MongoDB mongo;
+
     @Inject
     private Utils utils;
+    @Inject
+    private SandBoxDAO sandBoxDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(GET_BY_OWNER, this::getByOwnerHandler)
-                .registerHandler(GET_LIST_BY_OWNER, this::getListByOwnerHandler)
-                .registerHandler(ADD, this::addHandler)
-                .registerHandler(UPDATE, this::updateHandler);
+                .registerHandler(GET_BY_OWNER, this::getByOwner)
+                .registerHandler(GET_LIST_BY_OWNER, this::getListByOwner)
+                .registerHandler(ADD, this::add)
+                .registerHandler(UPDATE, this::update);
     }
 
     /**
-     *
+     * @apiDescription Update sandbox sandboxCfg id
+     * @api {post} /api/1/sandbox/config/sandbox/update Update sandbox sandboxCfg id
+     * @apiVersion 0.1.0
+     * @apiName update
+     * @apiGroup SandBox API
+     * @apiHeader {String} token
+     * @apiParam {String} _id sandbox id
+     * @apiParam {String} sandboxCfgId sandboxCfg id
+     * @apiSuccess {Object} sandbox
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ID, PARAM_SB_CFG_ID},
-            scope = Rule.Param.BODY)
-    private void updateHandler(Message<String> message) {
+          scope = Rule.Param.BODY)
+    private void update(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject body = new JsonObject(req.getBody());
-            final JsonObject sandbox = mongo.getById(body.getString(PARAM_ID), SB_SandBox.class);
-            if (sandbox == null) {
-                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for id :" + body.getString(PARAM_ID));
-            }
-            sandbox.putString("sandboxCfgId", body.getString(PARAM_SB_CFG_ID));
-            mongo.save(sandbox, SB_SandBox.class);
-            message.reply(sandbox.encode());
+            message.reply(sandBoxDAO.updateSandboxCfgId(body.getString(PARAM_ID), body.getString(PARAM_SB_CFG_ID)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -129,19 +126,23 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     }
 
     /**
-     *
+     * @apiDescription Add sandbox
+     * @api {put} /api/1/sandbox/config/sandbox/add Update sandbox sandboxCfg id
+     * @apiVersion 0.1.0
+     * @apiName add
+     * @apiGroup SandBox API
+     * @apiHeader {String} token
+     * @apiParam {String} uid User id
+     * @apiParam {String} activity activity id
+     * @apiSuccess {Object} sandbox
      */
     @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_USER_ID, PARAM_ACTIVITY_ID},
-            scope = Rule.Param.BODY)
-    private void addHandler(Message<String> message) {
+          scope = Rule.Param.BODY)
+    private void add(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject jsonReq = new JsonObject(req.getBody());
-            JsonObject sandbox = new JsonObject()
-                    .putString("activityId", jsonReq.getString(PARAM_ACTIVITY_ID))
-                    .putString("owner", jsonReq.getString(PARAM_USER_ID));
-            sandbox.putString("_id", mongo.save(sandbox, SB_SandBox.class));
-            message.reply(sandbox.encode());
+            final JsonObject body = new JsonObject(req.getBody());
+            message.reply(sandBoxDAO.add(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_USER_ID)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -153,26 +154,15 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiVersion 0.1.0
      * @apiName getListByOwner
      * @apiGroup SandBox API
-     * @apiPermission all
      * @apiDescription Retrieve the user's sandbox
      * @apiParam {String} activityId Mandatory The sandBox activity.
-     * @apiSuccess {sandBox}   sandBox    The sandBox updated.
+     * @apiSuccess {Object}   sandBox    The sandBox updated.
      */
     @Rule(address = GET_LIST_BY_OWNER, method = Constants.GET, logged = true)
-    private void getListByOwnerHandler(Message<String> message) {
+    private void getListByOwner(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            CriteriaBuilder cb = new CriteriaBuilder();
-            if (req.getParams().get("id") != null && !req.getParams().get("id").isEmpty() && StringUtils.isNoneBlank(req.getParams().get("id").get(0))) {
-                cb.add(PARAM_OWNER_ID, req.getParams().get("id").get(0));
-            } else {
-                cb.add(PARAM_OWNER_ID, req.getUser().get_id());
-            }
-            JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
-            if (resultJson == null || resultJson.size() == 0) {
-                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + req.getUser().get_id());
-            }
-            message.reply(resultJson.encode());
+            message.reply(sandBoxDAO.getListByOwner(req.getParams().get(PARAM_OWNER_ID), req.getUser().get_id()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -184,27 +174,16 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiVersion 0.1.0
      * @apiName getByOwner
      * @apiGroup SandBox API
-     * @apiPermission all
      * @apiDescription Retrieve the user's sandbox
      * @apiParam {String} activityId Mandatory The sandBox activity.
      * @apiSuccess {sandBox}   sandBox    The sandBox updated.
      */
     @Rule(address = GET_BY_OWNER, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
-            scope = Rule.Param.REQUEST)
-    private void getByOwnerHandler(Message<String> message) {
+          scope = Rule.Param.REQUEST)
+    private void getByOwner(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            Map<String, List<String>> params = req.getParams();
-            CriteriaBuilder cb = new CriteriaBuilder()
-                    .add(PARAM_OWNER_ID, req.getUser().get_id())
-                    .add("structure." + PARAM_ACTIVITY_ID + "._id", params.get(PARAM_ACTIVITY_ID).get(0));
-            JsonArray resultJson = mongo.findByCriterias(cb.get(), null, null, -1, -1, SB_SandBox.class);
-            if (resultJson == null || resultJson.size() == 0) {
-                throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + req.getUser().get_id()
-                        + " ,and activityId : " + params.get(PARAM_ACTIVITY_ID));
-            }
-            JsonObject json = resultJson.get(0);
-            message.reply(json.encode());
+            message.reply(sandBoxDAO.getByOwner(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getUser().get_id()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

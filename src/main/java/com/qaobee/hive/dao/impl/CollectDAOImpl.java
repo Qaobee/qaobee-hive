@@ -24,8 +24,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.dao.CollectDAO;
+import com.qaobee.hive.dao.NotificationsDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
@@ -42,44 +43,41 @@ import java.util.List;
  * The type Collect dao.
  */
 public class CollectDAOImpl implements CollectDAO {
-    private static final String COLLECTION_NAME = "SB_Collect";
 
     @Inject
     private MongoDB mongo;
     @Inject
     private Vertx vertx;
+    @Inject
+    private NotificationsDAO notificationsDAO;
 
     @Override
     public JsonObject get(String id) throws QaobeeException {
-        return mongo.getById(id, COLLECTION_NAME);
+        return mongo.getById(id, DBCollections.COLLECT);
     }
 
     @Override
-    public JsonObject update(JsonObject collect, String currentUserId, String locale) throws QaobeeException {
-        collect.putString("_id", mongo.update(collect, COLLECTION_NAME));
-        JsonObject notification = new JsonObject();
-        notification.putString("id", collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID));
-        notification.putString("target", SB_SandBox.class.getSimpleName());
-        notification.putObject("notification", new JsonObject()
-                .putString("content", Messages.getString("notification.collect.update.content", locale, collect.getObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
+    public JsonObject update(JsonObject collect, String currentUserId, String locale) {
+        collect.putString("_id", mongo.update(collect, DBCollections.COLLECT));
+        JsonObject notification = new JsonObject()
+                .putString("content", Messages.getString("notification.collect.update.content", locale,
+                        collect.getObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                 .putString("title", Messages.getString("notification.collect.update.title", locale))
-                .putString("senderId", currentUserId)
-        );
-        vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+                .putString("senderId", currentUserId);
+        notificationsDAO.notify(collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId));
         return collect;
     }
 
     @Override
     public JsonObject add(JsonObject collect, String currentUserId, String locale) throws QaobeeException {
-        collect.putString("_id", mongo.save(collect, COLLECTION_NAME));
-        JsonObject notification = new JsonObject();
-        notification.putString("id", collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID));
-        notification.putString("target", SB_SandBox.class.getSimpleName());
-        notification.putObject("notification", new JsonObject()
+        collect.putString("_id", mongo.save(collect, DBCollections.COLLECT));
+        JsonObject notification = new JsonObject()
                 .putString("content", Messages.getString("notification.collect.start.content", locale, collect.getObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                 .putString("title", Messages.getString("notification.collect.start.title", locale))
-                .putString("senderId", currentUserId)
-        );
+                .putString("senderId", currentUserId);
+        notificationsDAO.notify(collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId));
         vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
         return collect;
     }
@@ -107,6 +105,6 @@ public class CollectDAOImpl implements CollectDAO {
         match = new BasicDBObject("$match", dbObjectParent);
         List<DBObject> pipelineAggregation;
         pipelineAggregation = Collections.singletonList(match);
-        return mongo.aggregate("_id", pipelineAggregation, COLLECTION_NAME);
+        return mongo.aggregate("_id", pipelineAggregation, DBCollections.COLLECT);
     }
 }

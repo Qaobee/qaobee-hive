@@ -61,6 +61,14 @@ public final class Constants {
      */
     public static final String STATUS_CODE = "statusCode";
     /**
+     * The constant STATUS.
+     */
+    public static final String STATUS = "status";
+    /**
+     * The constant TOKEN.
+     */
+    public static final String TOKEN = "token";
+    /**
      * Instantiates a new constantes.
      */
     private Constants() {

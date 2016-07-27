@@ -19,25 +19,20 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.commons.settings.Activity;
+import com.qaobee.hive.dao.ActivityDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The type Activity verticle.
@@ -64,37 +59,32 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
     public static final String PARAM_ID = "_id";
     private static final Logger LOG = LoggerFactory.getLogger(ActivityVerticle.class);
     @Inject
-    private MongoDB mongo;
-    @Inject
     private Utils utils;
+    @Inject
+    private ActivityDAO activityDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(GET, this::getActivityHandler)
-                .registerHandler(GET_LIST, this::getListHandler)
-                .registerHandler(GET_LIST_ENABLE, this::getEnableActivitiesHandler);
+                .registerHandler(GET, this::get)
+                .registerHandler(GET_LIST, this::getList)
+                .registerHandler(GET_LIST_ENABLE, this::getEnabled);
     }
 
     /**
      * @api {get} /api/v1/commons/settings/activity/getListEnable List of enabled activities
      * @apiVersion 0.1.0
-     * @apiName getListEnable
+     * @apiName getEnabled
      * @apiGroup Activity API
      * @apiPermission all
      * @apiDescription List of enabled activities
-     * @apiSuccess {List}   activities  List of enabled activities
-     * @apiError DATA_ERROR Error on DB request
-     * @apiError INVALID_PARAMETER Parameters not found
+     * @apiSuccess {Array}   activities  List of enabled activities
      */
     @Rule(address = GET_LIST_ENABLE, method = Constants.GET)
-    private void getEnableActivitiesHandler(Message message) { 
-        Map<String, Object> criterias = new HashMap<>();
-        criterias.put("enable", true);
-        JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, Activity.class);
-        message.reply(resultJson.encode());
+    private void getEnabled(Message message) {
+        message.reply(activityDAO.getEnabled().encode());
     }
 
     /**
@@ -104,12 +94,11 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiGroup Activity API
      * @apiPermission all
      * @apiDescription get all activity
-     * @apiSuccess {List}   activities            List all activity
+     * @apiSuccess {Array}   activities List all activity
      */
     @Rule(address = GET_LIST, method = Constants.GET)
-    private void getListHandler(Message message) { 
-        JsonArray resultJson = mongo.findByCriterias(null, null, null, -1, -1, Activity.class);
-        message.reply(resultJson.encode());
+    private void getList(Message message) {
+        message.reply(activityDAO.getActivityList().encode());
     }
 
     /**
@@ -120,15 +109,13 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiPermission all
      * @apiDescription get a activity to the collection activity in settings module
      * @apiParam {String} id The Activity-ID.
-     * @apiSuccess {Activity} activity The Activity found.
-     * @apiError DATA_ERROR Error on DB request
+     * @apiSuccess {Object} activity The Activity found.
      */
     @Rule(address = GET, method = Constants.GET, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    private void getActivityHandler(Message<String> message) { 
+    private void get(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject json = mongo.getById(req.getParams().get(PARAM_ID).get(0), Activity.class);
-            message.reply(json.encode());
+            message.reply(activityDAO.getActivity(req.getParams().get(PARAM_ID).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

@@ -35,61 +35,19 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
-    /**
-     * Internal identifier
-     */
     private String _id; // NOSONAR
-    /**
-     * Avatar
-     */
     private String avatar;
-    /**
-     * Name
-     */
     private String name;
-    /**
-     * Firstname
-     */
     private String firstname;
-    /**
-     * Address
-     */
     private Address address;
-    /**
-     * Birthdate
-     */
     private long birthdate;
-    /**
-     * Contact
-     */
     private Contact contact;
-    /**
-     * Country
-     */
     private Country country;
-    /**
-     * Nationality
-     */
     private Country nationality;
-    /**
-     * Account
-     */
     private Account account;
-    /**
-     * Timestamp
-     */
     private long timestamp;
-    /**
-     * Gender
-     */
     private String gender;
-    /**
-     * List of notifications
-     */
     private List<Notification> notifications;
-    /**
-     * User's sandbox by default
-     */
     private String sandboxDefault;
 
     /**
@@ -326,19 +284,21 @@ public class User {
         this.birthdate = birthdate;
     }
 
-	/**
-	 * @return the sandboxDefault
-	 */
-	public String getSandboxDefault() {
-		return sandboxDefault;
-	}
+    /**
+     * Gets sandbox default.
+     *
+     * @return the sandboxDefault
+     */
+    public String getSandboxDefault() {
+        return sandboxDefault;
+    }
 
-	/**
-	 * @param sandboxDefault the sandboxDefault to set
-	 */
-	public void setSandboxDefault(String sandboxDefault) {
-		this.sandboxDefault = sandboxDefault;
-	}
-
-    
+    /**
+     * Sets sandbox default.
+     *
+     * @param sandboxDefault the sandboxDefault to set
+     */
+    public void setSandboxDefault(String sandboxDefault) {
+        this.sandboxDefault = sandboxDefault;
+    }
 }

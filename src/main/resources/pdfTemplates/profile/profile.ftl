@@ -38,7 +38,7 @@
         <div class="container">
             <div class="nav-wrapper">
                 <a href="/#/" class="brand-logo">
-                    <div class="media logo" data-src="https://www.qaobee.com/assets/images/logo-mini.png"/></a>
+                    <div class="media logo" data-src="https://www.qaobee.com/assets/images/logo-mini.png"></div></a>
             </div>
         </div>
     </nav>

@@ -19,10 +19,5 @@
 
 /**
  * @author cke
- * @author cke
- * @author cke
- */
-/**
- * @author cke
  */
 package com.qaobee.hive.technical.mongo;

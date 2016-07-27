@@ -21,9 +21,11 @@ package com.qaobee.hive.api;
 import com.englishtown.promises.Promise;
 import com.englishtown.promises.When;
 import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
+import com.qaobee.hive.dao.AssetDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -52,6 +54,7 @@ import org.vertx.java.core.sockjs.SockJSServer;
 import org.vertx.mods.Mailer;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.util.*;
 
@@ -63,6 +66,9 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.*;
  * @author Xavier.Marin
  */
 public class Main extends AbstractGuiceVerticle {
+    /**
+     * The constant FILE_SERVE.
+     */
     public static final String FILE_SERVE = "fileserve";
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
     private static final String COLLECTION = "collection";
@@ -71,6 +77,11 @@ public class Main extends AbstractGuiceVerticle {
     private static Map<String, Rule> rules = new HashMap<>();
     @Inject
     private Utils utils;
+    @Inject
+    private AssetDAO assetDAO;
+    @Inject
+    @Named("runtime")
+    private JsonObject runtime;
     private SockJSServer sockJSServer;
 
     /**
@@ -105,34 +116,38 @@ public class Main extends AbstractGuiceVerticle {
      * @param req     Request
      */
     private static void handleResult(AsyncResult<Message<Object>> message, HttpServerRequest req) {
-        if (message.succeeded()) {
-            final String response = (String) message.result().body();
-            if (response.startsWith("[") || !response.startsWith("{")) {
-                enableCors(req);
-                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                req.response().end(response);
-            } else {
-                final JsonObject json = new JsonObject(response);
-                if (json.containsField(FILE_SERVE)) {
-                    final File f = new File(json.getString(FILE_SERVE));
-                    req.response().putHeader("Content-Description", "File Transfer");
-                    req.response().putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE));
-                    req.response().putHeader("Content-Disposition", "attachment; filename=" + f.getName());
-                    req.response().putHeader("Expires", "0");
-                    req.response().putHeader("Cache-Control", "must-revalidate");
-                    req.response().putHeader("Pragma", "public");
-                    req.response().putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
-                    enableCors(req);
-                    req.response().sendFile(f.getAbsolutePath());
-                } else {
+        try {
+            if (message.succeeded()) {
+                final String response = (String) message.result().body();
+                if (response.startsWith("[") || !response.startsWith("{")) {
                     enableCors(req);
                     req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
                     req.response().end(response);
+                } else {
+                    final JsonObject json = new JsonObject(response);
+                    if (json.containsField(FILE_SERVE)) {
+                        final File f = new File(json.getString(FILE_SERVE));
+                        req.response().putHeader("Content-Description", "File Transfer")
+                                .putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE))
+                                .putHeader("Content-Disposition", "attachment; filename=" + f.getName())
+                                .putHeader("Expires", "0")
+                                .putHeader("Cache-Control", "must-revalidate")
+                                .putHeader("Pragma", "public")
+                                .putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
+                        enableCors(req);
+                        req.response().sendFile(f.getAbsolutePath());
+                    } else {
+                        enableCors(req);
+                        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+                        req.response().end(response);
+                    }
                 }
+            } else {
+                throw (ReplyException) message.cause();
             }
-        } else {
+        } catch (ReplyException ex) {
+            LOG.error(ex.getMessage(), ex);
             req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-            final ReplyException ex = (ReplyException) message.cause();
             req.response().setStatusCode(404);
             enableCors(req);
             if (ex.failureCode() > 0) {
@@ -193,18 +208,17 @@ public class Main extends AbstractGuiceVerticle {
         final RouteMatcher rm = new RouteMatcher();
 
         /**
+         * @apiDescription Get an asset from a collection
          * @api {get} /file/:collection/:id  Get an asset from a collection
          * @apiVersion 0.1.0
          * @apiName Get asset
-         * @apiGroup Main API
+         * @apiGroup Main
          * @apiPermission all
-         *
-         * @apiDescription Get an asset from a collection
-         *
          * @apiParam {String} collection Mandatory The collection.
          * @apiParam {String} id Mandatory The Asset-ID.
          */
         rm.get("/file/:collection/:id", this::getAssetHandler);
+
         /**
          * @apiDescription Put an asset in a collection
          * @api {post} /file/:collection/:field/:uid
@@ -215,8 +229,6 @@ public class Main extends AbstractGuiceVerticle {
          * @apiparam {String} token token
          * @apiparam {String} locale locale
          * @apiparam {String} uid document id
-         *
-         * @apiError NOT_LOGGED user not logged
          */
         rm.post("/file/:collection/:field/:uid", this::assetUploadHandler);
         rm.optionsWithRegEx(".*", req -> {
@@ -242,8 +254,8 @@ public class Main extends AbstractGuiceVerticle {
         final HttpServer server = vertx.createHttpServer();
         new When<String, Void>().all(promises, value -> {
             server.requestHandler(rm);
-            String ip = container.config().getObject(RUNTIME).getString("defaultHost");
-            int port = container.config().getObject(RUNTIME).getInteger("defaultPort");
+            String ip = runtime.getString("defaultHost");
+            int port = runtime.getInteger("defaultPort");
             if (container.env().containsKey("OPENSHIFT_VERTX_IP")) {
                 ip = container.env().get("OPENSHIFT_VERTX_IP");
             }
@@ -256,7 +268,7 @@ public class Main extends AbstractGuiceVerticle {
             JsonArray inboundPermitted = new JsonArray();
             outboundPermitted.add(new JsonObject());
             inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
-            sockJSServer.setHook(new ServerHook(container.config().getObject(RUNTIME).getString("site.url")));
+            sockJSServer.setHook(new ServerHook(runtime.getString("site.url")));
             sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
             server.listen(port, ip);
             LOG.info("The http server is started on : " + ip + ":" + port);
@@ -310,7 +322,7 @@ public class Main extends AbstractGuiceVerticle {
                     .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
                     .putString("action", "mark");
             vertx.eventBus().send("metrix", json);
-            String busAddress = container.config().getObject(RUNTIME).getInteger("version") + "." + StringUtils.join(path, '.');
+            String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
             if (rules.containsKey(busAddress)) {
                 if (testRequest(req, busAddress, wrapper)) {
                     vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> {
@@ -377,16 +389,21 @@ public class Main extends AbstractGuiceVerticle {
     private Handler<HttpServerFileUpload> getUploadHandler(final JsonObject request, final File dir, final HttpServerRequest req) {
         return upload -> {
             final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
-            request.putString("filename", filename).putString("contentType", upload.contentType());
+            request.putString("filename", filename).putString(CONTENT_TYPE, upload.contentType());
             if (vertx.fileSystem().existsSync(filename)) {
                 vertx.fileSystem().deleteSync(filename);
             }
             upload.streamToFileSystem(filename).endHandler(event -> {
                 upload.pause();
-                vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<JsonObject>>) message -> {
-                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON)
-                            .setStatusCode(message.body().getInteger("statusCode"))
-                            .end(message.body().getString(MESSAGE));
+                vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<Object>>) message -> {
+                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+                    if (message.body() instanceof ReplyException) {
+                        final JsonObject resp = new JsonObject(((ReplyException) message.body()).getMessage());
+                        req.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
+                                .end(resp.getString(MESSAGE, ""));
+                    } else if (message.body() instanceof JsonObject) {
+                        req.response().setStatusCode(200).end(((JsonObject) message.body()).encode());
+                    }
                     stopTimer("main.avatar");
                 });
             });
@@ -411,25 +428,13 @@ public class Main extends AbstractGuiceVerticle {
             if (rule.admin()) {
                 utils.isLoggedAndAdmin(wrapper);
             }
-            switch (rule.scope()) {
-                case BODY:
-                    utils.testMandatoryParams(wrapper.getBody(), rule.mandatoryParams());
-                    break;
-                case REQUEST:
-                    utils.testMandatoryParams(wrapper.getParams(), rule.mandatoryParams());
-                    break;
-                case HEADER:
-                    utils.testMandatoryParams(wrapper.getHeaders(), rule.mandatoryParams());
-                    break;
-                default:
-                    break;
-            }
+            testParameters(rule, wrapper);
         } catch (final NoSuchMethodException e) {
             LOG.error(e.getMessage(), e);
-            final JsonObject jsonResp = new JsonObject();
-            jsonResp.putBoolean("status", false);
-            jsonResp.putString(MESSAGE, "Nothing here");
-            jsonResp.putNumber("httpCode", 404);
+            final JsonObject jsonResp = new JsonObject()
+                    .putBoolean("status", false)
+                    .putString(MESSAGE, "Nothing here")
+                    .putNumber("httpCode", 404);
             req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
             return false;
         } catch (QaobeeException e) {
@@ -438,5 +443,21 @@ public class Main extends AbstractGuiceVerticle {
             return false;
         }
         return true;
+    }
+
+    private void testParameters(Rule rule, RequestWrapper wrapper) throws QaobeeException {
+        switch (rule.scope()) {
+            case BODY:
+                utils.testMandatoryParams(wrapper.getBody(), rule.mandatoryParams());
+                break;
+            case REQUEST:
+                utils.testMandatoryParams(wrapper.getParams(), rule.mandatoryParams());
+                break;
+            case HEADER:
+                utils.testMandatoryParams(wrapper.getHeaders(), rule.mandatoryParams());
+                break;
+            default:
+                break;
+        }
     }
 }

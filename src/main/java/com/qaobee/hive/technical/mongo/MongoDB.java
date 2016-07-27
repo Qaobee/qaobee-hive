@@ -51,16 +51,6 @@ public interface MongoDB {
      * @return the string
      * @throws MongoException the mongo exception
      */
-    String update(JsonObject document, Class<?> collection);
-
-    /**
-     * Update string.
-     *
-     * @param document   the document
-     * @param collection the collection
-     * @return the string
-     * @throws MongoException the mongo exception
-     */
     String update(JsonObject document, String collection);
 
     /**
@@ -80,29 +70,9 @@ public interface MongoDB {
      * @param document   object to save
      * @param collection target
      * @return id string
-     * @throws QaobeeException can't save
-     */
-    String save(JsonObject document, Class<?> collection) throws QaobeeException;
-
-    /**
-     * Saves a document in a colection.
-     *
-     * @param document   object to save
-     * @param collection target
-     * @return id string
      * @throws QaobeeException the qaobee exception
      */
     String save(JsonObject document, String collection) throws QaobeeException;
-
-    /**
-     * Get a document by id.
-     *
-     * @param id         the id
-     * @param collection the collection
-     * @return the document
-     * @throws QaobeeException not found
-     */
-    JsonObject getById(String id, Class<?> collection) throws QaobeeException;
 
     /**
      * Get a document by id.
@@ -123,7 +93,7 @@ public interface MongoDB {
      * @return the document
      * @throws QaobeeException not found
      */
-    JsonObject getById(String id, Class<?> collection, List<String> minimal) throws QaobeeException;
+    JsonObject getById(String id, String collection, List<String> minimal) throws QaobeeException;
 
     /**
      * Gets the minimal.
@@ -134,17 +104,18 @@ public interface MongoDB {
     Map<String, Boolean> getMinimal(List<String> minimal);
 
     /**
-     * Find document by criteria with minimal fields and a sort order.
+     * Find by criterias json array.
      *
-     * @param criteria   (Map(String, Object)) : criteria
-     * @param fields     (List(String))    : fields to include (null if all fields)
-     * @param sort       (String)      : sort field (null if no sort)
-     * @param order      (int)      : sort order
-     * @param limit      (int)      : limit (0 if no limit)
-     * @param collection (Class)    : collection
-     * @return JsonArray : an array
+     * @param criteria   the criteria
+     * @param fields     the fields
+     * @param sort       the sort
+     * @param order      the order
+     * @param limit      the limit
+     * @param collection the collection
+     * @return the json array
      */
-    JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, Class<?> collection);
+    JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit,
+                              String collection);
 
     /**
      * Find all documents with minimal fields and a sort order.
@@ -156,18 +127,7 @@ public interface MongoDB {
      * @param collection collection
      * @return an array
      */
-    JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection);
-
-    /**
-     * Aggregate json array.
-     *
-     * @param field      the field
-     * @param pipeline   the pipeline
-     * @param collection the collection
-     * @return the json array
-     * @throws QaobeeException the qaobee exception
-     */
-    JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection) throws QaobeeException;
+    JsonArray findAll(List<String> fields, String sort, int order, int limit, String collection);
 
     /**
      * Aggregate json array.

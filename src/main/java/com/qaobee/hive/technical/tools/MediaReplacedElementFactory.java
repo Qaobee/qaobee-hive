@@ -47,6 +47,7 @@ import java.util.UUID;
  */
 public class MediaReplacedElementFactory implements ReplacedElementFactory {
     private static final Logger LOG = LoggerFactory.getLogger(MediaReplacedElementFactory.class);
+    private static final String DATA_SRC = "data-src";
     /**
      * The super factory.
      */
@@ -57,7 +58,7 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
      * Instantiates a new media replaced element factory.
      *
      * @param superFactory the super factory
-     * @param dir tmp dir
+     * @param dir          tmp dir
      */
     public MediaReplacedElementFactory(final ReplacedElementFactory superFactory, File dir) {
         this.superFactory = superFactory;
@@ -86,17 +87,18 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
         // Replace any <div class="media" data-src="image.png" /> with the
         // binary data of `image.png` into the PDF.
         if ("div".equals(nodeName) && className.startsWith("media")) {
-            if (!element.hasAttribute("data-src")) {
+            if (!element.hasAttribute(DATA_SRC)) {
                 LOG.error("An element with class `media` is missing a `data-src` attribute indicating the media file.");
                 return null;
             }
             InputStream input = null;
+            File media = new File(dir.getAbsolutePath() +"/"+ UUID.randomUUID().toString());
             try {
-                File media = new File(dir.getAbsolutePath() +"/"+ UUID.randomUUID().toString());
-                if(element.getAttribute("data-src").startsWith("http")) {
-                    FileUtils.copyURLToFile(new URL(element.getAttribute("data-src")), media);
+
+                if(element.getAttribute(DATA_SRC).startsWith("http")) {
+                    FileUtils.copyURLToFile(new URL(element.getAttribute(DATA_SRC)), media);
                 } else {
-                    media = new File(element.getAttribute("data-src"));
+                    media = new File(element.getAttribute(DATA_SRC));
                 }
                 input = new FileInputStream(media);
                 final byte[] bytes = IOUtils.toByteArray(input);
@@ -110,6 +112,7 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
                 LOG.error("There was a problem trying to read a template embedded graphic.", e);
             } finally {
                 IOUtils.closeQuietly(input);
+                FileUtils.deleteQuietly(media);
             }
         }
         return superFactory.createReplacedElement(layoutContext, blockBox, userAgentCallback, cssWidth, cssHeight);

@@ -122,7 +122,7 @@ public class SB_Effective { // NOSONAR
      */
     public void addMember(Member member) {
         if (members == null) {
-            members = new ArrayList<Member>();
+            members = new ArrayList<>();
         }
         members.add(member);
     }

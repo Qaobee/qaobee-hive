@@ -44,7 +44,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 
 /**
- * The type Shipping test.
+ * The type Shipping
  */
 public class ShippingTest extends VertxJunitSupport {
     private ClientAndServer mockServer;
@@ -62,14 +62,16 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @After
     public void stopMockServer() {
-        mockServer.stop();
+        if(mockServer.isRunning()) {
+            mockServer.stop();
+        }
     }
 
     /**
-     * Create payment test.
+     * Create payment.
      */
     @Test
-    public void createPaymentTest() {
+    public void createPayment() {
         User u = generateLoggedUser();
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         new MockServerClient("localhost", 1080)
@@ -101,10 +103,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Create payment with wrong plan id test.
+     * Create payment with wrong plan id.
      */
     @Test
-    public void createPaymentWithWrongPlanIdTest() {
+    public void createPaymentWithWrongPlanId() {
         User u = generateLoggedUser();
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "1");
         given().header(TOKEN, u.getAccount().getToken())
@@ -115,10 +117,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Create payment with missing plan id test.
+     * Create payment with missing plan id.
      */
     @Test
-    public void createPaymentWithMissingPlanIdTest() {
+    public void createPaymentWithMissingPlanId() {
         User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
                 .when().post(getURL(ShippingVerticle.PAY))
@@ -127,10 +129,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Create payment with wrong http method test.
+     * Create payment with wrong http method.
      */
     @Test
-    public void createPaymentWithWrongHttpMethodTest() {
+    public void createPaymentWithWrongHttpMethod() {
         User u = generateLoggedUser();
         given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(ShippingVerticle.PAY))
@@ -139,10 +141,48 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification test.
+     * Create payment with wrong payplug response.
      */
     @Test
-    public void recievePayplugNotificationTest() {
+    public void createPaymentWithWrongPayplugResponse() {
+        User u = generateLoggedUser();
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(500)
+                        .withBody(generateMockBody(u, 0)));
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Create payment with no payplug server.
+     */
+    @Test
+    public void createPaymentWithNoPayplugServer() {
+        User u = generateLoggedUser();
+        if(mockServer.isRunning()) {
+            mockServer.stop();
+        }
+        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+    }
+
+    /**
+     * Recieve payplug notification
+     */
+    @Test
+    public void recievePayplugNotification() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
                 .respond(HttpResponse.response().withStatusCode(201)
@@ -195,10 +235,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification with no previous shipping test.
+     * Recieve payplug notification with no previous shipping
      */
     @Test
-    public void recievePayplugNotificationWithNoPreviousShippingTest() {
+    public void recievePayplugNotificationWithNoPreviousShipping() {
         try {
             User u = generateLoggedUser();
             u.getAccount().getListPlan().get(0).setShippingList(null);
@@ -260,10 +300,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification with zero amount test.
+     * Recieve payplug notification with zero amount
      */
     @Test
-    public void recievePayplugNotificationWithZeroAmountTest() {
+    public void recievePayplugNotificationWithZeroAmount() {
         try {
             User u = generateLoggedUser();
             u.getAccount().getListPlan().get(0).setAmountPaid(0L);
@@ -306,20 +346,20 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification with wrong http method test.
+     * Recieve payplug notification with wrong http method
      */
     @Test
-    public void recievePayplugNotificationWithWrongHttpMethodTest() {
+    public void recievePayplugNotificationWithWrongHttpMethod() {
         given().when().get(getURL(ShippingVerticle.IPN))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
 
     /**
-     * Recieve payplug notification with missing mandatory data test.
+     * Recieve payplug notification with missing mandatory data
      */
     @Test
-    public void recievePayplugNotificationWithMissingMandatoryDataTest() {
+    public void recievePayplugNotificationWithMissingMandatoryData() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.removeField("created_at");
         given().body(notification.encodePrettily())
@@ -329,10 +369,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification with missing metadata test.
+     * Recieve payplug notification with missing metadata
      */
     @Test
-    public void recievePayplugNotificationWithMissingMetadataTest() {
+    public void recievePayplugNotificationWithMissingMetadata() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").removeField("plan_id");
         given().body(notification.encodePrettily())
@@ -343,36 +383,36 @@ public class ShippingTest extends VertxJunitSupport {
 
 
     /**
-     * Recieve payplug notification with bad plan id test.
+     * Recieve payplug notification with bad plan id
      */
     @Test
-    public void recievePayplugNotificationWithBadPlanIdTest() {
+    public void recievePayplugNotificationWithBadPlanId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("plan_id", "bwahaha");
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
-     * Recieve payplug notification with non existing plan id test.
+     * Recieve payplug notification with non existing plan id
      */
     @Test
-    public void recievePayplugNotificationWithNonExistingPlanIdTest() {
+    public void recievePayplugNotificationWithNonExistingPlanId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("plan_id", "8");
         given().body(notification.encodePrettily())
                 .when().post(getURL(ShippingVerticle.IPN))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
-     * Recieve payplug notification with  null plan id test.
+     * Recieve payplug notification with  null plan id
      */
     @Test
-    public void recievePayplugNotificationWithNullPlanIdTest() {
+    public void recievePayplugNotificationWithNullPlanId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").removeField("plan_id");
         given().body(notification.encodePrettily())
@@ -382,10 +422,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification with empty plan id test.
+     * Recieve payplug notification with empty plan id
      */
     @Test
-    public void recievePayplugNotificationWithEmptyPlanIdTest() {
+    public void recievePayplugNotificationWithEmptyPlanId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("plan_id", "");
         given().body(notification.encodePrettily())
@@ -395,10 +435,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification wrong object test.
+     * Recieve payplug notification wrong object
      */
     @Test
-    public void recievePayplugNotificationWrongObjectTest() {
+    public void recievePayplugNotificationWrongObject() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
                 .respond(HttpResponse.response().withStatusCode(201)
@@ -435,10 +475,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification not paid test.
+     * Recieve payplug notification not paid
      */
     @Test
-    public void recievePayplugNotificationNotPaidTest() {
+    public void recievePayplugNotificationNotPaid() {
         try {
             User u = generateLoggedUser();
             u.getAccount().getListPlan().get(0).setStatus("notpaid");
@@ -493,10 +533,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification with failure test.
+     * Recieve payplug notification with failure
      */
     @Test
-    public void recievePayplugNotificationWithFailureTest() {
+    public void recievePayplugNotificationWithFailure() {
         try {
             User u = generateLoggedUser();
             u.getAccount().getListPlan().get(0).setStatus("notpaid");
@@ -559,10 +599,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification withnon existing user id test.
+     * Recieve payplug notification withnon existing user id
      */
     @Test
-    public void recievePayplugNotificationWithnonExistingUserIdTest() {
+    public void recievePayplugNotificationWithnonExistingUserId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("customer_id", "bwahaha");
         given().body(notification.encodePrettily())
@@ -572,10 +612,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification with null user id test.
+     * Recieve payplug notification with null user id
      */
     @Test
-    public void recievePayplugNotificationWithNullUserIdTest() {
+    public void recievePayplugNotificationWithNullUserId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").removeField("customer_id");
         given().body(notification.encodePrettily())
@@ -585,10 +625,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification with empty user id test.
+     * Recieve payplug notification with empty user id
      */
     @Test
-    public void recievePayplugNotificationWithEmptyUserIdTest() {
+    public void recievePayplugNotificationWithEmptyUserId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("customer_id", "");
         given().body(notification.encodePrettily())
@@ -598,10 +638,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recurring payment test.
+     * Recurring payment
      */
     @Test
-    public void recurringPaymentTest() {
+    public void recurringPayment() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
@@ -619,10 +659,31 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recurring payment with zero amount test.
+     * Recurring payment multi user.
      */
     @Test
-    public void recurringPaymentWithZeroAmountTest() {
+    public void recurringPaymentMultiUser() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().getListPlan().get(0).setPaidDate(0);
+        u.getAccount().getListPlan().get(0).setCardId("123456");
+        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
+
+        JsonObject res = sendOnBus(ShippingVerticle.PERIODIC_RECURING_PAYMENT, new JsonObject());
+        Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with zero amount
+     */
+    @Test
+    public void recurringPaymentWithZeroAmount() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
@@ -640,10 +701,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recurring payment with no card info test.
+     * Recurring payment with no card info
      */
     @Test
-    public void recurringPaymentWithNoCardInfoTest() {
+    public void recurringPaymentWithNoCardInfo() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
@@ -662,10 +723,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recurring payment with future date test.
+     * Recurring payment with future date.
      */
     @Test
-    public void recurringPaymentWithFutureDateTest() {
+    public void recurringPaymentWithFutureDate() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
@@ -683,10 +744,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recurring payment with not supported periodicity test.
+     * Recurring payment with not supported periodicity.
      */
     @Test
-    public void recurringPaymentWithNotSupportedPeriodicityTest() {
+    public void recurringPaymentWithNotSupportedPeriodicity() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
@@ -704,10 +765,10 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recurring payment with no plan test.
+     * Recurring payment with no plan.
      */
     @Test
-    public void recurringPaymentWithNoPlanTest() {
+    public void recurringPaymentWithNoPlan() {
         User u = generateLoggedUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
@@ -723,32 +784,88 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
+     * Recurring payment with no payplug servers.
+     */
+    @Test
+    public void recurringPaymentWithNoPayplugServers() {
+        User u = generateLoggedUser();
+        u.getAccount().getListPlan().get(0).setPaidDate(0);
+        u.getAccount().getListPlan().get(0).setCardId("123456");
+        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
+        if (mockServer.isRunning()) {
+            mockServer.stop();
+        }
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertEquals(res.encodePrettily(), res.getString("code"), ExceptionCodes.HTTP_ERROR.name());
+    }
+
+    /**
+     * Recurring payment with wrong data.
+     */
+    @Test
+    public void recurringPaymentWithWrongData() {
+        User u = generateUser();
+        User u2 = generateLoggedUser("123785");
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(201)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().setListPlan(new ArrayList<>());
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u2)));
+        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
+    }
+
+    /**
+     * Recurring payment with bad payplug response.
+     */
+    @Test
+    public void recurringPaymentWithBadPayplugResponse() {
+        User u = generateLoggedUser();
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/payments"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(500)
+                        .withBody(generateMockBody(u, 0)));
+        u.getAccount().getListPlan().get(0).setPaidDate(0);
+        u.getAccount().getListPlan().get(0).setCardId("123456");
+        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
+
+        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
+        Assert.assertEquals(res.encodePrettily(), res.getString("code"), ExceptionCodes.HTTP_ERROR.name());
+    }
+
+    /**
      * @param paymentId paymentId
      * @param u         user
      * @return a notification object
      */
 
     private JsonObject buildNotificationRequest(String paymentId, User u) {
-        JsonObject notification = new JsonObject();
-        notification.putString("id", "123456");
-        notification.putNumber("amount", 900L);
-        notification.putString("object", "payment");
-        notification.putBoolean("is_paid", true);
-        JsonObject metadata = new JsonObject();
-        metadata.putString("customer_id", u.get_id());
-        metadata.putString("plan_id", "0");
-        metadata.putString("locale", "fr_FR");
-        notification.putObject("metadata", metadata);
-        JsonObject card = new JsonObject();
-        card.putString("last4", "1800");
-        card.putString("country", "FR");
-        card.putString("brand", "Mastercard");
-        card.putNumber("exp_month", 9);
-        card.putNumber("exp_year", 2017);
-        notification.putObject("card", card);
-        notification.putNumber("created_at", new Date().getTime());
-        notification.putString("payment_id", paymentId);
-        return notification;
+        return new JsonObject()
+                .putString("id", "123456")
+                .putNumber("amount", 900L)
+                .putString("object", "payment")
+                .putBoolean("is_paid", true)
+                .putObject("metadata", new JsonObject()
+                        .putString("customer_id", u.get_id())
+                        .putString("plan_id", "0")
+                        .putString("locale", "fr_FR")
+                )
+                .putObject("card", new JsonObject()
+                        .putString("last4", "1800")
+                        .putString("country", "FR")
+                        .putString("brand", "Mastercard")
+                        .putNumber("exp_month", 9)
+                        .putNumber("exp_year", 2017)
+                )
+                .putNumber("created_at", new Date().getTime())
+                .putString("payment_id", paymentId);
     }
 
     /**

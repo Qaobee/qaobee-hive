@@ -22,8 +22,10 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import org.vertx.java.core.json.JsonObject;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * The Class MailDao.
@@ -40,10 +42,13 @@ public final class MailUtilsImpl implements MailUtils {
     private static final String ASSISTANT_KEY = "mail.footer.assistant";
     private static final String SOCIAL_LINKS_FIELD = "stayConnected";
     private static final String SOCIAL_LINKS_KEY = "mail.footer.stayConnected";
+    @Inject
+    @Named("runtime")
+    private JsonObject runtime;
 
 
     @Override
-    public JsonObject generateActivationBody(final User user, final String locale, JsonObject config) {
+    public JsonObject generateActivationBody(final User user, final String locale) {
         final JsonObject json = new JsonObject();
         json.putString(TITLE_FIELD, Messages.getString("mail.account.validation.title", locale));
         json.putString("salutation", Messages.getString("mail.account.validation.line.1", locale, user.getFirstname() + " " + user.getName()));
@@ -51,52 +56,52 @@ public final class MailUtilsImpl implements MailUtils {
         json.putString(HEADER_FIELD, Messages.getString("mail.account.validation.title", locale));
         json.putString(SUB_HEADER_FIELD, "");
         json.putString(MESSAGE_FIELD, Messages.getString("mail.account.validation.line.3", locale));
-        json.putString("activationlink", config.getObject(AbstractGuiceVerticle.RUNTIME).getString(SITE_URL_KEY)
-                + config.getObject(AbstractGuiceVerticle.RUNTIME).getString("mail.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationCode());
-        json.putString("sig", Messages.getString(SIG_KEY, locale, config.getObject(AbstractGuiceVerticle.RUNTIME).getString(SITE_URL_KEY)));
+        json.putString("activationlink", runtime.getString(SITE_URL_KEY)
+                + runtime.getString("mail.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationCode());
+        json.putString("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)));
         json.putString(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
         json.putString(SOCIAL_LINKS_FIELD, Messages.getString(SOCIAL_LINKS_KEY, locale));
         return json;
     }
 
     @Override
-    public JsonObject generateNewpasswdBody(final User user, final String locale, JsonObject config) {
+    public JsonObject generateNewpasswdBody(final User user, final String locale) {
         final JsonObject json = new JsonObject();
         json.putString(TITLE_FIELD, Messages.getString("mail.account.newpasswd.title", locale));
         json.putString("desc", Messages.getString("mail.account.newpasswd.line.1", locale, user.getFirstname() + " " + user.getName()));
         json.putString(HEADER_FIELD, Messages.getString("mail.account.newpasswd.title", locale));
         json.putString(SUB_HEADER_FIELD, "");
         json.putString(MESSAGE_FIELD, Messages.getString("mail.account.newpasswd.line.2", locale));
-        json.putString("activationlink", config.getObject(AbstractGuiceVerticle.RUNTIME).getString(SITE_URL_KEY) + config.getObject(AbstractGuiceVerticle.RUNTIME).getString("newpasswd.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationPasswd());
-        json.putString("sig", Messages.getString(SIG_KEY, locale, config.getObject(AbstractGuiceVerticle.RUNTIME).getString(SITE_URL_KEY)));
+        json.putString("activationlink", runtime.getString(SITE_URL_KEY) + runtime.getString("newpasswd.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationPasswd());
+        json.putString("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)));
         json.putString(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
         json.putString(SOCIAL_LINKS_FIELD, Messages.getString(SOCIAL_LINKS_KEY, locale));
         return json;
     }
 
     @Override
-    public JsonObject generatePaymentBody(final User user, final String locale, final Plan planItem, JsonObject config) {
+    public JsonObject generatePaymentBody(final User user, final String locale, final Plan planItem) {
         final JsonObject json = new JsonObject();
         json.putString(TITLE_FIELD, Messages.getString("mail.payment.title", locale));
         json.putString("desc", Messages.getString("mail.payment.line.1", locale, user.getFirstname() + " " + user.getName(), planItem.getLevelPlan().name()));
         json.putString(HEADER_FIELD, Messages.getString("mail.payment.title", locale));
         json.putString(SUB_HEADER_FIELD, "");
         json.putString(MESSAGE_FIELD, Messages.getString("mail.payment.line.2", locale, planItem.getAmountPaid()));
-        json.putString("sig", Messages.getString(SIG_KEY, locale, config.getObject(AbstractGuiceVerticle.RUNTIME).getString(SITE_URL_KEY)));
+        json.putString("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)));
         json.putString(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
         json.putString(SOCIAL_LINKS_FIELD, Messages.getString(SOCIAL_LINKS_KEY, locale));
         return json;
     }
 
     @Override
-    public JsonObject generateRefoundBody(User user, String locale, Plan planItem, JsonObject config) {
+    public JsonObject generateRefoundBody(User user, String locale, Plan planItem) {
         final JsonObject json = new JsonObject();
         json.putString(TITLE_FIELD, Messages.getString("mail.refund.title", locale));
         json.putString("desc", Messages.getString("mail.refund.line.1", locale, user.getFirstname() + " " + user.getName(), planItem.getLevelPlan().name()));
         json.putString(HEADER_FIELD, Messages.getString("mail.refund.title", locale));
         json.putString(SUB_HEADER_FIELD, "");
         json.putString(MESSAGE_FIELD, Messages.getString("mail.refund.line.2", locale, planItem.getAmountPaid()));
-        json.putString("sig", Messages.getString(SIG_KEY, locale, config.getObject(AbstractGuiceVerticle.RUNTIME).getString(SITE_URL_KEY)));
+        json.putString("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)));
         json.putString(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
         json.putString(SOCIAL_LINKS_FIELD, Messages.getString(SOCIAL_LINKS_KEY, locale));
         return json;
@@ -104,14 +109,14 @@ public final class MailUtilsImpl implements MailUtils {
 
 
     @Override
-    public JsonObject generateRefusedCardBody(User user, String locale, Plan planItem, String reason, JsonObject config) {
+    public JsonObject generateRefusedCardBody(User user, String locale, Plan planItem, String reason) {
         final JsonObject json = new JsonObject();
         json.putString(TITLE_FIELD, Messages.getString("mail.refusedCard.title", locale));
         json.putString("desc", Messages.getString("mail.refusedCard.line.1", locale, user.getFirstname() + " " + user.getName(), planItem.getLevelPlan().name()));
         json.putString(HEADER_FIELD, Messages.getString("mail.refusedCard.title", locale));
         json.putString(SUB_HEADER_FIELD, "mail.refusedCard.line.subheader." + reason);
-        json.putString(MESSAGE_FIELD, Messages.getString("mail.refusedCard.line2", locale, config.getObject(AbstractGuiceVerticle.RUNTIME).getString(SITE_URL_KEY) + "/" + config.getObject(AbstractGuiceVerticle.RUNTIME).getString("pay.url.api")));
-        json.putString("sig", Messages.getString(SIG_KEY, locale, config.getObject(AbstractGuiceVerticle.RUNTIME).getString(SITE_URL_KEY)));
+        json.putString(MESSAGE_FIELD, Messages.getString("mail.refusedCard.line2", locale, runtime.getString(SITE_URL_KEY) + "/" + runtime.getString("pay.url.api")));
+        json.putString("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)));
         json.putString(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
         json.putString(SOCIAL_LINKS_FIELD, Messages.getString(SOCIAL_LINKS_KEY, locale));
         return json;
