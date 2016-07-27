@@ -1103,7 +1103,23 @@ db.SB_SandBox.insert({
     "_id": "558b0efebd2e39cdab651e1f",
     "activityId": "ACT-HAND",
     "owner": "5509ef1fdb8f8b6e2f51f4ce",
-    "members": null,
+    "members": [
+        {
+            "personId" : "5509ef1fdb8f8b6e2f51f4ce",
+            "role" : {
+                "code" : "admin",
+                "label" : "Admin"
+            }
+        },
+        {
+            "personId" : "62b1870e-f1e4-4bcc-a389-ed8b22f564f7",
+            "role" : {
+                "code" : "coach",
+                "label" : "Coach"
+            }
+        }
+
+    ],
     "structure": {
         "_id": "541168295971d35c1f2d1b5f",
         "label": "CESSON RENNES METROPOLE HB",
