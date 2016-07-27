@@ -89,11 +89,16 @@ public class NotificationsDAOImpl implements NotificationsDAO {
         if(exclude != null) {
             exclude.forEach(excludeList::add);
         }
-        for (int i = 0; i < target.getArray(FIELD_MEMBERS).size(); i++) {
-            if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(0)).getString("personId"))) {
-                res = res && addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(0)).getString("personId"), notification);
+
+        if(target.getArray(FIELD_MEMBERS) != null && target.getArray(FIELD_MEMBERS).size() >0){
+            for (int i = 0; i < target.getArray(FIELD_MEMBERS).size(); i++) {
+                if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString("personId"))) {
+                    LOG.info(((JsonObject)target.getArray(FIELD_MEMBERS).get(i)).getString("personId"));
+                    res = res && addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString("personId"), notification);
+                }
             }
         }
+
         return res;
     }
 

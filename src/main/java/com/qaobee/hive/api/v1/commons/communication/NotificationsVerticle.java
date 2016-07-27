@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
@@ -121,10 +122,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             scope = Rule.Param.BODY)
     private void addNotificationToSandBox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject notification = new JsonObject(req.getBody());
         vertx.eventBus().send(NOTIFY, new JsonObject()
-                .putString("id", new JsonObject(req.getBody()).getString(TARGET_ID))
+                .putString("id", notification.getString(TARGET_ID))
                 .putString(TARGET, "SB_SandBox")
-                .putObject(NOTIFICATION, new JsonObject(req.getBody())), (Handler<Message<JsonObject>>) event ->
+                .putObject(NOTIFICATION, notification), (Handler<Message<JsonObject>>) event ->
                 utils.sendStatus(event.body().getBoolean("status", false), message)
         );
     }
@@ -162,7 +164,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
             utils.testMandatoryParams(message.body().encode(), "id", TARGET, NOTIFICATION);
             utils.sendStatusJson(notificationsDAO.notify(message.body().getString("id"),
                     message.body().getString(TARGET), message.body().getObject(NOTIFICATION),
-                    message.body().getArray("exclude")
+                    message.body().getObject(NOTIFICATION).getArray("exclude")
             ), message);
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
