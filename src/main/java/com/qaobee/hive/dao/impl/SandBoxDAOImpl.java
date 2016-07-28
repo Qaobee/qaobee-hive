@@ -26,30 +26,59 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * The type Sand box dao.
  */
 public class SandBoxDAOImpl implements SandBoxDAO {
+    private static final Logger LOG = LoggerFactory.getLogger(SandBoxDAOImpl.class);
     private static final String PARAM_OWNER_ID = "owner";
     private  static final String PARAM_ACTIVITY_ID = "activity";
+    private static final String FIELD_FIRSTNAME = "firstname";
+    private static final String FIELD_NAME = "name";
+    private static final String FIELD_AVATAR = "avatar";
+    private static final String FIELD_CONTACT = "contact";
+    private static final String FIELD_MEMBERS = "members";
+    private static final String FIELD_PERSON_ID = "personId";
+    private static final String FIELD_OWNER = "owner";
+    private static final String FIELD_ID = "_id";
+    private static final String FIELD_COUNTRY = "country";
 
     @Inject
     private MongoDB mongo;
 
     @Override
-    public JsonObject updateSandboxCfgId(String id, String sandboxCfgId) throws QaobeeException {
-        final JsonObject sandbox = mongo.getById(id, DBCollections.SANDBOX);
-        if (sandbox == null) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for id :" + id);
-        }
-        sandbox.putString("sandboxCfgId", sandboxCfgId);
-        mongo.save(sandbox, DBCollections.SANDBOX);
+    public JsonObject getSandboxSharing(String sandboxId) throws QaobeeException {
+        return getEnrichedSandbox(mongo.getById(sandboxId, DBCollections.SANDBOX));
+    }
+
+    @Override
+    public JsonObject getEnrichedSandbox(JsonObject sandbox) throws QaobeeException {
+        JsonArray members = new JsonArray();
+        sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
+            try {
+                members.add(mongo.getById(((JsonObject) m).getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
+            } catch (QaobeeException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        });
+        sandbox.putArray(FIELD_MEMBERS, members);
+        sandbox.putObject(FIELD_OWNER, mongo.getById(sandbox.getString(FIELD_OWNER), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
+        return sandbox;
+    }
+
+    @Override
+    public JsonObject updateSandbox(JsonObject sandbox) throws QaobeeException {
+        mongo.getById(sandbox.getString("_id"), DBCollections.SANDBOX);
+        sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
         return sandbox;
     }
 

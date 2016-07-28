@@ -30,14 +30,31 @@ import java.util.List;
  */
 public interface SandBoxDAO {
     /**
+     * Gets sandbox sharing.
+     *
+     * @param sandboxId the sandbox id
+     * @return the sandbox sharing
+     * @throws QaobeeException the qaobee exception
+     */
+    JsonObject getSandboxSharing(String sandboxId) throws QaobeeException;
+
+    /**
+     * Gets enriched sandbox cfg.
+     *
+     * @param sandboxCfgId the sandbox cfg id
+     * @return the enriched sandbox cfg
+     * @throws QaobeeException the qaobee exception
+     */
+    JsonObject getEnrichedSandbox(JsonObject sandboxCfgId) throws QaobeeException;
+
+    /**
      * Update json object.
      *
-     * @param id           the id
-     * @param sandboxCfgId the sandbox cfg id
+     * @param sandbox the sandbox
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject updateSandboxCfgId(String id, String sandboxCfgId) throws QaobeeException;
+    JsonObject updateSandbox(JsonObject sandbox) throws QaobeeException;
 
     /**
      * Add json object.

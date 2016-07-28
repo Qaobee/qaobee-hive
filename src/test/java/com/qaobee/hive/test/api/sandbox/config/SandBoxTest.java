@@ -1,19 +1,20 @@
-/*************************************************************************
- * Qaobee
- * __________________
- * <p/>
- * [2015] Qaobee
- * All Rights Reserved.
- * <p/>
- * NOTICE:  All information contained here is, and remains
- * the property of Qaobee and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may
- * be covered by U.S. and Foreign Patents, patents in process,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Qaobee.
+/*
+ *   __________________
+ *    Qaobee
+ *    __________________
+ *
+ *    Copyright (c) 2015.  Qaobee
+ *    All Rights Reserved.
+ *
+ *    NOTICE: All information contained here is, and remains
+ *    the property of Qaobee and its suppliers,
+ *    if any. The intellectual and technical concepts contained
+ *    here are proprietary to Qaobee and its suppliers and may
+ *    be covered by U.S. and Foreign Patents, patents in process,
+ *    and are protected by trade secret or copyright law.
+ *    Dissemination of this information or reproduction of this material
+ *    is strictly forbidden unless prior written permission is obtained
+ *    from Qaobee.
  */
 package com.qaobee.hive.test.api.sandbox.config;
 
@@ -274,15 +275,13 @@ public class SandBoxTest extends VertxJunitSupport {
                 .body("owner", is(user.get_id()))
                 .extract().asString());
 
-        JsonObject params = new JsonObject()
-                .putString(SB_SandBoxVerticle.PARAM_ID, sb.getString("_id"))
-                .putString(SB_SandBoxVerticle.PARAM_SB_CFG_ID, "123456");
+        sb.putString("effectiveDefault", "123456");
         given().header(TOKEN, user.getAccount().getToken())
-                .body(params.encode())
+                .body(sb.encode())
                 .when().post(getURL(SB_SandBoxVerticle.UPDATE))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body(SB_SandBoxVerticle.PARAM_SB_CFG_ID, is("123456"));
+                .body("effectiveDefault", is("123456"));
     }
 
     /**
@@ -294,7 +293,7 @@ public class SandBoxTest extends VertxJunitSupport {
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         JsonObject params = new JsonObject()
                 .putString(SB_SandBoxVerticle.PARAM_ID, "bla")
-                .putString(SB_SandBoxVerticle.PARAM_SB_CFG_ID, "123456");
+                .putString(SB_SandBoxVerticle.PARAM_SB_ID, "123456");
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(SB_SandBoxVerticle.UPDATE))
@@ -330,7 +329,7 @@ public class SandBoxTest extends VertxJunitSupport {
         User user = generateLoggedUser();
         JsonObject params = new JsonObject()
                 .putString(SB_SandBoxVerticle.PARAM_ID, "123456")
-                .putString(SB_SandBoxVerticle.PARAM_SB_CFG_ID, "123456");
+                .putString(SB_SandBoxVerticle.PARAM_SB_ID, "123456");
 
         List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_SandBoxVerticle.UPDATE).mandatoryParams());
         params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
@@ -352,7 +351,7 @@ public class SandBoxTest extends VertxJunitSupport {
         User user = generateLoggedUser();
         JsonObject params = new JsonObject()
                 .putString(SB_SandBoxVerticle.PARAM_ID, "123456")
-                .putString(SB_SandBoxVerticle.PARAM_SB_CFG_ID, "123456");
+                .putString(SB_SandBoxVerticle.PARAM_SB_ID, "123456");
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(SB_SandBoxVerticle.UPDATE))

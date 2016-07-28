@@ -28,24 +28,6 @@ import org.vertx.java.core.json.JsonObject;
 public interface ShareDAO {
 
     /**
-     * Gets sandbox sharing.
-     *
-     * @param sandboxId the sandbox id
-     * @return the sandbox sharing
-     * @throws QaobeeException the qaobee exception
-     */
-    JsonObject getSandboxSharing(String sandboxId) throws QaobeeException;
-
-    /**
-     * Gets enriched sandbox cfg.
-     *
-     * @param sandboxCfgId the sandbox cfg id
-     * @return the enriched sandbox cfg
-     * @throws QaobeeException the qaobee exception
-     */
-    JsonObject getEnrichedSandbox(JsonObject sandboxCfgId) throws QaobeeException;
-
-    /**
      * Remove user from sandbox.
      *
      * @param sandboxId the sandbox id
@@ -69,8 +51,9 @@ public interface ShareDAO {
     /**
      * Gets list of shared sandboxes.
      *
-     * @param userId the user id
+     * @param userId     the user id
+     * @param activityId the activity id
      * @return the list of shared sandboxes owners and members
      */
-    JsonObject getListOfSharedSandboxes(String userId);
+    JsonObject getListOfSharedSandboxes(String userId, String activityId);
 }
