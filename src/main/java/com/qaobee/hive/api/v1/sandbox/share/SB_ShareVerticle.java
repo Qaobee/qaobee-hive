@@ -53,11 +53,11 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * The constant ADD_TO_SANDBOX.
      */
-    public static final String ADD_TO_SANDBOX = Module.VERSION + ".sandbox.share.add";
+    public static final String INVITE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.inviteMember";
     /**
      * The constant REMOVE_FROM_SANDBOX.
      */
-    public static final String REMOVE_FROM_SANDBOX = Module.VERSION + ".sandbox.share.del";
+    public static final String DESACTIVATE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.desactivateMember";
 
     /**
      * The constant PARAM_SANBOXID.
@@ -92,8 +92,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
                 .registerHandler(GET_SANDBOX_SHARING_LIST, this::getListOfSharedSandboxes)
-                .registerHandler(ADD_TO_SANDBOX, this::addUserToSandbox)
-                .registerHandler(REMOVE_FROM_SANDBOX, this::removeUserFromSandbox)
+                .registerHandler(INVITE_MEMBER_TO_SANDBOX, this::inviteMemberToSandbox)
+                .registerHandler(DESACTIVATE_MEMBER_TO_SANDBOX, this::desactivateMemberToSandbox)
                 .registerHandler(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification);
     }
 
@@ -110,21 +110,21 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     }
 
     /**
-     * @apiDescription Remove a member to a SB_SandBoxCfg
-     * @api {post} /api/1/share/sandbox/del Remove a member to a SB_SandBoxCfg
-     * @apiParam {String} userId User id to remeve
+     * @apiDescription Desactivate a member to a SB_SandBox
+     * @api {post} /api/1/share/sandbox/del Desactivate a member to a SB_SandBox
+     * @apiParam {String} userId User id to Desactivate
      * @apiParam {String} sandboxId Targeted sandbox
-     * @apiName removeUserFromSandbox
+     * @apiName desactivateMemberToSandbox
      * @apiHeader {String} token
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = REMOVE_FROM_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID}, scope = Rule.Param.BODY)
-    private void removeUserFromSandbox(Message<String> message) {
+    @Rule(address = DESACTIVATE_MEMBER_TO_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID}, scope = Rule.Param.BODY)
+    private void desactivateMemberToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject request = new JsonObject(req.getBody());
         try {
-            JsonObject sandbox = shareDAO.removeUserFromSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID));
+            JsonObject sandbox = shareDAO.desactivateMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID));
             vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
                     .putString(PARAM_USERID, request.getString(PARAM_USERID))
                     .putString(FIELD_ROOT, "notification.sandbox.del")
@@ -139,8 +139,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     }
 
     /**
-     * @apiDescription Add a member to a SB_SandBoxCfg
-     * @api {post} /api/1/share/sandbox/add Add a member to a SB_SandBoxCfg
+     * @apiDescription Invite a member to a SB_SandBox
+     * @api {post} /api/1/share/sandbox/add Invite a member to a SB_SandBox
      * @apiParam {String} userId User id to add as a member
      * @apiParam {String} sandboxId Targeted sandbox
      * @apiParam {String} role_code Role code
@@ -149,12 +149,12 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = ADD_TO_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID, PARAM_ROLE_CODE}, scope = Rule.Param.BODY)
-    private void addUserToSandbox(Message<String> message) {
+    @Rule(address = INVITE_MEMBER_TO_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID, PARAM_ROLE_CODE}, scope = Rule.Param.BODY)
+    private void inviteMemberToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject request = new JsonObject(req.getBody());
         try {
-            JsonObject sandbox = shareDAO.addUserToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID), request.getString(PARAM_ROLE_CODE));
+            JsonObject sandbox = shareDAO.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID), request.getString(PARAM_ROLE_CODE));
             vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
                     .putString(PARAM_USERID, request.getString(PARAM_USERID))
                     .putString(FIELD_ROOT, "notification.sandbox.add")

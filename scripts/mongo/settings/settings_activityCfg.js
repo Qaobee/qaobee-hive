@@ -64,6 +64,15 @@ db.ActivityCfg.insert({
         "label" : "Départemental",
         "order" : NumberInt(4)
     }],
+    "listRoleSandbox" : [ {
+        "code" : "admin",
+        "label" : "Administrateur",
+        "order" : NumberInt(1)
+    }, {
+        "code" : "member",
+        "label" : "Membre",
+        "order" : NumberInt(2)
+    } ],
     "listRoleStr" : [ {
         "code" : "player",
         "label" : "Joueur",
@@ -343,6 +352,15 @@ db.ActivityCfg.insert({
         "code" : "other",
         "label" : "Autre",
         "order" : NumberInt(8)
+    } ],
+    "listRoleSandbox" : [ {
+        "code" : "admin",
+        "label" : "Administrateur",
+        "order" : NumberInt(1)
+    }, {
+        "code" : "member",
+        "label" : "Membre",
+        "order" : NumberInt(2)
     } ],
     "listCategoryAge" : [ {
         "code" : "sen",

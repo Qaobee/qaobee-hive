@@ -19,20 +19,24 @@
 
 package com.qaobee.hive.test.api.sandbox.share;
 
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Test;
+import org.vertx.java.core.json.JsonObject;
+
 import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.api.v1.sandbox.share.SB_ShareVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static com.jayway.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
 
 /**
  * The type Sb share test.
@@ -43,7 +47,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Add a member to a sandbox.
      */
     @Test
-    public void addAMemberToASandbox() {
+    public void inviteMemberToSandbox() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_SANDBOXES_HAND);
         User user = loggedUser("5509ef1fdb8f8b6e2f51f4ce");
         User user2 = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
@@ -54,11 +58,12 @@ public class SB_ShareTest extends VertxJunitSupport {
 
         String id = given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
-                .when().post(getURL(SB_ShareVerticle.ADD_TO_SANDBOX))
+                .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
+                .body("members.findAll{ it.status = 'waiting' }.personId", hasItem("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4"))
                 .extract().path("_id");
-
+        
         given().header(TOKEN, user.getAccount().getToken())
                 .queryParam(SB_SandBoxVerticle.PARAM_ID, id)
                 .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
@@ -78,8 +83,8 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Add a member to a sandbox with non logged user.
      */
     @Test
-    public void addAMemberToASandboxWithNonLoggedUser() {
-        given().when().post(getURL(SB_ShareVerticle.ADD_TO_SANDBOX))
+    public void inviteMemberToSandboxWithNonLoggedUser() {
+        given().when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -88,8 +93,8 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Add a member to a sandbox with wrong http method.
      */
     @Test
-    public void addAMemberToASandboxWithWrongHttpMethod() {
-        given().when().get(getURL(SB_ShareVerticle.ADD_TO_SANDBOX))
+    public void inviteMemberToSandboxWithWrongHttpMethod() {
+        given().when().get(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -98,19 +103,19 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Add a member to a sandbox with missing params.
      */
     @Test
-    public void addAMemberToASandboxWithMissingParams() {
+    public void inviteMemberToSandboxWithMissingParams() {
         User u = generateLoggedUser();
         final JsonObject params = new JsonObject()
                 .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
                 .putString(SB_ShareVerticle.PARAM_USERID, "12345")
                 .putString(SB_ShareVerticle.PARAM_ROLE_CODE, "acoach");
-        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_ShareVerticle.ADD_TO_SANDBOX).mandatoryParams());
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX).mandatoryParams());
         params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
             JsonObject params2 = new JsonObject(params.encode());
             params2.removeField(k);
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params2.encode())
-                    .when().post(getURL(SB_ShareVerticle.ADD_TO_SANDBOX))
+                    .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         });
@@ -120,7 +125,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Remove a member to a sandbox.
      */
     @Test
-    public void removeAMemberToASandbox() {
+    public void desactivateMemberToSandbox() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         User user2 = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
@@ -131,7 +136,7 @@ public class SB_ShareTest extends VertxJunitSupport {
 
         String id = given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
-                .when().post(getURL(SB_ShareVerticle.ADD_TO_SANDBOX))
+                .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .extract().path("_id");
@@ -145,7 +150,7 @@ public class SB_ShareTest extends VertxJunitSupport {
 
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
-                .when().post(getURL(SB_ShareVerticle.REMOVE_FROM_SANDBOX))
+                .when().post(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("members", hasSize(2));
@@ -155,8 +160,8 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Remove a member to a sandbox with non logged user.
      */
     @Test
-    public void removeAMemberToASandboxWithNonLoggedUser() {
-        given().when().post(getURL(SB_ShareVerticle.REMOVE_FROM_SANDBOX))
+    public void desactivateMemberToSandboxWithNonLoggedUser() {
+        given().when().post(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -165,8 +170,8 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Remove a member to a sandbox with wrong http method.
      */
     @Test
-    public void removeAMemberToASandboxWithWrongHttpMethod() {
-        given().when().get(getURL(SB_ShareVerticle.REMOVE_FROM_SANDBOX))
+    public void desactivateMemberToSandboxWithWrongHttpMethod() {
+        given().when().get(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -175,18 +180,18 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Remove a member to a sandbox with missing params.
      */
     @Test
-    public void removeAMemberToASandboxWithMissingParams() {
+    public void desactivateMemberToSandboxWithMissingParams() {
         User u = generateLoggedUser();
         final JsonObject params = new JsonObject()
                 .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
                 .putString(SB_ShareVerticle.PARAM_USERID, "12345");
-        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_ShareVerticle.REMOVE_FROM_SANDBOX).mandatoryParams());
+        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX).mandatoryParams());
         params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
             JsonObject params2 = new JsonObject(params.encode());
             params2.removeField(k);
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params2.encode())
-                    .when().post(getURL(SB_ShareVerticle.REMOVE_FROM_SANDBOX))
+                    .when().post(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         });

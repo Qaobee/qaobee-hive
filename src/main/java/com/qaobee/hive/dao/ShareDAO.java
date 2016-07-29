@@ -28,17 +28,17 @@ import org.vertx.java.core.json.JsonObject;
 public interface ShareDAO {
 
     /**
-     * Remove user from sandbox.
+     * Desactivate user from sandbox.
      *
      * @param sandboxId the sandbox id
      * @param userId    the user id
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject removeUserFromSandbox(String sandboxId, String userId) throws QaobeeException;
+    JsonObject desactivateMemberToSandbox(String sandboxId, String userId) throws QaobeeException;
 
     /**
-     * Add user to sandbox json object.
+     * Invite user to sandbox json object.
      *
      * @param sandboxId the sandbox id
      * @param userId    the user id
@@ -46,7 +46,19 @@ public interface ShareDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject addUserToSandbox(String sandboxId, String userId, String roleCode) throws QaobeeException;
+    JsonObject inviteMemberToSandbox(String sandboxId, String userId, String roleCode) throws QaobeeException;
+    
+    /**
+     * Confirm invitation to joint the sandbox.
+     *
+     * @param sandboxId the sandbox id
+     * @param userId    the user id
+     * @param answer  the answer (accepted or refused)
+     * @return the json object
+     * @throws QaobeeException the qaobee exception
+     */
+    JsonObject confirmInvitationToSandbox(String sandboxId, String userId, String answer) throws QaobeeException;
+    
 
     /**
      * Gets list of shared sandboxes.
