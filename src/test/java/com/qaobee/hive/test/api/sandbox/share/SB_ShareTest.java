@@ -60,8 +60,8 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .extract().path("_id");
 
         given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_ShareVerticle.PARAM_SANBOXID, id)
-                .when().get(getURL(SB_SandBoxVerticle.GET_SANDOX_SHARING))
+                .queryParam(SB_SandBoxVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("members", hasSize(3));
@@ -137,8 +137,8 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .extract().path("_id");
 
         given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_ShareVerticle.PARAM_SANBOXID, id)
-                .when().get(getURL(SB_SandBoxVerticle.GET_SANDOX_SHARING))
+                .queryParam(SB_SandBoxVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("members", hasSize(3));
@@ -190,38 +190,6 @@ public class SB_ShareTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         });
-    }
-
-    /**
-     * Gets sandbox with non logged user.
-     */
-    @Test
-    public void getSandboxWithNonLoggedUser() {
-        given().when().get(getURL(SB_SandBoxVerticle.GET_SANDOX_SHARING))
-                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
-    }
-
-    /**
-     * Gets sandbox with wrong http method.
-     */
-    @Test
-    public void getSandboxWithWrongHttpMethod() {
-        given().when().post(getURL(SB_SandBoxVerticle.GET_SANDOX_SHARING))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
-    }
-
-    /**
-     * Gets sandbox with missing params.
-     */
-    @Test
-    public void getSandboxWithMissingParams() {
-        User u = generateLoggedUser();
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().get(getURL(SB_SandBoxVerticle.GET_SANDOX_SHARING))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**

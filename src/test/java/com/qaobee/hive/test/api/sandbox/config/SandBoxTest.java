@@ -199,67 +199,6 @@ public class SandBoxTest extends VertxJunitSupport {
     }
 
     /**
-     * Add sand box.
-     */
-    @Test
-    public void addSandBox() {
-        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser();
-        JsonObject params = new JsonObject()
-                .putString(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, "ACT-WATER-PONEY")
-                .putString(SB_SandBoxVerticle.PARAM_USER_ID, user.get_id());
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(params.encode())
-                .when().put(getURL(SB_SandBoxVerticle.ADD))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("owner", is(user.get_id()));
-    }
-
-    /**
-     * Add sand box with non logged user.
-     */
-    @Test
-    public void addSandBoxWithNonLoggedUser() {
-        given().when().put(getURL(SB_SandBoxVerticle.ADD))
-                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
-    }
-
-    /**
-     * Add sand box with wrong http method.
-     */
-    @Test
-    public void addSandBoxWithWrongHttpMethod() {
-        given().when().post(getURL(SB_SandBoxVerticle.ADD))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
-    }
-
-    /**
-     * Add sand box with missing params.
-     */
-    @Test
-    public void addSandBoxWithMissingParams() {
-        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser();
-        JsonObject params = new JsonObject()
-                .putString(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, "ACT-WATER-PONEY")
-                .putString(SB_SandBoxVerticle.PARAM_USER_ID, user.get_id());
-
-        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_SandBoxVerticle.ADD).mandatoryParams());
-        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
-            JsonObject params2 = new JsonObject(params.encode());
-            params2.removeField(k);
-            given().header(TOKEN, user.getAccount().getToken())
-                    .body(params2.encode())
-                    .when().put(getURL(SB_SandBoxVerticle.ADD))
-                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
-    }
-
-    /**
      * Update sand box.
      */
     @Test
@@ -282,23 +221,6 @@ public class SandBoxTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("effectiveDefault", is("123456"));
-    }
-
-    /**
-     * Update sand box with wrong id.
-     */
-    @Test
-    public void updateSandBoxWithWrongId() {
-        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        JsonObject params = new JsonObject()
-                .putString(SB_SandBoxVerticle.PARAM_ID, "bla")
-                .putString(SB_SandBoxVerticle.PARAM_SB_ID, "123456");
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(SB_SandBoxVerticle.UPDATE))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**
@@ -327,35 +249,42 @@ public class SandBoxTest extends VertxJunitSupport {
     @Test
     public void updateSandBoxWithMissingParams() {
         User user = generateLoggedUser();
-        JsonObject params = new JsonObject()
-                .putString(SB_SandBoxVerticle.PARAM_ID, "123456")
-                .putString(SB_SandBoxVerticle.PARAM_SB_ID, "123456");
 
-        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_SandBoxVerticle.UPDATE).mandatoryParams());
-        params.getFieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
-            JsonObject params2 = new JsonObject(params.encode());
-            params2.removeField(k);
-            given().header(TOKEN, user.getAccount().getToken())
-                    .body(params2.encode())
-                    .when().post(getURL(SB_SandBoxVerticle.UPDATE))
-                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+        given().header(TOKEN, user.getAccount().getToken())
+            .when().post(getURL(SB_SandBoxVerticle.UPDATE))
+            .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+            .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
-     * Update sand box with wrong params.
+     * Gets sandbox with non logged user.
      */
     @Test
-    public void updateSandBoxWithWrongParams() {
-        User user = generateLoggedUser();
-        JsonObject params = new JsonObject()
-                .putString(SB_SandBoxVerticle.PARAM_ID, "123456")
-                .putString(SB_SandBoxVerticle.PARAM_SB_ID, "123456");
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(SB_SandBoxVerticle.UPDATE))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    public void getSandboxByIdWithNonLoggedUser() {
+        given().when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets sandbox with wrong http method.
+     */
+    @Test
+    public void getSandboxByIWithWrongHttpMethod() {
+        given().when().post(getURL(SB_SandBoxVerticle.GET_BY_ID))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
+    }
+
+    /**
+     * Gets sandbox with missing params.
+     */
+    @Test
+    public void getSandboxByIWithMissingParams() {
+        User u = generateLoggedUser();
+        given().header(TOKEN, u.getAccount().getToken())
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 }

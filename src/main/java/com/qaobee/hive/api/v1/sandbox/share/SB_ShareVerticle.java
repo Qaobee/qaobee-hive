@@ -49,15 +49,15 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     /**
      * The constant GET_SANDBOX_SHARING_LIST.
      */
-    public static final String GET_SANDBOX_SHARING_LIST = Module.VERSION + ".share.sandbox.list";
+    public static final String GET_SANDBOX_SHARING_LIST = Module.VERSION + ".sandbox.share.list";
     /**
      * The constant ADD_TO_SANDBOX.
      */
-    public static final String ADD_TO_SANDBOX = Module.VERSION + ".share.sandbox.add";
+    public static final String ADD_TO_SANDBOX = Module.VERSION + ".sandbox.share.add";
     /**
      * The constant REMOVE_FROM_SANDBOX.
      */
-    public static final String REMOVE_FROM_SANDBOX = Module.VERSION + ".share.sandbox.del";
+    public static final String REMOVE_FROM_SANDBOX = Module.VERSION + ".sandbox.share.del";
 
     /**
      * The constant PARAM_SANBOXID.

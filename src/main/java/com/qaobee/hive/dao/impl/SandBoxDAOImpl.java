@@ -56,7 +56,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
     private MongoDB mongo;
 
     @Override
-    public JsonObject getSandboxSharing(String sandboxId) throws QaobeeException {
+    public JsonObject getSandboxById(String sandboxId) throws QaobeeException {
         return getEnrichedSandbox(mongo.getById(sandboxId, DBCollections.SANDBOX));
     }
 
@@ -77,17 +77,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
 
     @Override
     public JsonObject updateSandbox(JsonObject sandbox) throws QaobeeException {
-        mongo.getById(sandbox.getString("_id"), DBCollections.SANDBOX);
         sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
-        return sandbox;
-    }
-
-    @Override
-    public JsonObject add(String activityId, String userId) throws QaobeeException {
-        JsonObject sandbox = new JsonObject()
-                .putString("activityId", activityId)
-                .putString("owner", userId);
-        sandbox.putString("_id", mongo.save(sandbox, DBCollections.SANDBOX));
         return sandbox;
     }
 
