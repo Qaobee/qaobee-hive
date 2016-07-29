@@ -86,8 +86,10 @@ public class SB_ShareTest extends VertxJunitSupport {
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("userId", nullValue())
+                .extract();
     }
 
     /**
@@ -129,6 +131,44 @@ public class SB_ShareTest extends VertxJunitSupport {
 		        .body("_id", notNullValue())
 		        .body("members", hasSize(3))
                 .body("members.findAll{ it.status = 'activated' }.personId", hasItem("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4"));
+    }
+
+    @Test
+    public void refuseInvitationToSandbox() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_SANDBOXES_HAND);
+        User user = loggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        User user2 = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
+        final JsonObject params = new JsonObject()
+                .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                .putString(SB_ShareVerticle.PARAM_USER_EMAIL, user2.getContact().getEmail())
+                .putString(SB_ShareVerticle.PARAM_ROLE_CODE, "member");
+
+        String invitationId = given().header(TOKEN, user.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .extract().path("_id");
+
+        final JsonObject params2 = new JsonObject()
+                .putString(SB_ShareVerticle.PARAM_INVITATION_ID, invitationId)
+                .putString(SB_ShareVerticle.PARAM_USERID, user2.get_id())
+                .putString(SB_ShareVerticle.PARAM_ANSWER_INVITATION, "refused");
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(params2.encode())
+                .when().post(getURL(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("status",is("refused"));
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxVerticle.PARAM_ID, "558b0efebd2e39cdab651e1f")
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("members", hasSize(2))
+                .body("members.personId", not(hasItem(user2.get_id())));
     }
 
     /**
@@ -176,6 +216,7 @@ public class SB_ShareTest extends VertxJunitSupport {
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         });
     }
+
 
     /**
      * Add a member to a sandbox with non logged user.
