@@ -62,16 +62,16 @@ public class SandBoxDAOImpl implements SandBoxDAO {
 
     @Override
     public JsonObject getEnrichedSandbox(JsonObject sandbox) throws QaobeeException {
-        JsonArray members = new JsonArray();
-        sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
+        JsonArray members = sandbox.getArray(FIELD_MEMBERS);
+        members.forEach(m -> {
             try {
-                members.add(mongo.getById(((JsonObject) m).getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
+            	((JsonObject) m).putObject("person", mongo.getById(((JsonObject) m).getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
             }
         });
         sandbox.putArray(FIELD_MEMBERS, members);
-        sandbox.putObject(FIELD_OWNER, mongo.getById(sandbox.getString(FIELD_OWNER), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
+        
         return sandbox;
     }
 
