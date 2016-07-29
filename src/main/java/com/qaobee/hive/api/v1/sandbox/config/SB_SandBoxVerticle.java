@@ -46,7 +46,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant GET.
      */
-    public static final String GET = Module.VERSION + ".sandbox.config.sandbox.get";
+    public static final String GET_BY_ID = Module.VERSION + ".sandbox.config.sandbox.getById";
     /**
      * The constant GET_BY_OWNER.
      */
@@ -56,17 +56,10 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String GET_LIST_BY_OWNER = Module.VERSION + ".sandbox.config.sandbox.getListByOwner";
     /**
-     * The constant ADD_TO_USER.
-     */
-    public static final String ADD = Module.VERSION + ".sandbox.config.sandbox.add";
-    /**
      * The constant UPDATE.
      */
     public static final String UPDATE = Module.VERSION + ".sandbox.config.sandbox.update";
-    /**
-     * The constant GET_SANDOX_SHARING.
-     */
-    public static final String GET_SANDOX_SHARING = Module.VERSION + ".share.sandbox.get";
+
     /**
      * The constant PARAM_ID.
      */
@@ -84,10 +77,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * The constant PARAM_USER.
      */
     public static final String PARAM_USER_ID = "uid";
-    /**
-     * The constant PARAM_SB_ID.
-     */
-    public static final String PARAM_SB_ID = "sandboxId";
+
 
     private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxVerticle.class);
 
@@ -103,78 +93,30 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
         vertx.eventBus()
                 .registerHandler(GET_BY_OWNER, this::getByOwner)
                 .registerHandler(GET_LIST_BY_OWNER, this::getListByOwner)
-                .registerHandler(ADD, this::add)
-                .registerHandler(GET_SANDOX_SHARING, this::getSandboxSharing)
+                .registerHandler(GET_BY_ID, this::getSandboxById)
                 .registerHandler(UPDATE, this::update);
     }
 
     /**
-     * @apiDescription Get an enriched SB_SandBoxCfg
-     * @api {post} /api/1/share/sandbox/get Get an enriched SB_SandBoxCfg
+     * @apiDescription Get an enriched SB_SandBox
+     * @api {post} /api/1/share/sandbox/getById Get an enriched SB_SandBox
      * @apiParam {String} sandboxId Targeted sandbox
-     * @apiName getSandboxSharing
+     * @apiName getSandboxById
      * @apiHeader {String} token
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = GET_SANDOX_SHARING, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SB_ID}, scope = Rule.Param.REQUEST)
-    private void getSandboxSharing(Message<String> message) {
+    @Rule(address = GET_BY_ID, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    private void getSandboxById(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            message.reply(sandBoxDAO.getSandboxSharing(req.getParams().get(PARAM_SB_ID).get(0)).encode());
+            message.reply(sandBoxDAO.getSandboxById(req.getParams().get(PARAM_ID).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
         } catch (DecodeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e));
-        }
-    }
-
-    /**
-     * @apiDescription Update sandbox sandboxCfg id
-     * @api {post} /api/1/sandbox/config/sandbox/update Update sandbox sandboxCfg id
-     * @apiVersion 0.1.0
-     * @apiName update
-     * @apiGroup SandBox API
-     * @apiHeader {String} token
-     * @apiParam {String} _id sandbox id
-     * @apiParam {String} sandboxCfgId sandboxCfg id
-     * @apiSuccess {Object} sandbox
-     */
-    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ID},
-          scope = Rule.Param.BODY)
-    private void update(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(sandBoxDAO.updateSandbox(new JsonObject(req.getBody())).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
-    }
-
-    /**
-     * @apiDescription Add sandbox
-     * @api {put} /api/1/sandbox/config/sandbox/add Update sandbox sandboxCfg id
-     * @apiVersion 0.1.0
-     * @apiName add
-     * @apiGroup SandBox API
-     * @apiHeader {String} token
-     * @apiParam {String} uid User id
-     * @apiParam {String} activity activity id
-     * @apiSuccess {Object} sandbox
-     */
-    @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_USER_ID, PARAM_ACTIVITY_ID},
-          scope = Rule.Param.BODY)
-    private void add(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject body = new JsonObject(req.getBody());
-            message.reply(sandBoxDAO.add(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_USER_ID)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
         }
     }
 
@@ -213,6 +155,29 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             message.reply(sandBoxDAO.getByOwner(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getUser().get_id()).encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    /**
+     * @apiDescription Update sandbox
+     * @api {post} /api/1/sandbox/config/sandbox/update Update sandbox
+     * @apiVersion 0.1.0
+     * @apiName update
+     * @apiGroup SandBox API
+     * @apiHeader {String} token
+     * @apiParam {String} _id sandbox id
+     * @apiParam {String} sandboxCfgId sandboxCfg id
+     * @apiSuccess {Object} sandbox
+     */
+    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ID},
+          scope = Rule.Param.BODY)
+    private void update(Message<String> message) {
+        try {
+            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+            message.reply(sandBoxDAO.updateSandbox(new JsonObject(req.getBody())).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
