@@ -48,7 +48,6 @@ public class SandBoxDAOImpl implements SandBoxDAO {
     private static final String FIELD_CONTACT = "contact";
     private static final String FIELD_MEMBERS = "members";
     private static final String FIELD_PERSON_ID = "personId";
-    private static final String FIELD_OWNER = "owner";
     private static final String FIELD_ID = "_id";
     private static final String FIELD_COUNTRY = "country";
 

@@ -19,8 +19,10 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
+
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 
 /**
  * The interface Share dao.
@@ -46,18 +48,18 @@ public interface ShareDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject inviteMemberToSandbox(String sandboxId, String userId, String roleCode) throws QaobeeException;
+    JsonObject inviteMemberToSandbox(String sandboxId, String userEmail, String roleCode) throws QaobeeException;
     
     /**
      * Confirm invitation to joint the sandbox.
      *
-     * @param sandboxId the sandbox id
+     * @param invitationId the invitation id
      * @param userId    the user id
      * @param answer  the answer (accepted or refused)
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject confirmInvitationToSandbox(String sandboxId, String userId, String answer) throws QaobeeException;
+    JsonObject confirmInvitationToSandbox(String invitationId, String userId, String answer) throws QaobeeException;
     
 
     /**
@@ -68,4 +70,13 @@ public interface ShareDAO {
      * @return the list of shared sandboxes owners and members
      */
     JsonObject getListOfSharedSandboxes(String userId, String activityId);
+    
+    /**
+     * Gets list of invitation sandboxes.
+     *
+     * @param sandboxId     the sandbox id
+     * @param status the status of invitation
+     * @return the list of invitation to the sandbox
+     */
+    JsonArray getListOfInvitationsToSandbox(String sandboxId, String status) throws QaobeeException;
 }

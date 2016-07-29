@@ -66,7 +66,7 @@ public class ShareDAOImpl implements ShareDAO {
     }
 
     @Override
-    public JsonObject inviteMemberToSandbox(String sandboxId, String userId, String roleCode) throws QaobeeException {
+    public JsonObject inviteMemberToSandbox(String sandboxId, String userEmail, String roleCode) throws QaobeeException {
         JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
         final JsonObject[] role = {new JsonObject().putString("code", roleCode)};
         JsonObject owner = mongo.getById(sandbox.getString(FIELD_OWNER), DBCollections.USER);
@@ -82,34 +82,61 @@ public class ShareDAOImpl implements ShareDAO {
                 }
             });
         }
-        sandbox.getArray(FIELD_MEMBERS).add(new JsonObject()
-                .putString(FIELD_PERSON_ID, userId)
+        JsonObject invitation = new JsonObject()
+        		.putString("userEmail", userEmail)
                 .putObject("role", role[0])
+                .putString("sandbox", sandbox.getString("_id"))
                 .putString("status", "waiting")
-                .putNumber("invitationDate", System.currentTimeMillis())
-        );
-        sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
-        return sandBoxDAO.getEnrichedSandbox(sandbox);
+                .putNumber("invitationDate", System.currentTimeMillis());
+        
+        sandbox.putString("_id", mongo.save(invitation, DBCollections.INVITATION));
+        return invitation;
     }
     
     @Override
-    public JsonObject confirmInvitationToSandbox(String sandboxId, String userId, String answer) throws QaobeeException {
-        JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
+    public JsonObject confirmInvitationToSandbox(String invitationId, String userId, String answer) throws QaobeeException {
+        JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
         
         if ("accepted".equals(answer)) {
-        	sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
-                if (((JsonObject) m).getString(FIELD_PERSON_ID).equals(userId)) {
-                	((JsonObject) m).putString("status", "accepted");
-                }
-            });
+        	invitation.putString("status", "accepted")
+        	.putNumber("answerDate", System.currentTimeMillis());
+        	mongo.update(invitation, DBCollections.INVITATION);
+        	
+        	AddMemberToSandbox(invitation.getString("sandboxId"), userId, invitation.getObject("role"));
         } else {
-        	sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
-                if (((JsonObject) m).getString(FIELD_PERSON_ID).equals(userId)) {
-                	((JsonObject) m).putString("status", "refused");
-                }
-            });
+        	invitation.putString("status", "refused")
+        	.putNumber("answerDate", System.currentTimeMillis());
+        	mongo.update(invitation, DBCollections.INVITATION);
         }
         
+        return invitation;
+    }
+    
+    @Override
+    public JsonArray getListOfInvitationsToSandbox(String sandboxId, String status) throws QaobeeException {
+    	
+    	CriteriaBuilder criterias = new CriteriaBuilder()
+        .add("sandboxId", sandboxId);
+    	
+    	if(!"ALL".equals(status)) {
+    		criterias.add("status", status);
+    	}
+        
+    	JsonArray invitations = mongo.findByCriterias(criterias.get(),
+        null, null, -1, 0, DBCollections.INVITATION);
+    	
+    	return invitations;
+    }
+    
+    private JsonObject AddMemberToSandbox(String sandboxId, String userId, JsonObject role) throws QaobeeException {
+        JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
+        
+        sandbox.getArray(FIELD_MEMBERS).add(new JsonObject()
+                .putString(FIELD_PERSON_ID, userId)
+                .putObject("role", role)
+                .putString("status", "activated")
+                .putNumber("startDate", System.currentTimeMillis())
+        );
         sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
         return sandBoxDAO.getEnrichedSandbox(sandbox);
     }
