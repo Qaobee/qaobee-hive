@@ -31,6 +31,7 @@ import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
@@ -179,12 +180,14 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         JsonObject request = new JsonObject(req.getBody());
         try {
             JsonObject invitation = shareDAO.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USER_EMAIL), request.getString(PARAM_ROLE_CODE));
-            vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
-                    .putString(PARAM_USERID, invitation.getString("userId"))
-                    .putString(FIELD_ROOT, "notification.sandbox.add")
-                    .putString(FIELD_LOCALE, req.getLocale())
-                    .putString(FIELD_UID, req.getUser().get_id())
-            );
+            if(StringUtils.isNotBlank(invitation.getString("userId", ""))) {
+                vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
+                        .putString(PARAM_USERID, invitation.getString("userId"))
+                        .putString(FIELD_ROOT, "notification.sandbox.add")
+                        .putString(FIELD_LOCALE, req.getLocale())
+                        .putString(FIELD_UID, req.getUser().get_id())
+                );
+            }
             message.reply(invitation.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);

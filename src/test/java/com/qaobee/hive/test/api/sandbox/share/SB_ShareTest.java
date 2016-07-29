@@ -23,11 +23,12 @@ import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.api.v1.sandbox.share.SB_ShareVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
 
 import java.util.Arrays;
 import java.util.List;
@@ -221,37 +222,58 @@ public class SB_ShareTest extends VertxJunitSupport {
     /**
      * Remove a member to a sandbox.
      */
-    @Ignore @Test
+    @Test
     public void desactivateMemberToSandbox() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        User user2 = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
+        User user2 = generateUser();
+        user2.getContact().setEmail("bla.bla@bla.bla");
+        user2.set_id(mongo.update(new JsonObject(Json.encode(user2)), DBCollections.USER));
+        String sandboxId = "558b0efebd2e39cdab651e1f";
+
         final JsonObject params = new JsonObject()
-                .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
-                .putString(SB_ShareVerticle.PARAM_USERID, user2.get_id())
+                .putString(SB_ShareVerticle.PARAM_SANBOXID, sandboxId)
+                .putString(SB_ShareVerticle.PARAM_USER_EMAIL, user2.getContact().getEmail())
                 .putString(SB_ShareVerticle.PARAM_ROLE_CODE, "acoach");
 
-        String id = given().header(TOKEN, user.getAccount().getToken())
+        String invitationId = given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
+                .body("sandboxId", is(sandboxId))
                 .extract().path("_id");
 
+        final JsonObject params2 = new JsonObject()
+                .putString(SB_ShareVerticle.PARAM_INVITATION_ID, invitationId)
+                .putString(SB_ShareVerticle.PARAM_USERID, user2.get_id())
+                .putString(SB_ShareVerticle.PARAM_ANSWER_INVITATION, "accepted");
+
         given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_ID, id)
+                .body(params2.encode())
+                .when().post(getURL(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("status", is("accepted"));
+
+        given().header(TOKEN, user.getAccount().getToken())
+                .queryParam(SB_SandBoxVerticle.PARAM_ID, sandboxId)
                 .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("members", hasSize(3));
 
+        final JsonObject params3 = new JsonObject()
+                .putString(SB_ShareVerticle.PARAM_USERID, user2.get_id())
+                .putString(SB_ShareVerticle.PARAM_SANBOXID, sandboxId);
+
         given().header(TOKEN, user.getAccount().getToken())
-                .body(params.encode())
+                .body(params3.encode())
                 .when().post(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("members", hasSize(3))
-                .body("members.findAll{ it.status = 'desactivated' }.personId", hasItem("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4"));
+                .body("members.findAll{ it.status == 'desactivated' }.personId", hasItem(user2.get_id()));
     }
 
     /**

@@ -24,7 +24,6 @@ import com.qaobee.hive.dao.ActivityCfgDAO;
 import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -84,19 +83,17 @@ public class ShareDAOImpl implements ShareDAO {
                 }
             });
         }
-        JsonArray invited = mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER);
-        if(invited.size() ==0) {
-            throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, userEmail + " does not exists");
-        }
         JsonObject invitation = new JsonObject()
         		.putString("userEmail", userEmail)
-        		.putString("userId",((JsonObject)invited.get(0)).getString("_id"))
                 .putObject("role", role[0])
                 .putString(FIELD_SANDBOX_ID, sandbox.getString("_id"))
                 .putString("status", "waiting")
                 .putNumber("invitationDate", System.currentTimeMillis());
-        
-        sandbox.putString("_id", mongo.save(invitation, DBCollections.INVITATION));
+        JsonArray invited = mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER);
+        if (invited.size() > 0) {
+            invitation.putString("userId", ((JsonObject) invited.get(0)).getString("_id"));
+        }
+        invitation.putString("_id", mongo.save(invitation, DBCollections.INVITATION));
         return invitation;
     }
     
