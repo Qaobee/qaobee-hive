@@ -249,7 +249,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private void getListInvitationOfSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            message.reply(shareDAO.getListOfInvitationsToSandbox(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getParams().get(PARAM_INVITATION_STATUS).get(0)).encode());
+            message.reply(shareDAO.getListOfInvitationsToSandbox(req.getParams().get(PARAM_SANBOXID).get(0), req.getParams().get(PARAM_INVITATION_STATUS).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
