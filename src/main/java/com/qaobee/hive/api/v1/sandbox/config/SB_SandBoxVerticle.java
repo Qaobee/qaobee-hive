@@ -46,7 +46,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant GET.
      */
-    public static final String GET_BY_ID = Module.VERSION + ".sandbox.config.sandbox.getById";
+    public static final String GET_BY_ID = Module.VERSION + ".sandbox.config.sandbox";
     /**
      * The constant GET_BY_OWNER.
      */
@@ -73,11 +73,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String PARAM_ACTIVITY_ID = "activity";
 
-    /**
-     * The constant PARAM_USER.
-     */
-    public static final String PARAM_USER_ID = "uid";
-
 
     private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxVerticle.class);
 
@@ -99,11 +94,11 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
 
     /**
      * @apiDescription Get an enriched SB_SandBox
-     * @api {post} /api/1/share/sandbox/getById Get an enriched SB_SandBox
+     * @api {post} /api/v1/sandbox/config/sandbox Get an enriched SB_SandBox
      * @apiParam {String} sandboxId Targeted sandbox
      * @apiName getSandboxById
      * @apiHeader {String} token
-     * @apiGroup Share API
+     * @apiGroup SandBox API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
     @Rule(address = GET_BY_ID, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)

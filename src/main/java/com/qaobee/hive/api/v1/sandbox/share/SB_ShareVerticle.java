@@ -101,6 +101,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private static final String FIELD_LOCALE = "locale";
     private static final String FIELD_ROOT = "root";
     private static final String FIELD_UID = "uid";
+    public static final String PARAM_USER_EMAIL = "email";
 
     @Inject
     private Utils utils;
@@ -172,19 +173,19 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = INVITE_MEMBER_TO_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID, PARAM_ROLE_CODE}, scope = Rule.Param.BODY)
+    @Rule(address = INVITE_MEMBER_TO_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USER_EMAIL, PARAM_ROLE_CODE}, scope = Rule.Param.BODY)
     private void inviteMemberToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject request = new JsonObject(req.getBody());
         try {
-            JsonObject sandbox = shareDAO.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID), request.getString(PARAM_ROLE_CODE));
+            JsonObject invitation = shareDAO.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USER_EMAIL), request.getString(PARAM_ROLE_CODE));
             vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
-                    .putString(PARAM_USERID, request.getString(PARAM_USERID))
+                    .putString(PARAM_USERID, invitation.getString("userId"))
                     .putString(FIELD_ROOT, "notification.sandbox.add")
                     .putString(FIELD_LOCALE, req.getLocale())
                     .putString(FIELD_UID, req.getUser().get_id())
             );
-            message.reply(sandbox.encode());
+            message.reply(invitation.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -248,11 +249,6 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_LIST_INVITATION_TO_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_INVITATION_STATUS}, scope = Rule.Param.REQUEST)
     private void getListInvitationOfSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(shareDAO.getListOfInvitationsToSandbox(req.getParams().get(PARAM_SANBOXID).get(0), req.getParams().get(PARAM_INVITATION_STATUS).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        message.reply(shareDAO.getListOfInvitationsToSandbox(req.getParams().get(PARAM_SANBOXID).get(0), req.getParams().get(PARAM_INVITATION_STATUS).get(0)).encode());
     }
 }

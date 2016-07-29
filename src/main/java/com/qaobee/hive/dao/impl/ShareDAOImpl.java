@@ -24,6 +24,7 @@ import com.qaobee.hive.dao.ActivityCfgDAO;
 import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -45,6 +46,7 @@ public class ShareDAOImpl implements ShareDAO {
     private static final String FIELD_COUNTRY = "country";
     private static final String FIELD_PERSON_ID = "personId";
     private static final String FIELD_ACTIVITY = "activityId";
+    private static final String FIELD_SANDBOX_ID = "sandboxId";
 
     @Inject
     private MongoDB mongo;
@@ -82,10 +84,15 @@ public class ShareDAOImpl implements ShareDAO {
                 }
             });
         }
+        JsonArray invited = mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER);
+        if(invited.size() ==0) {
+            throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, userEmail + " does not exists");
+        }
         JsonObject invitation = new JsonObject()
         		.putString("userEmail", userEmail)
+        		.putString("userId",((JsonObject)invited.get(0)).getString("_id"))
                 .putObject("role", role[0])
-                .putString("sandbox", sandbox.getString("_id"))
+                .putString(FIELD_SANDBOX_ID, sandbox.getString("_id"))
                 .putString("status", "waiting")
                 .putNumber("invitationDate", System.currentTimeMillis());
         
@@ -96,41 +103,28 @@ public class ShareDAOImpl implements ShareDAO {
     @Override
     public JsonObject confirmInvitationToSandbox(String invitationId, String userId, String answer) throws QaobeeException {
         JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
-        
         if ("accepted".equals(answer)) {
-        	invitation.putString("status", "accepted")
-        	.putNumber("answerDate", System.currentTimeMillis());
-        	mongo.update(invitation, DBCollections.INVITATION);
-        	
-        	AddMemberToSandbox(invitation.getString("sandboxId"), userId, invitation.getObject("role"));
+        	invitation.putString("status", "accepted").putNumber("answerDate", System.currentTimeMillis());
+            invitation.putString("_id", mongo.update(invitation, DBCollections.INVITATION));
+        	AddMemberToSandbox(invitation.getString(FIELD_SANDBOX_ID), userId, invitation.getObject("role"));
         } else {
-        	invitation.putString("status", "refused")
-        	.putNumber("answerDate", System.currentTimeMillis());
-        	mongo.update(invitation, DBCollections.INVITATION);
+        	invitation.putString("status", "refused").putNumber("answerDate", System.currentTimeMillis());
+            invitation.putString("_id", mongo.update(invitation, DBCollections.INVITATION));
         }
-        
         return invitation;
     }
     
     @Override
-    public JsonArray getListOfInvitationsToSandbox(String sandboxId, String status) throws QaobeeException {
-    	
-    	CriteriaBuilder criterias = new CriteriaBuilder()
-        .add("sandboxId", sandboxId);
-    	
-    	if(!"ALL".equals(status)) {
+    public JsonArray getListOfInvitationsToSandbox(String sandboxId, String status) {
+        CriteriaBuilder criterias = new CriteriaBuilder().add(FIELD_SANDBOX_ID, sandboxId);
+        if(!"ALL".equals(status)) {
     		criterias.add("status", status);
-    	}
-        
-    	JsonArray invitations = mongo.findByCriterias(criterias.get(),
-        null, null, -1, 0, DBCollections.INVITATION);
-    	
-    	return invitations;
+        }
+        return mongo.findByCriterias(criterias.get(), null, null, -1, 0, DBCollections.INVITATION);
     }
     
     private JsonObject AddMemberToSandbox(String sandboxId, String userId, JsonObject role) throws QaobeeException {
         JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
-        
         sandbox.getArray(FIELD_MEMBERS).add(new JsonObject()
                 .putString(FIELD_PERSON_ID, userId)
                 .putObject("role", role)
