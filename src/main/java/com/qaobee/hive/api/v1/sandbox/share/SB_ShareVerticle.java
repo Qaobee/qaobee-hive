@@ -180,9 +180,9 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         JsonObject request = new JsonObject(req.getBody());
         try {
             JsonObject invitation = shareDAO.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USER_EMAIL), request.getString(PARAM_ROLE_CODE));
-            if(StringUtils.isNotBlank(invitation.getString("userId", ""))) {
+            if(StringUtils.isNotBlank(invitation.getString(PARAM_USERID, ""))) {
                 vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
-                        .putString(PARAM_USERID, invitation.getString("userId"))
+                        .putString(PARAM_USERID, invitation.getString(PARAM_USERID))
                         .putString(FIELD_ROOT, "notification.sandbox.add")
                         .putString(FIELD_LOCALE, req.getLocale())
                         .putString(FIELD_UID, req.getUser().get_id())

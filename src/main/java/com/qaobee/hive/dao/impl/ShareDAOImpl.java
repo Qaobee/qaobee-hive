@@ -46,6 +46,7 @@ public class ShareDAOImpl implements ShareDAO {
     private static final String FIELD_PERSON_ID = "personId";
     private static final String FIELD_ACTIVITY = "activityId";
     private static final String FIELD_SANDBOX_ID = "sandboxId";
+    private static final String FIELD_STATUS = "status";
 
     @Inject
     private MongoDB mongo;
@@ -59,7 +60,7 @@ public class ShareDAOImpl implements ShareDAO {
         JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
         sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
             if (((JsonObject) m).getString(FIELD_PERSON_ID).equals(userId)) {
-            	((JsonObject) m).putString("status", "desactivated");
+                ((JsonObject) m).putString(FIELD_STATUS, "desactivated");
             }
         });
         sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
@@ -84,10 +85,10 @@ public class ShareDAOImpl implements ShareDAO {
             });
         }
         JsonObject invitation = new JsonObject()
-        		.putString("userEmail", userEmail)
+                .putString("userEmail", userEmail)
                 .putObject("role", role[0])
                 .putString(FIELD_SANDBOX_ID, sandbox.getString("_id"))
-                .putString("status", "waiting")
+                .putString(FIELD_STATUS, "waiting")
                 .putNumber("invitationDate", System.currentTimeMillis());
         JsonArray invited = mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER);
         if (invited.size() > 0) {
@@ -101,11 +102,11 @@ public class ShareDAOImpl implements ShareDAO {
     public JsonObject confirmInvitationToSandbox(String invitationId, String userId, String answer) throws QaobeeException {
         JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
         if ("accepted".equals(answer)) {
-        	invitation.putString("status", "accepted").putNumber("answerDate", System.currentTimeMillis());
+            invitation.putString(FIELD_STATUS, "accepted").putNumber("answerDate", System.currentTimeMillis());
             invitation.putString("_id", mongo.update(invitation, DBCollections.INVITATION));
-        	AddMemberToSandbox(invitation.getString(FIELD_SANDBOX_ID), userId, invitation.getObject("role"));
+            addMemberToSandbox(invitation.getString(FIELD_SANDBOX_ID), userId, invitation.getObject("role"));
         } else {
-        	invitation.putString("status", "refused").putNumber("answerDate", System.currentTimeMillis());
+            invitation.putString(FIELD_STATUS, "refused").putNumber("answerDate", System.currentTimeMillis());
             invitation.putString("_id", mongo.update(invitation, DBCollections.INVITATION));
         }
         return invitation;
@@ -115,17 +116,17 @@ public class ShareDAOImpl implements ShareDAO {
     public JsonArray getListOfInvitationsToSandbox(String sandboxId, String status) {
         CriteriaBuilder criterias = new CriteriaBuilder().add(FIELD_SANDBOX_ID, sandboxId);
         if(!"ALL".equals(status)) {
-    		criterias.add("status", status);
+            criterias.add(FIELD_STATUS, status);
         }
         return mongo.findByCriterias(criterias.get(), null, null, -1, 0, DBCollections.INVITATION);
     }
-    
-    private JsonObject AddMemberToSandbox(String sandboxId, String userId, JsonObject role) throws QaobeeException {
+
+    private JsonObject addMemberToSandbox(String sandboxId, String userId, JsonObject role) throws QaobeeException {
         JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
         sandbox.getArray(FIELD_MEMBERS).add(new JsonObject()
                 .putString(FIELD_PERSON_ID, userId)
                 .putObject("role", role)
-                .putString("status", "activated")
+                .putString(FIELD_STATUS, "activated")
                 .putNumber("startDate", System.currentTimeMillis())
         );
         sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));

@@ -64,7 +64,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         JsonArray members = sandbox.getArray(FIELD_MEMBERS);
         members.forEach(m -> {
             try {
-            	((JsonObject) m).putObject("person", mongo.getById(((JsonObject) m).getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
+                ((JsonObject) m).putObject("person", mongo.getById(((JsonObject) m).getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY)));
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
             }

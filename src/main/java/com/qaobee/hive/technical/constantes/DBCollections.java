@@ -23,8 +23,8 @@ package com.qaobee.hive.technical.constantes;
  * The type Db collections.
  */
 public class DBCollections {
-	
-	/**
+
+    /**
      * The constant USER.
      */
     public static final String INVITATION = "invitation";
