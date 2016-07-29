@@ -146,7 +146,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                             .putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF))
                             .encode());
                 }
-            } catch (Throwable e) {
+            } catch (Throwable e) { // NOSONAR
                 LOG.error(e.getMessage(), e);
                 utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
             }
