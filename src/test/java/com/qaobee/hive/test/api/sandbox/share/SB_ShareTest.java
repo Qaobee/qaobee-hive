@@ -61,7 +61,6 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body("members.findAll{ it.status = 'waiting' }.personId", hasItem("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4"))
                 .extract().path("_id");
         
         given().header(TOKEN, user.getAccount().getToken())
@@ -69,14 +68,11 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
+                .body("members.findAll{ it.role.code = 'admin' }.personId", hasItem("5509ef1fdb8f8b6e2f51f4ce"))
+                .body("members.findAll{ it.status = 'waiting' }.personId", hasItem("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4"))
                 .body("members", hasSize(3));
 
-        given().header(TOKEN, user2.getAccount().getToken())
-                .param(SB_ShareVerticle.PARAM_ACTIVITY_ID, user2.getAccount().getListPlan().get(0).getActivity().get_id())
-                .when().get(getURL(SB_ShareVerticle.GET_SANDBOX_SHARING_LIST))
-                .then().assertThat().statusCode(200)
-                .body("members", hasSize(1))
-                .body("members.owner._id", hasItem(user.get_id()));
+
     }
 
     /**
@@ -153,7 +149,8 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .when().post(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body("members", hasSize(2));
+                .body("members", hasSize(3))
+                .body("members.findAll{ it.status = 'desactivated' }.personId", hasItem("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4"));
     }
 
     /**
