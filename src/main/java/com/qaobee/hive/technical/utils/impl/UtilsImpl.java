@@ -27,7 +27,6 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
@@ -96,8 +95,12 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void sendErrorJ(final Message<JsonObject> message, final ExceptionCodes code, final String error) {
-        message.fail(code.getCode(), error);
+    public void sendErrorJ(final Message<JsonObject> message, final QaobeeException e) {
+       JsonObject err = new JsonObject(Json.encode(e));
+        if(!err.getBoolean("report")) {
+            err.removeField("stackTrace");
+        }
+        message.fail(e.getCode().getCode(), err.encode());
     }
 
     @Override
@@ -168,13 +171,13 @@ public class UtilsImpl implements Utils {
             } else if (map.get(field) instanceof List) {
                 if (((List<?>) map.get(field)).isEmpty()) {
                     missingFields.add(field);
-                } else if (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field))) {
-                    missingFields.add(field);
                 } else if (((List<?>) map.get(field)).get(0) instanceof String && (StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0)))) {
                     missingFields.add(field);
                 } else if (((List<?>) map.get(field)).get(0) == null) {
                     missingFields.add(field);
                 }
+            } else if (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field))) {
+                missingFields.add(field);
             }
         }
         if (!missingFields.isEmpty()) {
@@ -193,16 +196,16 @@ public class UtilsImpl implements Utils {
         if (request.getUser() != null) {
             return request.getUser();
         }
-        if (request.getHeaders() != null && request.getHeaders().containsKey(AbstractGuiceVerticle.TOKEN)) {
-            token = request.getHeaders().get(AbstractGuiceVerticle.TOKEN).get(0);
+        if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
+            token = request.getHeaders().get(Constants.TOKEN).get(0);
         }
-        if (request.getParams() != null && request.getParams().containsKey(AbstractGuiceVerticle.TOKEN)) {
-            token = request.getParams().get(AbstractGuiceVerticle.TOKEN).get(0);
+        if (request.getParams() != null && request.getParams().containsKey(Constants.TOKEN)) {
+            token = request.getParams().get(Constants.TOKEN).get(0);
         }
         if (StringUtils.isBlank(token)) {
             throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
         }
-        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, User.class);
+        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, "User");
         if (res.size() != 1) {
             throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
         } else {
@@ -222,7 +225,7 @@ public class UtilsImpl implements Utils {
                 user.getAccount().setTokenRenewDate(connectionTime);
             }
             try {
-                mongo.update(userToSave, User.class);
+                mongo.update(userToSave, "User");
                 if (user.getAccount().getTokenRenewDate() == 0) {
                     throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
                 }
@@ -242,19 +245,5 @@ public class UtilsImpl implements Utils {
             throw new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", request.getLocale()));
         }
         return user;
-    }
-
-    @Override
-    public long randomDate(int yearOldMin, int yearOldMax) {
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(new Date());
-        if (yearOldMin >= yearOldMax) {
-            calendar.add(GregorianCalendar.YEAR, -1 * yearOldMin);
-        } else {
-            calendar.add(GregorianCalendar.YEAR, -1 * ((int) Math.round(Math.random() * (yearOldMax - yearOldMin)) + yearOldMin));
-        }
-        calendar.set(GregorianCalendar.DAY_OF_YEAR, (int) Math.round(Math.random() * 365));
-
-        return calendar.getTimeInMillis();
     }
 }

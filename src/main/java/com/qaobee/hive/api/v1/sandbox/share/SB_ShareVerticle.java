@@ -26,7 +26,6 @@ import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
@@ -35,7 +34,6 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.DecodeException;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
@@ -49,21 +47,17 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_ShareVerticle.class);
 
     /**
-     * The constant GET_SANDBOX_LIST.
+     * The constant GET_SANDBOX_SHARING_LIST.
      */
-    public static final String GET_SANDBOX_LIST = Module.VERSION + ".share.sandbox.list";
+    public static final String GET_SANDBOX_SHARING_LIST = Module.VERSION + ".sandbox.share.list";
     /**
      * The constant ADD_TO_SANDBOX.
      */
-    public static final String ADD_TO_SANDBOX = Module.VERSION + ".share.sandbox.add";
+    public static final String ADD_TO_SANDBOX = Module.VERSION + ".sandbox.share.add";
     /**
      * The constant REMOVE_FROM_SANDBOX.
      */
-    public static final String REMOVE_FROM_SANDBOX = Module.VERSION + ".share.sandbox.del";
-    /**
-     * The constant GET_SANDOX_SHARING.
-     */
-    public static final String GET_SANDOX_SHARING = Module.VERSION + ".share.sandbox.get";
+    public static final String REMOVE_FROM_SANDBOX = Module.VERSION + ".sandbox.share.del";
 
     /**
      * The constant PARAM_SANBOXID.
@@ -77,6 +71,10 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * The constant PARAM_ROLE_CODE.
      */
     public static final String PARAM_ROLE_CODE = "role_code";
+    /**
+     * The constant PARAM_ACTIVITY_ID.
+     */
+    public static final String PARAM_ACTIVITY_ID = "activityId";
 
     private static final String INTERNAL_SHARE_NOTIFICATION = "internal.sandbox.share";
     private static final String FIELD_LOCALE = "locale";
@@ -93,10 +91,9 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(GET_SANDBOX_LIST, this::getListOfSharedSandboxes)
+                .registerHandler(GET_SANDBOX_SHARING_LIST, this::getListOfSharedSandboxes)
                 .registerHandler(ADD_TO_SANDBOX, this::addUserToSandbox)
                 .registerHandler(REMOVE_FROM_SANDBOX, this::removeUserFromSandbox)
-                .registerHandler(GET_SANDOX_SHARING, this::getSandboxSharing)
                 .registerHandler(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification);
     }
 
@@ -110,29 +107,6 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                         .putString("senderId", message.body().getString(FIELD_UID))
                 );
         vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-    }
-
-    /**
-     * @apiDescription Get an enriched SB_SandBoxCfg
-     * @api {post} /api/1/share/sandbox/get Get an enriched SB_SandBoxCfg
-     * @apiParam {String} sandboxId Targeted sandbox
-     * @apiName getSandboxSharing
-     * @apiHeader {String} token
-     * @apiGroup Share API
-     * @apiSuccess {Object} sandbox Enriched sandbox;
-     */
-    @Rule(address = GET_SANDOX_SHARING, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANBOXID}, scope = Rule.Param.REQUEST)
-    private void getSandboxSharing(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(shareDAO.getSandboxSharing(req.getParams().get(PARAM_SANBOXID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        } catch (DecodeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e));
-        }
     }
 
     /**
@@ -202,15 +176,9 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandboxes list of enriched sandboxes owned and as member;
      */
-    @Rule(address = GET_SANDBOX_LIST, method = Constants.GET, logged = true)
+    @Rule(address = GET_SANDBOX_SHARING_LIST, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID}, scope = Rule.Param.REQUEST)
     private void getListOfSharedSandboxes(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-
-        try {
-            message.reply(shareDAO.getListOfSharedSandboxes(req.getUser().get_id()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        message.reply(shareDAO.getListOfSharedSandboxes(req.getUser().get_id(), req.getParams().get(PARAM_ACTIVITY_ID).get(0)).encode());
     }
 }

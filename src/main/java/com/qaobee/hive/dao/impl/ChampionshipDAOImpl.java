@@ -22,8 +22,8 @@ package com.qaobee.hive.dao.impl;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.referencial.ChampionshipVerticle;
-import com.qaobee.hive.business.model.commons.referencial.ChampionShip;
 import com.qaobee.hive.dao.ChampionshipDAO;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import org.vertx.java.core.json.JsonArray;
@@ -44,19 +44,19 @@ public class ChampionshipDAOImpl implements ChampionshipDAO {
 
     @Override
     public JsonObject updateChampionship(JsonObject championship) throws QaobeeException {
-        mongo.save(championship, ChampionShip.class);
+        mongo.save(championship, DBCollections.CHAMPIONSHIP);
         return championship;
     }
 
     @Override
     public JsonObject addChampionship(JsonObject championship) throws QaobeeException {
-        championship.putString("_id", mongo.save(championship, ChampionShip.class));
+        championship.putString("_id", mongo.save(championship, DBCollections.CHAMPIONSHIP));
         return championship;
     }
 
     @Override
     public JsonObject getChampionship(String id) throws QaobeeException {
-        return mongo.getById(id, ChampionShip.class);
+        return mongo.getById(id, DBCollections.CHAMPIONSHIP);
     }
 
     @Override
@@ -95,6 +95,6 @@ public class ChampionshipDAOImpl implements ChampionshipDAO {
         match = new BasicDBObject("$match", dbObjectParent);
         // Pipeline
         List<DBObject> pipelineAggregation = Collections.singletonList(match);
-        return mongo.aggregate("_id", pipelineAggregation, ChampionShip.class);
+        return mongo.aggregate("_id", pipelineAggregation, DBCollections.CHAMPIONSHIP);
     }
 }

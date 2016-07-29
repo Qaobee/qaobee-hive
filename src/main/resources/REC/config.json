@@ -12,6 +12,7 @@
     "pay.url.api": "#/private/profile/billing",
     "recaptcha.pkey": "6LdoTvMSAAAAAHbaOoyuXsPRWz2S5_7df1b6UTpZ",
     "recaptcha.site": "https://www.qaobee.com",
+    "recaptcha" : true,
     "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
     "trial.duration" : 1,
     "plan": {
@@ -71,5 +72,11 @@
     "sendTimeout": 5000,
     "debug": true,
     "debugAddress": "logger"
+  },
+  "firebase" : {
+    "api_key" : "AIzaSyC7qw9ln164KM1dvSYpVmurep5lMFBliig",
+    "host" : "fcm.googleapis.com",
+    "port" : 443,
+    "basePath" : "/fcm/send"
   }
 }

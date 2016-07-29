@@ -20,6 +20,7 @@
 package com.qaobee.hive.test.api.sandbox.share;
 
 import com.qaobee.hive.api.Main;
+import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.api.v1.sandbox.share.SB_ShareVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -59,14 +60,15 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .extract().path("_id");
 
         given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_ShareVerticle.PARAM_SANBOXID, id)
-                .when().get(getURL(SB_ShareVerticle.GET_SANDOX_SHARING))
+                .queryParam(SB_SandBoxVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body("members", hasSize(1));
+                .body("members", hasSize(3));
 
         given().header(TOKEN, user2.getAccount().getToken())
-                .when().get(getURL(SB_ShareVerticle.GET_SANDBOX_LIST))
+                .param(SB_ShareVerticle.PARAM_ACTIVITY_ID, user2.getAccount().getListPlan().get(0).getActivity().get_id())
+                .when().get(getURL(SB_ShareVerticle.GET_SANDBOX_SHARING_LIST))
                 .then().assertThat().statusCode(200)
                 .body("members", hasSize(1))
                 .body("members.owner._id", hasItem(user.get_id()));
@@ -135,18 +137,18 @@ public class SB_ShareTest extends VertxJunitSupport {
                 .extract().path("_id");
 
         given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_ShareVerticle.PARAM_SANBOXID, id)
-                .when().get(getURL(SB_ShareVerticle.GET_SANDOX_SHARING))
+                .queryParam(SB_SandBoxVerticle.PARAM_ID, id)
+                .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body("members", hasSize(1));
+                .body("members", hasSize(3));
 
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(SB_ShareVerticle.REMOVE_FROM_SANDBOX))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
-                .body("members", hasSize(0));
+                .body("members", hasSize(2));
     }
 
     /**
@@ -191,43 +193,11 @@ public class SB_ShareTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets sandbox with non logged user.
-     */
-    @Test
-    public void getSandboxWithNonLoggedUser() {
-        given().when().get(getURL(SB_ShareVerticle.GET_SANDOX_SHARING))
-                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
-    }
-
-    /**
-     * Gets sandbox with wrong http method.
-     */
-    @Test
-    public void getSandboxWithWrongHttpMethod() {
-        given().when().post(getURL(SB_ShareVerticle.GET_SANDOX_SHARING))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
-    }
-
-    /**
-     * Gets sandbox with missing params.
-     */
-    @Test
-    public void getSandboxWithMissingParams() {
-        User u = generateLoggedUser();
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().get(getURL(SB_ShareVerticle.GET_SANDOX_SHARING))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
-
-    /**
      * Gets shared sandboxes with non logged user.
      */
     @Test
     public void getSharedSandboxesWithNonLoggedUser() {
-        given().when().get(getURL(SB_ShareVerticle.GET_SANDBOX_LIST))
+        given().when().get(getURL(SB_ShareVerticle.GET_SANDBOX_SHARING_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -237,7 +207,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void getSharedSandboxesWithWrongHttpMethod() {
-        given().when().post(getURL(SB_ShareVerticle.GET_SANDBOX_LIST))
+        given().when().post(getURL(SB_ShareVerticle.GET_SANDBOX_SHARING_LIST))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }

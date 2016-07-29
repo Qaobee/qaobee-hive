@@ -6,10 +6,10 @@ echo '****************************************************'
 
 export db='hive'
 pathFile='find . -name create_all.sh'
-echo $pathFile
+echo ${pathFile}
 pathDir='expr match "$pathFile" '\(.*\)\/create_all.sh''
 echo "Change directory to : $pathDir"
-cd $pathDir
+cd ${pathDir}
 echo `pwd`
 
 echo ' '

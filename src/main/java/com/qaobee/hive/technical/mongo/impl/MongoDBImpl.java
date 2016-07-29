@@ -42,6 +42,7 @@ public class MongoDBImpl implements MongoDB {
     private JsonObject config;
     private WriteConcern writeConcern;
     private static final String NOT_FOUND_MESS = "%s not found in %s";
+
     /**
      * Instantiates a new Mongo dB impl.
      *
@@ -156,12 +157,7 @@ public class MongoDBImpl implements MongoDB {
 
     @Override
     public String save(final Object o) throws QaobeeException {
-        return save(new JsonObject(Json.encode(o)), o.getClass());
-    }
-
-    @Override
-    public String update(final JsonObject document, final Class<?> collection) {
-        return update(document, collection.getSimpleName());
+        return save(new JsonObject(Json.encode(o)), o.getClass().getSimpleName());
     }
 
     @Override
@@ -179,21 +175,6 @@ public class MongoDBImpl implements MongoDB {
         final DBCollection coll = db.getCollection(collection.getSimpleName());
         WriteResult res = coll.update(new BasicDBObject(query.toMap()), new BasicDBObject(set.toMap()));
         return (String) res.getUpsertedId();
-    }
-
-    @Override
-    public String save(final JsonObject document, final Class<?> collection) throws QaobeeException {
-        final DBCollection coll = db.getCollection(collection.getSimpleName());
-        String genID;
-        if (document.getField("_id") == null) {
-            genID = UUID.randomUUID().toString();
-            document.putString("_id", genID);
-        } else {
-            genID = document.getField("_id");
-        }
-        final DBObject obj = new BasicDBObject(document.toMap());
-        final WriteResult res = coll.save(obj, getWriteConcern());
-        return getUpsertedId(res, genID, document);
     }
 
     private static String getUpsertedId(WriteResult res, String genID, JsonObject document) throws QaobeeException {
@@ -225,17 +206,6 @@ public class MongoDBImpl implements MongoDB {
 
     @Override
     @SuppressWarnings("unchecked")
-    public JsonObject getById(final String id, final Class<?> collection) throws QaobeeException {
-        final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id));
-        if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NOT_FOUND_MESS, id, collection.getSimpleName()));
-        } else {
-            return new JsonObject(res.next().toMap());
-        }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
     public JsonObject getById(final String id, final String collection) throws QaobeeException {
         final DBCursor res = db.getCollection(collection).find(new BasicDBObject("_id", id));
         if (res.count() != 1) {
@@ -247,8 +217,8 @@ public class MongoDBImpl implements MongoDB {
 
     @Override
     @SuppressWarnings("unchecked")
-    public JsonObject getById(final String id, final Class<?> collection, final List<String> minimal) throws QaobeeException {
-        final DBCursor res = db.getCollection(collection.getSimpleName()).find(new BasicDBObject("_id", id), new BasicDBObject(getMinimal(minimal)));
+    public JsonObject getById(final String id, final String collection, final List<String> minimal) throws QaobeeException {
+        final DBCursor res = db.getCollection(collection).find(new BasicDBObject("_id", id), new BasicDBObject(getMinimal(minimal)));
         if (res.count() != 1) {
             throw new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NOT_FOUND_MESS, id, collection));
         } else {
@@ -268,8 +238,8 @@ public class MongoDBImpl implements MongoDB {
     @Override
     @SuppressWarnings("unchecked")
     public JsonArray findByCriterias(final Map<String, Object> criteria, final List<String> fields, final String sort, final int order, final int limit,
-                                     final Class<?> collection) {
-        final DBCollection coll = db.getCollection(collection.getSimpleName());
+                                     final String collection) {
+        final DBCollection coll = db.getCollection(collection);
         DBObject query = new BasicDBObject();
         if (criteria != null) {
             final BasicDBList and = new BasicDBList();
@@ -303,14 +273,8 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
-    public JsonArray findAll(List<String> fields, String sort, int order, int limit, Class<?> collection) {
+    public JsonArray findAll(List<String> fields, String sort, int order, int limit, String collection) {
         return findByCriterias(null, fields, sort, order, limit, collection);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonArray aggregate(String field, List<DBObject> pipeline, Class<?> collection) throws QaobeeException {
-        return aggregate(field, pipeline, collection.getSimpleName());
     }
 
     @Override

@@ -1,47 +1,40 @@
-/*************************************************************************
- * Qaobee
- * __________________
- * <p/>
- * [2015] Qaobee
- * All Rights Reserved.
- * <p/>
- * NOTICE:  All information contained here is, and remains
- * the property of Qaobee and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may
- * be covered by U.S. and Foreign Patents, patents in process,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Qaobee.
+/*
+ *   __________________
+ *    Qaobee
+ *    __________________
+ *
+ *    Copyright (c) 2015.  Qaobee
+ *    All Rights Reserved.
+ *
+ *    NOTICE: All information contained here is, and remains
+ *    the property of Qaobee and its suppliers,
+ *    if any. The intellectual and technical concepts contained
+ *    here are proprietary to Qaobee and its suppliers and may
+ *    be covered by U.S. and Foreign Patents, patents in process,
+ *    and are protected by trade secret or copyright law.
+ *    Dissemination of this information or reproduction of this material
+ *    is strictly forbidden unless prior written permission is obtained
+ *    from Qaobee.
  */
 package com.qaobee.hive.api.v1.sandbox.stats;
 
-import com.mongodb.*;
-import com.mongodb.util.JSON;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.business.model.sandbox.stats.SB_Stats;
+import com.qaobee.hive.dao.StatisticsDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.EncodeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * The type Sb statistics verticle.
@@ -71,14 +64,6 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
     /**
-     * Value
-     */
-    public static final String PARAM_VALUES = "values";
-    /**
-     * List of parameters for the indicator
-     */
-    public static final String PARAM_LIST_SHOOTSEQID = "listShootSeqId";
-    /**
      * List of owners
      */
     public static final String PARAM_LIST_OWNERS = "listOwners";
@@ -90,41 +75,30 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * End date
      */
     public static final String PARAM_END_DATE = "endDate";
-    /**
-     * COUNT, SUM, AVG
-     */
-    public static final String PARAM_AGGREGAT = "aggregat";
-    /**
-     * list clause group by
-     */
-    public static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
-    /**
-     * list clause SORT by
-     */
-    public static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
-    /**
-     * limit number of result
-     */
-    public static final String PARAM_LIMIT_RESULT = "limitResult";
+    private static final String PARAM_VALUES = "values";
+    private static final String PARAM_LIST_SHOOTSEQID = "listShootSeqId";
+    private static final String PARAM_AGGREGAT = "aggregat";
+    private static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
+    private static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
+    private static final String PARAM_LIMIT_RESULT = "limitResult";
     private static final Logger LOG = LoggerFactory.getLogger(SB_StatisticsVerticle.class);
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
-    private static final String VALUE_FIELD = "value";
     private static final String TIMER_FIELD = "timer";
     @Inject
     private Utils utils;
     @Inject
-    private MongoDB mongo;
+    private StatisticsDAO statisticsDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(GET_STAT_GROUPBY, this::getStatsGroupedByHandler)
+                .registerHandler(GET_STAT_GROUPBY, this::getStatsGroupedBy)
                 .registerHandler(GET_LISTDETAIL_VALUES, this::getListDetailValue)
-                .registerHandler(ADD_STAT, this::addHandler)
-                .registerHandler(ADD_STAT_BULK, this::addBulkHandler);
+                .registerHandler(ADD_STAT, this::addStat)
+                .registerHandler(ADD_STAT_BULK, this::addBulk);
     }
 
     /**
@@ -132,54 +106,33 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiVersion 0.1.0
      * @apiName addBulk
      * @apiGroup Statistics API
-     * @apiPermission all
+     * @apiHeader {String} token
      * @apiDescription add many statistics in once time
      * @apiParam {Array} stats Mandatory The stats object to add.
-     * @apiSuccess {Stats}   stats    The stats added.
+     * @apiSuccess {Object}   stats    The stats added.
      */
     @Rule(address = ADD_STAT_BULK, method = Constants.PUT, logged = true)
-    private void addBulkHandler(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonArray documents = new JsonArray(req.getBody());
-            DBCollection coll = mongo.getDb().getCollection(SB_Stats.class.getSimpleName());
-            BulkWriteOperation bulk = coll.initializeUnorderedBulkOperation();
-            for (Object object : documents) {
-                JsonObject jsonO = (JsonObject) object;
-                DBObject item = (DBObject) JSON.parse(jsonO.encode());
-                item.put("_id", UUID.randomUUID().toString());
-                bulk.insert(item);
-            }
-            BulkWriteResult resultBulk = bulk.execute();
-            message.reply(new JsonObject().putNumber("count", resultBulk.getInsertedCount()).toString());
-        } catch (EncodeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-        }
+    private void addBulk(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        message.reply(statisticsDAO.addBulk(new JsonArray(req.getBody())).encode());
     }
 
     /**
      * @api {post} /api/1/sandbox/stats/statistics/add
      * @apiVersion 0.1.0
-     * @apiName add
+     * @apiName addStat
      * @apiGroup Statistics API
-     * @apiPermission all
+     * @apiHeader {String} token
      * @apiDescription add statistic
-     * @apiParam {Stats} stats Mandatory The stats object to add.
-     * @apiSuccess {Stats}   stats    The stats added.
-     * @apiError DATA_ERROR Error on DB request
+     * @apiParam {Object} stats Mandatory The stats object to add.
+     * @apiSuccess {Object}   stats    The stats added.
      */
     @Rule(address = ADD_STAT, method = Constants.PUT, logged = true, mandatoryParams = {CODE_FIELD, TIMER_FIELD, OWNER_FIELD},
             scope = Rule.Param.BODY)
-    private void addHandler(Message<String> message) {
+    private void addStat(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject stat = new JsonObject(req.getBody());
-            if (!stat.containsField(TIMER_FIELD) || Integer.valueOf(0).equals(stat.getInteger(TIMER_FIELD))) {
-                stat.putNumber(TIMER_FIELD, System.currentTimeMillis());
-            }
-            stat.putString("_id", mongo.save(stat, SB_Stats.class));
-            message.reply(stat.encode());
+            message.reply(statisticsDAO.addStat(new JsonObject(req.getBody())).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -191,7 +144,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiVersion 0.1.0
      * @apiName getListDetailValue
      * @apiGroup Statistics API
-     * @apiPermission all
+     * @apiHeader {String} token
      * @apiDescription Retrieve detail value for statistics for mandatory parameters
      * @apiParam {Array} listIndicators Mandatory The list of code indicator.
      * @apiParam {String} listOwners Mandatory The list of owner's stats.
@@ -208,43 +161,13 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
-            JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
-            JsonArray listOwners = params.getArray(PARAM_LIST_OWNERS);
-            Long startDate = params.getLong(PARAM_START_DATE);
-            Long endDate = params.getLong(PARAM_END_DATE);
-            BasicDBObject dbObjectParent, dbObjectChild;
-            // $MATCH section
-            dbObjectParent = new BasicDBObject();
-            // - code
-            dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
-            dbObjectParent.put(CODE_FIELD, dbObjectChild);
-            // - owner
-            dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
-            dbObjectParent.put(OWNER_FIELD, dbObjectChild);
-            // - values
-            if (params.containsField(PARAM_VALUES)) {
-                dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_VALUES));
-                dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-            }
-            // - timer
-            DBObject o = new BasicDBObject();
-            o.put("$gte", startDate);
-            o.put("$lt", endDate);
-            dbObjectParent.put(TIMER_FIELD, o);
-            DBObject match = new BasicDBObject("$match", dbObjectParent);
-            dbObjectParent = new BasicDBObject();
-            dbObjectParent.put(OWNER_FIELD, 1);
-            dbObjectParent.put(TIMER_FIELD, 1);
-            DBObject sort = new BasicDBObject("$sort", dbObjectParent);
-            List<DBObject> pipelineAggregation;
-            if (params.containsField(PARAM_LIMIT_RESULT)) {
-                int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
-                pipelineAggregation = Arrays.asList(match, sort, new BasicDBObject("$limit", limitNumber));
-            } else {
-                pipelineAggregation = Arrays.asList(match, sort);
-            }
-            final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
-            message.reply(resultJSon.encode());
+            message.reply(statisticsDAO.getListDetailValue(params.getArray(PARAM_INDICATOR_CODE),
+                    params.getArray(PARAM_LIST_OWNERS),
+                    params.getLong(PARAM_START_DATE),
+                    params.getLong(PARAM_END_DATE),
+                    params.getArray(PARAM_VALUES),
+                    params.containsField(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0
+            ).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -256,7 +179,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiVersion 0.1.0
      * @apiName getStatGroupBy
      * @apiGroup Statistics API
-     * @apiPermission all
+     * @apiHeader {String} token
      * @apiDescription Retrieve the statistics for mandatory parameters
      * @apiParam {Array} listIndicators Mandatory The list of code indicator.
      * @apiParam {String} aggregat Mandatory the aggregate type (SUM, AVG, COUNT).
@@ -272,93 +195,21 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_STAT_GROUPBY, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
             scope = Rule.Param.BODY)
-    private void getStatsGroupedByHandler(Message<String> message) {
+    private void getStatsGroupedBy(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             JsonObject params = new JsonObject(req.getBody());
-            // List of indicators
-            JsonArray listIndicators = params.getArray(PARAM_INDICATOR_CODE);
-            // List of owner
-            JsonArray listOwners = params.getArray(PARAM_LIST_OWNERS);
-            // Dates
-            Long startDate = params.getLong(PARAM_START_DATE);
-            Long endDate = params.getLong(PARAM_END_DATE);
-            // Aggregate section
-            // $MACTH section
-            DBObject dbObjectParent = new BasicDBObject();
-            // - code
-            BasicDBObject dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
-            dbObjectParent.put(CODE_FIELD, dbObjectChild);
-            // - owner
-            dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
-            dbObjectParent.put(OWNER_FIELD, dbObjectChild);
-            // - values
-            if (params.containsField(PARAM_VALUES)) {
-                dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_VALUES));
-                dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-            }
-            // - shootSeqId
-            if (params.containsField(PARAM_LIST_SHOOTSEQID)) {
-                dbObjectChild = new BasicDBObject("$in", params.getArray(PARAM_LIST_SHOOTSEQID));
-                dbObjectParent.put("shootSeqId", dbObjectChild);
-            }
-            // - timer
-            DBObject o = new BasicDBObject();
-            o.put("$gte", startDate);
-            o.put("$lt", endDate);
-            dbObjectParent.put(TIMER_FIELD, o);
-            DBObject match = new BasicDBObject("$match", dbObjectParent);
-            // $GROUP section
-            dbObjectParent = new BasicDBObject();
-            dbObjectChild = new BasicDBObject();
-            // - _id - List of field for id's group step
-            if (params.containsField(PARAM_LIST_GROUPBY)) {
-                for (Object field : params.getArray(PARAM_LIST_GROUPBY)) {
-                    dbObjectChild.append((String) field, "$" + field);
-                }
-            }
-            dbObjectParent.put("_id", dbObjectChild);
-            // - average
-            String aggregate = params.getString(PARAM_AGGREGAT);
-            switch (aggregate) {
-                case "COUNT":
-                    dbObjectChild = new BasicDBObject("$sum", 1);
-                    dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                    break;
-                case "SUM":
-                    dbObjectChild = new BasicDBObject("$sum", "$value");
-                    dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                    break;
-                case "AVG":
-                    dbObjectChild = new BasicDBObject("$avg", "$value");
-                    dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                    break;
-                default:
-                    dbObjectChild = new BasicDBObject("$sum", 1);
-                    dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                    break;
-            }
-            DBObject group = new BasicDBObject("$group", dbObjectParent);
-            // $SORT section
-            dbObjectParent = new BasicDBObject();
-            if (params.containsField(PARAM_LIST_SORTBY)) {
-                for (Object item : params.getArray(PARAM_LIST_SORTBY)) {
-                    JsonObject field = (JsonObject) item;
-                    dbObjectParent.put(field.getString("fieldName"), field.getInteger("sortOrder"));
-                }
-            } else {
-                dbObjectParent.put("_id", 1);
-            }
-            DBObject sort = new BasicDBObject("$sort", dbObjectParent);
-            List<DBObject> pipelineAggregation;
-            if (params.containsField(PARAM_LIMIT_RESULT)) {
-                int limitNumber = params.getInteger(PARAM_LIMIT_RESULT);
-                pipelineAggregation = Arrays.asList(match, group, sort, new BasicDBObject("$limit", limitNumber));
-            } else {
-                pipelineAggregation = Arrays.asList(match, group, sort);
-            }
-            final JsonArray resultJSon = mongo.aggregate("_id", pipelineAggregation, SB_Stats.class);
-            message.reply(resultJSon.encode());
+            message.reply(statisticsDAO.getStatsGroupedBy(params.getArray(PARAM_INDICATOR_CODE),
+                    params.getArray(PARAM_LIST_OWNERS),
+                    params.getLong(PARAM_START_DATE),
+                    params.getLong(PARAM_END_DATE),
+                    params.getString(PARAM_AGGREGAT),
+                    params.getArray(PARAM_VALUES),
+                    params.getArray(PARAM_LIST_SHOOTSEQID),
+                    params.getArray(PARAM_LIST_GROUPBY),
+                    params.getArray(PARAM_LIST_SORTBY),
+                    params.containsField(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0
+            ).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

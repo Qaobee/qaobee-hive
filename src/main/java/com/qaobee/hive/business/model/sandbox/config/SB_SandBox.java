@@ -113,45 +113,57 @@ public class SB_SandBox { // NOSONAR
         this._id = _id;
     }
 
-	/**
-	 * @return the structure
-	 */
-	public Structure getStructure() {
-		return structure;
-	}
+    /**
+     * Gets structure.
+     *
+     * @return the structure
+     */
+    public Structure getStructure() {
+        return structure;
+    }
 
-	/**
-	 * @param structure the structure to set
-	 */
-	public void setStructure(Structure structure) {
-		this.structure = structure;
-	}
+    /**
+     * Sets structure.
+     *
+     * @param structure the structure to set
+     */
+    public void setStructure(Structure structure) {
+        this.structure = structure;
+    }
 
-	/**
-	 * @return the members
-	 */
-	public List<Member> getMembers() {
-		return members;
-	}
+    /**
+     * Gets members.
+     *
+     * @return the members
+     */
+    public List<Member> getMembers() {
+        return members;
+    }
 
-	/**
-	 * @param members the members to set
-	 */
-	public void setMembers(List<Member> members) {
-		this.members = members;
-	}
+    /**
+     * Sets members.
+     *
+     * @param members the members to set
+     */
+    public void setMembers(List<Member> members) {
+        this.members = members;
+    }
 
-	/**
-	 * @return the effectiveDefault
-	 */
-	public String getEffectiveDefault() {
-		return effectiveDefault;
-	}
+    /**
+     * Gets effective default.
+     *
+     * @return the effectiveDefault
+     */
+    public String getEffectiveDefault() {
+        return effectiveDefault;
+    }
 
-	/**
-	 * @param effectiveDefault the effectiveDefault to set
-	 */
-	public void setEffectiveDefault(String effectiveDefault) {
-		this.effectiveDefault = effectiveDefault;
-	}
+    /**
+     * Sets effective default.
+     *
+     * @param effectiveDefault the effectiveDefault to set
+     */
+    public void setEffectiveDefault(String effectiveDefault) {
+        this.effectiveDefault = effectiveDefault;
+ }
 }

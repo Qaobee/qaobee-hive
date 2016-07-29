@@ -13,7 +13,7 @@ WORKINGDIR='delete'
 
 ###### FUNCTIONS 
 
-function help
+function showHelp
 {
 	echo "Utilisation du script "
 	echo "-l --login         Login de l'utilisateur"
@@ -46,13 +46,13 @@ while [ "$1" != "" ]; do
         						echo 'database : ' ${db}
         						;;
         -o | --output ) 		shift
-        						fileoutput=$i
+        						fileoutput=$1
         						echo 'file Output : ' ${fileoutput}
         						;;
         -f | --force-delete )	forceDelete=1
         						echo 'Force Delete : ON'
         						;;	
-        -h | --help )           help
+        -h | --help )           showHelp
                                 exit
                                 ;;
         * )                     exit 1
@@ -63,7 +63,7 @@ done
 if [[ ( -z "$login" ) && ( -z "$userId" ) ]]
 then
 	echo -e "${RED}Paramètres manquants : login ou id obligatoire ${RESET}"
-	help
+	showHelp
 fi
 
 if [ ! -d ${WORKINGDIR} ]
@@ -189,7 +189,7 @@ done
 cat ${WORKINGDIR}/*.json > ${fileoutput}
 echo "Nombre de requetes :  `cat ${fileoutput} | wc -l`"
 
-if [[ $forceDelete == 0 ]]
+if [[ ${forceDelete} == 0 ]]
 then
 	echo ""
 	echo -e "${RED}Supprimer ce user et sandbox ? (o/n) ${RESET}"

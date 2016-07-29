@@ -139,25 +139,31 @@ public class SB_EventTest extends VertxJunitSupport {
                 .putNumber(SB_EventVerticle.PARAM_END_DATE, 1467237600000L)
                 .putString(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
                 .putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23")
-                .putNumber(SB_EventVerticle.PARAM_LIMIT_RESULT, 5)
-                .putArray(SB_EventVerticle.PARAM_LIST_SORTBY, new JsonArray().add(new JsonObject()
-                        .putString("fieldName", SB_EventVerticle.PARAM_LABEL)
-                        .putNumber("sortOrder", -1)
-                )
-        );
+                .putString(SB_EventVerticle.PARAM_OWNER_TEAMID, "552d5e08644a77b3a20afdfe");
 
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(SB_EventVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(4));
+
+        params.putNumber(SB_EventVerticle.PARAM_LIMIT_RESULT, 2)
+                .putArray(SB_EventVerticle.PARAM_LIST_SORTBY, new JsonArray().add(new JsonObject()
+                        .putString("fieldName", SB_EventVerticle.PARAM_LABEL)
+                        .putNumber("sortOrder", -1)
+                ));
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(params.encode())
+                .when().post(getURL(SB_EventVerticle.GET_LIST))
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(2));
 
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "");
         given().header(TOKEN, user.getAccount().getToken())
                 .body(params.encode())
                 .when().post(getURL(SB_EventVerticle.GET_LIST))
                 .then().assertThat().statusCode(200)
-                .body("", hasSize(4));
+                .body("", hasSize(2));
 
         params.putString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "TOTO");
         given().header(TOKEN, user.getAccount().getToken())

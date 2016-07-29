@@ -29,8 +29,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.vertx.java.core.json.EncodeException;
+import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -294,15 +294,16 @@ public class NotificationsTest extends VertxJunitSupport {
     @Test
     public void addNotificationToUser() {
         User u = generateLoggedUser();
-        final Notification n = new Notification();
-        n.setContent("Hello");
-        n.setTitle("Message");
-        n.setSenderId(u.get_id());
-        n.setTimestamp(System.currentTimeMillis());
-        n.setTargetId(u.get_id());
+
+        JsonObject n = new JsonObject()
+                .putString("content", "Hello")
+                .putString("title", "Message")
+                .putString("senderId", u.get_id())
+                .putNumber("timestamp", System.currentTimeMillis())
+                .putString("targetId", u.get_id());
 
         given().header(TOKEN, u.getAccount().getToken())
-               .body(Json.encode(n))
+               .body(n.encode())
                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                .then().assertThat().statusCode(200)
                .body(STATUS, notNullValue())
@@ -317,21 +318,51 @@ public class NotificationsTest extends VertxJunitSupport {
     }
 
     /**
+     * Add notification to sandbox and exclude himself.
+     */
+    @Test
+    public void addNotificationToSandboxAndExcludeHimself() {
+        populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
+        User u = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+
+        JsonObject n = new JsonObject()
+                .putString("content", "Hello")
+                .putString("title", "Message")
+                .putString("senderId", u.get_id())
+                .putNumber("timestamp", System.currentTimeMillis())
+                .putArray("exclude", new JsonArray().add(u.get_id()))
+                .putString("targetId", "558b0efebd2e39cdab651e1f");
+
+        given().header(TOKEN, u.getAccount().getToken())
+               .body(n.encode())
+               .when().post(getURL(NotificationsVerticle.ADD_TO_SANDBOX))
+               .then().assertThat().statusCode(200)
+               .body(STATUS, notNullValue())
+               .body(STATUS, is(true));
+
+        given().header(TOKEN, u.getAccount().getToken())
+               .when().get(getURL(NotificationsVerticle.LIST))
+               .then().assertThat().statusCode(200)
+               .body("", hasSize(0));
+    }
+
+    /**
      * Add notification to sandbox.
      */
     @Test
     public void addNotificationToSandbox() {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User u = generateLoggedUser();
-        final Notification n = new Notification();
-        n.setContent("Hello");
-        n.setTitle("Message");
-        n.setSenderId(u.get_id());
-        n.setTimestamp(System.currentTimeMillis());
-        n.setTargetId("558b0efebd2e39cdab651e1f");
+        User u = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+
+        JsonObject n = new JsonObject()
+                .putString("content", "Hello")
+                .putString("title", "Message")
+                .putString("senderId", u.get_id())
+                .putNumber("timestamp", System.currentTimeMillis())
+                .putString("targetId", "558b0efebd2e39cdab651e1f");
 
         given().header(TOKEN, u.getAccount().getToken())
-               .body(Json.encode(n))
+               .body(n.encode())
                .when().post(getURL(NotificationsVerticle.ADD_TO_SANDBOX))
                .then().assertThat().statusCode(200)
                .body(STATUS, notNullValue())
@@ -344,18 +375,25 @@ public class NotificationsTest extends VertxJunitSupport {
     @Test
     public void addNotificationToUserWithWrongUserId() {
         User u = generateLoggedUser();
-        final Notification n = new Notification();
-        n.setContent("Hello");
-        n.setTitle("Message");
-        n.setSenderId("blabla");
-        n.setTimestamp(System.currentTimeMillis());
-        n.setTargetId("blabla");
+        JsonObject n = new JsonObject()
+                .putString("content", "Hello")
+                .putString("title", "Message")
+                .putString("senderId", u.get_id())
+                .putNumber("timestamp", System.currentTimeMillis());
+
         given().header(TOKEN, u.getAccount().getToken())
-               .body(Json.encode(n))
-               .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
-               .then().assertThat().statusCode(200)
-               .body(STATUS, notNullValue())
-               .body(STATUS, is(false));
+                .body(n.encode())
+                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+
+        n.putString("targetId", "bla");
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(n.encode())
+                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
+                .then().assertThat().statusCode(200)
+                .body(STATUS, notNullValue())
+                .body(STATUS, is(false));
     }
 
     /**

@@ -109,7 +109,8 @@ public class QaobeeException extends Exception {
 
     /**
      * Instantiates a new Qaobee exception.
-     *  @param code the code
+     *
+     * @param code the code
      * @param e    the e
      */
     public QaobeeException(ExceptionCodes code, Exception e) {

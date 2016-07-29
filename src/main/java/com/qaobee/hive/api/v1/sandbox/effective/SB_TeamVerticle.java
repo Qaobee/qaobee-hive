@@ -1,51 +1,47 @@
-/*************************************************************************
- * Qaobee
- * __________________
- * <p/>
- * [2015] Qaobee
- * All Rights Reserved.
- * <p/>
- * NOTICE:  All information contained here is, and remains
- * the property of Qaobee and its suppliers,
- * if any.  The intellectual and technical concepts contained
- * here are proprietary to Qaobee and its suppliers and may
- * be covered by U.S. and Foreign Patents, patents in process,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Qaobee.
+/*
+ *   __________________
+ *    Qaobee
+ *    __________________
+ *
+ *    Copyright (c) 2015.  Qaobee
+ *    All Rights Reserved.
+ *
+ *    NOTICE: All information contained here is, and remains
+ *    the property of Qaobee and its suppliers,
+ *    if any. The intellectual and technical concepts contained
+ *    here are proprietary to Qaobee and its suppliers and may
+ *    be covered by U.S. and Foreign Patents, patents in process,
+ *    and are protected by trade secret or copyright law.
+ *    Dissemination of this information or reproduction of this material
+ *    is strictly forbidden unless prior written permission is obtained
+ *    from Qaobee.
  */
+
 package com.qaobee.hive.api.v1.sandbox.effective;
 
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
-import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
-import com.qaobee.hive.business.model.sandbox.effective.SB_Team;
+import com.qaobee.hive.dao.TeamDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
 
 /**
  * The type Team verticle.
  */
 @DeployableVerticle
 public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
+    private static final Logger LOG = LoggerFactory.getLogger(SB_TeamVerticle.class);
     /**
      * Handler to get a set of team
      */
@@ -86,29 +82,28 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
      * team home link
      */
     public static final String PARAM_LINK_TEAM_ID = "linkTeamId";
-    private static final Logger LOG = LoggerFactory.getLogger(SB_TeamVerticle.class);
-    @Inject
-    private MongoDB mongo;
     @Inject
     private Utils utils;
+    @Inject
+    private TeamDAO teamDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(ADD, this::addTeamHandler)
-                .registerHandler(UPDATE, this::updateTeamHandler)
-                .registerHandler(GET, this::getTeamHandler)
-                .registerHandler(GET_LIST, this::getTeamListHandler);
+                .registerHandler(ADD, this::addTeam)
+                .registerHandler(UPDATE, this::updateTeam)
+                .registerHandler(GET, this::getTeam)
+                .registerHandler(GET_LIST, this::getTeamList);
     }
 
     /**
      * @api {get} /api/1/sandbox/effective/team/list Read data of a set of SB_Team
      * @apiVersion 0.1.0
-     * @apiName get
+     * @apiName getTeamList
      * @apiGroup SB_Team API
-     * @apiPermission all
+     * @apiHeader {String} token
      * @apiDescription get a list of my teams to the collection SB_team
      * @apiParam {String} sandBoxId Mandatory The sandBox Id
      * @apiParam {String} effectiveId Mandatory The effective Id
@@ -116,36 +111,36 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = GET_LIST, method = Constants.GET, logged = true,
             mandatoryParams = {PARAM_SANDBOX_ID, PARAM_EFFECTIVE_ID, PARAM_ENABLE, PARAM_ADVERSARY}, scope = Rule.Param.REQUEST)
-    private void getTeamListHandler(Message<String> message) {
+    private void getTeamList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        CriteriaBuilder criteria = new CriteriaBuilder()
-                .add(PARAM_SANDBOX_ID, req.getParams().get(PARAM_SANDBOX_ID).get(0))
-                .add(PARAM_EFFECTIVE_ID, req.getParams().get(PARAM_EFFECTIVE_ID).get(0))
-                .add(PARAM_ADVERSARY, "true".equals(req.getParams().get(PARAM_ADVERSARY).get(0)));
-        if (!"all".equals(req.getParams().get(PARAM_ENABLE).get(0))) {
-            criteria.add(PARAM_ENABLE, "true".equals(req.getParams().get(PARAM_ENABLE).get(0)));
-        }
+        String link = null;
         if (req.getParams().get(PARAM_LINK_TEAM_ID) != null && !"".equals(req.getParams().get(PARAM_LINK_TEAM_ID).get(0).trim())) {
-            criteria.add(PARAM_LINK_TEAM_ID, req.getParams().get(PARAM_LINK_TEAM_ID).get(0));
+            link = req.getParams().get(PARAM_LINK_TEAM_ID).get(0);
         }
-        message.reply(mongo.findByCriterias(criteria.get(), null, null, -1, -1, SB_Team.class).encode());
+        message.reply(teamDAO.getTeamList(
+                req.getParams().get(PARAM_SANDBOX_ID).get(0),
+                req.getParams().get(PARAM_EFFECTIVE_ID).get(0),
+                req.getParams().get(PARAM_ADVERSARY).get(0),
+                req.getParams().get(PARAM_ENABLE).get(0),
+                link).encode()
+        );
     }
 
     /**
      * @api {get} /api/v1/sandbox/effective/team/get Read data of an SB_Team
      * @apiVersion 0.1.0
-     * @apiName get
+     * @apiName getTeam
      * @apiGroup SB_Team API
-     * @apiPermission all
+     * @apiHeader {String} token
      * @apiDescription get a team to the collection SB_team
      * @apiParam {String} id Mandatory The SB_team Id
-     * @apiSuccess {SB_team}   team            The SB_Team found.
+     * @apiSuccess {Object}   team            The SB_Team found.
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
-    private void getTeamHandler(Message<String> message) {
+    private void getTeam(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(mongo.getById(req.getParams().get(PARAM_ID).get(0), SB_Team.class).encode());
+            message.reply(teamDAO.getTeam(req.getParams().get(PARAM_ID).get(0)).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -154,72 +149,34 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
 
     /**
      * @apiDescription Update Team
-     * @api {get} /api/1/sandbox/effective/team/get Update team
+     * @api {put} /api/1/sandbox/effective/team/get Update team
      * @apiVersion 0.1.0
      * @apiName updateTeam
+     * @apiHeader {String} token
      * @apiGroup Team API
      * @apiParam {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
      * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
      */
     @Rule(address = UPDATE, method = Constants.PUT, logged = true)
-    private void updateTeamHandler(Message<String> message) {
+    private void updateTeam(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        final JsonObject json = new JsonObject(req.getBody());
-        final String id = mongo.update(json, SB_Team.class);
-        json.putString("_id", id);
-        try {
-            String sandBoxId = mongo.getById(json.getString("sandboxId"), SB_SandBox.class).getString("sandboxId");
-            JsonObject notification = new JsonObject();
-            notification.putString("id", sandBoxId);
-            notification.putString("target", SB_SandBox.class.getSimpleName());
-            notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
-            notification.putObject("notification", new JsonObject()
-                    .putString("content", Messages.getString("notification.team.update.content", req.getLocale(),
-                            json.getString("label"),
-                            "/#/private/updateTeam/" + json.getString("_id") + "/" + json.getBoolean("adversary")))
-                    .putString("title", Messages.getString("notification.team.update.title", req.getLocale()))
-                    .putString("senderId", req.getUser().get_id())
-            );
-            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-        }
-        message.reply(json.encode());
+        message.reply(teamDAO.updateTeam(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
     }
 
     /**
      * @apiDescription Add Team
-     * @api {put} /api/1/sandbox/effective/team/add Add Team
+     * @api {post} /api/1/sandbox/effective/team/add Add Team
      * @apiVersion 0.1.0
-     * @apiName add
+     * @apiName addTeam
+     * @apiHeader {String} token
      * @apiGroup Team API
      * @apiSuccess {Object} Team com.qaobee.hive.business.model.sandbox.effective.Team
      */
     @Rule(address = ADD, method = Constants.POST, logged = true)
-    private void addTeamHandler(Message<String> message) {
+    private void addTeam(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject json = new JsonObject(req.getBody());
-            final String id = mongo.save(json, SB_Team.class);
-            json.putString("_id", id);
-            try {
-                String sandBoxId = mongo.getById(json.getString("sandboxId"), SB_SandBox.class).getString("sandboxId");
-                JsonObject notification = new JsonObject();
-                notification.putString("id", sandBoxId);
-                notification.putString("target", SB_SandBox.class.getSimpleName());
-                notification.putArray("exclude", new JsonArray().add(req.getUser().get_id()));
-                notification.putObject("notification", new JsonObject()
-                        .putString("content", Messages.getString("notification.team.add.content", req.getLocale(),
-                                json.getString("label"),
-                                "/#/private/updateTeam/" + json.getString("_id") + "/" + json.getBoolean("adversary")))
-                        .putString("title", Messages.getString("notification.team.add.title", req.getLocale()))
-                        .putString("senderId", req.getUser().get_id())
-                );
-                vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-            } catch (QaobeeException e) {
-                LOG.error(e.getMessage(), e);
-            }
-            message.reply(json.encode());
+            message.reply(teamDAO.addTeam(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

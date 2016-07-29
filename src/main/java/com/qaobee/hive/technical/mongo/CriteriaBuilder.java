@@ -72,6 +72,8 @@ public class CriteriaBuilder {
     }
 
     /**
+     * Between criteria builder.
+     *
      * @param floor key of the min
      * @param ceil  key of the max
      * @param value value to test
@@ -88,7 +90,7 @@ public class CriteriaBuilder {
      *
      * @param key    (String) : field to apply the criteria
      * @param values (String...) : values desired
-     * @return CriteriaBuilder
+     * @return CriteriaBuilder criteria builder
      */
     public CriteriaBuilder in(final String key, final String... values) {
         add(key, new BasicDBObject("$in", Arrays.asList(values)));
