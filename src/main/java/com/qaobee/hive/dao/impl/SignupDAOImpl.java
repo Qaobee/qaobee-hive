@@ -207,7 +207,7 @@ public class SignupDAOImpl implements SignupDAO {
     public JsonObject register(JsonObject reCaptchaJson, JsonObject userJson, String locale) throws QaobeeException {
         final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
         reCaptcha.setPrivateKey(runtime.getString("recaptcha.pkey"));
-        if (runtime.getBoolean("recaptcha")) {
+        if (runtime.getBoolean("recaptcha") || "web".equals(userJson.getObject("account").getString("origin", "web"))) {
             ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(runtime.getString("recaptcha.site"),
                     reCaptchaJson.getString("challenge"),
                     reCaptchaJson.getString("response"));
