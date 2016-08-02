@@ -737,26 +737,19 @@ public class SignupTest extends VertxJunitSupport {
     private JsonObject generateNewUser() {
         final JsonObject params = new JsonObject();
         // Account
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.putString("login", "loginTest");
-        jsonObject.putString("passwd", "passwdTest");
-        params.putObject("account", jsonObject);
-        // Contact
-        jsonObject = new JsonObject();
-        jsonObject.putString("email", "prenom.nom@fai.pays");
-        params.putObject("contact", jsonObject);
-        // Plan
-        jsonObject = new JsonObject();
-        jsonObject.putString("levelPlan", "FREEMIUM");
-        JsonObject objChild = new JsonObject();
-        objChild.putString("_id", "ACT-HAND");
-        jsonObject.putObject("activity", objChild);
-        params.putObject("plan", jsonObject);
-        // Nom & Prénom
-        params.putString("firstname", "Prenom");
-        params.putString("name", "NOM");
-        //jUnit
-        params.putBoolean("junit", true);
+        params.putObject("account", new JsonObject()
+                .putString("origin", "junit")
+                .putString("login", "loginTest")
+                .putString("passwd", "passwdTest"))
+                .putObject("contact", new JsonObject()
+                        .putString("email", "prenom.nom@fai.pays"))
+                .putObject("plan", new JsonObject()
+                        .putString("levelPlan", "FREEMIUM")
+                        .putObject("activity", new JsonObject()
+                                .putString("_id", "ACT-HAND"))
+                )
+                .putString("firstname", "Prenom")
+                .putString("name", "NOM");
         return params;
     }
 
