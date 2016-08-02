@@ -21,6 +21,7 @@ package com.qaobee.hive.business.model.commons.users.account;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.qaobee.hive.business.model.transversal.Habilitation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,7 +48,7 @@ public class Account {
     private List<Plan> listPlan;
     private List<Habilitation> habilitations;
     private String mobileToken;
-    private String pushId;
+    private List<Device> devices;
 
     /**
      * Returns the activation code.
@@ -338,20 +339,23 @@ public class Account {
     }
 
     /**
-     * Gets push id.
+     * Gets devices.
      *
-     * @return the push id
+     * @return the devices
      */
-    public String getPushId() {
-        return pushId;
+    public List<Device> getDevices() {
+        if(devices == null) {
+            devices = new ArrayList<>();
+        }
+        return devices;
     }
 
     /**
-     * Sets push id.
+     * Sets devices.
      *
-     * @param pushId the push id
+     * @param devices the devices
      */
-    public void setPushId(String pushId) {
-        this.pushId = pushId;
+    public void setDevices(List<Device> devices) {
+        this.devices = devices;
     }
 }

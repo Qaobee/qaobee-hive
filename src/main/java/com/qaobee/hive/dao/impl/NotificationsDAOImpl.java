@@ -24,7 +24,6 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +49,11 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     private static final String TARGET_ID = "targetId";
     private static final String DELETED = "deleted";
     private static final String FIELD_MEMBERS = "members";
-    private static final String PUSH_ID = "pushId";
+    private static final String FIELD_DEVICES = "devices";
+    private static final String FIELD_PUSH_ID = "id";
+    private static final String FIELD_DEVICE_OS = "os";
     private static final String ACCOUNT = "account";
+    private static final String FIELD_PERSON_ID = "personId";
 
     @Inject
     private MongoDB mongo;
@@ -92,13 +94,12 @@ public class NotificationsDAOImpl implements NotificationsDAO {
 
         if(target.getArray(FIELD_MEMBERS) != null && target.getArray(FIELD_MEMBERS).size() >0){
             for (int i = 0; i < target.getArray(FIELD_MEMBERS).size(); i++) {
-                if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString("personId"))) {
-                    LOG.info(((JsonObject)target.getArray(FIELD_MEMBERS).get(i)).getString("personId"));
-                    res = res && addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString("personId"), notification);
+                if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID))) {
+                    LOG.info(((JsonObject)target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID));
+                    res = res && addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID), notification);
                 }
             }
         }
-
         return res;
     }
 
@@ -112,33 +113,20 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                     .putBoolean(DELETED, false);
             mongo.save(notification, DBCollections.NOTIFICATION);
             JsonObject u = mongo.getById(id, DBCollections.USER);
-            if (u != null && u.containsField(ACCOUNT) && u.getObject(ACCOUNT).containsField(PUSH_ID) && StringUtils.isNotBlank(u.getObject(ACCOUNT).getString(PUSH_ID, ""))) {
+            if (u != null && u.containsField(ACCOUNT) && u.getObject(ACCOUNT).containsField(FIELD_DEVICES)) {
                 // Send firebase notification
-                JsonObject requestBody = new JsonObject()
-                        .putObject("notification", new JsonObject()
-                                .putString("title", notification.getString("title"))
-                                .putString("text", notification.getString("content"))
-                        )
-                        .putObject("data", new JsonObject().putString(SENDER_ID, notification.getString(SENDER_ID)))
-                        .putString("to", u.getObject(ACCOUNT).getString(PUSH_ID));
-                HttpClient client = vertx.createHttpClient().setKeepAlive(true);
-                client.setHost(firebase.getString("host"));
-                client.setPort(firebase.getInteger("port"));
-                client.setSSL(true).setTrustAll(true);
-                client.exceptionHandler(ex -> LOG.error(ex.getMessage(), ex));
-                client.post(firebase.getString("basePath"), resp -> {
-                    if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
-                        resp.bodyHandler(buffer -> {
-
-                        });
-                    } else {
-                        LOG.error(resp.statusCode() + " : " + resp.statusMessage());
+                u.getObject(ACCOUNT).getArray(FIELD_DEVICES).forEach(d -> {
+                    switch (((JsonObject) d).getString(FIELD_DEVICE_OS)) {
+                        case "android":
+                            notifyAndroid(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
+                            break;
+                        case "ios":
+                            notifyIOS(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
+                            break;
+                        default:
+                            break;
                     }
-                })
-                        .putHeader("Authorization", "key= " + firebase.getString("api_key"))
-                        .putHeader(HTTP.CONTENT_TYPE, "application/json")
-                        .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody.encode().length()))
-                        .end(requestBody.encode());
+                });
             }
             vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
             return true;
@@ -146,6 +134,36 @@ public class NotificationsDAOImpl implements NotificationsDAO {
             LOG.error(e.getMessage(), e);
         }
         return false;
+    }
+
+    private static void notifyIOS(JsonObject notification, String pushId) {
+        LOG.debug("IOS notification not yet implemented for : " + pushId + "\n" + notification.encodePrettily());
+    }
+
+    private void notifyAndroid(JsonObject notification, String pushId) {
+        JsonObject requestBody = new JsonObject()
+                .putObject("notification", new JsonObject()
+                        .putString("title", notification.getString("title"))
+                        .putString("text", notification.getString("content"))
+                )
+                .putObject("data", new JsonObject().putString(SENDER_ID, notification.getString(SENDER_ID)))
+                .putString("to", pushId);
+        HttpClient client = vertx.createHttpClient().setKeepAlive(true);
+        client.setHost(firebase.getString("host"));
+        client.setPort(firebase.getInteger("port"));
+        client.setSSL(true).setTrustAll(true);
+        client.exceptionHandler(ex -> LOG.error(ex.getMessage(), ex));
+        client.post(firebase.getString("basePath"), resp -> {
+            if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
+                resp.bodyHandler(buffer -> LOG.debug(buffer.toString()));
+            } else {
+                LOG.error(resp.statusCode() + " : " + resp.statusMessage());
+            }
+        })
+                .putHeader("Authorization", "key= " + firebase.getString("api_key"))
+                .putHeader(HTTP.CONTENT_TYPE, "application/json")
+                .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody.encode().length()))
+                .end(requestBody.encode());
     }
 
     @Override
