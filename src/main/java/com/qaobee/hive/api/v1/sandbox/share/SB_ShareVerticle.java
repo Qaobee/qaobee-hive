@@ -64,9 +64,13 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String GET_LIST_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.listInvitation";
     /**
-     * The constant REMOVE_FROM_SANDBOX.
+     * The constant DESACTIVATE_MEMBER_TO_SANDBOX.
      */
     public static final String DESACTIVATE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.desactivateMember";
+    /**
+     * The constant ACTIVATE_MEMBER_TO_SANDBOX.
+     */
+    public static final String ACTIVATE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.activateMember";
 
     /**
      * The constant PARAM_SANBOXID.
@@ -118,6 +122,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 .registerHandler(GET_LIST_INVITATION_TO_SANDBOX, this::getListInvitationOfSandbox)
                 .registerHandler(INVITE_MEMBER_TO_SANDBOX, this::inviteMemberToSandbox)
                 .registerHandler(CONFIRM_INVITATION_TO_SANDBOX, this::confirmInvitationToSandbox)
+                .registerHandler(ACTIVATE_MEMBER_TO_SANDBOX, this::activateMemberToSandbox)
                 .registerHandler(DESACTIVATE_MEMBER_TO_SANDBOX, this::desactivateMemberToSandbox)
                 .registerHandler(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification);
     }
@@ -152,7 +157,36 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
             JsonObject sandbox = shareDAO.desactivateMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID));
             vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
                     .putString(PARAM_USERID, request.getString(PARAM_USERID))
-                    .putString(FIELD_ROOT, "notification.sandbox.del")
+                    .putString(FIELD_ROOT, "notification.sandbox.desactivate")
+                    .putString(FIELD_LOCALE, req.getLocale())
+                    .putString(FIELD_UID, req.getUser().get_id())
+            );
+            message.reply(sandbox.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    /**
+     * @apiDescription Desactivate a member to a SB_SandBox
+     * @api {post} /api/1/share/sandbox/del activate a member to a SB_SandBox
+     * @apiParam {String} userId User id to activate
+     * @apiParam {String} sandboxId Targeted sandbox
+     * @apiName desactivateMemberToSandbox
+     * @apiHeader {String} token
+     * @apiGroup Share API
+     * @apiSuccess {Object} sandbox Enriched sandbox;
+     */
+    @Rule(address = ACTIVATE_MEMBER_TO_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USERID}, scope = Rule.Param.BODY)
+    private void activateMemberToSandbox(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject request = new JsonObject(req.getBody());
+        try {
+            JsonObject sandbox = shareDAO.activateMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID));
+            vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
+                    .putString(PARAM_USERID, request.getString(PARAM_USERID))
+                    .putString(FIELD_ROOT, "notification.sandbox.activate")
                     .putString(FIELD_LOCALE, req.getLocale())
                     .putString(FIELD_UID, req.getUser().get_id())
             );

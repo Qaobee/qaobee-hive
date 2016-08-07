@@ -68,6 +68,18 @@ public class ShareDAOImpl implements ShareDAO {
     }
 
     @Override
+    public JsonObject activateMemberToSandbox(String sandboxId, String userId) throws QaobeeException {
+        JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
+        sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
+            if (((JsonObject) m).getString(FIELD_PERSON_ID).equals(userId)) {
+                ((JsonObject) m).putString(FIELD_STATUS, "activated");
+            }
+        });
+        sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
+        return sandBoxDAO.getEnrichedSandbox(sandbox);
+    }
+
+    @Override
     public JsonObject inviteMemberToSandbox(String sandboxId, String userEmail, String roleCode) throws QaobeeException {
         JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
         final JsonObject[] role = {new JsonObject().putString("code", roleCode)};

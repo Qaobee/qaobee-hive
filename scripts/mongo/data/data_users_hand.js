@@ -124,7 +124,16 @@ db.SB_SandBox.insert({
     "_id" : "68d8945f-097b-4310-8499-7d282eed3354",
     "activityId" : "ACT-HAND",
     "owner" : "62b1870e-f1e4-4bcc-a389-ed8b22f564f7",
-    "members": null,
+    "members": [
+        {
+            "personId" : "62b1870e-f1e4-4bcc-a389-ed8b22f564f7",
+            "role" : {
+                "code" : "admin",
+                "label" : "Admin"
+            },
+            "status" : "accepted",
+        }
+    ],
     "structure": {
         "_id": "577fbf60b9cb07ea3649d6ec",
         "label": "EQUIPE DE FRANCE",

@@ -40,6 +40,16 @@ public interface ShareDAO {
     JsonObject desactivateMemberToSandbox(String sandboxId, String userId) throws QaobeeException;
 
     /**
+     * Activate user from sandbox.
+     *
+     * @param sandboxId the sandbox id
+     * @param userId    the user id
+     * @return the json object
+     * @throws QaobeeException the qaobee exception
+     */
+    JsonObject activateMemberToSandbox(String sandboxId, String userId) throws QaobeeException;
+
+    /**
      * Invite user to sandbox json object.
      *
      * @param sandboxId the sandbox id
