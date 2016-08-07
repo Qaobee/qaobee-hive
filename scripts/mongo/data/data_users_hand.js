@@ -114,7 +114,7 @@ db.User.insert({
         "mobileToken" : null
     },
     "timestamp": NumberLong(1444854317672),
-    "sandboxDefault" : "4c504098-e704-4e3e-8f7b-d1ea97beb681"
+    "sandboxDefault" : "68d8945f-097b-4310-8499-7d282eed3354"
 });
 
 /*
