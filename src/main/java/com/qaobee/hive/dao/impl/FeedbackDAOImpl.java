@@ -27,6 +27,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.json.JsonArray;
@@ -69,6 +70,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
             FileUtils.writeByteArrayToFile(temp, img);
             FileInputStream in = new FileInputStream(temp);
             client.attachments.createOnTask(t.id, in, UUID.randomUUID().toString() + ".png", "image/png").execute();
+            IOUtils.closeQuietly(in);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage());

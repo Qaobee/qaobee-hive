@@ -26,6 +26,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.MediaReplacedElementFactory;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
@@ -87,6 +88,7 @@ public class PdfDAOImpl implements PdfDAO {
             renderer.createPDF(os);
             final JsonObject res = new JsonObject();
             res.putString(PDF, temp.getAbsolutePath());
+            IOUtils.closeQuietly(os);
             return res;
         } catch (XRRuntimeException | DocumentException | IOException e) {
             LOG.error(e.getMessage(), e);
