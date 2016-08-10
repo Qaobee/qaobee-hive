@@ -17,7 +17,7 @@
     "trial.duration" : 12,
     "plan": {
       "FREEMIUM": {
-        "price": 800
+        "price": 8
       },
       "DISCOVERY": {
         "price": 500
