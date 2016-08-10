@@ -35,7 +35,7 @@
 /* 
  * Structure : une structure est quasi immuable, cet objet bougera peu dans le temps
  */
-db.Structure.remove({});
+// db.Structure.remove({});
 
 // Extract value of String from ObjectId - field transformation from Object to String
 db.Structure.insert({

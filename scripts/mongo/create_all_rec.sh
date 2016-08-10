@@ -9,8 +9,7 @@ function pause(){
    read -p "$*"
 }
 
-
-echo -e "${red}PRODUCTION !!! Are you sure?${NC}"
+echo -e "${red}RECETTE !!! Are you sure?${NC}"
 pause 'Press [Enter] key to continue...'
 
 echo -e "${green}****************************************************"

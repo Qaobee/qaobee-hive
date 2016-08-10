@@ -227,6 +227,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                     try {
                         future.complete(handlePayplugPaymentResponse(buffer, user, planId, amount));
                     } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
                         future.completeExceptionally(e);
                     }
                 });
@@ -254,7 +255,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                     if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
                         resp.bodyHandler(buffer -> {
                             // The entire response body has been received
-                            JsonObject res = new JsonObject(buffer.toString());
+                            final JsonObject res = new JsonObject(buffer.toString());
                             ((JsonObject) user.getObject(ACCOUNT_FIELD)
                                     .getArray(LIST_PLAN_FIELD)
                                     .get(planId))
