@@ -51,6 +51,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
 
     @Override
     public void sendFeedback(JsonObject data) throws QaobeeException {
+        FileInputStream in = null;
         try {
             Client client = Client.basicAuth(config.getString("apikey"));
             User m = client.users.me().execute();
@@ -68,12 +69,16 @@ public class FeedbackDAOImpl implements FeedbackDAO {
             byte[] img = Base64.decodeBase64(data.getString("img").replace("data:image/png;base64,", ""));
             File temp = File.createTempFile("temp-file-name", ".tmp");
             FileUtils.writeByteArrayToFile(temp, img);
-            FileInputStream in = new FileInputStream(temp);
+            in = new FileInputStream(temp);
             client.attachments.createOnTask(t.id, in, UUID.randomUUID().toString() + ".png", "image/png").execute();
-            IOUtils.closeQuietly(in);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+        } finally {
+            if(in != null) {
+                IOUtils.closeQuietly(in);
+            }
         }
+
     }
 }

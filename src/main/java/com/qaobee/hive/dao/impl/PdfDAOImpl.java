@@ -62,6 +62,7 @@ public class PdfDAOImpl implements PdfDAO {
 
     @Override
     public JsonObject generatePDF(JsonObject data, String template, String filename) throws QaobeeException {
+        OutputStream os = null;
         try {
             final StringBuilder cssStr = new StringBuilder();
             for (final Object c : pdfConfig.getArray("css").toList()) {
@@ -80,7 +81,7 @@ public class PdfDAOImpl implements PdfDAO {
             if (temp.exists()) {
                 assert temp.delete();
             }
-            final OutputStream os = new FileOutputStream(temp);
+            os = new FileOutputStream(temp);
             final ITextRenderer renderer = new ITextRenderer();
             renderer.getSharedContext().setReplacedElementFactory(new MediaReplacedElementFactory(renderer.getSharedContext().getReplacedElementFactory(), dir));
             renderer.setDocumentFromString(templatesDAO.generatePDF(data, template));
@@ -93,6 +94,10 @@ public class PdfDAOImpl implements PdfDAO {
         } catch (XRRuntimeException | DocumentException | IOException e) {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e);
+        }finally {
+            if(os != null) {
+                IOUtils.closeQuietly(os);
+            }
         }
     }
 }
