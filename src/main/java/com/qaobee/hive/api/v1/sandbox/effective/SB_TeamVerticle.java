@@ -136,7 +136,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {String} id Mandatory The SB_team Id
      * @apiSuccess {Object}   team            The SB_Team found.
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getTeam(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

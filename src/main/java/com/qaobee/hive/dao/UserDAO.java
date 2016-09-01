@@ -133,10 +133,10 @@ public interface UserDAO {
     /**
      * Gets meta.
      *
-     * @param userId the user id
+     * @param sandboxId the sandbox id
      * @return the meta
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject getMeta(String userId) throws QaobeeException;
+    JsonObject getMeta(String sandboxId) throws QaobeeException;
 
 }

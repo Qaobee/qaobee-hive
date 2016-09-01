@@ -60,7 +60,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
     }
 
     @Override
-    public JsonObject getEnrichedSandbox(JsonObject sandbox) throws QaobeeException {
+    public JsonObject getEnrichedSandbox(JsonObject sandbox) {
         JsonArray members = sandbox.getArray(FIELD_MEMBERS);
         members.forEach(m -> {
             try {
@@ -70,12 +70,11 @@ public class SandBoxDAOImpl implements SandBoxDAO {
             }
         });
         sandbox.putArray(FIELD_MEMBERS, members);
-        
         return sandbox;
     }
 
     @Override
-    public JsonObject updateSandbox(JsonObject sandbox) throws QaobeeException {
+    public JsonObject updateSandbox(JsonObject sandbox) {
         sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
         return sandbox;
     }

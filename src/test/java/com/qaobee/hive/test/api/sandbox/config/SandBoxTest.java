@@ -18,7 +18,6 @@
  */
 package com.qaobee.hive.test.api.sandbox.config;
 
-import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -26,9 +25,6 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
 import org.vertx.java.core.json.JsonObject;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;

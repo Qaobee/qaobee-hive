@@ -66,6 +66,8 @@ public class UserDAOImpl implements UserDAO {
     private SeasonDAO seasonDAO;
     @Inject
     private TeamDAO teamDAO;
+    @Inject
+    private ActivityDAO activityDAO;
 
     @Override
     public JsonObject updateAvatar(String uid, String filename) throws QaobeeException {
@@ -279,16 +281,11 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public JsonObject getMeta(String userId) throws QaobeeException {
-        final JsonObject activity = ((JsonObject) getUser(userId)
-                .getObject(ACCOUNT_FIELD)
-                .getArray("listPlan").get(0))
-                .getObject("activity");
-
-        JsonObject meta = sandBoxDAO.getByOwner(activity.getString("_id"), userId);
-        meta.putObject("season", seasonDAO.getCurrentSeason(activity.getString("_id"), meta.getObject("structure").getObject("country").getString("_id")));
+    public JsonObject getMeta(String sandboxId) throws QaobeeException {
+        JsonObject meta = sandBoxDAO.getSandboxById(sandboxId);
+        meta.putObject("season", seasonDAO.getCurrentSeason(meta.getString("activityId"), meta.getObject("structure").getObject("country").getString("_id")));
         meta.putArray("teams", teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null));
-        meta.putObject("activity", activity);
+        meta.putObject("activity", activityDAO.getActivity(meta.getString("activityId")));
         return meta;
     }
 }

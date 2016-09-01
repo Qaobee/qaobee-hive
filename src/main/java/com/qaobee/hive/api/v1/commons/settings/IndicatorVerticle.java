@@ -159,7 +159,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiSuccess {Indicator} indicator The Indicator found.
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getIndicator(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

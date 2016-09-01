@@ -30,11 +30,11 @@ import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
@@ -178,6 +178,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     protected User generateUser() {
         final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
         user.getAccount().setActive(true);
+        user.set_id(UUID.randomUUID().toString());
         try {
             final String id = mongo.save(user);
             if (id == null) {
@@ -212,7 +213,20 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @return the user
      */
     protected User generateLoggedUser() {
-        return generateLoggedUser("12345");
+        try {
+            User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
+            user.set_id(UUID.randomUUID().toString());
+            final String id = mongo.save(user);
+            if (id == null) {
+                Assert.fail("user id is null");
+            } else {
+                user.set_id(id);
+            }
+        return generateLoggedUser(user.get_id());
+        } catch (EncodeException | QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        return null;
     }
 
     /**
@@ -223,8 +237,8 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @return the user
      */
     protected User generateLoggedUser(String userId) {
-        final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
         try {
+            User user = Json.decodeValue(mongo.getById(userId, DBCollections.USER).encode(), User.class);
             user.set_id(userId);
             user.getAccount().setToken(UUID.randomUUID().toString());
             user.getAccount().setTokenRenewDate(System.currentTimeMillis());
@@ -235,10 +249,11 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
             } else {
                 user.set_id(id);
             }
+            return user;
         } catch (EncodeException | QaobeeException e) {
             Assert.fail(e.getMessage());
         }
-        return user;
+        return null;
     }
 
     /**
@@ -247,7 +262,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @return the user
      */
     protected User generateLoggedAdminUser() {
-        return generateLoggedAdminUser("12345");
+        return generateLoggedAdminUser(generateLoggedUser().get_id());
     }
 
     /**
@@ -271,21 +286,6 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
             Assert.fail(e.getMessage());
         }
         return user;
-    }
-
-    /**
-     * Gets the params.
-     *
-     * @param args tableaux de type [clef, val1, val2, ...]
-     *
-     * @return map de paramètres de requête
-     */
-    protected Map<String, List<String>> getParams(final String[]... args) {
-        final Map<String, List<String>> params = new HashMap<>();
-        for (final String[] arg : args) {
-            params.put(arg[0], Arrays.asList((String[]) ArrayUtils.subarray(arg, 1, arg.length)));
-        }
-        return params;
     }
 
     /**
@@ -360,7 +360,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
                     }
                     Assert.fail(((ReplyException) result).getMessage());
             } else if (result instanceof JsonObject) {
-                return ((JsonObject) result);
+                return (JsonObject) result;
             } else {
                 Assert.fail("unparsable data : " + result.toString());
             }
@@ -392,7 +392,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
         for(String s : mongoFiles) {
             LOG.info("Populating " + s);
         }
-        File[] listFiles = (new File("scripts/mongo" + relativeDirectory)).listFiles();
+        File[] listFiles = new File("scripts/mongo" + relativeDirectory).listFiles();
         if (listFiles != null && listFiles.length > 0) {
             List<String> mongoFilesList = new ArrayList<>();
             if (mongoFiles.length > 0) {

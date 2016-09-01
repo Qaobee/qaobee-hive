@@ -133,7 +133,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} id
      * @apiSuccess {Object} event event;
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
             scope = Rule.Param.REQUEST)
     private void getEvent(Message<String> message) {
         try {

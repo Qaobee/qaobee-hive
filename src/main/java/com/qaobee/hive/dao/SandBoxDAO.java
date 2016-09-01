@@ -43,18 +43,16 @@ public interface SandBoxDAO {
      *
      * @param sandbox the sandbox
      * @return the enriched sandbox
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getEnrichedSandbox(JsonObject sandbox) throws QaobeeException;
+    JsonObject getEnrichedSandbox(JsonObject sandbox);
 
     /**
      * Update json object.
      *
      * @param sandbox the sandbox
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject updateSandbox(JsonObject sandbox) throws QaobeeException;
+    JsonObject updateSandbox(JsonObject sandbox);
 
     /**
      * Gets list by owner.

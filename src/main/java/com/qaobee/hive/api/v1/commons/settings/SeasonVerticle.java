@@ -141,7 +141,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} _id Mandatory The season Id.
      * @apiSuccess {Object} the object found
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
             scope = Rule.Param.REQUEST)
     private void getSeason(Message<String> message) {
         try {

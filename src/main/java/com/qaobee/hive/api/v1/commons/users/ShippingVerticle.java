@@ -121,7 +121,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status Status with a redirect link if any
      * @apiHeader {String} token
      */
-    @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = {PARAM_PLAN_ID}, scope = Rule.Param.BODY)
+    @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = PARAM_PLAN_ID, scope = Rule.Param.BODY)
     private void pay(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {

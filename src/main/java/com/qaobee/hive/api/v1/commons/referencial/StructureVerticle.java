@@ -165,7 +165,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Structure}   structure            The Structure found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
             scope = Rule.Param.REQUEST)
     private void getStructure(Message<String> message) {
         try {

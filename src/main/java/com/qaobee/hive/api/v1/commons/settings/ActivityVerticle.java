@@ -111,7 +111,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} id The Activity-ID.
      * @apiSuccess {Object} activity The Activity found.
      */
-    @Rule(address = GET, method = Constants.GET, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

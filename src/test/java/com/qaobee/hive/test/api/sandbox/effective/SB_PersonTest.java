@@ -90,6 +90,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void getByIdWithMissingParameters() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         final JsonObject params = new JsonObject();
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         params.putArray(SB_PersonVerticle.PARAM_LIST_ID, new JsonArray(
@@ -148,7 +149,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void getListPersonSandboxWithMissingParameters() {
-        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().get(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
@@ -159,7 +160,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void getListPersonSandboxWithWringParameters() {
-        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .queryParam(SB_PersonVerticle.PARAM_SANDBOX_ID, "bla")
                 .when().get(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
@@ -348,7 +349,7 @@ public class SB_PersonTest extends VertxJunitSupport {
     @Test
     public void updatePersonWithMissingParameters() {
         populate(POPULATE_ONLY, DATA_EFFECTIVE_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        User user = generateLoggedUser();
         given().header(TOKEN, user.getAccount().getToken())
                 .when().put(getURL(SB_EffectiveVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())

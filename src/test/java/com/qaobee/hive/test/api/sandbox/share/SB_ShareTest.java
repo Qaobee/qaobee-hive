@@ -46,9 +46,9 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void inviteMemberToSandbox() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_SANDBOXES_HAND);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = loggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        User user2 = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
+        User user2 = generateLoggedUser();
         final JsonObject params = new JsonObject()
                 .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
                 .putString(SB_ShareVerticle.PARAM_USER_EMAIL, user2.getContact().getEmail())
@@ -97,9 +97,9 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void acceptationInvitationToSandbox() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_SANDBOXES_HAND);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = loggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        User user2 = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
+        User user2 = generateLoggedUser();
         final JsonObject params = new JsonObject()
                 .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
                 .putString(SB_ShareVerticle.PARAM_USER_EMAIL, user2.getContact().getEmail())
@@ -135,9 +135,9 @@ public class SB_ShareTest extends VertxJunitSupport {
 
     @Test
     public void refuseInvitationToSandbox() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_SANDBOXES_HAND);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = loggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        User user2 = generateLoggedUser("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4");
+        User user2 = generateLoggedUser();
         final JsonObject params = new JsonObject()
                 .putString(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
                 .putString(SB_ShareVerticle.PARAM_USER_EMAIL, user2.getContact().getEmail())

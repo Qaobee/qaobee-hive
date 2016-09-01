@@ -162,7 +162,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} login
      * @apiHeader {String} token
      */
-    @Rule(address = USER_BY_LOGIN, method = Constants.GET, logged = true, admin = true, mandatoryParams = {PARAM_LOGIN},
+    @Rule(address = USER_BY_LOGIN, method = Constants.GET, logged = true, admin = true, mandatoryParams = PARAM_LOGIN,
           scope = Rule.Param.REQUEST)
     private void userByLogin(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -183,7 +183,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} id
      * @apiHeader {String} token
      */
-    @Rule(address = USER_INFO, method = Constants.GET, logged = true, mandatoryParams = {"id"},
+    @Rule(address = USER_INFO, method = Constants.GET, logged = true, mandatoryParams = "id",
           scope = Rule.Param.REQUEST)
     private void userInfo(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -200,6 +200,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @api {get} /api/1/commons/users/user/meta Fetch meta information
      * @apiVersion 0.1.0
      * @apiName getMeta
+     * @apiParam sandboxId (optionnel) sandboxId
      * @apiGroup User API
      * @apiHeader {String} token
      */
@@ -207,7 +208,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private void getMeta(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
-            message.reply(userDAO.getMeta(req.getUser().get_id()).encode());
+            String sandBoxId = req.getUser().getSandboxDefault();
+            if(req.getParams().containsKey("sandboxId") && req.getParams().get("sandboxId").size() > 0) {
+                sandBoxId = req.getParams().get("sandboxId").get(0);
+            }
+            message.reply(userDAO.getMeta(sandBoxId).encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -296,7 +301,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} login user login
      * @apiSuccess {Object} status
      */
-    @Rule(address = PASSWD_RENEW, method = Constants.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
+    @Rule(address = PASSWD_RENEW, method = Constants.POST, mandatoryParams = PARAM_LOGIN, scope = Rule.Param.BODY)
     private void passwordRenew(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -317,7 +322,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiSuccess {Object} status {"status", true|false}
      */
-    @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = {Constants.TOKEN},
+    @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = Constants.TOKEN,
           scope = Rule.Param.HEADER)
     private void logout(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

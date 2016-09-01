@@ -267,10 +267,10 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandboxes list of enriched sandboxes owned and as member;
      */
-    @Rule(address = GET_SANDBOX_SHARING_LIST, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET_SANDBOX_SHARING_LIST, method = Constants.GET, logged = true, mandatoryParams = PARAM_ACTIVITY_ID, scope = Rule.Param.REQUEST)
     private void getListOfSharedSandboxes(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        message.reply(shareDAO.getListOfSharedSandboxes(req.getUser().get_id(), req.getParams().get(PARAM_ACTIVITY_ID).get(0)).encode());
+        message.reply(shareDAO.getListOfSharedSandboxes(req.getUser().get_id()).encode());
     }
     
     /**

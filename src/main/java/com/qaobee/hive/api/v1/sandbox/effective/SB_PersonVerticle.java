@@ -107,7 +107,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Array} list of persons
      */
-    @Rule(address = GET_LIST_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET_LIST_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = PARAM_SANDBOX_ID, scope = Rule.Param.REQUEST)
     private void getPersonListBySandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -150,7 +150,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
-    @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.BODY)
+    @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = PARAM_PERSON_ID, scope = Rule.Param.BODY)
     private void updatePerson(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         message.reply(personDAO.updatePerson(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
@@ -166,7 +166,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_PERSON_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_PERSON_ID, scope = Rule.Param.REQUEST)
     private void getPerson(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -186,7 +186,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiGroup Person API
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
-    @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = {"person"}, scope = Rule.Param.BODY)
+    @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = "person", scope = Rule.Param.BODY)
     private void addPerson(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

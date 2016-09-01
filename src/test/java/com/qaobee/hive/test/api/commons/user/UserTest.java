@@ -23,7 +23,6 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.test.config.JSDataMongoTest;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Assert;
 import org.junit.Test;
@@ -83,7 +82,7 @@ public class UserTest extends VertxJunitSupport {
     public void badloginHTTPMethod() {
         given().when().get(getURL(UserVerticle.LOGIN))
                 .then().assertThat().statusCode(404)
-                .body(VertxJunitSupport.STATUS, is(false));
+                .body(STATUS, is(false));
     }
 
     /**
@@ -280,7 +279,7 @@ public class UserTest extends VertxJunitSupport {
 
         given().when().get(getURL(UserVerticle.LOGIN_BY_TOKEN))
                 .then().assertThat().statusCode(404)
-                .body(VertxJunitSupport.STATUS, is(false));
+                .body(STATUS, is(false));
     }
 
     /**
@@ -434,13 +433,29 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetas() {
-        populate(VertxJunitSupport.POPULATE_ONLY, JSDataMongoTest.SETTINGS_ACTIVITY, JSDataMongoTest.DATA_SANDBOXES_HAND, JSDataMongoTest.SETTINGS_SEASONS);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
             mongo.save(user);
-            given().header(VertxJunitSupport.TOKEN, user.getAccount().getToken())
-                    .param(UserVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(UserVerticle.META))
+                    .then().assertThat().statusCode(200)
+                    .body("activityId", notNullValue())
+                    .body("structure", notNullValue());
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+    @Test
+    public void getMetasWithSandboxId() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
+        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+        try {
+            mongo.save(user);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .param("sandboxId", "558b0efebd2e39cdab651e1f")
                     .when().get(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(200)
                     .body("activityId", notNullValue())
@@ -455,16 +470,15 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetasWithWrongHTTPMethod() {
-        populate(VertxJunitSupport.POPULATE_ONLY, JSDataMongoTest.SETTINGS_ACTIVITY, JSDataMongoTest.DATA_SANDBOXES_HAND, JSDataMongoTest.SETTINGS_SEASONS);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
             mongo.save(user);
-            given().header(VertxJunitSupport.TOKEN, user.getAccount().getToken())
-                    .param(UserVerticle.PARAM_COUNTRY_ID, "Vulacain")
+            given().header(TOKEN, user.getAccount().getToken())
                     .when().post(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(404)
-                    .body(VertxJunitSupport.STATUS, is(false));
+                    .body(STATUS, is(false));
         } catch (QaobeeException e) {
             Assert.fail(e.getMessage());
         }
@@ -475,13 +489,12 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetasWithWrongUser() {
-        populate(VertxJunitSupport.POPULATE_ONLY, JSDataMongoTest.SETTINGS_ACTIVITY, JSDataMongoTest.DATA_SANDBOXES_HAND, JSDataMongoTest.SETTINGS_SEASONS);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User user = generateLoggedUser();
         user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
         try {
             mongo.save(user);
-            given().header(VertxJunitSupport.TOKEN, user.getAccount().getToken())
-                    .param(UserVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+            given().header(TOKEN, user.getAccount().getToken())
                     .when().get(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
@@ -495,8 +508,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getMetasNotLogged() {
-        given().param(UserVerticle.PARAM_COUNTRY_ID, "Vulacain")
-                .when().get(getURL(UserVerticle.META))
+        given().when().get(getURL(UserVerticle.META))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body("code", is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -508,7 +520,7 @@ public class UserTest extends VertxJunitSupport {
     public void getMetasWrongHTTPMethod() {
         given().when().post(getURL(UserVerticle.META))
                 .then().assertThat().statusCode(404)
-                .body(VertxJunitSupport.STATUS, is(false));
+                .body(STATUS, is(false));
     }
 
     /**
@@ -517,7 +529,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getUserById() {
         User user = generateLoggedUser();
-        given().header(VertxJunitSupport.TOKEN, user.getAccount().getToken())
+        given().header(TOKEN, user.getAccount().getToken())
                 .param("id", user.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
@@ -540,10 +552,10 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getUserByIdWrongHTTPMethod() {
-        given().header(VertxJunitSupport.TOKEN, generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(UserVerticle.META))
                 .then().assertThat().statusCode(404)
-                .body(VertxJunitSupport.STATUS, is(false));
+                .body(STATUS, is(false));
     }
 
     /**
@@ -552,7 +564,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getCurrentUser() {
         User user = generateLoggedUser();
-        given().header(VertxJunitSupport.TOKEN, user.getAccount().getToken())
+        given().header(TOKEN, user.getAccount().getToken())
                 .when().get(getURL(UserVerticle.CURRENT))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
@@ -574,10 +586,10 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getCurrentUserWrongHTTPMethod() {
-        given().header(VertxJunitSupport.TOKEN, generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(UserVerticle.CURRENT))
                 .then().assertThat().statusCode(404)
-                .body(VertxJunitSupport.STATUS, is(false));
+                .body(STATUS, is(false));
     }
 
     /**
@@ -585,7 +597,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void logout() {
-        given().header(VertxJunitSupport.TOKEN, generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().get(getURL(UserVerticle.LOGOUT))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
@@ -597,7 +609,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void logoutBadHTTPMethod() {
-        given().header(VertxJunitSupport.TOKEN, generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(UserVerticle.LOGOUT));
     }
 
@@ -653,7 +665,7 @@ public class UserTest extends VertxJunitSupport {
     public void passwordRenewBadHTTPMethod() {
         given().when().get(getURL(UserVerticle.PASSWD_RENEW))
                 .then().assertThat().statusCode(404)
-                .body(VertxJunitSupport.STATUS, is(false));
+                .body(STATUS, is(false));
     }
 
     /**
@@ -721,7 +733,7 @@ public class UserTest extends VertxJunitSupport {
 
         given().when().post(getURL(UserVerticle.PASSWD_RENEW_CHK))
                 .then().assertThat().statusCode(404)
-                .body(VertxJunitSupport.STATUS, is(false));
+                .body(STATUS, is(false));
     }
 
     /**
@@ -816,7 +828,7 @@ public class UserTest extends VertxJunitSupport {
     public void passwordResetWrongHTTPMethod() {
         given().when().get(getURL(UserVerticle.PASSWD_RESET))
                 .then().assertThat().statusCode(404)
-                .body(VertxJunitSupport.STATUS, is(false));
+                .body(STATUS, is(false));
     }
 
     /**
@@ -825,17 +837,17 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void uploadAvatar() {
         User user = generateLoggedUser();
-        String avatarId = given().header(VertxJunitSupport.TOKEN, user.getAccount().getToken())
+        String avatarId = given().header(TOKEN, user.getAccount().getToken())
                 .multiPart(new File("src/test/resources/avatar.jpg")).
                         pathParam("uid", user.get_id()).
                         when().
-                        post(VertxJunitSupport.BASE_URL + "/file/User/avatar/{uid}")
+                        post(BASE_URL + "/file/User/avatar/{uid}")
                 .then().assertThat().statusCode(200)
                 .body("avatar", notNullValue())
                 .extract().path("avatar");
 
         byte[] byteArray = given().pathParam("avatar", avatarId)
-                .get(VertxJunitSupport.BASE_URL + "/file/User/{avatar}")
+                .get(BASE_URL + "/file/User/{avatar}")
                 .then().assertThat().statusCode(200)
                 .extract().asByteArray();
 
@@ -849,11 +861,11 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void uploadAvatarWithWrongUserId() {
-        given().header(VertxJunitSupport.TOKEN, generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .multiPart(new File("src/test/resources/avatar.jpg")).
                 pathParam("uid", "blabla").
                 when().
-                post(VertxJunitSupport.BASE_URL + "/file/User/avatar/{uid}")
+                post(BASE_URL + "/file/User/avatar/{uid}")
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
     }
 
@@ -865,7 +877,7 @@ public class UserTest extends VertxJunitSupport {
         given().multiPart(new File("src/test/resources/avatar.jpg"))
                 .pathParam("uid", generateUser().get_id())
                 .when()
-                .post(VertxJunitSupport.BASE_URL + "/file/User/avatar/{uid}")
+                .post(BASE_URL + "/file/User/avatar/{uid}")
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
     }
 
@@ -876,9 +888,9 @@ public class UserTest extends VertxJunitSupport {
     public void uploadAvatarWithWrongToken() {
         given().multiPart(new File("src/test/resources/avatar.jpg")).
                 pathParam("uid", generateUser().get_id())
-                .header(VertxJunitSupport.TOKEN, "11111")
+                .header(TOKEN, "11111")
                 .when()
-                .post(VertxJunitSupport.BASE_URL + "/file/User/avatar/{uid}")
+                .post(BASE_URL + "/file/User/avatar/{uid}")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
     }
 
@@ -888,7 +900,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getAvatarWithWrongAvatarId() {
         given().pathParam("avatar", "blabla")
-                .get(VertxJunitSupport.BASE_URL + "/file/User/{avatar}")
+                .get(BASE_URL + "/file/User/{avatar}")
                 .then().assertThat().statusCode(404);
     }
 
@@ -898,7 +910,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getAvatarWithWrongCollection() {
        given().pathParam("avatar", "bla")
-               .get(VertxJunitSupport.BASE_URL + "/file/toto/{avatar}")
+               .get(BASE_URL + "/file/toto/{avatar}")
                 .then().assertThat().statusCode(404);
     }
 
@@ -908,7 +920,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getUserByLogin() {
         User u = generateLoggedAdminUser();
-        given().header(VertxJunitSupport.TOKEN, u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .queryParam(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
                 .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                 .then().assertThat().statusCode(200)
@@ -921,7 +933,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getUserByLoginBadHTTPMethod() {
-        given().header(VertxJunitSupport.TOKEN, generateLoggedUser().getAccount().getToken())
+        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
                 .when().post(getURL(UserVerticle.USER_BY_LOGIN));
     }
 
@@ -941,7 +953,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getUserByLoginWinthNotAdminUser() {
         User u = generateLoggedUser();
-        given().header(VertxJunitSupport.TOKEN, u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
                 .body("code", is(ExceptionCodes.NOT_ADMIN.toString()));
@@ -953,13 +965,13 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getUserByLoginWithWrongData() {
         User u = generateLoggedAdminUser();
-        given().header(VertxJunitSupport.TOKEN, u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .queryParam(UserVerticle.PARAM_LOGIN, "blabla")
                 .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                 .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
 
-        given().header(VertxJunitSupport.TOKEN, u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));

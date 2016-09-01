@@ -36,7 +36,7 @@ import javax.inject.Inject;
  *
  * @author Xavier MARIN
  */
-@DeployableVerticle()
+@DeployableVerticle
 public class PDFVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(PDFVerticle.class);
     /**

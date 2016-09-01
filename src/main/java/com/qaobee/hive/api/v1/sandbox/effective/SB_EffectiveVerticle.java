@@ -123,7 +123,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {Object} effective Mandatory The effective to update.
      * @apiSuccess {Object}   effective    The effective updated.
      */
-    @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = PARAM_ID,
           scope = Rule.Param.BODY)
     private void updateEffective(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -141,7 +141,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {String} categoryCode Optional The category code of the effective.
      * @apiSuccess {Array}   effectives            The list of effectives found.
      */
-    @Rule(address = GET_LIST, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANDBOX_ID},
+    @Rule(address = GET_LIST, method = Constants.GET, logged = true, mandatoryParams = PARAM_SANDBOX_ID,
           scope = Rule.Param.REQUEST)
     private void getEffectiveList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -168,7 +168,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {String} _id Mandatory The effective Id.
      * @apiSuccess {Object}   effective    The effective found.
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
           scope = Rule.Param.REQUEST)
     private void getEffective(Message<String> message) {
         try {

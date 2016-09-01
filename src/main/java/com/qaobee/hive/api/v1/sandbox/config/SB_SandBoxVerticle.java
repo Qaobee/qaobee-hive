@@ -101,7 +101,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiGroup SandBox API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = GET_BY_ID, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET_BY_ID, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getSandboxById(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -144,7 +144,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {String} activityId Mandatory The sandBox activity.
      * @apiSuccess {sandBox}   sandBox    The sandBox updated.
      */
-    @Rule(address = GET_BY_OWNER, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ACTIVITY_ID},
+    @Rule(address = GET_BY_OWNER, method = Constants.GET, logged = true, mandatoryParams = PARAM_ACTIVITY_ID,
           scope = Rule.Param.REQUEST)
     private void getByOwner(Message<String> message) {
         try {
@@ -167,15 +167,10 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {String} sandboxCfgId sandboxCfg id
      * @apiSuccess {Object} sandbox
      */
-    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ID},
+    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = PARAM_ID,
           scope = Rule.Param.BODY)
     private void update(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(sandBoxDAO.updateSandbox(new JsonObject(req.getBody())).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        message.reply(sandBoxDAO.updateSandbox(new JsonObject(req.getBody())).encode());
     }
 }

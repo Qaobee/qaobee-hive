@@ -48,12 +48,11 @@ public class QaobeeException extends Exception {
     /**
      * The report.
      */
-    private boolean report = false; // NOSONAR
+    private boolean report; // NOSONAR
 
     /**
      * The error.
      */
-    //NO SONAR
     private boolean error = true; // NOSONAR
 
     /**

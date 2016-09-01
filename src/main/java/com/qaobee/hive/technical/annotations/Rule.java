@@ -69,7 +69,7 @@ public @interface Rule {
      *
      * @return the param
      */
-    Param scope() default Param.NONE;
+    Rule.Param scope() default Rule.Param.NONE;
 
     /**
      * The enum Param.

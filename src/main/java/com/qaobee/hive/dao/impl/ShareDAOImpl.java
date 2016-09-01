@@ -27,8 +27,6 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
@@ -38,13 +36,11 @@ import javax.inject.Inject;
  * The type Share dao.
  */
 public class ShareDAOImpl implements ShareDAO {
-    private static final Logger LOG = LoggerFactory.getLogger(ShareDAOImpl.class);
     private static final String FIELD_ID = "_id";
     private static final String FIELD_OWNER = "owner";
     private static final String FIELD_MEMBERS = "members";
     private static final String FIELD_COUNTRY = "country";
     private static final String FIELD_PERSON_ID = "personId";
-    private static final String FIELD_ACTIVITY = "activityId";
     private static final String FIELD_SANDBOX_ID = "sandboxId";
     private static final String FIELD_STATUS = "status";
 
@@ -146,15 +142,12 @@ public class ShareDAOImpl implements ShareDAO {
     }
 
     @Override
-    public JsonObject getListOfSharedSandboxes(String userId, String activityId) {
+    public JsonObject getListOfSharedSandboxes(String userId) {
         JsonObject result = new JsonObject()
                 .putArray(FIELD_MEMBERS, new JsonArray())
                 .putArray(FIELD_OWNER, new JsonArray());
 
-        JsonArray sandboxes = mongo.findByCriterias(new CriteriaBuilder()
-                        .add(FIELD_OWNER, userId)
-                        .add(FIELD_ACTIVITY, activityId)
-                        .get(),
+        JsonArray sandboxes = mongo.findByCriterias(new CriteriaBuilder().add(FIELD_OWNER, userId).get(),
                 null, null, -1, 0, DBCollections.SANDBOX);
         BasicDBObject elemMatch = new BasicDBObject();
         elemMatch.put(FIELD_PERSON_ID, userId);
@@ -162,20 +155,10 @@ public class ShareDAOImpl implements ShareDAO {
         array.put("$elemMatch", elemMatch);
         BasicDBObject query = new BasicDBObject();
         query.put(FIELD_MEMBERS, array);
-        sandboxes.forEach(s -> {
-            try {
-                result.getArray(FIELD_OWNER).add(sandBoxDAO.getEnrichedSandbox((JsonObject) s));
-            } catch (QaobeeException e) {
-                LOG.error(e.getMessage(), e);
-            }
-        });
-        mongo.getDb().getCollection(DBCollections.SANDBOX).find(query).forEach(sandboxRes -> {
-            try {
-                result.getArray(FIELD_MEMBERS).add(sandBoxDAO.getEnrichedSandbox(new JsonObject(sandboxRes.toString())));
-            } catch (QaobeeException e) {
-                LOG.error(e.getMessage(), e);
-            }
-        });
+        sandboxes.forEach(s -> result.getArray(FIELD_OWNER).add(sandBoxDAO.getEnrichedSandbox((JsonObject) s)));
+        mongo.getDb().getCollection(DBCollections.SANDBOX)
+                .find(query)
+                .forEach(sandboxRes -> result.getArray(FIELD_MEMBERS).add(sandBoxDAO.getEnrichedSandbox(new JsonObject(sandboxRes.toString()))));
         return result;
     }
 }

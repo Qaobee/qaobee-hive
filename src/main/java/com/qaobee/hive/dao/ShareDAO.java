@@ -76,10 +76,9 @@ public interface ShareDAO {
      * Gets list of shared sandboxes.
      *
      * @param userId     the user id
-     * @param activityId the activity id
      * @return the list of shared sandboxes owners and members
      */
-    JsonObject getListOfSharedSandboxes(String userId, String activityId);
+    JsonObject getListOfSharedSandboxes(String userId);
 
     /**
      * Gets list of invitation sandboxes.

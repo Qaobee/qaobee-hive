@@ -804,8 +804,9 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void recurringPaymentWithWrongData() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         User u = generateUser();
-        User u2 = generateLoggedUser("123785");
+        User u2 = generateUser();
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
                         .withMethod("POST")

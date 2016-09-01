@@ -201,7 +201,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getChampionship(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

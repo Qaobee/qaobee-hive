@@ -30,7 +30,6 @@ import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
-import org.imgscalr.Scalr.Mode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.MultiMap;
@@ -114,9 +113,9 @@ public class UtilsImpl implements Utils {
             } else {
                 tmpTargetImage = Scalr.crop(originalImage, originalImage.getWidth(), originalImage.getWidth());
             }
-            targetImage = Scalr.resize(tmpTargetImage, Mode.FIT_TO_WIDTH, width, height);
+            targetImage = Scalr.resize(tmpTargetImage, Scalr.Mode.FIT_TO_WIDTH, width, height);
         } else {
-            targetImage = Scalr.resize(originalImage, Mode.FIT_TO_WIDTH, width, height);
+            targetImage = Scalr.resize(originalImage, Scalr.Mode.FIT_TO_WIDTH, width, height);
         }
         final File fDest = new File(dest);
         if (!fDest.getParentFile().exists()) {
@@ -171,7 +170,7 @@ public class UtilsImpl implements Utils {
             } else if (map.get(field) instanceof List) {
                 if (((List<?>) map.get(field)).isEmpty()) {
                     missingFields.add(field);
-                } else if (((List<?>) map.get(field)).get(0) instanceof String && (StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0)))) {
+                } else if (((List<?>) map.get(field)).get(0) instanceof String && StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0))) {
                     missingFields.add(field);
                 } else if (((List<?>) map.get(field)).get(0) == null) {
                     missingFields.add(field);

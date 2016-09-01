@@ -62,7 +62,7 @@ class JunitMongoSingleton {
      * @return the instance
      */
     static JunitMongoSingleton getInstance() {
-        return JunitMongoSingletonHolder.INSTANCE;
+        return JunitMongoSingleton.JunitMongoSingletonHolder.INSTANCE;
     }
 
     /**

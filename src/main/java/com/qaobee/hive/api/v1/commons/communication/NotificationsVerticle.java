@@ -181,7 +181,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = PARAM_NOTIF_ID, scope = Rule.Param.REQUEST)
     private void markAsRead(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
@@ -203,7 +203,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = {PARAM_NOTIF_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = PARAM_NOTIF_ID, scope = Rule.Param.REQUEST)
     private void delete(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {

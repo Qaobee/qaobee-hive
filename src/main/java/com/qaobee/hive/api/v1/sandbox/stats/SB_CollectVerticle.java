@@ -121,7 +121,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Object} collect
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = {PARAM_ID}, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);

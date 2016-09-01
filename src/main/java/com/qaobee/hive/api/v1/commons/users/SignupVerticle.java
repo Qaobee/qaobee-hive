@@ -274,7 +274,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} [login] person.account.login
      * @apiSuccess {Object} status {"status", true|false}
      */
-    @Rule(address = LOGIN_TEST, method = Constants.POST, mandatoryParams = {PARAM_LOGIN}, scope = Rule.Param.BODY)
+    @Rule(address = LOGIN_TEST, method = Constants.POST, mandatoryParams = PARAM_LOGIN, scope = Rule.Param.BODY)
     private void loginTest(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());

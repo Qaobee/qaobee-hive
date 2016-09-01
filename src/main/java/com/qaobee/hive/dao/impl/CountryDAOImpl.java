@@ -37,7 +37,7 @@ import java.util.Map;
  * The type Country dao.
  */
 public class CountryDAOImpl implements CountryDAO {
-    private Map<String, JsonObject> mapCountry = null;
+    private Map<String, JsonObject> mapCountry;
 
     @Inject
     private MongoDB mongo;

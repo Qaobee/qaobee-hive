@@ -173,6 +173,7 @@ public class SB_TeamTest extends VertxJunitSupport {
      */
     @Test
     public void getByIdWithMissingParameters() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
                 .when().get(getURL(SB_TeamVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
@@ -184,6 +185,7 @@ public class SB_TeamTest extends VertxJunitSupport {
      */
     @Test
     public void addTeam() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         final JsonObject params = new JsonObject()
                 .putString(SB_EventVerticle.PARAM_LABEL, "TheNewTeam")
                 .putString(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f")

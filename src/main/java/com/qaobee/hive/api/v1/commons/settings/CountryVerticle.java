@@ -98,7 +98,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} label Optional The Country label.
      * @apiSuccess {Array} countries The list of countries found.
      */
-    @Rule(address = GET_LIST, method = Constants.GET, mandatoryParams = {PARAM_LOCAL},
+    @Rule(address = GET_LIST, method = Constants.GET, mandatoryParams = PARAM_LOCAL,
             scope = Rule.Param.REQUEST)
     private void getList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
@@ -124,7 +124,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} alpha2 Mandatory The Alpha2.
      * @apiSuccess {Object} country The Country found.
      */
-    @Rule(address = GET_ALPHA2, method = Constants.GET, mandatoryParams = {PARAM_ALPHA2},
+    @Rule(address = GET_ALPHA2, method = Constants.GET, mandatoryParams = PARAM_ALPHA2,
             scope = Rule.Param.REQUEST)
     private void getAlpha2(Message<String> message) {
         try {
@@ -152,7 +152,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Country} country The Country found.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constants.GET, mandatoryParams = {PARAM_ID},
+    @Rule(address = GET, method = Constants.GET, mandatoryParams = PARAM_ID,
             scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
         try {

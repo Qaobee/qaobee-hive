@@ -124,7 +124,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} User com.qaobee.hive.business.model.commons.users.User
      * @apiHeader {String} token
      */
-    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {"_id"}, scope = Rule.Param.BODY)
+    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = "_id", scope = Rule.Param.BODY)
     private void updateUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
