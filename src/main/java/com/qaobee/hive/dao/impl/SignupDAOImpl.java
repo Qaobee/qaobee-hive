@@ -167,6 +167,16 @@ public class SignupDAOImpl implements SignupDAO {
         }
         sbEffective.set_id(mongo.save(sbEffective));
         sbSandBox.setEffectiveDefault(sbEffective.get_id());
+
+        //Add owner in member's list of sandbox
+        Member member = new Member();
+        member.setRole(new Role("admin", "Admin"));
+        member.setPersonId(user.get_id());
+
+        List<Member> members = new ArrayList();
+        members.add(member);
+        sbSandBox.setMembers(members);
+
         mongo.save(sbSandBox);
         user.setSandboxDefault(sbSandBox.get_id());
         mongo.save(user);
