@@ -254,7 +254,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             final JsonObject emailReq = new JsonObject()
                     .putString("from", runtime.getString("mail.from"))
                     .putString("to", res.getObject("person").getObject("contact").getString("email"))
-                    .putString("subject", Messages.getString("mail.account.validation.subject"))
+                    .putString("subject", Messages.getString("mail.account.validation.subject", req.getLocale()))
                     .putString("content_type", "text/html")
                     .putString("body", templatesDAO.generateMail(tplReq).getString("result"));
             vertx.eventBus().publish("mailer.mod", emailReq);
