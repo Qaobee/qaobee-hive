@@ -173,7 +173,7 @@ public class UserDAOImpl implements UserDAO {
         // Password
         if (StringUtils.isBlank(user.getAccount().getPasswd())) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.password.required", locale));
-        } else if (user.getAccount().getPasswd().length() < 4) {
+        } else if (user.getAccount().getPasswd().length() < 6) {
             throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.password.short", locale));
         }
         return true;
