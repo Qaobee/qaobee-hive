@@ -88,7 +88,10 @@ public enum ExceptionCodes {
     /**
      * Business Error
      */
-    BUSINESS_ERROR(200);
+    BUSINESS_ERROR(200), /**
+     * Unknown login exception codes.
+     */
+    UNKNOWN_LOGIN(401);
 
     /**
      * The code.

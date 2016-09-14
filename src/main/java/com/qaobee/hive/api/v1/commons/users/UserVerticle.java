@@ -256,7 +256,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             final JsonObject body = new JsonObject(req.getBody());
-            utils.sendStatus(securityDAO.passwordReset(body.getString("id"), body.getString("code"), body.getString(PASSWD_FIELD), body.getBoolean("byPassActivationCode", false)), message);
+            utils.sendStatus(securityDAO.passwordReset(body.getObject("captcha"), body.getString("id"), body.getString("code"), body.getString(PASSWD_FIELD), body.getBoolean("byPassActivationCode", false)), message);
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

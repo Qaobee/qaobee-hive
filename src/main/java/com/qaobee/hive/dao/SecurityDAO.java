@@ -42,6 +42,7 @@ public interface SecurityDAO {
     /**
      * Password reset boolean.
      *
+     * @param reCaptchaJson        the re captcha json
      * @param id                   the id
      * @param code                 the code
      * @param passwd               the passwd
@@ -49,7 +50,7 @@ public interface SecurityDAO {
      * @return the boolean
      * @throws QaobeeException the qaobee exception
      */
-    boolean passwordReset(String id, String code, String passwd, boolean byPassActivationCode) throws QaobeeException;
+    boolean passwordReset(JsonObject reCaptchaJson, String id, String code, String passwd, boolean byPassActivationCode) throws QaobeeException;
 
     /**
      * Password renew check json object.
