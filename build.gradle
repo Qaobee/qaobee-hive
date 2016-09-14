@@ -87,8 +87,7 @@ dependencies {
 
 }
 task apidoc(type: Exec) {
-    executable 'apidoc'
-    args '-i', 'src/main/java/', '-o', 'build/docs/api-doc'
+    commandLine 'apidoc', '-i', 'src/main/java/', '-o', 'build/docs/api-doc'
 }
 test {
     include 'com/qaobee/hive/test/api/**'
