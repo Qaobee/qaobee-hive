@@ -21,7 +21,6 @@ package com.qaobee.hive.api;
 import com.englishtown.promises.Promise;
 import com.englishtown.promises.When;
 import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
-import com.qaobee.hive.dao.AssetDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -77,8 +76,6 @@ public class Main extends AbstractGuiceVerticle {
     private static Map<String, Rule> rules = new HashMap<>();
     @Inject
     private Utils utils;
-    @Inject
-    private AssetDAO assetDAO;
     @Inject
     @Named("runtime")
     private JsonObject runtime;
@@ -362,6 +359,7 @@ public class Main extends AbstractGuiceVerticle {
         req.expectMultiPart(true).uploadHandler(getUploadHandler(request, dir, req));
     }
 
+
     /**
      * @param req Request
      */
@@ -406,6 +404,7 @@ public class Main extends AbstractGuiceVerticle {
                     }
                     stopTimer("main.avatar");
                 });
+                upload.resume();
             });
         };
     }
