@@ -654,8 +654,8 @@ public class UserTest extends VertxJunitSupport {
         JsonObject query = new JsonObject().putString(UserVerticle.PARAM_LOGIN, "toto");
         given().body(query.encodePrettily())
                 .when().post(getURL(UserVerticle.PASSWD_RENEW))
-                .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.UNKNOWN_LOGIN.getCode())
+                .body("code", is(ExceptionCodes.UNKNOWN_LOGIN.toString()));
     }
 
     /**
