@@ -125,7 +125,7 @@ db.User.insert({
         "home" : "0781635773",
         "office" : null,
         "cellphone" : null,
-        "email" : "christophe.kervella@qaobee.com",
+        "email" : "ch.kervella@gmail.com",
         "fax" : null,
         "webSite" : null,
         "facebook" : null,
@@ -204,7 +204,16 @@ db.SB_SandBox.insert({
     "_id": "561ec20b409937a6b439d4e9",
     "activityId": "ACT-HAND",
     "owner": "b50b3325-fdbd-41bf-bda4-81c827982001",
-    "members": [],
+    "members": [
+        {
+            "personId" : "b50b3325-fdbd-41bf-bda4-81c827982001",
+            "role" : {
+                "code" : "admin",
+                "label" : "Admin"
+            },
+            "status" : "activate",
+        }
+    ],
     "structure": {
         "_id": "541168295971d35c1f2d1b5f",
         "label": "CLUB CKE HB",
