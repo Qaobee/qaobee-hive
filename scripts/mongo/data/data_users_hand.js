@@ -101,7 +101,7 @@ db.User.insert({
             "activity": {
                 "_id": "ACT-HAND",
                 "code": "ACT-HAND",
-                "label": "admin.settings.activity.handball.label",
+                "label": "commons.settings.activity.handball",
                 "enable": true,
                 "activityType": "TEAM_SPORT"
             },
@@ -141,7 +141,7 @@ db.SB_SandBox.insert({
         "activity": {
             "_id": "ACT-HAND",
             "code": "ACT-HAND",
-            "label": "admin.settings.activity.handball.label",
+            "label": "commons.settings.activity.handball",
             "activated": true,
             "activityType": "TEAM_SPORT"
         },
@@ -1087,7 +1087,7 @@ db.User.insert({
             "activity": {
                 "_id": "ACT-HAND",
                 "code": "ACT-HAND",
-                "label": "admin.settings.activity.handball.label",
+                "label": "commons.settings.activity.handball",
                 "enable": true,
                 "activityType": "TEAM_SPORT"
             },
@@ -1143,7 +1143,7 @@ db.SB_SandBox.insert({
         "activity": {
             "_id": "ACT-HAND",
             "code": "ACT-HAND",
-            "label": "admin.settings.activity.handball.label",
+            "label": "commons.settings.activity.handball",
             "activated": true,
             "activityType": "TEAM_SPORT"
         },
