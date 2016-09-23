@@ -44,8 +44,8 @@
   "payplug": {
     "baseUrl": "api.payplug.com",
     "ipn_url": "http://flufy.hd.free.fr/hive/api/1/commons/users/shipping/ipn",
-    "return_url": "http://flufy.hd.free.fr/qswarm-web/#/private/profile/billing",
-    "cancel_url": "http://flufy.hd.free.fr/qswarm-web/#/private/profile/billing",
+    "return_url": "http://flufy.hd.free.fr/qswarm-web/#/private/billing/",
+    "cancel_url": "http://flufy.hd.free.fr/qswarm-web/#/private/billing",
     "api_key": "sk_test_2IcYHjZt1v5v6iKpvAwO3V",
     "port": 443,
     "basePath": "/v1"

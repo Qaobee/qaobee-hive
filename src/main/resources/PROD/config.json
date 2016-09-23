@@ -53,8 +53,8 @@
   "payplug": {
     "baseUrl": "api.payplug.com",
     "ipn_url": "https://hive.qaobee.com/api/1/commons/users/shipping/ipn",
-    "return_url": "https://www.qaobee.com/qswarm-web/#/private/profile/billing",
-    "cancel_url": "https://www.qaobee.com/#/private/profile/billing",
+    "return_url": "https://www.qaobee.com/qswarm-web/#/private/billing",
+    "cancel_url": "https://www.qaobee.com/#/private/billing",
     "api_key": "sk_live_bdb7dcd46103d08f7fd207d4c982f1aa",
     "port": 443,
     "basePath": "/v1"
