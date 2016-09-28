@@ -69,7 +69,6 @@ dependencies {
     compile 'org.xhtmlrenderer:flying-saucer-pdf:9.0.9'
     compile 'com.google.api-client:google-api-client:1.22.0'
     compile 'org.freemarker:freemarker:2.3.23'
-    compile 'net.tanesha.recaptcha4j:recaptcha4j:0.0.7'
     compile 'commons-beanutils:commons-beanutils:1.9.2'
     compile 'io.vertx:mod-mailer:2.0.0-final'
     compile 'com.asana:asana:0.4.1'

@@ -65,11 +65,11 @@ public interface SignupDAO {
     /**
      * Register json object.
      *
-     * @param reCaptcha the re captcha
+     * @param reCaptchaChallenge the re captcha
      * @param user      the user
      * @param locale    the locale
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject register(JsonObject reCaptcha, JsonObject user, String locale) throws QaobeeException;
+    JsonObject register(String reCaptchaChallenge, JsonObject user, String locale) throws QaobeeException;
 }

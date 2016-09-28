@@ -21,10 +21,7 @@ package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Device;
-import com.qaobee.hive.dao.PasswordEncryptionService;
-import com.qaobee.hive.dao.SecurityDAO;
-import com.qaobee.hive.dao.TemplatesDAO;
-import com.qaobee.hive.dao.UserDAO;
+import com.qaobee.hive.dao.*;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -32,8 +29,6 @@ import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +42,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Calendar;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The type Security dao.
@@ -69,6 +65,8 @@ public class SecurityDAOImpl implements SecurityDAO {
     private PasswordEncryptionService passwordEncryptionService;
     @Inject
     private Vertx vertx;
+    @Inject
+    private ReCaptcha reCaptcha;
     @Inject
     @Named("runtime")
     private JsonObject runtime;
@@ -98,15 +96,14 @@ public class SecurityDAOImpl implements SecurityDAO {
     }
 
     @Override
-    public boolean passwordReset(JsonObject reCaptchaJson, String id, String code, String passwd, boolean byPassActivationCode) throws QaobeeException {
+    public boolean passwordReset(String reCaptchaChallenge, String id, String code, String passwd, boolean byPassActivationCode) throws QaobeeException {
         if (runtime.getBoolean("recaptcha", false)) {
-            ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-            reCaptcha.setPrivateKey(runtime.getString("recaptcha.pkey"));
-            String challenge = reCaptchaJson.getString("challenge");
-            String uresponse = reCaptchaJson.getString("response");
-            ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(runtime.getString("recaptcha.site"), challenge, uresponse);
-            if (!reCaptchaResponse.isValid()) {
-                throw new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
+            try {
+                if (!reCaptcha.verify(reCaptchaChallenge).get()) {
+                    throw new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, e);
             }
         }
         User user = Json.decodeValue(userDAO.getUser(id).encode(), User.class);

@@ -247,7 +247,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
         try {
             // Gets JSon request
             final JsonObject json = new JsonObject(req.getBody());
-            JsonObject res = signupDAO.register(json.getObject(PARAM_CAPTCHA), json, req.getLocale());
+            JsonObject res = signupDAO.register(json.getString(PARAM_CAPTCHA), json, req.getLocale());
             final JsonObject tplReq = new JsonObject()
                     .putString(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
                     .putObject(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(res.getObject("person").encode(), User.class), req.getLocale()));

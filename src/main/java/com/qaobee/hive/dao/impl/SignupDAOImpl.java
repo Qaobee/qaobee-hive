@@ -41,8 +41,6 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.json.JsonArray;
@@ -52,6 +50,7 @@ import org.vertx.java.core.json.impl.Json;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 /**
  * The type Signup dao.
@@ -72,6 +71,8 @@ public class SignupDAOImpl implements SignupDAO {
     private UserDAO userDAO;
     @Inject
     private StructureDAO structureDAO;
+    @Inject
+    private ReCaptcha reCaptcha;
     @Inject
     @Named("runtime")
     private JsonObject runtime;
@@ -173,7 +174,7 @@ public class SignupDAOImpl implements SignupDAO {
         member.setRole(new Role("admin", "Admin"));
         member.setPersonId(user.get_id());
 
-        List<Member> members = new ArrayList();
+        List<Member> members = new ArrayList<>();
         members.add(member);
         sbSandBox.setMembers(members);
 
@@ -214,15 +215,14 @@ public class SignupDAOImpl implements SignupDAO {
     }
 
     @Override
-    public JsonObject register(JsonObject reCaptchaJson, JsonObject userJson, String locale) throws QaobeeException {
-        final ReCaptchaImpl reCaptcha = new ReCaptchaImpl();
-        reCaptcha.setPrivateKey(runtime.getString("recaptcha.pkey"));
+    public JsonObject register(String reCaptchaChallenge, JsonObject userJson, String locale) throws QaobeeException {
         if (runtime.getBoolean("recaptcha") || "web".equals(userJson.getObject("account").getString("origin", "web"))) {
-            ReCaptchaResponse reCaptchaResponse = reCaptcha.checkAnswer(runtime.getString("recaptcha.site"),
-                    reCaptchaJson.getString("challenge"),
-                    reCaptchaJson.getString("response"));
-            if(!reCaptchaResponse.isValid()) {
-                throw new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
+            try {
+                if (!reCaptcha.verify(reCaptchaChallenge).get()) {
+                    throw new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, e);
             }
         }
         final User user = Json.decodeValue(userJson.encode(), User.class);
@@ -230,7 +230,7 @@ public class SignupDAOImpl implements SignupDAO {
         userDAO.checkUserInformations(user, locale);
         // check if email is correct
         userDAO.testEmail(user.getContact().getEmail(), locale);
-        if(userDAO.existingLogin(user.getAccount().getLogin())) {
+        if (userDAO.existingLogin(user.getAccount().getLogin())) {
             throw new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale));
         }
         user.getAccount().setActive(false);
@@ -247,7 +247,7 @@ public class SignupDAOImpl implements SignupDAO {
             plan.setActivity(Json.decodeValue(activity.encode(), Activity.class));
         }
         user.getAccount().getListPlan().add(plan);
-            user.set_id(mongo.save(userDAO.prepareUpsert(user)));
+        user.set_id(mongo.save(userDAO.prepareUpsert(user)));
         return new JsonObject()
                 .putObject("person", mongo.getById(user.get_id(), DBCollections.USER))
                 .putString("planId", plan.getPaymentId());
