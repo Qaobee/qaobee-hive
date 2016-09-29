@@ -107,6 +107,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_PUSH_ID = "pushId";
     private static final String PASSWD_FIELD = "passwd"; // NOSONAR
+    private static final String SANDBOX_ID_FIELD = "sandboxId";
     @Inject
     private Utils utils;
     @Inject
@@ -209,8 +210,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             String sandBoxId = req.getUser().getSandboxDefault();
-            if(req.getParams().containsKey("sandboxId") && req.getParams().get("sandboxId").size() > 0) {
-                sandBoxId = req.getParams().get("sandboxId").get(0);
+            if(req.getParams().containsKey(SANDBOX_ID_FIELD) && !req.getParams().get(SANDBOX_ID_FIELD).isEmpty()) {
+                sandBoxId = req.getParams().get(SANDBOX_ID_FIELD).get(0);
             }
             message.reply(userDAO.getMeta(sandBoxId).encode());
         } catch (QaobeeException e) {
