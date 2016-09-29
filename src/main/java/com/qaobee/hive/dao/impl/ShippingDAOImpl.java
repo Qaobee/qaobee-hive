@@ -280,6 +280,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                                         .get(planId))
                                         .putString("cardId", res.getString("id"));
                                 mongo.save(user, DBCollections.USER);
+                                future.complete(true);
                             } catch (QaobeeException e) {
                                 LOG.error(e.getMessage(), e);
                                 future.completeExceptionally(e);
