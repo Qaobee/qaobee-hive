@@ -73,19 +73,23 @@ public class Main extends AbstractGuiceVerticle {
     private static final String COLLECTION = "collection";
     private static final String APPLICATION_JSON = "application/json";
     private static final String MESSAGE = "message";
-    private static Map<String, Rule> rules = new HashMap<>();
+    private static final Map<String, Rule> rules = new HashMap<>();
     @Inject
     private Utils utils;
     @Inject
     @Named("runtime")
     private JsonObject runtime;
+    @Inject
+    @Named("cors")
+    private JsonObject cors;
     private SockJSServer sockJSServer;
 
     /**
      * @param req request
      * @param e   exception
      */
-    private static void handleError(HttpServerRequest req, QaobeeException e) {
+    private void handleError(HttpServerRequest req, QaobeeException e) {
+        enableCors(req);
         req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
         req.response().setStatusCode(e.getCode().getCode());
         JsonObject jsonEx = new JsonObject(Json.encode(e));
@@ -112,7 +116,7 @@ public class Main extends AbstractGuiceVerticle {
      * @param message Vert.X message
      * @param req     Request
      */
-    private static void handleResult(AsyncResult<Message<Object>> message, HttpServerRequest req) {
+    private void handleResult(AsyncResult<Message<Object>> message, HttpServerRequest req) {
         try {
             if (message.succeeded()) {
                 final String response = (String) message.result().body();
@@ -178,10 +182,12 @@ public class Main extends AbstractGuiceVerticle {
      *
      * @param req the req
      */
-    private static void enableCors(final HttpServerRequest req) {
-        req.response().headers().add("Access-Control-Allow-Origin", "*");
-        req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-        req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
+    private void enableCors(final HttpServerRequest req) {
+        if(cors.getBoolean("enabled")) {
+            req.response().headers().add("Access-Control-Allow-Origin", "*");
+            req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+            req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
+        }
     }
 
     /**
@@ -269,6 +275,7 @@ public class Main extends AbstractGuiceVerticle {
             sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
             server.listen(port, ip);
             LOG.info("The http server is started on : " + ip + ":" + port);
+            System.out.println("Server started");
             startResult.setResult(null);
             return null;
         }, value -> {

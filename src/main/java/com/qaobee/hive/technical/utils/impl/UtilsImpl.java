@@ -56,6 +56,7 @@ import java.util.*;
 public class UtilsImpl implements Utils {
     private static final Logger LOG = LoggerFactory.getLogger(UtilsImpl.class);
     private static final String NOT_LOGGED_KEY = "not.logged";
+    private static final String SESSION_EXPIRED = "session.expired";
     @Inject
     private MongoDB mongo;
     @Inject
@@ -226,7 +227,7 @@ public class UtilsImpl implements Utils {
             try {
                 mongo.update(userToSave, "User");
                 if (user.getAccount().getTokenRenewDate() == 0) {
-                    throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
+                    throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale()));
                 }
                 request.setUser(user);
                 return user;

@@ -31,7 +31,7 @@ public final class Constants {
     /**
      * The Constant DEFAULT_SESSION_TIMEOUT.
      */
-    public static final long DEFAULT_SESSION_TIMEOUT = 30L * 60L * 1000L;
+    public static final long DEFAULT_SESSION_TIMEOUT = 60L * 1000L;
     /**
      * The Constant GET
      */

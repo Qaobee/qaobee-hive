@@ -20,6 +20,8 @@
 package com.qaobee.hive.technical.utils.guice;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
@@ -52,11 +54,12 @@ import java.util.Map;
 /**
  * The type Guice module.
  */
-public class GuiceModule extends AbstractModule {
+class GuiceModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(GuiceModule.class);
-    private JsonObject config;
-    private Vertx vertx;
-    private JsonObject env;
+    private final JsonObject config;
+    private final Vertx vertx;
+    private final JsonObject env;
+    private static Injector injector;
 
     /**
      * Instantiates a new Guice module.
@@ -65,7 +68,7 @@ public class GuiceModule extends AbstractModule {
      * @param vertx  the vertx
      * @param env    env vars
      */
-    GuiceModule(JsonObject config, Vertx vertx, Map<String, String> env) {
+    private GuiceModule(JsonObject config, Vertx vertx, Map<String, String> env) {
         this.config = config;
         this.vertx = vertx;
         this.env = new JsonObject();
@@ -77,15 +80,8 @@ public class GuiceModule extends AbstractModule {
      */
     @Override
     protected void configure() {
-        //get the vertx configuration
-        bind(JsonObject.class).annotatedWith(Names.named("mongo.persistor")).toInstance(config.getObject("mongo.persistor"));
-        bind(JsonObject.class).annotatedWith(Names.named("payplug")).toInstance(config.getObject("payplug"));
-        bind(JsonObject.class).annotatedWith(Names.named("asana")).toInstance(config.getObject("asana"));
-        bind(JsonObject.class).annotatedWith(Names.named("runtime")).toInstance(config.getObject("runtime"));
-        bind(JsonObject.class).annotatedWith(Names.named("pdf")).toInstance(config.getObject("pdf"));
-        bind(JsonObject.class).annotatedWith(Names.named("firebase")).toInstance(config.getObject("firebase"));
+        config.toMap().keySet().forEach(k -> bind(JsonObject.class).annotatedWith(Names.named(k)).toInstance(config.getObject(k)));
         bind(JsonObject.class).annotatedWith(Names.named("env")).toInstance(env);
-
         bind(Vertx.class).toInstance(vertx);
         // TECHNICAL MODULES
         bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);
@@ -136,5 +132,20 @@ public class GuiceModule extends AbstractModule {
         bind(TeamDAO.class).to(TeamDAOImpl.class).in(Singleton.class);
         bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
         bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
+    }
+
+    /**
+     * Gets injector.
+     *
+     * @param config the config
+     * @param vertx  the vertx
+     * @param env    the env
+     * @return the injector
+     */
+    static Injector getInjector(JsonObject config, Vertx vertx, Map<String, String> env) {
+        if (injector == null) {
+            injector = Guice.createInjector(new GuiceModule(config, vertx, env));
+        }
+        return injector;
     }
 }
