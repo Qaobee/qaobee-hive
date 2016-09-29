@@ -20,8 +20,6 @@
 package com.qaobee.hive.technical.utils.guice;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
@@ -59,7 +57,6 @@ class GuiceModule extends AbstractModule {
     private final JsonObject config;
     private final Vertx vertx;
     private final JsonObject env;
-    private static Injector injector;
 
     /**
      * Instantiates a new Guice module.
@@ -68,7 +65,7 @@ class GuiceModule extends AbstractModule {
      * @param vertx  the vertx
      * @param env    env vars
      */
-    private GuiceModule(JsonObject config, Vertx vertx, Map<String, String> env) {
+    public GuiceModule(JsonObject config, Vertx vertx, Map<String, String> env) {
         this.config = config;
         this.vertx = vertx;
         this.env = new JsonObject();
@@ -132,20 +129,5 @@ class GuiceModule extends AbstractModule {
         bind(TeamDAO.class).to(TeamDAOImpl.class).in(Singleton.class);
         bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
         bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
-    }
-
-    /**
-     * Gets injector.
-     *
-     * @param config the config
-     * @param vertx  the vertx
-     * @param env    the env
-     * @return the injector
-     */
-    static Injector getInjector(JsonObject config, Vertx vertx, Map<String, String> env) {
-        if (injector == null) {
-            injector = Guice.createInjector(new GuiceModule(config, vertx, env));
-        }
-        return injector;
     }
 }

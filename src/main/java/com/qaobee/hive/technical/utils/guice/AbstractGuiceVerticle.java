@@ -20,6 +20,8 @@
 package com.qaobee.hive.technical.utils.guice;
 
 import com.englishtown.vertx.promises.impl.DefaultWhenContainer;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
@@ -44,7 +46,9 @@ public class AbstractGuiceVerticle extends Verticle {
             container.config().getObject(MONKO_CONF_KEY).putString("password", container.env().get("OPENSHIFT_MONGODB_DB_PASSWORD"));
             container.config().getObject(MONKO_CONF_KEY).putString("username", container.env().get("OPENSHIFT_MONGODB_DB_USERNAME"));
         }
-        GuiceModule.getInjector(container.config(), vertx, container.env()).injectMembers(this);
+
+        Injector injector = Guice.createInjector(new GuiceModule(container.config(), vertx, container.env()));
+        injector.injectMembers(this);
         whenContainer = new DefaultWhenContainer(container);
     }
 
