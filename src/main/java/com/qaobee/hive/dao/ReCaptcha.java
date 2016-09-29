@@ -24,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * The interface Re captcha.
  */
+@FunctionalInterface
 public interface ReCaptcha {
     /**
      * Verify boolean.
@@ -31,5 +32,5 @@ public interface ReCaptcha {
      * @param challenge the chalenge
      * @return the boolean
      */
-    public CompletableFuture<Boolean> verify(String challenge);
+    CompletableFuture<Boolean> verify(String challenge);
 }
