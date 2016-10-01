@@ -10,7 +10,7 @@
     "mail.from": "jerome.roue@qaobee.com",
     "newpasswd.site.url.api": "#/recoverpasswd",
     "pay.url.api": "#/private/profile/billing",
-    "recaptcha.pkey": "6Leb6gcUAAAAAE1rnHF6j9o37dIj0TOzdoaMw7mx",
+    "recaptcha.pkey": "6LcTjvcSAAAAAKqDo7-xwQmc4K6gDcDSntKc2Pqs",
     "recaptcha.site": "localhost",
     "recaptcha" : true,
     "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
