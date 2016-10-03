@@ -47,7 +47,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.ajoberstar:gradle-jacoco:0.3.0'
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.1"
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
     }
 }
@@ -99,9 +99,14 @@ sonarqube {
         // This is the display project name
         property 'sonar.projectName', 'Qaobee-Hive'
         // This is the Sonar Server
-        property 'sonar.host.url', 'http://flufy.hd.free.fr/sonarqube'
+        property 'sonar.host.url', 'http://build.qaobee.com:9000'
         property 'sonar.projectKey', 'com.qaobee:qaobee-hive'
         property 'sonar.profile', 'Sonar way'
+        property 'sonar.language', 'java'
+        property 'sonar.sources', 'src/main/java'
+        property 'sonar.tests', 'src/test/java'
+        property 'sonar.jacoco.reportPath', 'build/jacoco/jacocoTest.exec'
+        property 'sonar.binaries', 'build/classes/main'
     }
 }
 
