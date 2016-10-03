@@ -52,9 +52,9 @@
   },
   "payplug": {
     "baseUrl": "api.payplug.com",
-    "ipn_url": "https://rec.qaobee.com/api/1/commons/users/shipping/ipn",
-    "return_url": "https://rec.qaobee.com/#/private/billing",
-    "cancel_url": "https://rec.qaobee.com/#/private/billing",
+    "ipn_url": "http://rec.qaobee.com/api/1/commons/users/shipping/ipn",
+    "return_url": "http://rec.qaobee.com/#/private/billing",
+    "cancel_url": "http://rec.qaobee.com/#/private/billing",
     "api_key": "sk_test_2IcYHjZt1v5v6iKpvAwO3V",
     "port": 443,
     "basePath": "/v1"
