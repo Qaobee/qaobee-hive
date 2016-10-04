@@ -157,7 +157,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
             JsonObject sandbox = shareDAO.desactivateMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID));
             vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
                     .putString(PARAM_USERID, request.getString(PARAM_USERID))
-                    .putString(FIELD_ROOT, "notification.sandbox.desactivate")
+                    .putString(FIELD_ROOT, "notification.sandbox.desactivateMember")
                     .putString(FIELD_LOCALE, req.getLocale())
                     .putString(FIELD_UID, req.getUser().get_id())
             );
@@ -186,7 +186,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
             JsonObject sandbox = shareDAO.activateMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID));
             vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
                     .putString(PARAM_USERID, request.getString(PARAM_USERID))
-                    .putString(FIELD_ROOT, "notification.sandbox.activate")
+                    .putString(FIELD_ROOT, "notification.sandbox.activateMember")
                     .putString(FIELD_LOCALE, req.getLocale())
                     .putString(FIELD_UID, req.getUser().get_id())
             );

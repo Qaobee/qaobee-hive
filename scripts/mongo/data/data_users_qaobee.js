@@ -211,7 +211,7 @@
                     "code" : "admin",
                     "label" : "Admin"
                 },
-                "status" : "activate",
+                "status" : "activated",
             }
         ],
         "structure": {

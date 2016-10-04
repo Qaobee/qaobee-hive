@@ -131,7 +131,7 @@ db.SB_SandBox.insert({
                 "code" : "admin",
                 "label" : "Admin"
             },
-            "status" : "activate",
+            "status" : "activated",
         }
     ],
     "structure": {
@@ -1122,7 +1122,7 @@ db.SB_SandBox.insert({
                 "code" : "admin",
                 "label" : "Admin"
             },
-            "status" : "activate",
+            "status" : "activated",
         },
         {
             "personId" : "62b1870e-f1e4-4bcc-a389-ed8b22f564f7",
@@ -1130,7 +1130,7 @@ db.SB_SandBox.insert({
                 "code" : "member",
                 "label" : "Membre"
             },
-            "status" : "desactivate",
+            "status" : "desactivated",
             "invitationDate":1469021400000,
             "answerDate":1469712600000,
         }
