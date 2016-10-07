@@ -54,6 +54,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     private static final String FIELD_DEVICE_OS = "os";
     private static final String ACCOUNT = "account";
     private static final String FIELD_PERSON_ID = "personId";
+    private static final String FIELD_MEMBER_STATUS = "status";
 
     @Inject
     private MongoDB mongo;
@@ -94,7 +95,8 @@ public class NotificationsDAOImpl implements NotificationsDAO {
 
         if(target.getArray(FIELD_MEMBERS) != null && target.getArray(FIELD_MEMBERS).size() >0){
             for (int i = 0; i < target.getArray(FIELD_MEMBERS).size(); i++) {
-                if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID))) {
+                if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID))
+                    && "activated".equals(((JsonObject)target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_MEMBER_STATUS))) {
                     LOG.info(((JsonObject)target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID));
                     res = res && addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID), notification);
                 }
