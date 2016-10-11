@@ -73,7 +73,7 @@ public class PdfDAOImpl implements PdfDAO {
             if (env.containsField("OPENSHIFT_DATA_DIR")) {
                 datadir = env.getString("OPENSHIFT_DATA_DIR");
             }
-            File dir = new File(datadir + "/tmp/");
+            File dir = new File(datadir + "/tmp");
             if (!dir.exists()) {
                 assert dir.mkdirs();
             }
