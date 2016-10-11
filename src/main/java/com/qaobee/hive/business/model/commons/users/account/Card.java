@@ -19,6 +19,8 @@
 
 package com.qaobee.hive.business.model.commons.users.account;
 
+import java.util.Map;
+
 /**
  * The type Card.
  */
@@ -29,6 +31,7 @@ public class Card {
     private int exp_year; // NOSONAR
     private String brand;
     private String id;
+    private Map<String, String> metaDatas;
 
     /**
      * Gets last 4.
@@ -136,5 +139,23 @@ public class Card {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * Gets meta datas.
+     *
+     * @return the meta datas
+     */
+    public Map<String, String> getMetaDatas() {
+        return metaDatas;
+    }
+
+    /**
+     * Sets meta datas.
+     *
+     * @param metaDatas the meta datas
+     */
+    public void setMetaDatas(Map<String, String> metaDatas) {
+        this.metaDatas = metaDatas;
     }
 }
