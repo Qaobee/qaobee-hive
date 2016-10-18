@@ -117,6 +117,8 @@ db.User.insert({
     "sandboxDefault" : "68d8945f-097b-4310-8499-7d282eed3354"
 });
 
+db.SB_SandBox.remove({"_id" : "68d8945f-097b-4310-8499-7d282eed3354"});
+
 /*
  * Alimentation SB_SandBox France Handball
  */
