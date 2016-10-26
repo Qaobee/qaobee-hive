@@ -19,6 +19,15 @@
 
 package com.qaobee.hive.api.v1.sandbox.share;
 
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -31,14 +40,6 @@ import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
-import javax.inject.Inject;
 
 /**
  * The type Sb share verticle.
@@ -51,6 +52,10 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * The constant GET_SANDBOX_SHARING_LIST.
      */
     public static final String GET_SANDBOX_SHARING_LIST = Module.VERSION + ".sandbox.share.list";
+    /**
+     * The constant GET_SANDBOX_ADMIN_SHARING_LIST for admin request.
+     */
+    public static final String GET_ADMIN_SANDBOX_SHARING_LIST = Module.VERSION + ".sandbox.share.listAdmin";
     /**
      * The constant CONFIRM_INVITATION_TO_SANDBOX.
      */
@@ -129,6 +134,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
                 .registerHandler(GET_SANDBOX_SHARING_LIST, this::getListOfSharedSandboxes)
+                .registerHandler(GET_ADMIN_SANDBOX_SHARING_LIST, this::getAdminListOfSharedSandboxes)
                 .registerHandler(GET_LIST_INVITATION_TO_SANDBOX, this::getListInvitationOfSandbox)
                 .registerHandler(INVITE_MEMBER_TO_SANDBOX, this::inviteMemberToSandbox)
                 .registerHandler(CONFIRM_INVITATION_TO_SANDBOX, this::confirmInvitationToSandbox)
@@ -331,10 +337,25 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandboxes list of enriched sandboxes owned and as member;
      */
+    //TODO utilité du ACTIVITY_ID ????
     @Rule(address = GET_SANDBOX_SHARING_LIST, method = Constants.GET, logged = true, mandatoryParams = PARAM_ACTIVITY_ID, scope = Rule.Param.REQUEST)
     private void getListOfSharedSandboxes(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         message.reply(shareDAO.getListOfSharedSandboxes(req.getUser().get_id()).encode());
+    }
+    
+    /**
+     * @apiDescription Get list of enriched sandboxes for the current user
+     * @api {get} /api/1/share/sandbox/list Get list of enriched sandboxes for the current user
+     * @apiName getListOfSharedSandboxes
+     * @apiHeader {String} token
+     * @apiGroup Share API
+     * @apiSuccess {Object} sandboxes list of enriched sandboxes owned and as member;
+     */
+    @Rule(address = GET_ADMIN_SANDBOX_SHARING_LIST, method = Constants.GET, logged = true, admin = true, mandatoryParams = PARAM_USERID, scope = Rule.Param.REQUEST)
+    private void getAdminListOfSharedSandboxes(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        message.reply(shareDAO.getListOfSharedSandboxes(req.getParams().get(PARAM_USERID).get(0)).encode());
     }
     
     /**

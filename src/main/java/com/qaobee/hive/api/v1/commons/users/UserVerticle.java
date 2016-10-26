@@ -81,7 +81,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     /**
      * The constant USER_BY_LOGIN.
      */
-    public static final String USER_BY_LOGIN = Module.VERSION + ".commons.users.user.getUserByLogin";
+    public static final String USER_BY_LOGIN = Module.VERSION + ".commons.users.user.userByLogin";
     /**
      * The constant PARAM_LOGIN.
      */
