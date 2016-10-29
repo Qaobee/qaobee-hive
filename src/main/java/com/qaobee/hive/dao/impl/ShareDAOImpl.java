@@ -107,6 +107,25 @@ public class ShareDAOImpl implements ShareDAO {
     }
     
     @Override
+    public JsonObject reviveInvitationToUser(String invitationId) throws QaobeeException {
+        JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
+
+        invitation.putNumber("invitationDate", System.currentTimeMillis());
+        invitation.putString("_id", mongo.update(invitation, DBCollections.INVITATION));
+        return invitation;
+    }
+
+    @Override
+    public JsonObject removeInvitationToSandbox(String invitationId) throws QaobeeException {
+        JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
+
+        invitation.putString(FIELD_STATUS, "abandonned");
+        invitation.putString("_id", mongo.save(invitation, DBCollections.INVITATION));
+
+        return invitation;
+    }
+
+    @Override
     public JsonObject confirmInvitationToSandbox(String invitationId, String userId, String answer) throws QaobeeException {
         JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
         if ("accepted".equals(answer)) {

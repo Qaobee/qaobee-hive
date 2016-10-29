@@ -73,6 +73,16 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     public static final String ACTIVATE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.activateMember";
 
     /**
+     * The constant REVIVE_INVITATION_TO_SANDBOX.
+     */
+    public static final String REVIVE_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.reviveInvitation";
+
+    /**
+     * The constant REMOVE_INVITATION_TO_SANDBOX.
+     */
+    public static final String REMOVE_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.removeInvitation";
+
+    /**
      * The constant PARAM_SANBOXID.
      */
     public static final String PARAM_SANBOXID = "sandboxId";
@@ -124,7 +134,9 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 .registerHandler(CONFIRM_INVITATION_TO_SANDBOX, this::confirmInvitationToSandbox)
                 .registerHandler(ACTIVATE_MEMBER_TO_SANDBOX, this::activateMemberToSandbox)
                 .registerHandler(DESACTIVATE_MEMBER_TO_SANDBOX, this::desactivateMemberToSandbox)
-                .registerHandler(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification);
+                .registerHandler(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification)
+                .registerHandler(REVIVE_INVITATION_TO_SANDBOX, this::reviveInvitationToSandbox)
+                .registerHandler(REMOVE_INVITATION_TO_SANDBOX, this::removeInvitationToSandbox);
     }
 
     private void internalShareNotification(Message<JsonObject> message) {
@@ -229,6 +241,58 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         }
     }
     
+    /**
+     * @apiDescription Revive an invitation to a person to join a SB_SandBox
+     * @api {post} /api/1/share/sandbox/reviveInvitation Invite a member to a SB_SandBox
+     * @apiParam {String} invitationId invitation Id
+     * @apiName reviveInvitationToSandbox
+     * @apiHeader {String} token
+     * @apiGroup Share API
+     * @apiSuccess {Object} invitation;
+     */
+    @Rule(address = REVIVE_INVITATION_TO_SANDBOX, method =  Constants.GET, logged = true, mandatoryParams = {PARAM_INVITATION_ID}, scope = Rule.Param.REQUEST)
+    private void reviveInvitationToSandbox(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject invitation = shareDAO.reviveInvitationToUser(req.getParams().get(PARAM_INVITATION_ID).get(0));
+
+            if(StringUtils.isNotBlank(invitation.getString(PARAM_USERID, ""))) {
+                vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
+                        .putString(PARAM_USERID, invitation.getString(PARAM_USERID))
+                        .putString(FIELD_ROOT, "notification.sandbox.add")
+                        .putString(FIELD_LOCALE, req.getLocale())
+                        .putString(FIELD_UID, req.getUser().get_id())
+                );
+            }
+            message.reply(invitation.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
+    /**
+     * @apiDescription Leave an invitation to a person to join a SB_SandBox
+     * @api {post} /api/1/share/sandbox/removeInvitation remove an invitation 's member to a SB_SandBox
+     * @apiParam {String} invitationId invitation Id
+     * @apiName removeInvitationToSandbox
+     * @apiHeader {String} token
+     * @apiGroup Share API
+     * @apiSuccess {Object} invitation;
+     */
+    @Rule(address = REMOVE_INVITATION_TO_SANDBOX, method =  Constants.GET, logged = true, mandatoryParams = {PARAM_INVITATION_ID}, scope = Rule.Param.REQUEST)
+    private void removeInvitationToSandbox(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            JsonObject invitation = shareDAO.removeInvitationToSandbox(req.getParams().get(PARAM_INVITATION_ID).get(0));
+
+            message.reply(invitation.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+
     /**
      * @apiDescription accept or refuse to become a member to a SB_SandBox
      * @api {post} /api/1/share/sandbox/add Add a member to a SB_SandBox
