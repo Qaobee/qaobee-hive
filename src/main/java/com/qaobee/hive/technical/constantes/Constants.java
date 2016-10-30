@@ -27,7 +27,7 @@ public final class Constants {
     /**
      * The Constant TIMEOUT.
      */
-    public static final long TIMEOUT = 1000000L;
+    public static final long TIMEOUT = 10000L;
     /**
      * The Constant DEFAULT_SESSION_TIMEOUT.
      */
