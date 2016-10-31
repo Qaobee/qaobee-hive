@@ -138,6 +138,16 @@ public interface Utils {
     void sendStatusJson(boolean b, Message<JsonObject> message);
 
     /**
+     * Send status json.
+     *
+     * @param b       the b
+     * @param cause   the cause
+     * @param message the message
+     */
+    void sendStatusJson(boolean b, String cause, Message<JsonObject> message);
+
+
+    /**
      * Test mandatory params.
      *
      * @param map    request's parameters
