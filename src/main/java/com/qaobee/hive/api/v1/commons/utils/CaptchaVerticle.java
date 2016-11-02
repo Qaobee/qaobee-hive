@@ -58,7 +58,6 @@ public class CaptchaVerticle extends AbstractGuiceVerticle {
         HttpClientRequest query = clientCaptcha.post("/recaptcha/api/siteverify", resp -> {
             if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
                 resp.bodyHandler(buffer -> {
-                    System.out.println(buffer.length() + " : " + buffer.toString());
                     if (buffer.length() > 0) {
                         final JsonObject response = new JsonObject(buffer.toString());
                         if (response.getBoolean("success")) {
