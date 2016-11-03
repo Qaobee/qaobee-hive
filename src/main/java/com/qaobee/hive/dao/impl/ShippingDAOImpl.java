@@ -150,7 +150,7 @@ public class ShippingDAOImpl implements ShippingDAO {
 
     @Override
     public boolean ipn(JsonObject body) throws QaobeeException {
-        utils.testMandatoryParams(body.getObject(METADATA_FIELD).toMap(), PARAM_PLAN_ID, CUSTOMER_ID_FIELD, PARAM_PLAN_ID, CUSTOMER_ID_FIELD);
+        utils.testMandatoryParams(body.getObject(METADATA_FIELD).toMap(), PARAM_PLAN_ID, CUSTOMER_ID_FIELD);
         try {
             int planId = Integer.parseInt(body.getObject(METADATA_FIELD).getString(PARAM_PLAN_ID));
             final JsonObject user = mongo.getById(body.getObject(METADATA_FIELD).getString(CUSTOMER_ID_FIELD), DBCollections.USER);
@@ -161,7 +161,7 @@ public class ShippingDAOImpl implements ShippingDAO {
             } else {
                 if ("payment".equals(body.getString("object"))) {
                     return makePayment(body, user, u, planId);
-                }
+                } else return false;
             }
             return false;
         } catch (NumberFormatException e) {

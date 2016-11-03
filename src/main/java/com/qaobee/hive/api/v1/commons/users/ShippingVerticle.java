@@ -147,7 +147,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @apiParam {object} payment Payment object : see https://gitlab.com/qaobee/com.qaobee.payplug/wikis/notification_url
      * @apiSuccess {object} status Status
      */
-    @Rule(address = IPN, method = Constants.POST, mandatoryParams = {"id", "id", METADATA_FIELD, "created_at"}, scope = Rule.Param.BODY)
+    @Rule(address = IPN, method = Constants.POST, mandatoryParams = {"id", METADATA_FIELD, "created_at"}, scope = Rule.Param.BODY)
     private void ipn(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
