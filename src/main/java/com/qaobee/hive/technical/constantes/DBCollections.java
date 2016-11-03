@@ -27,7 +27,7 @@ public class DBCollections {
     /**
      * The constant USER.
      */
-    public static final String INVITATION = "invitation";
+    public static final String INVITATION = "Invitation";
 
     /**
      * The constant USER.

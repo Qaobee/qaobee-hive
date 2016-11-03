@@ -75,4 +75,14 @@ public interface MailUtils {
      * @return the json object
      */
     JsonObject generateRefusedCardBody(User user, String locale, Plan plan, String reason);
+
+    /**
+     * Generate activation body.
+     *
+     * @param user   the person
+     * @param locale the locale language
+     * @param emailTarget the guest's e-mail
+     * @return the json object
+     */
+    JsonObject generateInvitationToSandboxBody(User user, String locale, String emailTarget);
 }
