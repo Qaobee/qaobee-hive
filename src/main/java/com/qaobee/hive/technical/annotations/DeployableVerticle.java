@@ -45,6 +45,8 @@ public @interface DeployableVerticle {
      */
     boolean isWorker() default true;
 
+    int poolSize() default 2;
+
     /**
      * The type Verticle loader.
      */

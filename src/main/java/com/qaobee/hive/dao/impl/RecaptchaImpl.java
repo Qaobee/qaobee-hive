@@ -19,18 +19,14 @@
 
 package com.qaobee.hive.dao.impl;
 
+import com.qaobee.hive.api.v1.commons.utils.CaptchaVerticle;
 import com.qaobee.hive.dao.ReCaptcha;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import io.netty.handler.codec.http.QueryStringEncoder;
 import org.vertx.java.core.Vertx;
-import org.vertx.java.core.buffer.Buffer;
-import org.vertx.java.core.http.HttpClientRequest;
-import org.vertx.java.core.http.HttpHeaders;
 import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -39,40 +35,22 @@ import java.util.concurrent.CompletableFuture;
 public class RecaptchaImpl implements ReCaptcha {
     @Inject
     private Vertx vertx;
-    @Inject
-    @Named("runtime")
-    private JsonObject runtime;
 
     @Override
     public CompletableFuture<Boolean> verify(String challenge) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
-        QueryStringEncoder enc = new QueryStringEncoder("");
-        enc.addParam("secret", runtime.getString("recaptcha.pkey"));
-        enc.addParam("response", challenge);
-        String encodedBody = enc.toString().substring(1);
-        HttpClientRequest query = vertx.createHttpClient()
-                .setHost("www.google.com")
-                .setSSL(true)
-                .setTrustAll(true)
-                .setPort(443)
-                .setKeepAlive(true)
-                .exceptionHandler(ex -> future.completeExceptionally(new QaobeeException(ExceptionCodes.HTTP_ERROR, ex.getMessage())))
-                .post("/recaptcha/api/siteverify", resp -> {
-                    if (resp.statusCode() >= 200 && resp.statusCode() < 400) {
-                        resp.bodyHandler(buffer -> {
-                            final JsonObject response = new JsonObject(buffer.toString());
-                            if (response.getBoolean("success")) {
-                                future.complete(true);
-                            } else {
-                                future.completeExceptionally(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha"));
-                            }
-                        });
-                    } else {
-                        future.completeExceptionally(new QaobeeException(ExceptionCodes.HTTP_ERROR, resp.statusMessage()));
-                    }
-                });
-        query.headers().add(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded; charset=utf-8");
-        query.end(new Buffer(encodedBody));
+        vertx.eventBus().sendWithTimeout(CaptchaVerticle.VERIFY, new JsonObject().putString("challenge", challenge), 5000L, r -> {
+            if (r.succeeded()) {
+                JsonObject res = (JsonObject) r.result().body();
+                if (res.getBoolean("status", false)) {
+                    future.complete(true);
+                } else {
+                    future.completeExceptionally(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha"));
+                }
+            } else {
+                future.completeExceptionally(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha"));
+            }
+        });
         return future;
     }
 }

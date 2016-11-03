@@ -297,7 +297,7 @@ public class Main extends AbstractGuiceVerticle {
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
         restModules.forEach(restMod -> {
             if (restMod.getAnnotation(DeployableVerticle.class).isWorker()) {
-                promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), container.config(), 2, true));
+                promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), container.config(), restMod.getAnnotation(DeployableVerticle.class).poolSize(), true));
             } else {
                 promises.add(whenContainer.deployVerticle(restMod.getName(), container.config()));
             }

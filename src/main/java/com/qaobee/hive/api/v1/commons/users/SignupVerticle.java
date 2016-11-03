@@ -50,7 +50,7 @@ import java.util.Map;
  *
  * @author Xavier MARIN <ul>     <li>resthandler.register : Register a new accunt</li>     <li>resthandler.logintest : Login unicity test for rest request</li>     <li>loginExists : Login unicity test for internal use</li>     <li>resthandler.accountcheck : email validation number check</li> </ul>
  */
-@DeployableVerticle
+@DeployableVerticle(poolSize = 1)
 public class SignupVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(SignupVerticle.class);
     /**
