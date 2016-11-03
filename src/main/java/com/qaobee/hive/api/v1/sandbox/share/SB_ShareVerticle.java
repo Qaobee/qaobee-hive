@@ -23,6 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.ShareDAO;
+import com.qaobee.hive.dao.UserDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -122,6 +123,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private Utils utils;
     @Inject
     private ShareDAO shareDAO;
+    @Inject
+    private UserDAO userDAO;
 
     @Override
     public void start() {
@@ -222,18 +225,47 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     @Rule(address = INVITE_MEMBER_TO_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_USER_EMAIL, PARAM_ROLE_CODE}, scope = Rule.Param.BODY)
     private void inviteMemberToSandbox(Message<String> message) {
+
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject request = new JsonObject(req.getBody());
+
         try {
+            JsonObject user = userDAO.getUserInfo(req.getUser().get_id());
             JsonObject invitation = shareDAO.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USER_EMAIL), request.getString(PARAM_ROLE_CODE));
+
             if(StringUtils.isNotBlank(invitation.getString(PARAM_USERID, ""))) {
-                vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
-                        .putString(PARAM_USERID, invitation.getString(PARAM_USERID))
-                        .putString(FIELD_ROOT, "notification.sandbox.add")
-                        .putString(FIELD_LOCALE, req.getLocale())
-                        .putString(FIELD_UID, req.getUser().get_id())
+
+                JsonObject notification = new JsonObject()
+                    .putString("id", invitation.getString(PARAM_USERID))
+                    .putString("target", User.class.getSimpleName())
+                    .putObject("notification", new JsonObject()
+                        .putString("content", Messages.getString("notification.sandbox.add.content", req.getLocale(), user.getString("firstname") + user.getString("name")))
+                        .putString("title", Messages.getString("notification.sandbox.add.title", req.getLocale()))
+                        .putString("senderId", req.getUser().get_id())
                 );
+                vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+
+            } else {
+                /* send an E-mail to guest */
+                LOG.debug("********************************************************** send an E-mail to guest : START **********************************************************");
+
+
+                LOG.debug("User : "+ user);
+
+                /*final JsonObject tplReq = new JsonObject()
+                        .putString(TemplatesDAOImpl.TEMPLATE, "invitationToSandbox.html")
+                        .putObject(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(res.getObject("person").encode(), User.class), req.getLocale()));
+                final JsonObject emailReq = new JsonObject()
+                        .putString("from", runtime.getString("mail.from"))
+                        .putString("to", request.getString(PARAM_USER_EMAIL))
+                        .putString("subject", Messages.getString("mail.account.validation.subject", req.getLocale()))
+                        .putString("content_type", "text/html")
+                        .putString("body", templatesDAO.generateMail(tplReq).getString("result"));
+                vertx.eventBus().publish("mailer.mod", emailReq);*/
+
+                LOG.debug("********************************************************** send an E-mail to guest : END **********************************************************");
             }
+
             message.reply(invitation.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
