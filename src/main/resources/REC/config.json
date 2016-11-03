@@ -9,7 +9,7 @@
     "mail.to": "contact@qaobee.com",
     "mail.from": "contact@qaobee.com",
     "newpasswd.site.url.api": "#/recoverpasswd",
-    "pay.url.api": "#/private/profile/billing",
+    "pay.url.api": "#/private/billing",
     "recaptcha.pkey": "6LcTjvcSAAAAAKqDo7-xwQmc4K6gDcDSntKc2Pqs",
     "recaptcha.site": "https://rec.qaobee.com",
     "recaptcha" : true,
