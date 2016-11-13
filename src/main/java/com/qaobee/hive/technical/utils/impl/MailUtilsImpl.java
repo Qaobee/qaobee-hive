@@ -127,17 +127,15 @@ public final class MailUtilsImpl implements MailUtils {
     @Override
     public JsonObject generateInvitationToSandboxBody(User user, String locale, String emailTarget) {
         final JsonObject json = new JsonObject();
-        json.putString(TITLE_FIELD, Messages.getString("mail.account.validation.title", locale));
-        json.putString("salutation", Messages.getString("mail.account.validation.line.1", locale, user.getFirstname() + " " + user.getName()));
-        json.putString("desc", Messages.getString("mail.account.validation.line.2", locale));
-        json.putString(HEADER_FIELD, Messages.getString("mail.account.validation.title", locale));
-        json.putString(SUB_HEADER_FIELD, "");
-        json.putString(MESSAGE_FIELD, Messages.getString("mail.account.validation.line.3", locale));
+        json.putString(TITLE_FIELD, Messages.getString("mail.account.sharingSB.title", locale));
+        json.putString("salutation", Messages.getString("mail.account.sharingSB.line.1", locale));
+        json.putString("desc", Messages.getString("mail.account.sharingSB.line.2", locale, user.getFirstname() + " " + user.getName()));
+        json.putString(MESSAGE_FIELD, Messages.getString("mail.account.sharingSB.line.3", locale));
         json.putString("activationlink", runtime.getString(SITE_URL_KEY)
                 + runtime.getString("mail.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationCode());
+        json.putString("activationlinkText", Messages.getString("mail.account.sharingSB.activationtext", locale));
         json.putString("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)));
         json.putString(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
-        json.putString(SOCIAL_LINKS_FIELD, Messages.getString(SOCIAL_LINKS_KEY, locale));
         return json;
     }
 }
