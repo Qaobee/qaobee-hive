@@ -31,7 +31,11 @@ node {
     stage("Quality $version") {
         sh "./gradlew sonarqube -x test -Dsonar.projectVersion=$version -Dsonar.login=marin.xavier -Dsonar.password=zaza66629!"
     }
-
+}
+stage('deployment') {
+    input 'Do you approve deployment?'
+}
+node{
     stage("Docker $version") {
         timeout(time: 30, unit: 'DAYS') {
             input 'Build docker ?'
