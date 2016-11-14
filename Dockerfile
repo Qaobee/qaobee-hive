@@ -1,5 +1,7 @@
-FROM java:8
+FROM java:8-jre-alpine
 MAINTAINER Xavier MARIN <marin.xavier@gmail.com>
+
+RUN apk add --update bash && rm -rf /var/cache/apk/*
 RUN wget http://dl.bintray.com/vertx/downloads/vert.x-2.1.5.tar.gz && \
     tar zxf vert.x-2.1.5.tar.gz -C /usr/share && \
     rm vert.x-2.1.5.tar.gz && \
