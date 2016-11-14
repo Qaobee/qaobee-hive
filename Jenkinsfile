@@ -11,13 +11,17 @@ node {
         version = this.version()
         echo("Building $version")
     }
-
+}
+stage('deployment') {
+    input 'Do you approve deployment?'
+}
+node{
     stage("Build $version") {
         sh './gradlew clean build -x test'
     }
 
     stage("Test $version") {
-        sh './gradlew test'
+        sh './gradlew -Dorg.gradle.jvmargs="-Xmx2048M -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" test'
         junit keepLongStdio: true, testResults: 'build/test-results/test/*.xml'
         step([$class: 'JacocoPublisher', classPattern: 'build/jacoco/classpathdumps/', exclusionPattern: '**/test/**/*.class', execPattern: 'build/jacoco/**.exec', inclusionPattern: 'com/qaobee/hive/**/*.class', sourcePattern: 'src/main/java'])
     }
@@ -31,11 +35,7 @@ node {
     stage("Quality $version") {
         sh "./gradlew sonarqube -x test -Dsonar.projectVersion=$version -Dsonar.login=marin.xavier -Dsonar.password=zaza66629!"
     }
-}
-stage('deployment') {
-    input 'Do you approve deployment?'
-}
-node{
+
     stage("Docker $version") {
         timeout(time: 30, unit: 'DAYS') {
             input 'Build docker ?'
