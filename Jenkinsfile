@@ -3,35 +3,36 @@ import hudson.model.*
 
 node {
     def rancherCli = 'v0.8.6'
+    def version = ''
 
-    stage 'Checkout' {
+    stage('Checkout') {
         //  git credentialsId: 'b74a476d-7464-429c-ab8e-7ebbe03bcd1f', url: 'git@gitlab.com:qaobee/qaobee-hive.git'
         sh 'git fetch --tags'
-        def version = version()
+        version = this.version()
         echo("Building $version")
     }
 
-    stage "Build $version" {
+    stage("Build $version") {
         sh './gradlew clean build -x test'
     }
 
-    stage "Test $version" {
+    stage("Test $version") {
         sh './gradlew test'
         junit keepLongStdio: true, testResults: 'build/test-results/test/*.xml'
         step([$class: 'JacocoPublisher', classPattern: 'build/jacoco/classpathdumps/', exclusionPattern: '**/test/**/*.class', execPattern: 'build/jacoco/**.exec', inclusionPattern: 'com/qaobee/hive/**/*.class', sourcePattern: 'src/main/java'])
     }
 
-    stage "Doc $version" {
+    stage("Doc $version") {
         sh './gradlew apidoc -x test'
         sh 'git_stats generate -o docs/git'
         step([$class: 'JavadocArchiver', javadocDir: 'build/docs/javadoc/', keepAll: true])
     }
 
-    stage "Quality $version" {
+    stage("Quality $version") {
         sh "./gradlew sonarqube -x test -Dsonar.projectVersion=$version -Dsonar.login=marin.xavier -Dsonar.password=zaza66629!"
     }
 
-    stage "Docker $version" {
+    stage("Docker $version") {
         timeout(time: 30, unit: 'DAYS') {
             input 'Build docker ?'
         }
@@ -44,7 +45,7 @@ node {
         sh "git push origin --tags"
     }
 
-    stage "Deploy $version in REC" {
+    stage("Deploy $version in REC") {
         sh "wget https://github.com/rancher/rancher-compose/releases/download/$rancherCli/rancher-compose-linux-amd64-$rancherCli" + ".tar.gz"
         sh "tar -zxf rancher-compose-linux-amd64-$rancherCli" + ".tar.gz"
         sh "rm -f rancher-compose-linux-amd64-$rancherCli" + ".tar.gz"
@@ -96,6 +97,5 @@ def version() {
             minor: v[1].toInteger(),
             patch: v[2].toInteger() + 1
     ]
-    def version = 'v' + gitVersion.values().join('.')
-    return version
+    return 'v' + gitVersion.values().join('.')
 }
