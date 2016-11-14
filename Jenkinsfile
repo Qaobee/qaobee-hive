@@ -11,11 +11,7 @@ node {
         version = this.version()
         echo("Building $version")
     }
-}
-stage('deployment') {
-    input 'Do you approve deployment?'
-}
-node{
+
     stage("Build $version") {
         sh './gradlew clean build -x test'
     }
