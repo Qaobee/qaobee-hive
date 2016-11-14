@@ -55,7 +55,7 @@
     "ipn_url": "http://rec.qaobee.com/api/1/commons/users/shipping/ipn",
     "return_url": "http://rec.qaobee.com/#/private/billing",
     "cancel_url": "http://rec.qaobee.com/#/private/billing",
-    "api_key": "sk_test_2IcYHjZt1v5v6iKpvAwO3V",
+    "api_key": "sk_test_7Gqc6bSiypvShOCZDBvVmJ",
     "port": 443,
     "basePath": "/v1"
   },

@@ -23,3 +23,4 @@ mods
 vertx_classpath.txt
 node_modules
 .sonar_lock
+classes
