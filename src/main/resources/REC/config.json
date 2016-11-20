@@ -10,6 +10,7 @@
     "mail.from": "contact@qaobee.com",
     "newpasswd.site.url.api": "#/recoverpasswd",
     "pay.url.api": "#/private/billing",
+    "invitation.site.url.api": "#/invitation",
     "recaptcha.pkey": "6LcTjvcSAAAAAKqDo7-xwQmc4K6gDcDSntKc2Pqs",
     "recaptcha.site": "https://rec.qaobee.com",
     "recaptcha" : true,

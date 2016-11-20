@@ -90,6 +90,11 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * The constant REMOVE_INVITATION_TO_SANDBOX.
      */
     public static final String REMOVE_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.removeInvitation";
+    
+    /**
+     * The constant GET_INVITATION_TO_SANDBOX.
+     */
+    public static final String GET_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.getInvitation";
 
     /**
      * The constant PARAM_SANBOXID.
@@ -152,7 +157,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 .registerHandler(DESACTIVATE_MEMBER_TO_SANDBOX, this::desactivateMemberToSandbox)
                 .registerHandler(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification)
                 .registerHandler(REVIVE_INVITATION_TO_SANDBOX, this::reviveInvitationToSandbox)
-                .registerHandler(REMOVE_INVITATION_TO_SANDBOX, this::removeInvitationToSandbox);
+                .registerHandler(REMOVE_INVITATION_TO_SANDBOX, this::removeInvitationToSandbox)
+                .registerHandler(GET_INVITATION_TO_SANDBOX, this::getInvitationToSandbox);
     }
 
     private void internalShareNotification(Message<JsonObject> message) {
@@ -263,7 +269,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
 
                 final JsonObject tplReq = new JsonObject()
                         .putString(TemplatesDAOImpl.TEMPLATE, "invitationToSandbox.html")
-                        .putObject(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), User.class), req.getLocale(),request.getString(PARAM_USER_EMAIL)));
+                        .putObject(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), User.class), req.getLocale(),request.getString(PARAM_USER_EMAIL), invitation.getString("_id")));
                 final JsonObject emailReq = new JsonObject()
                         .putString("from", user.getObject("contact").getString("email"))
                         .putString("to", request.getString(PARAM_USER_EMAIL))
@@ -310,7 +316,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 /* send an E-mail to guest */
                 final JsonObject tplReq = new JsonObject()
                         .putString(TemplatesDAOImpl.TEMPLATE, "invitationToSandbox.html")
-                        .putObject(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), User.class), req.getLocale(),invitation.getString("userEmail")));
+                        .putObject(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), User.class), req.getLocale(),invitation.getString("userEmail"), invitation.getString("_id")));
                 final JsonObject emailReq = new JsonObject()
                         .putString("from", user.getObject("contact").getString("email"))
                         .putString("to", invitation.getString("userEmail"))
@@ -341,6 +347,28 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject invitation = shareDAO.removeInvitationToSandbox(req.getParams().get(PARAM_INVITATION_ID).get(0));
+
+            message.reply(invitation.encode());
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
+    
+    /**
+     * @apiDescription get an invitation  to join a SB_SandBox
+     * @api {post} /api/1/share/sandbox/getInvitation get an invitation 's member to a SB_SandBox
+     * @apiParam {String} invitationId invitation Id
+     * @apiName getInvitationToSandbox
+     * @apiHeader {String} token
+     * @apiGroup Share API
+     * @apiSuccess {Object} invitation;
+     */
+    @Rule(address = GET_INVITATION_TO_SANDBOX, method =  Constants.GET, mandatoryParams = {PARAM_INVITATION_ID}, scope = Rule.Param.REQUEST)
+    private void getInvitationToSandbox(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+        	JsonObject invitation = shareDAO.getInvitationToSandbox(req.getParams().get(PARAM_INVITATION_ID).get(0));
 
             message.reply(invitation.encode());
         } catch (QaobeeException e) {

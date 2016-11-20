@@ -77,6 +77,15 @@ public interface ShareDAO {
      * @throws QaobeeException the qaobee exception
      */
     JsonObject removeInvitationToSandbox(String invitationId) throws QaobeeException;
+    
+    /**
+     * Get invitation json object.
+     *
+     * @param invitationId the invitation id
+     * @return the json object
+     * @throws QaobeeException the qaobee exception
+     */
+    JsonObject getInvitationToSandbox(String invitationId) throws QaobeeException;
 
     /**
      * Confirm invitation to joint the sandbox.
