@@ -96,8 +96,8 @@ public class SignupDAOImpl implements SignupDAO {
         User user = getUser(userUpdate.get_id(), locale);
         testAccount(user, activationCode, locale);
         // MaJ User
-        user.getAccount().setActive(true);
-        user.getAccount().setFirstConnexion(false);
+        user.getAccount().setActive(false);
+        user.getAccount().setFirstConnexion(true);
         user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
         // récupération des activities des plans
         user.getAccount().getListPlan().stream().filter(plan -> plan.getActivity() != null).forEachOrdered(plan -> {
@@ -199,6 +199,10 @@ public class SignupDAOImpl implements SignupDAO {
         testAccount(user, activationCode, locale);
         user.getAccount().setToken(UUID.randomUUID().toString());
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+        
+        // MaJ User
+        user.getAccount().setActive(true);
+        user.getAccount().setFirstConnexion(false);
         mongo.save(user);
         return new JsonObject(Json.encode(user));
     }
@@ -233,6 +237,10 @@ public class SignupDAOImpl implements SignupDAO {
         if (userDAO.existingLogin(user.getAccount().getLogin())) {
             throw new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale));
         }
+        
+        user.getAccount().setToken(UUID.randomUUID().toString());
+        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+        
         user.getAccount().setActive(false);
         user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
         final Plan plan = Json.decodeValue(userJson.getObject(PARAM_PLAN).encode(), Plan.class);

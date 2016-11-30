@@ -4,7 +4,7 @@
     "site.url": "https://www.qaobee.com/",
     "defaultHost": "0.0.0.0",
     "defaultPort": 8080,
-    "mail.site.url.api": "#/signup",
+    "mail.site.url.api": "#/signup/end",
     "mail.send": true,
     "mail.to": "contact@qaobee.com",
     "mail.from": "contact@qaobee.com",

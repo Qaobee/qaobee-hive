@@ -4,7 +4,7 @@
     "site.url": "http://localhost:3000/",
     "defaultHost": "0.0.0.0",
     "defaultPort": 8888,
-    "mail.site.url.api": "#/signup",
+    "mail.site.url.api": "#/signup/end",
     "mail.send": true,
     "mail.to": "jerome.roue@gmail.com",
     "mail.from": "jerome.roue@qaobee.com",

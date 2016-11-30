@@ -156,7 +156,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} user {"status", true|false}
      * @apiHeader {String} token
      */
-    @Rule(address = FINALIZE_SIGNUP, method = Constants.POST, logged = true,
+    @Rule(address = FINALIZE_SIGNUP, method = Constants.POST,
             mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
             scope = Rule.Param.BODY)
     private void finalizeSignup(Message<String> message) {
@@ -166,9 +166,22 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             JsonObject u = signupDAO.finalizeSignup(body.getObject(PARAM_USER),
                     body.getString(PARAM_CODE),
                     body.getString(PARAM_ACTIVITY),
-                    body.getObject(PARAM_STRUCTURE), body.getObject(PARAM_CATEGORY_AGE),
+                    body.getObject(PARAM_STRUCTURE), 
+                    body.getObject(PARAM_CATEGORY_AGE),
                     body.getString(COUNTRY_FIELD, "CNTR-250-FR-FRA"),
                     req.getLocale());
+            
+            final JsonObject tplReq = new JsonObject()
+                    .putString(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
+                    .putObject(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(u.encode(), User.class), req.getLocale()));
+            final JsonObject emailReq = new JsonObject()
+                    .putString("from", runtime.getString("mail.from"))
+                    .putString("to", u.getObject("contact").getString("email"))
+                    .putString("subject", Messages.getString("mail.account.validation.subject", req.getLocale()))
+                    .putString("content_type", "text/html")
+                    .putString("body", templatesDAO.generateMail(tplReq).getString("result"));
+            vertx.eventBus().publish("mailer.mod", emailReq);
+            
             JsonObject notification = new JsonObject()
                     .putString("id", u.getString("_id"))
                     .putString("target", "User")
@@ -248,16 +261,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             // Gets JSon request
             final JsonObject json = new JsonObject(req.getBody());
             JsonObject res = signupDAO.register(json.getString(PARAM_CAPTCHA), json, req.getLocale());
-            final JsonObject tplReq = new JsonObject()
-                    .putString(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
-                    .putObject(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(res.getObject("person").encode(), User.class), req.getLocale()));
-            final JsonObject emailReq = new JsonObject()
-                    .putString("from", runtime.getString("mail.from"))
-                    .putString("to", res.getObject("person").getObject("contact").getString("email"))
-                    .putString("subject", Messages.getString("mail.account.validation.subject", req.getLocale()))
-                    .putString("content_type", "text/html")
-                    .putString("body", templatesDAO.generateMail(tplReq).getString("result"));
-            vertx.eventBus().publish("mailer.mod", emailReq);
+            
             message.reply(res.encode());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
