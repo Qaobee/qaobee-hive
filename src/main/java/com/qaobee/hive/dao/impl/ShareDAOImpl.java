@@ -93,6 +93,7 @@ public class ShareDAOImpl implements ShareDAO {
             });
         }
         JsonObject invitation = new JsonObject()
+                .putString("senderId", owner.getString("_id"))
                 .putString("userEmail", userEmail)
                 .putObject("role", role[0])
                 .putString(FIELD_SANDBOX_ID, sandbox.getString("_id"))

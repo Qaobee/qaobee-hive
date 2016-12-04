@@ -388,18 +388,33 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = CONFIRM_INVITATION_TO_SANDBOX, method = Constants.POST, logged = true, mandatoryParams = {PARAM_INVITATION_ID, PARAM_USERID, PARAM_ANSWER_INVITATION}, scope = Rule.Param.BODY)
+    @Rule(address = CONFIRM_INVITATION_TO_SANDBOX, method = Constants.POST, mandatoryParams = {PARAM_INVITATION_ID, PARAM_USERID, PARAM_ANSWER_INVITATION}, scope = Rule.Param.BODY)
     private void confirmInvitationToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject request = new JsonObject(req.getBody());
         try {
             JsonObject invitation = shareDAO.confirmInvitationToSandbox(request.getString(PARAM_INVITATION_ID), request.getString(PARAM_USERID), request.getString(PARAM_ANSWER_INVITATION));
-            vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
-                    .putString(PARAM_USERID, request.getString(PARAM_USERID))
-                    .putString(FIELD_ROOT, "notification.sandbox.add")
-                    .putString(FIELD_LOCALE, req.getLocale())
-                    .putString(FIELD_UID, req.getUser().get_id())
-            );
+            JsonObject notification = new JsonObject();
+            if("accepted".equals(request.getString(PARAM_ANSWER_INVITATION))) {
+            
+            	notification.putString("id", invitation.getString("senderId"))
+                	.putString("target", User.class.getSimpleName())
+                    .putObject("notification", new JsonObject()
+                        .putString("content", Messages.getString("notification.sandbox.accept.content", req.getLocale(), invitation.getString("userEmail")))
+                        .putString("title", Messages.getString("notification.sandbox.accept.title", req.getLocale()))
+                        .putString("senderId", request.getString(PARAM_USERID))
+                );
+            } else {
+            	notification.putString("id", invitation.getString("senderId"))
+	            	.putString("target", User.class.getSimpleName())
+	                .putObject("notification", new JsonObject()
+	                    .putString("content", Messages.getString("notification.sandbox.refuse.content", req.getLocale(), invitation.getString("userEmail")))
+	                    .putString("title", Messages.getString("notification.sandbox.refuse.title", req.getLocale()))
+	                    .putString("senderId", request.getString(PARAM_USERID))
+	            );
+            }
+            
+            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
             message.reply(invitation.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
