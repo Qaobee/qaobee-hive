@@ -71,7 +71,8 @@ dependencies {
     compile 'org.freemarker:freemarker:2.3.23'
     compile 'commons-beanutils:commons-beanutils:1.9.2'
     compile 'io.vertx:mod-mailer:2.0.0-final'
-    compile 'com.asana:asana:0.4.1'
+    // compile 'com.asana:asana:0.4.1'
+    compile 'net.rcarz:jira-client:0.5'
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
