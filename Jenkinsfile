@@ -76,14 +76,14 @@ node {
                 "EOC"
         sh "./rancher-compose-$rancherCli/rancher-compose \\\n" +
                 "--url http://vps234741.ovh.net:8080 \\\n" +
-                "--access-key 6A1DEE8BB0D071FAEB96 \\\n" +
-                "--secret-key sWPySY7x69orcN2daAfJ8oC9pEjeSMA9JDygYqVz  \\\n" +
+                "--access-key 854D77F36BD20C5D89FE \\\n" +
+                "--secret-key p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot  \\\n" +
                 "--project-name Qaobee-Recette \\\n" +
                 "up -d --force-upgrade qaobee-hive\n" +
                 "./rancher-compose-$rancherCli/rancher-compose \\\n" +
                 "--url http://vps234741.ovh.net:8080 \\\n" +
-                "--access-key 6A1DEE8BB0D071FAEB96 \\\n" +
-                "--secret-key sWPySY7x69orcN2daAfJ8oC9pEjeSMA9JDygYqVz  \\\n" +
+                "--access-key 854D77F36BD20C5D89FE \\\n" +
+                "--secret-key p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot  \\\n" +
                 "--project-name Qaobee-Recette \\\n" +
                 "up -d --upgrade --confirm-upgrade"
         sh "rm -f docker-compose.yml"
