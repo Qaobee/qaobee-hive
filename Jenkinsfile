@@ -39,7 +39,7 @@ node {
             input 'Build docker ?'
         }
         sh "docker build -t registry.gitlab.com/qaobee/qaobee-hive:$version ."
-        sh "docker tag -f registry.gitlab.com/qaobee/qaobee-hive:$version registry.gitlab.com/qaobee/qaobee-hive"
+        sh "docker tag  registry.gitlab.com/qaobee/qaobee-hive:$version registry.gitlab.com/qaobee/qaobee-hive"
         sh "docker push registry.gitlab.com/qaobee/qaobee-hive:$version"
         sh "docker push registry.gitlab.com/qaobee/qaobee-hive"
         sh "docker rmi registry.gitlab.com/qaobee/qaobee-hive:$version"
