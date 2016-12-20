@@ -77,10 +77,10 @@
     "basePath" : "/fcm/send"
   },
   "jira" : {
-    "user" : "xavier.marin@qaobee.com",
-    "passwd" : "123456",
+    "user" : "contact@qaobee.com",
+    "passwd" : "qaobee16!",
     "url" : "https://qaobee.atlassian.net",
     "project" : "QHBWEB",
-    "userName" : "Xavier"
+    "userName" : "feedback"
   }
 }

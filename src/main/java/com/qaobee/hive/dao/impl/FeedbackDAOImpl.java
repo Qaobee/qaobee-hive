@@ -33,6 +33,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The type Feedback dao.
@@ -55,10 +57,13 @@ public class FeedbackDAOImpl implements FeedbackDAO {
             if (data.containsField("meta") && data.getObject("meta").containsField("user")) {
                 title = data.getObject("meta").getObject("user").getString("firstname") + " " + data.getObject("meta").getObject("user").getString("name");
             }
+            List<String> labels =  new ArrayList<>();
+            labels.add("feedback");
             Issue newIssue = jira.createIssue(config.getString("project"), "Bug")
                     .field(Field.SUMMARY, "[" + title + "] " + data.getString("note"))
                     .field(Field.DESCRIPTION, data.getString("note") + "\n" +  data.getString("url") + "\n" + data.getObject("browser").encodePrettily())
-                    .field(Field.REPORTER, config.getString("userName"))
+                    .field(Field.LABELS,labels)
+                    .field(Field.ISSUE_TYPE,"feedback")
                     .execute();
             newIssue.addAttachment(temp);
             FileUtils.deleteQuietly(temp);
