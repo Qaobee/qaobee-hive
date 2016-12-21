@@ -172,17 +172,6 @@ public class SB_ShareTest extends VertxJunitSupport {
     }
 
     /**
-     * Acceptation invitation to sandbox with not logged user.
-     */
-    @Test
-    public void acceptationInvitationToSandboxWithNotLoggedUser() {
-        given().body(new JsonObject())
-                .when().post(getURL(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX))
-                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
-    }
-
-    /**
      * Acceptation invitation to sandbox with wrong http method.
      */
     @Test

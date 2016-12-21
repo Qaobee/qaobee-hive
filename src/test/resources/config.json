@@ -37,10 +37,6 @@
     "css": [
     ]
   },
-  "asana": {
-    "apikey": "80LZMme1.66OB3CDxJsEeLCrHZkePc0O",
-    "project": "92340957592737"
-  },
   "payplug": {
     "baseUrl": "localhost",
     "ipn_url": "http://flufy.hd.free.fr/hive/api/1/commons/users/shipping/ipn",
@@ -81,6 +77,13 @@
     "host" : "fcm.googleapis.com",
     "port" : 443,
     "basePath" : "/fcm/send"
+  },
+  "jira" : {
+    "user" : "contact@qaobee.com",
+    "passwd" : "qaobee16!",
+    "url" : "https://qaobee.atlassian.net",
+    "project" : "QHBWEB",
+    "userName" : "feedback"
   },
   "junit": {
     "user": {

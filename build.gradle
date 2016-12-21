@@ -29,7 +29,7 @@ install - install any jars produced to the local Maven repository (.m2)
 apply from: "gradle/vertx.gradle"
 apply plugin: 'org.sonarqube'
 apply plugin: 'com.github.ben-manes.versions'
-
+apply plugin: 'project-report'
 repositories {
     flatDir {
         dirs 'lib'
@@ -48,7 +48,7 @@ buildscript {
     dependencies {
         classpath 'org.ajoberstar:gradle-jacoco:0.3.0'
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
     }
 }
 dependencies {
@@ -56,7 +56,7 @@ dependencies {
     compile "io.vertx:lang-groovy:$groovyLangModVersion@jar"
 
     compile 'org.mongodb:mongo-java-driver:2.13.2'
-    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.commons:commons-lang3:3.5'
     compile 'commons-io:commons-io:2.5'
     compile 'org.apache.commons:commons-email:1.4'
     compile 'commons-codec:commons-codec:1.10'
@@ -66,24 +66,27 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'org.reflections:reflections:0.9.10'
     compile 'org.imgscalr:imgscalr-lib:4.2'
-    compile 'org.xhtmlrenderer:flying-saucer-pdf:9.0.9'
+    compile 'org.xhtmlrenderer:flying-saucer-pdf:9.1.1'
     compile 'com.google.api-client:google-api-client:1.22.0'
     compile 'org.freemarker:freemarker:2.3.23'
-    compile 'commons-beanutils:commons-beanutils:1.9.2'
+    compile 'commons-beanutils:commons-beanutils:1.9.3'
     compile 'io.vertx:mod-mailer:2.0.0-final'
-    // compile 'com.asana:asana:0.4.1'
-    compile 'net.rcarz:jira-client:0.5'
+    compile ('net.rcarz:jira-client:0.5') {
+        transitive = true
+        exclude group:  'org.mockito'
+        exclude group: 'junit:junit'
+    }
 
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
-    compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.7'
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.8'
+    compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.8'
 
 
-    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.3'
+    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5'
+    testCompile 'com.jayway.restassured:rest-assured:2.9.0'
     testCompile "junit:junit:$junitVersion"
     testCompile name: 'vertx-junit-annotations-2.1RC2'
     testCompile 'org.mock-server:mockserver-netty:3.10.4'
-    testCompile 'com.jayway.restassured:rest-assured:2.9.0'
 
 }
 task apidoc(type: Exec) {
@@ -92,7 +95,9 @@ task apidoc(type: Exec) {
 test {
     include 'com/qaobee/hive/test/api/**'
 }
-
+htmlDependencyReport {
+    projects = project.allprojects
+}
 sonarqube {
     check
     properties {

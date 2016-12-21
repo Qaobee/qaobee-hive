@@ -19,15 +19,6 @@
 
 package com.qaobee.hive.api.v1.sandbox.share;
 
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -44,6 +35,14 @@ import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vertx.java.core.eventbus.Message;
+import org.vertx.java.core.json.JsonObject;
+import org.vertx.java.core.json.impl.Json;
+
+import javax.inject.Inject;
 
 /**
  * The type Sb share verticle.
@@ -383,7 +382,6 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} userId User id to add as a member
      * @apiParam {String} sandboxId Targeted sandbox
      * @apiParam {String} role_code Role code
-     * @apiName confirmInvitationToSandbox
      * @apiHeader {String} token
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
