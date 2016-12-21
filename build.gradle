@@ -94,7 +94,7 @@ task apidoc(type: Exec) {
 }
 test {
     minHeapSize = "128m"
-    maxHeapSize = "2048m"
+    maxHeapSize = "512m"
     maxParallelForks = 1
     jvmArgs '-XX:MaxPermSize=256m -Dfile.encoding=UTF-8'
     include 'com/qaobee/hive/test/api/**'
