@@ -90,7 +90,6 @@ node {
         sh "rm -f docker-compose.yml"
         sh "rm -fr rancher-compose-$rancherCli"
     }
-    step($class: 'WsCleanup')
 }
 
 
