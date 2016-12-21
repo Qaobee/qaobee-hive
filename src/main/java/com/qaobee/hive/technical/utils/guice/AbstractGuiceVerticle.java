@@ -22,7 +22,6 @@ package com.qaobee.hive.technical.utils.guice;
 import com.englishtown.vertx.promises.impl.DefaultWhenContainer;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.platform.Verticle;
 
 /**
@@ -50,29 +49,5 @@ public class AbstractGuiceVerticle extends Verticle {
         Injector injector = Guice.createInjector(new GuiceModule(container.config(), vertx, container.env()));
         injector.injectMembers(this);
         whenContainer = new DefaultWhenContainer(container);
-    }
-
-    /**
-     * Start timer for response time (<a href="http://metrics.codahale.com/getting-started/#timers">Reference</a>).
-     *
-     * @param name timer's name
-     */
-    protected void startTimer(final String name) {
-        final JsonObject metric = new JsonObject()
-                .putString("name", "timer." + name)
-                .putString("action", "start");
-        vertx.eventBus().send("metrix", metric);
-    }
-
-    /**
-     * stop time (<a href="http://metrics.codahale.com/getting-started/#timers">Reference</a>).
-     *
-     * @param name timer's name
-     */
-    protected void stopTimer(final String name) {
-        final JsonObject metric = new JsonObject()
-                .putString("name", "timer." + name)
-                .putString("action", "stop");
-        vertx.eventBus().send("metrix", metric);
     }
 }

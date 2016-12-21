@@ -291,7 +291,6 @@ public class Main extends AbstractGuiceVerticle {
     private List<Promise<String, Void>> loadVerticles() {
         final List<Promise<String, Void>> promises = new ArrayList<>();
         // Loading modules
-        promises.add(whenContainer.deployWorkerVerticle(com.bloidonia.vertx.metrics.MetricsModule.class.getCanonicalName(), container.config().getObject("metrix.mod"), 1, true));
         promises.add(whenContainer.deployWorkerVerticle(Mailer.class.getCanonicalName(), container.config().getObject("mailer.mod"), 1, true));
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
@@ -320,7 +319,6 @@ public class Main extends AbstractGuiceVerticle {
             List<String> path = Arrays.asList(req.path().split("/"));
             path = path.subList(3, path.size());
             wrapper.setPath(path);
-            startTimer(StringUtils.join(wrapper.getPath(), '.'));
             // Collect metrics : number of requests
             final JsonObject json = new JsonObject()
                     .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
@@ -330,7 +328,6 @@ public class Main extends AbstractGuiceVerticle {
             if (rules.containsKey(busAddress)) {
                 if (testRequest(req, busAddress, wrapper)) {
                     vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> {
-                        stopTimer(StringUtils.join(wrapper.getPath(), '.'));
                         handleResult(message, req);
                     });
                 }
@@ -344,7 +341,6 @@ public class Main extends AbstractGuiceVerticle {
      * @param req Request
      */
     private void assetUploadHandler(HttpServerRequest req) {
-        startTimer("main.avatar");
         enableCors(req);
         final JsonObject request = new JsonObject()
                 .putString(COLLECTION, req.params().get(COLLECTION))
@@ -409,7 +405,6 @@ public class Main extends AbstractGuiceVerticle {
                     } else if (message.body() instanceof JsonObject) {
                         req.response().setStatusCode(200).end(((JsonObject) message.body()).encode());
                     }
-                    stopTimer("main.avatar");
                 });
                 upload.resume();
             });
