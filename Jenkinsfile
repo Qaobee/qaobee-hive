@@ -12,12 +12,13 @@ node {
     }
 
     stage("Build $version") {
+        sh 'rm -fr build'
         sh './gradlew clean build -x test'
     }
 
     stage("Test $version") {
         try {
-            sh './gradlew -Dorg.gradle.jvmargs="-Xmx2048M -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" test'
+            sh './gradlew test'
         } finally {
             junit keepLongStdio: true, testResults: 'build/test-results/test/*.xml'
             step([$class: 'JacocoPublisher', classPattern: 'build/jacoco/classpathdumps/', exclusionPattern: '**/test/**/*.class', execPattern: 'build/jacoco/**.exec', inclusionPattern: 'com/qaobee/hive/**/*.class', sourcePattern: 'src/main/java'])

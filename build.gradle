@@ -93,7 +93,14 @@ task apidoc(type: Exec) {
     commandLine 'apidoc', '-i', 'src/main/java/', '-o', 'build/docs/api-doc'
 }
 test {
+    minHeapSize = "128m"
+    maxHeapSize = "2048m"
+    maxParallelForks = 1
+    jvmArgs '-XX:MaxPermSize=256m -Dfile.encoding=UTF-8'
     include 'com/qaobee/hive/test/api/**'
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: $descriptor")
+    }
 }
 htmlDependencyReport {
     projects = project.allprojects
