@@ -50,23 +50,37 @@ public class FeedbackDAOImpl implements FeedbackDAO {
         BasicCredentials creds = new BasicCredentials(config.getString("user"), config.getString("passwd"));
         JiraClient jira = new JiraClient(config.getString("url"), creds);
         try {
-            byte[] img = Base64.decodeBase64(data.getString("img").replace("data:image/png;base64,", ""));
-            File temp = File.createTempFile("temp-file-name", ".png");
-            FileUtils.writeByteArrayToFile(temp, img);
+            File temp = null;
+            if(data.containsField("img")) {
+                byte[] img = Base64.decodeBase64(data.getString("img").replace("data:image/png;base64,", ""));
+                temp = File.createTempFile("temp-file-name", ".png");
+                FileUtils.writeByteArrayToFile(temp, img);
+            }
             String title = "Anonymous Feedback";
             if (data.containsField("meta") && data.getObject("meta").containsField("user")) {
                 title = data.getObject("meta").getObject("user").getString("firstname") + " " + data.getObject("meta").getObject("user").getString("name");
             }
             List<String> labels =  new ArrayList<>();
             labels.add("feedback");
-            Issue newIssue = jira.createIssue(config.getString("project"), "Bug")
+            String project = config.getString("project");
+            if(data.containsField("project")) {
+                project = data.getString("project");
+            }
+            List<String> versions =  new ArrayList<>();
+            if(data.containsField("version")) {
+                versions.add(data.getString("version"));
+            }
+            Issue newIssue = jira.createIssue(project, "Bug")
                     .field(Field.SUMMARY, "[" + title + "] " + data.getString("note"))
-                    .field(Field.DESCRIPTION, data.getString("note") + "\n" +  data.getString("url") + "\n" + data.getObject("browser").encodePrettily())
+                    .field(Field.DESCRIPTION, data.getString("description", data.getString("note")) + "\n" +  data.getString("url") + "\n" + data.getObject("browser").encodePrettily())
                     .field(Field.LABELS,labels)
-                    .field(Field.ISSUE_TYPE,"feedback")
+                    .field(Field.ISSUE_TYPE,data.getString("type", "feedback"))
+              //      .field(Field.VERSIONS, versions)
                     .execute();
-            newIssue.addAttachment(temp);
-            FileUtils.deleteQuietly(temp);
+            if(temp !=null) {
+                newIssue.addAttachment(temp);
+                FileUtils.deleteQuietly(temp);
+            }
         } catch (JiraException | IOException e) {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage());

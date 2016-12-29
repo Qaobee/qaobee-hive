@@ -47,6 +47,7 @@ import java.nio.charset.StandardCharsets;
 public class FeedbackVerticle extends AbstractGuiceVerticle {
 
     private static final String POST_FEEDBACK = Module.VERSION + ".commons.feedback.send";
+    private static final String POST_FEEDBACK_MOB = Module.VERSION + ".commons.feedback.send.mob";
     private static final Logger LOG = LoggerFactory.getLogger(FeedbackVerticle.class);
     @Inject
     private Utils utils;
@@ -59,6 +60,7 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
                 .registerHandler(POST_FEEDBACK, this::postFeedback)
+                .registerHandler(POST_FEEDBACK_MOB, this::postFeedbackMob)
                 .registerHandler("internal.feedback.send", this::internalFeeback);
     }
 
@@ -89,5 +91,13 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
         }
+    }
+
+    @Rule(address = POST_FEEDBACK_MOB, method = Constants.POST)
+    private void postFeedbackMob(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        final JsonObject data = new JsonObject(req.getBody());
+        vertx.eventBus().send("internal.feedback.send", data);
+        utils.sendStatus(true, message);
     }
 }
