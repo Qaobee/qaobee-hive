@@ -17,6 +17,7 @@ test-output
 Scratch.java
 ScratchTest.java
 test-results
+doc
 test-tmp
 *.class
 mods
