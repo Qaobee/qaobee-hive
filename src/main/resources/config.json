@@ -72,7 +72,7 @@
     "debugAddress": "logger"
   },
   "firebase" : {
-    "api_key" : "AIzaSyC7qw9ln164KM1dvSYpVmurep5lMFBliig",
+    "api_key" : "AIzaSyC_jXXbc9Zb8c4HksR74z5_i2ppFUj37qw",
     "host" : "fcm.googleapis.com",
     "port" : 443,
     "basePath" : "/fcm/send"

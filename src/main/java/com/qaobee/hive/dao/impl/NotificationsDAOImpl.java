@@ -118,7 +118,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
             if (u != null && u.containsField(ACCOUNT) && u.getObject(ACCOUNT).containsField(FIELD_DEVICES)) {
                 // Send firebase notification
                 u.getObject(ACCOUNT).getArray(FIELD_DEVICES).forEach(d -> {
-                    switch (((JsonObject) d).getString(FIELD_DEVICE_OS)) {
+                    switch (((JsonObject) d).getString(FIELD_DEVICE_OS, "unknown")) {
                         case "android":
                             notifyAndroid(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
                             break;

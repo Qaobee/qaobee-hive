@@ -206,7 +206,7 @@ public class SecurityDAOImpl implements SecurityDAO {
         if (StringUtils.isNotBlank(pushId) && StringUtils.isNotBlank(deviceOS)) {
             Device d = new Device();
             d.setId(pushId);
-            d.setId(deviceOS);
+            d.setOs(deviceOS);
             if (!user.getAccount().getDevices().contains(d)) {
                 user.getAccount().getDevices().add(d);
             }
