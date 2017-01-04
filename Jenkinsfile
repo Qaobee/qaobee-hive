@@ -7,6 +7,7 @@ node {
 
     stage('Checkout') {
         sh 'git fetch --tags'
+        sh 'git pull'
         version = this.version()
         echo("Building $version")
     }
