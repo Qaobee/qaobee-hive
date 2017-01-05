@@ -60,7 +60,7 @@ node {
                 "  environment:\n" +
                 "    ENV: REC\n" +
                 "    OPENSHIFT_DATA_DIR: /opt/hive-data\n" +
-                "    OPENSHIFT_MONGODB_DB_HOST: mongo\n" +
+                "    OPENSHIFT_MONGODB_DB_HOST: vps269266.ovh.net\n" +
                 "    OPENSHIFT_MONGODB_DB_PASSWORD: qaobee2016\n" +
                 "    OPENSHIFT_MONGODB_DB_PORT: '27017'\n" +
                 "    OPENSHIFT_MONGODB_DB_USERNAME: hive\n" +
@@ -70,8 +70,6 @@ node {
                 "    io.rancher.scheduler.affinity:host_label: tag=hive\n" +
                 "    io.rancher.container.dns: 'true'\n" +
                 "  image: registry.gitlab.com/qaobee/qaobee-hive:$version\n" +
-                "  links:\n" +
-                "  - qaobeehivedb:mongo\n" +
                 "  volumes:\n" +
                 "  - /opt/qaobee-hive:/opt/hive-data\n" +
                 "  net: host\n" +
