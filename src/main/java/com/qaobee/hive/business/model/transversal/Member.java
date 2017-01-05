@@ -36,8 +36,27 @@ public class Member {
      * Member role
      */
     private Role role;
+    
+    /**
+     * Member role
+     */
+    private String status;
 
     /**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
      * Returns the person id.
      *
      * @return String : person ID

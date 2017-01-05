@@ -173,6 +173,7 @@ public class SignupDAOImpl implements SignupDAO {
         Member member = new Member();
         member.setRole(new Role("admin", "Admin"));
         member.setPersonId(user.get_id());
+        member.setStatus("activated");
 
         List<Member> members = new ArrayList<>();
         members.add(member);

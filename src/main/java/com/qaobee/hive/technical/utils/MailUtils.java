@@ -83,7 +83,8 @@ public interface MailUtils {
      * @param locale the locale language
      * @param emailTarget the guest's e-mail
      * @param invitationId the invitation id
+     * @param target indicate internal or external link 
      * @return the json object
      */
-    JsonObject generateInvitationToSandboxBody(User user, String locale, String emailTarget, String invitationId);
+    JsonObject generateInvitationToSandboxBody(User user, String locale, String emailTarget, String invitationId, String target);
 }
