@@ -53,7 +53,7 @@
     "ipn_url": "https://hive.qaobee.com/api/1/commons/users/shipping/ipn",
     "return_url": "https://www.qaobee.com/#/private/billing",
     "cancel_url": "https://www.qaobee.com/#/private/billing",
-    "api_key": "sk_live_bdb7dcd46103d08f7fd207d4c982f1aa",
+    "api_key": "sk_live_57R0LhnSRnH1KGDzjd8NDE",
     "port": 443,
     "basePath": "/v1"
   },
