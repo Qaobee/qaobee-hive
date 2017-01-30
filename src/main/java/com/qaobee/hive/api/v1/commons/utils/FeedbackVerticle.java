@@ -48,6 +48,8 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
 
     private static final String POST_FEEDBACK = Module.VERSION + ".commons.feedback.send";
     private static final String POST_FEEDBACK_MOB = Module.VERSION + ".commons.feedback.send.mob";
+    private static final String INTERNAL_FEEDBACK = "internal.feedback.send";
+    
     private static final Logger LOG = LoggerFactory.getLogger(FeedbackVerticle.class);
     @Inject
     private Utils utils;
@@ -61,7 +63,7 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
         vertx.eventBus()
                 .registerHandler(POST_FEEDBACK, this::postFeedback)
                 .registerHandler(POST_FEEDBACK_MOB, this::postFeedbackMob)
-                .registerHandler("internal.feedback.send", this::internalFeeback);
+                .registerHandler(INTERNAL_FEEDBACK, this::internalFeeback);
     }
 
     private void internalFeeback(Message<JsonObject> message) {
@@ -85,7 +87,7 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
         try {
             final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
             final JsonObject data = new JsonObject(URLDecoder.decode(req.getBody().split("=")[1], StandardCharsets.UTF_8.toString()));
-            vertx.eventBus().send("internal.feedback.send", data);
+            vertx.eventBus().send(INTERNAL_FEEDBACK, data);
             utils.sendStatus(true, message);
         } catch (UnsupportedEncodingException e) {
             LOG.error(e.getMessage(), e);
@@ -97,7 +99,7 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
     private void postFeedbackMob(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject data = new JsonObject(req.getBody());
-        vertx.eventBus().send("internal.feedback.send", data);
+        vertx.eventBus().send(INTERNAL_FEEDBACK, data);
         utils.sendStatus(true, message);
     }
 }

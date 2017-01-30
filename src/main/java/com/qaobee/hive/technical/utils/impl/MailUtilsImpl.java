@@ -42,6 +42,9 @@ public final class MailUtilsImpl implements MailUtils {
     private static final String ASSISTANT_KEY = "mail.footer.assistant";
     private static final String SOCIAL_LINKS_FIELD = "stayConnected";
     private static final String SOCIAL_LINKS_KEY = "mail.footer.stayConnected";
+    private static final String SALUTATION_FIELD = "salutation";
+    private static final String ACTIVATION_LINK_FIELD = "activationlink";
+    private static final String ACTIVATION_LINK_TEXT_FIELD = "activationlinkText";
     @Inject
     @Named("runtime")
     private JsonObject runtime;
@@ -51,14 +54,14 @@ public final class MailUtilsImpl implements MailUtils {
     public JsonObject generateActivationBody(final User user, final String locale) {
         final JsonObject json = new JsonObject();
         json.putString(TITLE_FIELD, Messages.getString("mail.account.validation.title", locale));
-        json.putString("salutation", Messages.getString("mail.account.validation.line.1", locale, user.getFirstname()));
+        json.putString(SALUTATION_FIELD, Messages.getString("mail.account.validation.line.1", locale, user.getFirstname()));
         json.putString("desc", Messages.getString("mail.account.validation.line.2", locale));
         json.putString(HEADER_FIELD, Messages.getString("mail.account.validation.title", locale));
         json.putString(SUB_HEADER_FIELD, "");
         json.putString(MESSAGE_FIELD, Messages.getString("mail.account.validation.line.3", locale));
-        json.putString("activationlink", runtime.getString(SITE_URL_KEY)
+        json.putString(ACTIVATION_LINK_FIELD, runtime.getString(SITE_URL_KEY)
                 + runtime.getString("mail.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationCode());
-        json.putString("activationlinkText", Messages.getString("mail.account.validation.activationtext", locale));
+        json.putString(ACTIVATION_LINK_TEXT_FIELD, Messages.getString("mail.account.validation.activationtext", locale));
         json.putString("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)));
         json.putString(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
         json.putString(SOCIAL_LINKS_FIELD, Messages.getString(SOCIAL_LINKS_KEY, locale));
@@ -69,12 +72,12 @@ public final class MailUtilsImpl implements MailUtils {
     public JsonObject generateNewpasswdBody(final User user, final String locale) {
         final JsonObject json = new JsonObject();
         json.putString(TITLE_FIELD, Messages.getString("mail.account.newpasswd.title", locale));
-        json.putString("salutation", Messages.getString("mail.account.newpasswd.line.1", locale, user.getFirstname()));
+        json.putString(SALUTATION_FIELD, Messages.getString("mail.account.newpasswd.line.1", locale, user.getFirstname()));
         json.putString(HEADER_FIELD, Messages.getString("mail.account.newpasswd.title", locale));
         json.putString(SUB_HEADER_FIELD, "");
         json.putString(MESSAGE_FIELD, Messages.getString("mail.account.newpasswd.line.2", locale));
-        json.putString("activationlink", runtime.getString(SITE_URL_KEY) + runtime.getString("newpasswd.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationPasswd());
-        json.putString("activationlinkText", Messages.getString("mail.account.newpasswd.activationtext", locale));
+        json.putString(ACTIVATION_LINK_FIELD, runtime.getString(SITE_URL_KEY) + runtime.getString("newpasswd.site.url.api") + "/" + user.get_id() + "/" + user.getAccount().getActivationPasswd());
+        json.putString(ACTIVATION_LINK_TEXT_FIELD, Messages.getString("mail.account.newpasswd.activationtext", locale));
         json.putString("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)));
         json.putString(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
         json.putString(SOCIAL_LINKS_FIELD, Messages.getString(SOCIAL_LINKS_KEY, locale));
@@ -128,18 +131,18 @@ public final class MailUtilsImpl implements MailUtils {
     public JsonObject generateInvitationToSandboxBody(User user, String locale, String emailTarget, String invitationId, String target) {
         final JsonObject json = new JsonObject();
         json.putString(TITLE_FIELD, Messages.getString("mail.account.sharingSB.title", locale));
-        json.putString("salutation", Messages.getString("mail.account.sharingSB.line.1", locale));
+        json.putString(SALUTATION_FIELD, Messages.getString("mail.account.sharingSB.line.1", locale));
         json.putString("desc", Messages.getString("mail.account.sharingSB.line.2", locale, user.getFirstname() + " " + user.getName()));
         json.putString(MESSAGE_FIELD, Messages.getString("mail.account.sharingSB.line.3", locale));
-        if("internal".equals(target)) {
-        	json.putString("activationlink", runtime.getString(SITE_URL_KEY)
+        if ("internal".equals(target)) {
+            json.putString(ACTIVATION_LINK_FIELD, runtime.getString(SITE_URL_KEY)
                     + runtime.getString("internal.invitation.site.url.api") + "/" + invitationId);
         } else {
-        	json.putString("activationlink", runtime.getString(SITE_URL_KEY)
+            json.putString(ACTIVATION_LINK_FIELD, runtime.getString(SITE_URL_KEY)
                     + runtime.getString("external.invitation.site.url.api") + "/" + invitationId);
         }
-        
-        json.putString("activationlinkText", Messages.getString("mail.account.sharingSB.activationtext", locale));
+
+        json.putString(ACTIVATION_LINK_TEXT_FIELD, Messages.getString("mail.account.sharingSB.activationtext", locale));
         json.putString("sig", Messages.getString(SIG_KEY, locale, runtime.getString(SITE_URL_KEY)));
         json.putString(ASSISTANT_FIELD, Messages.getString(ASSISTANT_KEY, locale));
         return json;

@@ -82,7 +82,6 @@ public class Main extends AbstractGuiceVerticle {
     @Inject
     @Named("cors")
     private JsonObject cors;
-    private SockJSServer sockJSServer;
 
     /**
      * @param req request
@@ -121,27 +120,9 @@ public class Main extends AbstractGuiceVerticle {
             if (message.succeeded()) {
                 final String response = (String) message.result().body();
                 if (response.startsWith("[") || !response.startsWith("{")) {
-                    enableCors(req);
-                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                    req.response().end(response);
+                    handleJsonArray(req, response);
                 } else {
-                    final JsonObject json = new JsonObject(response);
-                    if (json.containsField(FILE_SERVE)) {
-                        final File f = new File(json.getString(FILE_SERVE));
-                        req.response().putHeader("Content-Description", "File Transfer")
-                                .putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE))
-                                .putHeader("Content-Disposition", "attachment; filename=" + f.getName())
-                                .putHeader("Expires", "0")
-                                .putHeader("Cache-Control", "must-revalidate")
-                                .putHeader("Pragma", "public")
-                                .putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
-                        enableCors(req);
-                        req.response().sendFile(f.getAbsolutePath());
-                    } else {
-                        enableCors(req);
-                        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                        req.response().end(response);
-                    }
+                    handleJsonObject(req, response);
                 }
             } else {
                 throw (ReplyException) message.cause();
@@ -167,6 +148,32 @@ public class Main extends AbstractGuiceVerticle {
                 manage404Error(req);
             }
         }
+    }
+
+    private void handleJsonObject(HttpServerRequest req, String response) {
+        final JsonObject json = new JsonObject(response);
+        if (json.containsField(FILE_SERVE)) {
+            final File f = new File(json.getString(FILE_SERVE));
+            req.response().putHeader("Content-Description", "File Transfer")
+                    .putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE))
+                    .putHeader("Content-Disposition", "attachment; filename=" + f.getName())
+                    .putHeader("Expires", "0")
+                    .putHeader("Cache-Control", "must-revalidate")
+                    .putHeader("Pragma", "public")
+                    .putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
+            enableCors(req);
+            req.response().sendFile(f.getAbsolutePath());
+        } else {
+            enableCors(req);
+            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+            req.response().end(response);
+        }
+    }
+
+    private void handleJsonArray(HttpServerRequest req, String response) {
+        enableCors(req);
+        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+        req.response().end(response);
     }
 
     private static void manage404Error(HttpServerRequest req) {
@@ -209,30 +216,7 @@ public class Main extends AbstractGuiceVerticle {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         final RouteMatcher rm = new RouteMatcher();
-
-        /**
-         * @apiDescription Get an asset from a collection
-         * @api {get} /file/:collection/:id  Get an asset from a collection
-         * @apiVersion 0.1.0
-         * @apiName Get asset
-         * @apiGroup Main
-         * @apiPermission all
-         * @apiParam {String} collection Mandatory The collection.
-         * @apiParam {String} id Mandatory The Asset-ID.
-         */
         rm.get("/file/:collection/:id", this::getAssetHandler);
-
-        /**
-         * @apiDescription Put an asset in a collection
-         * @api {post} /file/:collection/:field/:uid
-         * @apiName Post asset
-         * @apiGroup Main
-         * @apiParam {String} collection collection
-         * @apiparam {String} field field
-         * @apiparam {String} token token
-         * @apiparam {String} locale locale
-         * @apiparam {String} uid document id
-         */
         rm.post("/file/:collection/:field/:uid", this::assetUploadHandler);
         rm.optionsWithRegEx(".*", req -> {
             if (container.config().getObject("cors").getBoolean("enabled", false)) {
@@ -242,7 +226,7 @@ public class Main extends AbstractGuiceVerticle {
         });
         rm.get("/", event -> event.response().end("Welcome to Qaobee Hive"));
         // API Rest
-        rm.allWithRegEx("^/api/.*", this::apiHandler);
+        rm.allWithRegEx("^/api/.*", req -> req.bodyHandler(event -> handleAPIRequest(req, event)));
         // Load Verticles
         List<Promise<String, Void>> promises = loadVerticles();
         runWebServer(promises, rm, startedResult);
@@ -256,26 +240,7 @@ public class Main extends AbstractGuiceVerticle {
     private void runWebServer(List<Promise<String, Void>> promises, Handler<HttpServerRequest> rm, Future<Void> startResult) {
         final HttpServer server = vertx.createHttpServer();
         new When<String, Void>().all(promises, value -> {
-            server.requestHandler(rm);
-            String ip = runtime.getString("defaultHost");
-            int port = runtime.getInteger("defaultPort");
-            if (container.env().containsKey("OPENSHIFT_VERTX_IP")) {
-                ip = container.env().get("OPENSHIFT_VERTX_IP");
-            }
-            if (container.env().containsKey("OPENSHIFT_VERTX_PORT")) {
-                port = Integer.parseInt(container.env().get("OPENSHIFT_VERTX_PORT"));
-            }
-            sockJSServer = vertx.createSockJSServer(server);
-            JsonObject wsConfig = new JsonObject().putString("prefix", "/eventbus");
-            JsonArray outboundPermitted = new JsonArray();
-            JsonArray inboundPermitted = new JsonArray();
-            outboundPermitted.add(new JsonObject());
-            inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
-            sockJSServer.setHook(new ServerHook(runtime.getString("site.url")));
-            sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
-            server.listen(port, ip);
-            LOG.info("The http server is started on : " + ip + ":" + port);
-            System.out.println("Server started");
+            handleServerStart(server, rm);
             startResult.setResult(null);
             return null;
         }, value -> {
@@ -283,6 +248,29 @@ public class Main extends AbstractGuiceVerticle {
             startResult.setFailure(value.error);
             return null;
         });
+    }
+
+    private void handleServerStart(HttpServer server, Handler<HttpServerRequest> rm) {
+        server.requestHandler(rm);
+        String ip = runtime.getString("defaultHost");
+        int port = runtime.getInteger("defaultPort");
+        if (container.env().containsKey("OPENSHIFT_VERTX_IP")) {
+            ip = container.env().get("OPENSHIFT_VERTX_IP");
+        }
+        if (container.env().containsKey("OPENSHIFT_VERTX_PORT")) {
+            port = Integer.parseInt(container.env().get("OPENSHIFT_VERTX_PORT"));
+        }
+        SockJSServer sockJSServer = vertx.createSockJSServer(server);
+        JsonObject wsConfig = new JsonObject().putString("prefix", "/eventbus");
+        JsonArray outboundPermitted = new JsonArray();
+        JsonArray inboundPermitted = new JsonArray();
+        outboundPermitted.add(new JsonObject());
+        inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
+        sockJSServer.setHook(new ServerHook(runtime.getString("site.url")));
+        sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
+        server.listen(port, ip);
+        LOG.info("The http server is started on : " + ip + ":" + port);
+        System.out.println("Server started");
     }
 
     /**
@@ -305,40 +293,41 @@ public class Main extends AbstractGuiceVerticle {
         return promises;
     }
 
-    /**
-     * @param req Request
-     */
-    private void apiHandler(HttpServerRequest req) {
-        req.bodyHandler(event -> {
-            final RequestWrapper wrapper = new RequestWrapper();
-            wrapper.setBody(event.toString());
-            wrapper.setMethod(req.method());
-            wrapper.setHeaders(utils.toMap(req.headers()));
-            wrapper.setParams(utils.toMap(req.params()));
-            wrapper.setLocale(req.headers().get(ACCEPT_LANGUAGE));
-            List<String> path = Arrays.asList(req.path().split("/"));
-            path = path.subList(3, path.size());
-            wrapper.setPath(path);
-            // Collect metrics : number of requests
-            final JsonObject json = new JsonObject()
-                    .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
-                    .putString("action", "mark");
-            vertx.eventBus().send("metrix", json);
-            String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
-            if (rules.containsKey(busAddress)) {
-                if (testRequest(req, busAddress, wrapper)) {
-                    vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> {
-                        handleResult(message, req);
-                    });
-                }
-            } else {
-                manage404Error(req);
+    private void handleAPIRequest(HttpServerRequest req, Buffer event) {
+        final RequestWrapper wrapper = new RequestWrapper();
+        wrapper.setBody(event.toString());
+        wrapper.setMethod(req.method());
+        wrapper.setHeaders(utils.toMap(req.headers()));
+        wrapper.setParams(utils.toMap(req.params()));
+        wrapper.setLocale(req.headers().get(ACCEPT_LANGUAGE));
+        List<String> path = Arrays.asList(req.path().split("/"));
+        path = path.subList(3, path.size());
+        wrapper.setPath(path);
+        // Collect metrics : number of requests
+        final JsonObject json = new JsonObject()
+                .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
+                .putString("action", "mark");
+        vertx.eventBus().send("metrix", json);
+        String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
+        if (rules.containsKey(busAddress)) {
+            if (testRequest(req, busAddress, wrapper)) {
+                vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> this.handleResult(message, req));
             }
-        });
+        } else {
+            manage404Error(req);
+        }
     }
 
     /**
-     * @param req Request
+     * @apiDescription Put an asset in a collection
+     * @api {post} /file/:collection/:field/:uid
+     * @apiName Post asset
+     * @apiGroup Main
+     * @apiParam {String} collection collection
+     * @apiparam {String} field field
+     * @apiparam {String} token token
+     * @apiparam {String} locale locale
+     * @apiparam {String} uid document id
      */
     private void assetUploadHandler(HttpServerRequest req) {
         enableCors(req);
@@ -359,12 +348,19 @@ public class Main extends AbstractGuiceVerticle {
             LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
         }
         request.putString("datadir", datadir);
-        req.expectMultiPart(true).uploadHandler(getUploadHandler(request, dir, req));
+        req.expectMultiPart(true).uploadHandler(upload -> handleUpload(upload, request, dir, req));
     }
 
 
     /**
-     * @param req Request
+     * @apiDescription Get an asset from a collection
+     * @api {get} /file/:collection/:id  Get an asset from a collection
+     * @apiVersion 0.1.0
+     * @apiName Get asset
+     * @apiGroup Main
+     * @apiPermission all
+     * @apiParam {String} collection Mandatory The collection.
+     * @apiParam {String} id Mandatory The Asset-ID.
      */
     private void getAssetHandler(HttpServerRequest req) {
         enableCors(req);
@@ -381,34 +377,26 @@ public class Main extends AbstractGuiceVerticle {
         });
     }
 
-    /**
-     * @param request Request
-     * @param dir     Directory
-     * @param req     HTTP Request
-     * @return Handler
-     */
-    private Handler<HttpServerFileUpload> getUploadHandler(final JsonObject request, final File dir, final HttpServerRequest req) {
-        return upload -> {
-            final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
-            request.putString("filename", filename).putString(CONTENT_TYPE, upload.contentType());
-            if (vertx.fileSystem().existsSync(filename)) {
-                vertx.fileSystem().deleteSync(filename);
-            }
-            upload.streamToFileSystem(filename).endHandler(event -> {
-                upload.pause();
-                vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<Object>>) message -> {
-                    req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                    if (message.body() instanceof ReplyException) {
-                        final JsonObject resp = new JsonObject(((ReplyException) message.body()).getMessage());
-                        req.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
-                                .end(resp.getString(MESSAGE, ""));
-                    } else if (message.body() instanceof JsonObject) {
-                        req.response().setStatusCode(200).end(((JsonObject) message.body()).encode());
-                    }
-                });
-                upload.resume();
+    private void handleUpload(HttpServerFileUpload upload, JsonObject request, File dir, HttpServerRequest req) {
+        final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
+        request.putString("filename", filename).putString(CONTENT_TYPE, upload.contentType());
+        if (vertx.fileSystem().existsSync(filename)) {
+            vertx.fileSystem().deleteSync(filename);
+        }
+        upload.streamToFileSystem(filename).endHandler(event -> {
+            upload.pause();
+            vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<Object>>) message -> {
+                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
+                if (message.body() instanceof ReplyException) {
+                    final JsonObject resp = new JsonObject(((ReplyException) message.body()).getMessage());
+                    req.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
+                            .end(resp.getString(MESSAGE, ""));
+                } else if (message.body() instanceof JsonObject) {
+                    req.response().setStatusCode(200).end(((JsonObject) message.body()).encode());
+                }
             });
-        };
+            upload.resume();
+        });
     }
 
     /**

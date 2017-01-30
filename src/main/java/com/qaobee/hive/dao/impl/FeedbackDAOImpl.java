@@ -41,6 +41,7 @@ import java.util.List;
  */
 public class FeedbackDAOImpl implements FeedbackDAO {
     private static final Logger LOG = LoggerFactory.getLogger(FeedbackDAOImpl.class);
+    private static final String PROJECT_FIELD = "project";
     @Inject
     @Named("jira")
     private JsonObject config;
@@ -62,9 +63,9 @@ public class FeedbackDAOImpl implements FeedbackDAO {
             }
             List<String> labels =  new ArrayList<>();
             labels.add("feedback");
-            String project = config.getString("project");
-            if(data.containsField("project")) {
-                project = data.getString("project");
+            String project = config.getString(PROJECT_FIELD);
+            if(data.containsField(PROJECT_FIELD)) {
+                project = data.getString(PROJECT_FIELD);
             }
             List<String> versions =  new ArrayList<>();
             if(data.containsField("version")) {
