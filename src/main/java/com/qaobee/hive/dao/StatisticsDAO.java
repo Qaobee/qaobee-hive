@@ -37,6 +37,14 @@ public interface StatisticsDAO {
     JsonObject addBulk(JsonArray stats);
 
     /**
+     * Gets list for event.
+     *
+     * @param eventId the event id
+     * @return the list for event
+     */
+    JsonArray getListForEvent(String eventId);
+
+    /**
      * Add stat json object.
      *
      * @param stat the stat

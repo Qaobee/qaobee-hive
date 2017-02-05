@@ -24,6 +24,7 @@ import com.mongodb.util.JSON;
 import com.qaobee.hive.dao.StatisticsDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
@@ -46,6 +47,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
 
     @Override
     public JsonObject addBulk(JsonArray stats) {
+        if (stats.size() > 0) {
             DBCollection coll = mongo.getDb().getCollection(DBCollections.STATS);
             BulkWriteOperation bulk = coll.initializeUnorderedBulkOperation();
             for (Object object : stats) {
@@ -56,6 +58,14 @@ public class StatisticsDAOImpl implements StatisticsDAO {
             }
             BulkWriteResult resultBulk = bulk.execute();
             return new JsonObject().putNumber("count", resultBulk.getInsertedCount());
+        } else {
+            return new JsonObject().putNumber("count", 0);
+        }
+    }
+
+    @Override
+    public JsonArray getListForEvent(String eventId) {
+        return mongo.findByCriterias(new CriteriaBuilder().add("eventId", eventId).get(), null, null, -1, -1, DBCollections.STATS);
     }
 
     @Override
@@ -69,11 +79,10 @@ public class StatisticsDAOImpl implements StatisticsDAO {
 
     @Override
     public JsonArray getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit) throws QaobeeException {
-        BasicDBObject dbObjectParent, dbObjectChild;
         // $MATCH section
-        dbObjectParent = new BasicDBObject();
+        BasicDBObject dbObjectParent = new BasicDBObject();
         // - code
-        dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
+        BasicDBObject dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
         dbObjectParent.put(CODE_FIELD, dbObjectChild);
         // - owner
         dbObjectChild = new BasicDBObject("$in", listOwners.toArray());

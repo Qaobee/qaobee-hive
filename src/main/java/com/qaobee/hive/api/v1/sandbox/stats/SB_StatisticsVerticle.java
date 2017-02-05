@@ -60,6 +60,10 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String ADD_STAT_BULK = Module.VERSION + ".sandbox.stats.statistics.addBulk";
     /**
+     * The constant GET_STATS.
+     */
+    public static final String GET_STATS  = Module.VERSION + ".sandbox.stats.statistics";
+    /**
      * List of Indicator code
      */
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
@@ -98,6 +102,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
                 .registerHandler(GET_STAT_GROUPBY, this::getStatsGroupedBy)
                 .registerHandler(GET_LISTDETAIL_VALUES, this::getListDetailValue)
                 .registerHandler(ADD_STAT, this::addStat)
+                .registerHandler(GET_STATS, this::getListForEvent)
                 .registerHandler(ADD_STAT_BULK, this::addBulk);
     }
 
@@ -115,6 +120,21 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     private void addBulk(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         message.reply(statisticsDAO.addBulk(new JsonArray(req.getBody())).encode());
+    }
+    /**
+     * @api {get} /api/1/sandbox/stats/statistics/?eventId
+     * @apiVersion 0.1.0
+     * @apiName addBulk
+     * @apiGroup Statistics API
+     * @apiHeader {String} token
+     * @apiDescription add many statistics in once time
+     * @apiParam {Array} stats Mandatory The stats object to add.
+     * @apiSuccess {Object}   stats    The stats added.
+     */
+    @Rule(address = GET_STATS, method = Constants.GET, logged = true)
+    private void getListForEvent(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        message.reply(statisticsDAO.getListForEvent(req.getParams().get("eventId").get(0)).encode());
     }
 
     /**
