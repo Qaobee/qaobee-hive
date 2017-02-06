@@ -29,7 +29,6 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import org.vertx.java.core.Vertx;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
@@ -45,8 +44,6 @@ public class CollectDAOImpl implements CollectDAO {
 
     @Inject
     private MongoDB mongo;
-    @Inject
-    private Vertx vertx;
     @Inject
     private NotificationsDAO notificationsDAO;
 
