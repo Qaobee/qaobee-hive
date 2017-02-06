@@ -22,7 +22,6 @@ package com.qaobee.hive.dao.impl;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
 import com.qaobee.hive.dao.CollectDAO;
 import com.qaobee.hive.dao.NotificationsDAO;
@@ -78,7 +77,6 @@ public class CollectDAOImpl implements CollectDAO {
                 .putString("senderId", currentUserId);
         notificationsDAO.notify(collect.getObject(SB_CollectVerticle.PARAM_EVENT).getObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
                 DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId));
-        vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
         return collect;
     }
 
