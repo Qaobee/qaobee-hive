@@ -27,9 +27,35 @@ node {
     }
 
     stage("Doc $version") {
-        sh './gradlew apidoc -x test'
-        sh 'git_stats generate -o docs/git'
+        sh 'npm install'
+        sh 'node_modules/apidoc/bin/apidoc -i src/main/java/ -o build/docs/api-doc'
+        sh 'git_stats generate -o build/docs/git'
+        sh './gradlew gitChangelogTask'
         step([$class: 'JavadocArchiver', javadocDir: 'build/docs/javadoc/', keepAll: true])
+        publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'build/docs/api-doc',
+                reportFiles: 'index.html',
+                reportName: "APIDoc"
+        ])
+        publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'build/docs/git',
+                reportFiles: 'index.html',
+                reportName: "GitStats"
+        ])
+        publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'build/docs/changelog',
+                reportFiles: 'index.html',
+                reportName: "Changelog"
+        ])
     }
 
     stage("Quality $version") {

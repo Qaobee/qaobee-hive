@@ -26,10 +26,7 @@ uploadArchives - upload the module zip file (and jar if one has been created) to
                  configure sonatypeUsername and sonatypePassword in ~/.gradle/gradle.properties.
 install - install any jars produced to the local Maven repository (.m2)
  */
-apply from: "gradle/vertx.gradle"
-apply plugin: 'org.sonarqube'
-apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'project-report'
+
 repositories {
     flatDir {
         dirs 'lib'
@@ -49,8 +46,14 @@ buildscript {
         classpath 'org.ajoberstar:gradle-jacoco:0.3.0'
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+        classpath "gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.40"
     }
 }
+apply from: "gradle/vertx.gradle"
+apply plugin: 'org.sonarqube'
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'project-report'
+apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
 dependencies {
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
     compile "io.vertx:lang-groovy:$groovyLangModVersion@jar"
@@ -88,9 +91,6 @@ dependencies {
     testCompile 'org.mock-server:mockserver-netty:3.10.4'
 
 }
-task apidoc(type: Exec) {
-    commandLine 'apidoc', '-i', 'src/main/java/', '-o', 'build/docs/api-doc'
-}
 test {
     minHeapSize = "128m"
     maxHeapSize = "512m"
@@ -120,6 +120,30 @@ sonarqube {
         property 'sonar.jacoco.reportPath', 'build/jacoco/jacocoTest.exec'
         property 'sonar.binaries', 'build/classes/main'
     }
+}
+
+def version(inc) {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--tags'
+        standardOutput = stdout
+    }
+    def v = stdout.toString().trim().substring(1).tokenize('.').toArray()
+    def gitVersion = [
+            major: v[0].toInteger(),
+            minor: v[1].toInteger(),
+            patch: v[2].toInteger() + inc
+    ]
+    def version = 'v' + gitVersion.values().join('.')
+    return version
+}
+task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+    jiraUsername = "marin.xavier"
+    jiraPassword = "123456"
+    jiraIssuePattern = "\\b[a-zA-Z]([a-zA-Z]+)-([0-9]+)\\b"
+    filePath = "build/docs/changelog/index.html"
+    templateContent = new File('changelog.mustache').getText('UTF-8')
+    fromRef = version(-5)
 }
 
 /*
