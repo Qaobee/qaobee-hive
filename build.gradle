@@ -138,9 +138,6 @@ def version(inc) {
     return version
 }
 task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
-    jiraUsername = "marin.xavier"
-    jiraPassword = "123456"
-    jiraIssuePattern = "\\b[a-zA-Z]([a-zA-Z]+)-([0-9]+)\\b"
     filePath = "build/docs/changelog/index.html"
     templateContent = new File('changelog.mustache').getText('UTF-8')
     fromRef = version(-5)
