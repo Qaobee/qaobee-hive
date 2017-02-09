@@ -19,7 +19,7 @@ node {
 
     stage("Test $version") {
         try {
-            sh './gradlew test -Dorg.gradle.parallel=false'
+            sh './gradlew test'
         } finally {
             junit keepLongStdio: true, testResults: 'build/test-results/test/*.xml'
             step([$class: 'JacocoPublisher', classPattern: 'build/jacoco/classpathdumps/', exclusionPattern: '**/test/**/*.class', execPattern: 'build/jacoco/**.exec', inclusionPattern: 'com/qaobee/hive/**/*.class', sourcePattern: 'src/main/java'])
