@@ -93,9 +93,9 @@ dependencies {
 }
 test {
     minHeapSize = "128m"
-    maxHeapSize = "512m"
+    maxHeapSize = "1024m"
     maxParallelForks = 1
-    jvmArgs '-XX:MaxPermSize=256m -Dfile.encoding=UTF-8'
+    jvmArgs '-XX:MaxPermSize=1024m -Dfile.encoding=UTF-8'
     include 'com/qaobee/hive/test/api/**'
     beforeTest { descriptor ->
         logger.lifecycle("Running test: $descriptor")
