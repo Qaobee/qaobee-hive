@@ -122,7 +122,7 @@ sonarqube {
     }
 }
 
-def version(inc) {
+def getVersion(inc) {
     def stdout = new ByteArrayOutputStream()
     exec {
         commandLine 'git', 'describe', '--abbrev=0', '--tags'
@@ -140,7 +140,7 @@ def version(inc) {
 task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     filePath = "build/docs/changelog/index.html"
     templateContent = new File('changelog.mustache').getText('UTF-8')
-    fromRef = version(-5)
+    fromRef = getVersion(-5)
 }
 
 /*
