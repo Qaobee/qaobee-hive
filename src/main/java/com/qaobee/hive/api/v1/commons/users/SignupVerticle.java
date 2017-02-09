@@ -261,7 +261,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
             // Gets JSon request
             final JsonObject json = new JsonObject(req.getBody());
             JsonObject res = signupDAO.register(json.getString(PARAM_CAPTCHA), json, req.getLocale());
-            
             message.reply(res.encode());
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
