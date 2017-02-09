@@ -69,7 +69,7 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
  */
 @RunWith(VertxJUnit4ClassRunner.class)
 @VertxConfiguration(modsDir = "build/mods")
-@TestModule(name = "com.qaobee~hive~0.1", jsonConfig = "file:config.json", instances = 2)
+@TestModule(name = "com.qaobee~hive~0.1", jsonConfig = "file:config.json")
 public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest {
     /**
      * The constant LOCALE.
