@@ -26,38 +26,6 @@ node {
         }
     }
 
-    stage("Doc $version") {
-        sh 'npm install'
-        sh 'node_modules/apidoc/bin/apidoc -i src/main/java/ -o build/docs/api-doc'
-        sh 'git_stats generate -o build/docs/git'
-        sh './gradlew gitChangelogTask'
-        step([$class: 'JavadocArchiver', javadocDir: 'build/docs/javadoc/', keepAll: true])
-        publishHTML (target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: 'build/docs/api-doc',
-                reportFiles: 'index.html',
-                reportName: "APIDoc"
-        ])
-        publishHTML (target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: 'build/docs/git',
-                reportFiles: 'index.html',
-                reportName: "GitStats"
-        ])
-        publishHTML (target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: 'build/docs/changelog',
-                reportFiles: 'index.html',
-                reportName: "Changelog"
-        ])
-    }
-
     stage("Quality $version") {
         sh "./gradlew sonarqube -x test -Dsonar.projectVersion=$version -Dsonar.login=marin.xavier -Dsonar.password=zaza66629!"
     }
@@ -114,6 +82,38 @@ node {
                 "up -d --upgrade --confirm-upgrade"
         sh "rm -f docker-compose.yml"
         sh "rm -fr rancher-compose-$rancherCli"
+    }
+
+    stage("Doc $version") {
+        sh 'npm install'
+        sh 'node_modules/apidoc/bin/apidoc -i src/main/java/ -o build/docs/api-doc'
+        sh 'git_stats generate -o build/docs/git'
+        sh './gradlew gitChangelogTask'
+        step([$class: 'JavadocArchiver', javadocDir: 'build/docs/javadoc/', keepAll: true])
+        publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'build/docs/api-doc',
+                reportFiles: 'index.html',
+                reportName: "APIDoc"
+        ])
+        publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'build/docs/git',
+                reportFiles: 'index.html',
+                reportName: "GitStats"
+        ])
+        publishHTML (target: [
+                allowMissing: false,
+                alwaysLinkToLastBuild: false,
+                keepAll: true,
+                reportDir: 'build/docs/changelog',
+                reportFiles: 'index.html',
+                reportName: "Changelog"
+        ])
     }
 }
 
