@@ -2,7 +2,7 @@
 import hudson.model.*
 
 node {
-    def rancherCli = 'v0.8.6'
+    def rancherCli = 'v0.12.2'
     def version = ''
 
     stage('Checkout') {
@@ -54,19 +54,18 @@ node {
                 "  environment:\n" +
                 "    ENV: REC\n" +
                 "    OPENSHIFT_DATA_DIR: /opt/hive-data\n" +
-                "    OPENSHIFT_MONGODB_DB_HOST: vps269266.ovh.net\n" +
+                "    OPENSHIFT_MONGODB_DB_HOST: mongo\n" +
                 "    OPENSHIFT_MONGODB_DB_PASSWORD: qaobee2016\n" +
                 "    OPENSHIFT_MONGODB_DB_PORT: '27017'\n" +
                 "    OPENSHIFT_MONGODB_DB_USERNAME: hive\n" +
-                "  log_driver: ''\n" +
                 "  labels:\n" +
                 "    io.rancher.container.pull_image: always\n" +
                 "    io.rancher.scheduler.affinity:host_label: tag=hive\n" +
-                "    io.rancher.container.dns: 'true'\n" +
                 "  image: registry.gitlab.com/qaobee/qaobee-hive:$version\n" +
                 "  volumes:\n" +
                 "  - /opt/qaobee-hive:/opt/hive-data\n" +
-                "  net: host\n" +
+                "  links:\n" +
+                "  - qaobeehivedb:mongo" +
                 "EOC"
         sh "./rancher-compose-$rancherCli/rancher-compose \\\n" +
                 "--url http://vps234741.ovh.net:8080 \\\n" +
