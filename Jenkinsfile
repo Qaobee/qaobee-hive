@@ -2,7 +2,6 @@
 import hudson.model.*
 
 node {
-    def rancherCli = 'v0.12.2'
     def version = ''
 
     stage('Checkout') {
@@ -44,43 +43,7 @@ node {
     }
 
     stage("Deploy $version in REC") {
-        sh "wget https://github.com/rancher/rancher-compose/releases/download/$rancherCli/rancher-compose-linux-amd64-$rancherCli" + ".tar.gz"
-        sh "tar -zxf rancher-compose-linux-amd64-$rancherCli" + ".tar.gz"
-        sh "rm -f rancher-compose-linux-amd64-$rancherCli" + ".tar.gz"
-        sh "cat > docker-compose.yml <<EOC\n" +
-                "qaobee-hive:\n" +
-                "  ports:\n" +
-                "  - 8080:8080/tcp\n" +
-                "  environment:\n" +
-                "    ENV: REC\n" +
-                "    OPENSHIFT_DATA_DIR: /opt/hive-data\n" +
-                "    OPENSHIFT_MONGODB_DB_HOST: mongo\n" +
-                "    OPENSHIFT_MONGODB_DB_PASSWORD: qaobee2016\n" +
-                "    OPENSHIFT_MONGODB_DB_PORT: '27017'\n" +
-                "    OPENSHIFT_MONGODB_DB_USERNAME: hive\n" +
-                "  labels:\n" +
-                "    io.rancher.container.pull_image: always\n" +
-                "    io.rancher.scheduler.affinity:host_label: tag=hive\n" +
-                "  image: registry.gitlab.com/qaobee/qaobee-hive:$version\n" +
-                "  volumes:\n" +
-                "  - /opt/qaobee-hive:/opt/hive-data\n" +
-                "  links:\n" +
-                "  - qaobeehivedb:mongo" +
-                "EOC"
-        sh "./rancher-compose-$rancherCli/rancher-compose \\\n" +
-                "--url http://vps234741.ovh.net:8080 \\\n" +
-                "--access-key 854D77F36BD20C5D89FE \\\n" +
-                "--secret-key p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot  \\\n" +
-                "--project-name Qaobee-Recette \\\n" +
-                "up -d --force-upgrade qaobee-hive\n" +
-                "./rancher-compose-$rancherCli/rancher-compose \\\n" +
-                "--url http://vps234741.ovh.net:8080 \\\n" +
-                "--access-key 854D77F36BD20C5D89FE \\\n" +
-                "--secret-key p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot  \\\n" +
-                "--project-name Qaobee-Recette \\\n" +
-                "up -d --upgrade --confirm-upgrade"
-        sh "rm -f docker-compose.yml"
-        sh "rm -fr rancher-compose-$rancherCli"
+       sh "./gradlew updateRancherImage -PdockerVersion=$version"
     }
 
     stage("Doc $version") {

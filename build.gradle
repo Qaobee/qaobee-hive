@@ -1,6 +1,8 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
 group 'com.qaobee'
 version '0.1'
-
 /*
 Usage:
 ./gradlew task_name
@@ -49,11 +51,13 @@ buildscript {
         classpath "gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.40"
     }
 }
+apply plugin: 'groovy'
 apply from: "gradle/vertx.gradle"
 apply plugin: 'org.sonarqube'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'project-report'
 apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
+
 dependencies {
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
     compile "io.vertx:lang-groovy:$groovyLangModVersion@jar"
@@ -73,9 +77,9 @@ dependencies {
     compile 'org.freemarker:freemarker:2.3.23'
     compile 'commons-beanutils:commons-beanutils:1.9.3'
     compile 'io.vertx:mod-mailer:2.0.0-final'
-    compile ('net.rcarz:jira-client:0.5') {
+    compile('net.rcarz:jira-client:0.5') {
         transitive = true
-        exclude group:  'org.mockito'
+        exclude group: 'org.mockito'
         exclude group: 'junit:junit'
     }
 
@@ -137,10 +141,38 @@ def getVersion(inc) {
     def version = 'v' + gitVersion.values().join('.')
     return version
 }
+
 task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
     filePath = "build/docs/changelog/index.html"
     templateContent = new File('changelog.mustache').getText('UTF-8')
     fromRef = getVersion(-5)
+}
+
+task updateRancherImage {
+    def url = "http://vps234741.ovh.net:8080/v2-beta/projects/1a7/services/1s22/"
+    def creds = "854D77F36BD20C5D89FE:p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot"
+    def p = ['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute()
+    def json = new JsonSlurper().parseText(p.text).upgrade
+    def imageUid = json.inServiceStrategy.launchConfig.imageUuid.split(':')
+    println "upgrading  ${imageUid[1]} from ${imageUid[2]} to ${dockerVersion}"
+    imageUid[2] = dockerVersion
+    json.inServiceStrategy.launchConfig.imageUuid = imageUid.join(':')
+
+    def req = new JsonSlurper().parseText('{"inServiceStrategy": {}}')
+    req.inServiceStrategy = json.inServiceStrategy
+    def request = JsonOutput.toJson(req)
+    def r = ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' -d '${request}' ${url}?action=upgrade"].execute()
+    def resp = new JsonSlurper().parseText(r.text)
+    if(resp.type != "error") {
+        def upgraded = false
+        while (!upgraded) {
+            Thread.sleep(2000L)
+            def state = new JsonSlurper().parseText(['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute().text)
+            println state.state
+            upgraded = "upgraded" == state.state
+        }
+        ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' ${url}?action=finishupgrade"].execute()
+    }
 }
 
 /*
@@ -183,4 +215,3 @@ def configurePom(def pom) {
         }
     }
 }
-
