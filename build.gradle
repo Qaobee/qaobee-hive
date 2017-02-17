@@ -95,6 +95,7 @@ test {
     minHeapSize = "128m"
     maxHeapSize = "1024m"
     maxParallelForks = 1
+    jvmArgs '-Djava.security.egd=file:/dev/urandom -Dfile.encoding=UTF-8'
     include 'com/qaobee/hive/test/api/**'
     beforeTest { descriptor ->
         logger.lifecycle("Running test: $descriptor")
