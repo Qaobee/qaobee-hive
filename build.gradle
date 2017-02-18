@@ -172,6 +172,7 @@ task updateRancherImage {
                 def state = new JsonSlurper().parseText(['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute().text)
                 println state.state
                 upgraded = "upgraded" == state.state
+                if("active" == state.state) return 0
             }
             ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' -d '{}' ${url}?action=finishupgrade"].execute()
         }
