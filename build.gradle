@@ -172,7 +172,7 @@ task updateRancherImage {
             println state.state
             upgraded = "upgraded" == state.state
         }
-        ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' ${url}?action=finishupgrade"].execute()
+        ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' -d '{}' ${url}?action=finishupgrade"].execute()
     }
 }
 
