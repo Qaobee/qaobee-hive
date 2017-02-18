@@ -150,29 +150,31 @@ task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
 
 task updateRancherImage {
     def dockerVersion = findProperty("dockerVersion")
-    def url = "http://vps234741.ovh.net:8080/v2-beta/projects/1a7/services/1s22/"
-    def creds = "854D77F36BD20C5D89FE:p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot"
-    def p = ['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute()
-    def json = new JsonSlurper().parseText(p.text).upgrade
-    def imageUid = json.inServiceStrategy.launchConfig.imageUuid.split(':')
-    println "upgrading  ${imageUid[1]} from ${imageUid[2]} to ${dockerVersion}"
-    imageUid[2] = dockerVersion
-    json.inServiceStrategy.launchConfig.imageUuid = imageUid.join(':')
+    if(dockerVersion != null) {
+        def url = "http://vps234741.ovh.net:8080/v2-beta/projects/1a7/services/1s22/"
+        def creds = "854D77F36BD20C5D89FE:p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot"
+        def p = ['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute()
+        def json = new JsonSlurper().parseText(p.text).upgrade
+        def imageUid = json.inServiceStrategy.launchConfig.imageUuid.split(':')
+        println "upgrading  ${imageUid[1]} from ${imageUid[2]} to ${dockerVersion}"
+        imageUid[2] = dockerVersion
+        json.inServiceStrategy.launchConfig.imageUuid = imageUid.join(':')
 
-    def req = new JsonSlurper().parseText('{"inServiceStrategy": {}}')
-    req.inServiceStrategy = json.inServiceStrategy
-    def request = JsonOutput.toJson(req)
-    def r = ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' -d '${request}' ${url}?action=upgrade"].execute()
-    def resp = new JsonSlurper().parseText(r.text)
-    if(resp.type != "error") {
-        def upgraded = false
-        while (!upgraded) {
-            Thread.sleep(2000L)
-            def state = new JsonSlurper().parseText(['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute().text)
-            println state.state
-            upgraded = "upgraded" == state.state
+        def req = new JsonSlurper().parseText('{"inServiceStrategy": {}}')
+        req.inServiceStrategy = json.inServiceStrategy
+        def request = JsonOutput.toJson(req)
+        def r = ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' -d '${request}' ${url}?action=upgrade"].execute()
+        def resp = new JsonSlurper().parseText(r.text)
+        if (resp.type != "error") {
+            def upgraded = false
+            while (!upgraded) {
+                Thread.sleep(2000L)
+                def state = new JsonSlurper().parseText(['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute().text)
+                println state.state
+                upgraded = "upgraded" == state.state
+            }
+            ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' -d '{}' ${url}?action=finishupgrade"].execute()
         }
-        ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' -d '{}' ${url}?action=finishupgrade"].execute()
     }
 }
 
