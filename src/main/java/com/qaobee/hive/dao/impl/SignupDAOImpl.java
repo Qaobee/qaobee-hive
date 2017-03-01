@@ -221,7 +221,7 @@ public class SignupDAOImpl implements SignupDAO {
 
     @Override
     public JsonObject register(String reCaptchaChallenge, JsonObject userJson, String locale) throws QaobeeException {
-        if (runtime.getBoolean("recaptcha") || "web".equals(userJson.getObject("account").getString("origin", "web"))) {
+        if (runtime.getBoolean("recaptcha") && !"mobile".equals(userJson.getObject("account").getString("origin", "web"))) {
             try {
                 if (!reCaptcha.verify(reCaptchaChallenge).get()) {
                     throw new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha");
