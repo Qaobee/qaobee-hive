@@ -72,7 +72,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
                 versions.add(data.getString("version"));
             }
             Issue newIssue = jira.createIssue(project, "Bug")
-                    .field(Field.SUMMARY, "[" + title + "] " + data.getString("note"))
+                    .field(Field.SUMMARY, "[" + title + "] " + data.getString("note").replaceAll("\n", " "))
                     .field(Field.DESCRIPTION, data.getString("description", data.getString("note")) + "\n" +  data.getString("url") + "\n" + data.getObject("browser").encodePrettily())
                     .field(Field.LABELS,labels)
                     .field(Field.ISSUE_TYPE,data.getString("type", "feedback"))
