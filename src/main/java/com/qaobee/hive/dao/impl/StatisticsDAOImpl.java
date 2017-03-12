@@ -19,25 +19,28 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.mongodb.*;
-import com.mongodb.util.JSON;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.qaobee.hive.dao.StatisticsDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * The type Statistics dao.
  */
 public class StatisticsDAOImpl implements StatisticsDAO {
+    private static final Logger LOG = LoggerFactory.getLogger(StatisticsDAOImpl.class);
     private static final String TIMER_FIELD = "timer";
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
@@ -47,20 +50,44 @@ public class StatisticsDAOImpl implements StatisticsDAO {
 
     @Override
     public JsonObject addBulk(JsonArray stats) {
-        if (stats.size() > 0) {
-            DBCollection coll = mongo.getDb().getCollection(DBCollections.STATS);
-            BulkWriteOperation bulk = coll.initializeUnorderedBulkOperation();
-            for (Object object : stats) {
-                JsonObject jsonO = (JsonObject) object;
-                DBObject item = (DBObject) JSON.parse(jsonO.encode());
-                item.put("_id", UUID.randomUUID().toString());
-                bulk.insert(item);
-            }
-            BulkWriteResult resultBulk = bulk.execute();
-            return new JsonObject().putNumber("count", resultBulk.getInsertedCount());
-        } else {
-            return new JsonObject().putNumber("count", 0);
+        long count = 0;
+        HashSet<String> events = new HashSet<>();
+        for (int i = 0; i < stats.size(); i++) {
+            events.add(((JsonObject) stats.get(i)).getString("eventId"));
         }
+        for (String evtId : events) {
+            JsonArray eventStats = getListForEvent(evtId);
+            if (eventStats.size() == 0) {
+                for (int i = 0; i < stats.size(); i++) {
+                    try {
+                        if(evtId.equals(((JsonObject) stats.get(i)).getString("eventId"))) {
+                            addStat(stats.get(i));
+                            count++;
+                        }
+                    } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                    }
+                }
+            } else {
+                for (int j = 0; j < eventStats.size(); j++) {
+                    for (int i = 0; i < stats.size(); i++) {
+                        final JsonObject jsonObj = eventStats.get(j);
+                        if (!jsonObj.getString("code").equals(((JsonObject) stats.get(i)).getString("code"))
+                                && !jsonObj.getLong("timer").equals(((JsonObject) stats.get(i)).getLong("timer"))
+                                && !jsonObj.getString("eventId").equals(evtId)
+                                ) {
+                            try {
+                                addStat(stats.get(i));
+                                count++;
+                            } catch (QaobeeException e) {
+                                LOG.error(e.getMessage(), e);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return new JsonObject().putNumber("count", count);
     }
 
     @Override
