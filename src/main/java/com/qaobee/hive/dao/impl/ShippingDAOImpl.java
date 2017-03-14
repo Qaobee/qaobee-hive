@@ -74,22 +74,35 @@ public class ShippingDAOImpl implements ShippingDAO {
     private static final String PAYMENT_ID_FIELD = "paymentId";
     private static final String SHIPPING_LIST_FIELD = "shippingList";
     private static final String BASE_URL_FIELD = "baseUrl";
+    private final MongoDB mongo;
+    private final Vertx vertx;
+    private final Utils utils;
+    private final JsonObject runtime;
+    private final JsonObject payplug;
+    private final MailUtils mailUtils;
+    private final TemplatesDAO templatesDAO;
+
+    /**
+     * Instantiates a new Shipping dao.
+     *
+     * @param mongo        the mongo
+     * @param vertx        the vertx
+     * @param utils        the utils
+     * @param runtime      the runtime
+     * @param payplug      the payplug
+     * @param mailUtils    the mail utils
+     * @param templatesDAO the templates dao
+     */
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private Vertx vertx;
-    @Inject
-    private Utils utils;
-    @Inject
-    @Named("runtime")
-    private JsonObject runtime;
-    @Inject
-    @Named("payplug")
-    private JsonObject payplug;
-    @Inject
-    private MailUtils mailUtils;
-    @Inject
-    private TemplatesDAO templatesDAO;
+    public ShippingDAOImpl(MongoDB mongo, Vertx vertx, Utils utils, @Named("runtime") JsonObject runtime, @Named("payplug") JsonObject payplug, MailUtils mailUtils, TemplatesDAO templatesDAO) {
+        this.mongo = mongo;
+        this.vertx = vertx;
+        this.utils = utils;
+        this.runtime = runtime;
+        this.payplug = payplug;
+        this.mailUtils = mailUtils;
+        this.templatesDAO = templatesDAO;
+    }
 
     @Override
     public JsonArray periodicPayment() {

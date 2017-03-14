@@ -42,10 +42,20 @@ public class TeamDAOImpl implements TeamDAO {
     private static final String PARAM_ENABLE = "enable";
     private static final String PARAM_LINK_TEAM_ID = "linkTeamId";
 
+    private final MongoDB mongo;
+    private final NotificationsDAO notificationsDAO;
+
+    /**
+     * Instantiates a new Team dao.
+     *
+     * @param mongo            the mongo
+     * @param notificationsDAO the notifications dao
+     */
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private NotificationsDAO notificationsDAO;
+    public TeamDAOImpl(MongoDB mongo, NotificationsDAO notificationsDAO) {
+        this.mongo = mongo;
+        this.notificationsDAO = notificationsDAO;
+    }
 
     @Override
     public JsonArray getTeamList(String sandboxId, String effectiveId, String adversary, String enabled, String link) {

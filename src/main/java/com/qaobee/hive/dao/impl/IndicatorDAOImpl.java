@@ -39,8 +39,17 @@ import java.util.List;
 public class IndicatorDAOImpl implements IndicatorDAO {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
+    private final MongoDB mongo;
+
+    /**
+     * Instantiates a new Indicator dao.
+     *
+     * @param mongo the mongo
+     */
     @Inject
-    private MongoDB mongo;
+    public IndicatorDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonArray getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators) throws QaobeeException {

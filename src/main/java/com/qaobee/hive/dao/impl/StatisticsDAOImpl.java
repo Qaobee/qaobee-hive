@@ -45,49 +45,79 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
     private static final String VALUE_FIELD = "value";
+    private static final String EVENT_ID_FIELD = "eventId";
+    private final MongoDB mongo;
+
+    /**
+     * Instantiates a new Statistics dao.
+     *
+     * @param mongo the mongo
+     */
     @Inject
-    private MongoDB mongo;
+    public StatisticsDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonObject addBulk(JsonArray stats) {
         long count = 0;
-        HashSet<String> events = new HashSet<>();
-        for (int i = 0; i < stats.size(); i++) {
-            events.add(((JsonObject) stats.get(i)).getString("eventId"));
-        }
-        for (String evtId : events) {
+        for (String evtId : collectUniqueIds(stats)) {
             JsonArray eventStats = getListForEvent(evtId);
             if (eventStats.size() == 0) {
-                for (int i = 0; i < stats.size(); i++) {
-                    try {
-                        if(evtId.equals(((JsonObject) stats.get(i)).getString("eventId"))) {
-                            addStat(stats.get(i));
-                            count++;
-                        }
-                    } catch (QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                    }
-                }
+                count = pushAllStats(stats, evtId);
             } else {
-                for (int j = 0; j < eventStats.size(); j++) {
-                    for (int i = 0; i < stats.size(); i++) {
-                        final JsonObject jsonObj = eventStats.get(j);
-                        if (!jsonObj.getString("code").equals(((JsonObject) stats.get(i)).getString("code"))
-                                && !jsonObj.getLong("timer").equals(((JsonObject) stats.get(i)).getLong("timer"))
-                                && !jsonObj.getString("eventId").equals(evtId)
-                                ) {
-                            try {
-                                addStat(stats.get(i));
-                                count++;
-                            } catch (QaobeeException e) {
-                                LOG.error(e.getMessage(), e);
-                            }
-                        }
-                    }
-                }
+                count = pushNonDuplicateStats(stats, eventStats, evtId);
             }
         }
         return new JsonObject().putNumber("count", count);
+    }
+
+    private long pushNonDuplicateStats(JsonArray stats, JsonArray eventStats, String evtId) {
+        long count = 0;
+        for (int j = 0; j < eventStats.size(); j++) {
+            for (int i = 0; i < stats.size(); i++) {
+                count += addNotDuplicateStat(stats.get(i), eventStats.get(j), evtId);
+            }
+        }
+        return count;
+    }
+
+    private long addNotDuplicateStat(JsonObject pushedStat, JsonObject existingStat, String evtId) {
+        if (!existingStat.getString(CODE_FIELD).equals(pushedStat.getString(CODE_FIELD))
+                && !existingStat.getLong(TIMER_FIELD).equals(pushedStat.getLong(TIMER_FIELD))
+                && !existingStat.getString(EVENT_ID_FIELD).equals(evtId)
+                ) {
+            try {
+                addStat(pushedStat);
+                return 1L;
+            } catch (QaobeeException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+        return 0L;
+    }
+
+    private long pushAllStats(JsonArray stats, String evtId) {
+        long count = 0;
+        for (int i = 0; i < stats.size(); i++) {
+            try {
+                if (evtId.equals(((JsonObject) stats.get(i)).getString(EVENT_ID_FIELD))) {
+                    addStat(stats.get(i));
+                    count++;
+                }
+            } catch (QaobeeException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+        return count;
+    }
+
+    private HashSet<String> collectUniqueIds(JsonArray stats) {
+        HashSet<String> events = new HashSet<>();
+        for (int i = 0; i < stats.size(); i++) {
+            events.add(((JsonObject) stats.get(i)).getString(EVENT_ID_FIELD));
+        }
+        return events;
     }
 
     @Override
@@ -177,10 +207,6 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         dbObjectParent.put("_id", dbObjectChild);
         // - average
         switch (aggregate) {
-            case "COUNT":
-                dbObjectChild = new BasicDBObject("$sum", 1);
-                dbObjectParent.put(VALUE_FIELD, dbObjectChild);
-                break;
             case "SUM":
                 dbObjectChild = new BasicDBObject("$sum", "$value");
                 dbObjectParent.put(VALUE_FIELD, dbObjectChild);
@@ -189,7 +215,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
                 dbObjectChild = new BasicDBObject("$avg", "$value");
                 dbObjectParent.put(VALUE_FIELD, dbObjectChild);
                 break;
-            default:
+            default: // COUNT
                 dbObjectChild = new BasicDBObject("$sum", 1);
                 dbObjectParent.put(VALUE_FIELD, dbObjectChild);
                 break;

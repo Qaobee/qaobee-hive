@@ -53,10 +53,20 @@ public class AssetDAOImpl implements AssetDAO {
     private static final String COLLECTION = "User";
     private static final String UID_FIELD = "uid";
     private static final String MESS_NOT_FOUND = "Not found";
+    private final MongoDB mongo;
+    private final Vertx vertx;
+
+    /**
+     * Instantiates a new Asset dao.
+     *
+     * @param mongo the mongo
+     * @param vertx the vertx
+     */
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private Vertx vertx;
+    public AssetDAOImpl(MongoDB mongo, Vertx vertx) {
+        this.mongo = mongo;
+        this.vertx = vertx;
+    }
 
     @Override
     public JsonObject addAsset(String userId, String token, String filename, String collection, String field, String contentType, String locale) throws QaobeeException {

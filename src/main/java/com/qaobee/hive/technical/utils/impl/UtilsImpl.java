@@ -57,10 +57,21 @@ public class UtilsImpl implements Utils {
     private static final Logger LOG = LoggerFactory.getLogger(UtilsImpl.class);
     private static final String NOT_LOGGED_KEY = "not.logged";
     private static final String SESSION_EXPIRED = "session.expired";
+    private static final String STATUS_FIELD = "status";
+    private final MongoDB mongo;
+    private final HabilitUtils habilitUtils;
+
+    /**
+     * Instantiates a new Utils.
+     *
+     * @param mongo        the mongo
+     * @param habilitUtils the habilit utils
+     */
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private HabilitUtils habilitUtils;
+    public UtilsImpl(MongoDB mongo, HabilitUtils habilitUtils) {
+        this.mongo = mongo;
+        this.habilitUtils = habilitUtils;
+    }
 
     @Override
     public void sendError(final Message<String> message, final ExceptionCodes ex, final String info) {
@@ -121,7 +132,9 @@ public class UtilsImpl implements Utils {
         final File fDest = new File(dest);
         if (!fDest.getParentFile().exists()) {
             boolean mkdirs = fDest.getParentFile().mkdirs();
-            LOG.info("res : " + mkdirs);
+            if(LOG.isInfoEnabled()) {
+                LOG.info(String.format("res : %s", mkdirs));
+            }
         }
         ImageIO.write(targetImage, "PNG", fDest);
     }
@@ -145,7 +158,7 @@ public class UtilsImpl implements Utils {
     @Override
     public void sendStatus(final boolean b, final Message<String> message) {
         final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean("status", b);
+        jsonResp.putBoolean(STATUS_FIELD, b);
         message.reply(jsonResp.encode());
 
     }
@@ -153,7 +166,7 @@ public class UtilsImpl implements Utils {
     @Override
     public void sendStatusJson(final boolean b, final Message<JsonObject> message) {
         final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean("status", b);
+        jsonResp.putBoolean(STATUS_FIELD, b);
         message.reply(jsonResp);
     }
 
@@ -167,7 +180,7 @@ public class UtilsImpl implements Utils {
     @Override
     public void sendStatusJson(boolean b, String cause, Message<JsonObject> message) {
         final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean("status", b);
+        jsonResp.putBoolean(STATUS_FIELD, b);
         jsonResp.putString("cause", cause);
         message.reply(jsonResp);
     }
@@ -180,7 +193,8 @@ public class UtilsImpl implements Utils {
             map = mapParams;
         }
         for (final String field : fields) {
-            if (!map.containsKey(field) || map.get(field) == null) {
+            if (!map.containsKey(field) || map.get(field) == null
+                    || (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field)))) {
                 missingFields.add(field);
             } else if (map.get(field) instanceof List) {
                 if (((List<?>) map.get(field)).isEmpty()) {
@@ -190,8 +204,6 @@ public class UtilsImpl implements Utils {
                 } else if (((List<?>) map.get(field)).get(0) == null) {
                     missingFields.add(field);
                 }
-            } else if (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field))) {
-                missingFields.add(field);
             }
         }
         if (!missingFields.isEmpty()) {

@@ -128,8 +128,7 @@ public class ShareDAOImpl implements ShareDAO {
     
     @Override
     public JsonObject getInvitationToSandbox(String invitationId) throws QaobeeException {
-        JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
-        return invitation;
+        return mongo.getById(invitationId, DBCollections.INVITATION);
     }
 
     @Override

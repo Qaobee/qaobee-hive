@@ -35,8 +35,17 @@ import java.util.Map;
  */
 public class ActivityDAOImpl implements ActivityDAO{
 
+    private final MongoDB mongo;
+
+    /**
+     * Instantiates a new Activity dao.
+     *
+     * @param mongo the mongo
+     */
     @Inject
-    private MongoDB mongo;
+    public ActivityDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonArray getEnabled() {

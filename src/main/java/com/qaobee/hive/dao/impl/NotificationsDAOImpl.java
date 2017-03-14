@@ -56,13 +56,27 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     private static final String FIELD_PERSON_ID = "personId";
     private static final String FIELD_MEMBER_STATUS = "status";
 
-    @Inject
-    private MongoDB mongo;
-    @Inject
-    private Vertx vertx;
-    @Inject
-    @Named("firebase")
+    private final MongoDB mongo;
+    private final Vertx vertx;
+    /**
+     * The Firebase.
+     */
+    final
     JsonObject firebase;
+
+    /**
+     * Instantiates a new Notifications dao.
+     *
+     * @param mongo    the mongo
+     * @param vertx    the vertx
+     * @param firebase the firebase
+     */
+    @Inject
+    public NotificationsDAOImpl(MongoDB mongo, Vertx vertx, @Named("firebase") JsonObject firebase) {
+        this.mongo = mongo;
+        this.vertx = vertx;
+        this.firebase = firebase;
+    }
 
     @Override
     public boolean notify(String id, String collection, JsonObject notification, JsonArray exclude) {

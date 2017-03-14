@@ -54,20 +54,35 @@ public class UserDAOImpl implements UserDAO {
     private static final Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9.\\-]+)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
+    private final MongoDB mongo;
+    private final Utils utils;
+    private final PasswordEncryptionService passwordEncryptionService;
+    private final SandBoxDAO sandBoxDAO;
+    private final SeasonDAO seasonDAO;
+    private final TeamDAO teamDAO;
+    private final ActivityDAO activityDAO;
+
+    /**
+     * Instantiates a new User dao.
+     *
+     * @param mongo                     the mongo
+     * @param utils                     the utils
+     * @param passwordEncryptionService the password encryption service
+     * @param sandBoxDAO                the sand box dao
+     * @param seasonDAO                 the season dao
+     * @param teamDAO                   the team dao
+     * @param activityDAO               the activity dao
+     */
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private Utils utils;
-    @Inject
-    private PasswordEncryptionService passwordEncryptionService;
-    @Inject
-    private SandBoxDAO sandBoxDAO;
-    @Inject
-    private SeasonDAO seasonDAO;
-    @Inject
-    private TeamDAO teamDAO;
-    @Inject
-    private ActivityDAO activityDAO;
+    public UserDAOImpl(MongoDB mongo, Utils utils, PasswordEncryptionService passwordEncryptionService, SandBoxDAO sandBoxDAO, SeasonDAO seasonDAO, TeamDAO teamDAO, ActivityDAO activityDAO) {
+        this.mongo = mongo;
+        this.utils = utils;
+        this.passwordEncryptionService = passwordEncryptionService;
+        this.sandBoxDAO = sandBoxDAO;
+        this.seasonDAO = seasonDAO;
+        this.teamDAO = teamDAO;
+        this.activityDAO = activityDAO;
+    }
 
     @Override
     public JsonObject updateAvatar(String uid, String filename) throws QaobeeException {

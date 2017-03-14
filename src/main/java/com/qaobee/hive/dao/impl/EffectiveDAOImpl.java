@@ -37,8 +37,17 @@ import java.util.Map;
 public class EffectiveDAOImpl implements EffectiveDAO {
     private static final String PARAM_SANDBOX_ID = "sandboxId";
     private static final String PARAM_CATEGORY_AGE_CODE = "categoryAge.code";
+    private final MongoDB mongo;
+
+    /**
+     * Instantiates a new Effective dao.
+     *
+     * @param mongo the mongo
+     */
     @Inject
-    private MongoDB mongo;
+    public EffectiveDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonObject add(JsonObject effective) throws QaobeeException {

@@ -53,23 +53,38 @@ public class SecurityDAOImpl implements SecurityDAO {
     private static final String BAD_LOGIN_MESS = "bad.login";
     private static final java.lang.String UNKNOWN_LOGIN = "login.wronglogin";
 
+    private final MongoDB mongo;
+    private final MailUtils mailUtils;
+    private final UserDAO userDAO;
+    private final TemplatesDAO templatesDAO;
+    private final PasswordEncryptionService passwordEncryptionService;
+    private final Vertx vertx;
+    private final ReCaptcha reCaptcha;
+    private final JsonObject runtime;
+
+    /**
+     * Instantiates a new Security dao.
+     *
+     * @param mongo                     the mongo
+     * @param mailUtils                 the mail utils
+     * @param userDAO                   the user dao
+     * @param templatesDAO              the templates dao
+     * @param passwordEncryptionService the password encryption service
+     * @param vertx                     the vertx
+     * @param reCaptcha                 the re captcha
+     * @param runtime                   the runtime
+     */
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private MailUtils mailUtils;
-    @Inject
-    private UserDAO userDAO;
-    @Inject
-    private TemplatesDAO templatesDAO;
-    @Inject
-    private PasswordEncryptionService passwordEncryptionService;
-    @Inject
-    private Vertx vertx;
-    @Inject
-    private ReCaptcha reCaptcha;
-    @Inject
-    @Named("runtime")
-    private JsonObject runtime;
+    public SecurityDAOImpl(MongoDB mongo, MailUtils mailUtils, UserDAO userDAO, TemplatesDAO templatesDAO, PasswordEncryptionService passwordEncryptionService, Vertx vertx, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime) {
+        this.mongo = mongo;
+        this.mailUtils = mailUtils;
+        this.userDAO = userDAO;
+        this.templatesDAO = templatesDAO;
+        this.passwordEncryptionService = passwordEncryptionService;
+        this.vertx = vertx;
+        this.reCaptcha = reCaptcha;
+        this.runtime = runtime;
+    }
 
     @Override
     public JsonObject loginByToken(String login, String mobileToken, String locale) throws QaobeeException {

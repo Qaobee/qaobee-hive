@@ -45,9 +45,17 @@ public final class MailUtilsImpl implements MailUtils {
     private static final String SALUTATION_FIELD = "salutation";
     private static final String ACTIVATION_LINK_FIELD = "activationlink";
     private static final String ACTIVATION_LINK_TEXT_FIELD = "activationlinkText";
+    private final JsonObject runtime;
+
+    /**
+     * Instantiates a new Mail utils.
+     *
+     * @param runtime the runtime
+     */
     @Inject
-    @Named("runtime")
-    private JsonObject runtime;
+    public MailUtilsImpl(@Named("runtime") JsonObject runtime) {
+        this.runtime = runtime;
+    }
 
 
     @Override

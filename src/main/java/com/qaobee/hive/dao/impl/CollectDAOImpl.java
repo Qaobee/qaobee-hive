@@ -42,10 +42,20 @@ import java.util.List;
  */
 public class CollectDAOImpl implements CollectDAO {
 
+    private final MongoDB mongo;
+    private final NotificationsDAO notificationsDAO;
+
+    /**
+     * Instantiates a new Collect dao.
+     *
+     * @param mongo            the mongo
+     * @param notificationsDAO the notifications dao
+     */
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private NotificationsDAO notificationsDAO;
+    public CollectDAOImpl(MongoDB mongo, NotificationsDAO notificationsDAO) {
+        this.mongo = mongo;
+        this.notificationsDAO = notificationsDAO;
+    }
 
     @Override
     public JsonObject get(String id) throws QaobeeException {

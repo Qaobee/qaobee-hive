@@ -40,8 +40,17 @@ import java.util.List;
  */
 public class ActivityCfgDAOImpl implements ActivityCfgDAO {
 
+    private final MongoDB mongo;
+
+    /**
+     * Instantiates a new Activity cfg dao.
+     *
+     * @param mongo the mongo
+     */
     @Inject
-    private MongoDB mongo;
+    public ActivityCfgDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonArray getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField) throws QaobeeException {

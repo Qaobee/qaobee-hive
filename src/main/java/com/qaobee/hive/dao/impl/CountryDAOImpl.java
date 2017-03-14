@@ -39,8 +39,17 @@ import java.util.Map;
 public class CountryDAOImpl implements CountryDAO {
     private Map<String, JsonObject> mapCountry;
 
+    private final MongoDB mongo;
+
+    /**
+     * Instantiates a new Country dao.
+     *
+     * @param mongo the mongo
+     */
     @Inject
-    private MongoDB mongo;
+    public CountryDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonObject getCountryFromAlpha2(String alpha2) {

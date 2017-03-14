@@ -33,8 +33,17 @@ import java.util.concurrent.CompletableFuture;
  * The type Recaptcha.
  */
 public class RecaptchaImpl implements ReCaptcha {
+    private final Vertx vertx;
+
+    /**
+     * Instantiates a new Recaptcha.
+     *
+     * @param vertx the vertx
+     */
     @Inject
-    private Vertx vertx;
+    public RecaptchaImpl(Vertx vertx) {
+        this.vertx = vertx;
+    }
 
     @Override
     public CompletableFuture<Boolean> verify(String challenge) {

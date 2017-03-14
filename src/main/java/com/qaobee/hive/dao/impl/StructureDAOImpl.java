@@ -39,10 +39,19 @@ import java.util.List;
  * The type Structure dao.
  */
 public class StructureDAOImpl implements StructureDAO {
-    @Inject
-    private MongoDB mongo;
+    private final MongoDB mongo;
     @Inject
     private CountryDAO countryDAO;
+
+    /**
+     * Instantiates a new Structure dao.
+     *
+     * @param mongo the mongo
+     */
+    @Inject
+    public StructureDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonObject update(JsonObject structure) throws QaobeeException {

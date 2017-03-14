@@ -42,9 +42,17 @@ import java.util.List;
 public class FeedbackDAOImpl implements FeedbackDAO {
     private static final Logger LOG = LoggerFactory.getLogger(FeedbackDAOImpl.class);
     private static final String PROJECT_FIELD = "project";
+    private final JsonObject config;
+
+    /**
+     * Instantiates a new Feedback dao.
+     *
+     * @param config the config
+     */
     @Inject
-    @Named("jira")
-    private JsonObject config;
+    public FeedbackDAOImpl(@Named("jira") JsonObject config) {
+        this.config = config;
+    }
 
     @Override
     public void sendFeedback(JsonObject data) throws QaobeeException {

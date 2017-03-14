@@ -38,8 +38,17 @@ public class SeasonDAOImpl implements SeasonDAO {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
     private static final String END_DATE_FIELD = "endDate";
+    private final MongoDB mongo;
+
+    /**
+     * Instantiates a new Season dao.
+     *
+     * @param mongo the mongo
+     */
     @Inject
-    private MongoDB mongo;
+    public SeasonDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonObject getCurrentSeason(String activityId, String countryId) throws QaobeeException {

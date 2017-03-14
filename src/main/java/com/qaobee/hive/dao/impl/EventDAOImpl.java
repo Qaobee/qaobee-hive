@@ -43,10 +43,20 @@ import java.util.List;
 public class EventDAOImpl implements EventDAO {
 
     private static final String FIELD_SANDBOX_ID = "sandboxId";
+    private final MongoDB mongo;
+    private final Vertx vertx;
+
+    /**
+     * Instantiates a new Event dao.
+     *
+     * @param mongo the mongo
+     * @param vertx the vertx
+     */
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private Vertx vertx;
+    public EventDAOImpl(MongoDB mongo, Vertx vertx) {
+        this.mongo = mongo;
+        this.vertx = vertx;
+    }
 
     @Override
     public JsonObject getEvent(String id) throws QaobeeException {

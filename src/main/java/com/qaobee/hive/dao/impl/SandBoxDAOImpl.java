@@ -51,8 +51,17 @@ public class SandBoxDAOImpl implements SandBoxDAO {
     private static final String FIELD_ID = "_id";
     private static final String FIELD_COUNTRY = "country";
 
+    private final MongoDB mongo;
+
+    /**
+     * Instantiates a new Sand box dao.
+     *
+     * @param mongo the mongo
+     */
     @Inject
-    private MongoDB mongo;
+    public SandBoxDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonObject getSandboxById(String sandboxId) throws QaobeeException {

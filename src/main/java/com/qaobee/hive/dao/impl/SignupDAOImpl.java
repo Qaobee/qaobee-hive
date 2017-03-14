@@ -61,21 +61,35 @@ public class SignupDAOImpl implements SignupDAO {
     private static final String PARAMERTER_FIELD = "parametersSignup";
     private static final String PARAM_PLAN = "plan";
 
+    private final ActivityDAO activityDAO;
+    private final MongoDB mongo;
+    private final CountryDAO countryDAO;
+    private final UserDAO userDAO;
+    private final StructureDAO structureDAO;
+    private final ReCaptcha reCaptcha;
+    private final JsonObject runtime;
+
+    /**
+     * Instantiates a new Signup dao.
+     *
+     * @param activityDAO  the activity dao
+     * @param mongo        the mongo
+     * @param countryDAO   the country dao
+     * @param userDAO      the user dao
+     * @param structureDAO the structure dao
+     * @param reCaptcha    the re captcha
+     * @param runtime      the runtime
+     */
     @Inject
-    private ActivityDAO activityDAO;
-    @Inject
-    private MongoDB mongo;
-    @Inject
-    private CountryDAO countryDAO;
-    @Inject
-    private UserDAO userDAO;
-    @Inject
-    private StructureDAO structureDAO;
-    @Inject
-    private ReCaptcha reCaptcha;
-    @Inject
-    @Named("runtime")
-    private JsonObject runtime;
+    public SignupDAOImpl(ActivityDAO activityDAO, MongoDB mongo, CountryDAO countryDAO, UserDAO userDAO, StructureDAO structureDAO, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime) {
+        this.activityDAO = activityDAO;
+        this.mongo = mongo;
+        this.countryDAO = countryDAO;
+        this.userDAO = userDAO;
+        this.structureDAO = structureDAO;
+        this.reCaptcha = reCaptcha;
+        this.runtime = runtime;
+    }
 
     @Override
     public JsonObject finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject structure, JsonObject categoryAge, String countryId, String locale) throws QaobeeException {

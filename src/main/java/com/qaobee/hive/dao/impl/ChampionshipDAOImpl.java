@@ -39,8 +39,17 @@ import java.util.Map;
  */
 public class ChampionshipDAOImpl implements ChampionshipDAO {
 
+    private final MongoDB mongo;
+
+    /**
+     * Instantiates a new Championship dao.
+     *
+     * @param mongo the mongo
+     */
     @Inject
-    private MongoDB mongo;
+    public ChampionshipDAOImpl(MongoDB mongo) {
+        this.mongo = mongo;
+    }
 
     @Override
     public JsonObject updateChampionship(JsonObject championship) throws QaobeeException {

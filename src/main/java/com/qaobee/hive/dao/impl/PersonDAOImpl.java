@@ -43,10 +43,20 @@ public class PersonDAOImpl implements PersonDAO {
 
     private static final String PARAM_SANDBOX_ID = "sandboxId";
 
+    private final MongoDB mongo;
+    private final NotificationsDAO notificationsDAO;
+
+    /**
+     * Instantiates a new Person dao.
+     *
+     * @param mongo            the mongo
+     * @param notificationsDAO the notifications dao
+     */
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private NotificationsDAO notificationsDAO;
+    public PersonDAOImpl(MongoDB mongo, NotificationsDAO notificationsDAO) {
+        this.mongo = mongo;
+        this.notificationsDAO = notificationsDAO;
+    }
 
     @Override
     public JsonArray getPersonListBySandbox(String sandboxId) throws QaobeeException {

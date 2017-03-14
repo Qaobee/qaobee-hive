@@ -49,16 +49,26 @@ import java.io.OutputStream;
 public class PdfDAOImpl implements PdfDAO {
     private static final Logger LOG = LoggerFactory.getLogger(PdfDAOImpl.class);
     private static final String PDF = "pdf";
+    private final TemplatesDAO templatesDAO;
+    private final Vertx vertx;
+    private final JsonObject pdfConfig;
+    private final JsonObject env;
+
+    /**
+     * Instantiates a new Pdf dao.
+     *
+     * @param templatesDAO the templates dao
+     * @param vertx        the vertx
+     * @param pdfConfig    the pdf config
+     * @param env          the env
+     */
     @Inject
-    private TemplatesDAO templatesDAO;
-    @Inject
-    private Vertx vertx;
-    @Inject
-    @Named("pdf")
-    private JsonObject pdfConfig;
-    @Inject
-    @Named("env")
-    private JsonObject env;
+    public PdfDAOImpl(TemplatesDAO templatesDAO, Vertx vertx, @Named("pdf") JsonObject pdfConfig, @Named("env") JsonObject env) {
+        this.templatesDAO = templatesDAO;
+        this.vertx = vertx;
+        this.pdfConfig = pdfConfig;
+        this.env = env;
+    }
 
     @Override
     public JsonObject generatePDF(JsonObject data, String template, String filename) throws QaobeeException {
