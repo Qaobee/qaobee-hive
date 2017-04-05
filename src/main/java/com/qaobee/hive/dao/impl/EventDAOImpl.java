@@ -66,7 +66,7 @@ public class EventDAOImpl implements EventDAO {
     @Override
     public JsonObject updateEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException {
         mongo.save(event, DBCollections.EVENT);
-        String sandBoxId = mongo.getById(event.getObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX).getString(FIELD_SANDBOX_ID);
+        String sandBoxId = mongo.getById(event.getObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX).getString("_id");
         JsonObject notification = new JsonObject();
         notification.putString("id", sandBoxId);
         notification.putString("target", DBCollections.SANDBOX);
@@ -83,7 +83,7 @@ public class EventDAOImpl implements EventDAO {
     @Override
     public JsonObject addEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException {
         event.putString("_id", mongo.save(event, DBCollections.EVENT));
-        String sandBoxId = mongo.getById(event.getObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX).getString(FIELD_SANDBOX_ID);
+        String sandBoxId = mongo.getById(event.getObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX).getString("_id");
         JsonObject notification = new JsonObject();
         notification.putString("id", sandBoxId);
         notification.putString("target", DBCollections.SANDBOX);
