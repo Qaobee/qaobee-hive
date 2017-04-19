@@ -40,7 +40,6 @@ import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Calendar;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -98,13 +97,8 @@ public class SecurityDAOImpl implements SecurityDAO {
             // we take the first one (should be only one)
             JsonObject jsonPerson = res.get(0);
             User user = Json.decodeValue(jsonPerson.encode(), User.class);
-            if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && testTrial(user)) {
-                user.getAccount().getListPlan().get(0).setStatus("notpaid");
-                throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale));
-            } else {
-                user.getAccount().setToken(UUID.randomUUID().toString());
-                user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-            }
+            user.getAccount().setToken(UUID.randomUUID().toString());
+            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
             mongo.save(user);
             return new JsonObject(Json.encode(user));
         }
@@ -211,10 +205,6 @@ public class SecurityDAOImpl implements SecurityDAO {
         if (!user.getAccount().isActive()) {
             throw new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", locale));
         }
-        // trial period test
-        if (!"paid".equals(user.getAccount().getListPlan().get(0).getStatus()) && testTrial(user)) {
-            user.getAccount().getListPlan().get(0).setStatus("notpaid");
-        }
         user.getAccount().setToken(UUID.randomUUID().toString());
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
         user.getAccount().setMobileToken(mobileToken);
@@ -228,18 +218,5 @@ public class SecurityDAOImpl implements SecurityDAO {
         }
         mongo.save(user);
         return userDAO.getUserInfo(user.get_id());
-    }
-
-    /**
-     * @param user User
-     * @return in trial period
-     */
-    private boolean testTrial(User user) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
-        Calendar cal2 = Calendar.getInstance();
-        cal2.setTimeInMillis(user.getAccount().getListPlan().get(0).getStartPeriodDate());
-        cal2.add(Calendar.MONTH, runtime.getInteger("trial.duration", 1));
-        return !"open".equals(user.getAccount().getListPlan().get(0).getStatus()) && cal.before(cal2);
     }
 }
