@@ -28,7 +28,7 @@ import org.vertx.java.platform.Verticle;
  * The type Abstract guice verticle.
  */
 public class AbstractGuiceVerticle extends Verticle {
-    private static final String MONKO_CONF_KEY = "mongo.persistor";
+    private static final String MONGO_CONF_KEY = "mongo.persistor";
     /**
      * The When container.
      */
@@ -40,12 +40,11 @@ public class AbstractGuiceVerticle extends Verticle {
     @Override
     public void start() {
         if (container.env().containsKey("OPENSHIFT_MONGODB_DB_HOST")) {
-            container.config().getObject(MONKO_CONF_KEY).putString("host", container.env().get("OPENSHIFT_MONGODB_DB_HOST"));
-            container.config().getObject(MONKO_CONF_KEY).putNumber("port", Integer.parseInt(container.env().get("OPENSHIFT_MONGODB_DB_PORT")));
-            container.config().getObject(MONKO_CONF_KEY).putString("password", container.env().get("OPENSHIFT_MONGODB_DB_PASSWORD"));
-            container.config().getObject(MONKO_CONF_KEY).putString("username", container.env().get("OPENSHIFT_MONGODB_DB_USERNAME"));
+            container.config().getObject(MONGO_CONF_KEY).putString("host", container.env().get("OPENSHIFT_MONGODB_DB_HOST"));
+            container.config().getObject(MONGO_CONF_KEY).putNumber("port", Integer.parseInt(container.env().get("OPENSHIFT_MONGODB_DB_PORT")));
+            container.config().getObject(MONGO_CONF_KEY).putString("password", container.env().get("OPENSHIFT_MONGODB_DB_PASSWORD"));
+            container.config().getObject(MONGO_CONF_KEY).putString("username", container.env().get("OPENSHIFT_MONGODB_DB_USERNAME"));
         }
-
         Injector injector = Guice.createInjector(new GuiceModule(container.config(), vertx, container.env()));
         injector.injectMembers(this);
         whenContainer = new DefaultWhenContainer(container);

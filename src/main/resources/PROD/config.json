@@ -57,6 +57,14 @@
     "port": 443,
     "basePath": "/v1"
   },
+  "mailchimp" : {
+    "env" : "PROD",
+    "key" : "97567b006b5c9f3d77cc5729bafb8d6d-us13",
+    "user" : "qaobee",
+    "host" : "us13.api.mailchimp.com",
+    "port" : 443,
+    "path" : "/3.0/lists/883987d33d"
+  },
   "mailer.mod": {
     "test": true,
     "address": "mailer.mod",

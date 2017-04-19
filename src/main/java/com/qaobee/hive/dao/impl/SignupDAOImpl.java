@@ -21,6 +21,7 @@ package com.qaobee.hive.dao.impl;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.qaobee.hive.api.v1.commons.utils.CRMVerticle;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
@@ -43,6 +44,7 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vertx.java.core.Vertx;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.json.impl.Json;
@@ -68,6 +70,8 @@ public class SignupDAOImpl implements SignupDAO {
     private final StructureDAO structureDAO;
     private final ReCaptcha reCaptcha;
     private final JsonObject runtime;
+    private final Vertx vertx;
+
 
     /**
      * Instantiates a new Signup dao.
@@ -79,9 +83,11 @@ public class SignupDAOImpl implements SignupDAO {
      * @param structureDAO the structure dao
      * @param reCaptcha    the re captcha
      * @param runtime      the runtime
+     * @param vertx        the vertx
      */
     @Inject
-    public SignupDAOImpl(ActivityDAO activityDAO, MongoDB mongo, CountryDAO countryDAO, UserDAO userDAO, StructureDAO structureDAO, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime) {
+    public SignupDAOImpl(ActivityDAO activityDAO, MongoDB mongo, CountryDAO countryDAO, UserDAO userDAO,
+                         StructureDAO structureDAO, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime, Vertx vertx) {
         this.activityDAO = activityDAO;
         this.mongo = mongo;
         this.countryDAO = countryDAO;
@@ -89,6 +95,7 @@ public class SignupDAOImpl implements SignupDAO {
         this.structureDAO = structureDAO;
         this.reCaptcha = reCaptcha;
         this.runtime = runtime;
+        this.vertx = vertx;
     }
 
     @Override
@@ -219,6 +226,7 @@ public class SignupDAOImpl implements SignupDAO {
         user.getAccount().setActive(true);
         user.getAccount().setFirstConnexion(false);
         mongo.save(user);
+        vertx.eventBus().send(CRMVerticle.UPDATE, new JsonObject(Json.encode(user)));
         return new JsonObject(Json.encode(user));
     }
 
@@ -271,6 +279,7 @@ public class SignupDAOImpl implements SignupDAO {
         }
         user.getAccount().getListPlan().add(plan);
         user.set_id(mongo.save(userDAO.prepareUpsert(user)));
+        vertx.eventBus().send(CRMVerticle.REGISTER, new JsonObject(Json.encode(user)));
         return new JsonObject()
                 .putObject("person", mongo.getById(user.get_id(), DBCollections.USER))
                 .putString("planId", plan.getPaymentId());

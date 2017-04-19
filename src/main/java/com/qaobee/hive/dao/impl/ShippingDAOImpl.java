@@ -229,7 +229,6 @@ public class ShippingDAOImpl implements ShippingDAO {
         HttpClient client = vertx.createHttpClient().setKeepAlive(true);
         client.setHost(payplug.getString(BASE_URL_FIELD));
         client.setPort(payplug.getInteger("port"));
-        client.setHost(payplug.getString(BASE_URL_FIELD)).setPort(payplug.getInteger("port"));
         if (payplug.getInteger("port") == 443) {
             client.setSSL(true).setTrustAll(true);
         }

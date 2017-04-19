@@ -128,6 +128,7 @@ class GuiceModule extends AbstractModule {
         bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
         bind(TeamDAO.class).to(TeamDAOImpl.class).in(Singleton.class);
         bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
-        bind(ReCaptcha.class).to(RecaptchaImpl.class).asEagerSingleton();
+        bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
+        bind(CRMDao.class).to(CRMDaoImpl.class).in(Singleton.class);
     }
 }

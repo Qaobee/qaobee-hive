@@ -57,6 +57,14 @@
     "db_name": "hive",
     "read_preference": "nearest"
   },
+  "mailchimp" : {
+    "env" : "TEST",
+    "key" : "xxx-us13",
+    "user" : "qaobee",
+    "host" : "us13.api.mailchimp.com",
+    "port" : 443,
+    "path" : "/3.0/lists/883987d33d"
+  },
   "mailer.mod": {
     "test": true,
     "fake": true,
