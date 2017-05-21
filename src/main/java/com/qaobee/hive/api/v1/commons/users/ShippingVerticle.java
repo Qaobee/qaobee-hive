@@ -101,14 +101,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     }
 
     private void triggeredPayment(Message<JsonObject> message) {
-       shippingDAO.triggeredPayment(message.body()).whenComplete((value, error) -> {
-           if (value != null) {
-              utils.sendStatusJson(value, message);
-           } else {
-               QaobeeException e = (QaobeeException) error;
-               utils.sendErrorJ(message, e);
-           }
-       });
+       shippingDAO.triggeredPayment(message.body());
     }
 
     /**
@@ -116,23 +109,18 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @api {post} /api/1/commons/users/shipping/pay Do a payment
      * @apiName Payment
      * @apiGroup Shipping API
-     * @apiParam {int} plan_id index of the plan in the user's plans list
+     * @apiParam {Object} data data
      * @apiHeader {String} token
      * @apiSuccess {Object} status Status with a redirect link if any
      * @apiHeader {String} token
      */
-    @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = PARAM_PLAN_ID, scope = Rule.Param.BODY)
+    @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = "data", scope = Rule.Param.BODY)
     private void pay(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject body = new JsonObject(req.getBody());
-            shippingDAO.pay(req.getUser(), Integer.parseInt(body.getString(PARAM_PLAN_ID)), req.getLocale()).whenComplete((value, error) -> {
-                if (value != null) {
-                    message.reply(value.encode());
-                } else {
-                    utils.sendError(message, (QaobeeException) error);
-                }
-            });
+            JsonObject value = shippingDAO.pay(req.getUser(), body.getObject("data"), req.getLocale());
+            message.reply(value.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

@@ -24,8 +24,6 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
  * The interface Shipping dao.
  */
@@ -43,18 +41,18 @@ public interface ShippingDAO {
      * @param user the user
      * @return the completable future
      */
-    CompletableFuture<Boolean> triggeredPayment(JsonObject user);
+    void triggeredPayment(JsonObject user);
 
     /**
      * Pay.
      *
      * @param user   the user
-     * @param planId the plan id
+     * @param paymentData the plan id
      * @param locale the locale
      * @return the completable future
      * @throws QaobeeException the qaobee exception
      */
-    CompletableFuture<JsonObject> pay(User user, int planId, String locale) throws QaobeeException;
+    JsonObject pay(User user, JsonObject paymentData, String locale) throws QaobeeException;
 
     /**
      * Ipn boolean.

@@ -83,9 +83,10 @@ dependencies {
         exclude group: 'junit:junit'
     }
 
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.8'
-    compile group: 'ch.qos.logback', name: 'logback-core', version: '1.1.8'
+    compile 'org.slf4j:slf4j-api:1.7.22'
+    compile 'ch.qos.logback:logback-classic:1.1.8'
+    compile 'ch.qos.logback:logback-core:1.1.8'
+    compile 'com.stripe:stripe-java:4.7.0'
 
 
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5'

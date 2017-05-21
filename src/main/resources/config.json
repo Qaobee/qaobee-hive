@@ -22,13 +22,13 @@
         "price": 8
       },
       "DISCOVERY": {
-        "price": 500
+        "price": 5
       },
       "PREMIUM": {
-        "price": 700
+        "price": 7
       },
       "TEAM_PLUS": {
-        "price": 900
+        "price": 9
       }
     }
   },
@@ -39,14 +39,8 @@
     "css": [
     ]
   },
-  "payplug": {
-    "baseUrl": "api.payplug.com",
-    "ipn_url": "https://flufy.hd.free.fr/hive/api/1/commons/users/shipping/ipn",
-    "return_url": "https://flufy.hd.free.fr/qswarm-web/#/private/billing/",
-    "cancel_url": "https://flufy.hd.free.fr/qswarm-web/#/private/billing/",
-    "api_key": "sk_test_2IcYHjZt1v5v6iKpvAwO3V",
-    "port": 443,
-    "basePath": "/v1"
+  "stripe": {
+    "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp"
   },
   "metrix.mod": {
     "address": "metrix"
