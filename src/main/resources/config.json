@@ -7,16 +7,16 @@
     "mail.site.url.api": "#/signup/end",
     "mail.send": true,
     "mail.to": "jerome.roue@gmail.com",
-    "mail.from": "jerome.roue@qaobee.com",
+    "mail.from": "contatc@qaobee.com",
     "newpasswd.site.url.api": "#/recoverpasswd",
-    "pay.url.api": "#/private/profile/billing",
+    "pay.url.api": "#/private/billing",
     "external.invitation.site.url.api": "#/externalInvitation",
     "internal.invitation.site.url.api": "#/internalInvitation",
     "recaptcha.pkey": "6LcTjvcSAAAAAKqDo7-xwQmc4K6gDcDSntKc2Pqs",
     "recaptcha.site": "localhost",
     "recaptcha" : true,
     "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
-    "trial.duration" : 1,
+    "trial.duration" : 365,
     "plan": {
       "FREEMIUM": {
         "price": 8

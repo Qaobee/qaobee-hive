@@ -94,7 +94,7 @@ public final class MailUtilsImpl implements MailUtils {
 
     @Override
     public JsonObject generatePaymentBody(final User user, final String locale, final Plan planItem) {
-        final JsonObject json = new JsonObject();
+         final JsonObject json = new JsonObject();
         json.putString(TITLE_FIELD, Messages.getString("mail.payment.title", locale));
         json.putString("desc", Messages.getString("mail.payment.line.1", locale, user.getFirstname() + " " + user.getName(), planItem.getLevelPlan().name()));
         json.putString(HEADER_FIELD, Messages.getString("mail.payment.title", locale));

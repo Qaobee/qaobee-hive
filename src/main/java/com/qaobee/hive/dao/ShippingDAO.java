@@ -21,27 +21,12 @@ package com.qaobee.hive.dao;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 /**
  * The interface Shipping dao.
  */
 public interface ShippingDAO {
-    /**
-     * Periodic payment json array.
-     *
-     * @return the json array
-     */
-    JsonArray periodicPayment();
-
-    /**
-     * Triggered payment.
-     *
-     * @param user the user
-     * @return the completable future
-     */
-    void triggeredPayment(JsonObject user);
 
     /**
      * Pay.
@@ -55,11 +40,11 @@ public interface ShippingDAO {
     JsonObject pay(User user, JsonObject paymentData, String locale) throws QaobeeException;
 
     /**
-     * Ipn boolean.
+     * webHook boolean.
      *
      * @param body the body
      * @return the boolean
      * @throws QaobeeException the qaobee exception
      */
-    boolean ipn(JsonObject body) throws QaobeeException;
+    boolean webHook(JsonObject body) throws QaobeeException;
 }
