@@ -7,7 +7,7 @@
     "mail.site.url.api": "#/signup/end",
     "mail.send": true,
     "mail.to": "jerome.roue@gmail.com",
-    "mail.from": "contatc@qaobee.com",
+    "mail.from": "contact@qaobee.com",
     "newpasswd.site.url.api": "#/recoverpasswd",
     "pay.url.api": "#/private/billing",
     "external.invitation.site.url.api": "#/externalInvitation",

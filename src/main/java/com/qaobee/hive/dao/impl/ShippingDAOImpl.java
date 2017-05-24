@@ -22,6 +22,7 @@ package com.qaobee.hive.dao.impl;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
+import com.qaobee.hive.dao.NotificationsDAO;
 import com.qaobee.hive.dao.ShippingDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -31,14 +32,12 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.Utils;
 import com.stripe.Stripe;
 import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import com.stripe.model.Token;
-import com.stripe.net.RequestOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
@@ -62,35 +61,33 @@ public class ShippingDAOImpl implements ShippingDAO {
     private static final String LIST_PLAN_FIELD = "listPlan";
     private final MongoDB mongo;
     private final Vertx vertx;
-    private final Utils utils;
     private final JsonObject runtime;
-    private final JsonObject stripe;
     private final MailUtils mailUtils;
     private final TemplatesDAO templatesDAO;
-    private final RequestOptions requestOptions;
+    private final NotificationsDAO notificationsDAO;
 
     /**
      * Instantiates a new Shipping dao.
      *
-     * @param mongo        the mongo
-     * @param vertx        the vertx
-     * @param utils        the utils
-     * @param runtime      the runtime
-     * @param stripe       the stripe
-     * @param mailUtils    the mail utils
-     * @param templatesDAO the templates dao
+     * @param mongo            the mongo
+     * @param vertx            the vertx
+     * @param runtime          the runtime
+     * @param stripe           the stripe
+     * @param mailUtils        the mail utils
+     * @param templatesDAO     the templates dao
+     * @param notificationsDAO the notifications dao
      */
     @Inject
-    public ShippingDAOImpl(MongoDB mongo, Vertx vertx, Utils utils, @Named("runtime") JsonObject runtime, @Named("stripe") JsonObject stripe, MailUtils mailUtils, TemplatesDAO templatesDAO) {
+    public ShippingDAOImpl(MongoDB mongo, Vertx vertx, @Named("runtime") JsonObject runtime,
+                           @Named("stripe") JsonObject stripe, MailUtils mailUtils, TemplatesDAO templatesDAO,
+                           NotificationsDAO notificationsDAO) {
         this.mongo = mongo;
         this.vertx = vertx;
-        this.utils = utils;
         this.runtime = runtime;
-        this.stripe = stripe;
         this.mailUtils = mailUtils;
         this.templatesDAO = templatesDAO;
+        this.notificationsDAO = notificationsDAO;
         Stripe.apiKey = stripe.getString("api_secret");
-        requestOptions = (new RequestOptions.RequestOptionsBuilder()).setApiKey(stripe.getString("api_secret")).build();
     }
 
     @Override
@@ -201,11 +198,16 @@ public class ShippingDAOImpl implements ShippingDAO {
     @Override
     public boolean webHook(JsonObject body) throws QaobeeException {
         try {
-            if (body.getObject("data").getObject("object").getObject("metadata").containsField("planId")) {
-                int planId = Integer.parseInt(body.getObject("data").getObject("object").getObject("metadata").getString("planId"));
+            LOG.info(body.getString("type") + " : " + body.getObject("data").getObject("object").getString("status"));
+            if (body.getObject("data").getObject("object").getObject(METADATA_FIELD).containsField("planId")) {
+                int planId = Integer.parseInt(body.getObject("data").getObject("object").getObject(METADATA_FIELD).getString("planId"));
                 Customer customer = Customer.retrieve(body.getObject("data").getObject("object").getString("customer"));
                 final JsonObject user = mongo.getById(customer.getMetadata().get("_id"), DBCollections.USER);
                 final User u = Json.decodeValue(user.encode(), User.class);
+                notificationsDAO.addNotificationToUser(user.getString("_id"), new JsonObject()
+                        .putString("content", Messages.getString("notification." + body.getString("type") + ".content", customer.getMetadata().get("locale")))
+                        .putString("title", Messages.getString("notification." + body.getString("type") + ".title", customer.getMetadata().get("locale")))
+                        .putString("senderId", runtime.getString("admin.id")));
                 return registerPayment(body.getObject("data").getObject("object"), user, u, planId);
             }
             return true;
@@ -225,7 +227,7 @@ public class ShippingDAOImpl implements ShippingDAO {
         final JsonObject tplReq = new JsonObject()
                 .putString(TemplatesDAOImpl.TEMPLATE, "payment.html")
                 .putObject(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(u,
-                        subscription.getObject("metadata").getString(LOCALE_FIELD),
+                        subscription.getObject(METADATA_FIELD).getString(LOCALE_FIELD),
                         u.getAccount().getListPlan().get(planId)));
 
         final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
