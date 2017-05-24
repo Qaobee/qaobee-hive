@@ -22,13 +22,13 @@
         "price": 8
       },
       "DISCOVERY": {
-        "price": 500
+        "price": 5
       },
       "PREMIUM": {
-        "price": 900
+        "price": 9
       },
       "TEAM_PLUS": {
-        "price": 1200
+        "price": 12
       }
     }
   },

@@ -186,7 +186,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     .putString("id", u.getString("_id"))
                     .putString("target", "User")
                     .putObject("notification", new JsonObject()
-                            .putString("content", Messages.getString("notification.first.connection.content", req.getLocale()))
+                            .putString("content", Messages.getString("notification.first.connection.content", runtime.getString("trial.duration"), req.getLocale()))
                             .putString("title", Messages.getString("notification.first.connection.title", req.getLocale()))
                             .putString("senderId", runtime.getString("admin.id")
                             )
