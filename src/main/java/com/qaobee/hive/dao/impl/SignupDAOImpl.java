@@ -272,6 +272,7 @@ public class SignupDAOImpl implements SignupDAO {
         }
         plan.setStatus("open");
         plan.setStartPeriodDate(System.currentTimeMillis());
+        plan.setAmountPaid(runtime.getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price"));
         Calendar gc = GregorianCalendar.getInstance();
         gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
         plan.setEndPeriodDate(gc.getTimeInMillis());

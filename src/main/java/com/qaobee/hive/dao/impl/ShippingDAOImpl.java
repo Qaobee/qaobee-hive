@@ -38,6 +38,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import com.stripe.model.Token;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
@@ -109,12 +110,13 @@ public class ShippingDAOImpl implements ShippingDAO {
                 metadata.put(LOCALE_FIELD, locale);
                 // Vérifier si on n'a pas déjà un customer id sur ce user
                 String customerId = user.getAccount().getListPlan().get(planId).getCardId();
-                Customer customer;
-                try {
-                    customer = Customer.retrieve(customerId);
-                } catch (InvalidRequestException e) {
-                    customer = null;
-                    LOG.error(e.getMessage(), e);
+                Customer customer = null;
+                if(StringUtils.isNotBlank(customerId)) {
+                    try {
+                        customer = Customer.retrieve(customerId);
+                    } catch (InvalidRequestException e) {
+                        LOG.error(e.getMessage(), e);
+                    }
                 }
                 if (customer == null) {
                     Map<String, Object> customerParams = new HashMap<>();
@@ -124,12 +126,13 @@ public class ShippingDAOImpl implements ShippingDAO {
                     customer = Customer.create(customerParams);
                 }
                 // Check if subscribtion exists
-                Subscription subscription;
-                try {
-                    subscription = Subscription.retrieve(user.getAccount().getListPlan().get(planId).getPaymentId());
-                } catch (InvalidRequestException e) {
-                    LOG.error(e.getMessage(), e);
-                    subscription = null;
+                Subscription subscription = null;
+                if(StringUtils.isNotBlank(user.getAccount().getListPlan().get(planId).getPaymentId())) {
+                    try {
+                        subscription = Subscription.retrieve(user.getAccount().getListPlan().get(planId).getPaymentId());
+                    } catch (InvalidRequestException e) {
+                        LOG.error(e.getMessage(), e);
+                    }
                 }
                 if (subscription != null) {
                     user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
@@ -148,6 +151,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                     subscription = Subscription.create(params);
                     user.getAccount().getListPlan().get(planId).setAmountPaid(amount / 100);
                     user.getAccount().getListPlan().get(planId).setPaymentId(subscription.getId());
+                    user.getAccount().getListPlan().get(planId).setPaidDate(System.currentTimeMillis());
                     user.getAccount().getListPlan().get(planId).setPeriodicity(MONTHLY);
                     user.getAccount().getListPlan().get(planId).setCardId(customer.getId());
                     user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
@@ -159,7 +163,9 @@ public class ShippingDAOImpl implements ShippingDAO {
                     card.setExp_year(cardJson.getInteger("exp_year"));
                     card.setLast4(cardJson.getString("last4"));
                     card.setId(cardJson.getString("id"));
-                    user.getAccount().getListPlan().get(planId).setEndPeriodDate(subscription.getTrialEnd());
+                    if(subscription.getTrialEnd() != null) {
+                        user.getAccount().getListPlan().get(planId).setEndPeriodDate(subscription.getTrialEnd());
+                    }
                     user.getAccount().getListPlan().get(planId).setStartPeriodDate(subscription.getStart());
                     user.getAccount().getListPlan().get(planId).setCardInfo(card);
                     mongo.save(user);
