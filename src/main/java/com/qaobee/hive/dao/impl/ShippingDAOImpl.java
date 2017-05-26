@@ -225,7 +225,6 @@ public class ShippingDAOImpl implements ShippingDAO {
                 return registerPayment(body.getObject("data").getObject("object"), user, u, planId);
             }
             return true;
-            // TODO gérer la fin de souscription
         } catch (NumberFormatException | StripeException e) {
             throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, e);
         }
