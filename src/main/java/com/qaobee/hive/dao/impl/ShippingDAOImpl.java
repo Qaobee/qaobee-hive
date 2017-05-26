@@ -33,8 +33,7 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.stripe.Stripe;
-import com.stripe.exception.InvalidRequestException;
-import com.stripe.exception.StripeException;
+import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import com.stripe.model.Token;
@@ -111,7 +110,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                 // Vérifier si on n'a pas déjà un customer id sur ce user
                 String customerId = user.getAccount().getListPlan().get(planId).getCardId();
                 Customer customer = null;
-                if(StringUtils.isNotBlank(customerId)) {
+                if (StringUtils.isNotBlank(customerId)) {
                     try {
                         customer = Customer.retrieve(customerId);
                     } catch (InvalidRequestException e) {
@@ -127,7 +126,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                 }
                 // Check if subscribtion exists
                 Subscription subscription = null;
-                if(StringUtils.isNotBlank(user.getAccount().getListPlan().get(planId).getPaymentId())) {
+                if (StringUtils.isNotBlank(user.getAccount().getListPlan().get(planId).getPaymentId())) {
                     try {
                         subscription = Subscription.retrieve(user.getAccount().getListPlan().get(planId).getPaymentId());
                     } catch (InvalidRequestException e) {
@@ -163,7 +162,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                     card.setExp_year(cardJson.getInteger("exp_year"));
                     card.setLast4(cardJson.getString("last4"));
                     card.setId(cardJson.getString("id"));
-                    if(subscription.getTrialEnd() != null) {
+                    if (subscription.getTrialEnd() != null) {
                         user.getAccount().getListPlan().get(planId).setEndPeriodDate(subscription.getTrialEnd());
                     }
                     user.getAccount().getListPlan().get(planId).setStartPeriodDate(subscription.getStart());
@@ -173,8 +172,17 @@ public class ShippingDAOImpl implements ShippingDAO {
                 } else {
                     throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale));
                 }
-            } catch (StripeException | QaobeeException e) {
+            } catch (APIException | APIConnectionException | InvalidRequestException | AuthenticationException | QaobeeException e) {
                 resp.putBoolean(Constants.STATUS, false).putString("message", e.getMessage());
+                LOG.error(e.getMessage(), e);
+            } catch (CardException e) {
+                resp
+                        .putBoolean(Constants.STATUS, false)
+                        .putString("message", e.getMessage())
+                        .putString("decline_code", e.getDeclineCode())
+                        .putString("param", e.getParam())
+                        .putString("code", e.getCode())
+                ;
                 LOG.error(e.getMessage(), e);
             }
             return resp;
