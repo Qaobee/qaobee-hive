@@ -7,7 +7,7 @@ node {
     stage('Checkout') {
         git credentialsId: 'b74a476d-7464-429c-ab8e-7ebbe03bcd1f', url: 'git@gitlab.com:qaobee/qaobee-hive.git'
         sh 'git fetch --tags'
-        sh 'git pull'
+    //    sh 'git pull'
         version = this.version()
         echo("Building $version")
     }
