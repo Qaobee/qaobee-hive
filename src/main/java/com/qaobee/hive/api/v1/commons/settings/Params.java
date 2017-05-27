@@ -39,6 +39,7 @@ public class Params extends AbstractGuiceVerticle {
     private void getParams(Message<String> message) {
         JsonObject params = new JsonObject()
                 .putString("pay_api_key", stripe.getString("api_key"))
+                .putString("trial.duration", runtime.getString("trial.duration"))
                 .putObject("plan", runtime.getObject("plan"));
         message.reply(params.encode());
     }
