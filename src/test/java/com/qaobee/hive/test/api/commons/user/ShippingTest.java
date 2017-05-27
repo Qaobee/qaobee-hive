@@ -25,10 +25,7 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.mockserver.client.server.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
@@ -68,6 +65,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Create payment.
      */
+    @Ignore
     @Test
     public void createPayment() {
         User u = generateLoggedUser();
@@ -103,6 +101,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Create payment with wrong plan id.
      */
+    @Ignore
     @Test
     public void createPaymentWithWrongPlanId() {
         User u = generateLoggedUser();
@@ -117,6 +116,8 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Create payment with missing plan id.
      */
+
+    @Ignore
     @Test
     public void createPaymentWithMissingPlanId() {
         User u = generateLoggedUser();
@@ -141,6 +142,8 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Create payment with wrong payplug response.
      */
+
+    @Ignore
     @Test
     public void createPaymentWithWrongPayplugResponse() {
         User u = generateLoggedUser();
@@ -162,6 +165,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Create payment with no payplug server.
      */
+    @Ignore
     @Test
     public void createPaymentWithNoPayplugServer() {
         User u = generateLoggedUser();
@@ -179,6 +183,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification
      */
+    @Ignore
     @Test
     public void recievePayplugNotification() {
         User u = generateLoggedUser();
@@ -235,6 +240,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification with no previous shipping
      */
+    @Ignore
     @Test
     public void recievePayplugNotificationWithNoPreviousShipping() {
         try {
@@ -300,6 +306,8 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification with zero amount
      */
+
+    @Ignore
     @Test
     public void recievePayplugNotificationWithZeroAmount() {
         try {
@@ -383,6 +391,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification with bad plan id
      */
+    @Ignore
     @Test
     public void recievePayplugNotificationWithBadPlanId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
@@ -396,6 +405,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification with non existing plan id
      */
+    @Ignore
     @Test
     public void recievePayplugNotificationWithNonExistingPlanId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
@@ -409,6 +419,8 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification with  null plan id
      */
+
+    @Ignore
     @Test
     public void recievePayplugNotificationWithNullPlanId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
@@ -435,6 +447,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification wrong object
      */
+    @Ignore
     @Test
     public void recievePayplugNotificationWrongObject() {
         User u = generateLoggedUser();
@@ -475,6 +488,7 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification not paid
      */
+    @Ignore
     @Test
     public void recievePayplugNotificationNotPaid() {
         try {
@@ -533,6 +547,8 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification with failure
      */
+
+    @Ignore
     @Test
     public void recievePayplugNotificationWithFailure() {
         try {
@@ -599,6 +615,8 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Recieve payplug notification withnon existing user id
      */
+
+    @Ignore
     @Test
     public void recievePayplugNotificationWithnonExistingUserId() {
         JsonObject notification = buildNotificationRequest("12345", generateUser());

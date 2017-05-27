@@ -6,27 +6,27 @@
     "defaultPort": 8888,
     "mail.site.url.api": "#/signup",
     "mail.send": true,
-    "mail.to": "marin.xavier@gmail.com",
+    "mail.to": "contact@qaobee.com",
     "mail.from": "contact@qaobee.com",
     "newpasswd.site.url.api": "#/recoverpasswd",
     "pay.url.api": "#/private/profile/billing",
     "recaptcha.pkey": "6LdoTvMSAAAAAHbaOoyuXsPRWz2S5_7df1b6UTpZ",
     "recaptcha.site": "http://www.qaobee.com",
     "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
-    "trial.duration" : 1,
+    "trial.duration" : 12,
     "recaptcha" : false,
     "plan": {
       "FREEMIUM": {
-        "price": 9
+        "price": 8
       },
       "DISCOVERY": {
-        "price": 500
+        "price": 5
       },
       "PREMIUM": {
-        "price": 700
+        "price": 7
       },
       "TEAM_PLUS": {
-        "price": 900
+        "price": 9
       }
     }
   },
@@ -37,14 +37,9 @@
     "css": [
     ]
   },
-  "payplug": {
-    "baseUrl": "localhost",
-    "ipn_url": "http://flufy.hd.free.fr/hive/api/1/commons/users/shipping/ipn",
-    "return_url": "http://flufy.hd.free.fr/qswarm-web/#/signup/coach/end",
-    "cancel_url": "http://flufy.hd.free.fr/qswarm-web/#/signup/coach/cancel",
-    "api_key": "sk_test_d5cdee91ababb9d78cf94603f9620de6",
-    "port": 1080,
-    "basePath": "/v1"
+  "stripe": {
+    "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp",
+    "api_key" : "pk_test_9Fc4Bc9dUkSK9vSzTTVVQgP5"
   },
   "metrix.mod": {
     "address": "metrix"
@@ -59,7 +54,7 @@
   },
   "mailchimp" : {
     "env" : "TEST",
-    "key" : "xxx-us13",
+    "key" : "97567b006b5c9f3d77cc5729bafb8d6d-us13",
     "user" : "qaobee",
     "host" : "us13.api.mailchimp.com",
     "port" : 443,
