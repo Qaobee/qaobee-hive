@@ -7,28 +7,28 @@
     "mail.site.url.api": "#/signup/end",
     "mail.send": true,
     "mail.to": "jerome.roue@gmail.com",
-    "mail.from": "jerome.roue@qaobee.com",
+    "mail.from": "contact@qaobee.com",
     "newpasswd.site.url.api": "#/recoverpasswd",
-    "pay.url.api": "#/private/profile/billing",
+    "pay.url.api": "#/private/billing",
     "external.invitation.site.url.api": "#/externalInvitation",
     "internal.invitation.site.url.api": "#/internalInvitation",
     "recaptcha.pkey": "6LcTjvcSAAAAAKqDo7-xwQmc4K6gDcDSntKc2Pqs",
     "recaptcha.site": "localhost",
     "recaptcha" : true,
     "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
-    "trial.duration" : 1,
+    "trial.duration" : 12,
     "plan": {
       "FREEMIUM": {
         "price": 8
       },
       "DISCOVERY": {
-        "price": 500
+        "price": 5
       },
       "PREMIUM": {
-        "price": 700
+        "price": 7
       },
       "TEAM_PLUS": {
-        "price": 900
+        "price": 9
       }
     }
   },
@@ -39,14 +39,9 @@
     "css": [
     ]
   },
-  "payplug": {
-    "baseUrl": "api.payplug.com",
-    "ipn_url": "https://flufy.hd.free.fr/hive/api/1/commons/users/shipping/ipn",
-    "return_url": "https://flufy.hd.free.fr/qswarm-web/#/private/billing/",
-    "cancel_url": "https://flufy.hd.free.fr/qswarm-web/#/private/billing/",
-    "api_key": "sk_test_2IcYHjZt1v5v6iKpvAwO3V",
-    "port": 443,
-    "basePath": "/v1"
+  "stripe": {
+    "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp",
+    "api_key" : "pk_test_9Fc4Bc9dUkSK9vSzTTVVQgP5"
   },
   "metrix.mod": {
     "address": "metrix"

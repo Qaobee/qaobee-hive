@@ -22,13 +22,13 @@
         "price": 8
       },
       "DISCOVERY": {
-        "price": 500
+        "price": 5
       },
       "PREMIUM": {
-        "price": 900
+        "price": 9
       },
       "TEAM_PLUS": {
-        "price": 1200
+        "price": 12
       }
     }
   },
@@ -48,14 +48,9 @@
     "db_name": "hive",
     "read_preference": "nearest"
   },
-  "payplug": {
-    "baseUrl": "api.payplug.com",
-    "ipn_url": "https://hive.qaobee.com/api/1/commons/users/shipping/ipn",
-    "return_url": "https://www.qaobee.com/#/private/billing",
-    "cancel_url": "https://www.qaobee.com/#/private/billing",
-    "api_key": "sk_live_57R0LhnSRnH1KGDzjd8NDE",
-    "port": 443,
-    "basePath": "/v1"
+  "stripe": {
+    "api_secret": "sk_live_231nVDKVdKgHfAHBMyF9b1h9",
+    "api_key" : "pk_live_wMBB5DpHStTvx8z2NdZ4wnIk"
   },
   "mailchimp" : {
     "env" : "PROD",

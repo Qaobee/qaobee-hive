@@ -34,9 +34,7 @@ import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -211,7 +209,7 @@ public class ShippingTest extends VertxJunitSupport {
 
         JsonObject notification = buildNotificationRequest(paymentId, u);
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
                 .body("status", is(true));
@@ -272,7 +270,7 @@ public class ShippingTest extends VertxJunitSupport {
 
             JsonObject notification = buildNotificationRequest(paymentId, u);
             given().body(notification.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.IPN))
+                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
@@ -335,7 +333,7 @@ public class ShippingTest extends VertxJunitSupport {
 
             JsonObject notification = buildNotificationRequest(paymentId, u);
             given().body(notification.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.IPN))
+                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
@@ -350,7 +348,7 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void recievePayplugNotificationWithWrongHttpMethod() {
-        given().when().get(getURL(ShippingVerticle.IPN))
+        given().when().get(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -363,7 +361,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.removeField("created_at");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -376,7 +374,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").removeField("plan_id");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -390,7 +388,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("plan_id", "bwahaha");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                 .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
@@ -403,7 +401,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("plan_id", "8");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                 .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
@@ -416,7 +414,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").removeField("plan_id");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -429,7 +427,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("plan_id", "");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -468,7 +466,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest(paymentId, u);
         notification.putString("object", "bwahahaha");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
                 .body("status", is(false));
@@ -511,7 +509,7 @@ public class ShippingTest extends VertxJunitSupport {
             JsonObject notification = buildNotificationRequest(paymentId, u);
             notification.putBoolean("is_paid", false);
             given().body(notification.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.IPN))
+                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(false));
@@ -576,7 +574,7 @@ public class ShippingTest extends VertxJunitSupport {
                 failure.putString(CODE, f);
                 notification.putObject("failure", failure);
                 given().body(notification.encodePrettily())
-                        .when().post(getURL(ShippingVerticle.IPN))
+                        .when().post(getURL(ShippingVerticle.WEB_HOOK))
                         .then().assertThat().statusCode(200)
                         .body("status", notNullValue())
                         .body("status", is(false));
@@ -606,7 +604,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("customer_id", "bwahaha");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
@@ -619,7 +617,7 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").removeField("customer_id");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -632,213 +630,9 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject notification = buildNotificationRequest("12345", generateUser());
         notification.getObject("metadata").putString("customer_id", "");
         given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.IPN))
+                .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
-
-    /**
-     * Recurring payment
-     */
-    @Test
-    public void recurringPayment() {
-        User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
-        u.getAccount().getListPlan().get(0).setPaidDate(0);
-        u.getAccount().getListPlan().get(0).setCardId("123456");
-        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
-
-        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
-        Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
-    }
-
-    /**
-     * Recurring payment multi user.
-     */
-    @Test
-    public void recurringPaymentMultiUser() {
-        User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
-        u.getAccount().getListPlan().get(0).setPaidDate(0);
-        u.getAccount().getListPlan().get(0).setCardId("123456");
-        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
-
-        JsonObject res = sendOnBus(ShippingVerticle.PERIODIC_RECURING_PAYMENT, new JsonObject());
-        Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
-    }
-
-    /**
-     * Recurring payment with zero amount
-     */
-    @Test
-    public void recurringPaymentWithZeroAmount() {
-        User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(201)
-                        .withBody(generateMockBody(u, 0, 0)));
-        u.getAccount().getListPlan().get(0).setPaidDate(0);
-        u.getAccount().getListPlan().get(0).setCardId("123456");
-        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
-
-        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
-        Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
-    }
-
-    /**
-     * Recurring payment with no card info
-     */
-    @Test
-    public void recurringPaymentWithNoCardInfo() {
-        User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
-        u.getAccount().getListPlan().get(0).setPaidDate(0);
-        u.getAccount().getListPlan().get(0).setCardId(null);
-        u.getAccount().getListPlan().get(0).setCardInfo(null);
-        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
-
-        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
-        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
-    }
-
-    /**
-     * Recurring payment with future date.
-     */
-    @Test
-    public void recurringPaymentWithFutureDate() {
-        User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
-        u.getAccount().getListPlan().get(0).setPaidDate(System.currentTimeMillis());
-        u.getAccount().getListPlan().get(0).setCardId("123456");
-        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
-
-        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
-        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
-    }
-
-    /**
-     * Recurring payment with not supported periodicity.
-     */
-    @Test
-    public void recurringPaymentWithNotSupportedPeriodicity() {
-        User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
-        u.getAccount().getListPlan().get(0).setPaidDate(0);
-        u.getAccount().getListPlan().get(0).setCardId("123456");
-        u.getAccount().getListPlan().get(0).setPeriodicity("daily");
-
-        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
-        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
-    }
-
-    /**
-     * Recurring payment with no plan.
-     */
-    @Test
-    public void recurringPaymentWithNoPlan() {
-        User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
-        u.getAccount().setListPlan(new ArrayList<>());
-
-        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
-        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
-    }
-
-    /**
-     * Recurring payment with no payplug servers.
-     */
-    @Test
-    public void recurringPaymentWithNoPayplugServers() {
-        User u = generateLoggedUser();
-        u.getAccount().getListPlan().get(0).setPaidDate(0);
-        u.getAccount().getListPlan().get(0).setCardId("123456");
-        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
-        if (mockServer.isRunning()) {
-            mockServer.stop();
-        }
-        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
-        Assert.assertEquals(res.encodePrettily(), res.getString("code"), ExceptionCodes.HTTP_ERROR.name());
-    }
-
-    /**
-     * Recurring payment with wrong data.
-     */
-    @Test
-    public void recurringPaymentWithWrongData() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        User u = generateUser();
-        User u2 = generateUser();
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
-        u.getAccount().setListPlan(new ArrayList<>());
-
-        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u2)));
-        Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
-    }
-
-    /**
-     * Recurring payment with bad payplug response.
-     */
-    @Test
-    public void recurringPaymentWithBadPayplugResponse() {
-        User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(500)
-                        .withBody(generateMockBody(u, 0)));
-        u.getAccount().getListPlan().get(0).setPaidDate(0);
-        u.getAccount().getListPlan().get(0).setCardId("123456");
-        u.getAccount().getListPlan().get(0).setPeriodicity("monthly");
-
-        JsonObject res = sendOnBus(ShippingVerticle.TRIGGERED_RECURING_PAYMENT, new JsonObject(Json.encode(u)));
-        Assert.assertEquals(res.encodePrettily(), res.getString("code"), ExceptionCodes.HTTP_ERROR.name());
     }
 
     /**

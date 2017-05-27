@@ -49,22 +49,13 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      */
     public static final String PAY = Module.VERSION + ".commons.users.shipping.pay";
     /**
-     * The constant IPN.
+     * The constant WEB_HOOK.
      */
-    public static final String IPN = Module.VERSION + ".commons.users.shipping.ipn";
-    /**
-     * The constant TRIGGERED_RECURING_PAYMENT.
-     */
-    public static final String TRIGGERED_RECURING_PAYMENT = "inner.recuring_payment";
-    /**
-     * The constant PERIODIC_RECURING_PAYMENT.
-     */
-    public static final String PERIODIC_RECURING_PAYMENT = "inner.periodic.recuring_payment";
+    public static final String WEB_HOOK = Module.VERSION + ".commons.users.shipping.webHook";
     /**
      * The constant PARAM_PLAN_ID.
      */
     public static final String PARAM_PLAN_ID = "plan_id";
-    private static final String METADATA_FIELD = "metadata";
 
     @Inject
     private ShippingDAO shippingDAO;
@@ -76,39 +67,8 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
-                .registerHandler(IPN, this::ipn)
-                .registerHandler(PAY, this::pay)
-                .registerHandler(TRIGGERED_RECURING_PAYMENT, this::triggeredPayment)
-                .registerHandler(PERIODIC_RECURING_PAYMENT, this::periodicTriggeredPayment);
-        vertx.setPeriodic(1000 * 60 * 60 * 24L, this::periodicHandler);
-    }
-
-
-
-    /**
-     * Periodic timer, each day it runs
-     */
-    private void periodicHandler(long l) {
-        LOG.info("Running each " + l);
-        periodicTriggeredPayment(null);
-    }
-
-    private void periodicTriggeredPayment(Message<JsonObject> message) {
-        shippingDAO.periodicPayment().forEach(user -> vertx.eventBus().send(TRIGGERED_RECURING_PAYMENT, (JsonObject) user));
-        if(message != null) {
-            message.reply(new JsonObject().putBoolean(Constants.STATUS, true));
-        }
-    }
-
-    private void triggeredPayment(Message<JsonObject> message) {
-       shippingDAO.triggeredPayment(message.body()).whenComplete((value, error) -> {
-           if (value != null) {
-              utils.sendStatusJson(value, message);
-           } else {
-               QaobeeException e = (QaobeeException) error;
-               utils.sendErrorJ(message, e);
-           }
-       });
+                .registerHandler(WEB_HOOK, this::webHook)
+                .registerHandler(PAY, this::pay);
     }
 
     /**
@@ -116,23 +76,18 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * @api {post} /api/1/commons/users/shipping/pay Do a payment
      * @apiName Payment
      * @apiGroup Shipping API
-     * @apiParam {int} plan_id index of the plan in the user's plans list
+     * @apiParam {Object} data data
      * @apiHeader {String} token
      * @apiSuccess {Object} status Status with a redirect link if any
      * @apiHeader {String} token
      */
-    @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = PARAM_PLAN_ID, scope = Rule.Param.BODY)
+    @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = "data", scope = Rule.Param.BODY)
     private void pay(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject body = new JsonObject(req.getBody());
-            shippingDAO.pay(req.getUser(), Integer.parseInt(body.getString(PARAM_PLAN_ID)), req.getLocale()).whenComplete((value, error) -> {
-                if (value != null) {
-                    message.reply(value.encode());
-                } else {
-                    utils.sendError(message, (QaobeeException) error);
-                }
-            });
+            JsonObject value = shippingDAO.pay(req.getUser(), body.getObject("data"), req.getLocale());
+            message.reply(value.encode());
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);
@@ -141,18 +96,18 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
     /**
      * @apiDescription Get notified by PayPlug when a payment is done
-     * @api {post} /api/1/commons/users/shipping/ipn Get notified by PayPlug when a payment is done
+     * @api {post} /api/1/commons/users/shipping/webHook Get notified by PayPlug when a payment is done
      * @apiName Payment Notification
      * @apiGroup Shipping API
      * @apiParam {object} payment Payment object : see https://gitlab.com/qaobee/com.qaobee.payplug/wikis/notification_url
      * @apiSuccess {object} status Status
      */
-    @Rule(address = IPN, method = Constants.POST, mandatoryParams = {"id", METADATA_FIELD, "created_at"}, scope = Rule.Param.BODY)
-    private void ipn(Message<String> message) {
+    @Rule(address = WEB_HOOK, method = Constants.POST, mandatoryParams = {"id", "created"}, scope = Rule.Param.BODY)
+    private void webHook(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         try {
             JsonObject body = new JsonObject(req.getBody());
-            utils.sendStatus(shippingDAO.ipn(body), message);
+            utils.sendStatus(shippingDAO.webHook(body), message);
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendError(message, e);

@@ -272,6 +272,10 @@ public class SignupDAOImpl implements SignupDAO {
         }
         plan.setStatus("open");
         plan.setStartPeriodDate(System.currentTimeMillis());
+        plan.setAmountPaid(runtime.getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price"));
+        Calendar gc = GregorianCalendar.getInstance();
+        gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
+        plan.setEndPeriodDate(gc.getTimeInMillis());
         // Si on vient du mobile, on connait le plan, mais pas par le web
         if (plan.getActivity() != null) {
             JsonObject activity = mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY);
