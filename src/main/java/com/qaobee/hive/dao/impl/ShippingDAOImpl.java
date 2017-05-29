@@ -114,16 +114,8 @@ public class ShippingDAOImpl implements ShippingDAO {
                 metadata.put(LOCALE_FIELD, locale);
                 // Vérifier si on n'a pas déjà un customer id sur ce user
                 String customerId = user.getAccount().getListPlan().get(planId).getCardId();
-                Customer customer = null;
-                if (StringUtils.isNotBlank(customerId)) {
-                    try {
-                        customer = Customer.retrieve(customerId);
-                    } catch (InvalidRequestException e) {
-                        LOG.error(e.getMessage(), e);
-                    } catch (APIConnectionException e) {
-                        throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
-                    }
-                }
+                Customer customer = getCustomerInfo(customerId);
+
                 if (customer == null) {
                     Map<String, Object> customerParams = new HashMap<>();
                     customerParams.put("email", user.getContact().getEmail());
@@ -132,16 +124,8 @@ public class ShippingDAOImpl implements ShippingDAO {
                     customer = Customer.create(customerParams);
                 }
                 // Check if subscribtion exists
-                Subscription subscription = null;
-                if (StringUtils.isNotBlank(user.getAccount().getListPlan().get(planId).getPaymentId())) {
-                    try {
-                        subscription = Subscription.retrieve(user.getAccount().getListPlan().get(planId).getPaymentId());
-                    } catch (InvalidRequestException e) {
-                        LOG.error(e.getMessage(), e);
-                    } catch (APIConnectionException e) {
-                        throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
-                    }
-                }
+                Subscription subscription = getSubscriptionInfo(user.getAccount().getListPlan().get(planId).getPaymentId());
+
                 if (subscription != null) {
                     user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
                     mongo.save(user);
@@ -203,6 +187,33 @@ public class ShippingDAOImpl implements ShippingDAO {
         } else {
             return new JsonObject().putBoolean(Constants.STATUS, true);
         }
+    }
+
+    private Subscription getSubscriptionInfo(String paymentId) throws QaobeeException, APIException, CardException, AuthenticationException {
+        if (StringUtils.isNotBlank(paymentId)) {
+            try {
+                return Subscription.retrieve(paymentId);
+            } catch (InvalidRequestException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (APIConnectionException e) {
+                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
+            }
+        }
+        return null;
+    }
+
+    private Customer getCustomerInfo(String customerId) throws QaobeeException, APIException, CardException, AuthenticationException {
+        if (StringUtils.isNotBlank(customerId)) {
+            try {
+                return Customer.retrieve(customerId);
+            } catch (InvalidRequestException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (APIConnectionException e) {
+                LOG.error(e.getMessage(), e);
+                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
+            }
+        }
+        return null;
     }
 
     private boolean registerPayment(User user, int planId, String locale) throws QaobeeException {
