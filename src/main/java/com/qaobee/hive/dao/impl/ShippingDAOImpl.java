@@ -148,6 +148,9 @@ public class ShippingDAOImpl implements ShippingDAO {
                 }
                 if (subscription == null || "canceled".equals(subscription.getStatus()) || "unpaid".equals(subscription.getStatus())) {
                     Token token = Token.retrieve(paymentData.getString("token"));
+                    if(token == null || token.getId() == null) {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Invalid token");
+                    }
                     Map<String, Object> params = new HashMap<>();
                     params.put("customer", customer.getId());
                     params.put("plan", plan.getLevelPlan().name());
@@ -181,7 +184,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                 } else {
                     throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale));
                 }
-            } catch (APIException | InvalidRequestException | AuthenticationException e) {
+            } catch (APIException | NullPointerException | InvalidRequestException | AuthenticationException e) {
                 resp.putBoolean(Constants.STATUS, false).putString("message", e.getMessage());
                 LOG.error(e.getMessage(), e);
             } catch (APIConnectionException e) {

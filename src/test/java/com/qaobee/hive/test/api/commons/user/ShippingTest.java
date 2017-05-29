@@ -100,6 +100,19 @@ public class ShippingTest extends VertxJunitSupport {
                         .withBody(mockData.getObject("token").encode()));
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
+                        .withMethod("GET")
+                        .withPath("/v1/tokens/bla"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(200)
+                        .withBody("{\n" +
+                                "  \"error\": {\n" +
+                                "    \"type\": \"invalid_request_error\",\n" +
+                                "    \"message\": \"No such token: bla\",\n" +
+                                "    \"param\": \"token\"\n" +
+                                "  }\n" +
+                                "}\n"));
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
                         .withMethod("POST")
                         .withPath("/v1/customers/"))
                 .respond(HttpResponse.response()
@@ -194,20 +207,22 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Create payment with wrong response.
+     * Create payment with wrong token.
      */
-    @Ignore
     @Test
-    public void createPaymentWithWrongResponse() {
-        //TODO : voir les cas d'erreur
+    public void createPaymentWithWrongToken() {
         User u = generateLoggedUser();
         initMockStripe(u);
-        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "bla")
+                );
         given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
