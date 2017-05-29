@@ -1,0 +1,248 @@
+{
+  "token" : {
+    "id": "tok_1AMilbArxO1IWesL3vBI9RXu",
+    "object": "token",
+    "card": {
+      "id": "card_1AM0GKArxO1IWesLoI6ygbdz",
+      "object": "card",
+      "address_city": null,
+      "address_country": null,
+      "address_line1": null,
+      "address_line1_check": null,
+      "address_line2": null,
+      "address_state": null,
+      "address_zip": null,
+      "address_zip_check": null,
+      "brand": "Visa",
+      "country": "US",
+      "cvc_check": "pass",
+      "dynamic_last4": null,
+      "exp_month": 8,
+      "exp_year": 2018,
+      "fingerprint": "hQ6Peh2ccAFUIlEn",
+      "funding": "credit",
+      "last4": "4242",
+      "metadata": {
+      },
+      "name": null,
+      "tokenization_method": null
+    },
+    "client_ip": null,
+    "created": 1495396968,
+    "livemode": false,
+    "type": "card",
+    "used": false
+  },
+  "customer" : {
+    "id": "cus_Aj5OosoTGCFY75",
+    "object": "customer",
+    "account_balance": 0,
+    "created": 1495785030,
+    "currency": "eur",
+    "default_source": "card_1ANdDNArxO1IWesLS4KprPcx",
+    "delinquent": false,
+    "description": null,
+    "discount": null,
+    "email": "yerimesylla@sylla.com",
+    "livemode": false,
+    "metadata": {
+      "_id": "5509ef1fdb8f8b6e2f51f4ce",
+      "locale": "fr,en-US;q=0.8,en;q=0.6"
+    },
+    "shipping": null,
+    "sources": {
+      "object": "list",
+      "data": [
+        {
+          "id": "card_1ANdDNArxO1IWesLS4KprPcx",
+          "object": "card",
+          "address_city": null,
+          "address_country": null,
+          "address_line1": null,
+          "address_line1_check": null,
+          "address_line2": null,
+          "address_state": null,
+          "address_zip": null,
+          "address_zip_check": null,
+          "brand": "Visa",
+          "country": "US",
+          "customer": "cus_Aj5OosoTGCFY75",
+          "cvc_check": "pass",
+          "dynamic_last4": null,
+          "exp_month": 7,
+          "exp_year": 2017,
+          "fingerprint": "h8thhyh3utUiOlFa",
+          "funding": "credit",
+          "last4": "0093",
+          "metadata": {
+          },
+          "name": null,
+          "tokenization_method": null
+        }
+      ],
+      "has_more": false,
+      "total_count": 1,
+      "url": "/v1/customers/cus_Aj5OosoTGCFY75/sources"
+    },
+    "subscriptions": {
+      "object": "list",
+      "data": [
+
+      ],
+      "has_more": false,
+      "total_count": 0,
+      "url": "/v1/customers/cus_Aj5OosoTGCFY75/subscriptions"
+    }
+  },
+  "subscription": {
+    "id": "sub_AkHS7YtIEi1Oy9",
+    "object": "subscription",
+    "application_fee_percent": null,
+    "cancel_at_period_end": false,
+    "canceled_at": null,
+    "created": 1496060547,
+    "current_period_end": 1498738947,
+    "current_period_start": 1496060547,
+    "customer": "cus_Aj5OosoTGCFY75",
+    "discount": null,
+    "ended_at": null,
+    "items": {
+      "object": "list",
+      "data": [
+        {
+          "id": "si_1AOmtDArxO1IWesLUFrSXchG",
+          "object": "subscription_item",
+          "created": 1496060547,
+          "plan": {
+            "id": "FREEMIUM",
+            "object": "plan",
+            "amount": 800,
+            "created": 1495404517,
+            "currency": "eur",
+            "interval": "month",
+            "interval_count": 1,
+            "livemode": false,
+            "metadata": {
+            },
+            "name": "FREEMIUM",
+            "statement_descriptor": null,
+            "trial_period_days": null
+          },
+          "quantity": 1
+        }
+      ],
+      "has_more": false,
+      "total_count": 1,
+      "url": "/v1/subscription_items?subscription=sub_AkHS7YtIEi1Oy9"
+    },
+    "livemode": false,
+    "metadata": {
+      "planId": "0",
+      "_id": "c88dfe12-3c08-4ed1-8ab2-bad9fef3fa9b",
+      "locale": "fr_FR"
+    },
+    "plan": {
+      "id": "FREEMIUM",
+      "object": "plan",
+      "amount": 800,
+      "created": 1495404517,
+      "currency": "eur",
+      "interval": "month",
+      "interval_count": 1,
+      "livemode": false,
+      "metadata": {
+      },
+      "name": "FREEMIUM",
+      "statement_descriptor": null,
+      "trial_period_days": null
+    },
+    "quantity": 1,
+    "start": 1496060547,
+    "status": "active",
+    "tax_percent": null,
+    "trial_end": null,
+    "trial_start": null
+  },
+  "customer.subscription.created" :{
+    "created": 1326853478,
+    "livemode": false,
+    "id": "evt_00000000000000",
+    "type": "customer.subscription.created",
+    "object": "event",
+    "request": null,
+    "pending_webhooks": 1,
+    "api_version": "2017-04-06",
+    "data": {
+      "object": {
+        "id": "sub_00000000000000",
+        "object": "subscription",
+        "application_fee_percent": null,
+        "cancel_at_period_end": false,
+        "canceled_at": 1496061515,
+        "created": 1496061462,
+        "current_period_end": 1498739862,
+        "current_period_start": 1496061462,
+        "customer": "cus_AiY3uOKT678kiQ",
+        "discount": null,
+        "ended_at": 1496061515,
+        "items": {
+          "object": "list",
+          "data": [
+            {
+              "id": "si_1AOn7yArxO1IWesL0IZxgr2R",
+              "object": "subscription_item",
+              "created": 1496061463,
+              "plan": {
+                "id": "FREEMIUM",
+                "object": "plan",
+                "amount": 800,
+                "created": 1495404517,
+                "currency": "eur",
+                "interval": "month",
+                "interval_count": 1,
+                "livemode": false,
+                "metadata": {
+                },
+                "name": "FREEMIUM",
+                "statement_descriptor": null,
+                "trial_period_days": null
+              },
+              "quantity": 1
+            }
+          ],
+          "has_more": false,
+          "total_count": 1,
+          "url": "/v1/subscription_items?subscription=sub_AkHhlZRmq91yUv"
+        },
+        "livemode": false,
+        "metadata": {
+          "planId": "0",
+          "_id": "c1bf5876-f074-4229-8bd1-e8633f7d6055",
+          "locale": "fr_FR"
+        },
+        "plan": {
+          "id": "FREEMIUM_00000000000000",
+          "object": "plan",
+          "amount": 800,
+          "created": 1495404517,
+          "currency": "eur",
+          "interval": "month",
+          "interval_count": 1,
+          "livemode": false,
+          "metadata": {
+          },
+          "name": "FREEMIUM",
+          "statement_descriptor": null,
+          "trial_period_days": null
+        },
+        "quantity": 1,
+        "start": 1496061462,
+        "status": "active",
+        "tax_percent": null,
+        "trial_end": null,
+        "trial_start": null
+      }
+    }
+  }
+}
+

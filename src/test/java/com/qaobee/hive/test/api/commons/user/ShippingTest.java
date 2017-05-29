@@ -23,8 +23,9 @@ import com.qaobee.hive.api.v1.commons.users.ShippingVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import com.stripe.Stripe;
+import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.mockserver.client.server.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
@@ -32,6 +33,8 @@ import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.vertx.java.core.json.JsonObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -43,12 +46,20 @@ import static org.mockserver.integration.ClientAndServer.startClientAndServer;
  */
 public class ShippingTest extends VertxJunitSupport {
     private ClientAndServer mockServer;
+    private JsonObject mockData;
 
     /**
      * Init mock server.
      */
     @Before
     public void initMockServer() {
+        try {
+            mockData = new JsonObject(FileUtils.readFileToString(new File("src/test/resources/mocks.json")));
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
+            e.printStackTrace();
+        }
+        Stripe.overrideApiBase("http://localhost:1080");
         mockServer = startClientAndServer(1080);
     }
 
@@ -57,33 +68,72 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @After
     public void stopMockServer() {
-        if(mockServer.isRunning()) {
+        if (mockServer.isRunning()) {
             mockServer.stop();
         }
+    }
+
+    private void initMockStripe(User u) {
+        JsonObject customer = mockData.getObject("customer");
+        customer.putString("id", u.getAccount().getListPlan().get(0).getCardId());
+        customer.putString("email", u.getContact().getEmail());
+        customer.putNumber("created",new Date().getTime());
+        customer.getObject("metadata").putString("_id", u.get_id());
+
+
+        JsonObject subscription = mockData.getObject("subscription");
+        subscription.putString("customer",  u.getAccount().getListPlan().get(0).getCardId());
+
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("GET")
+                        .withPath("/v1/customers/" + u.getAccount().getListPlan().get(0).getCardId()))
+                .respond(HttpResponse.response()
+                        .withStatusCode(200)
+                        .withBody(customer.encode()));
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("GET")
+                        .withPath("/v1/tokens/tok_1AMilbArxO1IWesL3vBI9RXu"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(200)
+                        .withBody(mockData.getObject("token").encode()));
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/customers/"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(200)
+                        .withBody(customer.encode()));
+        new MockServerClient("localhost", 1080)
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/v1/subscriptions"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(200)
+                        .withBody(subscription.encode()));
     }
 
     /**
      * Create payment.
      */
-    @Ignore
     @Test
     public void createPayment() {
         User u = generateLoggedUser();
-        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
-        String payment_url = given().header(TOKEN, u.getAccount().getToken())
+        initMockStripe(u);
+
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
+
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
                 .body("status", is(true))
-                .body("status", notNullValue())
-                .body("payment_url", notNullValue()).extract().path("payment_url");
+                .body("status", notNullValue());
 
         given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
@@ -91,21 +141,25 @@ public class ShippingTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].paiementURL", notNullValue())
-                .body("account.listPlan[0].paiementURL", is(payment_url))
+                .body("account.listPlan[0].cardId", notNullValue())
+                .body("account.listPlan[0].cardId", not(""))
                 .body("account.listPlan[0].paymentId", notNullValue())
                 .body("account.listPlan[0].paymentId", not(""));
-
     }
 
     /**
      * Create payment with wrong plan id.
      */
-    @Ignore
     @Test
     public void createPaymentWithWrongPlanId() {
         User u = generateLoggedUser();
-        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "1");
+        initMockStripe(u);
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 1)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
+
         given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
@@ -116,11 +170,10 @@ public class ShippingTest extends VertxJunitSupport {
     /**
      * Create payment with missing plan id.
      */
-
-    @Ignore
     @Test
     public void createPaymentWithMissingPlanId() {
         User u = generateLoggedUser();
+        initMockStripe(u);
         given().header(TOKEN, u.getAccount().getToken())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
@@ -133,6 +186,7 @@ public class ShippingTest extends VertxJunitSupport {
     @Test
     public void createPaymentWithWrongHttpMethod() {
         User u = generateLoggedUser();
+        initMockStripe(u);
         given().header(TOKEN, u.getAccount().getToken())
                 .when().get(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(404)
@@ -140,21 +194,15 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Create payment with wrong payplug response.
+     * Create payment with wrong response.
      */
-
     @Ignore
     @Test
-    public void createPaymentWithWrongPayplugResponse() {
+    public void createPaymentWithWrongResponse() {
+        //TODO : voir les cas d'erreur
         User u = generateLoggedUser();
+        initMockStripe(u);
         JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/v1/payments"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(500)
-                        .withBody(generateMockBody(u, 0)));
         given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
@@ -163,16 +211,21 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Create payment with no payplug server.
+     * Create payment with no server.
      */
-    @Ignore
     @Test
-    public void createPaymentWithNoPayplugServer() {
+    public void createPaymentWithNoServer() {
         User u = generateLoggedUser();
-        if(mockServer.isRunning()) {
+        initMockStripe(u);
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
+        initMockStripe(u);
+        if (mockServer.isRunning()) {
             mockServer.stop();
         }
-        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
         given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
@@ -181,39 +234,40 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     /**
-     * Recieve payplug notification
+     * Recieve webhook notification
      */
-    @Ignore
     @Test
-    public void recievePayplugNotification() {
+    public void recieveWebHookNotification() {
         User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
+        initMockStripe(u);
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
 
-        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        String payment_url = given().header(TOKEN, u.getAccount().getToken())
+        given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
                 .body("status", is(true))
-                .body("payment_url", notNullValue()).extract().path("payment_url");
+                .body("status", notNullValue());;
 
-        String paymentId = given().header(TOKEN, u.getAccount().getToken())
+        String customer = given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())
                 .when().get(getURL(UserVerticle.USER_INFO))
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].paiementURL", notNullValue())
-                .body("account.listPlan[0].paiementURL", is(payment_url))
-                .body("account.listPlan[0].paymentId", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""))
-                .extract().path("paymentId");
+                .body("account.listPlan[0].cardId", notNullValue())
+                .body("account.listPlan[0].cardId", not(""))
+                .extract().path("account.listPlan[0].cardId");
 
-        JsonObject notification = buildNotificationRequest(paymentId, u);
-        given().body(notification.encodePrettily())
+        JsonObject webHookData = mockData.getObject("customer.subscription.created");
+        webHookData.getObject("data").getObject("object").getObject("metadata").putString("planId", "0");
+        webHookData.getObject("data").getObject("object").putString("customer", customer);
+
+        given().body(webHookData.encode())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
@@ -227,161 +281,41 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("_id", is(u.get_id()))
                 .body("account.listPlan[0].paidDate", notNullValue())
                 .body("account.listPlan[0].cardInfo", notNullValue())
-                .body("account.listPlan[0].cardInfo.last4", notNullValue())
-                .body("account.listPlan[0].cardInfo.last4", is(notification.getObject("card").getString("last4")))
-                .body("account.listPlan[0].shippingList.size()", is(2))
-                .body("account.listPlan[0].shippingList[1].cardInfo.last4", notNullValue())
-                .body("account.listPlan[0].shippingList[1].cardInfo.last4", is(notification.getObject("card").getString("last4")))
                 .body("account.listPlan[0].paymentId", not(""))
-                .body("account.listPlan[0].status", is("paid"))
-                .extract().path("paymentId");
+                .body("account.listPlan[0].status", is("active"));
     }
 
     /**
-     * Recieve payplug notification with no previous shipping
-     */
-    @Ignore
-    @Test
-    public void recievePayplugNotificationWithNoPreviousShipping() {
-        try {
-            User u = generateLoggedUser();
-            u.getAccount().getListPlan().get(0).setShippingList(null);
-            u.getAccount().getListPlan().get(0).setCardInfo(null);
-            u.getAccount().getListPlan().get(0).setCardId(null);
-            mongo.save(u);
-            new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                    .respond(HttpResponse.response().withStatusCode(201)
-                            .withBody(generateMockBody(u, 0)));
-
-            JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-            String payment_url = given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.PAY))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(true))
-                    .body("payment_url", notNullValue()).extract().path("payment_url");
-
-            String paymentId = given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].paiementURL", notNullValue())
-                    .body("account.listPlan[0].paiementURL", is(payment_url))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""))
-                    .extract().path("paymentId");
-
-            JsonObject notification = buildNotificationRequest(paymentId, u);
-            given().body(notification.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(true));
-            // Let's verify user's info
-            given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].paidDate", notNullValue())
-                    .body("account.listPlan[0].cardInfo", notNullValue())
-                    .body("account.listPlan[0].cardInfo.last4", notNullValue())
-                    .body("account.listPlan[0].cardInfo.last4", is(notification.getObject("card").getString("last4")))
-                    .body("account.listPlan[0].paymentId", not(""))
-                    .body("account.listPlan[0].shippingList.size()", is(1))
-                    .body("account.listPlan[0].shippingList[0].cardInfo.last4", notNullValue())
-                    .body("account.listPlan[0].shippingList[0].cardInfo.last4", is(notification.getObject("card").getString("last4")))
-                    .body("account.listPlan[0].status", is("paid"))
-                    .extract().path("paymentId");
-
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-    }
-
-    /**
-     * Recieve payplug notification with zero amount
-     */
-
-    @Ignore
-    @Test
-    public void recievePayplugNotificationWithZeroAmount() {
-        try {
-            User u = generateLoggedUser();
-            u.getAccount().getListPlan().get(0).setAmountPaid(0L);
-            mongo.save(u);
-            new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                    .respond(HttpResponse.response().withStatusCode(201)
-                            .withBody(generateMockBody(u, 0)));
-
-            JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-            String payment_url = given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.PAY))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(true))
-                    .body("payment_url", notNullValue()).extract().path("payment_url");
-
-            String paymentId = given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].paiementURL", notNullValue())
-                    .body("account.listPlan[0].paiementURL", is(payment_url))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""))
-                    .extract().path("paymentId");
-
-            JsonObject notification = buildNotificationRequest(paymentId, u);
-            given().body(notification.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(true));
-
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-    }
-
-    /**
-     * Recieve payplug notification with wrong http method
+     * Recieve WebHook notification with wrong http method
      */
     @Test
-    public void recievePayplugNotificationWithWrongHttpMethod() {
+    public void recieveWebHookNotificationWithWrongHttpMethod() {
         given().when().get(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
 
     /**
-     * Recieve payplug notification with missing mandatory data
+     * Recieve WebHook notification with missing mandatory data
      */
     @Test
-    public void recievePayplugNotificationWithMissingMandatoryData() {
-        JsonObject notification = buildNotificationRequest("12345", generateUser());
-        notification.removeField("created_at");
-        given().body(notification.encodePrettily())
+    public void recieveWebHookNotificationWithMissingMandatoryData() {
+        JsonObject webHookData = mockData.getObject("customer.subscription.created");
+        webHookData.removeField("created");
+        given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
-     * Recieve payplug notification with missing metadata
+     * Recieve WebHook notification with missing metadata
      */
     @Test
-    public void recievePayplugNotificationWithMissingMetadata() {
-        JsonObject notification = buildNotificationRequest("12345", generateUser());
-        notification.getObject("metadata").removeField("plan_id");
-        given().body(notification.encodePrettily())
+    public void recieveWebHookNotificationWithMissingMetadata() {
+        JsonObject webHookData = mockData.getObject("customer.subscription.created");
+        webHookData.getObject("data").getObject("object").getObject("metadata").removeField("planId");
+        given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
@@ -389,360 +323,75 @@ public class ShippingTest extends VertxJunitSupport {
 
 
     /**
-     * Recieve payplug notification with bad plan id
-     */
-    @Ignore
-    @Test
-    public void recievePayplugNotificationWithBadPlanId() {
-        JsonObject notification = buildNotificationRequest("12345", generateUser());
-        notification.getObject("metadata").putString("plan_id", "bwahaha");
-        given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-    }
-
-    /**
-     * Recieve payplug notification with non existing plan id
-     */
-    @Ignore
-    @Test
-    public void recievePayplugNotificationWithNonExistingPlanId() {
-        JsonObject notification = buildNotificationRequest("12345", generateUser());
-        notification.getObject("metadata").putString("plan_id", "8");
-        given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-    }
-
-    /**
-     * Recieve payplug notification with  null plan id
-     */
-
-    @Ignore
-    @Test
-    public void recievePayplugNotificationWithNullPlanId() {
-        JsonObject notification = buildNotificationRequest("12345", generateUser());
-        notification.getObject("metadata").removeField("plan_id");
-        given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
-
-    /**
-     * Recieve payplug notification with empty plan id
+     * Recieve WebHook notification with bad plan id
      */
     @Test
-    public void recievePayplugNotificationWithEmptyPlanId() {
-        JsonObject notification = buildNotificationRequest("12345", generateUser());
-        notification.getObject("metadata").putString("plan_id", "");
-        given().body(notification.encodePrettily())
-                .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
-
-    /**
-     * Recieve payplug notification wrong object
-     */
-    @Ignore
-    @Test
-    public void recievePayplugNotificationWrongObject() {
+    public void recieveWebHookNotificationWithBadPlanId() {
         User u = generateLoggedUser();
-        new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                .respond(HttpResponse.response().withStatusCode(201)
-                        .withBody(generateMockBody(u, 0)));
+        initMockStripe(u);
+        JsonObject webHookData = mockData.getObject("customer.subscription.created");
+        webHookData.getObject("data")
+                .getObject("object")
+                .getObject("metadata")
+                .putString("planId", "sdqsdqd");
 
-        JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-        String payment_url = given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(200)
-                .body("status", is(true))
-                .body("status", notNullValue())
-                .body("payment_url", notNullValue()).extract().path("payment_url");
-
-        String paymentId = given().header(TOKEN, u.getAccount().getToken())
-                .param("id", u.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].paiementURL", notNullValue())
-                .body("account.listPlan[0].paiementURL", is(payment_url))
-                .body("account.listPlan[0].paymentId", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""))
-                .extract().path("paymentId");
-
-        JsonObject notification = buildNotificationRequest(paymentId, u);
-        notification.putString("object", "bwahahaha");
-        given().body(notification.encodePrettily())
+        given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
-                .body("status", is(false));
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
-     * Recieve payplug notification not paid
+     * Recieve WebHook notification with non existing plan id
      */
-    @Ignore
     @Test
-    public void recievePayplugNotificationNotPaid() {
-        try {
-            User u = generateLoggedUser();
-            u.getAccount().getListPlan().get(0).setStatus("notpaid");
-            mongo.save(u);
-            new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                    .respond(HttpResponse.response().withStatusCode(201)
-                            .withBody(generateMockBody(u, 0)));
-
-            JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-            String payment_url = given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.PAY))
-                    .then().assertThat().statusCode(200)
-                    .body("status", is(true))
-                    .body("status", notNullValue())
-                    .body("payment_url", notNullValue()).extract().path("payment_url");
-
-            String paymentId = given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].paiementURL", notNullValue())
-                    .body("account.listPlan[0].paiementURL", is(payment_url))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""))
-                    .extract().path("paymentId");
-
-            JsonObject notification = buildNotificationRequest(paymentId, u);
-            notification.putBoolean("is_paid", false);
-            given().body(notification.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(false));
-            given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].paiementURL", notNullValue())
-                    .body("account.listPlan[0].paiementURL", is(payment_url))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""))
-                    .body("account.listPlan[0].status", is("notpaid"));
-
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-    }
-
-    /**
-     * Recieve payplug notification with failure
-     */
-
-    @Ignore
-    @Test
-    public void recievePayplugNotificationWithFailure() {
-        try {
-            User u = generateLoggedUser();
-            u.getAccount().getListPlan().get(0).setStatus("notpaid");
-            mongo.save(u);
-            new MockServerClient("localhost", 1080).when(HttpRequest.request().withMethod("POST").withPath("/v1/payments"))
-                    .respond(HttpResponse.response().withStatusCode(201)
-                            .withBody(generateMockBody(u, 0)));
-
-            JsonObject request = new JsonObject().putString(ShippingVerticle.PARAM_PLAN_ID, "0");
-            String payment_url = given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.PAY))
-                    .then().assertThat().statusCode(200)
-                    .body("status", is(true))
-                    .body("status", notNullValue())
-                    .body("payment_url", notNullValue()).extract().path("payment_url");
-
-            String paymentId = given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].paiementURL", notNullValue())
-                    .body("account.listPlan[0].paiementURL", is(payment_url))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""))
-                    .body("account.listPlan[0].status", is("notpaid"))
-                    .extract().path("paymentId");
-
-            JsonObject failure = new JsonObject();
-            JsonObject notification = buildNotificationRequest(paymentId, u);
-            String[] failures =
-                    {"processing_error", "card_declined", "insufficient_funds", "fraud_suspected", "3ds_declined",
-                            "incorrect_number", "aborted"};
-            for (String f : failures) {
-                failure.putString(CODE, f);
-                notification.putObject("failure", failure);
-                given().body(notification.encodePrettily())
-                        .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                        .then().assertThat().statusCode(200)
-                        .body("status", notNullValue())
-                        .body("status", is(false));
-                // Let's verify if our user have'nt be marked as paid
-                given().header(TOKEN, u.getAccount().getToken())
-                        .param("id", u.get_id())
-                        .when().get(getURL(UserVerticle.USER_INFO))
-                        .then().assertThat().statusCode(200)
-                        .body("_id", notNullValue())
-                        .body("_id", is(u.get_id()))
-                        .body("account.listPlan[0].paiementURL", notNullValue())
-                        .body("account.listPlan[0].paiementURL", is(payment_url))
-                        .body("account.listPlan[0].paymentId", notNullValue())
-                        .body("account.listPlan[0].paymentId", not(""))
-                        .body("account.listPlan[0].status", is("notpaid"));
-            }
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-    }
-
-    /**
-     * Recieve payplug notification withnon existing user id
-     */
-
-    @Ignore
-    @Test
-    public void recievePayplugNotificationWithnonExistingUserId() {
-        JsonObject notification = buildNotificationRequest("12345", generateUser());
-        notification.getObject("metadata").putString("customer_id", "bwahaha");
-        given().body(notification.encodePrettily())
+    public void recieveWebHookNotificationWithNonExistingPlanId() {
+        User u = generateLoggedUser();
+        initMockStripe(u);
+        JsonObject webHookData = mockData.getObject("customer.subscription.created");
+        webHookData.getObject("data")
+                .getObject("object")
+                .getObject("metadata")
+                .putString("planId", "1");
+        given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 
     /**
-     * Recieve payplug notification with null user id
+     * Recieve WebHook notification with  null plan id
      */
     @Test
-    public void recievePayplugNotificationWithNullUserId() {
-        JsonObject notification = buildNotificationRequest("12345", generateUser());
-        notification.getObject("metadata").removeField("customer_id");
-        given().body(notification.encodePrettily())
+    public void recieveWebHookNotificationWithNullPlanId() {
+        User u = generateLoggedUser();
+        initMockStripe(u);
+        JsonObject webHookData = mockData.getObject("customer.subscription.created");
+        webHookData.getObject("data")
+                .getObject("object")
+                .getObject("metadata")
+                .removeField("planId");
+        given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
 
     /**
-     * Recieve payplug notification with empty user id
+     * Recieve WebHook notification with empty plan id
      */
     @Test
-    public void recievePayplugNotificationWithEmptyUserId() {
-        JsonObject notification = buildNotificationRequest("12345", generateUser());
-        notification.getObject("metadata").putString("customer_id", "");
-        given().body(notification.encodePrettily())
+    public void recieveWebHookNotificationWithEmptyPlanId() {
+        User u = generateLoggedUser();
+        initMockStripe(u);
+        JsonObject webHookData = mockData.getObject("customer.subscription.created");
+        webHookData.getObject("data")
+                .getObject("object")
+                .getObject("metadata")
+                .putString("planId", "");
+        given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
-
-    /**
-     * @param paymentId paymentId
-     * @param u         user
-     * @return a notification object
-     */
-
-    private JsonObject buildNotificationRequest(String paymentId, User u) {
-        return new JsonObject()
-                .putString("id", "123456")
-                .putNumber("amount", 900L)
-                .putString("object", "payment")
-                .putBoolean("is_paid", true)
-                .putObject("metadata", new JsonObject()
-                        .putString("customer_id", u.get_id())
-                        .putString("plan_id", "0")
-                        .putString("locale", "fr_FR")
-                )
-                .putObject("card", new JsonObject()
-                        .putString("last4", "1800")
-                        .putString("country", "FR")
-                        .putString("brand", "Mastercard")
-                        .putNumber("exp_month", 9)
-                        .putNumber("exp_year", 2017)
-                )
-                .putNumber("created_at", new Date().getTime())
-                .putString("payment_id", paymentId);
-    }
-
-    /**
-     * @param u      user
-     * @param planId plan id
-     * @param amount amount
-     * @return body
-     */
-    private String generateMockBody(User u, int planId, int amount) {
-        return "{\n" +
-                "  \"amount\": " + amount + ",\n" +
-                "  \"amount_refunded\": 0,\n" +
-                "  \"card\": {\n" +
-                "      \"brand\": null,\n" +
-                "      \"country\": null,\n" +
-                "      \"exp_month\": null,\n" +
-                "      \"exp_year\": null,\n" +
-                "      \"id\": null,\n" +
-                "      \"last4\": null\n" +
-                "  },\n" +
-                "  \"created_at\": " + new Date().getTime() + ",\n" +
-                "  \"currency\": \"EUR\",\n" +
-                "  \"customer\": {\n" +
-                "      \"address1\": null,\n" +
-                "      \"address2\": null,\n" +
-                "      \"city\": null,\n" +
-                "      \"country\": null,\n" +
-                "      \"email\": \"" + u.getContact().getEmail() + "\",\n" +
-                "      \"first_name\": \"" + u.getFirstname() + "\",\n" +
-                "      \"last_name\": \"" + u.getName() + "\",\n" +
-                "      \"postcode\": null\n" +
-                "  },\n" +
-                "  \"failure\": null,\n" +
-                "  \"hosted_payment\": {\n" +
-                "      \"cancel_url\": \"" + moduleConfig.getObject("payplug").getString("cancel_url") + "\",\n" +
-                "      \"paid_at\": null,\n" +
-                "      \"payment_url\": \"https://www.payplug.com/pay/test/2DNkjF024bcLFhTn7OBfcc\",\n" +
-                "      \"return_url\": \"" + moduleConfig.getObject("payplug").getString("return_url") + "\"\n" +
-                "  },\n" +
-                "  \"id\": \"pay_2DNkjF024bcLFhTn7OBfcc\",\n" +
-                "  \"is_3ds\": null,\n" +
-                "  \"is_live\": false,\n" +
-                "  \"is_paid\": false,\n" +
-                "  \"is_refunded\": false,\n" +
-                "  \"metadata\": {\n" +
-                "      \"customer_id\": \"" + u.get_id() + "\",\n" +
-                "      \"plan_id\": \"" + planId + "\",\n" +
-                "      \"locale\": \"" + LOCALE + "\"\n" +
-                "  },\n" +
-                "  \"notification\": {\n" +
-                "      \"response_code\": null,\n" +
-                "      \"url\": \"https://example.net/notifications?id=42710\"\n" +
-                "  },\n" +
-                "  \"object\": \"payment\",\n" +
-                "  \"save_card\": true\n" +
-                "}";
-    }
-
-    /**
-     * @param u User
-     * @param i planId
-     * @return body
-     */
-    private String generateMockBody(User u, int i) {
-        return generateMockBody(u, i, 900);
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
     }
 }

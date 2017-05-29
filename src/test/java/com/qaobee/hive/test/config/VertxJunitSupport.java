@@ -74,7 +74,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     /**
      * The constant LOCALE.
      */
-    protected static final String LOCALE = "fr_FR";
+    private static final String LOCALE = "fr_FR";
     /**
      * The constant CODE.
      */
@@ -98,7 +98,7 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     /**
      * The constant moduleConfig.
      */
-    protected static JsonObject moduleConfig;
+    private static JsonObject moduleConfig;
     private static final Logger LOG = LoggerFactory.getLogger(VertxJunitSupport.class);
     private static final String POPULATE_WITHOUT = "without";
     private static final String POPULATE_ALL = "all";

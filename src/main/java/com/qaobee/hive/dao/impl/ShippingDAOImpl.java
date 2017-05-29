@@ -59,6 +59,8 @@ public class ShippingDAOImpl implements ShippingDAO {
     private static final String LOCALE_FIELD = "locale";
     private static final String ACCOUNT_FIELD = "account";
     private static final String LIST_PLAN_FIELD = "listPlan";
+    private static final String OBJECT_FIELD = "object";
+    private static final String PLANID_FIELD = "planId";
     private final MongoDB mongo;
     private final Vertx vertx;
     private final JsonObject runtime;
@@ -92,10 +94,13 @@ public class ShippingDAOImpl implements ShippingDAO {
 
     @Override
     public JsonObject pay(User user, JsonObject paymentData, String locale) throws QaobeeException {
-        if (!paymentData.containsField("planId")) {
+        if (!paymentData.containsField(PLANID_FIELD)) {
             throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is not present");
         }
-        int planId = paymentData.getInteger("planId");
+        int planId = paymentData.getInteger(PLANID_FIELD);
+        if (user.getAccount().getListPlan().size() <= planId) {
+            throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid");
+        }
         Plan plan = user.getAccount().getListPlan().get(planId);
         int amount = 0;
         if (runtime.getObject("plan").containsField(plan.getLevelPlan().name())) {
@@ -115,6 +120,8 @@ public class ShippingDAOImpl implements ShippingDAO {
                         customer = Customer.retrieve(customerId);
                     } catch (InvalidRequestException e) {
                         LOG.error(e.getMessage(), e);
+                    } catch (APIConnectionException e) {
+                        throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
                     }
                 }
                 if (customer == null) {
@@ -131,6 +138,8 @@ public class ShippingDAOImpl implements ShippingDAO {
                         subscription = Subscription.retrieve(user.getAccount().getListPlan().get(planId).getPaymentId());
                     } catch (InvalidRequestException e) {
                         LOG.error(e.getMessage(), e);
+                    } catch (APIConnectionException e) {
+                        throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
                     }
                 }
                 if (subscription != null) {
@@ -145,7 +154,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                     Map<String, Object> subscriptionMetadata = new HashMap<>();
                     subscriptionMetadata.put("_id", user.get_id());
                     subscriptionMetadata.put(LOCALE_FIELD, locale);
-                    subscriptionMetadata.put("planId", planId);
+                    subscriptionMetadata.put(PLANID_FIELD, planId);
                     params.put(METADATA_FIELD, subscriptionMetadata);
                     subscription = Subscription.create(params);
                     user.getAccount().getListPlan().get(planId).setAmountPaid(amount / 100);
@@ -172,9 +181,11 @@ public class ShippingDAOImpl implements ShippingDAO {
                 } else {
                     throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale));
                 }
-            } catch (APIException | APIConnectionException | InvalidRequestException | AuthenticationException | QaobeeException e) {
+            } catch (APIException | InvalidRequestException | AuthenticationException e) {
                 resp.putBoolean(Constants.STATUS, false).putString("message", e.getMessage());
                 LOG.error(e.getMessage(), e);
+            } catch (APIConnectionException e) {
+                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
             } catch (CardException e) {
                 resp
                         .putBoolean(Constants.STATUS, false)
@@ -212,27 +223,28 @@ public class ShippingDAOImpl implements ShippingDAO {
     @Override
     public boolean webHook(JsonObject body) throws QaobeeException {
         try {
-            LOG.info(body.getString("type") + " : " + body.getObject("data").getObject("object").getString("status"));
-            if (body.getObject("data").getObject("object").getObject(METADATA_FIELD).containsField("planId")) {
-                int planId = Integer.parseInt(body.getObject("data").getObject("object").getObject(METADATA_FIELD).getString("planId"));
-                Customer customer = Customer.retrieve(body.getObject("data").getObject("object").getString("customer"));
+            LOG.info(body.getString("type") + " : " + body.getObject("data").getObject(OBJECT_FIELD).getString("status"));
+            if (body.getObject("data").getObject(OBJECT_FIELD).getObject(METADATA_FIELD).containsField(PLANID_FIELD)) {
+                int planId = Integer.parseInt(body.getObject("data").getObject(OBJECT_FIELD).getObject(METADATA_FIELD).getString(PLANID_FIELD));
+                Customer customer = Customer.retrieve(body.getObject("data").getObject(OBJECT_FIELD).getString("customer"));
                 final JsonObject user = mongo.getById(customer.getMetadata().get("_id"), DBCollections.USER);
                 final User u = Json.decodeValue(user.encode(), User.class);
                 notificationsDAO.addNotificationToUser(user.getString("_id"), new JsonObject()
-                        .putString("content", Messages.getString("notification." + body.getString("type") + ".content", customer.getMetadata().get("locale")))
-                        .putString("title", Messages.getString("notification." + body.getString("type") + ".title", customer.getMetadata().get("locale")))
+                        .putString("content", Messages.getString("notification." + body.getString("type") + ".content", customer.getMetadata().get(LOCALE_FIELD)))
+                        .putString("title", Messages.getString("notification." + body.getString("type") + ".title", customer.getMetadata().get(LOCALE_FIELD)))
                         .putString("senderId", runtime.getString("admin.id")));
-                return registerPayment(body.getObject("data").getObject("object"), user, u, planId);
+                return registerPayment(body.getObject("data").getObject(OBJECT_FIELD), user, u, planId);
+            } else {
+                throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "planId is mandatory");
             }
-            return true;
         } catch (NumberFormatException | StripeException e) {
             throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, e);
         }
     }
 
     private boolean registerPayment(final JsonObject subscription, JsonObject user, final User u, int planId) throws QaobeeException {
-        if (user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).size() < planId) {
-            return false;
+        if (user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).size() <= planId) {
+            throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid");
         }
         ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId))
                 .putString(Constants.STATUS, subscription.getString("status"));

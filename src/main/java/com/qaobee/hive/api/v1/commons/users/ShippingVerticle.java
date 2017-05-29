@@ -55,7 +55,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     /**
      * The constant PARAM_PLAN_ID.
      */
-    public static final String PARAM_PLAN_ID = "plan_id";
+    public static final String PARAM_PLAN_ID = "planId";
 
     @Inject
     private ShippingDAO shippingDAO;
