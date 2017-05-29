@@ -59,10 +59,6 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * The Constant GENERATE_PDF.
      */
     public static final String GENERATE_PDF = Module.VERSION + ".commons.users.profile.pdf";
-    /**
-     * The Constant GENERATE_BILL_PDF.
-     */
-    public static final String GENERATE_BILL_PDF = Module.VERSION + ".commons.users.profile.billpdf";
     @Inject
     private UserDAO userDAO;
     @Inject
@@ -74,31 +70,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
         LOG.debug(this.getClass().getName() + " started");
         vertx.eventBus()
                 .registerHandler(UPDATE, this::updateUser)
-                .registerHandler(GENERATE_PDF, this::generateProfilePDF)
-                .registerHandler(GENERATE_BILL_PDF, this::generateBillPDF);
-    }
-
-    /**
-     * @apiDescription Generate a PDF from the bill of the current profile
-     * @api {get} /api/1/commons/users/profile/billpdf?id= Generate a PDF from the bill of the current profile
-     * @apiName generateBillPDF
-     * @apiGroup ProfileVerticle
-     * @apiParam {String} plan plan type
-     * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
-     * @apiHeader {String} token
-     */
-    @Rule(address = GENERATE_BILL_PDF, method = Constants.GET, logged = true, mandatoryParams = {"plan_id", "pay_id"}, scope = Rule.Param.REQUEST)
-    private void generateBillPDF(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, userDAO.generateBillPDF(req.getUser(),
-                    req.getParams().get("pay_id").get(0),
-                    req.getParams().get("plan_id").get(0),
-                    req.getLocale()), 10000L, getPdfHandler(message));
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+                .registerHandler(GENERATE_PDF, this::generateProfilePDF);
     }
 
     /**
