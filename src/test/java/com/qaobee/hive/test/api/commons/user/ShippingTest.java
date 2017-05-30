@@ -23,6 +23,7 @@ import com.qaobee.hive.api.v1.commons.users.ShippingVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import com.stripe.Stripe;
 import org.apache.commons.io.FileUtils;
@@ -54,7 +55,7 @@ public class ShippingTest extends VertxJunitSupport {
     @Before
     public void initMockServer() {
         try {
-            mockData = new JsonObject(FileUtils.readFileToString(new File("src/test/resources/mocks.json")));
+            mockData = new JsonObject(FileUtils.readFileToString(new File("src/test/resources/mocks.json"), "UTF-8"));
         } catch (IOException e) {
             Assert.fail(e.getMessage());
             e.printStackTrace();
@@ -77,20 +78,68 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject customer = mockData.getObject("customer");
         customer.putString("id", u.getAccount().getListPlan().get(0).getCardId());
         customer.putString("email", u.getContact().getEmail());
-        customer.putNumber("created",new Date().getTime());
+        customer.putNumber("created", new Date().getTime());
         customer.getObject("metadata").putString("_id", u.get_id());
 
 
         JsonObject subscription = mockData.getObject("subscription");
-        subscription.putString("customer",  u.getAccount().getListPlan().get(0).getCardId());
+        subscription.putString("customer", u.getAccount().getListPlan().get(0).getCardId());
 
-        new MockServerClient("localhost", 1080)
-                .when(HttpRequest.request()
-                        .withMethod("GET")
-                        .withPath("/v1/customers/" + u.getAccount().getListPlan().get(0).getCardId()))
-                .respond(HttpResponse.response()
-                        .withStatusCode(200)
-                        .withBody(customer.encode()));
+        if ("12345".equals(u.getAccount().getListPlan().get(0).getCardId())) {
+            new MockServerClient("localhost", 1080)
+                    .when(HttpRequest.request()
+                            .withMethod("GET")
+                            .withPath("/v1/customers/12345"))
+                    .respond(HttpResponse.response()
+                            .withStatusCode(404)
+                            .withBody("{\n" +
+                                    "  \"error\": {\n" +
+                                    "    \"type\": \"invalid_request_error\",\n" +
+                                    "    \"message\": \"No such customer: 12345\",\n" +
+                                    "    \"param\": \"id\"\n" +
+                                    "  }\n" +
+                                    "}\n"));
+        } else {
+            new MockServerClient("localhost", 1080)
+                    .when(HttpRequest.request()
+                            .withMethod("GET")
+                            .withPath("/v1/customers/" + u.getAccount().getListPlan().get(0).getCardId()))
+                    .respond(HttpResponse.response()
+                            .withStatusCode(200)
+                            .withBody(customer.encode()));
+        }
+        if ("canceled".equals(u.getAccount().getListPlan().get(0).getPaymentId())) {
+            subscription.putString("status", "canceled");
+            new MockServerClient("localhost", 1080)
+                    .when(HttpRequest.request()
+                            .withMethod("GET")
+                            .withPath("/v1/subscriptions/canceled"))
+                    .respond(HttpResponse.response()
+                            .withStatusCode(200)
+                            .withBody(subscription.encode()));
+        } else if ("12345".equals(u.getAccount().getListPlan().get(0).getPaymentId())) {
+            new MockServerClient("localhost", 1080)
+                    .when(HttpRequest.request()
+                            .withMethod("GET")
+                            .withPath("/v1/subscriptions/12345"))
+                    .respond(HttpResponse.response()
+                            .withStatusCode(404)
+                            .withBody("{\n" +
+                                    "  \"error\": {\n" +
+                                    "    \"type\": \"invalid_request_error\",\n" +
+                                    "    \"message\": \"No such subscription: 12345\",\n" +
+                                    "    \"param\": \"id\"\n" +
+                                    "  }\n" +
+                                    "}\n"));
+        } else {
+            new MockServerClient("localhost", 1080)
+                    .when(HttpRequest.request()
+                            .withMethod("GET")
+                            .withPath("/v1/subscriptions/sub_AkHS7YtIEi1Oy9"))
+                    .respond(HttpResponse.response()
+                            .withStatusCode(200)
+                            .withBody(subscription.encode()));
+        }
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
                         .withMethod("GET")
@@ -103,7 +152,7 @@ public class ShippingTest extends VertxJunitSupport {
                         .withMethod("GET")
                         .withPath("/v1/tokens/bla"))
                 .respond(HttpResponse.response()
-                        .withStatusCode(200)
+                        .withStatusCode(404)
                         .withBody("{\n" +
                                 "  \"error\": {\n" +
                                 "    \"type\": \"invalid_request_error\",\n" +
@@ -114,7 +163,7 @@ public class ShippingTest extends VertxJunitSupport {
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
                         .withMethod("POST")
-                        .withPath("/v1/customers/"))
+                        .withPath("/v1/customers"))
                 .respond(HttpResponse.response()
                         .withStatusCode(200)
                         .withBody(customer.encode()));
@@ -178,6 +227,226 @@ public class ShippingTest extends VertxJunitSupport {
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                 .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+    }
+
+    /**
+     * Create payment with new customer.
+     */
+    @Test
+    public void createPaymentWithNewCustomer() {
+        User u = generateLoggedUser();
+        u.getAccount().getListPlan().get(0).setCardId("12345");
+        try {
+            mongo.save(u);
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        initMockStripe(u);
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(200)
+                .body("status", is(true))
+                .body("status", notNullValue());
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].cardId", notNullValue())
+                .body("account.listPlan[0].cardId", not(""))
+                .body("account.listPlan[0].paymentId", notNullValue())
+                .body("account.listPlan[0].paymentId", not(""));
+    }
+
+    /**
+     * Create payment with new customer and new subscription.
+     */
+    @Test
+    public void createPaymentWithNewCustomerAndNewSubscription() {
+        User u = generateLoggedUser();
+        u.getAccount().getListPlan().get(0).setCardId("12345");
+        u.getAccount().getListPlan().get(0).setPaymentId(null);
+        try {
+            mongo.save(u);
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        initMockStripe(u);
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(200)
+                .body("status", is(true))
+                .body("status", notNullValue());
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].cardId", notNullValue())
+                .body("account.listPlan[0].cardId", not(""))
+                .body("account.listPlan[0].paymentId", notNullValue())
+                .body("account.listPlan[0].paymentId", not(""));
+    }
+
+    /**
+     * Create payment with existing subscription.
+     */
+    @Test
+    public void createPaymentWithExistingSubscription() {
+        User u = generateLoggedUser();
+        u.getAccount().getListPlan().get(0).setPaymentId("sub_AkHS7YtIEi1Oy9");
+        try {
+            mongo.save(u);
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        initMockStripe(u);
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+    }
+
+    /**
+     * Create payment with canceled subscription.
+     */
+    @Test
+    public void createPaymentWithCanceledSubscription() {
+        User u = generateLoggedUser();
+        u.getAccount().getListPlan().get(0).setPaymentId("canceled");
+        try {
+            mongo.save(u);
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        initMockStripe(u);
+
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(200)
+                .body("status", is(true))
+                .body("status", notNullValue());
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].cardId", notNullValue())
+                .body("account.listPlan[0].cardId", not(""))
+                .body("account.listPlan[0].paymentId", notNullValue())
+                .body("account.listPlan[0].paymentId", not(""));
+    }
+
+    /**
+     * Create payment with new subscription.
+     */
+    @Test
+    public void createPaymentWithNewSubscription() {
+        User u = generateLoggedUser();
+        u.getAccount().getListPlan().get(0).setPaymentId(null);
+        try {
+            mongo.save(u);
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        initMockStripe(u);
+
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(200)
+                .body("status", is(true))
+                .body("status", notNullValue());
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].cardId", notNullValue())
+                .body("account.listPlan[0].cardId", not(""))
+                .body("account.listPlan[0].paymentId", notNullValue())
+                .body("account.listPlan[0].paymentId", not(""));
+    }
+
+    /**
+     * Create payment with wrong subscription.
+     */
+    @Test
+    public void createPaymentWithWrongSubscription() {
+        User u = generateLoggedUser();
+        u.getAccount().getListPlan().get(0).setPaymentId("12345");
+        try {
+            mongo.save(u);
+        } catch (QaobeeException e) {
+            Assert.fail(e.getMessage());
+        }
+        initMockStripe(u);
+
+        JsonObject request = new JsonObject()
+                .putObject("data", new JsonObject()
+                        .putNumber("planId", 0)
+                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                );
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .body(request.encodePrettily())
+                .when().post(getURL(ShippingVerticle.PAY))
+                .then().assertThat().statusCode(200)
+                .body("status", is(true))
+                .body("status", notNullValue());
+
+        given().header(TOKEN, u.getAccount().getToken())
+                .param("id", u.get_id())
+                .when().get(getURL(UserVerticle.USER_INFO))
+                .then().assertThat().statusCode(200)
+                .body("_id", notNullValue())
+                .body("_id", is(u.get_id()))
+                .body("account.listPlan[0].cardId", notNullValue())
+                .body("account.listPlan[0].cardId", not(""))
+                .body("account.listPlan[0].paymentId", notNullValue())
+                .body("account.listPlan[0].paymentId", not(""));
     }
 
     /**
@@ -266,7 +535,7 @@ public class ShippingTest extends VertxJunitSupport {
                 .when().post(getURL(ShippingVerticle.PAY))
                 .then().assertThat().statusCode(200)
                 .body("status", is(true))
-                .body("status", notNullValue());;
+                .body("status", notNullValue());
 
         String customer = given().header(TOKEN, u.getAccount().getToken())
                 .param("id", u.get_id())

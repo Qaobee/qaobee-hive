@@ -32,6 +32,7 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
+import com.qaobee.hive.technical.utils.Utils;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
@@ -67,6 +68,7 @@ public class ShippingDAOImpl implements ShippingDAO {
     private final MailUtils mailUtils;
     private final TemplatesDAO templatesDAO;
     private final NotificationsDAO notificationsDAO;
+    private final Utils utils;
 
     /**
      * Instantiates a new Shipping dao.
@@ -78,101 +80,56 @@ public class ShippingDAOImpl implements ShippingDAO {
      * @param mailUtils        the mail utils
      * @param templatesDAO     the templates dao
      * @param notificationsDAO the notifications dao
+     * @param utils            the utils
      */
     @Inject
     public ShippingDAOImpl(MongoDB mongo, Vertx vertx, @Named("runtime") JsonObject runtime,
                            @Named("stripe") JsonObject stripe, MailUtils mailUtils, TemplatesDAO templatesDAO,
-                           NotificationsDAO notificationsDAO) {
+                           NotificationsDAO notificationsDAO, Utils utils) {
         this.mongo = mongo;
         this.vertx = vertx;
         this.runtime = runtime;
         this.mailUtils = mailUtils;
         this.templatesDAO = templatesDAO;
         this.notificationsDAO = notificationsDAO;
+        this.utils = utils;
         Stripe.apiKey = stripe.getString("api_secret");
     }
 
     @Override
     public JsonObject pay(User user, JsonObject paymentData, String locale) throws QaobeeException {
-        if (!paymentData.containsField(PLANID_FIELD)) {
-            throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is not present");
-        }
+        utils.testMandatoryParams(paymentData.toMap(), PLANID_FIELD);
         int planId = paymentData.getInteger(PLANID_FIELD);
         if (user.getAccount().getListPlan().size() <= planId) {
             throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid");
         }
         Plan plan = user.getAccount().getListPlan().get(planId);
-        int amount = 0;
-        if (runtime.getObject("plan").containsField(plan.getLevelPlan().name())) {
-            amount = runtime.getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price") * 100;
-        }
-        if (amount != 0) {
+        int amount = getAmountToPay(plan);
+        if (amount > 0) {
             JsonObject resp = new JsonObject();
             try {
-                Map<String, Object> metadata = new HashMap<>();
-                metadata.put("_id", user.get_id());
-                metadata.put(LOCALE_FIELD, locale);
                 // Vérifier si on n'a pas déjà un customer id sur ce user
                 String customerId = user.getAccount().getListPlan().get(planId).getCardId();
-                Customer customer = getCustomerInfo(customerId);
-
-                if (customer == null) {
-                    Map<String, Object> customerParams = new HashMap<>();
-                    customerParams.put("email", user.getContact().getEmail());
-                    customerParams.put("source", paymentData.getString("token"));
-                    customerParams.put(METADATA_FIELD, metadata);
-                    customer = Customer.create(customerParams);
-                }
+                Customer customer = getCustomerInfo(customerId, user, paymentData, locale);
                 // Check if subscribtion exists
                 Subscription subscription = getSubscriptionInfo(user.getAccount().getListPlan().get(planId).getPaymentId());
-
                 if (subscription != null) {
                     user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
                     mongo.save(user);
-                }
-                if (subscription == null || "canceled".equals(subscription.getStatus()) || "unpaid".equals(subscription.getStatus())) {
-                    Token token = Token.retrieve(paymentData.getString("token"));
-                    if(token == null || token.getId() == null) {
-                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Invalid token");
+                    if ("canceled".equals(subscription.getStatus()) || "unpaid".equals(subscription.getStatus())) {
+                        registerSubscription(user, paymentData, locale, customer, plan, planId, amount, resp);
+                    } else {
+                        throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale));
                     }
-                    Map<String, Object> params = new HashMap<>();
-                    params.put("customer", customer.getId());
-                    params.put("plan", plan.getLevelPlan().name());
-                    Map<String, Object> subscriptionMetadata = new HashMap<>();
-                    subscriptionMetadata.put("_id", user.get_id());
-                    subscriptionMetadata.put(LOCALE_FIELD, locale);
-                    subscriptionMetadata.put(PLANID_FIELD, planId);
-                    params.put(METADATA_FIELD, subscriptionMetadata);
-                    subscription = Subscription.create(params);
-                    user.getAccount().getListPlan().get(planId).setAmountPaid(amount / 100);
-                    user.getAccount().getListPlan().get(planId).setPaymentId(subscription.getId());
-                    user.getAccount().getListPlan().get(planId).setPaidDate(System.currentTimeMillis());
-                    user.getAccount().getListPlan().get(planId).setPeriodicity(MONTHLY);
-                    user.getAccount().getListPlan().get(planId).setCardId(customer.getId());
-                    user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
-                    JsonObject cardJson = new JsonObject(token.toJson()).getObject("card");
-                    Card card = new Card();
-                    card.setBrand(cardJson.getString("brand"));
-                    card.setCountry(cardJson.getString("country"));
-                    card.setExp_month(cardJson.getInteger("exp_month"));
-                    card.setExp_year(cardJson.getInteger("exp_year"));
-                    card.setLast4(cardJson.getString("last4"));
-                    card.setId(cardJson.getString("id"));
-                    if (subscription.getTrialEnd() != null) {
-                        user.getAccount().getListPlan().get(planId).setEndPeriodDate(subscription.getTrialEnd());
-                    }
-                    user.getAccount().getListPlan().get(planId).setStartPeriodDate(subscription.getStart());
-                    user.getAccount().getListPlan().get(planId).setCardInfo(card);
-                    mongo.save(user);
-                    resp.putBoolean(Constants.STATUS, registerPayment(user, planId, locale));
                 } else {
-                    throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale));
+                    registerSubscription(user, paymentData, locale, customer, plan, planId, amount, resp);
                 }
             } catch (APIException | NullPointerException | InvalidRequestException | AuthenticationException e) {
                 resp.putBoolean(Constants.STATUS, false).putString("message", e.getMessage());
                 LOG.error(e.getMessage(), e);
             } catch (APIConnectionException e) {
-                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
+                LOG.error(e.getMessage(), e);
+                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, e.getMessage());
             } catch (CardException e) {
                 resp
                         .putBoolean(Constants.STATUS, false)
@@ -189,31 +146,93 @@ public class ShippingDAOImpl implements ShippingDAO {
         }
     }
 
+    private void registerSubscription(User user, JsonObject paymentData, String locale, Customer customer, Plan plan, int planId, int amount, JsonObject resp) throws CardException, APIException, AuthenticationException, InvalidRequestException, APIConnectionException, QaobeeException {
+        Token token;
+        try {
+            token = Token.retrieve(paymentData.getString("token"));
+        } catch (InvalidRequestException e) {
+            throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Invalid token");
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("customer", customer.getId());
+        params.put("plan", plan.getLevelPlan().name());
+        Map<String, Object> subscriptionMetadata = new HashMap<>();
+        subscriptionMetadata.put("_id", user.get_id());
+        subscriptionMetadata.put(LOCALE_FIELD, locale);
+        subscriptionMetadata.put(PLANID_FIELD, planId);
+        params.put(METADATA_FIELD, subscriptionMetadata);
+        Subscription subscription = Subscription.create(params);
+        user.getAccount().getListPlan().get(planId).setAmountPaid(amount / 100);
+        user.getAccount().getListPlan().get(planId).setPaymentId(subscription.getId());
+        user.getAccount().getListPlan().get(planId).setPaidDate(System.currentTimeMillis());
+        user.getAccount().getListPlan().get(planId).setPeriodicity(MONTHLY);
+        user.getAccount().getListPlan().get(planId).setCardId(customer.getId());
+        user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
+        JsonObject cardJson = new JsonObject(token.toJson()).getObject("card");
+        Card card = new Card();
+        card.setBrand(cardJson.getString("brand"));
+        card.setCountry(cardJson.getString("country"));
+        card.setExp_month(cardJson.getInteger("exp_month"));
+        card.setExp_year(cardJson.getInteger("exp_year"));
+        card.setLast4(cardJson.getString("last4"));
+        card.setId(cardJson.getString("id"));
+        if (subscription.getTrialEnd() != null) {
+            user.getAccount().getListPlan().get(planId).setEndPeriodDate(subscription.getTrialEnd());
+        }
+        user.getAccount().getListPlan().get(planId).setStartPeriodDate(subscription.getStart());
+        user.getAccount().getListPlan().get(planId).setCardInfo(card);
+        mongo.save(user);
+        resp.putBoolean(Constants.STATUS, registerPayment(user, planId, locale));
+    }
+
+    private int getAmountToPay(Plan plan) {
+        if (runtime.getObject("plan").containsField(plan.getLevelPlan().name())) {
+            return runtime.getObject("plan").getObject(plan.getLevelPlan().name()).getInteger("price") * 100;
+        }
+        return 0;
+    }
+
     private Subscription getSubscriptionInfo(String paymentId) throws QaobeeException, APIException, CardException, AuthenticationException {
         if (StringUtils.isNotBlank(paymentId)) {
             try {
                 return Subscription.retrieve(paymentId);
             } catch (InvalidRequestException e) {
-                LOG.error(e.getMessage(), e);
+                LOG.debug(e.getMessage(), e);
             } catch (APIConnectionException e) {
-                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
+                LOG.error(e.getMessage(), e);
+                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, e.getMessage());
             }
         }
         return null;
     }
 
-    private Customer getCustomerInfo(String customerId) throws QaobeeException, APIException, CardException, AuthenticationException {
-        if (StringUtils.isNotBlank(customerId)) {
-            try {
+    private Customer getCustomerInfo(String customerId, User user, JsonObject paymentData, String locale) throws QaobeeException, APIException, CardException, AuthenticationException {
+        try {
+            if (StringUtils.isNotBlank(customerId)) {
                 return Customer.retrieve(customerId);
-            } catch (InvalidRequestException e) {
-                LOG.error(e.getMessage(), e);
-            } catch (APIConnectionException e) {
-                LOG.error(e.getMessage(), e);
-                throw new QaobeeException(ExceptionCodes.HTTP_ERROR, "Stripe is not reachable");
             }
+        } catch (InvalidRequestException e) {
+            LOG.debug(e.getMessage(), e);
+        } catch (APIConnectionException e) {
+            LOG.error(e.getMessage(), e);
+            throw new QaobeeException(ExceptionCodes.HTTP_ERROR, e.getMessage());
         }
-        return null;
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("_id", user.get_id());
+        metadata.put(LOCALE_FIELD, locale);
+        Map<String, Object> customerParams = new HashMap<>();
+        customerParams.put("email", user.getContact().getEmail());
+        customerParams.put("source", paymentData.getString("token"));
+        customerParams.put(METADATA_FIELD, metadata);
+        try {
+            return Customer.create(customerParams);
+        } catch (InvalidRequestException e) {
+            LOG.error(e.getMessage(), e);
+            throw new QaobeeException(ExceptionCodes.DATA_ERROR, e.getMessage());
+        } catch (APIConnectionException e) {
+            LOG.error(e.getMessage(), e);
+            throw new QaobeeException(ExceptionCodes.HTTP_ERROR, e.getMessage());
+        }
     }
 
     private boolean registerPayment(User user, int planId, String locale) throws QaobeeException {
