@@ -26,12 +26,14 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -47,15 +49,18 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private static final String VALUE_FIELD = "value";
     private static final String EVENT_ID_FIELD = "eventId";
     private final MongoDB mongo;
+    private final Utils utils;
 
     /**
      * Instantiates a new Statistics dao.
      *
      * @param mongo the mongo
+     * @param utils the utils
      */
     @Inject
-    public StatisticsDAOImpl(MongoDB mongo) {
+    public StatisticsDAOImpl(MongoDB mongo, Utils utils) {
         this.mongo = mongo;
+        this.utils = utils;
     }
 
     @Override
@@ -72,29 +77,29 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         return new JsonObject().putNumber("count", count);
     }
 
-    private long pushNonDuplicateStats(JsonArray stats, JsonArray eventStats, String evtId) {
-        long count = 0;
-        for (int j = 0; j < eventStats.size(); j++) {
-            for (int i = 0; i < stats.size(); i++) {
-                count += addNotDuplicateStat(stats.get(i), eventStats.get(j), evtId);
+    private int pushNonDuplicateStats(JsonArray stats, JsonArray eventStats, String evtId) {
+        List<Integer> statsToAdd = new ArrayList<>();
+        int count = 0;
+        for (int i = 0; i < stats.size(); i++) {
+            boolean found = false;
+            for (int j = 0; j < eventStats.size(); j++) {
+                ((JsonObject) eventStats.get(j)).removeField("_id");
+                if (eventStats.get(j).equals(stats.get(i))) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                try {
+                    System.out.println(((JsonObject) stats.get(i)).encode());
+                    addStat(stats.get(i));
+                    statsToAdd.add(i);
+                    count++;
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                }
             }
         }
         return count;
-    }
-
-    private long addNotDuplicateStat(JsonObject pushedStat, JsonObject existingStat, String evtId) {
-        if (!existingStat.getString(CODE_FIELD).equals(pushedStat.getString(CODE_FIELD))
-                && !existingStat.getLong(TIMER_FIELD).equals(pushedStat.getLong(TIMER_FIELD))
-                && !existingStat.getString(EVENT_ID_FIELD).equals(evtId)
-                ) {
-            try {
-                addStat(pushedStat);
-                return 1L;
-            } catch (QaobeeException e) {
-                LOG.error(e.getMessage(), e);
-            }
-        }
-        return 0L;
     }
 
     private long pushAllStats(JsonArray stats, String evtId) {

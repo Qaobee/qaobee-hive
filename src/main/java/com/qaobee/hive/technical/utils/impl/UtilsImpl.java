@@ -107,8 +107,8 @@ public class UtilsImpl implements Utils {
 
     @Override
     public void sendErrorJ(final Message<JsonObject> message, final QaobeeException e) {
-       JsonObject err = new JsonObject(Json.encode(e));
-        if(!err.getBoolean("report")) {
+        JsonObject err = new JsonObject(Json.encode(e));
+        if (!err.getBoolean("report")) {
             err.removeField("stackTrace");
         }
         message.fail(e.getCode().getCode(), err.encode());
@@ -132,7 +132,7 @@ public class UtilsImpl implements Utils {
         final File fDest = new File(dest);
         if (!fDest.getParentFile().exists()) {
             boolean mkdirs = fDest.getParentFile().mkdirs();
-            if(LOG.isInfoEnabled()) {
+            if (LOG.isInfoEnabled()) {
                 LOG.info(String.format("res : %s", mkdirs));
             }
         }

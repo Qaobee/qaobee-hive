@@ -1,4 +1,4 @@
-/*************************************************************************
+/* ************************************************************************
  * Qaobee
  * __________________
  * <p/>
@@ -14,7 +14,7 @@
  * Dissemination of this information or reproduction of this material
  * is strictly forbidden unless prior written permission is obtained
  * from Qaobee.
- */
+ **/
 package com.qaobee.hive.test.api.sandbox.stats;
 
 import com.qaobee.hive.api.Main;
@@ -238,13 +238,14 @@ public class SB_StatsTest extends VertxJunitSupport {
     }
 
     /**
-     * Add stat bulk.
+     * Add stat bulk with duplicates.
      */
     @Test
-    public void addStatBulk() {
+    public void addStatBulkWithDuplicates() {
+        populate(POPULATE_ONLY, DATA_EVENT_HAND);
         User user = generateLoggedUser();
         JsonArray stats = new JsonArray();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             stats.add(generateStat(user, "fake", i));
         }
 
@@ -253,7 +254,17 @@ public class SB_StatsTest extends VertxJunitSupport {
                 .when().put(getURL(SB_StatisticsVerticle.ADD_STAT_BULK))
                 .then().assertThat().statusCode(200)
                 .body("count", notNullValue())
-                .body("count", is(10));
+                .body("count", is(5));
+
+        for (int i = 0; i < 5; i++) {
+            stats.add(generateStat(user, "fake", i));
+        }
+        given().header(TOKEN, user.getAccount().getToken())
+                .body(stats.encode())
+                .when().put(getURL(SB_StatisticsVerticle.ADD_STAT_BULK))
+                .then().assertThat().statusCode(200)
+                .body("count", notNullValue())
+                .body("count", is(5));
 
         final JsonObject params = new JsonObject()
                 .putNumber(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
@@ -291,6 +302,11 @@ public class SB_StatsTest extends VertxJunitSupport {
     }
 
     private JsonObject generateStat(User u, String indicator, int chrono) {
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return new JsonObject()
                 .putString("activityId", "ACT-HAND")
                 .putBoolean("attack", false)
