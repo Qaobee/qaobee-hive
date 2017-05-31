@@ -26,14 +26,12 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -49,18 +47,15 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private static final String VALUE_FIELD = "value";
     private static final String EVENT_ID_FIELD = "eventId";
     private final MongoDB mongo;
-    private final Utils utils;
 
     /**
      * Instantiates a new Statistics dao.
      *
      * @param mongo the mongo
-     * @param utils the utils
      */
     @Inject
-    public StatisticsDAOImpl(MongoDB mongo, Utils utils) {
+    public StatisticsDAOImpl(MongoDB mongo) {
         this.mongo = mongo;
-        this.utils = utils;
     }
 
     @Override
@@ -78,12 +73,11 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     }
 
     private int pushNonDuplicateStats(JsonArray stats, JsonArray eventStats) {
-        List<Integer> statsToAdd = new ArrayList<>();
         int count = 0;
         for (int i = 0; i < stats.size(); i++) {
             boolean found = false;
             for (int j = 0; j < eventStats.size(); j++) {
-                ((JsonObject) eventStats.get(j)).removeField("_id");
+                ((JsonObject) eventStats.get(j)).removeField("_id");// NOSONAR
                 if (eventStats.get(j).equals(stats.get(i))) {
                     found = true;
                 }
@@ -91,7 +85,6 @@ public class StatisticsDAOImpl implements StatisticsDAO {
             if (!found) {
                 try {
                     addStat(stats.get(i));
-                    statsToAdd.add(i);
                     count++;
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
@@ -105,7 +98,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         long count = 0;
         for (int i = 0; i < stats.size(); i++) {
             try {
-                if (evtId.equals(((JsonObject) stats.get(i)).getString(EVENT_ID_FIELD))) {
+                if (evtId.equals(((JsonObject) stats.get(i)).getString(EVENT_ID_FIELD))) {// NOSONAR
                     addStat(stats.get(i));
                     count++;
                 }
@@ -119,7 +112,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private static HashSet<String> collectUniqueIds(JsonArray stats) {
         HashSet<String> events = new HashSet<>();
         for (int i = 0; i < stats.size(); i++) {
-            events.add(((JsonObject) stats.get(i)).getString(EVENT_ID_FIELD));
+            events.add(((JsonObject) stats.get(i)).getString(EVENT_ID_FIELD));// NOSONAR
         }
         return events;
     }

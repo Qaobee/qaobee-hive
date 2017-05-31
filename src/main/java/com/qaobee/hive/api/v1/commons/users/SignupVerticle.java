@@ -20,17 +20,13 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.SignupDAO;
-import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.UserDAO;
-import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -78,6 +74,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      */
     public static final String FINALIZE_SIGNUP = Module.VERSION + ".commons.users.signup.finalize";
     /**
+     * The constant RESEND_MAIL.
+     */
+    public static final String RESEND_MAIL = Module.VERSION + ".commons.users.signup.mailResend";
+    /**
      * Parameter ID
      */
     public static final String PARAM_ID = "id";
@@ -102,31 +102,18 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_CATEGORY_AGE = "categoryAge";
     /**
-     * Parameter Captcha
-     */
-    public static final String PARAM_CAPTCHA = "captcha";
-    /**
      * Parameter Login
      */
     public static final String PARAM_LOGIN = "login";
-    /**
-     * The constant COUNTRY_FIELD.
-     */
-    public static final String COUNTRY_FIELD = "country";
-    /**
-     * Parameter Plan
-     */
+    private static final String COUNTRY_FIELD = "country";
+    private static final String PARAM_CAPTCHA = "captcha";
     @Inject
     @Named("runtime")
     private JsonObject runtime;
     @Inject
-    private MailUtils mailUtils;
-    @Inject
     private Utils utils;
     @Inject
     private UserDAO userDAO;
-    @Inject
-    private TemplatesDAO templatesDAO;
     @Inject
     private SignupDAO signupDAO;
 
@@ -140,9 +127,28 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 .registerHandler(REGISTER, this::register)
                 .registerHandler(ACCOUNT_CHECK, this::accountCheck)
                 .registerHandler(FIRST_CONNECTION_CHECK, this::firstConnectionCheck)
+                .registerHandler(RESEND_MAIL, this::resendMail)
                 .registerHandler(FINALIZE_SIGNUP, this::finalizeSignup);
     }
-
+    /**
+     * @apiDescription Resend a register mail
+     * @api {post} /api/1/commons/users/user/mailResend Resend a register mail
+     * @apiVersion 0.1.0
+     * @apiName resendMail
+     * @apiParam {String} login Login
+     * @apiGroup Object Status
+     */
+    @Rule(address = RESEND_MAIL, method = Constants.POST, mandatoryParams = {PARAM_LOGIN},
+            scope = Rule.Param.BODY)
+    private void resendMail(Message<String> message) {
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        try {
+            utils.sendStatus(signupDAO.resendMail(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale()), message);
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            utils.sendError(message, e);
+        }
+    }
     /**
      * @apiDescription Finalizes signup
      * @api {get} /api/1/commons/users/signup/finalizesignup Account finalizes signup
@@ -170,18 +176,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     body.getObject(PARAM_CATEGORY_AGE),
                     body.getString(COUNTRY_FIELD, "CNTR-250-FR-FRA"),
                     req.getLocale());
-            
-            final JsonObject tplReq = new JsonObject()
-                    .putString(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
-                    .putObject(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(u.encode(), User.class), req.getLocale()));
-            final JsonObject emailReq = new JsonObject()
-                    .putString("from", runtime.getString("mail.from"))
-                    .putString("to", u.getObject("contact").getString("email"))
-                    .putString("subject", Messages.getString("mail.account.validation.subject", req.getLocale()))
-                    .putString("content_type", "text/html")
-                    .putString("body", templatesDAO.generateMail(tplReq).getString("result"));
-            vertx.eventBus().publish("mailer.mod", emailReq);
-            
+            signupDAO.sendRegisterMail(u, req.getLocale());
             JsonObject notification = new JsonObject()
                     .putString("id", u.getString("_id"))
                     .putString("target", "User")

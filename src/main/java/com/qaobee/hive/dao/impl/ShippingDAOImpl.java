@@ -83,7 +83,7 @@ public class ShippingDAOImpl implements ShippingDAO {
      * @param utils            the utils
      */
     @Inject
-    public ShippingDAOImpl(MongoDB mongo, Vertx vertx, @Named("runtime") JsonObject runtime,
+    public ShippingDAOImpl(MongoDB mongo, Vertx vertx, @Named("runtime") JsonObject runtime, // NOSONAR
                            @Named("stripe") JsonObject stripe, MailUtils mailUtils, TemplatesDAO templatesDAO,
                            NotificationsDAO notificationsDAO, Utils utils) {
         this.mongo = mongo;
@@ -146,7 +146,9 @@ public class ShippingDAOImpl implements ShippingDAO {
         }
     }
 
-    private void registerSubscription(User user, JsonObject paymentData, String locale, Customer customer, Plan plan, int planId, int amount, JsonObject resp) throws CardException, APIException, AuthenticationException, InvalidRequestException, APIConnectionException, QaobeeException {
+    private void registerSubscription(User user, JsonObject paymentData, String locale, Customer customer, Plan plan, // NOSONAR
+                                      int planId, int amount, JsonObject resp)
+            throws CardException, APIException, AuthenticationException, InvalidRequestException, APIConnectionException, QaobeeException {
         Token token;
         try {
             token = Token.retrieve(paymentData.getString("token"));
@@ -280,7 +282,7 @@ public class ShippingDAOImpl implements ShippingDAO {
         if (user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).size() <= planId) {
             throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid");
         }
-        ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId))
+        ((JsonObject) user.getObject(ACCOUNT_FIELD).getArray(LIST_PLAN_FIELD).get(planId)) // NOSONAR
                 .putString(Constants.STATUS, subscription.getString("status"));
         mongo.save(user, DBCollections.USER);
         final JsonObject tplReq = new JsonObject()

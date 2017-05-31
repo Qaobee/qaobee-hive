@@ -55,10 +55,10 @@ public class SignupTest extends VertxJunitSupport {
     }
 
     /**
-     * Existing login caseinsensitive.
+     * Existing login case insensitive.
      */
     @Test
-    public void existingLoginCaseinsensitive() {
+    public void existingLoginCaseInsensitive() {
         User u = generateUser();
         JsonObject param = new JsonObject().putString(SignupVerticle.PARAM_LOGIN, u.getAccount().getLogin().toUpperCase());
         JsonObject res = sendOnBus(SignupVerticle.LOGIN_EXISTS, param);
@@ -566,19 +566,13 @@ public class SignupTest extends VertxJunitSupport {
                 .body("person.name", notNullValue())
                 .body("person.name", is(u.getString("name")))
                 .body("person._id", notNullValue()).extract().asString()).getObject("person");
-        /*String token = given().param(SignupVerticle.PARAM_ID, p.getString("_id"))
-                .param(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"))
-                .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
-                .then().assertThat().statusCode(200)
-                .body("account", notNullValue())
-                .body("account.token", notNullValue()).extract().path("account.token");*/
 
-        JsonObject param = new JsonObject();
-        param.putObject(SignupVerticle.PARAM_USER, p);
-        param.putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"));
-        param.putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"));
-        param.putObject(SignupVerticle.PARAM_STRUCTURE, getStructure());
-        param.putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
+        JsonObject param = new JsonObject()
+                .putObject(SignupVerticle.PARAM_USER, p)
+                .putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"))
+                .putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"))
+                .putObject(SignupVerticle.PARAM_STRUCTURE, getStructure())
+                .putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
         given().body(param.encode())
                 .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(200)
@@ -603,7 +597,7 @@ public class SignupTest extends VertxJunitSupport {
                 .body("person.name", notNullValue())
                 .body("person.name", is(u.getString("name")))
                 .body("person._id", notNullValue()).extract().asString()).getObject("person");
-        
+
 
         JsonObject structure = getStructure();
         structure.removeField("_id");
@@ -690,14 +684,14 @@ public class SignupTest extends VertxJunitSupport {
                 .body("account", notNullValue())
                 .body("account.token", notNullValue()).extract().path("account.token");
 
-        JsonObject param = new JsonObject();
         String id = p.getString("_id");
         p.putString("_id", "blabla");
-        param.putObject(SignupVerticle.PARAM_USER, p);
-        param.putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"));
-        param.putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"));
-        param.putObject(SignupVerticle.PARAM_STRUCTURE, getStructure());
-        param.putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
+        JsonObject param = new JsonObject()
+                .putObject(SignupVerticle.PARAM_USER, p)
+                .putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"))
+                .putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"))
+                .putObject(SignupVerticle.PARAM_STRUCTURE, getStructure())
+                .putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
         given().header(TOKEN, token)
                 .body(param.encode())
                 .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
@@ -705,13 +699,93 @@ public class SignupTest extends VertxJunitSupport {
                 .body(CODE, is(ExceptionCodes.BAD_LOGIN.toString()));
 
         p.putString("_id", id);
-        param.putObject(SignupVerticle.PARAM_USER, p);
-        param.putString(SignupVerticle.PARAM_CODE,"blabla");
+        param.putObject(SignupVerticle.PARAM_USER, p)
+                .putString(SignupVerticle.PARAM_CODE, "blabla");
         given().header(TOKEN, token)
                 .body(param.encode())
                 .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
                 .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
+    }
+
+    /**
+     * Resend register mail.
+     */
+    @Test
+    public void resendRegisterMail() {
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
+        JsonObject u = generateNewUser();
+        JsonObject p = new JsonObject(given().body(u.encode())
+                .when().put(getURL(SignupVerticle.REGISTER))
+                .then().assertThat().statusCode(200)
+                .body("person", notNullValue())
+                .body("person.account.active", is(false))
+                .body("person.name", notNullValue())
+                .body("person.name", is(u.getString("name")))
+                .body("person._id", notNullValue()).extract().asString()).getObject("person");
+
+        JsonObject param = new JsonObject()
+                .putObject(SignupVerticle.PARAM_USER, p)
+                .putString(SignupVerticle.PARAM_CODE, p.getObject("account").getString("activationCode"))
+                .putString(SignupVerticle.PARAM_ACTIVITY, u.getObject("plan").getObject("activity").getString("_id"))
+                .putObject(SignupVerticle.PARAM_STRUCTURE, getStructure())
+                .putObject(SignupVerticle.PARAM_CATEGORY_AGE, getCategoryAge());
+        given().body(param.encode())
+                .when().post(getURL(SignupVerticle.FINALIZE_SIGNUP))
+                .then().assertThat().statusCode(200)
+                .body("name", notNullValue())
+                .body("name", is(p.getString("name")))
+                .body("sandboxDefault", notNullValue())
+                .body("account.active", is(false));
+
+
+        given()
+                .body(new JsonObject().putString(SignupVerticle.PARAM_LOGIN, "loginTest").encode())
+                .when().post(getURL(SignupVerticle.RESEND_MAIL))
+                .then().assertThat().statusCode(200)
+                .body("status", notNullValue())
+                .body("status", is(true));
+    }
+
+    /**
+     * Resend register mail with unknown login.
+     */
+    @Test
+    public void resendRegisterMailWithUnknownLogin() {
+        given()
+                .body(new JsonObject().putString(SignupVerticle.PARAM_LOGIN, "bla").encode())
+                .when().post(getURL(SignupVerticle.RESEND_MAIL))
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+    }
+
+    /**
+     * Resend register mail with no login.
+     */
+    @Test
+    public void resendRegisterMailWithNoLogin() {
+        given()
+                .body(new JsonObject().putString(SignupVerticle.PARAM_LOGIN, "").encode())
+                .when().post(getURL(SignupVerticle.RESEND_MAIL))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        given()
+                .body(new JsonObject().encode())
+                .when().post(getURL(SignupVerticle.RESEND_MAIL))
+                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    }
+
+    /**
+     * Resend register mail with wrong http method.
+     */
+    @Test
+    public void resendRegisterMailWithWrongHttpMethod() {
+        given()
+                .body(new JsonObject().putString(SignupVerticle.PARAM_LOGIN, "loginTest").encode())
+                .when().put(getURL(SignupVerticle.RESEND_MAIL))
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**

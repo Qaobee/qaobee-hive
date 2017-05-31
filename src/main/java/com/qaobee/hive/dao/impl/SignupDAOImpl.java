@@ -42,6 +42,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
+import com.qaobee.hive.technical.utils.MailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vertx.java.core.Vertx;
@@ -71,6 +72,9 @@ public class SignupDAOImpl implements SignupDAO {
     private final ReCaptcha reCaptcha;
     private final JsonObject runtime;
     private final Vertx vertx;
+    private static Random rand = new Random();
+    private final MailUtils mailUtils;
+    private final TemplatesDAO templatesDAO;
 
 
     /**
@@ -83,17 +87,22 @@ public class SignupDAOImpl implements SignupDAO {
      * @param structureDAO the structure dao
      * @param reCaptcha    the re captcha
      * @param runtime      the runtime
+     * @param mailUtils    the mail utils
+     * @param templatesDAO the templates dao
      * @param vertx        the vertx
      */
     @Inject
-    public SignupDAOImpl(ActivityDAO activityDAO, MongoDB mongo, CountryDAO countryDAO, UserDAO userDAO,
-                         StructureDAO structureDAO, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime, Vertx vertx) {
+    public SignupDAOImpl(ActivityDAO activityDAO, MongoDB mongo, CountryDAO countryDAO, UserDAO userDAO, // NOSONAR
+                         StructureDAO structureDAO, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime,
+                         MailUtils mailUtils, TemplatesDAO templatesDAO, Vertx vertx) {
         this.activityDAO = activityDAO;
         this.mongo = mongo;
         this.countryDAO = countryDAO;
         this.userDAO = userDAO;
         this.structureDAO = structureDAO;
         this.reCaptcha = reCaptcha;
+        this.mailUtils = mailUtils;
+        this.templatesDAO = templatesDAO;
         this.runtime = runtime;
         this.vertx = vertx;
     }
@@ -221,7 +230,7 @@ public class SignupDAOImpl implements SignupDAO {
         testAccount(user, activationCode, locale);
         user.getAccount().setToken(UUID.randomUUID().toString());
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-        
+
         // MaJ User
         user.getAccount().setActive(true);
         user.getAccount().setFirstConnexion(false);
@@ -260,10 +269,10 @@ public class SignupDAOImpl implements SignupDAO {
         if (userDAO.existingLogin(user.getAccount().getLogin())) {
             throw new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale));
         }
-        
+
         user.getAccount().setToken(UUID.randomUUID().toString());
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-        
+
         user.getAccount().setActive(false);
         user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
         final Plan plan = Json.decodeValue(userJson.getObject(PARAM_PLAN).encode(), Plan.class);
@@ -289,6 +298,26 @@ public class SignupDAOImpl implements SignupDAO {
                 .putString("planId", plan.getPaymentId());
     }
 
+    @Override
+    public boolean resendMail(String login, String locale) throws QaobeeException {
+        sendRegisterMail(userDAO.getUserByLogin(login), locale);
+        return true;
+    }
+
+    @Override
+    public void sendRegisterMail(JsonObject user, String locale) throws QaobeeException {
+        final JsonObject tplReq = new JsonObject()
+                .putString(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
+                .putObject(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(user.encode(), User.class), locale));
+        final JsonObject emailReq = new JsonObject()
+                .putString("from", runtime.getString("mail.from"))
+                .putString("to", user.getObject("contact").getString("email"))
+                .putString("subject", Messages.getString("mail.account.validation.subject", locale))
+                .putString("content_type", "text/html")
+                .putString("body", templatesDAO.generateMail(tplReq).getString("result"));
+        vertx.eventBus().publish("mailer.mod", emailReq);
+    }
+
     private static void testAccount(User user, String activationCode, String locale) throws QaobeeException {
         if (user.getAccount().isActive()) {
             throw new QaobeeException(ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", locale));
@@ -300,6 +329,7 @@ public class SignupDAOImpl implements SignupDAO {
     }
 
     private void addPlayer(JsonObject player, Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, List<String> listPersonsId) throws QaobeeException {
+
         for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
             SB_Person sbPerson = new SB_Person();
             sbPerson.setFirstname("Numero " + (listPersonsId.size() + 1));
@@ -314,10 +344,10 @@ public class SignupDAOImpl implements SignupDAO {
 
             Status status = new Status();
             status.setAvailability(new Availability("available", "available"));
-            status.setHeight((int) Math.round(Math.random() * 30) + 150);
+            status.setHeight(rand.nextInt(30) + 150);
             status.setLaterality(Math.random() > 0.5 ? "right-handed" : "left-handed");
             status.setStateForm("good");
-            status.setWeight((int) Math.round(Math.random() * 20) + 70);
+            status.setWeight(rand.nextInt(20) + 70);
             sbPerson.setStatus(status);
 
             sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
@@ -341,9 +371,9 @@ public class SignupDAOImpl implements SignupDAO {
         if (yearOldMin >= yearOldMax) {
             calendar.add(GregorianCalendar.YEAR, -1 * yearOldMin);
         } else {
-            calendar.add(GregorianCalendar.YEAR, -1 * ((int) Math.round(Math.random() * (yearOldMax - yearOldMin)) + yearOldMin));
+            calendar.add(GregorianCalendar.YEAR, -1 *rand.nextInt(yearOldMax - yearOldMin) + yearOldMin);
         }
-        calendar.set(GregorianCalendar.DAY_OF_YEAR, (int) Math.round(Math.random() * 365));
+        calendar.set(GregorianCalendar.DAY_OF_YEAR, rand.nextInt(365));
         return calendar.getTimeInMillis();
     }
 }

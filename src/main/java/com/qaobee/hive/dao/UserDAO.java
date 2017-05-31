@@ -138,5 +138,4 @@ public interface UserDAO {
      * @throws QaobeeException the qaobee exception
      */
     JsonObject getMeta(String sandboxId) throws QaobeeException;
-
 }
