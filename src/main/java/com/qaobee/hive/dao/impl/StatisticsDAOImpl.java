@@ -116,7 +116,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         return count;
     }
 
-    private HashSet<String> collectUniqueIds(JsonArray stats) {
+    private static HashSet<String> collectUniqueIds(JsonArray stats) {
         HashSet<String> events = new HashSet<>();
         for (int i = 0; i < stats.size(); i++) {
             events.add(((JsonObject) stats.get(i)).getString(EVENT_ID_FIELD));

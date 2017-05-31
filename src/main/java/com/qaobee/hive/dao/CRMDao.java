@@ -5,6 +5,7 @@ import org.vertx.java.core.json.JsonObject;
 /**
  * The interface Crm dao.
  */
+@FunctionalInterface
 public interface CRMDao {
 
     /**

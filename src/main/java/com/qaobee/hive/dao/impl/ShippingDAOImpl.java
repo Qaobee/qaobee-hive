@@ -151,6 +151,7 @@ public class ShippingDAOImpl implements ShippingDAO {
         try {
             token = Token.retrieve(paymentData.getString("token"));
         } catch (InvalidRequestException e) {
+            LOG.debug(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Invalid token");
         }
         Map<String, Object> params = new HashMap<>();
@@ -192,7 +193,7 @@ public class ShippingDAOImpl implements ShippingDAO {
         return 0;
     }
 
-    private Subscription getSubscriptionInfo(String paymentId) throws QaobeeException, APIException, CardException, AuthenticationException {
+    private static Subscription getSubscriptionInfo(String paymentId) throws QaobeeException, APIException, CardException, AuthenticationException {
         if (StringUtils.isNotBlank(paymentId)) {
             try {
                 return Subscription.retrieve(paymentId);
@@ -206,7 +207,7 @@ public class ShippingDAOImpl implements ShippingDAO {
         return null;
     }
 
-    private Customer getCustomerInfo(String customerId, User user, JsonObject paymentData, String locale) throws QaobeeException, APIException, CardException, AuthenticationException {
+    private static Customer getCustomerInfo(String customerId, User user, JsonObject paymentData, String locale) throws QaobeeException, APIException, CardException, AuthenticationException {
         try {
             if (StringUtils.isNotBlank(customerId)) {
                 return Customer.retrieve(customerId);
