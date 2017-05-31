@@ -71,13 +71,13 @@ public class StatisticsDAOImpl implements StatisticsDAO {
             if (eventStats.size() == 0) {
                 count = pushAllStats(stats, evtId);
             } else {
-                count = pushNonDuplicateStats(stats, eventStats, evtId);
+                count = pushNonDuplicateStats(stats, eventStats);
             }
         }
         return new JsonObject().putNumber("count", count);
     }
 
-    private int pushNonDuplicateStats(JsonArray stats, JsonArray eventStats, String evtId) {
+    private int pushNonDuplicateStats(JsonArray stats, JsonArray eventStats) {
         List<Integer> statsToAdd = new ArrayList<>();
         int count = 0;
         for (int i = 0; i < stats.size(); i++) {
@@ -90,7 +90,6 @@ public class StatisticsDAOImpl implements StatisticsDAO {
             }
             if (!found) {
                 try {
-                    System.out.println(((JsonObject) stats.get(i)).encode());
                     addStat(stats.get(i));
                     statsToAdd.add(i);
                     count++;
