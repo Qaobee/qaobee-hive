@@ -303,7 +303,7 @@ public class SB_StatsTest extends VertxJunitSupport {
 
     private JsonObject generateStat(User u, String indicator, int chrono) {
         try {
-            Thread.sleep(10);
+            Thread.sleep(10); // NOSONAR
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

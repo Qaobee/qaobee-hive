@@ -74,7 +74,9 @@ public class SecurityDAOImpl implements SecurityDAO {
      * @param runtime                   the runtime
      */
     @Inject
-    public SecurityDAOImpl(MongoDB mongo, MailUtils mailUtils, UserDAO userDAO, TemplatesDAO templatesDAO, PasswordEncryptionService passwordEncryptionService, Vertx vertx, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime) {
+    public SecurityDAOImpl(MongoDB mongo, MailUtils mailUtils, UserDAO userDAO, TemplatesDAO templatesDAO, // NOSONAR
+                           PasswordEncryptionService passwordEncryptionService, Vertx vertx, ReCaptcha reCaptcha,
+                           @Named("runtime") JsonObject runtime) {
         this.mongo = mongo;
         this.mailUtils = mailUtils;
         this.userDAO = userDAO;

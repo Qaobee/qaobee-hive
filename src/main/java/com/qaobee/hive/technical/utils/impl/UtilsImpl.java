@@ -170,13 +170,6 @@ public class UtilsImpl implements Utils {
         message.reply(jsonResp);
     }
 
-    /**
-     * Send status json.
-     *
-     * @param b       the b
-     * @param cause   the cause
-     * @param message the message
-     */
     @Override
     public void sendStatusJson(boolean b, String cause, Message<JsonObject> message) {
         final JsonObject jsonResp = new JsonObject();
@@ -186,7 +179,7 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void testMandatoryParams(Map<String, ?> mapParams, String... fields) throws QaobeeException {
+    public void testMandatoryParams(Map<String, ?> mapParams, String... fields) throws QaobeeException { // NOSONAR
         final List<String> missingFields = new ArrayList<>();
         Map<String, ?> map = new HashMap<>();
         if (mapParams != null) {

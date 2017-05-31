@@ -58,11 +58,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
 
     private final MongoDB mongo;
     private final Vertx vertx;
-    /**
-     * The Firebase.
-     */
-    final
-    JsonObject firebase;
+    private final JsonObject firebase;
 
     /**
      * Instantiates a new Notifications dao.
@@ -103,16 +99,16 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     private boolean addNotificationToSandbox(JsonObject target, JsonObject notification, JsonArray exclude) {
         List<Object> excludeList = new ArrayList<>();
         boolean res = true;
-        if(exclude != null) {
+        if (exclude != null) {
             exclude.forEach(excludeList::add);
         }
 
-        if(target.getArray(FIELD_MEMBERS) != null && target.getArray(FIELD_MEMBERS).size() >0){
+        if (target.getArray(FIELD_MEMBERS) != null && target.getArray(FIELD_MEMBERS).size() > 0) {
             for (int i = 0; i < target.getArray(FIELD_MEMBERS).size(); i++) {
-                if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID))
-                    && "activated".equals(((JsonObject)target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_MEMBER_STATUS))) {
-                    LOG.info(((JsonObject)target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID));
-                    res = res && addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID), notification);
+                if (!excludeList.contains(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID)) // NOSONAR
+                        && "activated".equals(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_MEMBER_STATUS))) {// NOSONAR
+                    LOG.info(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID));// NOSONAR
+                    res = res && addNotificationToUser(((JsonObject) target.getArray(FIELD_MEMBERS).get(i)).getString(FIELD_PERSON_ID), notification);// NOSONAR
                 }
             }
         }
@@ -153,7 +149,9 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     }
 
     private static void notifyIOS(JsonObject notification, String pushId) {
-        LOG.debug("IOS notification not yet implemented for : " + pushId + "\n" + notification.encodePrettily());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("IOS notification not yet implemented for : {}\nn{}", pushId, notification.encode());
+        }
     }
 
     private void notifyAndroid(JsonObject notification, String pushId) {
@@ -213,7 +211,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
             myLimit = notifications.size();
         }
         for (int i = start; i < start + myLimit; i++) {
-            ((JsonObject) notifications.get(i)).putObject(SENDER_ID, getUser(((JsonObject) notifications.get(i)).getString(SENDER_ID)));
+            ((JsonObject) notifications.get(i)).putObject(SENDER_ID, getUser(((JsonObject) notifications.get(i)).getString(SENDER_ID)));// NOSONAR
             jnotif.add(notifications.get(i));
         }
         return jnotif;

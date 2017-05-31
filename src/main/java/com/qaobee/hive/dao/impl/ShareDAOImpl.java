@@ -81,7 +81,7 @@ public class ShareDAOImpl implements ShareDAO {
         final JsonObject[] role = {new JsonObject().putString("code", roleCode)};
         JsonObject owner = mongo.getById(sandbox.getString(FIELD_OWNER), DBCollections.USER);
         if (owner.containsField(FIELD_COUNTRY) && owner.getObject(FIELD_COUNTRY) != null && owner.getObject(FIELD_COUNTRY).containsField(FIELD_ID)) {
-            ((JsonObject) activityCfgDAO.getActivityCfgParams(
+            ((JsonObject) activityCfgDAO.getActivityCfgParams( // NOSONAR
                     sandbox.getString("activityId"),
                     owner.getObject(FIELD_COUNTRY).getString(FIELD_ID),
                     System.currentTimeMillis(),
@@ -101,12 +101,12 @@ public class ShareDAOImpl implements ShareDAO {
                 .putNumber("invitationDate", System.currentTimeMillis());
         JsonArray invited = mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER);
         if (invited.size() > 0) {
-            invitation.putString("userId", ((JsonObject) invited.get(0)).getString("_id"));
+            invitation.putString("userId", ((JsonObject) invited.get(0)).getString("_id"));// NOSONAR
         }
         invitation.putString("_id", mongo.save(invitation, DBCollections.INVITATION));
         return invitation;
     }
-    
+
     @Override
     public JsonObject reviveInvitationToUser(String invitationId) throws QaobeeException {
         JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
@@ -125,7 +125,7 @@ public class ShareDAOImpl implements ShareDAO {
 
         return invitation;
     }
-    
+
     @Override
     public JsonObject getInvitationToSandbox(String invitationId) throws QaobeeException {
         return mongo.getById(invitationId, DBCollections.INVITATION);
@@ -144,11 +144,11 @@ public class ShareDAOImpl implements ShareDAO {
         }
         return invitation;
     }
-    
+
     @Override
     public JsonArray getListOfInvitationsToSandbox(String sandboxId, String status) {
         CriteriaBuilder criterias = new CriteriaBuilder().add(FIELD_SANDBOX_ID, sandboxId);
-        if(!"ALL".equals(status)) {
+        if (!"ALL".equals(status)) {
             criterias.add(FIELD_STATUS, status);
         }
         return mongo.findByCriterias(criterias.get(), null, null, -1, 0, DBCollections.INVITATION);

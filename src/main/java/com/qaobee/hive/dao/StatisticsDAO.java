@@ -83,5 +83,7 @@ public interface StatisticsDAO {
      * @return the stats grouped by
      * @throws QaobeeException the qaobee exception
      */
-    JsonArray getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId, JsonArray groupBy, JsonArray sortedBy, Integer limit) throws QaobeeException;
+    JsonArray getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, // NOSONAR
+                                Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId,
+                                JsonArray groupBy, JsonArray sortedBy, Integer limit) throws QaobeeException;
 }
