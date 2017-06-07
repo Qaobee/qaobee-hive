@@ -186,8 +186,7 @@ public class UtilsImpl implements Utils {
             map = mapParams;
         }
         for (final String field : fields) {
-            if (!map.containsKey(field) || map.get(field) == null
-                    || (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field))) || map.get(field) instanceof List && (((List<?>) map.get(field)).isEmpty() || ((List<?>) map.get(field)).get(0) instanceof String && StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0)) || ((List<?>) map.get(field)).get(0) == null)) {
+            if (!map.containsKey(field) || map.get(field) == null || (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field))) || map.get(field) instanceof List && (((List<?>) map.get(field)).isEmpty() || ((List<?>) map.get(field)).get(0) instanceof String && StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0)) || ((List<?>) map.get(field)).get(0) == null)) { // NOSONAR
                 missingFields.add(field);
             }
         }
