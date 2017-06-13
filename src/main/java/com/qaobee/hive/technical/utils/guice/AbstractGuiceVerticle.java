@@ -19,34 +19,29 @@
 
 package com.qaobee.hive.technical.utils.guice;
 
-import com.englishtown.vertx.promises.impl.DefaultWhenContainer;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.vertx.java.platform.Verticle;
+import io.vertx.core.AbstractVerticle;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * The type Abstract guice verticle.
  */
-public class AbstractGuiceVerticle extends Verticle {
+public class AbstractGuiceVerticle extends AbstractVerticle {
     private static final String MONGO_CONF_KEY = "mongo.persistor";
-    /**
-     * The When container.
-     */
-    protected DefaultWhenContainer whenContainer;
 
     /**
      * Start void.
      */
     @Override
     public void start() {
-        if (container.env().containsKey("OPENSHIFT_MONGODB_DB_HOST")) {
-            container.config().getObject(MONGO_CONF_KEY).putString("host", container.env().get("OPENSHIFT_MONGODB_DB_HOST"));
-            container.config().getObject(MONGO_CONF_KEY).putNumber("port", Integer.parseInt(container.env().get("OPENSHIFT_MONGODB_DB_PORT")));
-            container.config().getObject(MONGO_CONF_KEY).putString("password", container.env().get("OPENSHIFT_MONGODB_DB_PASSWORD"));
-            container.config().getObject(MONGO_CONF_KEY).putString("username", container.env().get("OPENSHIFT_MONGODB_DB_USERNAME"));
+        if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_MONGODB_DB_HOST"))) {
+            config().getJsonObject(MONGO_CONF_KEY).put("host", System.getenv("OPENSHIFT_MONGODB_DB_HOST"));
+            config().getJsonObject(MONGO_CONF_KEY).put("port", Integer.parseInt(System.getenv("OPENSHIFT_MONGODB_DB_PORT")));
+            config().getJsonObject(MONGO_CONF_KEY).put("password", System.getenv("OPENSHIFT_MONGODB_DB_PASSWORD"));
+            config().getJsonObject(MONGO_CONF_KEY).put("username", System.getenv("OPENSHIFT_MONGODB_DB_USERNAME"));
         }
-        Injector injector = Guice.createInjector(new GuiceModule(container.config(), vertx, container.env()));
+        Injector injector = Guice.createInjector(new GuiceModule(this.config(), vertx));
         injector.injectMembers(this);
-        whenContainer = new DefaultWhenContainer(container);
     }
 }

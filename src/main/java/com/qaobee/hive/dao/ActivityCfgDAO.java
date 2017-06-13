@@ -19,14 +19,32 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import com.qaobee.hive.dao.impl.ActivityCfgDAOImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Activity cfg dao.
  */
+@ProxyGen
+@VertxGen
 public interface ActivityCfgDAO {
+    String ADDRESS = "ActivityCfgDAO";
+
+    static ActivityCfgDAO create(Vertx vertx) {
+        return new ActivityCfgDAOImpl(vertx);
+    }
+
+    static ActivityCfgDAO createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(ActivityCfgDAO.class, vertx, address);
+    }
+
     /**
      * Gets activity cfg params.
      *
@@ -34,10 +52,8 @@ public interface ActivityCfgDAO {
      * @param countryId  the country id
      * @param dateRef    the date ref
      * @param paramField the param field
-     * @return the activity cfg params
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField) throws QaobeeException;
+    void getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Gets activity cfg.
@@ -45,8 +61,6 @@ public interface ActivityCfgDAO {
      * @param activityId the activity id
      * @param countryId  the country id
      * @param dateRef    the date ref
-     * @return the activity cfg
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getActivityCfg(String activityId, String countryId, Long dateRef) throws QaobeeException;
+    void getActivityCfg(String activityId, String countryId, Long dateRef, Handler<AsyncResult<JsonObject>> resultHandler);
 }

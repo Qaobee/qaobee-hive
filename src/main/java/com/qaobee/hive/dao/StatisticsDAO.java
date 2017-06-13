@@ -21,8 +21,8 @@ package com.qaobee.hive.dao;
 
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 /**
  * The interface Statistics dao.

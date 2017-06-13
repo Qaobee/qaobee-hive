@@ -21,33 +21,12 @@ package com.qaobee.hive.dao;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonObject;
 
 /**
  * The interface User dao.
  */
 public interface UserDAO {
-    /**
-     * Update avatar json object.
-     *
-     * @param uid      the uid
-     * @param filename the filename
-     * @return the json object
-     * @throws QaobeeException the qaobee exception
-     */
-    JsonObject updateAvatar(String uid, String filename) throws QaobeeException;
-
-    /**
-     * Generate bill pdf json object.
-     *
-     * @param user   the user
-     * @param payId  the pay id
-     * @param planId the plan id
-     * @param locale the locale
-     * @return the json object
-     * @throws QaobeeException the qaobee exception
-     */
-    JsonObject generateBillPDF(User user, String payId, String planId, String locale) throws QaobeeException;
 
     /**
      * Generate profile pdf json object.

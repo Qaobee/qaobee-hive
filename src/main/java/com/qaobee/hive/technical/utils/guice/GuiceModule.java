@@ -25,10 +25,10 @@ import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.guice.provides.MongoProvider;
 import com.qaobee.hive.technical.utils.guice.services.Files;
 import com.qaobee.hive.technical.utils.guice.services.impl.FilesImpl;
 import com.qaobee.hive.technical.utils.impl.HabilitUtilsImpl;
@@ -37,39 +37,33 @@ import com.qaobee.hive.technical.utils.impl.UtilsImpl;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.MongoClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Vertx;
-import org.vertx.java.core.file.impl.PathAdjuster;
-import org.vertx.java.core.impl.VertxInternal;
-import org.vertx.java.core.json.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * The type Guice module.
  */
-class GuiceModule extends AbstractModule {
+public class GuiceModule extends AbstractModule {
     private static final Logger LOG = LoggerFactory.getLogger(GuiceModule.class);
     private final JsonObject config;
     private final Vertx vertx;
-    private final JsonObject env;
 
     /**
      * Instantiates a new Guice module.
      *
      * @param config the config
      * @param vertx  the vertx
-     * @param env    env vars
      */
-    public GuiceModule(JsonObject config, Vertx vertx, Map<String, String> env) {
+    public GuiceModule(JsonObject config, Vertx vertx) {
         this.config = config;
         this.vertx = vertx;
-        this.env = new JsonObject();
-        env.keySet().forEach(k -> this.env.putString(k, env.get(k)));
     }
 
     /**
@@ -77,11 +71,11 @@ class GuiceModule extends AbstractModule {
      */
     @Override
     protected void configure() {
-        config.toMap().keySet().forEach(k -> bind(JsonObject.class).annotatedWith(Names.named(k)).toInstance(config.getObject(k)));
-        bind(JsonObject.class).annotatedWith(Names.named("env")).toInstance(env);
+        config.getMap().keySet().forEach(k -> bind(JsonObject.class).annotatedWith(Names.named(k)).toInstance(config.getJsonObject(k)));
         bind(Vertx.class).toInstance(vertx);
         // TECHNICAL MODULES
-        bind(MongoDB.class).toProvider(MongoProvider.class).in(Singleton.class);
+        bind(MongoDB.class).to(MongoDBImpl.class).in(Singleton.class);
+        bind(MongoClient.class).toProvider(MongoClientProvider.class).asEagerSingleton();
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
@@ -91,13 +85,13 @@ class GuiceModule extends AbstractModule {
         Configuration cfgMails = new Configuration(new Version("2.3.23"));
         // Where do we load the templates from:
         try {
-            cfgMails.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, "mailTemplates/")));
+            cfgMails.setDirectoryForTemplateLoading(new File("mailTemplates/"));
             cfgMails.setIncompatibleImprovements(new Version(2, 3, 20));
             cfgMails.setDefaultEncoding("UTF-8");
             cfgMails.setLocale(Locale.US);
             cfgMails.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
             Configuration cfgPDF = new Configuration(new Version("2.3.23"));
-            cfgPDF.setDirectoryForTemplateLoading(new File(PathAdjuster.adjust((VertxInternal) vertx, "pdfTemplates/")));
+            cfgPDF.setDirectoryForTemplateLoading(new File("pdfTemplates/"));
             bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
         } catch (final IOException e) {
             LOG.error(e.getMessage(), e);
@@ -130,5 +124,7 @@ class GuiceModule extends AbstractModule {
         bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
         bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
         bind(CRMDao.class).to(CRMDaoImpl.class).in(Singleton.class);
+        // Services
+        // bind(UserService.class).toInstance(UserService.createProxy(vertx, UserService.ADDRESS));
     }
 }

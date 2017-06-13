@@ -19,79 +19,93 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgVerticle;
 import com.qaobee.hive.dao.ActivityCfgDAO;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.MongoClient;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
+
 
 /**
  * The type Activity cfg dao.
  */
+@ProxyService(address = ActivityCfgDAO.ADDRESS, iface = ActivityCfgDAO.class)
 public class ActivityCfgDAOImpl implements ActivityCfgDAO {
 
-    private final MongoDB mongo;
-
-    /**
-     * Instantiates a new Activity cfg dao.
-     *
-     * @param mongo the mongo
-     */
     @Inject
-    public ActivityCfgDAOImpl(MongoDB mongo) {
-        this.mongo = mongo;
+    private MongoClient mongoClient;
+    @Inject
+    private MongoDB mongoDB;
+
+    public ActivityCfgDAOImpl(Vertx vertx) {
+        super();
     }
 
     @Override
-    public JsonArray getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField) throws QaobeeException {
-        DBObject match;
-        DBObject project;
-        BasicDBObject dbObjectParent;
+    public void getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField, Handler<AsyncResult<JsonArray>> resultHandler) {
+        JsonObject match;
+        JsonObject project;
+        JsonObject dbObjectParent;
         // $MATCH section
-        dbObjectParent = new BasicDBObject();
+        dbObjectParent = new JsonObject();
         // - activityId
         dbObjectParent.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, activityId);
         // - countryId
         dbObjectParent.put(ActivityCfgVerticle.PARAM_COUNTRY_ID, countryId);
         // - date between start and end dates
-        dbObjectParent.put("startDate", new BasicDBObject("$lte", dateRef));
-        dbObjectParent.put("endDate", new BasicDBObject("$gte", dateRef));
-        match = new BasicDBObject("$match", dbObjectParent);
+        dbObjectParent.put("startDate", new JsonObject().put("$lte", dateRef));
+        dbObjectParent.put("endDate", new JsonObject().put("$gte", dateRef));
+        match = new JsonObject().put("$match", dbObjectParent);
         // $PROJECT section
-        dbObjectParent = new BasicDBObject();
+        dbObjectParent = new JsonObject();
         dbObjectParent.put("_id", 0);
         dbObjectParent.put(paramField, 1);
-        project = new BasicDBObject("$project", dbObjectParent);
-        List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-        final JsonArray resultJSon = mongo.aggregate(paramField, pipelineAggregation, DBCollections.ACTIVITY_CFG);
-        if (resultJSon.size() != 1 || !((JsonObject) resultJSon.get(0)).containsField(paramField)) { // NOSONAR
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")");
-        }
-        return resultJSon;
+        project = new JsonObject().put("$project", dbObjectParent);
+        JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
+        JsonObject command = new JsonObject()
+                .put("aggregate", DBCollections.ACTIVITY_CFG)
+                .put("pipeline", pipelineAggregation);
+        mongoClient.runCommand("aggregate", command, res -> {
+            if (res.succeeded()) {
+                JsonArray resultJSon = res.result().getJsonArray("result");
+                if (resultJSon.size() != 1 || !resultJSon.getJsonObject(0).containsKey(paramField)) {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")")));
+                } else {
+                    resultHandler.handle(Future.succeededFuture(resultJSon));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause())));
+                res.cause().printStackTrace();
+            }
+        });
     }
 
     @Override
-    public JsonObject getActivityCfg(String activityId, String countryId, Long dateRef) throws QaobeeException {
+    public void getActivityCfg(String activityId, String countryId, Long dateRef, Handler<AsyncResult<JsonObject>> resultHandler) {
         // Creation of request
         CriteriaBuilder criterias = new CriteriaBuilder();
         criterias.add(ActivityCfgVerticle.PARAM_ACTIVITY_ID, activityId);
         criterias.add(ActivityCfgVerticle.PARAM_COUNTRY_ID, countryId);
         criterias.between("startDate", "endDate", dateRef);
         // Call to mongo
-        JsonArray resultJSon = mongo.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.ACTIVITY_CFG);
-        if (resultJSon.size() == 0) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")");
-        }
-        return resultJSon.get(0);
+        mongoDB.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.ACTIVITY_CFG, res -> {
+            if (res.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(res.result().getJsonObject(0)));
+            } else {
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No activity configuration was found for (" + activityId + " / " + countryId + " / " + dateRef + ")")));
+            }
+        });
     }
 }

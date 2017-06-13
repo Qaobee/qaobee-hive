@@ -28,17 +28,17 @@ import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.MultiMap;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.json.EncodeException;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.MultiMap;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -85,14 +85,6 @@ public class UtilsImpl implements Utils {
         }
     }
 
-    @Override
-    public Map<String, List<String>> toMap(final MultiMap multiMap) {
-        final Map<String, List<String>> map = new HashMap<>();
-        for (final String key : multiMap.names()) {
-            map.put(key, multiMap.getAll(key));
-        }
-        return map;
-    }
 
     @Override
     public void sendError(final Message<String> message, final QaobeeException e) {
@@ -109,7 +101,7 @@ public class UtilsImpl implements Utils {
     public void sendErrorJ(final Message<JsonObject> message, final QaobeeException e) {
         JsonObject err = new JsonObject(Json.encode(e));
         if (!err.getBoolean("report")) {
-            err.removeField("stackTrace");
+            err.remove("stackTrace");
         }
         message.fail(e.getCode().getCode(), err.encode());
     }
@@ -147,7 +139,7 @@ public class UtilsImpl implements Utils {
     @Override
     public JsonObject find(final String key, final String value, final JsonArray res) {
         for (int i = 0; i < res.size(); i++) {
-            final JsonObject jsonObj = res.get(i);
+            final JsonObject jsonObj = res.getJsonObject(i);
             if (jsonObj.getString(key).equals(value)) {
                 return jsonObj;
             }
@@ -157,29 +149,36 @@ public class UtilsImpl implements Utils {
 
     @Override
     public void sendStatus(final boolean b, final Message<String> message) {
-        final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean(STATUS_FIELD, b);
-        message.reply(jsonResp.encode());
-
+        message.reply(new JsonObject().put(STATUS_FIELD, b).encode());
     }
 
     @Override
     public void sendStatusJson(final boolean b, final Message<JsonObject> message) {
-        final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean(STATUS_FIELD, b);
-        message.reply(jsonResp);
+        message.reply(new JsonObject().put(STATUS_FIELD, b));
     }
 
     @Override
     public void sendStatusJson(boolean b, String cause, Message<JsonObject> message) {
-        final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean(STATUS_FIELD, b);
-        jsonResp.putString("cause", cause);
+        final JsonObject jsonResp = new JsonObject()
+                .put(STATUS_FIELD, b)
+                .put("cause", cause);
         message.reply(jsonResp);
     }
 
     @Override
-    public void testMandatoryParams(Map<String, ?> mapParams, String... fields) throws QaobeeException {
+    public void testMandatoryParams(MultiMap map, String... fields) throws QaobeeException {
+        final List<String> missingFields = new ArrayList<>();
+        for (final String field : fields) {
+            if (!map.contains(field) || map.get(field) == null || StringUtils.isBlank(map.get(field))) {
+                missingFields.add(field);
+            }
+        }
+        if (!missingFields.isEmpty()) {
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "Missing mandatory parameters : " + missingFields);
+        }
+    }
+
+    private void testMandatoryParams(Map<String, ?> mapParams, String... fields) throws QaobeeException {
         final List<String> missingFields = new ArrayList<>();
         Map<String, ?> map = new HashMap<>();
         if (mapParams != null) {
@@ -196,8 +195,8 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void testMandatoryParams(String body, final String... fields) throws QaobeeException {
-        testMandatoryParams(new JsonObject(StringUtils.isBlank(body) ? "{}" : body).toMap(), fields);
+    public void testMandatoryParams(JsonObject body, final String... fields) throws QaobeeException {
+        testMandatoryParams((body == null ? new JsonObject() : body).getMap(), fields);
     }
 
     @Override
@@ -206,11 +205,11 @@ public class UtilsImpl implements Utils {
         if (request.getUser() != null) {
             return request.getUser();
         }
-        if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
-            token = request.getHeaders().get(Constants.TOKEN).get(0);
+        if (request.getHeaders() != null && request.getHeaders().contains(Constants.TOKEN)) {
+            token = request.getHeaders().get(Constants.TOKEN);
         }
-        if (request.getParams() != null && request.getParams().containsKey(Constants.TOKEN)) {
-            token = request.getParams().get(Constants.TOKEN).get(0);
+        if (request.getParams() != null && request.getParams().contains(Constants.TOKEN)) {
+            token = request.getParams().get(Constants.TOKEN);
         }
         if (StringUtils.isBlank(token)) {
             throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
@@ -220,18 +219,18 @@ public class UtilsImpl implements Utils {
             throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
         } else {
             // we take the first one (should be only one)
-            final JsonObject jsonUser = res.get(0);
+            final JsonObject jsonUser = res.getJsonObject(0);
             JsonObject userToSave = new JsonObject();
             final User user = Json.decodeValue(jsonUser.encode(), User.class);
-            userToSave.putString("_id", user.get_id());
+            userToSave.put("_id", user.get_id());
             if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
-                userToSave.putString("account.token", null);
+                userToSave.put("account.token", "");
                 user.getAccount().setToken(null);
-                userToSave.putNumber("account.tokenRenewDate", 0L);
+                userToSave.put("account.tokenRenewDate", 0L);
                 user.getAccount().setTokenRenewDate(0L);
             } else {
                 long connectionTime = System.currentTimeMillis();
-                userToSave.putNumber("account.tokenRenewDate", connectionTime);
+                userToSave.put("account.tokenRenewDate", connectionTime);
                 user.getAccount().setTokenRenewDate(connectionTime);
             }
             try {

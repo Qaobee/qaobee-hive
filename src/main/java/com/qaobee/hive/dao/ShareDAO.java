@@ -19,10 +19,10 @@
 
 package com.qaobee.hive.dao;
 
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 /**
  * The interface Share dao.

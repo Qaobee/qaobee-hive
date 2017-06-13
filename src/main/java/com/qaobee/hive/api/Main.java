@@ -18,8 +18,6 @@
  */
 package com.qaobee.hive.api;
 
-import com.englishtown.promises.Promise;
-import com.englishtown.promises.When;
 import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
@@ -29,35 +27,37 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.technical.vertx.ServerHook;
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Future;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.http.HttpServer;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.FileUpload;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.sockjs.BridgeOptions;
+import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.protocol.HTTP;
+import org.jdeferred.Deferred;
+import org.jdeferred.DeferredManager;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DefaultDeferredManager;
+import org.jdeferred.impl.DeferredObject;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.AsyncResult;
-import org.vertx.java.core.Future;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.buffer.Buffer;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.http.HttpServer;
-import org.vertx.java.core.http.HttpServerFileUpload;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.RouteMatcher;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-import org.vertx.java.core.sockjs.SockJSServer;
-import org.vertx.mods.Mailer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
 import java.util.*;
-
-import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 
 /**
  * The Class Main.
@@ -84,17 +84,17 @@ public class Main extends AbstractGuiceVerticle {
     private JsonObject cors;
 
     /**
-     * @param req request
-     * @param e   exception
+     * @param routingContext request
+     * @param e              exception
      */
-    private void handleError(HttpServerRequest req, QaobeeException e) {
-        enableCors(req);
-        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-        req.response().setStatusCode(e.getCode().getCode());
+    private void handleError(RoutingContext routingContext, QaobeeException e) {
+        enableCors(routingContext);
+        routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
+        routingContext.response().setStatusCode(e.getCode().getCode());
         JsonObject jsonEx = new JsonObject(Json.encode(e));
-        jsonEx.removeField("stackTrace");
-        jsonEx.removeField("suppressed");
-        req.response().end(jsonEx.encode());
+        jsonEx.remove("stackTrace");
+        jsonEx.remove("suppressed");
+        routingContext.response().end(jsonEx.encode());
     }
 
     /**
@@ -111,89 +111,50 @@ public class Main extends AbstractGuiceVerticle {
         });
     }
 
-    /**
-     * @param message Vert.X message
-     * @param req     Request
-     */
-    private void handleResult(AsyncResult<Message<Object>> message, HttpServerRequest req) {
-        try {
-            if (message.succeeded()) {
-                final String response = (String) message.result().body();
-                if (response.startsWith("[") || !response.startsWith("{")) {
-                    handleJsonArray(req, response);
-                } else {
-                    handleJsonObject(req, response);
-                }
-            } else {
-                throw (ReplyException) message.cause();
-            }
-        } catch (ReplyException ex) {
-            LOG.error(ex.getMessage(), ex);
-            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-            req.response().setStatusCode(404);
-            enableCors(req);
-            if (ex.failureCode() > 0) {
-                req.response().setStatusCode(ex.failureCode());
-            }
-            if (ex.getMessage() != null) {
-                String exStr = ex.getMessage();
-                if (ex.getMessage().startsWith("{")) {
-                    JsonObject jsonEx = new JsonObject(ex.getMessage());
-                    jsonEx.removeField("stackTrace");
-                    jsonEx.removeField("suppressed");
-                    exStr = jsonEx.encode();
-                }
-                req.response().end(exStr);
-            } else {
-                manage404Error(req);
-            }
-        }
-    }
-
-    private void handleJsonObject(HttpServerRequest req, String response) {
+    private void handleJsonObject(RoutingContext routingContext, String response) {
         final JsonObject json = new JsonObject(response);
-        if (json.containsField(FILE_SERVE)) {
+        if (json.containsKey(FILE_SERVE)) {
             final File f = new File(json.getString(FILE_SERVE));
-            req.response().putHeader("Content-Description", "File Transfer")
-                    .putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE))
+            routingContext.response().putHeader("Content-Description", "File Transfer")
+                    .putHeader(HTTP.CONTENT_TYPE, json.getString(HTTP.CONTENT_TYPE))
                     .putHeader("Content-Disposition", "attachment; filename=" + f.getName())
                     .putHeader("Expires", "0")
                     .putHeader("Cache-Control", "must-revalidate")
                     .putHeader("Pragma", "public")
-                    .putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
-            enableCors(req);
-            req.response().sendFile(f.getAbsolutePath());
+                    .putHeader(HTTP.CONTENT_LEN, String.valueOf(f.length()));
+            enableCors(routingContext);
+            routingContext.response().sendFile(f.getAbsolutePath());
         } else {
-            enableCors(req);
-            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-            req.response().end(response);
+            enableCors(routingContext);
+            routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
+            routingContext.response().end(response);
         }
     }
 
-    private void handleJsonArray(HttpServerRequest req, String response) {
-        enableCors(req);
-        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-        req.response().end(response);
+    private void handleJsonArray(RoutingContext routingContext, String response) {
+        enableCors(routingContext);
+        routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
+        routingContext.response().end(response);
     }
 
-    private static void manage404Error(HttpServerRequest req) {
-        final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean("status", false);
-        jsonResp.putString(MESSAGE, "Nothing here");
-        jsonResp.putNumber("httpCode", 404);
-        req.response().setStatusCode(404).end(jsonResp.encode());
+    private static void manage404Error(RoutingContext routingContext) {
+        final JsonObject jsonResp = new JsonObject()
+                .put("status", false)
+                .put(MESSAGE, "Nothing here")
+                .put("httpCode", 404);
+        routingContext.response().setStatusCode(404).end(jsonResp.encode());
     }
 
     /**
      * Enable cors.
      *
-     * @param req the req
+     * @param routingContext the req
      */
-    private void enableCors(final HttpServerRequest req) {
-        if(cors.getBoolean("enabled")) {
-            req.response().headers().add("Access-Control-Allow-Origin", "*");
-            req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-            req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
+    private void enableCors(final RoutingContext routingContext) {
+        if (cors.getBoolean("enabled")) {
+            routingContext.response().headers().add("Access-Control-Allow-Origin", "*");
+            routingContext.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+            routingContext.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
         }
     }
 
@@ -206,68 +167,53 @@ public class Main extends AbstractGuiceVerticle {
         return rules;
     }
 
-    /**
-     * Start void.
-     *
-     * @param startedResult the started result
-     */
     @Override
-    public void start(final Future<Void> startedResult) {
-        super.start();
+    public void start(Future<Void> startFuture) throws Exception {
         LOG.debug(this.getClass().getName() + " started");
-        final RouteMatcher rm = new RouteMatcher();
-        rm.get("/file/:collection/:id", this::getAssetHandler);
-        rm.post("/file/:collection/:field/:uid", this::assetUploadHandler);
-        rm.optionsWithRegEx(".*", req -> {
-            if (container.config().getObject("cors").getBoolean("enabled", false)) {
+        final Router router = Router.router(vertx);
+        router.route().handler(BodyHandler.create());
+        router.get("/file/:collection/:id").handler(this::getAssetHandler);
+        router.post("/file/:collection/:field/:uid").handler(this::assetUploadHandler);
+        router.optionsWithRegex(".*").handler(req -> {
+            if (config().getJsonObject("cors").getBoolean("enabled", false)) {
                 enableCors(req);
             }
             req.response().end();
         });
-        rm.get("/", event -> event.response().end("Welcome to Qaobee Hive"));
+        router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
         // API Rest
-        rm.allWithRegEx("^/api/.*", req -> req.bodyHandler(event -> handleAPIRequest(req, event)));
+        router.routeWithRegex("^/api/.*").handler(this::handleAPIRequest);
         // Load Verticles
-        List<Promise<String, Void>> promises = loadVerticles();
-        runWebServer(promises, rm, startedResult);
+        runWebServer(loadVerticles(), router, startFuture);
+        super.start(startFuture);
     }
 
     /**
-     * @param promises    Promises
-     * @param rm          Route matcher
-     * @param startResult Start result
+     * @param promises Promises
+     * @param router       Route matcher
      */
-    private void runWebServer(List<Promise<String, Void>> promises, Handler<HttpServerRequest> rm, Future<Void> startResult) {
-        final HttpServer server = vertx.createHttpServer();
-        new When<String, Void>().all(promises, value -> {
-            handleServerStart(server, rm);
-            startResult.setResult(null);
-            return null;
-        }, value -> {
-            LOG.error(value.error.getMessage());
-            startResult.setFailure(value.error);
-            return null;
-        });
+    private void runWebServer(List<Promise> promises, Router router, Future<Void> startFuture) {
+        DeferredManager dm = new DefaultDeferredManager();
+        dm.when(promises.toArray(new Promise[promises.size()]))
+                .done(rs -> {
+                    rs.forEach(r -> System.out.println(r.getResult()));
+                    handleServerStart(router);
+                    startFuture.complete();
+                })
+                .fail(e -> {
+                    LOG.error(((Throwable) e.getReject()).getMessage());
+                    startFuture.fail((Throwable) e.getReject());
+                });
     }
 
-    private void handleServerStart(HttpServer server, Handler<HttpServerRequest> rm) {
-        server.requestHandler(rm);
+    private void handleServerStart(Router router) {
+        final HttpServer server = vertx.createHttpServer();
+        server.requestHandler(router::accept);
         String ip = runtime.getString("defaultHost");
         int port = runtime.getInteger("defaultPort");
-        if (container.env().containsKey("OPENSHIFT_VERTX_IP")) {
-            ip = container.env().get("OPENSHIFT_VERTX_IP");
-        }
-        if (container.env().containsKey("OPENSHIFT_VERTX_PORT")) {
-            port = Integer.parseInt(container.env().get("OPENSHIFT_VERTX_PORT"));
-        }
-        SockJSServer sockJSServer = vertx.createSockJSServer(server);
-        JsonObject wsConfig = new JsonObject().putString("prefix", "/eventbus");
-        JsonArray outboundPermitted = new JsonArray();
-        JsonArray inboundPermitted = new JsonArray();
-        outboundPermitted.add(new JsonObject());
-        inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
-        sockJSServer.setHook(new ServerHook(runtime.getString("site.url")));
-        sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
+        SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
+        sockJSHandler.bridge(new BridgeOptions());
+        router.route("/eventbus/*").handler(sockJSHandler);
         server.listen(port, ip);
         LOG.info("The http server is started on : " + ip + ":" + port);
         System.out.println("Server started");
@@ -276,45 +222,93 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @return start promises
      */
-    private List<Promise<String, Void>> loadVerticles() {
-        final List<Promise<String, Void>> promises = new ArrayList<>();
-        // Loading modules
-        promises.add(whenContainer.deployWorkerVerticle(Mailer.class.getCanonicalName(), container.config().getObject("mailer.mod"), 1, true));
+    private List<Promise> loadVerticles() {
+        List<Promise> promises = new ArrayList<>();
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
         restModules.forEach(restMod -> {
+            Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
+            promises.add(deferred.promise());
             if (restMod.getAnnotation(DeployableVerticle.class).isWorker()) {
-                promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), container.config(), restMod.getAnnotation(DeployableVerticle.class).poolSize(), true));
+                vertx.deployVerticle(restMod.getName(), new DeploymentOptions()
+                        .setConfig(config())
+                        .setWorker(true)
+                        .setWorkerPoolSize(restMod.getAnnotation(DeployableVerticle.class).poolSize()), res -> {
+                    if (res.succeeded()) {
+                        deferred.resolve(res.result());
+                    } else {
+                        deferred.reject(res.cause());
+                    }
+                });
             } else {
-                promises.add(whenContainer.deployVerticle(restMod.getName(), container.config()));
+                vertx.deployVerticle(restMod.getName(), new DeploymentOptions().setConfig(config()), res -> {
+                    if (res.succeeded()) {
+                        deferred.resolve(res.result());
+                    } else {
+                        deferred.reject(res.cause());
+                    }
+                });
             }
             manageRules(restMod);
         });
         return promises;
     }
 
-    private void handleAPIRequest(HttpServerRequest req, Buffer event) {
+    private void handleAPIRequest(RoutingContext routingContext) {
         final RequestWrapper wrapper = new RequestWrapper();
-        wrapper.setBody(event.toString());
-        wrapper.setMethod(req.method());
-        wrapper.setHeaders(utils.toMap(req.headers()));
-        wrapper.setParams(utils.toMap(req.params()));
-        wrapper.setLocale(req.headers().get(ACCEPT_LANGUAGE));
-        List<String> path = Arrays.asList(req.path().split("/"));
+        wrapper.setBody(routingContext.getBodyAsJson());
+        wrapper.setMethod(routingContext.request().rawMethod());
+        wrapper.setHeaders(routingContext.request().headers());
+        wrapper.setParams(routingContext.request().params());
+        wrapper.setLocale(routingContext.request().getHeader("Accept-Language"));
+        List<String> path = Arrays.asList(routingContext.request().path().split("/"));
         path = path.subList(3, path.size());
         wrapper.setPath(path);
         // Collect metrics : number of requests
         final JsonObject json = new JsonObject()
-                .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
-                .putString("action", "mark");
+                .put("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
+                .put("action", "mark");
         vertx.eventBus().send("metrix", json);
         String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
         if (rules.containsKey(busAddress)) {
-            if (testRequest(req, busAddress, wrapper)) {
-                vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> this.handleResult(message, req));
+            if (testRequest(routingContext, busAddress, wrapper)) {
+                vertx.eventBus().send(busAddress, Json.encode(wrapper), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), message -> {
+                    try {
+                        if (message.succeeded()) {
+                            final String response = (String) message.result().body();
+                            if (response.startsWith("[") || !response.startsWith("{")) {
+                                handleJsonArray(routingContext, response);
+                            } else {
+                                handleJsonObject(routingContext, response);
+                            }
+                        } else {
+                            throw (ReplyException) message.cause();
+                        }
+                    } catch (ReplyException ex) {
+                        LOG.error(ex.getMessage(), ex);
+                        routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
+                        routingContext.response().setStatusCode(404);
+                        enableCors(routingContext);
+                        if (ex.failureCode() > 0) {
+                            routingContext.response().setStatusCode(ex.failureCode());
+                        }
+                        if (ex.getMessage() != null) {
+                            String exStr = ex.getMessage();
+                            if (ex.getMessage().startsWith("{")) {
+                                JsonObject jsonEx = new JsonObject(ex.getMessage());
+                                jsonEx.remove("stackTrace");
+                                jsonEx.remove("suppressed");
+                                exStr = jsonEx.encode();
+                            }
+                            routingContext.response().end(exStr);
+                        } else {
+                            manage404Error(routingContext);
+                        }
+                    }
+                });
             }
         } else {
-            manage404Error(req);
+            manage404Error(routingContext);
         }
     }
 
@@ -329,26 +323,26 @@ public class Main extends AbstractGuiceVerticle {
      * @apiparam {String} locale locale
      * @apiparam {String} uid document id
      */
-    private void assetUploadHandler(HttpServerRequest req) {
-        enableCors(req);
+    private void assetUploadHandler(RoutingContext routingContext) {
+        enableCors(routingContext);
         final JsonObject request = new JsonObject()
-                .putString(COLLECTION, req.params().get(COLLECTION))
-                .putString("field", req.params().get("field"))
-                .putString("uid", req.params().get("uid"))
-                .putString("token", req.headers().get("token"))
-                .putString("locale", req.headers().get(ACCEPT_LANGUAGE));
+                .put(COLLECTION, routingContext.request().getParam(COLLECTION))
+                .put("field", routingContext.request().getParam("field"))
+                .put("uid", routingContext.request().getParam("uid"))
+                .put("token", routingContext.request().getHeader("token"))
+                .put("locale", routingContext.request().getHeader("Accept-Language"));
         // We first pause the request so we don't receive any data between now and when the file is opened
         String datadir = System.getProperty("user.home");
-        if (container.env().containsKey("OPENSHIFT_DATA_DIR")) {
-            datadir = container.env().get("OPENSHIFT_DATA_DIR");
+        if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_DATA_DIR"))) {
+            datadir = System.getenv("OPENSHIFT_DATA_DIR");
         }
         final File dir = new File(datadir + "/upload");
         if (!dir.exists()) {
             boolean res = dir.mkdirs();
             LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
         }
-        request.putString("datadir", datadir);
-        req.expectMultiPart(true).uploadHandler(upload -> handleUpload(upload, request, dir, req));
+        request.put("datadir", datadir);
+        routingContext.fileUploads().forEach(upload -> handleUpload(upload, request, dir, routingContext));
     }
 
 
@@ -362,41 +356,37 @@ public class Main extends AbstractGuiceVerticle {
      * @apiParam {String} collection Mandatory The collection.
      * @apiParam {String} id Mandatory The Asset-ID.
      */
-    private void getAssetHandler(HttpServerRequest req) {
-        enableCors(req);
+    private void getAssetHandler(RoutingContext routingContext) {
+        enableCors(routingContext);
         final JsonObject request = new JsonObject()
-                .putString(COLLECTION, req.params().get(COLLECTION))
-                .putString("id", req.params().get("id"));
-        vertx.eventBus().send(AssetVerticle.GET, request, (Handler<Message<JsonObject>>) message -> {
-            if (message.body().containsField(CONTENT_LENGTH)) {
-                req.response().putHeader(CONTENT_LENGTH, message.body().getString(CONTENT_LENGTH))
-                        .end(new Buffer(message.body().getBinary("asset")));
+                .put(COLLECTION, routingContext.request().getParam(COLLECTION))
+                .put("id", routingContext.request().getParam("id"));
+        vertx.eventBus().send(AssetVerticle.GET, request, message -> {
+            if (message.succeeded() && ((JsonObject) message.result().body()).containsKey(HTTP.CONTENT_LEN)) {
+                routingContext.response().putHeader(HTTP.CONTENT_LEN, ((JsonObject) message.result().body()).getString(HTTP.CONTENT_LEN))
+                        .end(Buffer.buffer(((JsonObject) message.result().body()).getBinary("asset")));
             } else {
-                req.response().setStatusCode(404).end(message.body().getString(MESSAGE));
+                routingContext.response().setStatusCode(404).end(((JsonObject) message.result().body()).getString(MESSAGE));
             }
         });
     }
 
-    private void handleUpload(HttpServerFileUpload upload, JsonObject request, File dir, HttpServerRequest req) {
-        final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
-        request.putString("filename", filename).putString(CONTENT_TYPE, upload.contentType());
-        if (vertx.fileSystem().existsSync(filename)) {
-            vertx.fileSystem().deleteSync(filename);
+    private void handleUpload(FileUpload upload, JsonObject request, File dir, RoutingContext routingContext) {
+        final String destFileName = dir.getAbsolutePath() + "/" + routingContext.request().getParam("uid") + "." + FilenameUtils.getExtension(upload.fileName());
+        request.put("filename", destFileName).put(HTTP.CONTENT_TYPE, upload.contentType());
+        if (vertx.fileSystem().existsBlocking(destFileName)) {
+            vertx.fileSystem().deleteBlocking(destFileName);
         }
-        upload.streamToFileSystem(filename).endHandler(event -> {
-            upload.pause();
-            vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<Object>>) message -> {
-                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                if (message.body() instanceof ReplyException) {
-                    final JsonObject resp = new JsonObject(((ReplyException) message.body()).getMessage());
-                    req.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
-                            .end(resp.getString(MESSAGE, ""));
-                } else if (message.body() instanceof JsonObject) {
-                    req.response().setStatusCode(200).end(((JsonObject) message.body()).encode());
-                }
-            });
-            upload.resume();
-        });
+        vertx.fileSystem().copy(upload.uploadedFileName(), destFileName, res -> vertx.eventBus().send(AssetVerticle.ADD, request, message -> {
+            routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
+            if (message.result().body() instanceof ReplyException) {
+                final JsonObject resp = new JsonObject(((ReplyException) message.result().body()).getMessage());
+                routingContext.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
+                        .end(resp.getString(MESSAGE, ""));
+            } else if (message.result().body() instanceof JsonObject) {
+                routingContext.response().setStatusCode(200).end(((JsonObject) message.result().body()).encode());
+            }
+        }));
     }
 
     /**
@@ -405,7 +395,7 @@ public class Main extends AbstractGuiceVerticle {
      * @param wrapper    request wrapper
      * @return success
      */
-    private boolean testRequest(HttpServerRequest req, String busAddress, RequestWrapper wrapper) {
+    private boolean testRequest(RoutingContext req, String busAddress, RequestWrapper wrapper) {
         try {
             Rule rule = rules.get(busAddress);
             if (StringUtils.isNotBlank(rule.method())) {
@@ -421,10 +411,10 @@ public class Main extends AbstractGuiceVerticle {
         } catch (final NoSuchMethodException e) {
             LOG.error(e.getMessage(), e);
             final JsonObject jsonResp = new JsonObject()
-                    .putBoolean("status", false)
-                    .putString(MESSAGE, "Nothing here")
-                    .putNumber("httpCode", 404);
-            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
+                    .put("status", false)
+                    .put(MESSAGE, "Nothing here")
+                    .put("httpCode", 404);
+            req.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
             return false;
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);

@@ -21,8 +21,7 @@ package com.qaobee.hive.dao;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonObject;
-
+import io.vertx.core.json.JsonObject;
 /**
  * The interface Shipping dao.
  */

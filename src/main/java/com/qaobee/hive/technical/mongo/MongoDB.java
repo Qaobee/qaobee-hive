@@ -19,131 +19,106 @@
 
 package com.qaobee.hive.technical.mongo;
 
-import com.mongodb.DB;
-import com.mongodb.DBObject;
-import com.mongodb.MongoException;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * The interface Mongo dB.
+ * The interface Mongo db.
  */
 public interface MongoDB {
 
     /**
-     * Save string.
+     * Upsert.
      *
-     * @param o object to save
-     * @return id string
-     * @throws QaobeeException can't save
+     * @param o             the o
+     * @param resultHandler the result handler
      */
-    String save(Object o) throws QaobeeException;
+    void upsert(Object o, Handler<AsyncResult<String>> resultHandler);
 
     /**
-     * Update string.
+     * Upsert.
      *
-     * @param document   the document
-     * @param collection the collection
-     * @return the string
-     * @throws MongoException the mongo exception
+     * @param document      the document
+     * @param collection    the collection
+     * @param resultHandler the result handler
      */
-    String update(JsonObject document, String collection);
+    void upsert(JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler);
 
     /**
-     * Update a document.
+     * Upsert.
      *
-     * @param query      (JSonObject) : The selection criteria for the update.
-     * @param set        (JSonObject) : The modifications to apply.(need to have a                   {                   "$set" :                   {                   ...                   }                   }
-     * @param collection (Class) : collection to update
-     * @return string string
-     * @throws MongoException the mongo exception
+     * @param query         the query
+     * @param document      the document
+     * @param collection    the collection
+     * @param resultHandler the result handler
      */
-    String update(JsonObject query, JsonObject set, Class<?> collection);
+    void upsert(JsonObject query, JsonObject document, Class<?> collection, Handler<AsyncResult<String>> resultHandler);
 
     /**
-     * Saves a document in a colection.
+     * Upsert.
      *
-     * @param document   object to save
-     * @param collection target
-     * @return id string
-     * @throws QaobeeException the qaobee exception
+     * @param query         the query
+     * @param document      the document
+     * @param collection    the collection
+     * @param resultHandler the result handler
      */
-    String save(JsonObject document, String collection) throws QaobeeException;
+    void upsert(JsonObject query, JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler);
 
     /**
-     * Get a document by id.
+     * Gets by id.
      *
-     * @param id         the id
-     * @param collection the collection
-     * @return the document
-     * @throws QaobeeException not found
+     * @param id            the id
+     * @param collection    the collection
+     * @param resultHandler the result handler
      */
-    JsonObject getById(String id, String collection) throws QaobeeException;
+    void getById(String id, String collection, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Get a document by id.
+     * Gets by id.
      *
-     * @param id         the id
-     * @param collection the collection
-     * @param minimal    fields to retrieve
-     * @return the document
-     * @throws QaobeeException not found
+     * @param id            the id
+     * @param collection    the collection
+     * @param minimal       the minimal
+     * @param resultHandler the result handler
      */
-    JsonObject getById(String id, String collection, List<String> minimal) throws QaobeeException;
+    void getById(String id, String collection, List<String> minimal, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Gets the minimal.
+     * Gets minimal.
      *
-     * @param minimal minimal list of fields to retrieve
-     * @return a map
+     * @param minimal the minimal
+     * @return the minimal
      */
-    Map<String, Boolean> getMinimal(List<String> minimal);
+    JsonObject getMinimal(List<String> minimal);
 
     /**
-     * Find by criterias json array.
+     * Find by criterias.
      *
-     * @param criteria   the criteria
-     * @param fields     the fields
-     * @param sort       the sort
-     * @param order      the order
-     * @param limit      the limit
-     * @param collection the collection
-     * @return the json array
+     * @param criteria      the criteria
+     * @param fields        the fields
+     * @param sort          the sort
+     * @param order         the order
+     * @param limit         the limit
+     * @param collection    the collection
+     * @param resultHandler the result handler
      */
-    JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit,
-                              String collection);
+    void findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit,
+                              String collection, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
-     * Find all documents with minimal fields and a sort order.
+     * Find all.
      *
-     * @param fields     fields to include
-     * @param sort       sort field
-     * @param order      sort order
-     * @param limit      limit
-     * @param collection collection
-     * @return an array
+     * @param fields        the fields
+     * @param sort          the sort
+     * @param order         the order
+     * @param limit         the limit
+     * @param collection    the collection
+     * @param resultHandler the result handler
      */
-    JsonArray findAll(List<String> fields, String sort, int order, int limit, String collection);
-
-    /**
-     * Aggregate json array.
-     *
-     * @param field      the field
-     * @param pipeline   the pipeline
-     * @param collection the collection
-     * @return the json array
-     * @throws QaobeeException the qaobee exception
-     */
-    JsonArray aggregate(String field, List<DBObject> pipeline, String collection) throws QaobeeException;
-
-    /**
-     * Gets db.
-     *
-     * @return the db
-     */
-    DB getDb();
+    void findAll(List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler);
 }

@@ -25,16 +25,6 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
  * The interface Password encryption service.
  */
 public interface PasswordEncryptionService {
-    /**
-     * Authenticate.
-     *
-     * @param attemptedPassword the attempted password
-     * @param encryptedPassword the encrypted password
-     * @param salt              the salt
-     * @return true, if successful
-     * @throws QaobeeException the qaobee exception
-     */
-    boolean authenticate(String attemptedPassword, byte[] encryptedPassword, byte[] salt) throws QaobeeException;
 
     /**
      * Gets the encrypted password.

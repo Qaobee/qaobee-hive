@@ -20,8 +20,7 @@
 package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonObject;
-
+import io.vertx.core.json.JsonObject;
 /**
  * Created by b3605 on 18/07/16.
  *

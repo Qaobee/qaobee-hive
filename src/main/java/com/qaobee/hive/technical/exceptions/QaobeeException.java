@@ -112,7 +112,7 @@ public class QaobeeException extends Exception {
      * @param code the code
      * @param e    the e
      */
-    public QaobeeException(ExceptionCodes code, Exception e) {
+    public QaobeeException(ExceptionCodes code, Throwable e) {
         super(e.getMessage());
         this.code = code;
     }

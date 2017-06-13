@@ -19,10 +19,11 @@
 package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.business.model.commons.users.User;
+import io.vertx.codegen.annotations.Nullable;
+import io.vertx.core.MultiMap;
+import io.vertx.core.json.JsonObject;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The Class RequestWrapper.
@@ -32,9 +33,9 @@ import java.util.Map;
 public class RequestWrapper {
 
     private List<String> path;
-    private Map<String, List<String>> headers;
-    private Map<String, List<String>> params;
-    private String body;
+    private MultiMap headers;
+    private MultiMap params;
+    private JsonObject body;
     private String method;
     private String locale;
     private User user;
@@ -44,7 +45,7 @@ public class RequestWrapper {
      *
      * @return the body
      */
-    public String getBody() {
+    public JsonObject getBody() {
         return body;
     }
 
@@ -53,7 +54,7 @@ public class RequestWrapper {
      *
      * @param body the new body
      */
-    public void setBody(final String body) {
+    public void setBody(final @Nullable JsonObject body) {
         this.body = body;
     }
 
@@ -62,7 +63,7 @@ public class RequestWrapper {
      *
      * @return the headers
      */
-    public Map<String, List<String>> getHeaders() {
+    public MultiMap getHeaders() {
         return headers;
     }
 
@@ -71,7 +72,7 @@ public class RequestWrapper {
      *
      * @param headers the new headers
      */
-    public void setHeaders(final Map<String, List<String>> headers) {
+    public void setHeaders(final MultiMap headers) {
         this.headers = headers;
     }
 
@@ -116,9 +117,9 @@ public class RequestWrapper {
      *
      * @return the params
      */
-    public Map<String, List<String>> getParams() {
+    public MultiMap getParams() {
         if (params == null) {
-            params = new HashMap<>();
+            params = MultiMap.caseInsensitiveMultiMap();
         }
         return params;
     }
@@ -128,7 +129,7 @@ public class RequestWrapper {
      *
      * @param params the new params
      */
-    public void setParams(final Map<String, List<String>> params) {
+    public void setParams(final MultiMap params) {
         this.params = params;
     }
 
