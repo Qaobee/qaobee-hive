@@ -1,14 +1,15 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.CRMDao;
+import io.vertx.core.buffer.Buffer;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.client.HttpRequest;
+import io.vertx.ext.web.client.WebClient;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Vertx;
-import org.vertx.java.core.http.HttpClient;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,7 +23,7 @@ public class CRMDaoImpl implements CRMDao {
     @Named("mailchimp")
     private JsonObject mailchimp;
     @Inject
-    private Vertx vertx;
+    private WebClient webClient;
     @Inject
     @Named("env")
     private JsonObject env;
@@ -32,33 +33,32 @@ public class CRMDaoImpl implements CRMDao {
     public void registerUser(JsonObject user, boolean firstLogin) {
         JsonArray members = new JsonArray();
         members.add(new JsonObject()
-                .putObject("merge_fields", new JsonObject()
-                        .putString("NAME", user.getString("name"))
-                        .putString("FIRSTNAME", user.getString("firstname"))
-                        .putString("NEVERCONNE", String.valueOf(firstLogin))
-                        .putString("ENV", env.getString("ENV", "DEV"))
+                .put("merge_fields", new JsonObject()
+                        .put("NAME", user.getString("name"))
+                        .put("FIRSTNAME", user.getString("firstname"))
+                        .put("NEVERCONNE", String.valueOf(firstLogin))
+                        .put("ENV", env.getString("ENV", "DEV"))
                 )
-                .putString("status", "subscribed")
-                .putString("email_address", user.getObject("contact").getString("email"))
+                .put("status", "subscribed")
+                .put("email_address", user.getJsonObject("contact").getString("email"))
         );
         JsonObject requestBody = new JsonObject()
-                .putArray("members", members)
-                .putBoolean("update_existing", true);
-        String body = requestBody.encode();
-        HttpClient client = vertx.createHttpClient().setKeepAlive(true);
-        client.setHost(mailchimp.getString("host"));
-        client.setPort(mailchimp.getInteger("port"));
+                .put("members", members)
+                .put("update_existing", true);
+        HttpRequest<Buffer> req = webClient.post(mailchimp.getInteger("port"), mailchimp.getString("host"), mailchimp.getString("path"));
         if (mailchimp.getInteger("port") == 443) {
-            client.setSSL(true).setTrustAll(true);
+            req.ssl(true);
         }
-        LOG.info(body);
-        client.post(mailchimp.getString("path"), resp -> {
-            LOG.info("Status : " + resp.statusCode());
-            resp.bodyHandler(buffer -> LOG.info(buffer.toString()));
-        })
+        req
                 .putHeader("Authorization", "Basic " + Base64.encodeBase64String((mailchimp.getString("user") + ":" + mailchimp.getString("key")).getBytes()))
                 .putHeader(HTTP.CONTENT_TYPE, "application/json")
-                .putHeader(HTTP.CONTENT_LEN, String.valueOf(body.length()))
-                .end(body);
+                //    .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody..length()))
+                .sendJsonObject(requestBody, res -> {
+                    if (res.succeeded()) {
+                        LOG.info(requestBody.encode() + " : ok");
+                    } else {
+                        LOG.error(res.cause().getMessage(), res.cause());
+                    }
+                });
     }
 }

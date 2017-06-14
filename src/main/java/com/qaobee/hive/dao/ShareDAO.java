@@ -23,6 +23,7 @@ package com.qaobee.hive.dao;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Share dao.
@@ -37,7 +38,7 @@ public interface ShareDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject desactivateMemberToSandbox(String sandboxId, String userId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> desactivateMemberToSandbox(String sandboxId, String userId) throws QaobeeException;
 
     /**
      * Activate user from sandbox.
@@ -47,7 +48,7 @@ public interface ShareDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject activateMemberToSandbox(String sandboxId, String userId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> activateMemberToSandbox(String sandboxId, String userId) throws QaobeeException;
 
     /**
      * Invite user to sandbox json object.
@@ -58,7 +59,7 @@ public interface ShareDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject inviteMemberToSandbox(String sandboxId, String userEmail, String roleCode) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> inviteMemberToSandbox(String sandboxId, String userEmail, String roleCode) throws QaobeeException;
 
     /**
      * Remove revive an invitation to an person to join sandbox json object.
@@ -67,7 +68,7 @@ public interface ShareDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject reviveInvitationToUser(String invitationId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> reviveInvitationToUser(String invitationId) throws QaobeeException;
 
     /**
      * Remove invitation json object.
@@ -76,7 +77,7 @@ public interface ShareDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject removeInvitationToSandbox(String invitationId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> removeInvitationToSandbox(String invitationId) throws QaobeeException;
     
     /**
      * Get invitation json object.
@@ -85,7 +86,7 @@ public interface ShareDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject getInvitationToSandbox(String invitationId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getInvitationToSandbox(String invitationId) throws QaobeeException;
 
     /**
      * Confirm invitation to joint the sandbox.
@@ -96,7 +97,7 @@ public interface ShareDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject confirmInvitationToSandbox(String invitationId, String userId, String answer) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> confirmInvitationToSandbox(String invitationId, String userId, String answer) throws QaobeeException;
 
 
     /**
@@ -105,7 +106,7 @@ public interface ShareDAO {
      * @param userId     the user id
      * @return the list of shared sandboxes owners and members
      */
-    JsonObject getListOfSharedSandboxes(String userId);
+    Promise<JsonObject, QaobeeException, Integer> getListOfSharedSandboxes(String userId);
 
     /**
      * Gets list of invitation sandboxes.
@@ -114,5 +115,5 @@ public interface ShareDAO {
      * @param status    the status of invitation
      * @return the list of invitation to the sandbox
      */
-    JsonArray getListOfInvitationsToSandbox(String sandboxId, String status);
+    Promise<JsonArray, QaobeeException, Integer> getListOfInvitationsToSandbox(String sandboxId, String status);
 }

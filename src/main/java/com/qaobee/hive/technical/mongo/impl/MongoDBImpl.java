@@ -18,15 +18,17 @@
  */
 package com.qaobee.hive.technical.mongo.impl;
 
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
+import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
-import io.vertx.ext.mongo.MongoClient;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -35,51 +37,54 @@ import java.util.regex.Pattern;
 
 public class MongoDBImpl implements MongoDB {
     @Inject
-    MongoClient mongoClient;
+    private MongoClientCustom mongoClient;
 
     @Override
-    public void upsert(final Object o, Handler<AsyncResult<String>> resultHandler) {
-        upsert(new JsonObject(Json.encode(o)), o.getClass().getSimpleName(), resultHandler);
+    public Promise<String, QaobeeException, Integer> upsert(final Object o) {
+        return upsert(new JsonObject(Json.encode(o)), o.getClass().getSimpleName());
     }
 
     @Override
-    public void upsert(JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler) {
-        upsert(new JsonObject().put("_id", document.getString("_id")), document, collection, resultHandler);
+    public Promise<String, QaobeeException, Integer> upsert(JsonObject document, String collection) {
+        return upsert(new JsonObject().put("_id", document.getString("_id")), document, collection);
     }
 
     @Override
-    public void upsert(JsonObject query, JsonObject document, Class<?> collection, Handler<AsyncResult<String>> resultHandler) {
-        upsert(query, document, collection.getClass().getSimpleName(), resultHandler);
+    public Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, Class<?> collection) {
+        return upsert(query, document, collection.getClass().getSimpleName());
     }
 
     @Override
-    public void upsert(JsonObject query, JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler) {
+    public Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, String collection) {
+        Deferred<String, QaobeeException, Integer> deferred = new DeferredObject<>();
         if (document.containsKey("_id")) {
             mongoClient.updateCollection(collection, query, document, res -> {
                 if (res.succeeded()) {
-                    resultHandler.handle(Future.succeededFuture(document.getString("_id")));
+                    deferred.resolve(document.getString("_id"));
                 } else {
-                    resultHandler.handle(Future.failedFuture(res.cause()));
+                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
                 }
             });
         } else {
             mongoClient.insert(collection, document, res -> {
                 if (res.succeeded()) {
-                    resultHandler.handle(Future.succeededFuture(res.result()));
+                    deferred.resolve(res.result());
                 } else {
-                    resultHandler.handle(Future.failedFuture(res.cause()));
+                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
                 }
             });
         }
+        return deferred.promise();
     }
 
     @Override
-    public void getById(String id, String collection, Handler<AsyncResult<JsonObject>> resultHandler) {
-        getById(id, collection, null, resultHandler);
+    public Promise<JsonObject, QaobeeException, Integer> getById(String id, String collection) {
+        return getById(id, collection, null);
     }
 
     @Override
-    public void getById(String id, String collection, List<String> minimal, Handler<AsyncResult<JsonObject>> resultHandler) {
+    public Promise<JsonObject, QaobeeException, Integer> getById(String id, String collection, List<String> minimal) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         JsonObject query = new JsonObject().put("_id", id);
         JsonObject mini = null;
         if (minimal != null) {
@@ -87,11 +92,12 @@ public class MongoDBImpl implements MongoDB {
         }
         mongoClient.findOne(collection, query, mini, res -> {
             if (res.succeeded()) {
-                resultHandler.handle(Future.succeededFuture(res.result()));
+                deferred.resolve(res.result());
             } else {
-                resultHandler.handle(Future.failedFuture(res.cause()));
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
             }
         });
+        return deferred.promise();
     }
 
     @Override
@@ -104,7 +110,8 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
-    public void findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
+    public Promise<JsonArray, QaobeeException, Integer> findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, String collection) {
+        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
         JsonObject query = new JsonObject();
         if (criteria != null) {
             final JsonArray and = new JsonArray();
@@ -131,15 +138,32 @@ public class MongoDBImpl implements MongoDB {
             if (res.succeeded()) {
                 final JsonArray json = new JsonArray();
                 res.result().forEach(json::add);
-                resultHandler.handle(Future.succeededFuture(json));
+                deferred.resolve(json);
             } else {
-                resultHandler.handle(Future.failedFuture(res.cause()));
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
             }
         });
+        return deferred.promise();
     }
 
     @Override
-    public void findAll(List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
-        findByCriterias(null, fields, sort, order, limit, collection, resultHandler);
+    public Promise<JsonArray, QaobeeException, Integer> findAll(List<String> fields, String sort, int order, int limit, String collection) {
+        return findByCriterias(null, fields, sort, order, limit, collection);
+    }
+
+    @Override
+    public Promise<JsonArray, QaobeeException, Integer> aggregate(String id, JsonArray pipelineAggregation, String collection) {
+        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
+        JsonObject command = new JsonObject()
+                .put("aggregate", collection)
+                .put("pipeline", pipelineAggregation);
+        mongoClient.runCommand("aggregate", command, res -> {
+            if (res.succeeded()) {
+                deferred.resolve(res.result().getJsonArray("result"));
+            } else {
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause()));
+            }
+        });
+        return deferred.promise();
     }
 }

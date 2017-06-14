@@ -22,6 +22,7 @@ package com.qaobee.hive.dao;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Event dao.
@@ -35,7 +36,7 @@ public interface EventDAO {
      * @return the event
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject getEvent(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getEvent(String id) throws QaobeeException;
 
     /**
      * Update event json object.
@@ -46,7 +47,7 @@ public interface EventDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject updateEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> updateEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException;
 
     /**
      * Add event json object.
@@ -57,7 +58,7 @@ public interface EventDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject addEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException;
 
     /**
      * Gets event list.
@@ -66,5 +67,5 @@ public interface EventDAO {
      * @return the event list
      * @throws QaobeeException the qaobee exception
      */
-    JsonArray getEventList(JsonObject params) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getEventList(JsonObject params) throws QaobeeException;
 }

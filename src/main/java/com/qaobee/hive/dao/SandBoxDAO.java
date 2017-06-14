@@ -22,6 +22,7 @@ package com.qaobee.hive.dao;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public interface SandBoxDAO {
      * @return the sandbox sharing
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject getSandboxById(String sandboxId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getSandboxById(String sandboxId);
 
     /**
      * Gets enriched sandbox.
@@ -44,7 +45,7 @@ public interface SandBoxDAO {
      * @param sandbox the sandbox
      * @return the enriched sandbox
      */
-    JsonObject getEnrichedSandbox(JsonObject sandbox);
+    Promise<JsonObject, QaobeeException, Integer> getEnrichedSandbox(JsonObject sandbox);
 
     /**
      * Update json object.
@@ -52,7 +53,7 @@ public interface SandBoxDAO {
      * @param sandbox the sandbox
      * @return the json object
      */
-    JsonObject updateSandbox(JsonObject sandbox);
+    Promise<JsonObject, QaobeeException, Integer> updateSandbox(JsonObject sandbox);
 
     /**
      * Gets list by owner.
@@ -62,7 +63,7 @@ public interface SandBoxDAO {
      * @return the list by owner
      * @throws QaobeeException the qaobee exception
      */
-    JsonArray getListByOwner(List<String> usersIds, String loggedUserId) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getListByOwner(List<String> usersIds, String loggedUserId);
 
     /**
      * Gets by owner.
@@ -72,6 +73,6 @@ public interface SandBoxDAO {
      * @return the by owner
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject getByOwner(String activityId, String userId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getByOwner(String activityId, String userId);
 
 }

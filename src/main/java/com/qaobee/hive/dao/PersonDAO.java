@@ -22,6 +22,7 @@ package com.qaobee.hive.dao;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Person dao.
@@ -34,7 +35,7 @@ public interface PersonDAO {
      * @return the person list by sandbox
      * @throws QaobeeException the qaobee exception
      */
-    JsonArray getPersonListBySandbox(String sandboxId) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getPersonListBySandbox(String sandboxId) throws QaobeeException;
 
     /**
      * Gets person list.
@@ -44,7 +45,7 @@ public interface PersonDAO {
      * @return the person list
      * @throws QaobeeException the qaobee exception
      */
-    JsonArray getPersonList(JsonArray listId, JsonArray listfield) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getPersonList(JsonArray listId, JsonArray listfield) throws QaobeeException;
 
     /**
      * Update person json object.
@@ -54,7 +55,7 @@ public interface PersonDAO {
      * @param locale the locale
      * @return the json object
      */
-    JsonObject updatePerson(JsonObject person, String userId, String locale);
+    Promise<JsonObject, QaobeeException, Integer> updatePerson(JsonObject person, String userId, String locale);
 
     /**
      * Gets person.
@@ -63,7 +64,7 @@ public interface PersonDAO {
      * @return the person
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject getPerson(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getPerson(String id) throws QaobeeException;
 
     /**
      * Add person json object.
@@ -74,5 +75,5 @@ public interface PersonDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject addPerson(JsonObject person, String userId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addPerson(JsonObject person, String userId, String locale) throws QaobeeException;
 }

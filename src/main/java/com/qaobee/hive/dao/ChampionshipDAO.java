@@ -22,6 +22,7 @@ package com.qaobee.hive.dao;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Championship dao.
@@ -34,7 +35,7 @@ public interface ChampionshipDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject updateChampionship(JsonObject championship) throws QaobeeException;
+    Promise<String, QaobeeException, Integer> updateChampionship(JsonObject championship) throws QaobeeException;
 
     /**
      * Add championship json object.
@@ -43,7 +44,7 @@ public interface ChampionshipDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject addChampionship(JsonObject championship) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addChampionship(JsonObject championship) throws QaobeeException;
 
     /**
      * Gets championship.
@@ -52,7 +53,7 @@ public interface ChampionshipDAO {
      * @return the championship
      * @throws QaobeeException the qaobee exception
      */
-    JsonObject getChampionship(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getChampionship(String id) throws QaobeeException;
 
     /**
      * Gets list championships.
@@ -61,5 +62,5 @@ public interface ChampionshipDAO {
      * @return the list championships
      * @throws QaobeeException the qaobee exception
      */
-    JsonArray getListChampionships(JsonObject params) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getListChampionships(JsonObject params) throws QaobeeException;
 }

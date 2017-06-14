@@ -19,10 +19,10 @@
 
 package com.qaobee.hive.technical.mongo;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 import java.util.List;
 import java.util.Map;
@@ -35,63 +35,70 @@ public interface MongoDB {
     /**
      * Upsert.
      *
-     * @param o             the o
-     * @param resultHandler the result handler
+     * @param o the o
+     *
+     * @return the promise
      */
-    void upsert(Object o, Handler<AsyncResult<String>> resultHandler);
+    Promise<String, QaobeeException, Integer> upsert(Object o);
 
     /**
      * Upsert.
      *
-     * @param document      the document
-     * @param collection    the collection
-     * @param resultHandler the result handler
+     * @param document   the document
+     * @param collection the collection
+     *
+     * @return the promise
      */
-    void upsert(JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler);
+    Promise<String, QaobeeException, Integer> upsert(JsonObject document, String collection);
 
     /**
      * Upsert.
      *
-     * @param query         the query
-     * @param document      the document
-     * @param collection    the collection
-     * @param resultHandler the result handler
+     * @param query      the query
+     * @param document   the document
+     * @param collection the collection
+     *
+     * @return the promise
      */
-    void upsert(JsonObject query, JsonObject document, Class<?> collection, Handler<AsyncResult<String>> resultHandler);
+    Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, Class<?> collection);
 
     /**
      * Upsert.
      *
-     * @param query         the query
-     * @param document      the document
-     * @param collection    the collection
-     * @param resultHandler the result handler
+     * @param query      the query
+     * @param document   the document
+     * @param collection the collection
+     *
+     * @return the promise
      */
-    void upsert(JsonObject query, JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler);
+    Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, String collection);
 
     /**
      * Gets by id.
      *
-     * @param id            the id
-     * @param collection    the collection
-     * @param resultHandler the result handler
+     * @param id         the id
+     * @param collection the collection
+     *
+     * @return the by id
      */
-    void getById(String id, String collection, Handler<AsyncResult<JsonObject>> resultHandler);
+    Promise<JsonObject, QaobeeException, Integer>  getById(String id, String collection);
 
     /**
      * Gets by id.
      *
-     * @param id            the id
-     * @param collection    the collection
-     * @param minimal       the minimal
-     * @param resultHandler the result handler
+     * @param id         the id
+     * @param collection the collection
+     * @param minimal    the minimal
+     *
+     * @return the by id
      */
-    void getById(String id, String collection, List<String> minimal, Handler<AsyncResult<JsonObject>> resultHandler);
+    Promise<JsonObject, QaobeeException, Integer> getById(String id, String collection, List<String> minimal);
 
     /**
      * Gets minimal.
      *
      * @param minimal the minimal
+     *
      * @return the minimal
      */
     JsonObject getMinimal(List<String> minimal);
@@ -99,26 +106,38 @@ public interface MongoDB {
     /**
      * Find by criterias.
      *
-     * @param criteria      the criteria
-     * @param fields        the fields
-     * @param sort          the sort
-     * @param order         the order
-     * @param limit         the limit
-     * @param collection    the collection
-     * @param resultHandler the result handler
+     * @param criteria   the criteria
+     * @param fields     the fields
+     * @param sort       the sort
+     * @param order      the order
+     * @param limit      the limit
+     * @param collection the collection
+     *
+     * @return the promise
      */
-    void findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit,
-                              String collection, Handler<AsyncResult<JsonArray>> resultHandler);
+    Promise<JsonArray, QaobeeException, Integer> findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, String collection);
 
     /**
      * Find all.
      *
-     * @param fields        the fields
-     * @param sort          the sort
-     * @param order         the order
-     * @param limit         the limit
-     * @param collection    the collection
-     * @param resultHandler the result handler
+     * @param fields     the fields
+     * @param sort       the sort
+     * @param order      the order
+     * @param limit      the limit
+     * @param collection the collection
+     *
+     * @return the promise
      */
-    void findAll(List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler);
+    Promise<JsonArray, QaobeeException, Integer> findAll(List<String> fields, String sort, int order, int limit, String collection);
+
+    /**
+     * Aggregate promise.
+     *
+     * @param id                  the id
+     * @param pipelineAggregation the pipeline aggregation
+     * @param collection          the collection
+     *
+     * @return the promise
+     */
+    Promise<JsonArray, QaobeeException, Integer> aggregate(String id, JsonArray pipelineAggregation, String collection);
 }

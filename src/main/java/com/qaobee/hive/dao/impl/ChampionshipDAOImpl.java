@@ -19,19 +19,19 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.api.v1.commons.referencial.ChampionshipVerticle;
 import com.qaobee.hive.dao.ChampionshipDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,31 +52,33 @@ public class ChampionshipDAOImpl implements ChampionshipDAO {
     }
 
     @Override
-    public JsonObject updateChampionship(JsonObject championship) throws QaobeeException {
-        mongo.save(championship, DBCollections.CHAMPIONSHIP);
-        return championship;
+    public Promise<String, QaobeeException, Integer> updateChampionship(JsonObject championship) {
+        return mongo.upsert(championship, DBCollections.CHAMPIONSHIP);
     }
 
     @Override
-    public JsonObject addChampionship(JsonObject championship) throws QaobeeException {
-        championship.putString("_id", mongo.save(championship, DBCollections.CHAMPIONSHIP));
-        return championship;
+    public Promise<JsonObject, QaobeeException, Integer> addChampionship(JsonObject championship) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.upsert(championship, DBCollections.CHAMPIONSHIP)
+                .done(res -> {
+                    championship.put("_id", res);
+                    deferred.resolve(championship);
+                })
+                .fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject getChampionship(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getChampionship(String id) {
         return mongo.getById(id, DBCollections.CHAMPIONSHIP);
     }
 
     @Override
-    public JsonArray getListChampionships(JsonObject params) throws QaobeeException {
-        Map<String, Object> mapParams = params.toMap();
+    public Promise<JsonArray, QaobeeException, Integer> getListChampionships(JsonObject params) {
+        Map<String, Object> mapParams = params.getMap();
         // Aggregat section
-        DBObject match;
-        BasicDBObject dbObjectParent;
-        BasicDBObject dbObjectChild;
         //$MACTH section
-        dbObjectParent = new BasicDBObject();
+        JsonObject dbObjectParent = new JsonObject();
         // Activity ID
         dbObjectParent.put("activityId", mapParams.get(ChampionshipVerticle.PARAM_ACTIVITY));
         // Category Age Code
@@ -85,8 +87,9 @@ public class ChampionshipDAOImpl implements ChampionshipDAO {
         dbObjectParent.put("participants.structureId", mapParams.get(ChampionshipVerticle.PARAM_STRUCTURE));
         // Participant
         if (mapParams.containsKey(ChampionshipVerticle.PARAM_PARTICIPANT)) {
-            @SuppressWarnings("unchecked") Map<String, Object> mapParticipant = (Map<String, Object>) mapParams.get(ChampionshipVerticle.PARAM_PARTICIPANT);
-            dbObjectChild = new BasicDBObject();
+            @SuppressWarnings(
+                    "unchecked") Map<String, Object> mapParticipant = (Map<String, Object>) mapParams.get(ChampionshipVerticle.PARAM_PARTICIPANT);
+            JsonObject  dbObjectChild = new JsonObject();
             if (mapParticipant.containsKey("id")) {
                 dbObjectChild.put("participants.id", mapParticipant.get("id"));
             }
@@ -101,9 +104,8 @@ public class ChampionshipDAOImpl implements ChampionshipDAO {
             }
             dbObjectParent.put("$and", Collections.singletonList(dbObjectChild));
         }
-        match = new BasicDBObject("$match", dbObjectParent);
-        // Pipeline
-        List<DBObject> pipelineAggregation = Collections.singletonList(match);
+        JsonObject match = new JsonObject().put("$match", dbObjectParent);
+        JsonArray pipelineAggregation = new JsonArray().add(match);
         return mongo.aggregate("_id", pipelineAggregation, DBCollections.CHAMPIONSHIP);
     }
 }

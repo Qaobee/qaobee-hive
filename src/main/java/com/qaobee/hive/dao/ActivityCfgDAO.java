@@ -19,31 +19,15 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.dao.impl.ActivityCfgDAOImpl;
-import io.vertx.codegen.annotations.ProxyGen;
-import io.vertx.codegen.annotations.VertxGen;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
+import org.jdeferred.Promise;
 
 /**
  * The interface Activity cfg dao.
  */
-@ProxyGen
-@VertxGen
 public interface ActivityCfgDAO {
-    String ADDRESS = "ActivityCfgDAO";
-
-    static ActivityCfgDAO create(Vertx vertx) {
-        return new ActivityCfgDAOImpl(vertx);
-    }
-
-    static ActivityCfgDAO createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(ActivityCfgDAO.class, vertx, address);
-    }
 
     /**
      * Gets activity cfg params.
@@ -52,8 +36,10 @@ public interface ActivityCfgDAO {
      * @param countryId  the country id
      * @param dateRef    the date ref
      * @param paramField the param field
+     *
+     * @return the activity cfg params
      */
-    void getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField, Handler<AsyncResult<JsonArray>> resultHandler);
+    Promise<JsonArray, QaobeeException, Integer> getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField);
 
     /**
      * Gets activity cfg.
@@ -61,6 +47,8 @@ public interface ActivityCfgDAO {
      * @param activityId the activity id
      * @param countryId  the country id
      * @param dateRef    the date ref
+     *
+     * @return the activity cfg
      */
-    void getActivityCfg(String activityId, String countryId, Long dateRef, Handler<AsyncResult<JsonObject>> resultHandler);
+    Promise<JsonObject, QaobeeException, Integer> getActivityCfg(String activityId, String countryId, Long dateRef);
 }

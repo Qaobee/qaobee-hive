@@ -46,7 +46,7 @@
   "metrix.mod": {
     "address": "metrix"
   },
-  "mongo.persistor": {
+  "mongo.db": {
     "host": "localhost",
     "port": 27017,
     "pool_size": 2,

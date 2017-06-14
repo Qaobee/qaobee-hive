@@ -22,6 +22,7 @@ package com.qaobee.hive.dao;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface User dao.
@@ -42,9 +43,8 @@ public interface UserDAO {
      *
      * @param user the user
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject updateUser(JsonObject user) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> updateUser(JsonObject user);
 
     /**
      * Check user informations boolean.
@@ -62,7 +62,7 @@ public interface UserDAO {
      * @param login the login
      * @return the boolean
      */
-    boolean existingLogin(String login);
+    Promise<Boolean, QaobeeException, Integer> existingLogin(String login);
 
     /**
      * Permet de vérifier une adresse e-mail.
@@ -87,34 +87,30 @@ public interface UserDAO {
      *
      * @param id the id
      * @return the user
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getUser(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getUser(String id);
 
     /**
      * Gets user by login.
      *
      * @param login the login
      * @return the user by login
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getUserByLogin(String login) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getUserByLogin(String login);
 
     /**
      * Gets user info.
      *
      * @param id the id
      * @return the user info
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getUserInfo(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getUserInfo(String id);
 
     /**
      * Gets meta.
      *
      * @param sandboxId the sandbox id
      * @return the meta
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getMeta(String sandboxId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getMeta(String sandboxId);
 }

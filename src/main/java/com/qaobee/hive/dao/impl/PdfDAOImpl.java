@@ -25,14 +25,12 @@ import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.MediaReplacedElementFactory;
-import org.apache.commons.io.FileUtils;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Vertx;
-import org.vertx.java.core.file.impl.PathAdjuster;
-import org.vertx.java.core.impl.VertxInternal;
-import org.vertx.java.core.json.JsonObject;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.util.XRRuntimeException;
 
@@ -49,39 +47,31 @@ import java.io.OutputStream;
 public class PdfDAOImpl implements PdfDAO {
     private static final Logger LOG = LoggerFactory.getLogger(PdfDAOImpl.class);
     private static final String PDF = "pdf";
-    private final TemplatesDAO templatesDAO;
-    private final Vertx vertx;
-    private final JsonObject pdfConfig;
-    private final JsonObject env;
-
-    /**
-     * Instantiates a new Pdf dao.
-     *
-     * @param templatesDAO the templates dao
-     * @param vertx        the vertx
-     * @param pdfConfig    the pdf config
-     * @param env          the env
-     */
     @Inject
-    public PdfDAOImpl(TemplatesDAO templatesDAO, Vertx vertx, @Named("pdf") JsonObject pdfConfig, @Named("env") JsonObject env) {
-        this.templatesDAO = templatesDAO;
-        this.vertx = vertx;
-        this.pdfConfig = pdfConfig;
-        this.env = env;
-    }
+    private TemplatesDAO templatesDAO;
+    @Inject
+    private Vertx vertx;
+    @Inject
+    @Named("pdf")
+    private JsonObject pdfConfig;
+    @Inject
+    @Named("env")
+    private JsonObject env;
+
 
     @Override
     public JsonObject generatePDF(JsonObject data, String template, String filename) throws QaobeeException {
         OutputStream os = null;
         try {
             final StringBuilder cssStr = new StringBuilder();
-            for (final Object c : pdfConfig.getArray("css").toList()) {
-                cssStr.append(FileUtils.readFileToString(new File(PathAdjuster.adjust((VertxInternal) vertx, (String) c)), "UTF-8"));
+            for (final Object c : pdfConfig.getJsonArray("css").getList()) {
+                // FIXME : à vérifier ici
+                cssStr.append(vertx.fileSystem().readFileBlocking((String) c).toString());
             }
-            data.putString("css", cssStr.toString());
+            data.put("css", cssStr.toString());
             String datadir = System.getProperty("user.home");
-            if (env.containsField("OPENSHIFT_DATA_DIR")) {
-                datadir = env.getString("OPENSHIFT_DATA_DIR");
+            if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_DATA_DIR"))) {
+                datadir = System.getenv("OPENSHIFT_DATA_DIR");
             }
             File dir = new File(datadir + "/tmp");
             if (!dir.exists()) {
@@ -98,14 +88,14 @@ public class PdfDAOImpl implements PdfDAO {
             renderer.layout();
             renderer.createPDF(os);
             final JsonObject res = new JsonObject();
-            res.putString(PDF, temp.getAbsolutePath());
+            res.put(PDF, temp.getAbsolutePath());
             IOUtils.closeQuietly(os);
             return res;
         } catch (XRRuntimeException | DocumentException | IOException e) {
             LOG.error(e.getMessage(), e);
             throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e);
-        }finally {
-            if(os != null) {
+        } finally {
+            if (os != null) {
                 IOUtils.closeQuietly(os);
             }
         }

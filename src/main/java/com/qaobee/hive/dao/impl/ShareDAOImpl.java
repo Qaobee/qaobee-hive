@@ -19,16 +19,22 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.mongodb.BasicDBObject;
 import com.qaobee.hive.dao.ActivityCfgDAO;
 import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -36,6 +42,7 @@ import javax.inject.Inject;
  * The type Share dao.
  */
 public class ShareDAOImpl implements ShareDAO {
+    private static final Logger LOG = LoggerFactory.getLogger(ShareDAOImpl.class);
     private static final String FIELD_ID = "_id";
     private static final String FIELD_OWNER = "owner";
     private static final String FIELD_MEMBERS = "members";
@@ -47,106 +54,152 @@ public class ShareDAOImpl implements ShareDAO {
     @Inject
     private MongoDB mongo;
     @Inject
+    private MongoClientCustom mongoClientCustom;
+    @Inject
     private ActivityCfgDAO activityCfgDAO;
     @Inject
     private SandBoxDAO sandBoxDAO;
 
     @Override
-    public JsonObject desactivateMemberToSandbox(String sandboxId, String userId) throws QaobeeException {
-        JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
-        sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
-            if (((JsonObject) m).getString(FIELD_PERSON_ID).equals(userId)) {
-                ((JsonObject) m).putString(FIELD_STATUS, "desactivated");
-            }
-        });
-        sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
-        return sandBoxDAO.getEnrichedSandbox(sandbox);
+    public Promise<JsonObject, QaobeeException, Integer> desactivateMemberToSandbox(String sandboxId, String userId) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.getById(sandboxId, DBCollections.SANDBOX)
+                .done(sandbox -> {
+                    sandbox.getJsonArray(FIELD_MEMBERS).forEach(m -> {
+                        if (((JsonObject) m).getString(FIELD_PERSON_ID).equals(userId)) {
+                            ((JsonObject) m).put(FIELD_STATUS, "desactivated");
+                        }
+                    });
+                    mongo.upsert(sandbox, DBCollections.SANDBOX).done(id -> {
+                        sandbox.put("_id", id);
+                        sandBoxDAO.getEnrichedSandbox(sandbox).done(deferred::resolve).fail(deferred::reject);
+                    }).fail(deferred::reject);
+                }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject activateMemberToSandbox(String sandboxId, String userId) throws QaobeeException {
-        JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
-        sandbox.getArray(FIELD_MEMBERS).forEach(m -> {
-            if (((JsonObject) m).getString(FIELD_PERSON_ID).equals(userId)) {
-                ((JsonObject) m).putString(FIELD_STATUS, "activated");
-            }
-        });
-        sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
-        return sandBoxDAO.getEnrichedSandbox(sandbox);
-    }
-
-    @Override
-    public JsonObject inviteMemberToSandbox(String sandboxId, String userEmail, String roleCode) throws QaobeeException {
-        JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
-        final JsonObject[] role = {new JsonObject().putString("code", roleCode)};
-        JsonObject owner = mongo.getById(sandbox.getString(FIELD_OWNER), DBCollections.USER);
-        if (owner.containsField(FIELD_COUNTRY) && owner.getObject(FIELD_COUNTRY) != null && owner.getObject(FIELD_COUNTRY).containsField(FIELD_ID)) {
-            ((JsonObject) activityCfgDAO.getActivityCfgParams( // NOSONAR
-                    sandbox.getString("activityId"),
-                    owner.getObject(FIELD_COUNTRY).getString(FIELD_ID),
-                    System.currentTimeMillis(),
-                    "listRoleSandbox"
-            ).get(0)).getArray("listRoleSandbox").forEach(n -> {
-                if (((JsonObject) n).getString("code").equals(roleCode)) {
-                    role[0] = (JsonObject) n;
+    public Promise<JsonObject, QaobeeException, Integer> activateMemberToSandbox(String sandboxId, String userId) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.getById(sandboxId, DBCollections.SANDBOX).done(sandbox -> {
+            sandbox.getJsonArray(FIELD_MEMBERS).forEach(m -> {
+                if (((JsonObject) m).getString(FIELD_PERSON_ID).equals(userId)) {
+                    ((JsonObject) m).put(FIELD_STATUS, "activated");
                 }
             });
-        }
-        JsonObject invitation = new JsonObject()
-                .putString("senderId", owner.getString("_id"))
-                .putString("userEmail", userEmail)
-                .putObject("role", role[0])
-                .putString(FIELD_SANDBOX_ID, sandbox.getString("_id"))
-                .putString(FIELD_STATUS, "waiting")
-                .putNumber("invitationDate", System.currentTimeMillis());
-        JsonArray invited = mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER);
-        if (invited.size() > 0) {
-            invitation.putString("userId", ((JsonObject) invited.get(0)).getString("_id"));// NOSONAR
-        }
-        invitation.putString("_id", mongo.save(invitation, DBCollections.INVITATION));
-        return invitation;
+            mongo.upsert(sandbox, DBCollections.SANDBOX).done(id -> {
+                sandbox.put("_id", id);
+                sandBoxDAO.getEnrichedSandbox(sandbox).done(deferred::resolve).fail(deferred::reject);
+            }).fail(deferred::reject);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject reviveInvitationToUser(String invitationId) throws QaobeeException {
-        JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
-
-        invitation.putNumber("invitationDate", System.currentTimeMillis());
-        invitation.putString("_id", mongo.update(invitation, DBCollections.INVITATION));
-        return invitation;
+    public Promise<JsonObject, QaobeeException, Integer> inviteMemberToSandbox(String sandboxId, String userEmail, String roleCode) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.getById(sandboxId, DBCollections.SANDBOX).done(sandbox -> {
+            final JsonObject[] role = {new JsonObject().put("code", roleCode)};
+            mongo.getById(sandbox.getString(FIELD_OWNER), DBCollections.USER).done(owner -> {
+                if (owner.containsKey(FIELD_COUNTRY) && owner.getJsonObject(FIELD_COUNTRY) != null && owner.getJsonObject(FIELD_COUNTRY).containsKey(FIELD_ID)) {
+                    activityCfgDAO.getActivityCfgParams(
+                            sandbox.getString("activityId"),
+                            owner.getJsonObject(FIELD_COUNTRY).getString(FIELD_ID),
+                            System.currentTimeMillis(),
+                            "listRoleSandbox"
+                    ).done(activityCfg -> {
+                        activityCfg.getJsonObject(0).getJsonArray("listRoleSandbox").forEach(n -> {
+                            if (((JsonObject) n).getString("code").equals(roleCode)) {
+                                role[0] = (JsonObject) n;
+                            }
+                        });
+                        JsonObject invitation = new JsonObject()
+                                .put("senderId", owner.getString("_id"))
+                                .put("userEmail", userEmail)
+                                .put("role", role[0])
+                                .put(FIELD_SANDBOX_ID, sandbox.getString("_id"))
+                                .put(FIELD_STATUS, "waiting")
+                                .put("invitationDate", System.currentTimeMillis());
+                        mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER).done(invited -> {
+                            if (invited.size() > 0) {
+                                invitation.put("userId", invited.getJsonObject(0).getString("_id"));
+                            }
+                            mongo.upsert(invitation, DBCollections.INVITATION).done(id -> {
+                                invitation.put("_id", id);
+                                deferred.resolve(invitation);
+                            }).fail(deferred::reject);
+                        }).fail(deferred::reject);
+                    }).fail(deferred::reject);
+                }
+                deferred.resolve(null);
+            }).fail(deferred::reject);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject removeInvitationToSandbox(String invitationId) throws QaobeeException {
-        JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
+    public Promise<JsonObject, QaobeeException, Integer> reviveInvitationToUser(String invitationId) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.getById(invitationId, DBCollections.INVITATION).done(invitation -> {
+            invitation.put("invitationDate", System.currentTimeMillis());
+            mongo.upsert(invitation, DBCollections.INVITATION).done(id -> {
+                invitation.put("_id", id);
+                deferred.resolve(invitation);
+            }).fail(deferred::reject);
 
-        invitation.putString(FIELD_STATUS, "abandonned");
-        invitation.putString("_id", mongo.save(invitation, DBCollections.INVITATION));
-
-        return invitation;
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject getInvitationToSandbox(String invitationId) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> removeInvitationToSandbox(String invitationId) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.getById(invitationId, DBCollections.INVITATION).done(invitation -> {
+            invitation.put(FIELD_STATUS, "abandonned");
+            mongo.upsert(invitation, DBCollections.INVITATION).done(id -> {
+                invitation.put("_id", id);
+                deferred.resolve(invitation);
+            }).fail(deferred::reject);
+
+        }).fail(deferred::reject);
+        return deferred.promise();
+    }
+
+    @Override
+    public Promise<JsonObject, QaobeeException, Integer> getInvitationToSandbox(String invitationId) {
         return mongo.getById(invitationId, DBCollections.INVITATION);
     }
 
     @Override
-    public JsonObject confirmInvitationToSandbox(String invitationId, String userId, String answer) throws QaobeeException {
-        JsonObject invitation = mongo.getById(invitationId, DBCollections.INVITATION);
-        if ("accepted".equals(answer)) {
-            invitation.putString(FIELD_STATUS, "accepted").putNumber("answerDate", System.currentTimeMillis());
-            invitation.putString("_id", mongo.update(invitation, DBCollections.INVITATION));
-            addMemberToSandbox(invitation.getString(FIELD_SANDBOX_ID), userId, invitation.getObject("role"));
-        } else {
-            invitation.putString(FIELD_STATUS, "refused").putNumber("answerDate", System.currentTimeMillis());
-            invitation.putString("_id", mongo.update(invitation, DBCollections.INVITATION));
-        }
-        return invitation;
+    public Promise<JsonObject, QaobeeException, Integer> confirmInvitationToSandbox(String invitationId, String userId, String answer) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.getById(invitationId, DBCollections.INVITATION).done(invitation -> {
+            if ("accepted".equals(answer)) {
+                invitation.put(FIELD_STATUS, "accepted").put("answerDate", System.currentTimeMillis());
+                mongo.upsert(invitation, DBCollections.INVITATION).done(id -> {
+                    invitation.put("_id", id);
+                    try {
+                        addMemberToSandbox(invitation.getString(FIELD_SANDBOX_ID), userId, invitation.getJsonObject("role"));
+                        deferred.resolve(invitation);
+                    } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                        deferred.reject(e);
+                    }
+                }).fail(deferred::reject);
+            } else {
+                invitation.put(FIELD_STATUS, "refused").put("answerDate", System.currentTimeMillis());
+                mongo.upsert(invitation, DBCollections.INVITATION).done(id -> {
+                    invitation.put("_id", id);
+                    deferred.resolve(invitation);
+                }).fail(deferred::reject);
+            }
+        }).fail(deferred::reject);
+
+        return deferred.promise();
     }
 
     @Override
-    public JsonArray getListOfInvitationsToSandbox(String sandboxId, String status) {
+    public Promise<JsonArray, QaobeeException, Integer> getListOfInvitationsToSandbox(String sandboxId, String status) {
         CriteriaBuilder criterias = new CriteriaBuilder().add(FIELD_SANDBOX_ID, sandboxId);
         if (!"ALL".equals(status)) {
             criterias.add(FIELD_STATUS, status);
@@ -154,36 +207,55 @@ public class ShareDAOImpl implements ShareDAO {
         return mongo.findByCriterias(criterias.get(), null, null, -1, 0, DBCollections.INVITATION);
     }
 
-    private JsonObject addMemberToSandbox(String sandboxId, String userId, JsonObject role) throws QaobeeException {
-        JsonObject sandbox = mongo.getById(sandboxId, DBCollections.SANDBOX);
-        sandbox.getArray(FIELD_MEMBERS).add(new JsonObject()
-                .putString(FIELD_PERSON_ID, userId)
-                .putObject("role", role)
-                .putString(FIELD_STATUS, "activated")
-                .putNumber("startDate", System.currentTimeMillis())
-        );
-        sandbox.putString("_id", mongo.update(sandbox, DBCollections.SANDBOX));
-        return sandBoxDAO.getEnrichedSandbox(sandbox);
+    private Promise<JsonObject, QaobeeException, Integer> addMemberToSandbox(String sandboxId, String userId, JsonObject role) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.getById(sandboxId, DBCollections.SANDBOX).done(sandbox -> {
+            sandbox.getJsonArray(FIELD_MEMBERS).add(new JsonObject()
+                    .put(FIELD_PERSON_ID, userId)
+                    .put("role", role)
+                    .put(FIELD_STATUS, "activated")
+                    .put("startDate", System.currentTimeMillis())
+            );
+            mongo.upsert(sandbox, DBCollections.INVITATION).done(id -> {
+                sandbox.put("_id", id);
+                sandBoxDAO.getEnrichedSandbox(sandbox).done(deferred::resolve).fail(deferred::reject);
+            }).fail(deferred::reject);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject getListOfSharedSandboxes(String userId) {
+    public Promise<JsonObject, QaobeeException, Integer> getListOfSharedSandboxes(String userId) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         JsonObject result = new JsonObject()
-                .putArray(FIELD_MEMBERS, new JsonArray())
-                .putArray(FIELD_OWNER, new JsonArray());
+                .put(FIELD_MEMBERS, new JsonArray())
+                .put(FIELD_OWNER, new JsonArray());
 
-        JsonArray sandboxes = mongo.findByCriterias(new CriteriaBuilder().add(FIELD_OWNER, userId).get(),
-                null, null, -1, 0, DBCollections.SANDBOX);
-        BasicDBObject elemMatch = new BasicDBObject();
-        elemMatch.put(FIELD_PERSON_ID, userId);
-        BasicDBObject array = new BasicDBObject();
-        array.put("$elemMatch", elemMatch);
-        BasicDBObject query = new BasicDBObject();
-        query.put(FIELD_MEMBERS, array);
-        sandboxes.forEach(s -> result.getArray(FIELD_OWNER).add(sandBoxDAO.getEnrichedSandbox((JsonObject) s)));
-        mongo.getDb().getCollection(DBCollections.SANDBOX)
-                .find(query)
-                .forEach(sandboxRes -> result.getArray(FIELD_MEMBERS).add(sandBoxDAO.getEnrichedSandbox(new JsonObject(sandboxRes.toString()))));
-        return result;
+        mongo.findByCriterias(new CriteriaBuilder().add(FIELD_OWNER, userId).get(),null, null, -1, 0, DBCollections.SANDBOX)
+                .done(sandboxes-> {
+                    JsonObject elemMatch = new JsonObject();
+                    elemMatch.put(FIELD_PERSON_ID, userId);
+                    JsonObject array = new JsonObject();
+                    array.put("$elemMatch", elemMatch);
+                    JsonObject query = new JsonObject();
+                    query.put(FIELD_MEMBERS, array);
+
+                    // FIXME avec un when
+                    sandboxes.forEach(s -> result.getJsonArray(FIELD_OWNER).add(sandBoxDAO.getEnrichedSandbox((JsonObject) s)));
+                    mongoClientCustom.find(DBCollections.SANDBOX, query, res ->{
+                        if(res.succeeded()) {
+                            res.result().forEach(sandboxRes -> result.getJsonArray(FIELD_MEMBERS).add(sandBoxDAO.getEnrichedSandbox(new JsonObject(sandboxRes.toString()))));
+                        } else {
+                            deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
+                        }
+                    })
+                            .find(query)
+
+                    return result;
+                }).fail(deferred::reject);
+
+
+
+        return deferred.promise();
     }
 }

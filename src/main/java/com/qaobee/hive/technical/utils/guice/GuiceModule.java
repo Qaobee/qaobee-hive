@@ -39,7 +39,7 @@ import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.mongo.MongoClient;
+import io.vertx.ext.web.client.WebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +61,7 @@ public class GuiceModule extends AbstractModule {
      * @param config the config
      * @param vertx  the vertx
      */
-    public GuiceModule(JsonObject config, Vertx vertx) {
+    GuiceModule(JsonObject config, Vertx vertx) {
         this.config = config;
         this.vertx = vertx;
     }
@@ -75,7 +75,8 @@ public class GuiceModule extends AbstractModule {
         bind(Vertx.class).toInstance(vertx);
         // TECHNICAL MODULES
         bind(MongoDB.class).to(MongoDBImpl.class).in(Singleton.class);
-        bind(MongoClient.class).toProvider(MongoClientProvider.class).asEagerSingleton();
+        bind(WebClient.class).toInstance(WebClient.create(vertx));
+        bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);

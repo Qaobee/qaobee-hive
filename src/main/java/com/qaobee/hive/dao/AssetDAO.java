@@ -21,6 +21,7 @@ package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Asset dao.
@@ -36,18 +37,18 @@ public interface AssetDAO {
      * @param field       the field
      * @param contentType the content type
      * @param locale      the locale
+     *
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject addAsset(String userId, String token, String filename, String collection, String field, String contentType, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addAsset(String userId, String token, String filename, String collection, String field, String contentType, String locale);
 
     /**
      * Gets asset.
      *
      * @param collection the collection
      * @param id         the id
+     *
      * @return the asset
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getAsset(String collection, String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getAsset(String collection, String id);
 }

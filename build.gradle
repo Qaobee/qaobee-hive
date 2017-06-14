@@ -61,6 +61,7 @@ dependencies {
     compile "io.vertx:vertx-service-proxy:$version"
     compile "io.vertx:vertx-codegen:$version"
     compile "io.vertx:vertx-mail-client:$version"
+    compile "io.vertx:vertx-web-client:$version"
     compile 'org.reflections:reflections:0.9.11'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'com.google.inject:guice:4.1.0'

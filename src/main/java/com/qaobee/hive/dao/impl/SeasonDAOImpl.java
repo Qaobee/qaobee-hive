@@ -24,8 +24,11 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -38,53 +41,56 @@ public class SeasonDAOImpl implements SeasonDAO {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
     private static final String END_DATE_FIELD = "endDate";
-    private final MongoDB mongo;
-
-    /**
-     * Instantiates a new Season dao.
-     *
-     * @param mongo the mongo
-     */
     @Inject
-    public SeasonDAOImpl(MongoDB mongo) {
-        this.mongo = mongo;
-    }
+    private MongoDB mongo;
 
     @Override
-    public JsonObject getCurrentSeason(String activityId, String countryId) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getCurrentSeason(String activityId, String countryId) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         // Creation of the request
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(PARAM_ACTIVITY_ID, activityId);
         criterias.put(PARAM_COUNTRY_ID, countryId);
-        JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, DBCollections.SEASON);
-        long currentDate = System.currentTimeMillis();
-        if (resultJson.size() == 0) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
-        }
-        for (int i = 0; i < resultJson.size(); i++) {
-            JsonObject s = resultJson.get(i);
-            if (s.getLong(END_DATE_FIELD, 0) > currentDate && s.getLong("startDate") < currentDate) {
-                return s;
-            }
-        }
-        return new JsonObject();
+        mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, DBCollections.SEASON)
+                .done(resultJson -> {
+                    long currentDate = System.currentTimeMillis();
+                    if (resultJson.size() == 0) {
+                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")"));
+                    }
+                    for (int i = 0; i < resultJson.size(); i++) {
+                        JsonObject s = resultJson.getJsonObject(i);
+                        if (s.getLong(END_DATE_FIELD, 0L) > currentDate && s.getLong("startDate") < currentDate) {
+                            deferred.resolve(s);
+                            return;
+                        }
+                    }
+                    deferred.resolve(new JsonObject());
+                })
+                .fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonArray getListByActivity(String activityId, String countryId) throws QaobeeException {
+    public Promise<JsonArray, QaobeeException, Integer> getListByActivity(String activityId, String countryId) {
+        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
         // Creation of the request
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(PARAM_ACTIVITY_ID, activityId);
         criterias.put(PARAM_COUNTRY_ID, countryId);
-        JsonArray resultJson = mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, DBCollections.SEASON);
-        if (resultJson.size() == 0) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")");
-        }
-        return resultJson;
+        mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, DBCollections.SEASON)
+                .done(resultJson -> {
+                    if (resultJson.size() == 0) {
+                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")"));
+                    } else {
+                        deferred.resolve(resultJson);
+                    }
+                })
+                .fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject getSeason(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getSeason(String id) {
         return mongo.getById(id, DBCollections.SEASON);
     }
 }

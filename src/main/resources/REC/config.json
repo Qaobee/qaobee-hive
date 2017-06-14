@@ -42,7 +42,7 @@
   "metrix.mod": {
     "address": "metrix"
   },
-  "mongo.persistor": {
+  "mongo.db": {
     "address": "mongo.db",
     "pool_size": 10,
     "db_name": "hive",
