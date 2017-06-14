@@ -49,5 +49,5 @@ public interface ActivityDAO {
      * @return the json object
      * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> getActivity(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getActivity(String id);
 }

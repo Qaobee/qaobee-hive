@@ -19,20 +19,23 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.dao.StatisticsDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Deferred;
+import org.jdeferred.DeferredManager;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DefaultDeferredManager;
+import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -47,6 +50,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private static final String VALUE_FIELD = "value";
     private static final String EVENT_ID_FIELD = "eventId";
     private final MongoDB mongo;
+    private DeferredManager dm = new DefaultDeferredManager();
 
     /**
      * Instantiates a new Statistics dao.
@@ -59,167 +63,172 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     }
 
     @Override
-    public JsonObject addBulk(JsonArray stats) {
-        long count = 0;
+    public Promise<JsonObject, QaobeeException, Integer> addBulk(JsonArray stats) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        final long[] count = {0};
+        List<Promise> promises = new ArrayList<>();
+        List<Promise> promises2 = new ArrayList<>();
         for (String evtId : collectUniqueIds(stats)) {
-            JsonArray eventStats = getListForEvent(evtId);
-            if (eventStats.size() == 0) {
-                count = pushAllStats(stats, evtId);
-            } else {
-                count = pushNonDuplicateStats(stats, eventStats);
-            }
+            promises.add(getListForEvent(evtId));
         }
-        return new JsonObject().putNumber("count", count);
+        dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
+            rs.forEach(eventStats -> {
+                if (((JsonObject) eventStats.getResult()).getJsonArray("stats").size() == 0) {
+                    promises2.add(pushAllStats(stats, ((JsonObject) eventStats.getResult()).getString("evtId")));
+                } else {
+                    promises2.add(pushNonDuplicateStats(stats, ((JsonObject) eventStats.getResult()).getJsonArray("stats")));
+                }
+            });
+            dm.when(promises2.toArray(new Promise[promises2.size()])).done(counts -> {
+                counts.forEach(c -> count[0] += (Integer) c.getResult());
+                deferred.resolve(new JsonObject().put("count", count[0]));
+            });
+        }).fail(e -> {
+            LOG.error(((Throwable) e.getReject()).getMessage());
+            deferred.reject(((QaobeeException) e.getReject()));
+        });
+        return deferred.promise();
     }
 
-    private int pushNonDuplicateStats(JsonArray stats, JsonArray eventStats) {
-        int count = 0;
-        for (int i = 0; i < stats.size(); i++) {
+    private Promise<Integer, QaobeeException, Integer> pushNonDuplicateStats(JsonArray stats, JsonArray eventStats) {
+        Deferred<Integer, QaobeeException, Integer> deferred = new DeferredObject<>();
+        List<Promise> promises = new ArrayList<>();
+        stats.forEach(s -> {
             boolean found = false;
             for (int j = 0; j < eventStats.size(); j++) {
-                ((JsonObject) eventStats.get(j)).removeField("_id");// NOSONAR
-                if (eventStats.get(j).equals(stats.get(i))) {
+                eventStats.getJsonObject(j).remove("_id");
+                if (eventStats.getJsonObject(j).equals(s)) {
                     found = true;
                 }
             }
             if (!found) {
-                try {
-                    addStat(stats.get(i));
-                    count++;
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                }
+                promises.add(addStat((JsonObject) s));
             }
-        }
-        return count;
+        });
+        count(promises, deferred);
+        return deferred.promise();
     }
 
-    private long pushAllStats(JsonArray stats, String evtId) {
-        long count = 0;
-        for (int i = 0; i < stats.size(); i++) {
-            try {
-                if (evtId.equals(((JsonObject) stats.get(i)).getString(EVENT_ID_FIELD))) {// NOSONAR
-                    addStat(stats.get(i));
-                    count++;
-                }
-            } catch (QaobeeException e) {
-                LOG.error(e.getMessage(), e);
+    private void count(List<Promise> promises, Deferred<Integer, QaobeeException, Integer> deferred) {
+        dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
+            final int[] count = {0};
+            rs.forEach(r -> count[0]++);
+            deferred.resolve(count[0]);
+        }).fail(e -> {
+            LOG.error(((Throwable) e.getReject()).getMessage());
+            deferred.reject(((QaobeeException) e.getReject()));
+        });
+    }
+
+    private Promise<Integer, QaobeeException, Integer> pushAllStats(JsonArray stats, String evtId) {
+        Deferred<Integer, QaobeeException, Integer> deferred = new DeferredObject<>();
+        List<Promise> promises = new ArrayList<>();
+        stats.forEach(s -> {
+            if (evtId.equals(((JsonObject) s).getString(EVENT_ID_FIELD))) {
+                promises.add(addStat((JsonObject) s));
             }
-        }
-        return count;
+        });
+        count(promises, deferred);
+        return deferred.promise();
     }
 
     private static HashSet<String> collectUniqueIds(JsonArray stats) {
         HashSet<String> events = new HashSet<>();
         for (int i = 0; i < stats.size(); i++) {
-            events.add(((JsonObject) stats.get(i)).getString(EVENT_ID_FIELD));// NOSONAR
+            events.add(stats.getJsonObject(i).getString(EVENT_ID_FIELD));
         }
         return events;
     }
 
     @Override
-    public JsonArray getListForEvent(String eventId) {
-        return mongo.findByCriterias(new CriteriaBuilder().add("eventId", eventId).get(), null, null, -1, -1, DBCollections.STATS);
+    public Promise<JsonObject, QaobeeException, Integer> getListForEvent(String eventId) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.findByCriterias(new CriteriaBuilder().add("eventId", eventId).get(), null, null, -1, -1, DBCollections.STATS).done(res ->
+                deferred.resolve(new JsonObject().put("eventId", eventId).put("stats", res))
+        ).fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject addStat(JsonObject stat) throws QaobeeException {
-        if (!stat.containsField(TIMER_FIELD) || Integer.valueOf(0).equals(stat.getInteger(TIMER_FIELD))) {
-            stat.putNumber(TIMER_FIELD, System.currentTimeMillis());
+    public Promise<JsonObject, QaobeeException, Integer> addStat(JsonObject stat) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        if (!stat.containsKey(TIMER_FIELD) || Integer.valueOf(0).equals(stat.getInteger(TIMER_FIELD))) {
+            stat.put(TIMER_FIELD, System.currentTimeMillis());
         }
-        stat.putString("_id", mongo.save(stat, DBCollections.STATS));
-        return stat;
+        mongo.upsert(stat, DBCollections.STATS).done(id -> {
+            stat.put("_id", id);
+            deferred.resolve(stat);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonArray getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit) throws QaobeeException {
+    public Promise<JsonArray, QaobeeException, Integer> getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit) {
         // $MATCH section
-        BasicDBObject dbObjectParent = new BasicDBObject();
-        // - code
-        BasicDBObject dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
-        dbObjectParent.put(CODE_FIELD, dbObjectChild);
-        // - owner
-        dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
-        dbObjectParent.put(OWNER_FIELD, dbObjectChild);
+        JsonObject dbObjectParent = new JsonObject()
+                .put(CODE_FIELD, new JsonObject().put("$in", listIndicators))
+                .put(OWNER_FIELD, new JsonObject().put("$in", listOwners));
         // - values
         if (values != null) {
-            dbObjectChild = new BasicDBObject("$in", values);
-            dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+            dbObjectParent.put(VALUE_FIELD, new JsonObject().put("$in", values));
         }
         // - timer
-        DBObject o = new BasicDBObject();
-        o.put("$gte", startDate);
-        o.put("$lt", endDate);
+        JsonObject o = new JsonObject().put("$gte", startDate).put("$lt", endDate);
         dbObjectParent.put(TIMER_FIELD, o);
-        DBObject match = new BasicDBObject("$match", dbObjectParent);
-        dbObjectParent = new BasicDBObject();
-        dbObjectParent.put(OWNER_FIELD, 1);
-        dbObjectParent.put(TIMER_FIELD, 1);
-        DBObject sort = new BasicDBObject("$sort", dbObjectParent);
-        List<DBObject> pipelineAggregation;
+        JsonObject match = new JsonObject().put("$match", dbObjectParent);
+        dbObjectParent = new JsonObject().put(OWNER_FIELD, 1).put(TIMER_FIELD, 1);
+        JsonObject sort = new JsonObject().put("$sort", dbObjectParent);
+        JsonArray pipelineAggregation = new JsonArray().add(match).add(sort);
         if (limit > 0) {
-            pipelineAggregation = Arrays.asList(match, sort, new BasicDBObject("$limit", limit));
-        } else {
-            pipelineAggregation = Arrays.asList(match, sort);
+            pipelineAggregation.add(new JsonObject().put("$limit", limit));
         }
         return mongo.aggregate("_id", pipelineAggregation, DBCollections.STATS);
     }
 
     @Override
-    public JsonArray getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId, JsonArray groupBy, JsonArray sortedBy, Integer limit) throws QaobeeException {
+    public Promise<JsonArray, QaobeeException, Integer> getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId, JsonArray groupBy, JsonArray sortedBy, Integer limit) {
         // Aggregate section
         // $MACTH section
-        DBObject dbObjectParent = new BasicDBObject();
-        // - code
-        BasicDBObject dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
-        dbObjectParent.put(CODE_FIELD, dbObjectChild);
-        // - owner
-        dbObjectChild = new BasicDBObject("$in", listOwners.toArray());
-        dbObjectParent.put(OWNER_FIELD, dbObjectChild);
+        JsonObject dbObjectParent = new JsonObject()
+                .put(CODE_FIELD, new JsonObject().put("$in", listIndicators))
+                .put(OWNER_FIELD, new JsonObject().put("$in", listOwners));
         // - values
         if (value != null) {
-            dbObjectChild = new BasicDBObject("$in", value);
-            dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+            dbObjectParent.put(VALUE_FIELD, new JsonObject().put("$in", value));
         }
         // - shootSeqId
         if (shootSeqId != null) {
-            dbObjectChild = new BasicDBObject("$in", shootSeqId);
-            dbObjectParent.put("shootSeqId", dbObjectChild);
+            dbObjectParent.put("shootSeqId", new JsonObject().put("$in", shootSeqId));
         }
         // - timer
-        DBObject o = new BasicDBObject();
-        o.put("$gte", startDate);
-        o.put("$lt", endDate);
+        JsonObject o = new JsonObject().put("$gte", startDate).put("$lt", endDate);
         dbObjectParent.put(TIMER_FIELD, o);
-        DBObject match = new BasicDBObject("$match", dbObjectParent);
+        JsonObject match = new JsonObject().put("$match", dbObjectParent);
         // $GROUP section
-        dbObjectParent = new BasicDBObject();
-        dbObjectChild = new BasicDBObject();
+        dbObjectParent = new JsonObject();
+        JsonObject dbObjectChild = new JsonObject();
         // - _id - List of field for id's group step
         if (groupBy != null) {
             for (Object field : groupBy) {
-                dbObjectChild.append((String) field, "$" + field);
+                dbObjectChild.put((String) field, "$" + field);
             }
         }
         dbObjectParent.put("_id", dbObjectChild);
         // - average
         switch (aggregate) {
             case "SUM":
-                dbObjectChild = new BasicDBObject("$sum", "$value");
-                dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+                dbObjectParent.put(VALUE_FIELD, new JsonObject().put("$sum", "$value"));
                 break;
             case "AVG":
-                dbObjectChild = new BasicDBObject("$avg", "$value");
-                dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+                dbObjectParent.put(VALUE_FIELD, new JsonObject().put("$avg", "$value"));
                 break;
             default: // COUNT
-                dbObjectChild = new BasicDBObject("$sum", 1);
-                dbObjectParent.put(VALUE_FIELD, dbObjectChild);
+                dbObjectParent.put(VALUE_FIELD, new JsonObject().put("$sum", 1));
                 break;
         }
-        DBObject group = new BasicDBObject("$group", dbObjectParent);
+        JsonObject group = new JsonObject().put("$group", dbObjectParent);
         // $SORT section
-        dbObjectParent = new BasicDBObject();
+        dbObjectParent = new JsonObject();
         if (sortedBy != null) {
             for (Object item : sortedBy) {
                 JsonObject field = (JsonObject) item;
@@ -228,9 +237,11 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         } else {
             dbObjectParent.put("_id", 1);
         }
-        DBObject sort = new BasicDBObject("$sort", dbObjectParent);
-        List<DBObject> pipelineAggregation;
-        pipelineAggregation = limit > 0 ? Arrays.asList(match, group, sort, new BasicDBObject("$limit", limit)) : Arrays.asList(match, group, sort);
+        JsonObject sort = new JsonObject().put("$sort", dbObjectParent);
+        JsonArray pipelineAggregation = new JsonArray().add(match).add(group).add(sort);
+        if(limit > 0) {
+            pipelineAggregation.add(new JsonObject().put("$limit", limit));
+        }
         return mongo.aggregate("_id", pipelineAggregation, DBCollections.STATS);
     }
 }

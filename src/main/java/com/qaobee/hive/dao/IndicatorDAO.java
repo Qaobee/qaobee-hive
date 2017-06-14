@@ -35,9 +35,8 @@ public interface IndicatorDAO {
      * @param countryId      the country id
      * @param listIndicators the list indicators
      * @return the indicator by code
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators);
 
     /**
      * Gets indicators list.
@@ -46,16 +45,14 @@ public interface IndicatorDAO {
      * @param countryId  the country id
      * @param screen     the screen
      * @return the indicators list
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getIndicatorsList(String activityId, String countryId, JsonArray screen) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getIndicatorsList(String activityId, String countryId, JsonArray screen);
 
     /**
      * Gets indicator.
      *
      * @param id the id
      * @return the indicator
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> getIndicator(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getIndicator(String id);
 }

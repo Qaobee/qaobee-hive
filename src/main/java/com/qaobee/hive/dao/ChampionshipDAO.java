@@ -33,34 +33,30 @@ public interface ChampionshipDAO {
      *
      * @param championship the championship
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<String, QaobeeException, Integer> updateChampionship(JsonObject championship) throws QaobeeException;
+    Promise<String, QaobeeException, Integer> updateChampionship(JsonObject championship);
 
     /**
      * Add championship json object.
      *
      * @param championship the championship
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> addChampionship(JsonObject championship) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addChampionship(JsonObject championship);
 
     /**
      * Gets championship.
      *
      * @param id the id
      * @return the championship
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> getChampionship(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getChampionship(String id);
 
     /**
      * Gets list championships.
      *
      * @param params the params
      * @return the list championships
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getListChampionships(JsonObject params) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getListChampionships(JsonObject params);
 }

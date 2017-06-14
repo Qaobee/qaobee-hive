@@ -42,16 +42,14 @@ public interface CountryDAO {
      * @param locale the locale
      * @param label  the label
      * @return the country list
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getCountryList(String locale, String label) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getCountryList(String locale, String label);
 
     /**
      * Gets country.
      *
      * @param id the id
      * @return the country
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> getCountry(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getCountry(String id);
 }

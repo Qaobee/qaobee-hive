@@ -22,6 +22,7 @@ package com.qaobee.hive.dao;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Structure dao.
@@ -32,9 +33,8 @@ public interface StructureDAO {
      *
      * @param structure the structure
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject update(JsonObject structure) throws QaobeeException;
+    Promise<String, QaobeeException, Integer> update(JsonObject structure);
 
     /**
      * Gets list of structures.
@@ -42,25 +42,22 @@ public interface StructureDAO {
      * @param activity the activity
      * @param address  the address
      * @return the list of structures
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getListOfStructures(String activity, JsonObject address) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getListOfStructures(String activity, JsonObject address);
 
     /**
      * Gets structure.
      *
      * @param id the id
      * @return the structure
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getStructure(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getStructure(String id);
 
     /**
      * Add structure json object.
      *
      * @param structure the structure
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject addStructure(JsonObject structure) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addStructure(JsonObject structure);
 }

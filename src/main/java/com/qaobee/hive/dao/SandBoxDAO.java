@@ -35,7 +35,6 @@ public interface SandBoxDAO {
      *
      * @param sandboxId the sandbox id
      * @return the sandbox sharing
-     * @throws QaobeeException the qaobee exception
      */
     Promise<JsonObject, QaobeeException, Integer> getSandboxById(String sandboxId);
 
@@ -61,7 +60,6 @@ public interface SandBoxDAO {
      * @param usersIds     the users ids
      * @param loggedUserId the logged user id
      * @return the list by owner
-     * @throws QaobeeException the qaobee exception
      */
     Promise<JsonArray, QaobeeException, Integer> getListByOwner(List<String> usersIds, String loggedUserId);
 
@@ -71,7 +69,6 @@ public interface SandBoxDAO {
      * @param activityId the activity id
      * @param userId     the user id
      * @return the by owner
-     * @throws QaobeeException the qaobee exception
      */
     Promise<JsonObject, QaobeeException, Integer> getByOwner(String activityId, String userId);
 

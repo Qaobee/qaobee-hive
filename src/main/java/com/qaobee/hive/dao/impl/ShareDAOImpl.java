@@ -31,12 +31,16 @@ import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.jdeferred.Deferred;
+import org.jdeferred.DeferredManager;
 import org.jdeferred.Promise;
+import org.jdeferred.impl.DefaultDeferredManager;
 import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The type Share dao.
@@ -178,13 +182,9 @@ public class ShareDAOImpl implements ShareDAO {
                 invitation.put(FIELD_STATUS, "accepted").put("answerDate", System.currentTimeMillis());
                 mongo.upsert(invitation, DBCollections.INVITATION).done(id -> {
                     invitation.put("_id", id);
-                    try {
-                        addMemberToSandbox(invitation.getString(FIELD_SANDBOX_ID), userId, invitation.getJsonObject("role"));
-                        deferred.resolve(invitation);
-                    } catch (QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                        deferred.reject(e);
-                    }
+                    addMemberToSandbox(invitation.getString(FIELD_SANDBOX_ID), userId, invitation.getJsonObject("role"))
+                            .done(r -> deferred.resolve(invitation))
+                            .fail(deferred::reject);
                 }).fail(deferred::reject);
             } else {
                 invitation.put(FIELD_STATUS, "refused").put("answerDate", System.currentTimeMillis());
@@ -231,31 +231,41 @@ public class ShareDAOImpl implements ShareDAO {
                 .put(FIELD_MEMBERS, new JsonArray())
                 .put(FIELD_OWNER, new JsonArray());
 
-        mongo.findByCriterias(new CriteriaBuilder().add(FIELD_OWNER, userId).get(),null, null, -1, 0, DBCollections.SANDBOX)
-                .done(sandboxes-> {
-                    JsonObject elemMatch = new JsonObject();
-                    elemMatch.put(FIELD_PERSON_ID, userId);
-                    JsonObject array = new JsonObject();
-                    array.put("$elemMatch", elemMatch);
-                    JsonObject query = new JsonObject();
-                    query.put(FIELD_MEMBERS, array);
+        mongo.findByCriterias(new CriteriaBuilder().add(FIELD_OWNER, userId).get(), null, null, -1, 0, DBCollections.SANDBOX)
+                .done(sandboxes -> {
+                    JsonObject elemMatch = new JsonObject().put(FIELD_PERSON_ID, userId);
+                    JsonObject array = new JsonObject().put("$elemMatch", elemMatch);
+                    JsonObject query = new JsonObject().put(FIELD_MEMBERS, array);
+                    List<Promise> promises = new ArrayList<>();
+                    sandboxes.forEach(s -> promises.add(sandBoxDAO.getEnrichedSandbox((JsonObject) s)));
+                    DeferredManager dm = new DefaultDeferredManager();
+                    dm.when(promises.toArray(new Promise[promises.size()]))
+                            .done(rs -> {
+                                rs.forEach(result.getJsonArray(FIELD_OWNER)::add);
+                                mongoClientCustom.find(DBCollections.SANDBOX, query, res -> {
+                                    if (res.succeeded()) {
+                                        List<Promise> promises2 = new ArrayList<>();
+                                        res.result().forEach(sandboxRes -> promises2.add(sandBoxDAO.getEnrichedSandbox(new JsonObject(sandboxRes.toString()))));
+                                        dm.when(promises2.toArray(new Promise[promises2.size()]))
+                                                .done(rs2 -> {
+                                                    rs2.forEach(sb -> result.getJsonArray(FIELD_MEMBERS).add(sb));
+                                                    deferred.resolve(result);
+                                                })
+                                                .fail(e -> {
+                                                    LOG.error(((Throwable) e.getReject()).getMessage());
+                                                    deferred.reject(((QaobeeException) e.getReject()));
+                                                });
 
-                    // FIXME avec un when
-                    sandboxes.forEach(s -> result.getJsonArray(FIELD_OWNER).add(sandBoxDAO.getEnrichedSandbox((JsonObject) s)));
-                    mongoClientCustom.find(DBCollections.SANDBOX, query, res ->{
-                        if(res.succeeded()) {
-                            res.result().forEach(sandboxRes -> result.getJsonArray(FIELD_MEMBERS).add(sandBoxDAO.getEnrichedSandbox(new JsonObject(sandboxRes.toString()))));
-                        } else {
-                            deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
-                        }
-                    })
-                            .find(query)
-
-                    return result;
+                                    } else {
+                                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
+                                    }
+                                });
+                            })
+                            .fail(e -> {
+                                LOG.error(((Throwable) e.getReject()).getMessage());
+                                deferred.reject(((QaobeeException) e.getReject()));
+                            });
                 }).fail(deferred::reject);
-
-
-
         return deferred.promise();
     }
 }

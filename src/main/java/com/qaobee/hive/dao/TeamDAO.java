@@ -22,6 +22,7 @@ package com.qaobee.hive.dao;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Team dao.
@@ -37,16 +38,15 @@ public interface TeamDAO {
      * @param link        the link
      * @return the team list
      */
-    JsonArray getTeamList(String sandboxId, String effectiveId, String adversary, String enabled, String link);
+    Promise<JsonArray, QaobeeException, Integer> getTeamList(String sandboxId, String effectiveId, String adversary, String enabled, String link);
 
     /**
      * Gets team.
      *
      * @param teamId the team id
      * @return the team
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getTeam(String teamId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getTeam(String teamId);
 
     /**
      * Update team json object.
@@ -56,7 +56,7 @@ public interface TeamDAO {
      * @param locale the locale
      * @return the json object
      */
-    JsonObject updateTeam(JsonObject team, String userId, String locale);
+    Promise<JsonObject, QaobeeException, Integer> updateTeam(JsonObject team, String userId, String locale);
 
     /**
      * Add team json object.
@@ -65,7 +65,6 @@ public interface TeamDAO {
      * @param userId the user id
      * @param locale the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject addTeam(JsonObject team, String userId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addTeam(JsonObject team, String userId, String locale);
 }

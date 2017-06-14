@@ -38,7 +38,7 @@ public interface NotificationsDAO {
      * @param exclude      the exclude
      * @return the boolean
      */
-    Promise<Boolean, QaobeeException, Integer> notify(String id, String collection, JsonObject notification, JsonArray exclude) ;
+    Promise<Boolean, QaobeeException, Integer> notify(String id, String collection, JsonObject notification, JsonArray exclude);
 
     /**
      * Add notification to user.
@@ -54,18 +54,16 @@ public interface NotificationsDAO {
      *
      * @param id the id
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> markAsRead(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> markAsRead(String id);
 
     /**
      * Delete json object.
      *
      * @param id the id
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> delete(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> delete(String id);
 
     /**
      * Gets list.
@@ -74,7 +72,6 @@ public interface NotificationsDAO {
      * @param start the start
      * @param limit the limit
      * @return the list
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getList(String id, int start, int limit) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getList(String id, int start, int limit);
 }

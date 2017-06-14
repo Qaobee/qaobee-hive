@@ -34,9 +34,8 @@ public interface SeasonDAO {
      * @param activityId the activity id
      * @param countryId  the country id
      * @return the current season
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> getCurrentSeason(String activityId, String countryId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getCurrentSeason(String activityId, String countryId);
 
     /**
      * Gets list by activity.
@@ -44,16 +43,14 @@ public interface SeasonDAO {
      * @param activityId the activity id
      * @param countryId  the country id
      * @return the list by activity
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getListByActivity(String activityId, String countryId) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getListByActivity(String activityId, String countryId);
 
     /**
      * Gets season.
      *
      * @param id the id
      * @return the season
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> getSeason(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getSeason(String id);
 }

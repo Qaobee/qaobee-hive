@@ -190,20 +190,18 @@ public class Main extends AbstractGuiceVerticle {
 
     /**
      * @param promises Promises
-     * @param router       Route matcher
+     * @param router   Route matcher
      */
     private void runWebServer(List<Promise> promises, Router router, Future<Void> startFuture) {
         DeferredManager dm = new DefaultDeferredManager();
-        dm.when(promises.toArray(new Promise[promises.size()]))
-                .done(rs -> {
-                    rs.forEach(r -> System.out.println(r.getResult()));
-                    handleServerStart(router);
-                    startFuture.complete();
-                })
-                .fail(e -> {
-                    LOG.error(((Throwable) e.getReject()).getMessage());
-                    startFuture.fail((Throwable) e.getReject());
-                });
+        dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
+            rs.forEach(r -> System.out.println(r.getResult()));
+            handleServerStart(router);
+            startFuture.complete();
+        }).fail(e -> {
+            LOG.error(((Throwable) e.getReject()).getMessage());
+            startFuture.fail((Throwable) e.getReject());
+        });
     }
 
     private void handleServerStart(Router router) {

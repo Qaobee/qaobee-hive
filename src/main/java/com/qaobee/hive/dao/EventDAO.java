@@ -34,9 +34,8 @@ public interface EventDAO {
      *
      * @param id the id
      * @return the event
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> getEvent(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getEvent(String id);
 
     /**
      * Update event json object.
@@ -45,9 +44,8 @@ public interface EventDAO {
      * @param currentUserId the current user id
      * @param locale        the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> updateEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> updateEvent(JsonObject event, String currentUserId, String locale);
 
     /**
      * Add event json object.
@@ -56,16 +54,14 @@ public interface EventDAO {
      * @param currentUserId the current user id
      * @param locale        the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> addEvent(JsonObject event, String currentUserId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addEvent(JsonObject event, String currentUserId, String locale);
 
     /**
      * Gets event list.
      *
      * @param params the params
      * @return the event list
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getEventList(JsonObject params) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getEventList(JsonObject params);
 }

@@ -33,9 +33,8 @@ public interface CollectDAO {
      *
      * @param id the id
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> get(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> get(String id);
 
     /**
      * Update json object.
@@ -54,16 +53,14 @@ public interface CollectDAO {
      * @param currentUserId the current user id
      * @param locale        the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> add(JsonObject collect, String currentUserId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> add(JsonObject collect, String currentUserId, String locale);
 
     /**
      * Gets list.
      *
      * @param params the params
      * @return the list
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getList(JsonObject params) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getList(JsonObject params);
 }

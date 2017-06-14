@@ -33,9 +33,8 @@ public interface PersonDAO {
      *
      * @param sandboxId the sandbox id
      * @return the person list by sandbox
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getPersonListBySandbox(String sandboxId) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getPersonListBySandbox(String sandboxId);
 
     /**
      * Gets person list.
@@ -43,9 +42,8 @@ public interface PersonDAO {
      * @param listId    the list id
      * @param listfield the listfield
      * @return the person list
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getPersonList(JsonArray listId, JsonArray listfield) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getPersonList(JsonArray listId, JsonArray listfield);
 
     /**
      * Update person json object.
@@ -62,9 +60,8 @@ public interface PersonDAO {
      *
      * @param id the id
      * @return the person
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> getPerson(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getPerson(String id);
 
     /**
      * Add person json object.
@@ -73,7 +70,6 @@ public interface PersonDAO {
      * @param userId the user id
      * @param locale the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> addPerson(JsonObject person, String userId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addPerson(JsonObject person, String userId, String locale);
 }

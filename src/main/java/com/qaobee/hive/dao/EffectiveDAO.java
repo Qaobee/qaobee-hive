@@ -33,9 +33,8 @@ public interface EffectiveDAO {
      *
      * @param effective the effective
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> add(JsonObject effective) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> add(JsonObject effective);
 
     /**
      * Update json object.
@@ -51,16 +50,14 @@ public interface EffectiveDAO {
      * @param sandboxId       the sandbox id
      * @param categoryAgeCode the category age code
      * @return the effective list
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonArray, QaobeeException, Integer> getEffectiveList(String sandboxId, String categoryAgeCode) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getEffectiveList(String sandboxId, String categoryAgeCode);
 
     /**
      * Gets effective.
      *
      * @param id the id
      * @return the effective
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> getEffective(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getEffective(String id);
 }

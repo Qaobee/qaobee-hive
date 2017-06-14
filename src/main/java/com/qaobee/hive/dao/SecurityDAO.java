@@ -36,9 +36,8 @@ public interface SecurityDAO {
      * @param mobileToken the mobile token
      * @param locale      the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> loginByToken(String login, String mobileToken, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> loginByToken(String login, String mobileToken, String locale);
 
     /**
      * Password reset boolean.
@@ -49,9 +48,8 @@ public interface SecurityDAO {
      * @param passwd               the passwd
      * @param byPassActivationCode the by pass activation code
      * @return the boolean
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<Boolean, QaobeeException, Integer> passwordReset(String reCaptchaChallenge, String id, String code, String passwd, boolean byPassActivationCode) throws QaobeeException;
+    Promise<Boolean, QaobeeException, Integer> passwordReset(String reCaptchaChallenge, String id, String code, String passwd, boolean byPassActivationCode);
 
     /**
      * Password renew check json object.
@@ -59,9 +57,8 @@ public interface SecurityDAO {
      * @param id   the id
      * @param code the code
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> passwordRenewCheck(String id, String code) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> passwordRenewCheck(String id, String code);
 
     /**
      * Password renew boolean.
@@ -69,18 +66,16 @@ public interface SecurityDAO {
      * @param login  the login
      * @param locale the locale
      * @return the boolean
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<Boolean, QaobeeException, Integer> passwordRenew(String login, String locale) throws QaobeeException;
+    Promise<Boolean, QaobeeException, Integer> passwordRenew(String login, String locale);
 
     /**
      * Logout boolean.
      *
      * @param token the token
      * @return the boolean
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<Boolean, QaobeeException, Integer> logout(String token) throws QaobeeException;
+    Promise<Boolean, QaobeeException, Integer> logout(String token);
 
     /**
      * Login json object.
@@ -92,8 +87,6 @@ public interface SecurityDAO {
      * @param deviceOS    the device os
      * @param locale      the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> login(String login, String password, String mobileToken, String pushId, String deviceOS, String locale) throws QaobeeException;
-
+    Promise<JsonObject, QaobeeException, Integer> login(String login, String password, String mobileToken, String pushId, String deviceOS, String locale);
 }
