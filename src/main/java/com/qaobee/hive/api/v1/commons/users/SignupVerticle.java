@@ -30,23 +30,21 @@ import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The Class SignupVerticle.
  *
  * @author Xavier MARIN <ul>     <li>resthandler.register : Register a new accunt</li>     <li>resthandler.logintest : Login unicity test for rest request</li>     <li>loginExists : Login unicity test for internal use</li>     <li>resthandler.accountcheck : email validation number check</li> </ul>
  */
-@DeployableVerticle(poolSize = 1)
+@DeployableVerticle
 public class SignupVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(SignupVerticle.class);
     /**
@@ -120,16 +118,18 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(LOGIN_EXISTS, this::existingLogin)
-                .registerHandler(LOGIN_TEST, this::loginTest)
-                .registerHandler(REGISTER, this::register)
-                .registerHandler(ACCOUNT_CHECK, this::accountCheck)
-                .registerHandler(FIRST_CONNECTION_CHECK, this::firstConnectionCheck)
-                .registerHandler(RESEND_MAIL, this::resendMail)
-                .registerHandler(FINALIZE_SIGNUP, this::finalizeSignup);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this.getClass().getName() + " started");
+        }
+        vertx.eventBus().consumer(LOGIN_EXISTS, this::existingLogin);
+        vertx.eventBus().consumer(LOGIN_TEST, this::loginTest);
+        vertx.eventBus().consumer(REGISTER, this::register);
+        vertx.eventBus().consumer(ACCOUNT_CHECK, this::accountCheck);
+        vertx.eventBus().consumer(FIRST_CONNECTION_CHECK, this::firstConnectionCheck);
+        vertx.eventBus().consumer(RESEND_MAIL, this::resendMail);
+        vertx.eventBus().consumer(FINALIZE_SIGNUP, this::finalizeSignup);
     }
+
     /**
      * @apiDescription Resend a register mail
      * @api {post} /api/1/commons/users/user/mailResend Resend a register mail
@@ -139,16 +139,14 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiGroup Object Status
      */
     @Rule(address = RESEND_MAIL, method = Constants.POST, mandatoryParams = {PARAM_LOGIN},
-            scope = Rule.Param.BODY)
+          scope = Rule.Param.BODY)
     private void resendMail(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            utils.sendStatus(signupDAO.resendMail(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale()), message);
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        signupDAO.resendMail(req.getBody().getString(PARAM_LOGIN), req.getLocale())
+                .done(r -> utils.sendStatus(r, message))
+                .fail(e -> utils.sendError(message, e));
     }
+
     /**
      * @apiDescription Finalizes signup
      * @api {get} /api/1/commons/users/signup/finalizesignup Account finalizes signup
@@ -163,35 +161,37 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      */
     @Rule(address = FINALIZE_SIGNUP, method = Constants.POST,
-            mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
-            scope = Rule.Param.BODY)
+          mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
+          scope = Rule.Param.BODY)
     private void finalizeSignup(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            final JsonObject body = new JsonObject(req.getBody());
-            JsonObject u = signupDAO.finalizeSignup(body.getObject(PARAM_USER),
-                    body.getString(PARAM_CODE),
-                    body.getString(PARAM_ACTIVITY),
-                    body.getObject(PARAM_STRUCTURE), 
-                    body.getObject(PARAM_CATEGORY_AGE),
-                    body.getString(COUNTRY_FIELD, "CNTR-250-FR-FRA"),
-                    req.getLocale());
-            signupDAO.sendRegisterMail(u, req.getLocale());
-            JsonObject notification = new JsonObject()
-                    .putString("id", u.getString("_id"))
-                    .putString("target", "User")
-                    .putObject("notification", new JsonObject()
-                            .putString("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), req.getLocale()))
-                            .putString("title", Messages.getString("notification.first.connection.title", req.getLocale()))
-                            .putString("senderId", runtime.getString("admin.id")
-                            )
-            );
-            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-            message.reply(u.encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        //        final JsonObject body = new JsonObject(req.getBody());
+        signupDAO.finalizeSignup(req.getBody().getJsonObject(PARAM_USER),
+                req.getBody().getString(PARAM_CODE),
+                req.getBody().getString(PARAM_ACTIVITY),
+                req.getBody().getJsonObject(PARAM_STRUCTURE),
+                req.getBody().getJsonObject(PARAM_CATEGORY_AGE),
+                req.getBody().getString(COUNTRY_FIELD, "CNTR-250-FR-FRA"),
+                req.getLocale())
+                .done(u -> {
+                    try {
+                        signupDAO.sendRegisterMail(u, req.getLocale());
+                        JsonObject notification = new JsonObject()
+                                .put("id", u.getString("_id"))
+                                .put("target", "User")
+                                .put("notification", new JsonObject()
+                                        .put("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), req.getLocale()))
+                                        .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
+                                        .put("senderId", runtime.getString("admin.id")
+                                        )
+                                );
+                        vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+                        message.reply(u.encode());
+                    } catch (final QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                        utils.sendError(message, e);
+                    }
+                }).fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -204,16 +204,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiGroup Signup API
      * @apiSuccess {Object} status {"status", true|false}
      */
-    @Rule(address = FIRST_CONNECTION_CHECK, method = Constants.GET, mandatoryParams = {PARAM_ID, PARAM_CODE}, scope = Rule.Param.REQUEST)
+    @Rule(address = FIRST_CONNECTION_CHECK, method = Constants.GET, mandatoryParams = {PARAM_ID, PARAM_CODE},
+          scope = Rule.Param.REQUEST)
     private void firstConnectionCheck(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            Map<String, List<String>> params = req.getParams();
-            message.reply(signupDAO.firstConnectionCheck(params.get(PARAM_ID).get(0), params.get(PARAM_CODE).get(0), req.getLocale()).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, signupDAO.firstConnectionCheck(req.getParams().get(PARAM_ID), req.getParams().get(PARAM_CODE), req.getLocale()));
     }
 
     /**
@@ -229,12 +224,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = ACCOUNT_CHECK, method = Constants.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
     private void accountCheck(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            utils.sendStatus(signupDAO.accountCheck(req.getParams().get("id").get(0), req.getParams().get("code").get(0)), message);
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendStatus(false, message);
-        }
+        signupDAO.accountCheck(req.getParams().get("id"), req.getParams().get("code")).done(r -> utils.sendStatus(r, message));
     }
 
     /**
@@ -252,15 +242,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = REGISTER, method = Constants.PUT)
     private void register(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            // Gets JSon request
-            final JsonObject json = new JsonObject(req.getBody());
-            JsonObject res = signupDAO.register(json.getString(PARAM_CAPTCHA), json, req.getLocale());
-            message.reply(res.encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, signupDAO.register(req.getBody().getString(PARAM_CAPTCHA), req.getBody(), req.getLocale()));
     }
 
     /**
@@ -275,9 +257,9 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = LOGIN_TEST, method = Constants.POST, mandatoryParams = PARAM_LOGIN, scope = Rule.Param.BODY)
     private void loginTest(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject body = new JsonObject(req.getBody());
-        utils.sendStatus(userDAO.existingLogin(body.getString(PARAM_LOGIN).toLowerCase()), message);
+        replyBoolean(message, userDAO.existingLogin(req.getBody().getString(PARAM_LOGIN).toLowerCase()));
     }
+
 
     /**
      * @apiDescription Test the existence of a username in the db
@@ -289,6 +271,6 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      */
     private void existingLogin(Message<JsonObject> message) {
-        utils.sendStatusJson(userDAO.existingLogin(message.body().getString(PARAM_LOGIN).toLowerCase()), message);
+        replyBooleanJ(message, userDAO.existingLogin(message.body().getString(PARAM_LOGIN).toLowerCase()));
     }
 }

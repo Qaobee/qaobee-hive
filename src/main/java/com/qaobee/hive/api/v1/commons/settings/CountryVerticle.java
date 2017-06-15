@@ -28,12 +28,11 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 
@@ -81,11 +80,12 @@ public class CountryVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(GET, this::get)
-                .registerHandler(GET_ALPHA2, this::getAlpha2)
-                .registerHandler(GET_LIST, this::getList);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this.getClass().getName() + " started");
+        }
+        vertx.eventBus().consumer(GET, this::get);
+        vertx.eventBus().consumer(GET_ALPHA2, this::getAlpha2);
+        vertx.eventBus().consumer(GET_LIST, this::getList);
     }
 
     /**
@@ -99,19 +99,14 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array} countries The list of countries found.
      */
     @Rule(address = GET_LIST, method = Constants.GET, mandatoryParams = PARAM_LOCAL,
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void getList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            String label = null;
-            if (req.getParams().containsKey(CountryVerticle.PARAM_LABEL) && StringUtils.isNotBlank(req.getParams().get(PARAM_LABEL).get(0))) {
-                label = req.getParams().get(PARAM_LABEL).get(0);
-            }
-            message.reply(countryDAO.getCountryList(req.getParams().get(PARAM_LOCAL).get(0), label).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
+        String label = null;
+        if (req.getParams().contains(CountryVerticle.PARAM_LABEL) && StringUtils.isNotBlank(req.getParams().get(PARAM_LABEL))) {
+            label = req.getParams().get(PARAM_LABEL);
         }
+        replyJsonArray(message, countryDAO.getCountryList(req.getParams().get(PARAM_LOCAL), label));
     }
 
     /**
@@ -125,20 +120,17 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} country The Country found.
      */
     @Rule(address = GET_ALPHA2, method = Constants.GET, mandatoryParams = PARAM_ALPHA2,
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void getAlpha2(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject country = countryDAO.getCountryFromAlpha2(req.getParams().get(PARAM_ALPHA2).get(0));
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        countryDAO.getCountryFromAlpha2(req.getParams().get(PARAM_ALPHA2)).done(country -> {
             if (country == null) {
-                throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                        "No Country defined for (" + req.getParams().get(PARAM_ALPHA2).get(0) + ")");
+                utils.sendError(message, new QaobeeException(ExceptionCodes.DATA_ERROR,
+                        "No Country defined for (" + req.getParams().get(PARAM_ALPHA2) + ")"));
+            } else {
+                message.reply(country.encode());
             }
-            message.reply(country.encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        }).fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -153,14 +145,9 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = GET, method = Constants.GET, mandatoryParams = PARAM_ID,
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(countryDAO.getCountry(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, countryDAO.getCountry(req.getParams().get(PARAM_ID)));
     }
 }

@@ -50,19 +50,16 @@ public class ActivityCfgDAOImpl implements ActivityCfgDAO {
     public Promise<JsonArray, QaobeeException, Integer> getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField) {
         Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
         // $MATCH section
-        JsonObject dbObjectParent = new JsonObject();
-        // - activityId
-        dbObjectParent.put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, activityId);
-        // - countryId
-        dbObjectParent.put(ActivityCfgVerticle.PARAM_COUNTRY_ID, countryId);
-        // - date between start and end dates
-        dbObjectParent.put("startDate", new JsonObject().put("$lte", dateRef));
-        dbObjectParent.put("endDate", new JsonObject().put("$gte", dateRef));
+        JsonObject dbObjectParent = new JsonObject()
+                .put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, activityId)
+                .put(ActivityCfgVerticle.PARAM_COUNTRY_ID, countryId)
+                .put("startDate", new JsonObject().put("$lte", dateRef))
+                .put("endDate", new JsonObject().put("$gte", dateRef));
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         // $PROJECT section
-        dbObjectParent = new JsonObject();
-        dbObjectParent.put("_id", 0);
-        dbObjectParent.put(paramField, 1);
+        dbObjectParent = new JsonObject()
+                .put("_id", 0)
+                .put(paramField, 1);
         JsonObject project = new JsonObject().put("$project", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
         JsonObject command = new JsonObject()

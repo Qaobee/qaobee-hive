@@ -24,24 +24,20 @@ import com.qaobee.hive.dao.ShippingDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 
 /**
  * The type Shipping verticle.
  */
-// Ugly hack because of a bug in Vert.X 2.x, must be in the main thread WTF!!
-// https://groups.google.com/forum/#!topic/vertx/KvtxhkA0wiM
-@DeployableVerticle(isWorker = false)
+@DeployableVerticle
 public class ShippingVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(ShippingVerticle.class);
     /**
@@ -52,10 +48,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
      * The constant WEB_HOOK.
      */
     public static final String WEB_HOOK = Module.VERSION + ".commons.users.shipping.webHook";
-    /**
-     * The constant PARAM_PLAN_ID.
-     */
-    public static final String PARAM_PLAN_ID = "planId";
 
     @Inject
     private ShippingDAO shippingDAO;
@@ -65,10 +57,11 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(WEB_HOOK, this::webHook)
-                .registerHandler(PAY, this::pay);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this.getClass().getName() + " started");
+        }
+        vertx.eventBus().consumer(WEB_HOOK, this::webHook);
+        vertx.eventBus().consumer(PAY, this::pay);
     }
 
     /**
@@ -84,14 +77,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = "data", scope = Rule.Param.BODY)
     private void pay(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            JsonObject body = new JsonObject(req.getBody());
-            JsonObject value = shippingDAO.pay(req.getUser(), body.getObject("data"), req.getLocale());
-            message.reply(value.encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, shippingDAO.pay(req.getUser(), req.getBody().getJsonObject("data"), req.getLocale()));
     }
 
     /**
@@ -105,12 +91,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     @Rule(address = WEB_HOOK, method = Constants.POST, mandatoryParams = {"id", "created"}, scope = Rule.Param.BODY)
     private void webHook(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            JsonObject body = new JsonObject(req.getBody());
-            utils.sendStatus(shippingDAO.webHook(body), message);
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        shippingDAO.webHook(req.getBody()).done(r->utils.sendStatus(r, message)).fail(e -> utils.sendError(message, e));
     }
 }

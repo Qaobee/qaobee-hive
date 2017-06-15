@@ -23,14 +23,13 @@ import com.qaobee.hive.dao.ActivityDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 
@@ -66,11 +65,12 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
     @Override
     public void start() {
         super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(GET, this::get)
-                .registerHandler(GET_LIST, this::getList)
-                .registerHandler(GET_LIST_ENABLE, this::getEnabled);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this.getClass().getName() + " started");
+        }
+        vertx.eventBus().consumer(GET, this::get);
+        vertx.eventBus().consumer(GET_LIST, this::getList);
+        vertx.eventBus().consumer(GET_LIST_ENABLE, this::getEnabled);
     }
 
     /**
@@ -83,8 +83,8 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array}   activities  List of enabled activities
      */
     @Rule(address = GET_LIST_ENABLE, method = Constants.GET)
-    private void getEnabled(Message message) {
-        message.reply(activityDAO.getEnabled().encode());
+    private void getEnabled(Message<String> message) {
+        activityDAO.getEnabled().done(activities->message.reply(activities.encode())).fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -97,8 +97,8 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array}   activities List all activity
      */
     @Rule(address = GET_LIST, method = Constants.GET)
-    private void getList(Message message) {
-        message.reply(activityDAO.getActivityList().encode());
+    private void getList(Message<String> message) {
+        activityDAO.getActivityList().done(activities->message.reply(activities.encode())).fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -113,12 +113,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET, method = Constants.GET, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(activityDAO.getActivity(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        activityDAO.getActivity(req.getParams().get(PARAM_ID)).done(activity->message.reply(activity.encode())).fail(e -> utils.sendError(message, e));
     }
 }

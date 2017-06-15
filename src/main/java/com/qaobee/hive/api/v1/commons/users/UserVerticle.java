@@ -20,20 +20,17 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.dao.SecurityDAO;
-import com.qaobee.hive.dao.SignupDAO;
 import com.qaobee.hive.dao.UserDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 
@@ -111,24 +108,23 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private UserDAO userDAO;
     @Inject
     private SecurityDAO securityDAO;
-    @Inject
-    private SignupDAO signupDAO;
 
     @Override
     public void start() {
         super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(LOGIN, this::login)
-                .registerHandler(LOGOUT, this::logout)
-                .registerHandler(PASSWD_RENEW, this::passwordRenew)
-                .registerHandler(PASSWD_RENEW_CHK, this::passwordRenewCheck)
-                .registerHandler(PASSWD_RESET, this::passwordReset)
-                .registerHandler(CURRENT, this::currentUser)
-                .registerHandler(META, this::getMeta)
-                .registerHandler(USER_INFO, this::userInfo)
-                .registerHandler(USER_BY_LOGIN, this::userByLogin)
-                .registerHandler(LOGIN_BY_TOKEN, this::loginByToken);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this.getClass().getName() + " started");
+        }
+        vertx.eventBus().consumer(LOGIN, this::login);
+        vertx.eventBus().consumer(LOGOUT, this::logout);
+        vertx.eventBus().consumer(PASSWD_RENEW, this::passwordRenew);
+        vertx.eventBus().consumer(PASSWD_RENEW_CHK, this::passwordRenewCheck);
+        vertx.eventBus().consumer(PASSWD_RESET, this::passwordReset);
+        vertx.eventBus().consumer(CURRENT, this::currentUser);
+        vertx.eventBus().consumer(META, this::getMeta);
+        vertx.eventBus().consumer(USER_INFO, this::userInfo);
+        vertx.eventBus().consumer(USER_BY_LOGIN, this::userByLogin);
+        vertx.eventBus().consumer(LOGIN_BY_TOKEN, this::loginByToken);
     }
 
     /**
@@ -141,16 +137,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiGroup User API
      */
     @Rule(address = LOGIN_BY_TOKEN, method = Constants.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN},
-            scope = Rule.Param.BODY)
+          scope = Rule.Param.BODY)
     private void loginByToken(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            JsonObject request = new JsonObject(req.getBody());
-            message.reply(securityDAO.loginByToken(request.getString(PARAM_LOGIN), request.getString(MOBILE_TOKEN), req.getLocale()).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, securityDAO.loginByToken(req.getBody().getString(PARAM_LOGIN), req.getBody().getString(MOBILE_TOKEN), req.getLocale()));
     }
 
     /**
@@ -163,15 +153,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      */
     @Rule(address = USER_BY_LOGIN, method = Constants.GET, logged = true, admin = true, mandatoryParams = PARAM_LOGIN,
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void userByLogin(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(userDAO.getUserByLogin(req.getParams().get("login").get(0)).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, userDAO.getUserByLogin(req.getParams().get("login")));
     }
 
     /**
@@ -184,15 +169,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      */
     @Rule(address = USER_INFO, method = Constants.GET, logged = true, mandatoryParams = "id",
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void userInfo(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(userDAO.getUserInfo(req.getParams().get("id").get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, userDAO.getUserInfo(req.getParams().get("id")));
     }
 
     /**
@@ -207,16 +187,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = META, method = Constants.GET, logged = true)
     private void getMeta(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            String sandBoxId = req.getUser().getSandboxDefault();
-            if (req.getParams().containsKey(SANDBOX_ID_FIELD) && !req.getParams().get(SANDBOX_ID_FIELD).isEmpty()) {
-                sandBoxId = req.getParams().get(SANDBOX_ID_FIELD).get(0);
-            }
-            message.reply(userDAO.getMeta(sandBoxId).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
+        String sandBoxId = req.getUser().getSandboxDefault();
+        if (req.getParams().contains(SANDBOX_ID_FIELD) && !req.getParams().get(SANDBOX_ID_FIELD).isEmpty()) {
+            sandBoxId = req.getParams().get(SANDBOX_ID_FIELD);
         }
+        replyJsonObject(message, userDAO.getMeta(sandBoxId));
     }
 
     /**
@@ -232,12 +207,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = CURRENT, method = Constants.GET, logged = true)
     private void currentUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(userDAO.getUserInfo(req.getUser().get_id()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, userDAO.getUserInfo(req.getUser().get_id()));
     }
 
     /**
@@ -251,16 +221,16 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = PASSWD_RESET, method = Constants.POST, mandatoryParams = {"id", "code", PASSWD_FIELD},
-            scope = Rule.Param.BODY)
+          scope = Rule.Param.BODY)
     private void passwordReset(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            final JsonObject body = new JsonObject(req.getBody());
-            utils.sendStatus(securityDAO.passwordReset(body.getString("captcha"), body.getString("id"), body.getString("code"), body.getString(PASSWD_FIELD), body.getBoolean("byPassActivationCode", false)), message);
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyBoolean(message, securityDAO.passwordReset(
+                req.getBody().getString("captcha"),
+                req.getBody().getString("id"),
+                req.getBody().getString("code"),
+                req.getBody().getString(PASSWD_FIELD),
+                req.getBody().getBoolean("byPassActivationCode", false)
+        ));
     }
 
     /**
@@ -274,22 +244,17 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
      */
     @Rule(address = PASSWD_RENEW_CHK, method = Constants.GET, mandatoryParams = {"id", "code"},
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void passwordRenewCheck(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            final String id = req.getParams().get("id").get(0);
-            final String code = req.getParams().get("code").get(0);
-            JsonObject jsonUser = securityDAO.passwordRenewCheck(id, code);
-            if (jsonUser == null) {
-                utils.sendStatus(false, message);
-            } else {
-                message.reply(jsonUser.encode());
-            }
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        securityDAO.passwordRenewCheck(req.getParams().get("id"), req.getParams().get("code"))
+                .done(jsonUser -> {
+                    if (jsonUser == null) {
+                        utils.sendStatus(false, message);
+                    } else {
+                        message.reply(jsonUser.encode());
+                    }
+                }).fail(e -> utils.sendStatus(false, message));
     }
 
     /**
@@ -304,13 +269,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = PASSWD_RENEW, method = Constants.POST, mandatoryParams = PARAM_LOGIN, scope = Rule.Param.BODY)
     private void passwordRenew(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            final JsonObject infos = new JsonObject(req.getBody());
-            utils.sendStatus(securityDAO.passwordRenew(infos.getString(PARAM_LOGIN), req.getLocale()), message);
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyBoolean(message, securityDAO.passwordRenew(req.getBody().getString(PARAM_LOGIN), req.getLocale()));
     }
 
     /**
@@ -323,15 +282,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      */
     @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = Constants.TOKEN,
-            scope = Rule.Param.HEADER)
+          scope = Rule.Param.HEADER)
     private void logout(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            utils.sendStatus(securityDAO.logout(req.getHeaders().get("token").get(0)), message);
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyBoolean(message, securityDAO.logout(req.getHeaders().get("token")));
     }
 
     /**
@@ -352,17 +306,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = LOGIN, method = Constants.POST)
     private void login(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            final JsonObject infos = new JsonObject(req.getBody());
-            message.reply(securityDAO.login(infos.getString(PARAM_LOGIN),
-                    infos.getString(PARAM_PWD),
-                    infos.getString(MOBILE_TOKEN),
-                    infos.getString(PARAM_PUSH_ID),
-                    infos.getString(PARAM_OS),
-                    req.getLocale()).toString());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, securityDAO.login(req.getBody().getString(PARAM_LOGIN),
+                req.getBody().getString(PARAM_PWD),
+                req.getBody().getString(MOBILE_TOKEN),
+                req.getBody().getString(PARAM_PUSH_ID),
+                req.getBody().getString(PARAM_OS),
+                req.getLocale()));
     }
 }

@@ -25,10 +25,10 @@ import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
 
@@ -57,13 +57,15 @@ public class AssetVerticle extends AbstractGuiceVerticle {
     private Utils utils;
     @Inject
     private AssetDAO assetDAO;
+
     @Override
     public void start() {
         super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(ADD, this::addAsset)
-                .registerHandler(GET, this::getAssetHandler);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this.getClass().getName() + " started");
+        }
+        vertx.eventBus().consumer(ADD, this::addAsset);
+        vertx.eventBus().consumer(GET, this::getAssetHandler);
     }
 
     /**
@@ -73,17 +75,17 @@ public class AssetVerticle extends AbstractGuiceVerticle {
      *  id
      *  collection
      *  }</pre>
-     *  </p>
+     * </p>
      */
-    private void getAssetHandler(Message<JsonObject> message) { 
+    private void getAssetHandler(Message<JsonObject> message) {
         JsonObject resp = new JsonObject();
         try {
-            utils.testMandatoryParams(message.body().toMap(), COLLECTION_FIELD, "id");
-            message.reply(assetDAO.getAsset(message.body().getString(COLLECTION_FIELD), message.body().getString("id")));
+            utils.testMandatoryParams(message.body(), COLLECTION_FIELD, "id");
+            replyJsonObjectJ(message, assetDAO.getAsset(message.body().getString(COLLECTION_FIELD), message.body().getString("id")));
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
-            resp.putNumber(Constants.STATUS_CODE, e.getCode().getCode())
-                    .putString(Constants.MESSAGE, e.getMessage());
+            resp.put(Constants.STATUS_CODE, e.getCode().getCode())
+                    .put(Constants.MESSAGE, e.getMessage());
             message.reply(resp);
         }
     }
@@ -99,12 +101,12 @@ public class AssetVerticle extends AbstractGuiceVerticle {
      *  field
      *  contentType
      *  }</pre>
-     *  </p>
+     * </p>
      */
     private void addAsset(Message<JsonObject> message) {
         try {
-            utils.testMandatoryParams(message.body().toMap(), UID_FIELD, Constants.TOKEN, FILENAME_FIELD, COLLECTION_FIELD, "field", CONTENT_TYPE, "locale");
-            message.reply(assetDAO.addAsset(
+            utils.testMandatoryParams(message.body(), UID_FIELD, Constants.TOKEN, FILENAME_FIELD, COLLECTION_FIELD, "field", CONTENT_TYPE, "locale");
+            replyJsonObjectJ(message, assetDAO.addAsset(
                     message.body().getString(UID_FIELD),
                     message.body().getString(Constants.TOKEN),
                     message.body().getString(FILENAME_FIELD),
@@ -113,10 +115,10 @@ public class AssetVerticle extends AbstractGuiceVerticle {
                     message.body().getString(CONTENT_TYPE),
                     message.body().getString("locale")
             ));
-        }  catch (QaobeeException e) {
+        } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
-            if (vertx.fileSystem().existsSync(message.body().getString(FILENAME_FIELD))) {
-                vertx.fileSystem().deleteSync(message.body().getString(FILENAME_FIELD));
+            if (vertx.fileSystem().existsBlocking(message.body().getString(FILENAME_FIELD))) {
+                vertx.fileSystem().deleteBlocking(message.body().getString(FILENAME_FIELD));
             }
             utils.sendErrorJ(message, e);
         }

@@ -23,15 +23,12 @@ import com.qaobee.hive.dao.SeasonDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 
@@ -69,17 +66,16 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
     public static final String PARAM_COUNTRY_ID = "countryId";
     @Inject
     private SeasonDAO seasonDAO;
-    @Inject
-    private Utils utils;
 
     @Override
     public void start() {
         super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(GET, this::getSeason)
-                .registerHandler(GET_LIST_BY_ACTIVITY, this::getListByActivity)
-                .registerHandler(GET_CURRENT, this::getCurrentSeason);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this.getClass().getName() + " started");
+        }
+        vertx.eventBus().consumer(GET, this::getSeason);
+        vertx.eventBus().consumer(GET_LIST_BY_ACTIVITY, this::getListByActivity);
+        vertx.eventBus().consumer(GET_CURRENT, this::getCurrentSeason);
     }
 
     /**
@@ -94,17 +90,11 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
     @Rule(address = GET_CURRENT, method = Constants.GET, logged = true,
-            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
-            scope = Rule.Param.REQUEST)
+          mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
+          scope = Rule.Param.REQUEST)
     private void getCurrentSeason(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            JsonObject s = seasonDAO.getCurrentSeason(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getParams().get(PARAM_COUNTRY_ID).get(0));
-            message.reply(s.encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, seasonDAO.getCurrentSeason(req.getParams().get(PARAM_ACTIVITY_ID), req.getParams().get(PARAM_COUNTRY_ID)));
     }
 
     /**
@@ -119,16 +109,11 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
     @Rule(address = GET_LIST_BY_ACTIVITY, method = Constants.GET, logged = true,
-            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
-            scope = Rule.Param.REQUEST)
+          mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
+          scope = Rule.Param.REQUEST)
     private void getListByActivity(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(seasonDAO.getListByActivity(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getParams().get(PARAM_COUNTRY_ID).get(0)).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonArray(message, seasonDAO.getListByActivity(req.getParams().get(PARAM_ACTIVITY_ID), req.getParams().get(PARAM_COUNTRY_ID)));
     }
 
     /**
@@ -142,15 +127,9 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} the object found
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void getSeason(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(seasonDAO.getSeason(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, seasonDAO.getSeason(req.getParams().get(PARAM_ID)));
     }
-
 }

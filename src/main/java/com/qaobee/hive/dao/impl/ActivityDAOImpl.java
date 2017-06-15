@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * The type Activity dao.
  */
-public class ActivityDAOImpl implements ActivityDAO{
+public class ActivityDAOImpl implements ActivityDAO {
 
     @Inject
     private MongoDB mongo;
@@ -45,13 +45,14 @@ public class ActivityDAOImpl implements ActivityDAO{
         criterias.put("enable", true);
         return mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.ACTIVITY);
     }
+
     @Override
     public Promise<JsonArray, QaobeeException, Integer> getActivityList() {
         return mongo.findByCriterias(null, null, null, -1, -1, DBCollections.ACTIVITY);
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getActivity(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getActivity(String id) {
         return mongo.getById(id, DBCollections.ACTIVITY);
     }
 }

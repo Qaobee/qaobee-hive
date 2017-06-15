@@ -25,7 +25,6 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.AsyncResult;
@@ -86,14 +85,14 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     private static final String SENDER_ID = "senderId";
 
     @Inject
-    private Utils utils;
-    @Inject
     private NotificationsDAO notificationsDAO;
 
     @Override
     public void start() {
         super.start();
-        LOG.debug(this.getClass().getName() + " started");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(this.getClass().getName() + " started");
+        }
         vertx.eventBus().consumer(LIST, this::notificationList);
         vertx.eventBus().consumer(DEL, this::delete);
         vertx.eventBus().consumer(READ, this::markAsRead);
@@ -117,8 +116,8 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * </pre></p>
      */
     @Rule(address = ADD_TO_SANDBOX, method = Constants.POST, logged = true,
-            mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
-            scope = Rule.Param.BODY)
+          mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
+          scope = Rule.Param.BODY)
     private void addNotificationToSandBox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = req.getBody();
@@ -145,8 +144,8 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * </pre></p>
      */
     @Rule(address = ADD_TO_USER, method = Constants.POST, logged = true,
-            mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
-            scope = Rule.Param.BODY)
+          mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
+          scope = Rule.Param.BODY)
     private void addNotificationToUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = req.getBody();
@@ -166,10 +165,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
                     message.body().getJsonObject(NOTIFICATION).getJsonArray("exclude")
             )
                     .done(r -> utils.sendStatusJson(r, message))
-                    .fail(e -> {
-                        LOG.error(e.getMessage(), e);
-                        utils.sendStatusJson(false, message);
-                    });
+                    .fail(e -> utils.sendStatusJson(false, message));
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendStatusJson(false, message);
@@ -186,13 +182,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = PARAM_NOTIF_ID, scope = Rule.Param.REQUEST)
+    @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = PARAM_NOTIF_ID,
+          scope = Rule.Param.REQUEST)
     private void markAsRead(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        notificationsDAO.markAsRead(req.getParams().get(PARAM_NOTIF_ID)).done(r -> utils.sendStatus(true, message)).fail(e -> {
-            LOG.error(e.getMessage(), e);
-            utils.sendStatus(false, message);
-        });
+        replyStatus(message, notificationsDAO.markAsRead(req.getParams().get(PARAM_NOTIF_ID)));
     }
 
     /**
@@ -205,13 +199,11 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = PARAM_NOTIF_ID, scope = Rule.Param.REQUEST)
+    @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = PARAM_NOTIF_ID,
+          scope = Rule.Param.REQUEST)
     private void delete(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        notificationsDAO.delete(req.getParams().get(PARAM_NOTIF_ID)).done(r -> utils.sendStatus(true, message)).fail(e -> {
-            LOG.error(e.getMessage(), e);
-            utils.sendStatus(false, message);
-        });
+        replyStatus(message, notificationsDAO.delete(req.getParams().get(PARAM_NOTIF_ID)));
     }
 
     /**
@@ -237,9 +229,6 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         if (req.getParams() != null && req.getParams().contains(PARAM_LIMIT)) {
             limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT));
         }
-        notificationsDAO.getList(req.getUser().get_id(), start, limit).done(r -> message.reply(r.encode())).fail(e -> {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        });
+        replyJsonArray(message, notificationsDAO.getList(req.getUser().get_id(), start, limit));
     }
 }
