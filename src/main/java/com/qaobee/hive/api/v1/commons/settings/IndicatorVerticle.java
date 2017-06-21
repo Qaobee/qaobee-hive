@@ -28,6 +28,7 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,8 +108,9 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void getIndicatorByCode(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, indicatorDAO.getIndicatorByCode(req.getBody().getString(PARAM_ACTIVITY_ID),
-                req.getBody().getString(PARAM_COUNTRY_ID), req.getBody().getJsonArray(PARAM_INDICATOR_CODE)));
+        JsonObject body = new JsonObject(req.getBody());
+        replyJsonArray(message, indicatorDAO.getIndicatorByCode(body.getString(PARAM_ACTIVITY_ID),
+                body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_INDICATOR_CODE)));
     }
 
     /**
@@ -129,8 +131,9 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void getIndicatorsList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, indicatorDAO.getIndicatorsList(req.getBody().getString(PARAM_ACTIVITY_ID),
-                req.getBody().getString(PARAM_COUNTRY_ID), req.getBody().getJsonArray(PARAM_SCREEN)));
+        JsonObject body = new JsonObject(req.getBody());
+        replyJsonArray(message, indicatorDAO.getIndicatorsList(body.getString(PARAM_ACTIVITY_ID),
+                body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_SCREEN)));
     }
 
     /**

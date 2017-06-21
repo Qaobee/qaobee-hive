@@ -63,7 +63,7 @@ public class CountryDAOImpl implements CountryDAO {
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getCountryList(String locale, String label) throws QaobeeException {
+    public Promise<JsonArray, QaobeeException, Integer> getCountryList(String locale, String label) {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(CountryVerticle.PARAM_LOCAL, locale);
         // label
@@ -74,7 +74,7 @@ public class CountryDAOImpl implements CountryDAO {
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getCountry(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getCountry(String id) {
         return mongo.getById(id, DBCollections.COUNTRY);
     }
 

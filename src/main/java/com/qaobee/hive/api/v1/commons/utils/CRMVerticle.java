@@ -3,10 +3,10 @@ package com.qaobee.hive.api.v1.commons.utils;
 import com.qaobee.hive.dao.CRMDao;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
 
@@ -31,8 +31,8 @@ public class CRMVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().registerHandler(REGISTER, this::register);
-        vertx.eventBus().registerHandler(UPDATE, this::update);
+        vertx.eventBus().consumer(REGISTER, this::register);
+        vertx.eventBus().consumer(UPDATE, this::update);
     }
 
     private void update(Message<JsonObject> message) {

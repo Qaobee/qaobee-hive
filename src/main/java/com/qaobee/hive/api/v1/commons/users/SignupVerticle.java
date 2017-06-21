@@ -142,7 +142,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void resendMail(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        signupDAO.resendMail(req.getBody().getString(PARAM_LOGIN), req.getLocale())
+        signupDAO.resendMail(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale())
                 .done(r -> utils.sendStatus(r, message))
                 .fail(e -> utils.sendError(message, e));
     }
@@ -165,13 +165,13 @@ public class SignupVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void finalizeSignup(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        //        final JsonObject body = new JsonObject(req.getBody());
-        signupDAO.finalizeSignup(req.getBody().getJsonObject(PARAM_USER),
-                req.getBody().getString(PARAM_CODE),
-                req.getBody().getString(PARAM_ACTIVITY),
-                req.getBody().getJsonObject(PARAM_STRUCTURE),
-                req.getBody().getJsonObject(PARAM_CATEGORY_AGE),
-                req.getBody().getString(COUNTRY_FIELD, "CNTR-250-FR-FRA"),
+        final JsonObject body = new JsonObject(req.getBody());
+        signupDAO.finalizeSignup(body.getJsonObject(PARAM_USER),
+                body.getString(PARAM_CODE),
+                body.getString(PARAM_ACTIVITY),
+                body.getJsonObject(PARAM_STRUCTURE),
+                body.getJsonObject(PARAM_CATEGORY_AGE),
+                body.getString(COUNTRY_FIELD, "CNTR-250-FR-FRA"),
                 req.getLocale())
                 .done(u -> {
                     try {
@@ -242,7 +242,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = REGISTER, method = Constants.PUT)
     private void register(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, signupDAO.register(req.getBody().getString(PARAM_CAPTCHA), req.getBody(), req.getLocale()));
+        JsonObject body = new JsonObject(req.getBody());
+        replyJsonObject(message, signupDAO.register(body.getString(PARAM_CAPTCHA), body, req.getLocale()));
     }
 
     /**
@@ -257,7 +258,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = LOGIN_TEST, method = Constants.POST, mandatoryParams = PARAM_LOGIN, scope = Rule.Param.BODY)
     private void loginTest(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyBoolean(message, userDAO.existingLogin(req.getBody().getString(PARAM_LOGIN).toLowerCase()));
+        replyBoolean(message, userDAO.existingLogin(new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase()));
     }
 
 

@@ -110,7 +110,7 @@ public class SignupDAOImpl implements SignupDAO {
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject struct, JsonObject categoryAge, String countryId, String locale) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject struct, JsonObject categoryAge, String countryId, String locale) {
 
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         // Converts jSon to Bean (extra parameters are ignored)
@@ -214,9 +214,7 @@ public class SignupDAOImpl implements SignupDAO {
                                                 team.setLabel("Mon équipe");
                                                 team.setEnable(true);
                                                 team.setAdversary(false);
-                                                mongo.upsert(team).done(teamId -> {
-                                                    deferred.resolve(new JsonObject(Json.encode(user)));
-                                                }).fail(deferred::reject);
+                                                mongo.upsert(team).done(teamId -> deferred.resolve(new JsonObject(Json.encode(user)))).fail(deferred::reject);
                                             }).fail(deferred::reject);
                                         }).fail(deferred::reject);
                                     }).fail(deferred::reject);

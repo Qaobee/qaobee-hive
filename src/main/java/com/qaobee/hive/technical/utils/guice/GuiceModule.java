@@ -29,8 +29,6 @@ import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.guice.services.Files;
-import com.qaobee.hive.technical.utils.guice.services.impl.FilesImpl;
 import com.qaobee.hive.technical.utils.impl.HabilitUtilsImpl;
 import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
 import com.qaobee.hive.technical.utils.impl.UtilsImpl;
@@ -81,7 +79,6 @@ public class GuiceModule extends AbstractModule {
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
-        bind(Files.class).to(FilesImpl.class).in(Singleton.class);
         // BUSINESS MODULES
         Configuration cfgMails = new Configuration(new Version("2.3.23"));
         // Where do we load the templates from:

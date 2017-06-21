@@ -98,7 +98,7 @@ public class TeamDAOImpl implements TeamDAO {
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> addTeam(JsonObject team, String userId, String locale) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> addTeam(JsonObject team, String userId, String locale) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         mongo.upsert(team, DBCollections.TEAM).done(id -> {
             team.put("_id", id);

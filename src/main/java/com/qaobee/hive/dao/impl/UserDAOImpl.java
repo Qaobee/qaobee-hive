@@ -266,15 +266,10 @@ public class UserDAOImpl implements UserDAO {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         sandBoxDAO.getSandboxById(sandboxId)
                 .done(meta -> {
-                    try {
-                        meta.put("season", seasonDAO.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id")));
-                        meta.put("teams", teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null));
-                        meta.put("activity", activityDAO.getActivity(meta.getString("activityId")));
-                        deferred.resolve(meta);
-                    } catch (QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                        deferred.reject(e);
-                    }
+                    meta.put("season", seasonDAO.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id")));
+                    meta.put("teams", teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null));
+                    meta.put("activity", activityDAO.getActivity(meta.getString("activityId")));
+                    deferred.resolve(meta);
                 })
                 .fail(deferred::reject);
         return deferred.promise();

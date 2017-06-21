@@ -27,6 +27,7 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,7 +147,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                   PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void updateChampionship(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyString(message, championshipDAO.updateChampionship(req.getBody()));
+        replyString(message, championshipDAO.updateChampionship(new JsonObject(req.getBody())));
     }
 
 
@@ -175,7 +176,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
                   PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void addChampionship(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, championshipDAO.addChampionship(req.getBody()));
+        replyJsonObject(message, championshipDAO.addChampionship(new JsonObject(req.getBody())));
     }
 
     /**
@@ -210,6 +211,6 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
           mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
     private void getListChampionships(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, championshipDAO.getListChampionships(req.getBody()));
+        replyJsonArray(message, championshipDAO.getListChampionships(new JsonObject(req.getBody())));
     }
 }

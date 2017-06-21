@@ -29,11 +29,11 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
@@ -60,10 +60,9 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(POST_FEEDBACK, this::postFeedback)
-                .registerHandler(POST_FEEDBACK_MOB, this::postFeedbackMob)
-                .registerHandler(INTERNAL_FEEDBACK, this::internalFeeback);
+        vertx.eventBus().consumer(POST_FEEDBACK, this::postFeedback);
+        vertx.eventBus().consumer(POST_FEEDBACK_MOB, this::postFeedbackMob);
+        vertx.eventBus().consumer(INTERNAL_FEEDBACK, this::internalFeeback);
     }
 
     private void internalFeeback(Message<JsonObject> message) {

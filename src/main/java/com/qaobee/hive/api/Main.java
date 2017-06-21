@@ -254,7 +254,7 @@ public class Main extends AbstractGuiceVerticle {
 
     private void handleAPIRequest(RoutingContext routingContext) {
         final RequestWrapper wrapper = new RequestWrapper();
-        wrapper.setBody(routingContext.getBodyAsJson());
+        wrapper.setBody(routingContext.getBodyAsString());
         wrapper.setMethod(routingContext.request().rawMethod());
         wrapper.setHeaders(routingContext.request().headers());
         wrapper.setParams(routingContext.request().params());
@@ -425,7 +425,7 @@ public class Main extends AbstractGuiceVerticle {
     private void testParameters(Rule rule, RequestWrapper wrapper) throws QaobeeException {
         switch (rule.scope()) {
             case BODY:
-                utils.testMandatoryParams(wrapper.getBody(), rule.mandatoryParams());
+                utils.testMandatoryParams(new JsonObject(wrapper.getBody()), rule.mandatoryParams());
                 break;
             case REQUEST:
                 utils.testMandatoryParams(wrapper.getParams(), rule.mandatoryParams());

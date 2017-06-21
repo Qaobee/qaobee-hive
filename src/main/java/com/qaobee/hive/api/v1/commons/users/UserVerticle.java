@@ -29,6 +29,7 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,7 +141,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void loginByToken(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, securityDAO.loginByToken(req.getBody().getString(PARAM_LOGIN), req.getBody().getString(MOBILE_TOKEN), req.getLocale()));
+        JsonObject body = new JsonObject(req.getBody());
+        replyJsonObject(message, securityDAO.loginByToken(body.getString(PARAM_LOGIN), body.getString(MOBILE_TOKEN), req.getLocale()));
     }
 
     /**
@@ -224,12 +226,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void passwordReset(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject body = new JsonObject(req.getBody());
         replyBoolean(message, securityDAO.passwordReset(
-                req.getBody().getString("captcha"),
-                req.getBody().getString("id"),
-                req.getBody().getString("code"),
-                req.getBody().getString(PASSWD_FIELD),
-                req.getBody().getBoolean("byPassActivationCode", false)
+                body.getString("captcha"),
+                body.getString("id"),
+                body.getString("code"),
+                body.getString(PASSWD_FIELD),
+                body.getBoolean("byPassActivationCode", false)
         ));
     }
 
@@ -269,7 +272,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = PASSWD_RENEW, method = Constants.POST, mandatoryParams = PARAM_LOGIN, scope = Rule.Param.BODY)
     private void passwordRenew(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyBoolean(message, securityDAO.passwordRenew(req.getBody().getString(PARAM_LOGIN), req.getLocale()));
+        replyBoolean(message, securityDAO.passwordRenew(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale()));
     }
 
     /**
@@ -306,11 +309,12 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = LOGIN, method = Constants.POST)
     private void login(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, securityDAO.login(req.getBody().getString(PARAM_LOGIN),
-                req.getBody().getString(PARAM_PWD),
-                req.getBody().getString(MOBILE_TOKEN),
-                req.getBody().getString(PARAM_PUSH_ID),
-                req.getBody().getString(PARAM_OS),
+        JsonObject body = new JsonObject(req.getBody());
+        replyJsonObject(message, securityDAO.login(body.getString(PARAM_LOGIN),
+                body.getString(PARAM_PWD),
+                body.getString(MOBILE_TOKEN),
+                body.getString(PARAM_PUSH_ID),
+                body.getString(PARAM_OS),
                 req.getLocale()));
     }
 }

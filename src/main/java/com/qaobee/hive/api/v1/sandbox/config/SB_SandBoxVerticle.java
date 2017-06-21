@@ -24,19 +24,17 @@ import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.DecodeException;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 
 /**
  * The type Sand box cfg verticle.
@@ -85,11 +83,10 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(GET_BY_OWNER, this::getByOwner)
-                .registerHandler(GET_LIST_BY_OWNER, this::getListByOwner)
-                .registerHandler(GET_BY_ID, this::getSandboxById)
-                .registerHandler(UPDATE, this::update);
+        vertx.eventBus().consumer(GET_BY_OWNER, this::getByOwner);
+        vertx.eventBus().consumer(GET_LIST_BY_OWNER, this::getListByOwner);
+        vertx.eventBus().consumer(GET_BY_ID, this::getSandboxById);
+        vertx.eventBus().consumer(UPDATE, this::update);
     }
 
     /**
@@ -104,15 +101,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_BY_ID, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getSandboxById(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(sandBoxDAO.getSandboxById(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        } catch (DecodeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e));
-        }
+        replyJsonObject(message, sandBoxDAO.getSandboxById(req.getParams().get(PARAM_ID)));
     }
 
     /**
@@ -126,13 +115,8 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = GET_LIST_BY_OWNER, method = Constants.GET, logged = true)
     private void getListByOwner(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(sandBoxDAO.getListByOwner(req.getParams().get(PARAM_OWNER_ID), req.getUser().get_id()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonArray(message, sandBoxDAO.getListByOwner(Arrays.asList(req.getParams().get(PARAM_OWNER_ID).split(",")), req.getUser().get_id()));
     }
 
     /**
@@ -147,13 +131,8 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_BY_OWNER, method = Constants.GET, logged = true, mandatoryParams = PARAM_ACTIVITY_ID,
           scope = Rule.Param.REQUEST)
     private void getByOwner(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(sandBoxDAO.getByOwner(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getUser().get_id()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, sandBoxDAO.getByOwner(req.getParams().get(PARAM_ACTIVITY_ID), req.getUser().get_id()));
     }
 
     /**
@@ -171,6 +150,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
           scope = Rule.Param.BODY)
     private void update(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        message.reply(sandBoxDAO.updateSandbox(new JsonObject(req.getBody())).encode());
+        replyJsonObject(message, sandBoxDAO.updateSandbox(new JsonObject(req.getBody())));
     }
 }

@@ -120,7 +120,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void addNotificationToSandBox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject notification = req.getBody();
+        JsonObject notification = new JsonObject(req.getBody());
         vertx.eventBus().send(NOTIFY, new JsonObject()
                         .put("id", notification.getString(TARGET_ID))
                         .put(TARGET, "SB_SandBox")
@@ -148,7 +148,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void addNotificationToUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject notification = req.getBody();
+        JsonObject notification = new JsonObject(req.getBody());
         vertx.eventBus().send(NOTIFY, new JsonObject()
                 .put("id", notification.getString(TARGET_ID))
                 .put(TARGET, "User")

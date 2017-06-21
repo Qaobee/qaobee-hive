@@ -28,6 +28,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 import java.io.File;
 import java.io.IOException;
@@ -162,7 +163,7 @@ public interface Utils {
      * @return the User
      * @throws QaobeeException the qaobee exception
      */
-    User isUserLogged(RequestWrapper request) throws QaobeeException;
+    Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request) throws QaobeeException;
 
     /**
      * Is admin.
@@ -171,5 +172,5 @@ public interface Utils {
      * @return the boolean
      * @throws QaobeeException the qaobee exception
      */
-    User isLoggedAndAdmin(RequestWrapper request) throws QaobeeException;
+    Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request) throws QaobeeException;
 }

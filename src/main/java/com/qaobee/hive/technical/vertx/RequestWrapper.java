@@ -21,7 +21,6 @@ package com.qaobee.hive.technical.vertx;
 import com.qaobee.hive.business.model.commons.users.User;
 import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.MultiMap;
-import io.vertx.core.json.JsonObject;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class RequestWrapper {
     private List<String> path;
     private MultiMap headers;
     private MultiMap params;
-    private JsonObject body;
+    private String body;
     private String method;
     private String locale;
     private User user;
@@ -45,7 +44,7 @@ public class RequestWrapper {
      *
      * @return the body
      */
-    public JsonObject getBody() {
+    public String getBody() {
         return body;
     }
 
@@ -54,7 +53,7 @@ public class RequestWrapper {
      *
      * @param body the new body
      */
-    public void setBody(final @Nullable JsonObject body) {
+    public void setBody(final @Nullable String body) {
         this.body = body;
     }
 

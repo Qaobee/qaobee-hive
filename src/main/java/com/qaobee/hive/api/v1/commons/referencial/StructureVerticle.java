@@ -23,11 +23,11 @@ import com.qaobee.hive.dao.StructureDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,8 +87,6 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     public static final String PARAM_ADDRESS = "address";
     private static final Logger LOG = LoggerFactory.getLogger(StructureVerticle.class);
     @Inject
-    private Utils utils;
-    @Inject
     private StructureDAO structureDAO;
 
     @Override
@@ -126,7 +124,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void updateStructure(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyString(message, structureDAO.update(req.getBody()));
+        replyString(message, structureDAO.update(new JsonObject(req.getBody())));
     }
 
     /**
@@ -144,7 +142,8 @@ public class StructureVerticle extends AbstractGuiceVerticle {
           mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY)
     private void getListOfStructures(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, structureDAO.getListOfStructures(req.getBody().getString(PARAM_ACTIVITY), req.getBody().getJsonObject(PARAM_ADDRESS)));
+        JsonObject body = new JsonObject(req.getBody());
+        replyJsonArray(message, structureDAO.getListOfStructures(body.getString(PARAM_ACTIVITY), body.getJsonObject(PARAM_ADDRESS)));
     }
 
     /**
@@ -187,6 +186,6 @@ public class StructureVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.BODY)
     private void addStructure(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, structureDAO.addStructure(req.getBody()));
+        replyJsonObject(message, structureDAO.addStructure(new JsonObject(req.getBody())));
     }
 }

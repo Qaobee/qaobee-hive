@@ -24,10 +24,10 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
 
@@ -72,13 +72,13 @@ public class PDFVerticle extends AbstractGuiceVerticle {
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().registerHandler(GENERATE_PDF, this::generatePDF);
+        vertx.eventBus().consumer(GENERATE_PDF, this::generatePDF);
     }
 
     private void generatePDF(Message<JsonObject> message) {
         try {
-            utils.testMandatoryParams(message.body().toMap(), DATA, TEMPLATE, FILE_NAME);
-            message.reply(pdfDAO.generatePDF(message.body().getObject(DATA), message.body().getString(TEMPLATE), message.body().getString(FILE_NAME)));
+            utils.testMandatoryParams(message.body(), DATA, TEMPLATE, FILE_NAME);
+            message.reply(pdfDAO.generatePDF(message.body().getJsonObject(DATA), message.body().getString(TEMPLATE), message.body().getString(FILE_NAME)));
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendErrorJ(message,e );

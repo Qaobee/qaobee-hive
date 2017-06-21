@@ -24,15 +24,13 @@ import com.qaobee.hive.dao.TeamDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 
@@ -83,19 +81,16 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String PARAM_LINK_TEAM_ID = "linkTeamId";
     @Inject
-    private Utils utils;
-    @Inject
     private TeamDAO teamDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(ADD, this::addTeam)
-                .registerHandler(UPDATE, this::updateTeam)
-                .registerHandler(GET, this::getTeam)
-                .registerHandler(GET_LIST, this::getTeamList);
+        vertx.eventBus().consumer(ADD, this::addTeam);
+        vertx.eventBus().consumer(UPDATE, this::updateTeam);
+        vertx.eventBus().consumer(GET, this::getTeam);
+        vertx.eventBus().consumer(GET_LIST, this::getTeamList);
     }
 
     /**
@@ -114,15 +109,16 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
     private void getTeamList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         String link = null;
-        if (req.getParams().get(PARAM_LINK_TEAM_ID) != null && !"".equals(req.getParams().get(PARAM_LINK_TEAM_ID).get(0).trim())) {
-            link = req.getParams().get(PARAM_LINK_TEAM_ID).get(0);
+        if (req.getParams().get(PARAM_LINK_TEAM_ID) != null && !"".equals(req.getParams().get(PARAM_LINK_TEAM_ID).trim())) {
+            link = req.getParams().get(PARAM_LINK_TEAM_ID);
         }
-        message.reply(teamDAO.getTeamList(
-                req.getParams().get(PARAM_SANDBOX_ID).get(0),
-                req.getParams().get(PARAM_EFFECTIVE_ID).get(0),
-                req.getParams().get(PARAM_ADVERSARY).get(0),
-                req.getParams().get(PARAM_ENABLE).get(0),
-                link).encode()
+        replyJsonArray(message,
+                teamDAO.getTeamList(
+                        req.getParams().get(PARAM_SANDBOX_ID),
+                        req.getParams().get(PARAM_EFFECTIVE_ID),
+                        req.getParams().get(PARAM_ADVERSARY),
+                        req.getParams().get(PARAM_ENABLE),
+                        link)
         );
     }
 
@@ -138,13 +134,8 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getTeam(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(teamDAO.getTeam(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, teamDAO.getTeam(req.getParams().get(PARAM_ID)));
     }
 
     /**
@@ -160,7 +151,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = UPDATE, method = Constants.PUT, logged = true)
     private void updateTeam(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        message.reply(teamDAO.updateTeam(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
+        replyJsonObject(message, teamDAO.updateTeam(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
     }
 
     /**
@@ -174,12 +165,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = ADD, method = Constants.POST, logged = true)
     private void addTeam(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(teamDAO.addTeam(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, teamDAO.addTeam(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
     }
 }

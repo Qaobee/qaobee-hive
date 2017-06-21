@@ -239,7 +239,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         }
         JsonObject sort = new JsonObject().put("$sort", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match).add(group).add(sort);
-        if(limit > 0) {
+        if (limit > 0) {
             pipelineAggregation.add(new JsonObject().put("$limit", limit));
         }
         return mongo.aggregate("_id", pipelineAggregation, DBCollections.STATS);

@@ -101,7 +101,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = "_id", scope = Rule.Param.BODY)
     private void updateUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, userDAO.updateUser(req.getBody()));
+        replyJsonObject(message, userDAO.updateUser(new JsonObject(req.getBody())));
     }
 
     private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {

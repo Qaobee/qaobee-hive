@@ -47,7 +47,7 @@ public class CollectDAOImpl implements CollectDAO {
     private NotificationsDAO notificationsDAO;
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> get(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> get(String id) {
         return mongo.getById(id, DBCollections.COLLECT);
     }
 
@@ -70,7 +70,7 @@ public class CollectDAOImpl implements CollectDAO {
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> add(JsonObject collect, String currentUserId, String locale) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> add(JsonObject collect, String currentUserId, String locale) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         mongo.upsert(collect, DBCollections.COLLECT)
                 .done(id -> {
@@ -87,8 +87,8 @@ public class CollectDAOImpl implements CollectDAO {
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getList(JsonObject params) throws QaobeeException {
-        JsonObject  dbObjectParent = new JsonObject();
+    public Promise<JsonArray, QaobeeException, Integer> getList(JsonObject params) {
+        JsonObject dbObjectParent = new JsonObject();
         // Collecte sandboxId
         dbObjectParent.put("eventRef.owner.sandboxId", params.getString(SB_CollectVerticle.PARAM_SANDBOX_ID));
         if (params.getString(SB_CollectVerticle.PARAM_EVENT_ID) != null && !"".equals(params.getString(SB_CollectVerticle.PARAM_EVENT_ID).trim())) {

@@ -23,15 +23,13 @@ import com.qaobee.hive.dao.CollectDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 
@@ -97,19 +95,16 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_CollectVerticle.class);
 
     @Inject
-    private Utils utils;
-    @Inject
     private CollectDAO collectDAO;
 
     @Override
     public void start() {
         super.start();
         LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(GET_LIST, this::getList)
-                .registerHandler(ADD, this::add)
-                .registerHandler(UPDATE, this::update)
-                .registerHandler(GET, this::get);
+        vertx.eventBus().consumer(GET_LIST, this::getList);
+        vertx.eventBus().consumer(ADD, this::add);
+        vertx.eventBus().consumer(UPDATE, this::update);
+        vertx.eventBus().consumer(GET, this::get);
     }
 
     /**
@@ -123,13 +118,8 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(collectDAO.get(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, collectDAO.get(req.getParams().get(PARAM_ID)));
     }
 
     /**
@@ -143,7 +133,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
     private void update(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        message.reply(collectDAO.update(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
+        replyJsonObject(message, collectDAO.update(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
     }
 
     /**
@@ -157,12 +147,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = ADD, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
     private void add(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(collectDAO.add(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, collectDAO.add(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
     }
 
     /**
@@ -180,11 +165,6 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
             mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID}, scope = Rule.Param.BODY)
     private void getList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(collectDAO.getList(new JsonObject(req.getBody())).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonArray(message, collectDAO.getList(new JsonObject(req.getBody())));
     }
 }

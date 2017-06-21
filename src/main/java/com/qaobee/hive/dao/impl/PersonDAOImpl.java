@@ -65,7 +65,7 @@ public class PersonDAOImpl implements PersonDAO {
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getPersonList(JsonArray listId, JsonArray listfield) throws QaobeeException {
+    public Promise<JsonArray, QaobeeException, Integer> getPersonList(JsonArray listId, JsonArray listfield) {
         JsonObject dbObjectParent = new JsonObject();
         JsonObject dbObjectChild = new JsonObject().put("$in", listId);
         dbObjectParent.put("_id", dbObjectChild);

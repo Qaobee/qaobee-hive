@@ -14,7 +14,6 @@ import org.jdeferred.Deferred;
 import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.net.www.http.HttpClient;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -69,7 +68,7 @@ public class CaptchaVerticle extends AbstractGuiceVerticle {
                             utils.sendStatusJson(false, res.result().statusMessage(), message);
                         }
                     } else {
-                        utils.sendStatusJson(false, res.cause().getMessage(), message)
+                        utils.sendStatusJson(false, res.cause().getMessage(), message);
                     }
                 });
     }

@@ -29,6 +29,7 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +78,7 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     @Rule(address = PAY, method = Constants.POST, logged = true, mandatoryParams = "data", scope = Rule.Param.BODY)
     private void pay(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, shippingDAO.pay(req.getUser(), req.getBody().getJsonObject("data"), req.getLocale()));
+        replyJsonObject(message, shippingDAO.pay(req.getUser(), new JsonObject(req.getBody()).getJsonObject("data"), req.getLocale()));
     }
 
     /**
@@ -91,6 +92,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     @Rule(address = WEB_HOOK, method = Constants.POST, mandatoryParams = {"id", "created"}, scope = Rule.Param.BODY)
     private void webHook(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shippingDAO.webHook(req.getBody()).done(r->utils.sendStatus(r, message)).fail(e -> utils.sendError(message, e));
+        shippingDAO.webHook(new JsonObject(req.getBody())).done(r->utils.sendStatus(r, message)).fail(e -> utils.sendError(message, e));
     }
 }

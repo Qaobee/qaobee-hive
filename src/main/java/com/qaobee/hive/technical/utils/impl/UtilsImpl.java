@@ -31,12 +31,14 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
-import io.vertx.core.json.EncodeException;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -200,10 +202,11 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public User isUserLogged(RequestWrapper request) throws QaobeeException {
+    public Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request) {
+        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
         String token = "";
         if (request.getUser() != null) {
-            return request.getUser();
+            deferred.resolve(request.getUser());
         }
         if (request.getHeaders() != null && request.getHeaders().contains(Constants.TOKEN)) {
             token = request.getHeaders().get(Constants.TOKEN);
@@ -212,47 +215,49 @@ public class UtilsImpl implements Utils {
             token = request.getParams().get(Constants.TOKEN);
         }
         if (StringUtils.isBlank(token)) {
-            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
+            deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
         }
-        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, "User");
-        if (res.size() != 1) {
-            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
-        } else {
-            // we take the first one (should be only one)
-            final JsonObject jsonUser = res.getJsonObject(0);
-            JsonObject userToSave = new JsonObject();
-            final User user = Json.decodeValue(jsonUser.encode(), User.class);
-            userToSave.put("_id", user.get_id());
-            if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
-                userToSave.put("account.token", "");
-                user.getAccount().setToken(null);
-                userToSave.put("account.tokenRenewDate", 0L);
-                user.getAccount().setTokenRenewDate(0L);
-            } else {
-                long connectionTime = System.currentTimeMillis();
-                userToSave.put("account.tokenRenewDate", connectionTime);
-                user.getAccount().setTokenRenewDate(connectionTime);
-            }
-            try {
-                mongo.update(userToSave, "User");
-                if (user.getAccount().getTokenRenewDate() == 0) {
-                    throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale()));
-                }
-                request.setUser(user);
-                return user;
-            } catch (final EncodeException e) {
-                LOG.error(e.getMessage(), e);
-                throw new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-            }
-        }
+        mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, "User")
+                .done(res -> {
+                    if (res.size() != 1) {
+                        deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
+                    } else {
+                        // we take the first one (should be only one)
+                        final JsonObject jsonUser = res.getJsonObject(0);
+                        JsonObject userToSave = new JsonObject();
+                        final User user = Json.decodeValue(jsonUser.encode(), User.class);
+                        userToSave.put("_id", user.get_id());
+                        if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
+                            userToSave.put("account.token", "");
+                            user.getAccount().setToken(null);
+                            userToSave.put("account.tokenRenewDate", 0L);
+                            user.getAccount().setTokenRenewDate(0L);
+                        } else {
+                            long connectionTime = System.currentTimeMillis();
+                            userToSave.put("account.tokenRenewDate", connectionTime);
+                            user.getAccount().setTokenRenewDate(connectionTime);
+                        }
+                        mongo.upsert(userToSave, "User").done(id -> {
+                            if (user.getAccount().getTokenRenewDate() == 0) {
+                                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
+                            }
+                            request.setUser(user);
+                            deferred.resolve(user);
+                        }).fail(deferred::reject);
+                    }
+                }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public User isLoggedAndAdmin(RequestWrapper request) throws QaobeeException {
-        User user = isUserLogged(request);
-        if (!habilitUtils.hasHabilitation(user, Constants.ADMIN_HABILIT)) { // are we admin ?
-            throw new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", request.getLocale()));
-        }
-        return user;
+    public Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request) throws QaobeeException {
+        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+        isUserLogged(request).done(user -> {
+            if (!habilitUtils.hasHabilitation(user, Constants.ADMIN_HABILIT)) { // are we admin ?
+                deferred.reject(new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", request.getLocale())));
+            }
+            deferred.resolve(user);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 }
