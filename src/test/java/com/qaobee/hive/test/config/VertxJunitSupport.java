@@ -23,33 +23,37 @@ import com.google.inject.Injector;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.parsing.Parser;
-import com.mongodb.BasicDBObject;
-import com.mongodb.CommandResult;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.MultiMap;
+import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.file.FileSystem;
+import io.vertx.core.http.CaseInsensitiveHeaders;
+import io.vertx.core.json.EncodeException;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.commons.io.FileUtils;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-import org.vertx.java.test.TestModule;
-import org.vertx.java.test.VertxConfiguration;
-import org.vertx.java.test.VertxTestBase;
-import org.vertx.java.test.junit.VertxJUnit4ClassRunner;
-import org.vertx.java.test.utils.DeploymentUtils;
-import org.vertx.java.test.utils.QueueReplyHandler;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -58,7 +62,6 @@ import java.net.ServerSocket;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
 
@@ -67,10 +70,8 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
  *
  * @author xavier
  */
-@RunWith(VertxJUnit4ClassRunner.class)
-@VertxConfiguration(modsDir = "build/mods")
-@TestModule(name = "com.qaobee~hive~0.1", jsonConfig = "file:config.json")
-public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest {
+@RunWith(VertxUnitRunner.class)
+public class VertxJunitSupport implements JSDataMongoTest {
     /**
      * The constant LOCALE.
      */
@@ -96,13 +97,14 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     protected static final String BASE_URL = "http://localhost:8888";
     /**
-     * The constant moduleConfig.
+     * The constant config.
      */
-    private static JsonObject moduleConfig;
+    private static JsonObject config;
     private static final Logger LOG = LoggerFactory.getLogger(VertxJunitSupport.class);
     private static final String POPULATE_WITHOUT = "without";
     private static final String POPULATE_ALL = "all";
     private final LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<>();
+    static Vertx vertx;
     /**
      * The name.
      */
@@ -113,18 +115,23 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      */
     @Inject
     protected MongoDB mongo;
+    @Inject
+    protected MongoClientCustom mongoClientCustom;
 
     /**
      * Start mongo server.
      */
     @BeforeClass
     public static void startMongoServer() {
+        vertx = Vertx.vertx();
+        FileSystem fs = vertx.fileSystem();
+        config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes()));
+        vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config));
         RestAssured.defaultParser = Parser.JSON;
         RestAssured.requestSpecification = new RequestSpecBuilder().addHeader(ACCEPT_LANGUAGE, LOCALE).build();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        moduleConfig = DeploymentUtils.getJsonConfig(VertxJunitSupport.class.getAnnotation(TestModule.class).jsonConfig());
         try {
-            JunitMongoSingleton.getInstance().startServer(moduleConfig);
+            JunitMongoSingleton.getInstance().startServer(config);
         } catch (IOException e) {
             Assert.fail(e.getMessage());
             e.printStackTrace();
@@ -166,11 +173,20 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * Prints the info.
      */
     @Before
-    public void printInfo() {
-        Injector injector = Guice.createInjector(new GuiceTestModule(moduleConfig));
+    public void printInfo(TestContext context) {
+        Injector injector = Guice.createInjector(new GuiceTestModule(config));
         injector.injectMembers(this);
         System.out.println("About to execute : " + name.getMethodName());
-        mongo.getDb().dropDatabase();
+
+        Async async = context.async();
+        mongoClientCustom.getDB().getDatabase("hive").drop((result, t) -> {
+            if (t != null) {
+                context.fail(t.getCause());
+            } else {
+                async.complete();
+            }
+        });
+        async.await();
     }
 
 
@@ -179,42 +195,19 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      *
      * @return a user
      */
-    protected User generateUser() {
-        final User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
+    protected Promise<User, QaobeeException, Integer> generateUser() {
+        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+        final User user = Json.decodeValue(config.getJsonObject("junit").getJsonObject("user").copy().encode(), User.class);
         user.getAccount().setActive(true);
         user.set_id(UUID.randomUUID().toString());
-        try {
-            final String id = mongo.save(user);
+        mongo.upsert(user).done(id -> {
             if (id == null) {
                 Assert.fail("user id is null");
             }
             user.set_id(id);
-        } catch (EncodeException | QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        return user;
-    }
-
-
-    /**
-     * Logged user user.
-     *
-     * @param id the id
-     * @return the user
-     */
-    protected User loggedUser(String id) {
-        User user = null;
-        try {
-            user = Json.decodeValue(mongo.getById(id, User.class.getSimpleName()).encode(), User.class);
-            user.getAccount().setToken(UUID.randomUUID().toString());
-            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-            user.getAccount().setActive(true);
-            mongo.save(user);
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            Assert.fail(e.getMessage());
-        }
-        return user;
+            deferred.resolve(user);
+        }).fail(e -> Assert.fail("user id is null"));
+        return deferred.promise();
     }
 
     /**
@@ -222,21 +215,18 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      *
      * @return the user
      */
-    protected User generateLoggedUser() {
-        try {
-            User user = Json.decodeValue(moduleConfig.getObject("junit").getObject("user").copy().encode(), User.class);
-            user.set_id(UUID.randomUUID().toString());
-            final String id = mongo.save(user);
-            if (id == null) {
-                Assert.fail("user id is null");
-            } else {
-                user.set_id(id);
-            }
-            return generateLoggedUser(user.get_id());
-        } catch (EncodeException | QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        return null;
+    protected Promise<User, QaobeeException, Integer> generateLoggedUser() {
+        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+        User user = Json.decodeValue(config.getJsonObject("junit").getJsonObject("user").copy().encode(), User.class);
+        user.set_id(UUID.randomUUID().toString());
+        user.getAccount().setToken(UUID.randomUUID().toString());
+        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+        user.getAccount().setActive(true);
+        mongo.upsert(user).done(i -> {
+            user.set_id(i);
+            deferred.resolve(user);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     /**
@@ -245,24 +235,19 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param userId the user id
      * @return the user
      */
-    protected User generateLoggedUser(String userId) {
-        try {
-            User user = Json.decodeValue(mongo.getById(userId, DBCollections.USER).encode(), User.class);
-            user.set_id(userId);
+    protected Promise<User, QaobeeException, Integer> generateLoggedUser(String userId) {
+        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.getById(userId, User.class.getSimpleName()).done(u -> {
+            User user = Json.decodeValue(u.encode(), User.class);
             user.getAccount().setToken(UUID.randomUUID().toString());
             user.getAccount().setTokenRenewDate(System.currentTimeMillis());
             user.getAccount().setActive(true);
-            final String id = mongo.save(user);
-            if (id == null) {
-                Assert.fail("user id is null");
-            } else {
-                user.set_id(id);
-            }
-            return user;
-        } catch (EncodeException | QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        return null;
+            mongo.upsert(user).done(i -> {
+                user.set_id(i);
+                deferred.resolve(user);
+            }).fail(deferred::reject);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     /**
@@ -270,8 +255,12 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      *
      * @return the user
      */
-    protected User generateLoggedAdminUser() {
-        return generateLoggedAdminUser(generateLoggedUser().get_id());
+    protected Promise<User, QaobeeException, Integer> generateLoggedAdminUser() {
+        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+        generateLoggedUser().done(user -> {
+            generateLoggedAdminUser(user.get_id()).done(deferred::resolve).fail(deferred::reject);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     /**
@@ -280,20 +269,18 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param userId the user id
      * @return the user
      */
-    protected User generateLoggedAdminUser(String userId) {
-        User user = generateLoggedUser(userId);
-        Habilitation habilitation = new Habilitation();
-        habilitation.set_id("123456");
-        habilitation.setDescription("admin Qaobee");
-        habilitation.setKey(Constants.ADMIN_HABILIT);
-        user.getAccount().setHabilitations(new ArrayList<>());
-        user.getAccount().getHabilitations().add(habilitation);
-        try {
-            mongo.save(user);
-        } catch (EncodeException | QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        return user;
+    protected Promise<User, QaobeeException, Integer> generateLoggedAdminUser(String userId) {
+        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+        generateLoggedUser(userId).done(user -> {
+            Habilitation habilitation = new Habilitation();
+            habilitation.set_id("123456");
+            habilitation.setDescription("admin Qaobee");
+            habilitation.setKey(Constants.ADMIN_HABILIT);
+            user.getAccount().setHabilitations(new ArrayList<>());
+            user.getAccount().getHabilitations().add(habilitation);
+            mongo.upsert(user).done(u -> deferred.resolve(user)).fail(deferred::reject);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     /**
@@ -303,31 +290,31 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param req     request
      * @return result string
      */
-    protected String sendOnBus(final String address, final RequestWrapper req) {
-        long timeout = 150L;
-        getEventBus().send(address, Json.encode(req), new QueueReplyHandler<Object>(queue, timeout));
-        try {
-            final Object result = queue.poll(timeout, TimeUnit.SECONDS);
-            if (result instanceof ReplyException) {
-                try {
-                    final JsonObject error = new JsonObject(((ReplyException) result).getMessage());
-                    LOG.error(error.getString("code") + " : " + error.getString("message"), error);
-                } catch (final EncodeException e) {
-                    LOG.error(((ReplyException) result).getMessage(), e);
-                    Assert.fail(e.getMessage());
+    protected Promise<String, Throwable, Integer> sendOnBus(final String address, final RequestWrapper req) {
+        Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
+        vertx.eventBus().send(address, Json.encode(req), new DeliveryOptions().setSendTimeout(150L), ar -> {
+            if (ar.succeeded()) {
+                if (ar.result().body() instanceof ReplyException) {
+                    try {
+                        final JsonObject error = new JsonObject(((ReplyException) ar.result().body()).getMessage());
+                        LOG.error(error.getString("code") + " : " + error.getString("message"), error);
+                    } catch (final EncodeException e) {
+                        LOG.error(((ReplyException) ar.result()).getMessage(), e);
+                        Assert.fail(e.getMessage());
+                    }
+                    deferred.resolve(((ReplyException) ar.result().body()).getMessage());
+                } else if (ar.result().body() instanceof String) {
+                    deferred.resolve((String) ar.result().body());
+                } else if (ar.result().body() instanceof JsonObject) {
+                    deferred.resolve(((JsonObject) ar.result().body()).encode());
+                } else {
+                    Assert.fail("unparsable data : " + ar.result().body().toString());
                 }
-                return ((ReplyException) result).getMessage();
-            } else if (result instanceof String) {
-                return (String) result;
-            } else if (result instanceof JsonObject) {
-                return ((JsonObject) result).encode();
             } else {
-                Assert.fail("unparsable data : " + result.toString());
+                deferred.reject(ar.cause());
             }
-        } catch (final InterruptedException e) {
-            Assert.fail(e.getMessage());
-        }
-        return null;
+        });
+        return deferred.promise();
     }
 
     /**
@@ -338,11 +325,8 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param token   the token
      * @return the string
      */
-    protected String sendOnBus(String address, RequestWrapper req, String token) {
-        if (req.getHeaders() == null) {
-            req.setHeaders(new HashMap<>());
-        }
-        req.getHeaders().put("token", Collections.singletonList(token));
+    protected Promise<String, Throwable, Integer> sendOnBus(String address, RequestWrapper req, String token) {
+        req.getHeaders().add("token", token);
         return sendOnBus(address, req);
     }
 
@@ -354,25 +338,25 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param query   the query
      * @return the json object
      */
-    protected JsonObject sendOnBus(String address, JsonObject query) {
-        long timeout = 5L;
-        getEventBus().send(address, query, new QueueReplyHandler<Object>(queue, timeout));
-        try {
-            final Object result = queue.poll(timeout, TimeUnit.SECONDS);
-            if (result instanceof ReplyException) {
-                if (((ReplyException) result).getMessage().startsWith("{")) {
-                    return new JsonObject(((ReplyException) result).getMessage());
+    protected Promise<JsonObject, Throwable, Integer> sendOnBus(String address, JsonObject query) {
+        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
+        vertx.eventBus().send(address, query, new DeliveryOptions().setSendTimeout(5L), ar -> {
+            if (ar.succeeded()) {
+                if (ar.result().body() instanceof ReplyException) {
+                    if (((ReplyException) ar.result().body()).getMessage().startsWith("{")) {
+                        deferred.resolve(new JsonObject(((ReplyException) ar.result().body()).getMessage()));
+                    }
+                    Assert.fail(((ReplyException) ar.result().body()).getMessage());
+                } else if (ar.result().body() instanceof JsonObject) {
+                    deferred.resolve(((JsonObject) ar.result().body()));
+                } else {
+                    Assert.fail("unparsable data : " + ar.result().body().toString());
                 }
-                Assert.fail(((ReplyException) result).getMessage());
-            } else if (result instanceof JsonObject) {
-                return (JsonObject) result;
             } else {
-                Assert.fail("unparsable data : " + result.toString());
+                deferred.reject(ar.cause());
             }
-        } catch (final InterruptedException e) {
-            Assert.fail(e.getMessage());
-        }
-        return null;
+        });
+        return deferred.promise();
     }
 
     /**
@@ -388,12 +372,12 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
     /**
      * Populates the test base. It is not needed to indicate the subdirectory name, the function will search in all directories
      * of "scripts/mongo".
-     *
-     * @param populateType      (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
+     *  @param populateType      (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
      * @param relativeDirectory (String) : relative dir from "scripts/mongo"
      * @param mongoFiles        (String[]) : array of filenames
      */
-    private void populate(String populateType, String relativeDirectory, String... mongoFiles) {
+    private Promise<JsonObject, Throwable, Integer> populate(String populateType, String relativeDirectory, String... mongoFiles) {
+        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
         for (String s : mongoFiles) {
             LOG.info("Populating " + s);
         }
@@ -413,26 +397,29 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
                 // all
                 if (POPULATE_ALL.equals(populateType)) {
                     // OK
-                    getContainer().logger().debug("OK");
+                    LOG.debug("OK");
                 } else if (POPULATE_ONLY.equals(populateType) && !mongoFilesList.contains(scriptMongo.getName())) {
                     continue;
                 } else if (POPULATE_WITHOUT.equals(populateType) && mongoFilesList.contains(scriptMongo.getName())) {
                     continue;
                 }
-                BasicDBObject obj = new BasicDBObject();
                 try {
-                    obj.append("eval", FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8")) + "\n");
-                    CommandResult res = mongo.getDb().command(obj);
-                    if (!res.ok()) {
-                        Assert.fail("[ " + scriptMongo.getAbsolutePath() + " ]" + res.getErrorMessage());
-                    }
+                    JsonObject command = new JsonObject(FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8")));
+                    mongoClientCustom.runCommand("eval", command, res -> {
+                        if (res.succeeded()) {
+                            deferred.resolve(new JsonObject());
+                        } else {
+                            Assert.fail("[ " + scriptMongo.getAbsolutePath() + " ]" + res.cause().getMessage());
+                            res.cause().printStackTrace();
+                        }
+                    });
                 } catch (IOException e) {
                     LOG.error(e.getMessage(), e);
                     Assert.fail(e.getMessage());
                 }
             }
         }
-
+    return deferred.promise();
     }
 
     /**
@@ -442,16 +429,15 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param user the user
      * @return activity activity
      */
-    protected JsonObject getActivity(String id, User user) {
+    protected Promise<String, Throwable, Integer> getActivity(String id, User user) {
+        Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constants.GET);
-        final HashMap<String, List<String>> params = new HashMap<>();
-        /* Retreive object */
-        params.put(ActivityVerticle.PARAM_ID, Collections.singletonList(id));
+        final MultiMap params = new CaseInsensitiveHeaders().add(ActivityVerticle.PARAM_ID, id);
         req.setParams(params);
-        final String reply = sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken());
-        return new JsonObject(reply);
+        sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()).done(deferred::resolve).fail(deferred::reject);
+        return deferred.promise();
     }
 
     /**
@@ -460,15 +446,14 @@ public class VertxJunitSupport extends VertxTestBase implements JSDataMongoTest 
      * @param id the id
      * @return country country
      */
-    protected JsonObject getCountry(String id) {
+    protected Promise<String, Throwable, Integer> getCountry(String id) {
+        Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constants.GET);
-        final HashMap<String, List<String>> params = new HashMap<>();
-        /* Retreive object */
-        params.put(CountryVerticle.PARAM_ID, Collections.singletonList(id));
+        final MultiMap params = new CaseInsensitiveHeaders().add(CountryVerticle.PARAM_ID, id);
         req.setParams(params);
-        final String reply = sendOnBus(CountryVerticle.GET, req);
-        return new JsonObject(reply);
+        sendOnBus(CountryVerticle.GET, req).done(deferred::resolve).fail(deferred::reject);
+        return deferred.promise();
     }
 }

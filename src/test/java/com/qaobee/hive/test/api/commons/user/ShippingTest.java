@@ -23,16 +23,18 @@ import com.qaobee.hive.api.v1.commons.users.ShippingVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import com.stripe.Stripe;
+import io.vertx.core.json.JsonObject;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockserver.client.server.MockServerClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
-import org.vertx.java.core.json.JsonObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,15 +77,15 @@ public class ShippingTest extends VertxJunitSupport {
     }
 
     private void initMockStripe(User u) {
-        JsonObject customer = mockData.getObject("customer");
-        customer.putString("id", u.getAccount().getListPlan().get(0).getCardId());
-        customer.putString("email", u.getContact().getEmail());
-        customer.putNumber("created", new Date().getTime());
-        customer.getObject("metadata").putString("_id", u.get_id());
+        JsonObject customer = mockData.getJsonObject("customer")
+                .put("id", u.getAccount().getListPlan().get(0).getCardId())
+                .put("email", u.getContact().getEmail())
+                .put("created", new Date().getTime())
+                .getJsonObject("metadata").put("_id", u.get_id());
 
 
-        JsonObject subscription = mockData.getObject("subscription");
-        subscription.putString("customer", u.getAccount().getListPlan().get(0).getCardId());
+        JsonObject subscription = mockData.getJsonObject("subscription");
+        subscription.put("customer", u.getAccount().getListPlan().get(0).getCardId());
 
         if ("12345".equals(u.getAccount().getListPlan().get(0).getCardId())) {
             new MockServerClient("localhost", 1080)
@@ -109,7 +111,7 @@ public class ShippingTest extends VertxJunitSupport {
                             .withBody(customer.encode()));
         }
         if ("canceled".equals(u.getAccount().getListPlan().get(0).getPaymentId())) {
-            subscription.putString("status", "canceled");
+            subscription.put("status", "canceled");
             new MockServerClient("localhost", 1080)
                     .when(HttpRequest.request()
                             .withMethod("GET")
@@ -146,7 +148,7 @@ public class ShippingTest extends VertxJunitSupport {
                         .withPath("/v1/tokens/tok_1AMilbArxO1IWesL3vBI9RXu"))
                 .respond(HttpResponse.response()
                         .withStatusCode(200)
-                        .withBody(mockData.getObject("token").encode()));
+                        .withBody(mockData.getJsonObject("token").encode()));
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
                         .withMethod("GET")
@@ -185,9 +187,9 @@ public class ShippingTest extends VertxJunitSupport {
         initMockStripe(u);
 
         JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                .put("data", new JsonObject()
+                        .put("planId", 0)
+                        .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
                 );
 
         given().header(TOKEN, u.getAccount().getToken())
@@ -217,9 +219,9 @@ public class ShippingTest extends VertxJunitSupport {
         User u = generateLoggedUser();
         initMockStripe(u);
         JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 1)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                .put("data", new JsonObject()
+                        .put("planId", 1)
+                        .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
                 );
 
         given().header(TOKEN, u.getAccount().getToken())
@@ -236,35 +238,32 @@ public class ShippingTest extends VertxJunitSupport {
     public void createPaymentWithNewCustomer() {
         User u = generateLoggedUser();
         u.getAccount().getListPlan().get(0).setCardId("12345");
-        try {
-            mongo.save(u);
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        initMockStripe(u);
-        JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
+        mongo.upsert(u).done(id -> {
+            initMockStripe(u);
+            JsonObject request = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("planId", 0)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                    );
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(200)
-                .body("status", is(true))
-                .body("status", notNullValue());
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(request.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(200)
+                    .body("status", is(true))
+                    .body("status", notNullValue());
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .param("id", u.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].cardId", notNullValue())
-                .body("account.listPlan[0].cardId", not(""))
-                .body("account.listPlan[0].paymentId", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .param("id", u.get_id())
+                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(u.get_id()))
+                    .body("account.listPlan[0].cardId", notNullValue())
+                    .body("account.listPlan[0].cardId", not(""))
+                    .body("account.listPlan[0].paymentId", notNullValue())
+                    .body("account.listPlan[0].paymentId", not(""));
+        }).fail(e -> Assert.fail(e.getMessage()));
     }
 
     /**
@@ -275,35 +274,33 @@ public class ShippingTest extends VertxJunitSupport {
         User u = generateLoggedUser();
         u.getAccount().getListPlan().get(0).setCardId("12345");
         u.getAccount().getListPlan().get(0).setPaymentId(null);
-        try {
-            mongo.save(u);
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        initMockStripe(u);
-        JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(200)
-                .body("status", is(true))
-                .body("status", notNullValue());
+        mongo.upsert(u).done(id -> {
+            initMockStripe(u);
+            JsonObject request = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("planId", 0)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                    );
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .param("id", u.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].cardId", notNullValue())
-                .body("account.listPlan[0].cardId", not(""))
-                .body("account.listPlan[0].paymentId", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(request.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(200)
+                    .body("status", is(true))
+                    .body("status", notNullValue());
+
+            given().header(TOKEN, u.getAccount().getToken())
+                    .param("id", u.get_id())
+                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(u.get_id()))
+                    .body("account.listPlan[0].cardId", notNullValue())
+                    .body("account.listPlan[0].cardId", not(""))
+                    .body("account.listPlan[0].paymentId", notNullValue())
+                    .body("account.listPlan[0].paymentId", not(""));
+        }).fail(e -> Assert.fail(e.getMessage()));
     }
 
     /**
@@ -313,23 +310,20 @@ public class ShippingTest extends VertxJunitSupport {
     public void createPaymentWithExistingSubscription() {
         User u = generateLoggedUser();
         u.getAccount().getListPlan().get(0).setPaymentId("sub_AkHS7YtIEi1Oy9");
-        try {
-            mongo.save(u);
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        initMockStripe(u);
-        JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
+        mongo.upsert(u).done(id -> {
+            initMockStripe(u);
+            JsonObject request = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("planId", 0)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                    );
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(request.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                    .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+        }).fail(e -> Assert.fail(e.getMessage()));
     }
 
     /**
@@ -339,36 +333,33 @@ public class ShippingTest extends VertxJunitSupport {
     public void createPaymentWithCanceledSubscription() {
         User u = generateLoggedUser();
         u.getAccount().getListPlan().get(0).setPaymentId("canceled");
-        try {
-            mongo.save(u);
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        initMockStripe(u);
+        mongo.upsert(u).done(id -> {
+            initMockStripe(u);
 
-        JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
+            JsonObject request = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("planId", 0)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                    );
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(200)
-                .body("status", is(true))
-                .body("status", notNullValue());
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(request.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(200)
+                    .body("status", is(true))
+                    .body("status", notNullValue());
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .param("id", u.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].cardId", notNullValue())
-                .body("account.listPlan[0].cardId", not(""))
-                .body("account.listPlan[0].paymentId", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .param("id", u.get_id())
+                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(u.get_id()))
+                    .body("account.listPlan[0].cardId", notNullValue())
+                    .body("account.listPlan[0].cardId", not(""))
+                    .body("account.listPlan[0].paymentId", notNullValue())
+                    .body("account.listPlan[0].paymentId", not(""));
+        }).fail(e -> Assert.fail(e.getMessage()));
     }
 
     /**
@@ -378,36 +369,33 @@ public class ShippingTest extends VertxJunitSupport {
     public void createPaymentWithNewSubscription() {
         User u = generateLoggedUser();
         u.getAccount().getListPlan().get(0).setPaymentId(null);
-        try {
-            mongo.save(u);
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        initMockStripe(u);
+        mongo.upsert(u).done(id -> {
+            initMockStripe(u);
 
-        JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
+            JsonObject request = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("planId", 0)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                    );
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(200)
-                .body("status", is(true))
-                .body("status", notNullValue());
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(request.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(200)
+                    .body("status", is(true))
+                    .body("status", notNullValue());
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .param("id", u.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].cardId", notNullValue())
-                .body("account.listPlan[0].cardId", not(""))
-                .body("account.listPlan[0].paymentId", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .param("id", u.get_id())
+                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(u.get_id()))
+                    .body("account.listPlan[0].cardId", notNullValue())
+                    .body("account.listPlan[0].cardId", not(""))
+                    .body("account.listPlan[0].paymentId", notNullValue())
+                    .body("account.listPlan[0].paymentId", not(""));
+        }).fail(e -> Assert.fail(e.getMessage()));
     }
 
     /**
@@ -417,36 +405,33 @@ public class ShippingTest extends VertxJunitSupport {
     public void createPaymentWithWrongSubscription() {
         User u = generateLoggedUser();
         u.getAccount().getListPlan().get(0).setPaymentId("12345");
-        try {
-            mongo.save(u);
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        initMockStripe(u);
+        mongo.upsert(u).done(id -> {
+            initMockStripe(u);
 
-        JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
+            JsonObject request = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("planId", 0)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                    );
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(200)
-                .body("status", is(true))
-                .body("status", notNullValue());
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(request.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(200)
+                    .body("status", is(true))
+                    .body("status", notNullValue());
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .param("id", u.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].cardId", notNullValue())
-                .body("account.listPlan[0].cardId", not(""))
-                .body("account.listPlan[0].paymentId", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .param("id", u.get_id())
+                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(u.get_id()))
+                    .body("account.listPlan[0].cardId", notNullValue())
+                    .body("account.listPlan[0].cardId", not(""))
+                    .body("account.listPlan[0].paymentId", notNullValue())
+                    .body("account.listPlan[0].paymentId", not(""));
+        }).fail(e -> Assert.fail(e.getMessage()));
     }
 
     /**
@@ -483,9 +468,9 @@ public class ShippingTest extends VertxJunitSupport {
         User u = generateLoggedUser();
         initMockStripe(u);
         JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "bla")
+                .put("data", new JsonObject()
+                        .put("planId", 0)
+                        .put("token", "bla")
                 );
         given().header(TOKEN, u.getAccount().getToken())
                 .body(request.encodePrettily())
@@ -502,9 +487,9 @@ public class ShippingTest extends VertxJunitSupport {
         User u = generateLoggedUser();
         initMockStripe(u);
         JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                .put("data", new JsonObject()
+                        .put("planId", 0)
+                        .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
                 );
         initMockStripe(u);
         if (mockServer.isRunning()) {
@@ -525,9 +510,9 @@ public class ShippingTest extends VertxJunitSupport {
         User u = generateLoggedUser();
         initMockStripe(u);
         JsonObject request = new JsonObject()
-                .putObject("data", new JsonObject()
-                        .putNumber("planId", 0)
-                        .putString("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                .put("data", new JsonObject()
+                        .put("planId", 0)
+                        .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
                 );
 
         given().header(TOKEN, u.getAccount().getToken())
@@ -547,9 +532,9 @@ public class ShippingTest extends VertxJunitSupport {
                 .body("account.listPlan[0].cardId", not(""))
                 .extract().path("account.listPlan[0].cardId");
 
-        JsonObject webHookData = mockData.getObject("customer.subscription.created");
-        webHookData.getObject("data").getObject("object").getObject("metadata").putString("planId", "0");
-        webHookData.getObject("data").getObject("object").putString("customer", customer);
+        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+        webHookData.getJsonObject("data").getJsonObject("object").getJsonObject("metadata").put("planId", "0");
+        webHookData.getJsonObject("data").getJsonObject("object").put("customer", customer);
 
         given().body(webHookData.encode())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
@@ -584,8 +569,8 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void recieveWebHookNotificationWithMissingMandatoryData() {
-        JsonObject webHookData = mockData.getObject("customer.subscription.created");
-        webHookData.removeField("created");
+        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+        webHookData.remove("created");
         given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
@@ -597,8 +582,8 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void recieveWebHookNotificationWithMissingMetadata() {
-        JsonObject webHookData = mockData.getObject("customer.subscription.created");
-        webHookData.getObject("data").getObject("object").getObject("metadata").removeField("planId");
+        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+        webHookData.getJsonObject("data").getJsonObject("object").getJsonObject("metadata").remove("planId");
         given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
@@ -613,11 +598,11 @@ public class ShippingTest extends VertxJunitSupport {
     public void recieveWebHookNotificationWithBadPlanId() {
         User u = generateLoggedUser();
         initMockStripe(u);
-        JsonObject webHookData = mockData.getObject("customer.subscription.created");
-        webHookData.getObject("data")
-                .getObject("object")
-                .getObject("metadata")
-                .putString("planId", "sdqsdqd");
+        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+        webHookData.getJsonObject("data")
+                .getJsonObject("object")
+                .getJsonObject("metadata")
+                .put("planId", "sdqsdqd");
 
         given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
@@ -632,11 +617,11 @@ public class ShippingTest extends VertxJunitSupport {
     public void recieveWebHookNotificationWithNonExistingPlanId() {
         User u = generateLoggedUser();
         initMockStripe(u);
-        JsonObject webHookData = mockData.getObject("customer.subscription.created");
-        webHookData.getObject("data")
-                .getObject("object")
-                .getObject("metadata")
-                .putString("planId", "1");
+        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+        webHookData.getJsonObject("data")
+                .getJsonObject("object")
+                .getJsonObject("metadata")
+                .put("planId", "1");
         given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
@@ -650,11 +635,11 @@ public class ShippingTest extends VertxJunitSupport {
     public void recieveWebHookNotificationWithNullPlanId() {
         User u = generateLoggedUser();
         initMockStripe(u);
-        JsonObject webHookData = mockData.getObject("customer.subscription.created");
-        webHookData.getObject("data")
-                .getObject("object")
-                .getObject("metadata")
-                .removeField("planId");
+        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+        webHookData.getJsonObject("data")
+                .getJsonObject("object")
+                .getJsonObject("metadata")
+                .remove("planId");
         given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
@@ -668,11 +653,11 @@ public class ShippingTest extends VertxJunitSupport {
     public void recieveWebHookNotificationWithEmptyPlanId() {
         User u = generateLoggedUser();
         initMockStripe(u);
-        JsonObject webHookData = mockData.getObject("customer.subscription.created");
-        webHookData.getObject("data")
-                .getObject("object")
-                .getObject("metadata")
-                .putString("planId", "");
+        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+        webHookData.getJsonObject("data")
+                .getJsonObject("object")
+                .getJsonObject("metadata")
+                .put("planId", "");
         given().body(webHookData.encodePrettily())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
