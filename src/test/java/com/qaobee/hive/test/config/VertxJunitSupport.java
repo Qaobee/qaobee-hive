@@ -44,6 +44,7 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.commons.io.FileUtils;
+import org.bson.Document;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
@@ -223,7 +224,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
         mongo.upsert(user).done(i -> {
             user.set_id(i);
             deferred.resolve(user);
-        }).fail(e->Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
         return deferred.promise();
     }
 
@@ -370,7 +371,8 @@ public class VertxJunitSupport implements JSDataMongoTest {
     /**
      * Populates the test base. It is not needed to indicate the subdirectory name, the function will search in all directories
      * of "scripts/mongo".
-     *  @param populateType      (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
+     *
+     * @param populateType      (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
      * @param relativeDirectory (String) : relative dir from "scripts/mongo"
      * @param mongoFiles        (String[]) : array of filenames
      */
@@ -402,22 +404,24 @@ public class VertxJunitSupport implements JSDataMongoTest {
                     continue;
                 }
                 try {
-                    JsonObject command = new JsonObject(FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8")));
-                    mongoClientCustom.runCommand("eval", command, res -> {
-                        if (res.succeeded()) {
-                            deferred.resolve(new JsonObject());
-                        } else {
-                            Assert.fail("[ " + scriptMongo.getAbsolutePath() + " ]" + res.cause().getMessage());
-                            res.cause().printStackTrace();
-                        }
-                    });
+                    //   JsonObject command = new JsonObject(FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8")));
+                    mongoClientCustom.getDB()
+                            .getDatabase("hive")
+                            .runCommand(new Document("eval", FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8"))+ "\n"), (result, t) -> {
+                                if (t == null) {
+                                    deferred.resolve(new JsonObject());
+                                } else {
+                                    Assert.fail("[ " + scriptMongo.getAbsolutePath() + " ]" + t.getMessage());
+                                    t.printStackTrace();
+                                }
+                            });
                 } catch (IOException e) {
                     LOG.error(e.getMessage(), e);
                     Assert.fail(e.getMessage());
                 }
             }
         }
-    return deferred.promise();
+        return deferred.promise();
     }
 
     /**
@@ -433,7 +437,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
         req.setLocale(LOCALE);
         req.setMethod(Constants.GET);
         req.getParams().put(ActivityVerticle.PARAM_ID, Collections.singletonList(id));
-        sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()).done(res->deferred.resolve(new JsonObject(res))).fail(deferred::reject);
+        sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()).done(res -> deferred.resolve(new JsonObject(res))).fail(deferred::reject);
         return deferred.promise();
     }
 
