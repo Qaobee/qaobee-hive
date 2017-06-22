@@ -186,7 +186,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void markAsRead(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyStatus(message, notificationsDAO.markAsRead(req.getParams().get(PARAM_NOTIF_ID)));
+        replyStatus(message, notificationsDAO.markAsRead(req.getParams().get(PARAM_NOTIF_ID).get(0)));
     }
 
     /**
@@ -203,7 +203,7 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void delete(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyStatus(message, notificationsDAO.delete(req.getParams().get(PARAM_NOTIF_ID)));
+        replyStatus(message, notificationsDAO.delete(req.getParams().get(PARAM_NOTIF_ID).get(0)));
     }
 
     /**
@@ -222,12 +222,12 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     private void notificationList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         int start = 0;
-        if (req.getParams() != null && req.getParams().contains(PARAM_START)) {
-            start = Integer.parseInt(req.getParams().get(PARAM_START));
+        if (req.getParams() != null && req.getParams().containsKey(PARAM_START)) {
+            start = Integer.parseInt(req.getParams().get(PARAM_START).get(0));
         }
         int limit = -1;
-        if (req.getParams() != null && req.getParams().contains(PARAM_LIMIT)) {
-            limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT));
+        if (req.getParams() != null && req.getParams().containsKey(PARAM_LIMIT)) {
+            limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
         }
         replyJsonArray(message, notificationsDAO.getList(req.getUser().get_id(), start, limit));
     }

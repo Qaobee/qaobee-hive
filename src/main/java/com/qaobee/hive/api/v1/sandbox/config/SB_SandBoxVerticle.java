@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 
 /**
  * The type Sand box cfg verticle.
@@ -101,7 +100,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_BY_ID, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getSandboxById(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, sandBoxDAO.getSandboxById(req.getParams().get(PARAM_ID)));
+        replyJsonObject(message, sandBoxDAO.getSandboxById(req.getParams().get(PARAM_ID).get(0)));
     }
 
     /**
@@ -116,7 +115,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_LIST_BY_OWNER, method = Constants.GET, logged = true)
     private void getListByOwner(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, sandBoxDAO.getListByOwner(Arrays.asList(req.getParams().get(PARAM_OWNER_ID).split(",")), req.getUser().get_id()));
+        replyJsonArray(message, sandBoxDAO.getListByOwner(req.getParams().get(PARAM_OWNER_ID), req.getUser().get_id()));
     }
 
     /**
@@ -132,7 +131,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
           scope = Rule.Param.REQUEST)
     private void getByOwner(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, sandBoxDAO.getByOwner(req.getParams().get(PARAM_ACTIVITY_ID), req.getUser().get_id()));
+        replyJsonObject(message, sandBoxDAO.getByOwner(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getUser().get_id()));
     }
 
     /**

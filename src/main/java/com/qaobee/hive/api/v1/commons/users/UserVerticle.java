@@ -158,7 +158,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void userByLogin(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, userDAO.getUserByLogin(req.getParams().get("login")));
+        replyJsonObject(message, userDAO.getUserByLogin(req.getParams().get("login").get(0)));
     }
 
     /**
@@ -174,7 +174,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void userInfo(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, userDAO.getUserInfo(req.getParams().get("id")));
+        replyJsonObject(message, userDAO.getUserInfo(req.getParams().get("id").get(0)));
     }
 
     /**
@@ -190,8 +190,8 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private void getMeta(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         String sandBoxId = req.getUser().getSandboxDefault();
-        if (req.getParams().contains(SANDBOX_ID_FIELD) && !req.getParams().get(SANDBOX_ID_FIELD).isEmpty()) {
-            sandBoxId = req.getParams().get(SANDBOX_ID_FIELD);
+        if (req.getParams().containsKey(SANDBOX_ID_FIELD) && !req.getParams().get(SANDBOX_ID_FIELD).isEmpty()) {
+            sandBoxId = req.getParams().get(SANDBOX_ID_FIELD).get(0);
         }
         replyJsonObject(message, userDAO.getMeta(sandBoxId));
     }
@@ -250,7 +250,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void passwordRenewCheck(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        securityDAO.passwordRenewCheck(req.getParams().get("id"), req.getParams().get("code"))
+        securityDAO.passwordRenewCheck(req.getParams().get("id").get(0), req.getParams().get("code").get(0))
                 .done(jsonUser -> {
                     if (jsonUser == null) {
                         utils.sendStatus(false, message);
@@ -288,7 +288,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.HEADER)
     private void logout(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyBoolean(message, securityDAO.logout(req.getHeaders().get("token")));
+        replyBoolean(message, securityDAO.logout(req.getHeaders().get("token").get(0)));
     }
 
     /**

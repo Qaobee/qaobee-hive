@@ -130,7 +130,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_STATS, method = Constants.GET, logged = true)
     private void getListForEvent(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, statisticsDAO.getListForEvent(req.getParams().get("eventId")));
+        replyJsonObject(message, statisticsDAO.getListForEvent(req.getParams().get("eventId").get(0)));
     }
 
     /**

@@ -7,6 +7,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.HttpRequest;
 import io.vertx.ext.web.client.WebClient;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,20 +25,21 @@ public class CRMDaoImpl implements CRMDao {
     private JsonObject mailchimp;
     @Inject
     private WebClient webClient;
-    @Inject
-    @Named("env")
-    private JsonObject env;
 
 
     @Override
     public void registerUser(JsonObject user, boolean firstLogin) {
         JsonArray members = new JsonArray();
+        String env = "DEV";
+        if(StringUtils.isNotBlank(System.getenv("ENV"))) {
+            env = System.getenv("ENV");
+        }
         members.add(new JsonObject()
                 .put("merge_fields", new JsonObject()
                         .put("NAME", user.getString("name"))
                         .put("FIRSTNAME", user.getString("firstname"))
                         .put("NEVERCONNE", String.valueOf(firstLogin))
-                        .put("ENV", env.getString("ENV", "DEV"))
+                        .put("ENV", env)
                 )
                 .put("status", "subscribed")
                 .put("email_address", user.getJsonObject("contact").getString("email"))

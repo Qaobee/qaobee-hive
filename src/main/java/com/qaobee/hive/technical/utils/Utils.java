@@ -23,7 +23,6 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.json.JsonArray;
@@ -32,6 +31,8 @@ import org.jdeferred.Promise;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * The interface Utils.
@@ -145,7 +146,7 @@ public interface Utils {
      * @param fields array of fields to test
      * @throws QaobeeException explain missing fields
      */
-    void testMandatoryParams(MultiMap map, String... fields) throws QaobeeException;
+    void testMandatoryParams(HashMap<String, List<String>> map, String... fields) throws QaobeeException;
 
     /**
      * Test mandatory params.

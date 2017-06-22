@@ -97,11 +97,11 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
     private void getActivityCfgParamsHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         activityCfgDAO.getActivityCfgParams(
-                req.getParams().get(PARAM_ACTIVITY_ID),
-                req.getParams().get(PARAM_COUNTRY_ID),
-                Long.parseLong(req.getParams().get(PARAM_DATE)),
-                req.getParams().get(PARAM_FIELD_LIST)
-        ).done(params -> message.reply(params.getJsonObject(0).getJsonArray(req.getParams().get(PARAM_FIELD_LIST)).encode()))
+                req.getParams().get(PARAM_ACTIVITY_ID).get(0),
+                req.getParams().get(PARAM_COUNTRY_ID).get(0),
+                Long.parseLong(req.getParams().get(PARAM_DATE).get(0)),
+                req.getParams().get(PARAM_FIELD_LIST).get(0)
+        ).done(params -> message.reply(params.getJsonObject(0).getJsonArray(req.getParams().get(PARAM_FIELD_LIST).get(0)).encode()))
                 .fail(e -> utils.sendError(message, e));
     }
 
@@ -119,9 +119,9 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
     private void getActivityCfgHandler(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, activityCfgDAO.getActivityCfg(
-                req.getParams().get(PARAM_ACTIVITY_ID),
-                req.getParams().get(PARAM_COUNTRY_ID),
-                Long.parseLong(req.getParams().get(PARAM_DATE))
+                req.getParams().get(PARAM_ACTIVITY_ID).get(0),
+                req.getParams().get(PARAM_COUNTRY_ID).get(0),
+                Long.parseLong(req.getParams().get(PARAM_DATE).get(0))
         ));
     }
 }

@@ -29,6 +29,7 @@ import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
+import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.ReplyException;
@@ -197,10 +198,8 @@ public class Main extends AbstractGuiceVerticle {
         dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
             rs.forEach(r -> System.out.println(r.getResult()));
             handleServerStart(router);
-            startFuture.complete();
         }).fail(e -> {
             LOG.error(((Throwable) e.getReject()).getMessage());
-            startFuture.fail((Throwable) e.getReject());
         });
     }
 
@@ -256,8 +255,8 @@ public class Main extends AbstractGuiceVerticle {
         final RequestWrapper wrapper = new RequestWrapper();
         wrapper.setBody(routingContext.getBodyAsString());
         wrapper.setMethod(routingContext.request().rawMethod());
-        wrapper.setHeaders(routingContext.request().headers());
-        wrapper.setParams(routingContext.request().params());
+        wrapper.setHeaders(toMap(routingContext.request().headers()));
+        wrapper.setParams(toMap(routingContext.request().params()));
         wrapper.setLocale(routingContext.request().getHeader("Accept-Language"));
         List<String> path = Arrays.asList(routingContext.request().path().split("/"));
         path = path.subList(3, path.size());
@@ -269,45 +268,65 @@ public class Main extends AbstractGuiceVerticle {
         vertx.eventBus().send("metrix", json);
         String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
         if (rules.containsKey(busAddress)) {
-            if (testRequest(routingContext, busAddress, wrapper)) {
-                vertx.eventBus().send(busAddress, Json.encode(wrapper), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), message -> {
-                    try {
-                        if (message.succeeded()) {
-                            final String response = (String) message.result().body();
-                            if (response.startsWith("[") || !response.startsWith("{")) {
-                                handleJsonArray(routingContext, response);
+            testRequest(routingContext, busAddress, wrapper).done(res -> {
+                if (res.getBoolean("status")) {
+                    vertx.eventBus().send(busAddress, Json.encode(wrapper), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), message -> {
+                        try {
+                            if (message.succeeded()) {
+                                final String response = (String) message.result().body();
+                                if (response.startsWith("[") || !response.startsWith("{")) {
+                                    handleJsonArray(routingContext, response);
+                                } else {
+                                    handleJsonObject(routingContext, response);
+                                }
                             } else {
-                                handleJsonObject(routingContext, response);
+                                throw (ReplyException) message.cause();
                             }
-                        } else {
-                            throw (ReplyException) message.cause();
-                        }
-                    } catch (ReplyException ex) {
-                        LOG.error(ex.getMessage(), ex);
-                        routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
-                        routingContext.response().setStatusCode(404);
-                        enableCors(routingContext);
-                        if (ex.failureCode() > 0) {
-                            routingContext.response().setStatusCode(ex.failureCode());
-                        }
-                        if (ex.getMessage() != null) {
-                            String exStr = ex.getMessage();
-                            if (ex.getMessage().startsWith("{")) {
-                                JsonObject jsonEx = new JsonObject(ex.getMessage());
-                                jsonEx.remove("stackTrace");
-                                jsonEx.remove("suppressed");
-                                exStr = jsonEx.encode();
+                        } catch (ReplyException ex) {
+                            LOG.error(ex.getMessage(), ex);
+                            routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
+                            routingContext.response().setStatusCode(404);
+                            enableCors(routingContext);
+                            if (ex.failureCode() > 0) {
+                                routingContext.response().setStatusCode(ex.failureCode());
                             }
-                            routingContext.response().end(exStr);
-                        } else {
-                            manage404Error(routingContext);
+                            if (ex.getMessage() != null) {
+                                String exStr = ex.getMessage();
+                                if (ex.getMessage().startsWith("{")) {
+                                    JsonObject jsonEx = new JsonObject(ex.getMessage());
+                                    jsonEx.remove("stackTrace");
+                                    jsonEx.remove("suppressed");
+                                    exStr = jsonEx.encode();
+                                }
+                                routingContext.response().end(exStr);
+                            } else {
+                                manage404Error(routingContext);
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                } else {
+                    int code = res.getInteger("httpCode");
+                    res.remove("httpCode");
+                    routingContext.response()
+                            .putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+                            .setStatusCode(code)
+                            .end(res.encode());
+                }
+            });
         } else {
             manage404Error(routingContext);
         }
+    }
+
+    private HashMap<String, List<String>> toMap(MultiMap multiMap) {
+        HashMap<String, List<String>> map = new HashMap<>();
+        multiMap.entries().forEach(e -> {
+            if (!map.containsKey(e.getKey())) {
+                map.put(e.getKey(), new ArrayList<>());
+            }
+            map.get(e.getKey()).add(e.getValue());
+        });
+        return map;
     }
 
     /**
@@ -393,33 +412,48 @@ public class Main extends AbstractGuiceVerticle {
      * @param wrapper    request wrapper
      * @return success
      */
-    private boolean testRequest(RoutingContext req, String busAddress, RequestWrapper wrapper) {
+    private Promise<JsonObject, QaobeeException, Integer> testRequest(RoutingContext req, String busAddress, RequestWrapper wrapper) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         try {
             Rule rule = rules.get(busAddress);
             if (StringUtils.isNotBlank(rule.method())) {
                 utils.testHTTPMetod(rule.method(), wrapper.getMethod());
             }
+            List<Promise> promises = new ArrayList<>();
             if (rule.logged()) {
-                utils.isUserLogged(wrapper);
+                promises.add(utils.isUserLogged(wrapper));
             }
             if (rule.admin()) {
-                utils.isLoggedAndAdmin(wrapper);
+                promises.add(utils.isLoggedAndAdmin(wrapper));
             }
             testParameters(rule, wrapper);
+            if (promises.isEmpty()) {
+                deferred.resolve(new JsonObject().put("status", true));
+            } else {
+                DeferredManager dm = new DefaultDeferredManager();
+                dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> deferred.resolve(new JsonObject().put("status", true))).fail(e -> {
+                    QaobeeException ex = (QaobeeException) e.getReject();
+                    LOG.error(ex.getMessage(), ex);
+                    final JsonObject jsonResp = new JsonObject()
+                            .put("status", false)
+                            .put(MESSAGE, ex.getMessage())
+                            .put("httpCode", ex.getCode().getCode())
+                            .put("code", ex.getCode().name());
+                    LOG.error(((Throwable) e.getReject()).getMessage());
+                    deferred.resolve(jsonResp);
+                });
+            }
         } catch (final NoSuchMethodException e) {
             LOG.error(e.getMessage(), e);
             final JsonObject jsonResp = new JsonObject()
                     .put("status", false)
                     .put(MESSAGE, "Nothing here")
                     .put("httpCode", 404);
-            req.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
-            return false;
+            deferred.resolve(jsonResp);
         } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            handleError(req, e);
-            return false;
+
         }
-        return true;
+        return deferred.promise();
     }
 
     private void testParameters(Rule rule, RequestWrapper wrapper) throws QaobeeException {

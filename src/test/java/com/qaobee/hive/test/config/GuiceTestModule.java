@@ -26,6 +26,7 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.utils.guice.MongoClientProvider;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 
 /**
@@ -33,6 +34,7 @@ import io.vertx.core.json.JsonObject;
  */
 class GuiceTestModule extends AbstractModule {
 
+    private final Vertx vertx;
     private JsonObject config;
 
     /**
@@ -40,14 +42,17 @@ class GuiceTestModule extends AbstractModule {
      *
      * @param config the config
      */
-    GuiceTestModule(JsonObject config) {
+    GuiceTestModule(JsonObject config, Vertx vertx) {
         this.config = config;
+        this.vertx = vertx;
     }
 
     @Override
     protected void configure() {
+        bind(Vertx.class).toInstance(vertx);
         bind(JsonObject.class).annotatedWith(Names.named("mongo.db")).toInstance(config.getJsonObject("mongo.db"));
         bind(MongoDB.class).to(MongoDBImpl.class).in(Singleton.class);
         bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();
+
     }
 }

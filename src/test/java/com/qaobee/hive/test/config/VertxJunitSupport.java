@@ -33,12 +33,10 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.DeploymentOptions;
-import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.file.FileSystem;
-import io.vertx.core.http.CaseInsensitiveHeaders;
 import io.vertx.core.json.EncodeException;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -174,7 +172,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     @Before
     public void printInfo(TestContext context) {
-        Injector injector = Guice.createInjector(new GuiceTestModule(config));
+        Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
         injector.injectMembers(this);
         System.out.println("About to execute : " + name.getMethodName());
 
@@ -326,7 +324,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * @return the string
      */
     protected Promise<String, Throwable, Integer> sendOnBus(String address, RequestWrapper req, String token) {
-        req.getHeaders().add("token", token);
+        req.getHeaders().put("token", Collections.singletonList(token));
         return sendOnBus(address, req);
     }
 
@@ -434,8 +432,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constants.GET);
-        final MultiMap params = new CaseInsensitiveHeaders().add(ActivityVerticle.PARAM_ID, id);
-        req.setParams(params);
+        req.getParams().put(ActivityVerticle.PARAM_ID, Collections.singletonList(id));
         sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()).done(res->deferred.resolve(new JsonObject(res))).fail(deferred::reject);
         return deferred.promise();
     }
@@ -451,8 +448,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constants.GET);
-        final MultiMap params = new CaseInsensitiveHeaders().add(CountryVerticle.PARAM_ID, id);
-        req.setParams(params);
+        req.getParams().put(CountryVerticle.PARAM_ID, Collections.singletonList(id));
         sendOnBus(CountryVerticle.GET, req).done(res -> deferred.resolve(new JsonObject(res))).fail(deferred::reject);
         return deferred.promise();
     }

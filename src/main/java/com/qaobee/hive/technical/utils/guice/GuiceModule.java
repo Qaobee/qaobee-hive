@@ -41,8 +41,10 @@ import io.vertx.ext.web.client.WebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Locale;
 
 /**
@@ -83,15 +85,17 @@ public class GuiceModule extends AbstractModule {
         Configuration cfgMails = new Configuration(new Version("2.3.23"));
         // Where do we load the templates from:
         try {
-            cfgMails.setDirectoryForTemplateLoading(new File("mailTemplates/"));
+            URL mailTemplates = GuiceModule.class.getResource("/mailTemplates");
+            cfgMails.setDirectoryForTemplateLoading(Paths.get(mailTemplates.toURI()).toFile());
             cfgMails.setIncompatibleImprovements(new Version(2, 3, 20));
             cfgMails.setDefaultEncoding("UTF-8");
             cfgMails.setLocale(Locale.US);
             cfgMails.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
             Configuration cfgPDF = new Configuration(new Version("2.3.23"));
-            cfgPDF.setDirectoryForTemplateLoading(new File("pdfTemplates/"));
+            URL pdfTemplates = GuiceModule.class.getResource("/pdfTemplates");
+            cfgPDF.setDirectoryForTemplateLoading(Paths.get(pdfTemplates.toURI()).toFile());
             bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
-        } catch (final IOException e) {
+        } catch (final IOException | URISyntaxException e) {
             LOG.error(e.getMessage(), e);
         }
 

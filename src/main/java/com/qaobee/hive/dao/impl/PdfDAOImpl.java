@@ -54,10 +54,6 @@ public class PdfDAOImpl implements PdfDAO {
     @Inject
     @Named("pdf")
     private JsonObject pdfConfig;
-    @Inject
-    @Named("env")
-    private JsonObject env;
-
 
     @Override
     public JsonObject generatePDF(JsonObject data, String template, String filename) throws QaobeeException {

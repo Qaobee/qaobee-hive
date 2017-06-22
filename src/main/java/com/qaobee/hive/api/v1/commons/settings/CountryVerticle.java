@@ -103,10 +103,10 @@ public class CountryVerticle extends AbstractGuiceVerticle {
     private void getList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         String label = null;
-        if (req.getParams().contains(CountryVerticle.PARAM_LABEL) && StringUtils.isNotBlank(req.getParams().get(PARAM_LABEL))) {
-            label = req.getParams().get(PARAM_LABEL);
+        if (req.getParams().containsKey(CountryVerticle.PARAM_LABEL) && StringUtils.isNotBlank(req.getParams().get(PARAM_LABEL).get(0))) {
+            label = req.getParams().get(PARAM_LABEL).get(0);
         }
-        replyJsonArray(message, countryDAO.getCountryList(req.getParams().get(PARAM_LOCAL), label));
+        replyJsonArray(message, countryDAO.getCountryList(req.getParams().get(PARAM_LOCAL).get(0), label));
     }
 
     /**
@@ -123,7 +123,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void getAlpha2(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        countryDAO.getCountryFromAlpha2(req.getParams().get(PARAM_ALPHA2)).done(country -> {
+        countryDAO.getCountryFromAlpha2(req.getParams().get(PARAM_ALPHA2).get(0)).done(country -> {
             if (country == null) {
                 utils.sendError(message, new QaobeeException(ExceptionCodes.DATA_ERROR,
                         "No Country defined for (" + req.getParams().get(PARAM_ALPHA2) + ")"));
@@ -148,6 +148,6 @@ public class CountryVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, countryDAO.getCountry(req.getParams().get(PARAM_ID)));
+        replyJsonObject(message, countryDAO.getCountry(req.getParams().get(PARAM_ID).get(0)));
     }
 }

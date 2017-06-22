@@ -58,7 +58,7 @@ public class MongoDBImpl implements MongoDB {
     public Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, String collection) {
         Deferred<String, QaobeeException, Integer> deferred = new DeferredObject<>();
         if (document.containsKey("_id")) {
-            mongoClient.updateCollection(collection, query, document, res -> {
+            mongoClient.findOneAndReplace(collection, query, document, res -> {
                 if (res.succeeded()) {
                     deferred.resolve(document.getString("_id"));
                 } else {

@@ -303,7 +303,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = REVIVE_INVITATION_TO_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_INVITATION_ID}, scope = Rule.Param.REQUEST)
     private void reviveInvitationToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shareDAO.reviveInvitationToUser(req.getParams().get(PARAM_INVITATION_ID)).done(invitation -> {
+        shareDAO.reviveInvitationToUser(req.getParams().get(PARAM_INVITATION_ID).get(0)).done(invitation -> {
             userDAO.getUserInfo(req.getUser().get_id()).done(user -> {
                 try {
                     sendNotification(invitation, user, invitation.getString(USER_EMAIL_FIELD), req.getLocale());
@@ -328,7 +328,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = REMOVE_INVITATION_TO_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_INVITATION_ID}, scope = Rule.Param.REQUEST)
     private void removeInvitationToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, shareDAO.removeInvitationToSandbox(req.getParams().get(PARAM_INVITATION_ID)));
+        replyJsonObject(message, shareDAO.removeInvitationToSandbox(req.getParams().get(PARAM_INVITATION_ID).get(0)));
     }
 
     /**
@@ -343,7 +343,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_INVITATION_TO_SANDBOX, method = Constants.GET, mandatoryParams = {PARAM_INVITATION_ID}, scope = Rule.Param.REQUEST)
     private void getInvitationToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, shareDAO.getInvitationToSandbox(req.getParams().get(PARAM_INVITATION_ID)));
+        replyJsonObject(message, shareDAO.getInvitationToSandbox(req.getParams().get(PARAM_INVITATION_ID).get(0)));
     }
 
     /**
@@ -411,7 +411,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_ADMIN_SANDBOX_SHARING_LIST, method = Constants.GET, logged = true, admin = true, mandatoryParams = PARAM_USERID, scope = Rule.Param.REQUEST)
     private void getAdminListOfSharedSandboxes(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, shareDAO.getListOfSharedSandboxes(req.getParams().get(PARAM_USERID)));
+        replyJsonObject(message, shareDAO.getListOfSharedSandboxes(req.getParams().get(PARAM_USERID).get(0)));
     }
 
     /**
@@ -427,6 +427,6 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = GET_LIST_INVITATION_TO_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_SANBOXID, PARAM_INVITATION_STATUS}, scope = Rule.Param.REQUEST)
     private void getListInvitationOfSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, shareDAO.getListOfInvitationsToSandbox(req.getParams().get(PARAM_SANBOXID), req.getParams().get(PARAM_INVITATION_STATUS)));
+        replyJsonArray(message, shareDAO.getListOfInvitationsToSandbox(req.getParams().get(PARAM_SANBOXID).get(0), req.getParams().get(PARAM_INVITATION_STATUS).get(0)));
     }
 }

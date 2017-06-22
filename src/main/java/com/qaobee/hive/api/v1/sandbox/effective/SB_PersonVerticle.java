@@ -102,7 +102,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_LIST_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = PARAM_SANDBOX_ID, scope = Rule.Param.REQUEST)
     private void getPersonListBySandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, personDAO.getPersonListBySandbox(req.getParams().get(PARAM_SANDBOX_ID)));
+        replyJsonArray(message, personDAO.getPersonListBySandbox(req.getParams().get(PARAM_SANDBOX_ID).get(0)));
     }
 
     /**
@@ -150,7 +150,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_PERSON_ID, scope = Rule.Param.REQUEST)
     private void getPerson(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, personDAO.getPerson(req.getParams().get(PARAM_PERSON_ID)));
+        replyJsonObject(message, personDAO.getPerson(req.getParams().get(PARAM_PERSON_ID).get(0)));
     }
 
     /**

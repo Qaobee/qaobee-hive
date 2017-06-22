@@ -47,9 +47,7 @@
   "mongo.db": {
     "host": "localhost",
     "port": 12345,
-    "pool_size": 10,
-    "db_name": "hive",
-    "read_preference": "nearest"
+    "db_name": "hive"
   },
   "mailchimp" : {
     "env" : "TEST",

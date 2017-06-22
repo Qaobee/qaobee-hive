@@ -94,7 +94,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void getCurrentSeason(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, seasonDAO.getCurrentSeason(req.getParams().get(PARAM_ACTIVITY_ID), req.getParams().get(PARAM_COUNTRY_ID)));
+        replyJsonObject(message, seasonDAO.getCurrentSeason(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getParams().get(PARAM_COUNTRY_ID).get(0)));
     }
 
     /**
@@ -113,7 +113,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void getListByActivity(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, seasonDAO.getListByActivity(req.getParams().get(PARAM_ACTIVITY_ID), req.getParams().get(PARAM_COUNTRY_ID)));
+        replyJsonArray(message, seasonDAO.getListByActivity(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getParams().get(PARAM_COUNTRY_ID).get(0)));
     }
 
     /**
@@ -130,6 +130,6 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
           scope = Rule.Param.REQUEST)
     private void getSeason(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, seasonDAO.getSeason(req.getParams().get(PARAM_ID)));
+        replyJsonObject(message, seasonDAO.getSeason(req.getParams().get(PARAM_ID).get(0)));
     }
 }

@@ -20,8 +20,8 @@ package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import io.vertx.codegen.annotations.Nullable;
-import io.vertx.core.MultiMap;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -32,8 +32,8 @@ import java.util.List;
 public class RequestWrapper {
 
     private List<String> path;
-    private MultiMap headers;
-    private MultiMap params;
+    private HashMap<String,  List<String>> headers = new HashMap<>();
+    private HashMap<String,  List<String>> params = new HashMap<>();
     private String body;
     private String method;
     private String locale;
@@ -62,7 +62,7 @@ public class RequestWrapper {
      *
      * @return the headers
      */
-    public MultiMap getHeaders() {
+    public HashMap<String,  List<String>> getHeaders() {
         return headers;
     }
 
@@ -71,7 +71,7 @@ public class RequestWrapper {
      *
      * @param headers the new headers
      */
-    public void setHeaders(final MultiMap headers) {
+    public void setHeaders(final HashMap<String,  List<String>> headers) {
         this.headers = headers;
     }
 
@@ -116,10 +116,7 @@ public class RequestWrapper {
      *
      * @return the params
      */
-    public MultiMap getParams() {
-        if (params == null) {
-            params = MultiMap.caseInsensitiveMultiMap();
-        }
+    public HashMap<String,  List<String>> getParams() {
         return params;
     }
 
@@ -128,7 +125,7 @@ public class RequestWrapper {
      *
      * @param params the new params
      */
-    public void setParams(final MultiMap params) {
+    public void setParams(final HashMap<String,  List<String>> params) {
         this.params = params;
     }
 

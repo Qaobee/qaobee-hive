@@ -109,15 +109,15 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
     private void getTeamList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         String link = null;
-        if (req.getParams().get(PARAM_LINK_TEAM_ID) != null && !"".equals(req.getParams().get(PARAM_LINK_TEAM_ID).trim())) {
-            link = req.getParams().get(PARAM_LINK_TEAM_ID);
+        if (req.getParams().get(PARAM_LINK_TEAM_ID) != null && !"".equals(req.getParams().get(PARAM_LINK_TEAM_ID).get(0).trim())) {
+            link = req.getParams().get(PARAM_LINK_TEAM_ID).get(0);
         }
         replyJsonArray(message,
                 teamDAO.getTeamList(
-                        req.getParams().get(PARAM_SANDBOX_ID),
-                        req.getParams().get(PARAM_EFFECTIVE_ID),
-                        req.getParams().get(PARAM_ADVERSARY),
-                        req.getParams().get(PARAM_ENABLE),
+                        req.getParams().get(PARAM_SANDBOX_ID).get(0),
+                        req.getParams().get(PARAM_EFFECTIVE_ID).get(0),
+                        req.getParams().get(PARAM_ADVERSARY).get(0),
+                        req.getParams().get(PARAM_ENABLE).get(0),
                         link)
         );
     }
@@ -135,7 +135,7 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getTeam(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, teamDAO.getTeam(req.getParams().get(PARAM_ID)));
+        replyJsonObject(message, teamDAO.getTeam(req.getParams().get(PARAM_ID).get(0)));
     }
 
     /**

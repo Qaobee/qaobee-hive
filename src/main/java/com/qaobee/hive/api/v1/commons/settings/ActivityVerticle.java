@@ -114,6 +114,6 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
     @Rule(address = GET, method = Constants.GET, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        activityDAO.getActivity(req.getParams().get(PARAM_ID)).done(activity->message.reply(activity.encode())).fail(e -> utils.sendError(message, e));
+        activityDAO.getActivity(req.getParams().get(PARAM_ID).get(0)).done(activity->message.reply(activity.encode())).fail(e -> utils.sendError(message, e));
     }
 }
