@@ -19,14 +19,12 @@
 package com.qaobee.hive.test.api.commons.user;
 
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.core.json.JsonObject;
 import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
 
 import java.io.File;
 import java.util.UUID;
@@ -48,15 +46,16 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginOk() {
-        User u = generateUser();
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+        generateUser().then(u -> {
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
 
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+        });
     }
 
     /**
@@ -64,15 +63,16 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginOkWithUppercaseLogin() {
-        User u = generateUser();
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin().toUpperCase())
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+        generateUser().then(u -> {
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin().toUpperCase())
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
 
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+        });
     }
 
     /**
@@ -90,34 +90,35 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginOkWithMobileToken() {
-        User u = generateUser();
+        generateUser().then(u -> {
 
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                .putString(UserVerticle.MOBILE_TOKEN, UUID.randomUUID().toString());
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.MOBILE_TOKEN, UUID.randomUUID().toString());
 
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+        });
     }
 
     @Test
     public void loginOkWithMobileTokenAndPushId() {
-        User u = generateUser();
+        generateUser().then(u -> {
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.MOBILE_TOKEN, UUID.randomUUID().toString())
+                    .put(UserVerticle.PARAM_PUSH_ID, UUID.randomUUID().toString())
+                    .put(UserVerticle.PARAM_OS, "android");
 
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                .putString(UserVerticle.MOBILE_TOKEN, UUID.randomUUID().toString())
-                .putString(UserVerticle.PARAM_PUSH_ID, UUID.randomUUID().toString())
-                .putString(UserVerticle.PARAM_OS, "android");
-
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+        });
     }
 
     /**
@@ -125,16 +126,17 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginKo() {
-        User u = generateUser();
+        generateUser().then(u -> {
 
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, "badlogin")
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, "badlogin")
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
 
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                    .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+        });
     }
 
     /**
@@ -143,7 +145,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void badLogin() {
         JsonObject params = new JsonObject();
-        params.putString(UserVerticle.PARAM_LOGIN, "badlogin");
+        params.put(UserVerticle.PARAM_LOGIN, "badlogin");
 
         given().body(params.encodePrettily())
                 .when().post(getURL(UserVerticle.LOGIN))
@@ -151,7 +153,7 @@ public class UserTest extends VertxJunitSupport {
                 .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
 
         JsonObject params2 = new JsonObject();
-        params.putString(UserVerticle.PARAM_PWD, "toto");
+        params.put(UserVerticle.PARAM_PWD, "toto");
         given().body(params2.encodePrettily())
                 .when().post(getURL(UserVerticle.LOGIN))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
@@ -163,16 +165,16 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginPasswordKo() {
-        User u = generateUser();
+        generateUser().then(u -> {
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, "tutu");
 
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.PARAM_PWD, "tutu");
-
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                    .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+        });
     }
 
     /**
@@ -180,21 +182,19 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginUserInactive() {
-        try {
-            User u = generateUser();
+        generateUser().then(u -> {
             u.getAccount().setActive(false);
-            mongo.save(u);
-            JsonObject params = new JsonObject()
-                    .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+            mongo.upsert(u).done(id -> {
+                JsonObject params = new JsonObject()
+                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                        .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
 
-            given().body(params.encodePrettily())
-                    .when().post(getURL(UserVerticle.LOGIN))
-                    .then().assertThat().statusCode(ExceptionCodes.NON_ACTIVE.getCode())
-                    .body("code", is(ExceptionCodes.NON_ACTIVE.toString()));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+                given().body(params.encodePrettily())
+                        .when().post(getURL(UserVerticle.LOGIN))
+                        .then().assertThat().statusCode(ExceptionCodes.NON_ACTIVE.getCode())
+                        .body("code", is(ExceptionCodes.NON_ACTIVE.toString()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -202,27 +202,28 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginByMobileToken() {
-        User u = generateUser();
-        String token = UUID.randomUUID().toString();
+        generateUser().then(u -> {
+            String token = UUID.randomUUID().toString();
 
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                .putString(UserVerticle.MOBILE_TOKEN, token);
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.MOBILE_TOKEN, token);
 
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
 
-        JsonObject params2 = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.MOBILE_TOKEN, token);
+            JsonObject params2 = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.MOBILE_TOKEN, token);
 
-        given().body(params2.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params2.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+        });
     }
 
     /**
@@ -230,33 +231,31 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginByMobileTokenTrialPeriod() {
-        try {
-            User u = generateUser();
+        generateUser().then(u -> {
             u.getAccount().getListPlan().get(0).setStatus("open");
-            mongo.save(u);
-            String token = UUID.randomUUID().toString();
+            mongo.upsert(u).done(id -> {
+                String token = UUID.randomUUID().toString();
 
-            JsonObject params = new JsonObject()
-                    .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                    .putString(UserVerticle.MOBILE_TOKEN, token);
+                JsonObject params = new JsonObject()
+                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                        .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                        .put(UserVerticle.MOBILE_TOKEN, token);
 
-            given().body(params.encodePrettily())
-                    .when().post(getURL(UserVerticle.LOGIN))
-                    .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                given().body(params.encodePrettily())
+                        .when().post(getURL(UserVerticle.LOGIN))
+                        .then().assertThat().statusCode(200)
+                        .body("name", is(u.getName()));
 
-            JsonObject params2 = new JsonObject()
-                    .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .putString(UserVerticle.MOBILE_TOKEN, token);
+                JsonObject params2 = new JsonObject()
+                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                        .put(UserVerticle.MOBILE_TOKEN, token);
 
-            given().body(params2.encodePrettily())
-                    .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                    .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+                given().body(params2.encodePrettily())
+                        .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                        .then().assertThat().statusCode(200)
+                        .body("name", is(u.getName()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -264,22 +263,23 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginByMobileTokenWrongHTTPMethod() {
-        User u = generateUser();
-        String token = UUID.randomUUID().toString();
+        generateUser().then(u -> {
+            String token = UUID.randomUUID().toString();
 
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                .putString(UserVerticle.MOBILE_TOKEN, token);
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.MOBILE_TOKEN, token);
 
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
 
-        given().when().get(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+            given().when().get(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -287,27 +287,28 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginByMobileTokenWrongLogin() {
-        User u = generateUser();
-        String token = UUID.randomUUID().toString();
+        generateUser().then(u -> {
+            String token = UUID.randomUUID().toString();
 
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                .putString(UserVerticle.MOBILE_TOKEN, token);
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.MOBILE_TOKEN, token);
 
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
 
-        JsonObject params2 = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, "badLogin")
-                .putString(UserVerticle.MOBILE_TOKEN, token);
+            JsonObject params2 = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, "badLogin")
+                    .put(UserVerticle.MOBILE_TOKEN, token);
 
-        given().body(params2.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+            given().body(params2.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                    .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                    .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+        });
     }
 
     /**
@@ -315,32 +316,30 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginByMobileTokenNotPaid() {
-        try {
-            User u = generateUser();
+        generateUser().then(u -> {
             u.getAccount().getListPlan().get(0).setStatus("notpaid");
-            mongo.save(u);
-            String token = UUID.randomUUID().toString();
-            JsonObject params = new JsonObject()
-                    .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                    .putString(UserVerticle.MOBILE_TOKEN, token);
+            mongo.upsert(u).done(id -> {
+                String token = UUID.randomUUID().toString();
+                JsonObject params = new JsonObject()
+                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                        .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                        .put(UserVerticle.MOBILE_TOKEN, token);
 
-            given().body(params.encodePrettily())
-                    .when().post(getURL(UserVerticle.LOGIN))
-                    .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                given().body(params.encodePrettily())
+                        .when().post(getURL(UserVerticle.LOGIN))
+                        .then().assertThat().statusCode(200)
+                        .body("name", is(u.getName()));
 
-            JsonObject params2 = new JsonObject()
-                    .putString(UserVerticle.PARAM_LOGIN, "badLogin")
-                    .putString(UserVerticle.MOBILE_TOKEN, token);
+                JsonObject params2 = new JsonObject()
+                        .put(UserVerticle.PARAM_LOGIN, "badLogin")
+                        .put(UserVerticle.MOBILE_TOKEN, token);
 
-            given().body(params2.encodePrettily())
-                    .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                    .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                    .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+                given().body(params2.encodePrettily())
+                        .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                        .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                        .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -348,33 +347,31 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginByMobileTokenTrialPeriodEnded() {
-        try {
-            User u = generateUser();
+        generateUser().then(u -> {
             u.getAccount().getListPlan().get(0).setStatus("open");
             u.getAccount().getListPlan().get(0).setEndPeriodDate(0);
-            mongo.save(u);
-            String token = UUID.randomUUID().toString();
-            JsonObject params = new JsonObject()
-                    .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                    .putString(UserVerticle.MOBILE_TOKEN, token);
+            mongo.upsert(u).done(id -> {
+                String token = UUID.randomUUID().toString();
+                JsonObject params = new JsonObject()
+                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                        .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                        .put(UserVerticle.MOBILE_TOKEN, token);
 
-            given().body(params.encodePrettily())
-                    .when().post(getURL(UserVerticle.LOGIN))
-                    .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                given().body(params.encodePrettily())
+                        .when().post(getURL(UserVerticle.LOGIN))
+                        .then().assertThat().statusCode(200)
+                        .body("name", is(u.getName()));
 
-            JsonObject params2 = new JsonObject()
-                    .putString(UserVerticle.PARAM_LOGIN, "badLogin")
-                    .putString(UserVerticle.MOBILE_TOKEN, token);
+                JsonObject params2 = new JsonObject()
+                        .put(UserVerticle.PARAM_LOGIN, "badLogin")
+                        .put(UserVerticle.MOBILE_TOKEN, token);
 
-            given().body(params2.encodePrettily())
-                    .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                    .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                    .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+                given().body(params2.encodePrettily())
+                        .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                        .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                        .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -382,27 +379,28 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginByMobileTokenWrongToken() {
-        User u = generateUser();
-        String token = UUID.randomUUID().toString();
+        generateUser().then(u -> {
+            String token = UUID.randomUUID().toString();
 
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                .putString(UserVerticle.MOBILE_TOKEN, token);
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.MOBILE_TOKEN, token);
 
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
 
-        JsonObject params2 = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.MOBILE_TOKEN, "123456");
+            JsonObject params2 = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.MOBILE_TOKEN, "123456");
 
-        given().body(params2.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+            given().body(params2.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                    .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                    .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+        });
     }
 
     /**
@@ -410,22 +408,23 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void loginByMobileTokenNoData() {
-        User u = generateUser();
-        String token = UUID.randomUUID().toString();
+        generateUser().then(u -> {
+            String token = UUID.randomUUID().toString();
 
-        JsonObject params = new JsonObject()
-                .putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .putString(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                .putString(UserVerticle.MOBILE_TOKEN, token);
+            JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.MOBILE_TOKEN, token);
 
-        given().body(params.encodePrettily())
-                .when().post(getURL(UserVerticle.LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", is(u.getName()));
+            given().body(params.encodePrettily())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
 
-        given().when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -434,35 +433,28 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getMetas() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-        try {
-            mongo.save(user);
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+            mongo.upsert(user).done(id -> given().header(TOKEN, user.getAccount().getToken())
                     .when().get(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(200)
                     .body("activityId", notNullValue())
-                    .body("structure", notNullValue());
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+                    .body("structure", notNullValue())).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
+
     @Test
     public void getMetasWithSandboxId() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-        try {
-            mongo.save(user);
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+            mongo.upsert(user).done(id -> given().header(TOKEN, user.getAccount().getToken())
                     .param("sandboxId", "558b0efebd2e39cdab651e1f")
                     .when().get(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(200)
                     .body("activityId", notNullValue())
-                    .body("structure", notNullValue());
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+                    .body("structure", notNullValue())).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -471,17 +463,14 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getMetasWithWrongHTTPMethod() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-        try {
-            mongo.save(user);
-            given().header(TOKEN, user.getAccount().getToken())
-                    .when().post(getURL(UserVerticle.META))
-                    .then().assertThat().statusCode(404)
-                    .body(STATUS, is(false));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+            mongo.upsert(user).done(id ->
+                    given().header(TOKEN, user.getAccount().getToken())
+                            .when().post(getURL(UserVerticle.META))
+                            .then().assertThat().statusCode(404)
+                            .body(STATUS, is(false))).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -490,17 +479,14 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getMetasWithWrongUser() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        User user = generateLoggedUser();
-        user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-        try {
-            mongo.save(user);
-            given().header(TOKEN, user.getAccount().getToken())
-                    .when().get(getURL(UserVerticle.META))
-                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                    .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+        generateLoggedUser().then(user -> {
+            user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+            mongo.upsert(user).done(id ->
+                    given().header(TOKEN, user.getAccount().getToken())
+                            .when().get(getURL(UserVerticle.META))
+                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                            .body("code", is(ExceptionCodes.DATA_ERROR.toString()))).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -528,13 +514,14 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getUserById() {
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .param("id", user.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(user.get_id()));
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .param("id", user.get_id())
+                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(user.get_id()));
+        });
     }
 
     /**
@@ -552,10 +539,12 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getUserByIdWrongHTTPMethod() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().post(getURL(UserVerticle.META))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().post(getURL(UserVerticle.META))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -563,12 +552,13 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getCurrentUser() {
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .when().get(getURL(UserVerticle.CURRENT))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(user.get_id()));
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(UserVerticle.CURRENT))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(user.get_id()));
+        });
     }
 
     /**
@@ -586,10 +576,12 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getCurrentUserWrongHTTPMethod() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().post(getURL(UserVerticle.CURRENT))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().post(getURL(UserVerticle.CURRENT))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -597,11 +589,13 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void logout() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().get(getURL(UserVerticle.LOGOUT))
-                .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
-                .body("status", is(true));
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(UserVerticle.LOGOUT))
+                    .then().assertThat().statusCode(200)
+                    .body("status", notNullValue())
+                    .body("status", is(true));
+        });
     }
 
     /**
@@ -609,8 +603,10 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void logoutBadHTTPMethod() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().post(getURL(UserVerticle.LOGOUT));
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().post(getURL(UserVerticle.LOGOUT));
+        });
     }
 
     /**
@@ -628,12 +624,14 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void passwordRenew() {
-        JsonObject query = new JsonObject().putString(UserVerticle.PARAM_LOGIN, generateUser().getAccount().getLogin());
-        given().body(query.encodePrettily())
-                .when().post(getURL(UserVerticle.PASSWD_RENEW))
-                .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
-                .body("status", is(true));
+        generateUser().then(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+            given().body(query.encodePrettily())
+                    .when().post(getURL(UserVerticle.PASSWD_RENEW))
+                    .then().assertThat().statusCode(200)
+                    .body("status", notNullValue())
+                    .body("status", is(true));
+        });
     }
 
     /**
@@ -651,7 +649,7 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void passwordRenewBadLogin() {
-        JsonObject query = new JsonObject().putString(UserVerticle.PARAM_LOGIN, "toto");
+        JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, "toto");
         given().body(query.encodePrettily())
                 .when().post(getURL(UserVerticle.PASSWD_RENEW))
                 .then().assertThat().statusCode(ExceptionCodes.UNKNOWN_LOGIN.getCode())
@@ -673,27 +671,23 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void passwordRenewActivationCodeCheck() {
-        try {
-            // First step ask for a new code
-            User user = generateUser();
-            JsonObject query = new JsonObject().putString(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+        generateUser().then(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
             given().body(query.encodePrettily())
                     .when().post(getURL(UserVerticle.PASSWD_RENEW))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            JsonObject jsonuser = mongo.getById(user.get_id(), DBCollections.USER);
-            String code = jsonuser.getObject("account").getString("activationPasswd");
-
-            given().param("id", user.get_id()).param("code", code)
-                    .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(true));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+            mongo.getById(user.get_id(), DBCollections.USER).done(jsonuser -> {
+                String code = jsonuser.getJsonObject("account").getString("activationPasswd");
+                given().param("id", user.get_id()).param("code", code)
+                        .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
+                        .then().assertThat().statusCode(200)
+                        .body("status", notNullValue())
+                        .body("status", is(true));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -701,20 +695,20 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void passwordRenewWrongActivationCodeCheck() {
-        // First step ask for a new code
-        User user = generateUser();
-        JsonObject query = new JsonObject().putString(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
-        given().body(query.encodePrettily())
-                .when().post(getURL(UserVerticle.PASSWD_RENEW))
-                .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
-                .body("status", is(true));
-        // fetch the code
-        given().param("id", user.get_id()).param("code", "12345")
-                .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
-                .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
-                .body("status", is(false));
+        generateUser().then(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+            given().body(query.encodePrettily())
+                    .when().post(getURL(UserVerticle.PASSWD_RENEW))
+                    .then().assertThat().statusCode(200)
+                    .body("status", notNullValue())
+                    .body("status", is(true));
+            // fetch the code
+            given().param("id", user.get_id()).param("code", "12345")
+                    .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
+                    .then().assertThat().statusCode(200)
+                    .body("status", notNullValue())
+                    .body("status", is(false));
+        });
     }
 
     /**
@@ -723,17 +717,18 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void passwordRenewActivationCodeCheckBadHTTPMethod() {
         // First step ask for a new code
-        User user = generateUser();
-        JsonObject query = new JsonObject().putString(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
-        given().body(query.encodePrettily())
-                .when().post(getURL(UserVerticle.PASSWD_RENEW))
-                .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
-                .body("status", is(true));
+        generateUser().then(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+            given().body(query.encodePrettily())
+                    .when().post(getURL(UserVerticle.PASSWD_RENEW))
+                    .then().assertThat().statusCode(200)
+                    .body("status", notNullValue())
+                    .body("status", is(true));
 
-        given().when().post(getURL(UserVerticle.PASSWD_RENEW_CHK))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+            given().when().post(getURL(UserVerticle.PASSWD_RENEW_CHK))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -741,46 +736,44 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void passwordReset() {
-        try {
-            // First step ask for a new code
-            User user = generateUser();
-            JsonObject query = new JsonObject().putString(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+        // First step ask for a new code
+        generateUser().then(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
             given().body(query.encodePrettily())
                     .when().post(getURL(UserVerticle.PASSWD_RENEW))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            JsonObject jsonuser = mongo.getById(user.get_id(), DBCollections.USER);
-            String code = jsonuser.getObject("account").getString("activationPasswd");
-            given().param("id", user.get_id()).param("code", code)
-                    .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(true));
+            mongo.getById(user.get_id(), DBCollections.USER).done(jsonuser -> {
+                String code = jsonuser.getJsonObject("account").getString("activationPasswd");
+                given().param("id", user.get_id()).param("code", code)
+                        .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
+                        .then().assertThat().statusCode(200)
+                        .body("status", notNullValue())
+                        .body("status", is(true));
 
-            JsonObject query2 = new JsonObject()
-                    .putString("id", user.get_id())
-                    .putString("code", code)
-                    .putString("passwd", "newPassword");
+                JsonObject query2 = new JsonObject()
+                        .put("id", user.get_id())
+                        .put("code", code)
+                        .put("passwd", "newPassword");
 
-            given().body(query2.encodePrettily())
-                    .when().post(getURL(UserVerticle.PASSWD_RESET))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(true));
-            // Finaly test login
-            JsonObject params = new JsonObject()
-                    .putString(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin())
-                    .putString(UserVerticle.PARAM_PWD, "newPassword");
-            given().body(params.encodePrettily())
-                    .when().post(getURL(UserVerticle.LOGIN))
-                    .then().assertThat().statusCode(200)
-                    .body("name", notNullValue())
-                    .body("name", is(user.getName()));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+                given().body(query2.encodePrettily())
+                        .when().post(getURL(UserVerticle.PASSWD_RESET))
+                        .then().assertThat().statusCode(200)
+                        .body("status", notNullValue())
+                        .body("status", is(true));
+                // Finaly test login
+                JsonObject params = new JsonObject()
+                        .put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin())
+                        .put(UserVerticle.PARAM_PWD, "newPassword");
+                given().body(params.encodePrettily())
+                        .when().post(getURL(UserVerticle.LOGIN))
+                        .then().assertThat().statusCode(200)
+                        .body("name", notNullValue())
+                        .body("name", is(user.getName()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -788,37 +781,35 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void passwordResetWrongCode() {
-        try {
-            // First step ask for a new code
-            User user = generateUser();
-            JsonObject query = new JsonObject().putString(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+        // First step ask for a new code
+        generateUser().then(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
             given().body(query.encodePrettily())
                     .when().post(getURL(UserVerticle.PASSWD_RENEW))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            JsonObject jsonuser = mongo.getById(user.get_id(), DBCollections.USER);
-            String code = jsonuser.getObject("account").getString("activationPasswd");
-            given().param("id", user.get_id()).param("code", code)
-                    .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(true));
+            mongo.getById(user.get_id(), DBCollections.USER).done(jsonuser -> {
+                String code = jsonuser.getJsonObject("account").getString("activationPasswd");
+                given().param("id", user.get_id()).param("code", code)
+                        .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
+                        .then().assertThat().statusCode(200)
+                        .body("status", notNullValue())
+                        .body("status", is(true));
 
-            JsonObject query2 = new JsonObject()
-                    .putString("id", user.get_id())
-                    .putString("code", "123456")
-                    .putString("passwd", "newPassword");
+                JsonObject query2 = new JsonObject()
+                        .put("id", user.get_id())
+                        .put("code", "123456")
+                        .put("passwd", "newPassword");
 
-            given().body(query2.encodePrettily())
-                    .when().post(getURL(UserVerticle.PASSWD_RESET))
-                    .then().assertThat().statusCode(200)
-                    .body("status", notNullValue())
-                    .body("status", is(false));
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
+                given().body(query2.encodePrettily())
+                        .when().post(getURL(UserVerticle.PASSWD_RESET))
+                        .then().assertThat().statusCode(200)
+                        .body("status", notNullValue())
+                        .body("status", is(false));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -836,24 +827,25 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void uploadAvatar() {
-        User user = generateLoggedUser();
-        String avatarId = given().header(TOKEN, user.getAccount().getToken())
-                .multiPart(new File("src/test/resources/avatar.jpg")).
-                        pathParam("uid", user.get_id()).
-                        when().
-                        post(BASE_URL + "/file/User/avatar/{uid}")
-                .then().assertThat().statusCode(200)
-                .body("avatar", notNullValue())
-                .extract().path("avatar");
+        generateLoggedUser().then(user -> {
+            String avatarId = given().header(TOKEN, user.getAccount().getToken())
+                    .multiPart(new File("src/test/resources/avatar.jpg")).
+                            pathParam("uid", user.get_id()).
+                            when().
+                            post(BASE_URL + "/file/User/avatar/{uid}")
+                    .then().assertThat().statusCode(200)
+                    .body("avatar", notNullValue())
+                    .extract().path("avatar");
 
-        byte[] byteArray = given().pathParam("avatar", avatarId)
-                .get(BASE_URL + "/file/User/{avatar}")
-                .then().assertThat().statusCode(200)
-                .extract().asByteArray();
+            byte[] byteArray = given().pathParam("avatar", avatarId)
+                    .get(BASE_URL + "/file/User/{avatar}")
+                    .then().assertThat().statusCode(200)
+                    .extract().asByteArray();
 
-        Assert.assertEquals("Files must have same size",
-                byteArray.length,
-                getVertx().fileSystem().propsSync("src/test/resources/avatar.jpg").size());
+            Assert.assertEquals("Files must have same size",
+                    byteArray.length,
+                    vertx.fileSystem().propsBlocking("src/test/resources/avatar.jpg").size());
+        });
     }
 
     /**
@@ -861,12 +853,14 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void uploadAvatarWithWrongUserId() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .multiPart(new File("src/test/resources/avatar.jpg")).
-                pathParam("uid", "blabla").
-                when().
-                post(BASE_URL + "/file/User/avatar/{uid}")
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .multiPart(new File("src/test/resources/avatar.jpg")).
+                    pathParam("uid", "blabla").
+                    when().
+                    post(BASE_URL + "/file/User/avatar/{uid}")
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
+        });
     }
 
     /**
@@ -874,11 +868,13 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void uploadAvatarWithNotLoggedUser() {
-        given().multiPart(new File("src/test/resources/avatar.jpg"))
-                .pathParam("uid", generateUser().get_id())
-                .when()
-                .post(BASE_URL + "/file/User/avatar/{uid}")
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
+        generateUser().then(user -> {
+            given().multiPart(new File("src/test/resources/avatar.jpg"))
+                    .pathParam("uid", user.get_id())
+                    .when()
+                    .post(BASE_URL + "/file/User/avatar/{uid}")
+                    .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
+        });
     }
 
     /**
@@ -886,12 +882,14 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void uploadAvatarWithWrongToken() {
-        given().multiPart(new File("src/test/resources/avatar.jpg")).
-                pathParam("uid", generateUser().get_id())
-                .header(TOKEN, "11111")
-                .when()
-                .post(BASE_URL + "/file/User/avatar/{uid}")
-                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
+        generateUser().then(user -> {
+            given().multiPart(new File("src/test/resources/avatar.jpg")).
+                    pathParam("uid", user.get_id())
+                    .header(TOKEN, "11111")
+                    .when()
+                    .post(BASE_URL + "/file/User/avatar/{uid}")
+                    .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
+        });
     }
 
     /**
@@ -909,8 +907,8 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getAvatarWithWrongCollection() {
-       given().pathParam("avatar", "bla")
-               .get(BASE_URL + "/file/toto/{avatar}")
+        given().pathParam("avatar", "bla")
+                .get(BASE_URL + "/file/toto/{avatar}")
                 .then().assertThat().statusCode(404);
     }
 
@@ -919,13 +917,14 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getUserByLogin() {
-        User u = generateLoggedAdminUser();
-        given().header(TOKEN, u.getAccount().getToken())
-                .queryParam(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                .when().get(getURL(UserVerticle.USER_BY_LOGIN))
-                .then().assertThat().statusCode(200)
-                .body("name", notNullValue())
-                .body("name", is(u.getName()));
+        generateLoggedAdminUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .when().get(getURL(UserVerticle.USER_BY_LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", notNullValue())
+                    .body("name", is(u.getName()));
+        });
     }
 
     /**
@@ -933,8 +932,10 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getUserByLoginBadHTTPMethod() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().post(getURL(UserVerticle.USER_BY_LOGIN));
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().post(getURL(UserVerticle.USER_BY_LOGIN));
+        });
     }
 
     /**
@@ -952,11 +953,12 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getUserByLoginWinthNotAdminUser() {
-        User u = generateLoggedUser();
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().get(getURL(UserVerticle.USER_BY_LOGIN))
-                .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
-                .body("code", is(ExceptionCodes.NOT_ADMIN.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(UserVerticle.USER_BY_LOGIN))
+                    .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
+                    .body("code", is(ExceptionCodes.NOT_ADMIN.toString()));
+        });
     }
 
     /**
@@ -964,16 +966,17 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getUserByLoginWithWrongData() {
-        User u = generateLoggedAdminUser();
-        given().header(TOKEN, u.getAccount().getToken())
-                .queryParam(UserVerticle.PARAM_LOGIN, "blabla")
-                .when().get(getURL(UserVerticle.USER_BY_LOGIN))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedAdminUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(UserVerticle.PARAM_LOGIN, "blabla")
+                    .when().get(getURL(UserVerticle.USER_BY_LOGIN))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().get(getURL(UserVerticle.USER_BY_LOGIN))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(UserVerticle.USER_BY_LOGIN))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 }

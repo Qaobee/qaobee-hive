@@ -104,7 +104,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
     private static final String POPULATE_WITHOUT = "without";
     private static final String POPULATE_ALL = "all";
     private final LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<>();
-    static Vertx vertx;
+    protected static Vertx vertx;
     /**
      * The name.
      */
@@ -225,7 +225,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
         mongo.upsert(user).done(i -> {
             user.set_id(i);
             deferred.resolve(user);
-        }).fail(deferred::reject);
+        }).fail(e->Assert.fail(e.getMessage()));
         return deferred.promise();
     }
 
@@ -429,14 +429,14 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * @param user the user
      * @return activity activity
      */
-    protected Promise<String, Throwable, Integer> getActivity(String id, User user) {
-        Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
+    protected Promise<JsonObject, Throwable, Integer> getActivity(String id, User user) {
+        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constants.GET);
         final MultiMap params = new CaseInsensitiveHeaders().add(ActivityVerticle.PARAM_ID, id);
         req.setParams(params);
-        sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()).done(deferred::resolve).fail(deferred::reject);
+        sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()).done(res->deferred.resolve(new JsonObject(res))).fail(deferred::reject);
         return deferred.promise();
     }
 
@@ -446,14 +446,14 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * @param id the id
      * @return country country
      */
-    protected Promise<String, Throwable, Integer> getCountry(String id) {
-        Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
+    protected Promise<JsonObject, Throwable, Integer> getCountry(String id) {
+        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
         final RequestWrapper req = new RequestWrapper();
         req.setLocale(LOCALE);
         req.setMethod(Constants.GET);
         final MultiMap params = new CaseInsensitiveHeaders().add(CountryVerticle.PARAM_ID, id);
         req.setParams(params);
-        sendOnBus(CountryVerticle.GET, req).done(deferred::resolve).fail(deferred::reject);
+        sendOnBus(CountryVerticle.GET, req).done(res -> deferred.resolve(new JsonObject(res))).fail(deferred::reject);
         return deferred.promise();
     }
 }

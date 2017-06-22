@@ -20,19 +20,20 @@
 package com.qaobee.hive.test.api.commons.communication;
 
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.communication.Notification;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -70,14 +71,15 @@ public class NotificationsTest extends VertxJunitSupport {
             n.setSenderId(u.get_id());
             n.setTargetId(u.get_id());
             n.setTimestamp(System.currentTimeMillis());
-            n.set_id(addNotification(n));
-
-            given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(NotificationsVerticle.LIST))
-                    .then().assertThat().statusCode(200)
-                    .body("", hasSize(greaterThan(0)))
-                    .body("_id", hasItem(n.get_id()))
-                    .body("content", hasItem("Hello"));
+            addNotification(n).then(id -> {
+                n.set_id(id);
+                given().header(TOKEN, u.getAccount().getToken())
+                        .when().get(getURL(NotificationsVerticle.LIST))
+                        .then().assertThat().statusCode(200)
+                        .body("", hasSize(greaterThan(0)))
+                        .body("_id", hasItem(n.get_id()))
+                        .body("content", hasItem("Hello"));
+            });
         });
     }
 
@@ -99,7 +101,8 @@ public class NotificationsTest extends VertxJunitSupport {
      * Gets notifications with limit and start.
      */
     @Test
-    public void getNotificationsWithLimitAndStart() {
+    public void getNotificationsWithLimitAndStart(TestContext context) {
+        Async async = context.async(2);
         generateLoggedUser().then(u -> {
             for (int i = 0; i < 15; i++) {
                 final Notification n = new Notification();
@@ -108,9 +111,12 @@ public class NotificationsTest extends VertxJunitSupport {
                 n.setSenderId(u.get_id());
                 n.setTargetId(u.get_id());
                 n.setTimestamp(i);
-                n.set_id(addNotification(n));
+                addNotification(n).then(id -> {
+                    n.set_id(id);
+                    async.countDown();
+                });
             }
-
+            async.awaitSuccess();
             given().header(TOKEN, u.getAccount().getToken())
                     .when().get(getURL(NotificationsVerticle.LIST))
                     .then().assertThat().statusCode(200)
@@ -159,37 +165,39 @@ public class NotificationsTest extends VertxJunitSupport {
             n.setSenderId(u.get_id());
             n.setTimestamp(System.currentTimeMillis());
             n.setTargetId(u.get_id());
-            n.set_id(addNotification(n));
+            addNotification(n).then(id -> {
+                n.set_id(id);
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
-                    .when().post(getURL(NotificationsVerticle.READ))
-                    .then().assertThat().statusCode(200)
-                    .body(STATUS, notNullValue())
-                    .body(STATUS, is(true));
+                given().header(TOKEN, u.getAccount().getToken())
+                        .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
+                        .when().post(getURL(NotificationsVerticle.READ))
+                        .then().assertThat().statusCode(200)
+                        .body(STATUS, notNullValue())
+                        .body(STATUS, is(true));
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(NotificationsVerticle.LIST))
-                    .then().assertThat().statusCode(200)
-                    .body("", hasSize(1))
-                    .body("content", hasItem("Hello"))
-                    .body("_id", hasItem(n.get_id()))
-                    .body("read", hasItem(true));
+                given().header(TOKEN, u.getAccount().getToken())
+                        .when().get(getURL(NotificationsVerticle.LIST))
+                        .then().assertThat().statusCode(200)
+                        .body("", hasSize(1))
+                        .body("content", hasItem("Hello"))
+                        .body("_id", hasItem(n.get_id()))
+                        .body("read", hasItem(true));
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
-                    .when().post(getURL(NotificationsVerticle.READ))
-                    .then().assertThat().statusCode(200)
-                    .body(STATUS, notNullValue())
-                    .body(STATUS, is(true));
+                given().header(TOKEN, u.getAccount().getToken())
+                        .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
+                        .when().post(getURL(NotificationsVerticle.READ))
+                        .then().assertThat().statusCode(200)
+                        .body(STATUS, notNullValue())
+                        .body(STATUS, is(true));
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(NotificationsVerticle.LIST))
-                    .then().assertThat().statusCode(200)
-                    .body("", hasSize(1))
-                    .body("content", hasItem("Hello"))
-                    .body("_id", hasItem(n.get_id()))
-                    .body("read", hasItem(false));
+                given().header(TOKEN, u.getAccount().getToken())
+                        .when().get(getURL(NotificationsVerticle.LIST))
+                        .then().assertThat().statusCode(200)
+                        .body("", hasSize(1))
+                        .body("content", hasItem("Hello"))
+                        .body("_id", hasItem(n.get_id()))
+                        .body("read", hasItem(false));
+            });
         });
     }
 
@@ -246,7 +254,9 @@ public class NotificationsTest extends VertxJunitSupport {
             n.setSenderId(u.get_id());
             n.setTimestamp(System.currentTimeMillis());
             n.setTargetId(u.get_id());
-            n.set_id(addNotification(n));
+
+                    addNotification(n).then(id -> {
+            n.set_id(id);
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
                     .when().delete(getURL(NotificationsVerticle.DEL))
@@ -258,6 +268,7 @@ public class NotificationsTest extends VertxJunitSupport {
                     .when().get(getURL(NotificationsVerticle.LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
+        });
         });
     }
 
@@ -293,11 +304,13 @@ public class NotificationsTest extends VertxJunitSupport {
      */
     @Test
     public void deleteNotificationWithWrongHttpMethod() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
-                .when().get(getURL(NotificationsVerticle.DEL))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
+                    .when().get(getURL(NotificationsVerticle.DEL))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -316,28 +329,28 @@ public class NotificationsTest extends VertxJunitSupport {
      */
     @Test
     public void addNotificationToUser() {
-        User u = generateLoggedUser();
+        generateLoggedUser().then(u -> {
+            JsonObject n = new JsonObject()
+                    .put("content", "Hello")
+                    .put("title", "Message")
+                    .put("senderId", u.get_id())
+                    .put("timestamp", System.currentTimeMillis())
+                    .put("targetId", u.get_id());
 
-        JsonObject n = new JsonObject()
-                .putString("content", "Hello")
-                .putString("title", "Message")
-                .putString("senderId", u.get_id())
-                .putNumber("timestamp", System.currentTimeMillis())
-                .putString("targetId", u.get_id());
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(n.encode())
+                    .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
+                    .then().assertThat().statusCode(200)
+                    .body(STATUS, notNullValue())
+                    .body(STATUS, is(true));
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(n.encode())
-                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
-                .then().assertThat().statusCode(200)
-                .body(STATUS, notNullValue())
-                .body(STATUS, is(true));
-
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().get(getURL(NotificationsVerticle.LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(1))
-                .body("content", hasItem("Hello"))
-                .body("_id", hasItem(notNullValue()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(NotificationsVerticle.LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("content", hasItem("Hello"))
+                    .body("_id", hasItem(notNullValue()));
+        });
     }
 
     /**
@@ -346,27 +359,27 @@ public class NotificationsTest extends VertxJunitSupport {
     @Test
     public void addNotificationToSandboxAndExcludeHimself() {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User u = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(u -> {
+            JsonObject n = new JsonObject()
+                    .put("content", "Hello")
+                    .put("title", "Message")
+                    .put("senderId", u.get_id())
+                    .put("timestamp", System.currentTimeMillis())
+                    .put("exclude", new JsonArray().add(u.get_id()))
+                    .put("targetId", "558b0efebd2e39cdab651e1f");
 
-        JsonObject n = new JsonObject()
-                .putString("content", "Hello")
-                .putString("title", "Message")
-                .putString("senderId", u.get_id())
-                .putNumber("timestamp", System.currentTimeMillis())
-                .putArray("exclude", new JsonArray().add(u.get_id()))
-                .putString("targetId", "558b0efebd2e39cdab651e1f");
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(n.encode())
+                    .when().post(getURL(NotificationsVerticle.ADD_TO_SANDBOX))
+                    .then().assertThat().statusCode(200)
+                    .body(STATUS, notNullValue())
+                    .body(STATUS, is(true));
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(n.encode())
-                .when().post(getURL(NotificationsVerticle.ADD_TO_SANDBOX))
-                .then().assertThat().statusCode(200)
-                .body(STATUS, notNullValue())
-                .body(STATUS, is(true));
-
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().get(getURL(NotificationsVerticle.LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(0));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(NotificationsVerticle.LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(0));
+        });
     }
 
     /**
@@ -375,21 +388,21 @@ public class NotificationsTest extends VertxJunitSupport {
     @Test
     public void addNotificationToSandbox() {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User u = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(u -> {
+            JsonObject n = new JsonObject()
+                    .put("content", "Hello")
+                    .put("title", "Message")
+                    .put("senderId", u.get_id())
+                    .put("timestamp", System.currentTimeMillis())
+                    .put("targetId", "558b0efebd2e39cdab651e1f");
 
-        JsonObject n = new JsonObject()
-                .putString("content", "Hello")
-                .putString("title", "Message")
-                .putString("senderId", u.get_id())
-                .putNumber("timestamp", System.currentTimeMillis())
-                .putString("targetId", "558b0efebd2e39cdab651e1f");
-
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(n.encode())
-                .when().post(getURL(NotificationsVerticle.ADD_TO_SANDBOX))
-                .then().assertThat().statusCode(200)
-                .body(STATUS, notNullValue())
-                .body(STATUS, is(true));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(n.encode())
+                    .when().post(getURL(NotificationsVerticle.ADD_TO_SANDBOX))
+                    .then().assertThat().statusCode(200)
+                    .body(STATUS, notNullValue())
+                    .body(STATUS, is(true));
+        });
     }
 
     /**
@@ -397,26 +410,27 @@ public class NotificationsTest extends VertxJunitSupport {
      */
     @Test
     public void addNotificationToUserWithWrongUserId() {
-        User u = generateLoggedUser();
-        JsonObject n = new JsonObject()
-                .putString("content", "Hello")
-                .putString("title", "Message")
-                .putString("senderId", u.get_id())
-                .putNumber("timestamp", System.currentTimeMillis());
+        generateLoggedUser().then(u -> {
+            JsonObject n = new JsonObject()
+                    .put("content", "Hello")
+                    .put("title", "Message")
+                    .put("senderId", u.get_id())
+                    .put("timestamp", System.currentTimeMillis());
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(n.encode())
-                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(n.encode())
+                    .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-        n.putString("targetId", "bla");
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(n.encode())
-                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
-                .then().assertThat().statusCode(200)
-                .body(STATUS, notNullValue())
-                .body(STATUS, is(false));
+            n.put("targetId", "bla");
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(n.encode())
+                    .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
+                    .then().assertThat().statusCode(200)
+                    .body(STATUS, notNullValue())
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -424,17 +438,18 @@ public class NotificationsTest extends VertxJunitSupport {
      */
     @Test
     public void addNotificationToUserWithNoData() {
-        User u = generateLoggedUser();
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(new JsonObject().encode())
-                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(new JsonObject().encode())
+                    .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -442,10 +457,12 @@ public class NotificationsTest extends VertxJunitSupport {
      */
     @Test
     public void addNotificationToUserWithWrongHttpMethod() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().get(getURL(NotificationsVerticle.ADD_TO_USER))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(NotificationsVerticle.ADD_TO_USER))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -464,13 +481,9 @@ public class NotificationsTest extends VertxJunitSupport {
      * @param n Notification
      * @return notification id
      */
-    private String addNotification(final Notification n) {
-        String nid = null;
-        try {
-            nid = mongo.save(n);
-        } catch (EncodeException | QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        return nid;
+    private Promise<String, QaobeeException, Integer> addNotification(final Notification n) {
+        Deferred<String, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.upsert(n).done(deferred::resolve).fail(e -> Assert.fail(e.getMessage()));
+        return deferred.promise();
     }
 }

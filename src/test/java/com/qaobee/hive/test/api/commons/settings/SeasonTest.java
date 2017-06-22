@@ -20,7 +20,6 @@ package com.qaobee.hive.test.api.commons.settings;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
@@ -42,12 +41,14 @@ public class SeasonTest extends VertxJunitSupport {
     @Test
     public void getSeasonTest() {
         populate(POPULATE_ONLY, SETTINGS_SEASONS);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(SeasonVerticle.PARAM_ID, "559a9294889089a442f3d499")
-                .when().get(getURL(SeasonVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body("label", notNullValue())
-                .body("label", is("SAISON 2014-2015"));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(SeasonVerticle.PARAM_ID, "559a9294889089a442f3d499")
+                    .when().get(getURL(SeasonVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body("label", notNullValue())
+                    .body("label", is("SAISON 2014-2015"));
+        });
     }
 
     /**
@@ -65,10 +66,12 @@ public class SeasonTest extends VertxJunitSupport {
      */
     @Test
     public void getSeasonWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().post(getURL(SeasonVerticle.GET))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().post(getURL(SeasonVerticle.GET))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -77,11 +80,13 @@ public class SeasonTest extends VertxJunitSupport {
     @Test
     public void getSeasonWithWrongParameterTest() {
         populate(POPULATE_ONLY, SETTINGS_SEASONS);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(SeasonVerticle.PARAM_ID, "blabla")
-                .when().get(getURL(SeasonVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(SeasonVerticle.PARAM_ID, "blabla")
+                    .when().get(getURL(SeasonVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        });
     }
 
     /**
@@ -90,10 +95,12 @@ public class SeasonTest extends VertxJunitSupport {
     @Test
     public void getSeasonWithMissingParameterTest() {
         populate(POPULATE_ONLY, SETTINGS_SEASONS);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().get(getURL(SeasonVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(SeasonVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -102,13 +109,18 @@ public class SeasonTest extends VertxJunitSupport {
     @Test
     public void getSeasonListTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
-                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
-                .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(4));
+        generateLoggedUser().then(u -> {
+            getCountry("CNTR-250-FR-FRA").then(country -> {
+                getActivity("ACT-HAND", u).then(activity -> {
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) country.getString(CountryVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) activity.getString(ActivityVerticle.PARAM_ID))
+                            .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                            .then().assertThat().statusCode(200)
+                            .body("", hasSize(4));
+                });
+            });
+        });
     }
 
     /**
@@ -126,10 +138,12 @@ public class SeasonTest extends VertxJunitSupport {
      */
     @Test
     public void getSeasonListWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().post(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().post(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -138,20 +152,25 @@ public class SeasonTest extends VertxJunitSupport {
     @Test
     public void getSeasonListWithWrongParameterTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
-                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
-                .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().then(u -> {
+            getCountry("CNTR-250-FR-FRA").then(country -> {
+                getActivity("ACT-HAND", u).then(activity -> {
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                            .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                            .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID,(String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
-                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
-                .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                            .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                            .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+                });
+            });
+        });
     }
 
     /**
@@ -160,10 +179,12 @@ public class SeasonTest extends VertxJunitSupport {
     @Test
     public void getSeasonListWithMissingParameterTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
 
@@ -173,17 +194,22 @@ public class SeasonTest extends VertxJunitSupport {
     @Test
     public void getCurrentSeasonTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        User user = generateLoggedUser();
-        GregorianCalendar today = new GregorianCalendar();
-        int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) -1 : today.get(GregorianCalendar.YEAR);
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
-                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
-                .when().get(getURL(SeasonVerticle.GET_CURRENT))
-                .then().assertThat().statusCode(200)
-                .body("label", notNullValue())
-                .body("label", is("SAISON 2016-2017"))
-                .body("code", is("SAI-" + year));
+        generateLoggedUser().then(u -> {
+            getCountry("CNTR-250-FR-FRA").then(country -> {
+                getActivity("ACT-HAND", u).then(activity -> {
+                    GregorianCalendar today = new GregorianCalendar();
+                    int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                            .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                            .then().assertThat().statusCode(200)
+                            .body("label", notNullValue())
+                            .body("label", is("SAISON 2016-2017"))
+                            .body("code", is("SAI-" + year));
+                });
+            });
+        });
     }
 
     /**
@@ -201,10 +227,12 @@ public class SeasonTest extends VertxJunitSupport {
      */
     @Test
     public void getCurrentSeasonWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().post(getURL(SeasonVerticle.GET_CURRENT))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().post(getURL(SeasonVerticle.GET_CURRENT))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -213,20 +241,25 @@ public class SeasonTest extends VertxJunitSupport {
     @Test
     public void getCurrentSeasonWithWrongParameterTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
-                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
-                .when().get(getURL(SeasonVerticle.GET_CURRENT))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().then(u -> {
+            getCountry("CNTR-250-FR-FRA").then(country -> {
+                getActivity("ACT-HAND", u).then(activity -> {
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                            .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                            .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SeasonVerticle.PARAM_COUNTRY_ID,(String) getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID))
-                .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
-                .when().get(getURL(SeasonVerticle.GET_CURRENT))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                            .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                            .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+                });
+            });
+        });
     }
 
     /**
@@ -235,9 +268,11 @@ public class SeasonTest extends VertxJunitSupport {
     @Test
     public void getCurrentSeasonWithMissingParameterTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().get(getURL(SeasonVerticle.GET_CURRENT))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 }

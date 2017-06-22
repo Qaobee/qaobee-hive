@@ -183,32 +183,33 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void createPayment() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
 
-        JsonObject request = new JsonObject()
-                .put("data", new JsonObject()
-                        .put("planId", 0)
-                        .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
+            JsonObject request = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("planId", 0)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                    );
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(200)
-                .body("status", is(true))
-                .body("status", notNullValue());
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(request.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(200)
+                    .body("status", is(true))
+                    .body("status", notNullValue());
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .param("id", u.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].cardId", notNullValue())
-                .body("account.listPlan[0].cardId", not(""))
-                .body("account.listPlan[0].paymentId", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .param("id", u.get_id())
+                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(u.get_id()))
+                    .body("account.listPlan[0].cardId", notNullValue())
+                    .body("account.listPlan[0].cardId", not(""))
+                    .body("account.listPlan[0].paymentId", notNullValue())
+                    .body("account.listPlan[0].paymentId", not(""));
+        });
     }
 
     /**
@@ -216,105 +217,11 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void createPaymentWithWrongPlanId() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        JsonObject request = new JsonObject()
-                .put("data", new JsonObject()
-                        .put("planId", 1)
-                        .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
-
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-    }
-
-    /**
-     * Create payment with new customer.
-     */
-    @Test
-    public void createPaymentWithNewCustomer() {
-        User u = generateLoggedUser();
-        u.getAccount().getListPlan().get(0).setCardId("12345");
-        mongo.upsert(u).done(id -> {
+        generateLoggedUser().then(u -> {
             initMockStripe(u);
             JsonObject request = new JsonObject()
                     .put("data", new JsonObject()
-                            .put("planId", 0)
-                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                    );
-
-            given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.PAY))
-                    .then().assertThat().statusCode(200)
-                    .body("status", is(true))
-                    .body("status", notNullValue());
-
-            given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].cardId", notNullValue())
-                    .body("account.listPlan[0].cardId", not(""))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""));
-        }).fail(e -> Assert.fail(e.getMessage()));
-    }
-
-    /**
-     * Create payment with new customer and new subscription.
-     */
-    @Test
-    public void createPaymentWithNewCustomerAndNewSubscription() {
-        User u = generateLoggedUser();
-        u.getAccount().getListPlan().get(0).setCardId("12345");
-        u.getAccount().getListPlan().get(0).setPaymentId(null);
-
-        mongo.upsert(u).done(id -> {
-            initMockStripe(u);
-            JsonObject request = new JsonObject()
-                    .put("data", new JsonObject()
-                            .put("planId", 0)
-                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                    );
-
-            given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.PAY))
-                    .then().assertThat().statusCode(200)
-                    .body("status", is(true))
-                    .body("status", notNullValue());
-
-            given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].cardId", notNullValue())
-                    .body("account.listPlan[0].cardId", not(""))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""));
-        }).fail(e -> Assert.fail(e.getMessage()));
-    }
-
-    /**
-     * Create payment with existing subscription.
-     */
-    @Test
-    public void createPaymentWithExistingSubscription() {
-        User u = generateLoggedUser();
-        u.getAccount().getListPlan().get(0).setPaymentId("sub_AkHS7YtIEi1Oy9");
-        mongo.upsert(u).done(id -> {
-            initMockStripe(u);
-            JsonObject request = new JsonObject()
-                    .put("data", new JsonObject()
-                            .put("planId", 0)
+                            .put("planId", 1)
                             .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
                     );
 
@@ -323,7 +230,105 @@ public class ShippingTest extends VertxJunitSupport {
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
+    }
+
+    /**
+     * Create payment with new customer.
+     */
+    @Test
+    public void createPaymentWithNewCustomer() {
+        generateLoggedUser().then(u -> {
+            u.getAccount().getListPlan().get(0).setCardId("12345");
+            mongo.upsert(u).done(id -> {
+                initMockStripe(u);
+                JsonObject request = new JsonObject()
+                        .put("data", new JsonObject()
+                                .put("planId", 0)
+                                .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                        );
+
+                given().header(TOKEN, u.getAccount().getToken())
+                        .body(request.encodePrettily())
+                        .when().post(getURL(ShippingVerticle.PAY))
+                        .then().assertThat().statusCode(200)
+                        .body("status", is(true))
+                        .body("status", notNullValue());
+
+                given().header(TOKEN, u.getAccount().getToken())
+                        .param("id", u.get_id())
+                        .when().get(getURL(UserVerticle.USER_INFO))
+                        .then().assertThat().statusCode(200)
+                        .body("_id", notNullValue())
+                        .body("_id", is(u.get_id()))
+                        .body("account.listPlan[0].cardId", notNullValue())
+                        .body("account.listPlan[0].cardId", not(""))
+                        .body("account.listPlan[0].paymentId", notNullValue())
+                        .body("account.listPlan[0].paymentId", not(""));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
+    }
+
+    /**
+     * Create payment with new customer and new subscription.
+     */
+    @Test
+    public void createPaymentWithNewCustomerAndNewSubscription() {
+        generateLoggedUser().then(u -> {
+            u.getAccount().getListPlan().get(0).setCardId("12345");
+            u.getAccount().getListPlan().get(0).setPaymentId(null);
+
+            mongo.upsert(u).done(id -> {
+                initMockStripe(u);
+                JsonObject request = new JsonObject()
+                        .put("data", new JsonObject()
+                                .put("planId", 0)
+                                .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                        );
+
+                given().header(TOKEN, u.getAccount().getToken())
+                        .body(request.encodePrettily())
+                        .when().post(getURL(ShippingVerticle.PAY))
+                        .then().assertThat().statusCode(200)
+                        .body("status", is(true))
+                        .body("status", notNullValue());
+
+                given().header(TOKEN, u.getAccount().getToken())
+                        .param("id", u.get_id())
+                        .when().get(getURL(UserVerticle.USER_INFO))
+                        .then().assertThat().statusCode(200)
+                        .body("_id", notNullValue())
+                        .body("_id", is(u.get_id()))
+                        .body("account.listPlan[0].cardId", notNullValue())
+                        .body("account.listPlan[0].cardId", not(""))
+                        .body("account.listPlan[0].paymentId", notNullValue())
+                        .body("account.listPlan[0].paymentId", not(""));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
+    }
+
+    /**
+     * Create payment with existing subscription.
+     */
+    @Test
+    public void createPaymentWithExistingSubscription() {
+        generateLoggedUser().then(u -> {
+            u.getAccount().getListPlan().get(0).setPaymentId("sub_AkHS7YtIEi1Oy9");
+            mongo.upsert(u).done(id -> {
+                initMockStripe(u);
+                JsonObject request = new JsonObject()
+                        .put("data", new JsonObject()
+                                .put("planId", 0)
+                                .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                        );
+
+                given().header(TOKEN, u.getAccount().getToken())
+                        .body(request.encodePrettily())
+                        .when().post(getURL(ShippingVerticle.PAY))
+                        .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                        .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -331,35 +336,36 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void createPaymentWithCanceledSubscription() {
-        User u = generateLoggedUser();
-        u.getAccount().getListPlan().get(0).setPaymentId("canceled");
-        mongo.upsert(u).done(id -> {
-            initMockStripe(u);
+        generateLoggedUser().then(u -> {
+            u.getAccount().getListPlan().get(0).setPaymentId("canceled");
+            mongo.upsert(u).done(id -> {
+                initMockStripe(u);
 
-            JsonObject request = new JsonObject()
-                    .put("data", new JsonObject()
-                            .put("planId", 0)
-                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                    );
+                JsonObject request = new JsonObject()
+                        .put("data", new JsonObject()
+                                .put("planId", 0)
+                                .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                        );
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.PAY))
-                    .then().assertThat().statusCode(200)
-                    .body("status", is(true))
-                    .body("status", notNullValue());
+                given().header(TOKEN, u.getAccount().getToken())
+                        .body(request.encodePrettily())
+                        .when().post(getURL(ShippingVerticle.PAY))
+                        .then().assertThat().statusCode(200)
+                        .body("status", is(true))
+                        .body("status", notNullValue());
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].cardId", notNullValue())
-                    .body("account.listPlan[0].cardId", not(""))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""));
-        }).fail(e -> Assert.fail(e.getMessage()));
+                given().header(TOKEN, u.getAccount().getToken())
+                        .param("id", u.get_id())
+                        .when().get(getURL(UserVerticle.USER_INFO))
+                        .then().assertThat().statusCode(200)
+                        .body("_id", notNullValue())
+                        .body("_id", is(u.get_id()))
+                        .body("account.listPlan[0].cardId", notNullValue())
+                        .body("account.listPlan[0].cardId", not(""))
+                        .body("account.listPlan[0].paymentId", notNullValue())
+                        .body("account.listPlan[0].paymentId", not(""));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -367,35 +373,36 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void createPaymentWithNewSubscription() {
-        User u = generateLoggedUser();
-        u.getAccount().getListPlan().get(0).setPaymentId(null);
-        mongo.upsert(u).done(id -> {
-            initMockStripe(u);
+        generateLoggedUser().then(u -> {
+            u.getAccount().getListPlan().get(0).setPaymentId(null);
+            mongo.upsert(u).done(id -> {
+                initMockStripe(u);
 
-            JsonObject request = new JsonObject()
-                    .put("data", new JsonObject()
-                            .put("planId", 0)
-                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                    );
+                JsonObject request = new JsonObject()
+                        .put("data", new JsonObject()
+                                .put("planId", 0)
+                                .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                        );
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
-                    .when().post(getURL(ShippingVerticle.PAY))
-                    .then().assertThat().statusCode(200)
-                    .body("status", is(true))
-                    .body("status", notNullValue());
+                given().header(TOKEN, u.getAccount().getToken())
+                        .body(request.encodePrettily())
+                        .when().post(getURL(ShippingVerticle.PAY))
+                        .then().assertThat().statusCode(200)
+                        .body("status", is(true))
+                        .body("status", notNullValue());
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .param("id", u.get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue())
-                    .body("_id", is(u.get_id()))
-                    .body("account.listPlan[0].cardId", notNullValue())
-                    .body("account.listPlan[0].cardId", not(""))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""));
-        }).fail(e -> Assert.fail(e.getMessage()));
+                given().header(TOKEN, u.getAccount().getToken())
+                        .param("id", u.get_id())
+                        .when().get(getURL(UserVerticle.USER_INFO))
+                        .then().assertThat().statusCode(200)
+                        .body("_id", notNullValue())
+                        .body("_id", is(u.get_id()))
+                        .body("account.listPlan[0].cardId", notNullValue())
+                        .body("account.listPlan[0].cardId", not(""))
+                        .body("account.listPlan[0].paymentId", notNullValue())
+                        .body("account.listPlan[0].paymentId", not(""));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
     }
 
     /**
@@ -403,11 +410,117 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void createPaymentWithWrongSubscription() {
-        User u = generateLoggedUser();
-        u.getAccount().getListPlan().get(0).setPaymentId("12345");
-        mongo.upsert(u).done(id -> {
-            initMockStripe(u);
+        generateLoggedUser().then(u -> {
+            u.getAccount().getListPlan().get(0).setPaymentId("12345");
+            mongo.upsert(u).done(id -> {
+                initMockStripe(u);
 
+                JsonObject request = new JsonObject()
+                        .put("data", new JsonObject()
+                                .put("planId", 0)
+                                .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                        );
+
+                given().header(TOKEN, u.getAccount().getToken())
+                        .body(request.encodePrettily())
+                        .when().post(getURL(ShippingVerticle.PAY))
+                        .then().assertThat().statusCode(200)
+                        .body("status", is(true))
+                        .body("status", notNullValue());
+
+                given().header(TOKEN, u.getAccount().getToken())
+                        .param("id", u.get_id())
+                        .when().get(getURL(UserVerticle.USER_INFO))
+                        .then().assertThat().statusCode(200)
+                        .body("_id", notNullValue())
+                        .body("_id", is(u.get_id()))
+                        .body("account.listPlan[0].cardId", notNullValue())
+                        .body("account.listPlan[0].cardId", not(""))
+                        .body("account.listPlan[0].paymentId", notNullValue())
+                        .body("account.listPlan[0].paymentId", not(""));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        });
+    }
+
+    /**
+     * Create payment with missing plan id.
+     */
+    @Test
+    public void createPaymentWithMissingPlanId() {
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
+    }
+
+    /**
+     * Create payment with wrong http method.
+     */
+    @Test
+    public void createPaymentWithWrongHttpMethod() {
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
+    }
+
+    /**
+     * Create payment with wrong token.
+     */
+    @Test
+    public void createPaymentWithWrongToken() {
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
+            JsonObject request = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("planId", 0)
+                            .put("token", "bla")
+                    );
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(request.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                    .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+        });
+    }
+
+    /**
+     * Create payment with no server.
+     */
+    @Test
+    public void createPaymentWithNoServer() {
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
+            JsonObject request = new JsonObject()
+                    .put("data", new JsonObject()
+                            .put("planId", 0)
+                            .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
+                    );
+            initMockStripe(u);
+            if (mockServer.isRunning()) {
+                mockServer.stop();
+            }
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(request.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.PAY))
+                    .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
+        });
+    }
+
+    /**
+     * Recieve webhook notification
+     */
+    @Test
+    public void recieveWebHookNotification() {
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
             JsonObject request = new JsonObject()
                     .put("data", new JsonObject()
                             .put("planId", 0)
@@ -421,7 +534,7 @@ public class ShippingTest extends VertxJunitSupport {
                     .body("status", is(true))
                     .body("status", notNullValue());
 
-            given().header(TOKEN, u.getAccount().getToken())
+            String customer = given().header(TOKEN, u.getAccount().getToken())
                     .param("id", u.get_id())
                     .when().get(getURL(UserVerticle.USER_INFO))
                     .then().assertThat().statusCode(200)
@@ -429,129 +542,29 @@ public class ShippingTest extends VertxJunitSupport {
                     .body("_id", is(u.get_id()))
                     .body("account.listPlan[0].cardId", notNullValue())
                     .body("account.listPlan[0].cardId", not(""))
-                    .body("account.listPlan[0].paymentId", notNullValue())
-                    .body("account.listPlan[0].paymentId", not(""));
-        }).fail(e -> Assert.fail(e.getMessage()));
-    }
+                    .extract().path("account.listPlan[0].cardId");
 
-    /**
-     * Create payment with missing plan id.
-     */
-    @Test
-    public void createPaymentWithMissingPlanId() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
+            JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+            webHookData.getJsonObject("data").getJsonObject("object").getJsonObject("metadata").put("planId", "0");
+            webHookData.getJsonObject("data").getJsonObject("object").put("customer", customer);
 
-    /**
-     * Create payment with wrong http method.
-     */
-    @Test
-    public void createPaymentWithWrongHttpMethod() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().get(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
-    }
-
-    /**
-     * Create payment with wrong token.
-     */
-    @Test
-    public void createPaymentWithWrongToken() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        JsonObject request = new JsonObject()
-                .put("data", new JsonObject()
-                        .put("planId", 0)
-                        .put("token", "bla")
-                );
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-    }
-
-    /**
-     * Create payment with no server.
-     */
-    @Test
-    public void createPaymentWithNoServer() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        JsonObject request = new JsonObject()
-                .put("data", new JsonObject()
-                        .put("planId", 0)
-                        .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
-        initMockStripe(u);
-        if (mockServer.isRunning()) {
-            mockServer.stop();
-        }
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
-    }
-
-    /**
-     * Recieve webhook notification
-     */
-    @Test
-    public void recieveWebHookNotification() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        JsonObject request = new JsonObject()
-                .put("data", new JsonObject()
-                        .put("planId", 0)
-                        .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
-                );
-
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(request.encodePrettily())
-                .when().post(getURL(ShippingVerticle.PAY))
-                .then().assertThat().statusCode(200)
-                .body("status", is(true))
-                .body("status", notNullValue());
-
-        String customer = given().header(TOKEN, u.getAccount().getToken())
-                .param("id", u.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].cardId", notNullValue())
-                .body("account.listPlan[0].cardId", not(""))
-                .extract().path("account.listPlan[0].cardId");
-
-        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
-        webHookData.getJsonObject("data").getJsonObject("object").getJsonObject("metadata").put("planId", "0");
-        webHookData.getJsonObject("data").getJsonObject("object").put("customer", customer);
-
-        given().body(webHookData.encode())
-                .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(200)
-                .body("status", notNullValue())
-                .body("status", is(true));
-        // Let's verify user's info
-        given().header(TOKEN, u.getAccount().getToken())
-                .param("id", u.get_id())
-                .when().get(getURL(UserVerticle.USER_INFO))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("_id", is(u.get_id()))
-                .body("account.listPlan[0].paidDate", notNullValue())
-                .body("account.listPlan[0].cardInfo", notNullValue())
-                .body("account.listPlan[0].paymentId", not(""))
-                .body("account.listPlan[0].status", is("active"));
+            given().body(webHookData.encode())
+                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
+                    .then().assertThat().statusCode(200)
+                    .body("status", notNullValue())
+                    .body("status", is(true));
+            // Let's verify user's info
+            given().header(TOKEN, u.getAccount().getToken())
+                    .param("id", u.get_id())
+                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("_id", is(u.get_id()))
+                    .body("account.listPlan[0].paidDate", notNullValue())
+                    .body("account.listPlan[0].cardInfo", notNullValue())
+                    .body("account.listPlan[0].paymentId", not(""))
+                    .body("account.listPlan[0].status", is("active"));
+        });
     }
 
     /**
@@ -596,18 +609,19 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void recieveWebHookNotificationWithBadPlanId() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
-        webHookData.getJsonObject("data")
-                .getJsonObject("object")
-                .getJsonObject("metadata")
-                .put("planId", "sdqsdqd");
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
+            JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+            webHookData.getJsonObject("data")
+                    .getJsonObject("object")
+                    .getJsonObject("metadata")
+                    .put("planId", "sdqsdqd");
 
-        given().body(webHookData.encodePrettily())
-                .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+            given().body(webHookData.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
+                    .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                    .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+        });
     }
 
     /**
@@ -615,17 +629,18 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void recieveWebHookNotificationWithNonExistingPlanId() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
-        webHookData.getJsonObject("data")
-                .getJsonObject("object")
-                .getJsonObject("metadata")
-                .put("planId", "1");
-        given().body(webHookData.encodePrettily())
-                .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
+            JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+            webHookData.getJsonObject("data")
+                    .getJsonObject("object")
+                    .getJsonObject("metadata")
+                    .put("planId", "1");
+            given().body(webHookData.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
+                    .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                    .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+        });
     }
 
     /**
@@ -633,17 +648,18 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void recieveWebHookNotificationWithNullPlanId() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
-        webHookData.getJsonObject("data")
-                .getJsonObject("object")
-                .getJsonObject("metadata")
-                .remove("planId");
-        given().body(webHookData.encodePrettily())
-                .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
+            JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+            webHookData.getJsonObject("data")
+                    .getJsonObject("object")
+                    .getJsonObject("metadata")
+                    .remove("planId");
+            given().body(webHookData.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -651,16 +667,17 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Test
     public void recieveWebHookNotificationWithEmptyPlanId() {
-        User u = generateLoggedUser();
-        initMockStripe(u);
-        JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
-        webHookData.getJsonObject("data")
-                .getJsonObject("object")
-                .getJsonObject("metadata")
-                .put("planId", "");
-        given().body(webHookData.encodePrettily())
-                .when().post(getURL(ShippingVerticle.WEB_HOOK))
-                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
-                .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+        generateLoggedUser().then(u -> {
+            initMockStripe(u);
+            JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
+            webHookData.getJsonObject("data")
+                    .getJsonObject("object")
+                    .getJsonObject("metadata")
+                    .put("planId", "");
+            given().body(webHookData.encodePrettily())
+                    .when().post(getURL(ShippingVerticle.WEB_HOOK))
+                    .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
+                    .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+        });
     }
 }

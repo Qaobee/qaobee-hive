@@ -19,12 +19,11 @@
 package com.qaobee.hive.test.api.commons.referencial;
 
 import com.qaobee.hive.api.v1.commons.referencial.StructureVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
-import org.junit.Test;
+import io.vertx.core.json.JsonObject;
 import org.junit.Ignore;
-import org.vertx.java.core.json.JsonObject;
+import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -34,7 +33,7 @@ import static org.hamcrest.Matchers.*;
  *
  * @author cke
  */
- @Ignore
+@Ignore
 public class StructureTest extends VertxJunitSupport {
 
     /**
@@ -43,12 +42,14 @@ public class StructureTest extends VertxJunitSupport {
     @Test
     public void getStructureById() {
         populate(POPULATE_ONLY, DATA_STRUCTURE);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(StructureVerticle.PARAM_ID, "541168295971d35c1f2d1b5e")
-                .when().get(getURL(StructureVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body(StructureVerticle.PARAM_LABEL, notNullValue())
-                .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(StructureVerticle.PARAM_ID, "541168295971d35c1f2d1b5e")
+                    .when().get(getURL(StructureVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body(StructureVerticle.PARAM_LABEL, notNullValue())
+                    .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"));
+        });
     }
 
     /**
@@ -66,10 +67,12 @@ public class StructureTest extends VertxJunitSupport {
      */
     @Test
     public void getStructureByIdWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .post(getURL(StructureVerticle.GET))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .post(getURL(StructureVerticle.GET))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -77,10 +80,12 @@ public class StructureTest extends VertxJunitSupport {
      */
     @Test
     public void getStructureByIdWithMissingParameterTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .get(getURL(StructureVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .get(getURL(StructureVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -89,19 +94,21 @@ public class StructureTest extends VertxJunitSupport {
     @Test
     public void getStructuresList() {
         populate(POPULATE_ONLY, DATA_STRUCTURE, SETTINGS_COUNTRY);
-        JsonObject param = new JsonObject()
-                .putString(StructureVerticle.PARAM_ACTIVITY, "ACT-HAND")
-                .putObject(StructureVerticle.PARAM_ADDRESS, new JsonObject()
-                        .putString("city", "DUNKERQUE")
-                        .putString("zipcode", "59240")
-                );
+        generateLoggedUser().then(u -> {
+            JsonObject param = new JsonObject()
+                    .put(StructureVerticle.PARAM_ACTIVITY, "ACT-HAND")
+                    .put(StructureVerticle.PARAM_ADDRESS, new JsonObject()
+                            .put("city", "DUNKERQUE")
+                            .put("zipcode", "59240")
+                    );
 
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(param.encode())
-                .when().post(getURL(StructureVerticle.GET_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(1))
-                .body("acronym", hasItem("USDK"));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(param.encode())
+                    .when().post(getURL(StructureVerticle.GET_LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("acronym", hasItem("USDK"));
+        });
     }
 
     /**
@@ -119,10 +126,12 @@ public class StructureTest extends VertxJunitSupport {
      */
     @Test
     public void getStructuresListWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .get(getURL(StructureVerticle.GET_LIST))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .get(getURL(StructureVerticle.GET_LIST))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -130,10 +139,12 @@ public class StructureTest extends VertxJunitSupport {
      */
     @Test
     public void getStructuresListWithMissingParameterTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .post(getURL(StructureVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .post(getURL(StructureVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -142,45 +153,47 @@ public class StructureTest extends VertxJunitSupport {
     @Test
     public void getStructuresListWithWrongParameters() {
         populate(POPULATE_ONLY, DATA_STRUCTURE, SETTINGS_COUNTRY);
-        JsonObject param = new JsonObject()
-                .putString(StructureVerticle.PARAM_ACTIVITY, "ACT-HAND")
-                .putObject(StructureVerticle.PARAM_ADDRESS, new JsonObject()
-                        .putString("city", "DUNKERQUE")
-                        .putString("zipcode", "59240")
-                        .putString("countryAlpha2", "KL")
-                );
+        generateLoggedUser().then(u -> {
+            JsonObject param = new JsonObject()
+                    .put(StructureVerticle.PARAM_ACTIVITY, "ACT-HAND")
+                    .put(StructureVerticle.PARAM_ADDRESS, new JsonObject()
+                            .put("city", "DUNKERQUE")
+                            .put("zipcode", "59240")
+                            .put("countryAlpha2", "KL")
+                    );
 
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(param.encode())
-                .when().post(getURL(StructureVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(param.encode())
+                    .when().post(getURL(StructureVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
-        param = new JsonObject()
-                .putString(StructureVerticle.PARAM_ACTIVITY, "ACT-HAND")
-                .putObject(StructureVerticle.PARAM_ADDRESS, new JsonObject()
-                        .putString("city", "blabla")
-                        .putString("zipcode", "bla")
-                );
+            param = new JsonObject()
+                    .put(StructureVerticle.PARAM_ACTIVITY, "ACT-HAND")
+                    .put(StructureVerticle.PARAM_ADDRESS, new JsonObject()
+                            .put("city", "blabla")
+                            .put("zipcode", "bla")
+                    );
 
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(param.encode())
-                .when().post(getURL(StructureVerticle.GET_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(0));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(param.encode())
+                    .when().post(getURL(StructureVerticle.GET_LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(0));
 
-        param = new JsonObject()
-                .putString(StructureVerticle.PARAM_ACTIVITY, "ACT-BIDON")
-                .putObject(StructureVerticle.PARAM_ADDRESS, new JsonObject()
-                        .putString("city", "DUNKERQUE")
-                        .putString("zipcode", "59240")
-                );
+            param = new JsonObject()
+                    .put(StructureVerticle.PARAM_ACTIVITY, "ACT-BIDON")
+                    .put(StructureVerticle.PARAM_ADDRESS, new JsonObject()
+                            .put("city", "DUNKERQUE")
+                            .put("zipcode", "59240")
+                    );
 
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(param.encode())
-                .when().post(getURL(StructureVerticle.GET_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(0));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(param.encode())
+                    .when().post(getURL(StructureVerticle.GET_LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(0));
+        });
     }
 
 
@@ -190,21 +203,22 @@ public class StructureTest extends VertxJunitSupport {
     @Test
     public void updateStructure() {
         populate(POPULATE_ONLY, DATA_STRUCTURE);
-        User u = generateLoggedUser();
-        JsonObject structure = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
-                .queryParam(StructureVerticle.PARAM_ID, "541168295971d35c1f2d1b5e")
-                .when().get(getURL(StructureVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body(StructureVerticle.PARAM_LABEL, notNullValue())
-                .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"))
-                .extract().asString());
-        structure.putString(StructureVerticle.PARAM_LABEL, "newValue");
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(structure.encode())
-                .when().post(getURL(StructureVerticle.UPDATE))
-                .then().assertThat().statusCode(200)
-                .body(StructureVerticle.PARAM_LABEL, notNullValue())
-                .body(StructureVerticle.PARAM_LABEL, is("newValue"));
+        generateLoggedUser().then(u -> {
+            JsonObject structure = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(StructureVerticle.PARAM_ID, "541168295971d35c1f2d1b5e")
+                    .when().get(getURL(StructureVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body(StructureVerticle.PARAM_LABEL, notNullValue())
+                    .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"))
+                    .extract().asString());
+            structure.put(StructureVerticle.PARAM_LABEL, "newValue");
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(structure.encode())
+                    .when().post(getURL(StructureVerticle.UPDATE))
+                    .then().assertThat().statusCode(200)
+                    .body(StructureVerticle.PARAM_LABEL, notNullValue())
+                    .body(StructureVerticle.PARAM_LABEL, is("newValue"));
+        });
     }
 
     /**
@@ -222,10 +236,12 @@ public class StructureTest extends VertxJunitSupport {
      */
     @Test
     public void updateStructureWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .get(getURL(StructureVerticle.UPDATE))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .get(getURL(StructureVerticle.UPDATE))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -234,20 +250,21 @@ public class StructureTest extends VertxJunitSupport {
     @Test
     public void updateStructureWithMissingParameterTest() {
         populate(POPULATE_ONLY, DATA_STRUCTURE);
-        User u = generateLoggedUser();
-        JsonObject structure = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
-                .queryParam(StructureVerticle.PARAM_ID, "541168295971d35c1f2d1b5e")
-                .when().get(getURL(StructureVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body(StructureVerticle.PARAM_LABEL, notNullValue())
-                .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"))
-                .extract().asString());
-        structure.removeField(StructureVerticle.PARAM_COUNTRY);
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(structure.encode())
-                .post(getURL(StructureVerticle.UPDATE))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            JsonObject structure = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(StructureVerticle.PARAM_ID, "541168295971d35c1f2d1b5e")
+                    .when().get(getURL(StructureVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body(StructureVerticle.PARAM_LABEL, notNullValue())
+                    .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"))
+                    .extract().asString());
+            structure.remove(StructureVerticle.PARAM_COUNTRY);
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(structure.encode())
+                    .post(getURL(StructureVerticle.UPDATE))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -257,17 +274,18 @@ public class StructureTest extends VertxJunitSupport {
     public void addStructure() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-        User u = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString("label", "labelValue");
-        params.putString("acronym", "acronymValue");
-        params.putObject(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
-        params.putObject(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", u));
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(StructureVerticle.ADD))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue());
+        generateLoggedUser().then(u -> {
+            final JsonObject params = new JsonObject();
+            params.put("label", "labelValue");
+            params.put("acronym", "acronymValue");
+            params.put(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
+            params.put(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", u));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(getURL(StructureVerticle.ADD))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue());
+        });
     }
 
     /**
@@ -285,10 +303,12 @@ public class StructureTest extends VertxJunitSupport {
      */
     @Test
     public void addStructureWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .get(getURL(StructureVerticle.ADD))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .get(getURL(StructureVerticle.ADD))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -298,15 +318,16 @@ public class StructureTest extends VertxJunitSupport {
     public void addStructureWithMissingParameterTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-        User u = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString("label", "labelValue");
-        params.putString("acronym", "acronymValue");
-        params.putObject(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(StructureVerticle.ADD))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            final JsonObject params = new JsonObject();
+            params.put("label", "labelValue");
+            params.put("acronym", "acronymValue");
+            params.put(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(getURL(StructureVerticle.ADD))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 }

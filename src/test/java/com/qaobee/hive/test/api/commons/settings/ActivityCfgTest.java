@@ -20,7 +20,6 @@
 package com.qaobee.hive.test.api.commons.settings;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
@@ -38,14 +37,17 @@ public class ActivityCfgTest extends VertxJunitSupport {
     @Test
     public void getActivityCfg() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
-                .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
-                .when().get(getURL(ActivityCfgVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body("activityId", notNullValue())
-                .body("activityId", is("ACT-HAND"));
+
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+                    .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
+                    .when().get(getURL(ActivityCfgVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body("activityId", notNullValue())
+                    .body("activityId", is("ACT-HAND"));
+        });
     }
 
     /**
@@ -63,10 +65,12 @@ public class ActivityCfgTest extends VertxJunitSupport {
      */
     @Test
     public void getActivityCfgWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .post(getURL(ActivityCfgVerticle.GET))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .post(getURL(ActivityCfgVerticle.GET))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -74,25 +78,26 @@ public class ActivityCfgTest extends VertxJunitSupport {
      */
     @Test
     public void getActivityCfgWithMissingParameterTest() {
-        User u =  generateLoggedUser();
-        given().header(TOKEN,u.getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
-                .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
-                .get(getURL(ActivityCfgVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        given().header(TOKEN, u.getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
-                .get(getURL(ActivityCfgVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        given().header(TOKEN, u.getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
-                .get(getURL(ActivityCfgVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+                    .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
+                    .get(getURL(ActivityCfgVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
+                    .get(getURL(ActivityCfgVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+                    .get(getURL(ActivityCfgVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -101,13 +106,15 @@ public class ActivityCfgTest extends VertxJunitSupport {
     @Test
     public void getActivityCfgWithWrongActivityIdTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
-                .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
-                .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
-                .get(getURL(ActivityCfgVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                    .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+                    .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
+                    .get(getURL(ActivityCfgVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        });
     }
 
     /**
@@ -116,14 +123,16 @@ public class ActivityCfgTest extends VertxJunitSupport {
     @Test
     public void getParamsFields() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
-                .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
-                .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
-                .when().get(getURL(ActivityCfgVerticle.PARAMS))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(7));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+                    .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
+                    .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
+                    .when().get(getURL(ActivityCfgVerticle.PARAMS))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(7));
+        });
     }
 
     /**
@@ -141,10 +150,12 @@ public class ActivityCfgTest extends VertxJunitSupport {
      */
     @Test
     public void getParamsFieldsWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .post(getURL(ActivityCfgVerticle.PARAMS))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .post(getURL(ActivityCfgVerticle.PARAMS))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+        });
     }
 
     /**
@@ -152,35 +163,36 @@ public class ActivityCfgTest extends VertxJunitSupport {
      */
     @Test
     public void getParamsFieldsWithMissingParameterTest() {
-        User u =  generateLoggedUser();
-        given().header(TOKEN,u.getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
-                .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
-                .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
-                .get(getURL(ActivityCfgVerticle.PARAMS))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        given().header(TOKEN, u.getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
-                .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
-                .get(getURL(ActivityCfgVerticle.PARAMS))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        given().header(TOKEN, u.getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
-                .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
-                .get(getURL(ActivityCfgVerticle.PARAMS))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        given().header(TOKEN, u.getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
-                .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
-                .get(getURL(ActivityCfgVerticle.PARAMS))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+                    .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
+                    .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
+                    .get(getURL(ActivityCfgVerticle.PARAMS))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
+                    .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
+                    .get(getURL(ActivityCfgVerticle.PARAMS))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+                    .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
+                    .get(getURL(ActivityCfgVerticle.PARAMS))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+                    .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
+                    .get(getURL(ActivityCfgVerticle.PARAMS))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        });
     }
 
     /**
@@ -189,13 +201,15 @@ public class ActivityCfgTest extends VertxJunitSupport {
     @Test
     public void getParamsFieldsWithWrongActivityIdTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
-                .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
-                .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
-                .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
-                .get(getURL(ActivityCfgVerticle.PARAMS))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(ActivityCfgVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                    .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
+                    .queryParam(ActivityCfgVerticle.PARAM_DATE, "1391209200000")
+                    .queryParam(ActivityCfgVerticle.PARAM_FIELD_LIST, "listPositionType")
+                    .get(getURL(ActivityCfgVerticle.PARAMS))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        });
     }
 }
