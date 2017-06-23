@@ -24,7 +24,6 @@ import com.qaobee.hive.dao.EventDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -107,8 +106,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String PARAM_LIMIT_RESULT = "limitResult";
     private static final Logger LOG = LoggerFactory.getLogger(SB_EventVerticle.class);
-    @Inject
-    private Utils utils;
     @Inject
     private EventDAO eventDAO;
 

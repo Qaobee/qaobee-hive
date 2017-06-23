@@ -217,45 +217,46 @@ public class UtilsImpl implements Utils {
         String token = "";
         if (request.getUser() != null) {
             deferred.resolve(request.getUser());
-        }
-        if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
-            token = request.getHeaders().get(Constants.TOKEN).get(0);
-        }
-        if (request.getParams() != null && request.getParams().containsKey(Constants.TOKEN)) {
-            token = request.getParams().get(Constants.TOKEN).get(0);
-        }
-        if (StringUtils.isBlank(token)) {
-            deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
         } else {
-            mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, "User")
-                    .done(res -> {
-                        if (res.size() != 1) {
-                            deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
-                        } else {
-                            // we take the first one (should be only one)
-                            final JsonObject jsonUser = res.getJsonObject(0);
-                            JsonObject userToSave = new JsonObject();
-                            final User user = Json.decodeValue(jsonUser.encode(), User.class);
-                            userToSave.put("_id", user.get_id());
-                            if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
-                                userToSave.put("account.token", "");
-                                user.getAccount().setToken(null);
-                                userToSave.put("account.tokenRenewDate", 0L);
-                                user.getAccount().setTokenRenewDate(0L);
+            if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
+                token = request.getHeaders().get(Constants.TOKEN).get(0);
+            }
+            if (request.getParams() != null && request.getParams().containsKey(Constants.TOKEN)) {
+                token = request.getParams().get(Constants.TOKEN).get(0);
+            }
+            if (StringUtils.isBlank(token)) {
+                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
+            } else {
+                mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, "User")
+                        .done(res -> {
+                            if (res.size() != 1) {
+                                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
                             } else {
-                                long connectionTime = System.currentTimeMillis();
-                                userToSave.put("account.tokenRenewDate", connectionTime);
-                                user.getAccount().setTokenRenewDate(connectionTime);
-                            }
-                            mongo.upsert(userToSave, "User").done(id -> {
-                                if (user.getAccount().getTokenRenewDate() == 0) {
-                                    deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
+                                // we take the first one (should be only one)
+                                final JsonObject jsonUser = res.getJsonObject(0);
+                                JsonObject userToSave = new JsonObject();
+                                final User user = Json.decodeValue(jsonUser.encode(), User.class);
+                                userToSave.put("_id", user.get_id());
+                                if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
+                                    userToSave.put("account.token", "");
+                                    user.getAccount().setToken(null);
+                                    userToSave.put("account.tokenRenewDate", 0L);
+                                    user.getAccount().setTokenRenewDate(0L);
+                                } else {
+                                    long connectionTime = System.currentTimeMillis();
+                                    userToSave.put("account.tokenRenewDate", connectionTime);
+                                    user.getAccount().setTokenRenewDate(connectionTime);
                                 }
-                                request.setUser(user);
-                                deferred.resolve(user);
-                            }).fail(deferred::reject);
-                        }
-                    }).fail(deferred::reject);
+                                mongo.upsert(userToSave, "User").done(id -> {
+                                    if (user.getAccount().getTokenRenewDate() == 0) {
+                                        deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
+                                    }
+                                    request.setUser(user);
+                                    deferred.resolve(user);
+                                }).fail(deferred::reject);
+                            }
+                        }).fail(deferred::reject);
+            }
         }
         return deferred.promise();
     }

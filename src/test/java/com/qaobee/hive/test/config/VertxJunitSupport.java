@@ -43,8 +43,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.apache.commons.io.FileUtils;
-import org.bson.Document;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
@@ -55,12 +55,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.nio.charset.Charset;
 import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
 
@@ -99,33 +98,42 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * The constant config.
      */
     private static JsonObject config;
-    private static final Logger LOG = LoggerFactory.getLogger(VertxJunitSupport.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(VertxJunitSupport.class);
     private static final String POPULATE_WITHOUT = "without";
     private static final String POPULATE_ALL = "all";
-    private final LinkedBlockingQueue<Object> queue = new LinkedBlockingQueue<>();
+    /**
+     * The constant vertx.
+     */
     protected static Vertx vertx;
     /**
      * The name.
      */
     @Rule
     public TestName name = new TestName();
+
     /**
      * The Mongo.
      */
     @Inject
     protected MongoDB mongo;
+    /**
+     * The Mongo client custom.
+     */
     @Inject
     protected MongoClientCustom mongoClientCustom;
+    @Inject
+    @Named("mongo.db")
+    private JsonObject mongoConf;
 
     /**
      * Start mongo server.
      */
     @BeforeClass
-    public static void startMongoServer() {
+    public static void startMongoServer(TestContext context) {
         vertx = Vertx.vertx();
         FileSystem fs = vertx.fileSystem();
         config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes()));
-        vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config));
+        vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config), context.asyncAssertSuccess());
         RestAssured.defaultParser = Parser.JSON;
         RestAssured.requestSpecification = new RequestSpecBuilder().addHeader(ACCEPT_LANGUAGE, LOCALE).build();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -141,14 +149,17 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Stop all.
      */
     @AfterClass
-    public static void stopAll() {
+    public static void stopAll(TestContext context) {
+        Async async = context.async();
         JunitMongoSingleton.getInstance().getProcess().stop();
+        vertx.close(event -> async.complete());
     }
 
     /**
      * Find free port.
      *
      * @return the int
+     *
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static int findFreePort() throws IOException {
@@ -162,6 +173,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Gets url.
      *
      * @param busAddress the bus address
+     *
      * @return the url
      */
     protected String getURL(String busAddress) {
@@ -173,19 +185,26 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     @Before
     public void printInfo(TestContext context) {
+        vertx.exceptionHandler(context.exceptionHandler());
+        RestAssured.reset();
         Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
         injector.injectMembers(this);
-        System.out.println("About to execute : " + name.getMethodName());
+        LOG.info("About to execute : " + name.getMethodName());
+    }
 
+    @After
+    public void cleanDatas(TestContext context) {
         Async async = context.async();
         mongoClientCustom.getDB().getDatabase("hive").drop((result, t) -> {
+            LOG.debug("-------------------> 1");
             if (t != null) {
                 context.fail(t.getCause());
             } else {
                 async.complete();
             }
         });
-        async.await();
+        async.awaitSuccess();
+        LOG.debug("-------------------> 2");
     }
 
 
@@ -224,7 +243,10 @@ public class VertxJunitSupport implements JSDataMongoTest {
         mongo.upsert(user).done(i -> {
             user.set_id(i);
             deferred.resolve(user);
-        }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> {
+            deferred.reject(e);
+            Assert.fail(e.getMessage());
+        });
         return deferred.promise();
     }
 
@@ -232,6 +254,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Promise<User, QaobeeException, Integer> generateLoggedUser(String userId) {
@@ -266,6 +289,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged admin user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Promise<User, QaobeeException, Integer> generateLoggedAdminUser(String userId) {
@@ -287,6 +311,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param address bus address
      * @param req     request
+     *
      * @return result string
      */
     protected Promise<String, Throwable, Integer> sendOnBus(final String address, final RequestWrapper req) {
@@ -322,6 +347,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * @param address the address
      * @param req     the req
      * @param token   the token
+     *
      * @return the string
      */
     protected Promise<String, Throwable, Integer> sendOnBus(String address, RequestWrapper req, String token) {
@@ -335,6 +361,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param address the address
      * @param query   the query
+     *
      * @return the json object
      */
     protected Promise<JsonObject, Throwable, Integer> sendOnBus(String address, JsonObject query) {
@@ -376,11 +403,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * @param relativeDirectory (String) : relative dir from "scripts/mongo"
      * @param mongoFiles        (String[]) : array of filenames
      */
-    private Promise<JsonObject, Throwable, Integer> populate(String populateType, String relativeDirectory, String... mongoFiles) {
-        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        for (String s : mongoFiles) {
-            LOG.info("Populating " + s);
-        }
+    private void populate(String populateType, String relativeDirectory, String... mongoFiles) {
         File[] listFiles = new File("scripts/mongo" + relativeDirectory).listFiles();
         if (listFiles != null && listFiles.length > 0) {
             List<String> mongoFilesList = new ArrayList<>();
@@ -403,25 +426,24 @@ public class VertxJunitSupport implements JSDataMongoTest {
                 } else if (POPULATE_WITHOUT.equals(populateType) && mongoFilesList.contains(scriptMongo.getName())) {
                     continue;
                 }
+                //  try {
+                LOG.info("Populating " + scriptMongo.getName());
+                CommandLine mongoCmd = new CommandLine("mongo")
+                        .addArgument(mongoConf.getString("host") + ":" + mongoConf.getInteger("port") + "/" + mongoConf.getString("db_name"))
+                        .addArgument(scriptMongo.getAbsolutePath());
+                DefaultExecutor executor = new DefaultExecutor();
                 try {
-                    //   JsonObject command = new JsonObject(FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8")));
-                    mongoClientCustom.getDB()
-                            .getDatabase("hive")
-                            .runCommand(new Document("eval", FileUtils.readFileToString(scriptMongo, Charset.forName("UTF-8"))+ "\n"), (result, t) -> {
-                                if (t == null) {
-                                    deferred.resolve(new JsonObject());
-                                } else {
-                                    Assert.fail("[ " + scriptMongo.getAbsolutePath() + " ]" + t.getMessage());
-                                    t.printStackTrace();
-                                }
-                            });
+                    int exitValue = executor.execute(mongoCmd);
+                    System.out.println(exitValue);
+                    if (exitValue > 0) {
+                        Assert.fail("[ " + scriptMongo.getAbsolutePath() + " ] " + exitValue);
+                    }
                 } catch (IOException e) {
-                    LOG.error(e.getMessage(), e);
-                    Assert.fail(e.getMessage());
+                    Assert.fail("[ " + scriptMongo.getAbsolutePath() + " ] " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }
-        return deferred.promise();
     }
 
     /**
@@ -429,6 +451,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param id   the id
      * @param user the user
+     *
      * @return activity activity
      */
     protected Promise<JsonObject, Throwable, Integer> getActivity(String id, User user) {
@@ -445,6 +468,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
+     *
      * @return country country
      */
     protected Promise<JsonObject, Throwable, Integer> getCountry(String id) {

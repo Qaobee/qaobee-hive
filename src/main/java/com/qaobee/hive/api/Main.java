@@ -24,11 +24,9 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.DeliveryOptions;
@@ -75,8 +73,7 @@ public class Main extends AbstractGuiceVerticle {
     private static final String APPLICATION_JSON = "application/json";
     private static final String MESSAGE = "message";
     private static final Map<String, Rule> rules = new HashMap<>();
-    @Inject
-    private Utils utils;
+
     @Inject
     @Named("runtime")
     private JsonObject runtime;
@@ -169,7 +166,7 @@ public class Main extends AbstractGuiceVerticle {
     }
 
     @Override
-    public void start(Future<Void> startFuture) throws Exception {
+    public void start() {
         LOG.debug(this.getClass().getName() + " started");
         final Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
@@ -185,22 +182,19 @@ public class Main extends AbstractGuiceVerticle {
         // API Rest
         router.routeWithRegex("^/api/.*").handler(this::handleAPIRequest);
         // Load Verticles
-        runWebServer(loadVerticles(), router, startFuture);
-        super.start(startFuture);
+        runWebServer(loadVerticles(), router);
+        super.start();
     }
 
     /**
      * @param promises Promises
      * @param router   Route matcher
      */
-    private void runWebServer(List<Promise> promises, Router router, Future<Void> startFuture) {
+    private void runWebServer(List<Promise> promises, Router router) {
         DeferredManager dm = new DefaultDeferredManager();
         dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
-            rs.forEach(r -> System.out.println(r.getResult()));
             handleServerStart(router);
-        }).fail(e -> {
-            LOG.error(((Throwable) e.getReject()).getMessage());
-        });
+        }).fail(e -> LOG.error(((Throwable) e.getReject()).getMessage()));
     }
 
     private void handleServerStart(Router router) {
@@ -226,7 +220,7 @@ public class Main extends AbstractGuiceVerticle {
         restModules.forEach(restMod -> {
             Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
             promises.add(deferred.promise());
-            if (restMod.getAnnotation(DeployableVerticle.class).isWorker()) {
+         //   if (restMod.getAnnotation(DeployableVerticle.class).isWorker()) {
                 vertx.deployVerticle(restMod.getName(), new DeploymentOptions()
                         .setConfig(config())
                         .setWorker(true)
@@ -237,7 +231,7 @@ public class Main extends AbstractGuiceVerticle {
                         deferred.reject(res.cause());
                     }
                 });
-            } else {
+        /*    } else {
                 vertx.deployVerticle(restMod.getName(), new DeploymentOptions().setConfig(config()), res -> {
                     if (res.succeeded()) {
                         deferred.resolve(res.result());
@@ -245,7 +239,7 @@ public class Main extends AbstractGuiceVerticle {
                         deferred.reject(res.cause());
                     }
                 });
-            }
+            }*/
             manageRules(restMod);
         });
         return promises;
@@ -268,8 +262,22 @@ public class Main extends AbstractGuiceVerticle {
         vertx.eventBus().send("metrix", json);
         String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
         if (rules.containsKey(busAddress)) {
-            testRequest(routingContext, busAddress, wrapper).done(res -> {
+            testRequest(busAddress, wrapper).done(res -> {
                 if (res.getBoolean("status")) {
+                    Rule rule = rules.get(busAddress);
+                    try {
+                        testParameters(rule, wrapper);
+                    } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                        final JsonObject jsonResp = new JsonObject()
+                                .put("status", false)
+                                .put(MESSAGE, e.getMessage())
+                                .put("code", e.getCode().name());
+                        routingContext.response()
+                                .putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+                                .setStatusCode(e.getCode().getCode())
+                                .end(jsonResp.encode());
+                    }
                     vertx.eventBus().send(busAddress, Json.encode(wrapper), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), message -> {
                         try {
                             if (message.succeeded()) {
@@ -407,12 +415,12 @@ public class Main extends AbstractGuiceVerticle {
     }
 
     /**
-     * @param req        Request
      * @param busAddress address
      * @param wrapper    request wrapper
+     *
      * @return success
      */
-    private Promise<JsonObject, QaobeeException, Integer> testRequest(RoutingContext req, String busAddress, RequestWrapper wrapper) {
+    private Promise<JsonObject, QaobeeException, Integer> testRequest(String busAddress, RequestWrapper wrapper) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         try {
             Rule rule = rules.get(busAddress);
@@ -426,7 +434,6 @@ public class Main extends AbstractGuiceVerticle {
             if (rule.admin()) {
                 promises.add(utils.isLoggedAndAdmin(wrapper));
             }
-            testParameters(rule, wrapper);
             if (promises.isEmpty()) {
                 deferred.resolve(new JsonObject().put("status", true));
             } else {
@@ -439,7 +446,6 @@ public class Main extends AbstractGuiceVerticle {
                             .put(MESSAGE, ex.getMessage())
                             .put("httpCode", ex.getCode().getCode())
                             .put("code", ex.getCode().name());
-                    LOG.error(((Throwable) e.getReject()).getMessage());
                     deferred.resolve(jsonResp);
                 });
             }
@@ -451,7 +457,13 @@ public class Main extends AbstractGuiceVerticle {
                     .put("httpCode", 404);
             deferred.resolve(jsonResp);
         } catch (QaobeeException e) {
-
+            LOG.error(e.getMessage(), e);
+            final JsonObject jsonResp = new JsonObject()
+                    .put("status", false)
+                    .put(MESSAGE, e.getMessage())
+                    .put("httpCode", e.getCode().getCode())
+                    .put("code", e.getCode().name());
+            deferred.resolve(jsonResp);
         }
         return deferred.promise();
     }
@@ -459,7 +471,11 @@ public class Main extends AbstractGuiceVerticle {
     private void testParameters(Rule rule, RequestWrapper wrapper) throws QaobeeException {
         switch (rule.scope()) {
             case BODY:
-                utils.testMandatoryParams(new JsonObject(wrapper.getBody()), rule.mandatoryParams());
+                JsonObject body = new JsonObject();
+                if (StringUtils.isNotBlank(wrapper.getBody())) {
+                    body = new JsonObject(wrapper.getBody());
+                }
+                utils.testMandatoryParams(body, rule.mandatoryParams());
                 break;
             case REQUEST:
                 utils.testMandatoryParams(wrapper.getParams(), rule.mandatoryParams());
