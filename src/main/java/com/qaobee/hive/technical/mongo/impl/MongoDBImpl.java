@@ -34,7 +34,6 @@ import org.jdeferred.impl.DeferredObject;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class MongoDBImpl implements MongoDB {
     @Inject
@@ -123,7 +122,7 @@ public class MongoDBImpl implements MongoDB {
             final JsonArray and = new JsonArray();
             criteria.keySet().forEach(k -> {
                 if (criteria.get(k) instanceof String && ((String) criteria.get(k)).startsWith("//")) {
-                    and.add(new JsonObject().put(k, Pattern.compile(((String) criteria.get(k)).substring(2))));
+                    and.add(new JsonObject().put(k, new JsonObject().put("$regex", ((String)criteria.get(k)).substring(2)).put("$options", "i")));
                 } else {
                     and.add(new JsonObject().put(k, criteria.get(k)));
                 }
