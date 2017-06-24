@@ -22,10 +22,13 @@ import com.qaobee.hive.api.v1.commons.referencial.StructureVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -40,7 +43,8 @@ public class StructureTest extends VertxJunitSupport {
      * Gets structure by id.
      */
     @Test
-    public void getStructureById() {
+    public void getStructureById(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_STRUCTURE);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
@@ -49,14 +53,16 @@ public class StructureTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body(StructureVerticle.PARAM_LABEL, notNullValue())
                     .body(StructureVerticle.PARAM_LABEL, is("Dunkerque Handball"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets structure by id with non logged user test.
      */
     @Test
-    public void getStructureByIdWithNonLoggedUserTest() {
+    public void getStructureByIdWithNonLoggedUserTest(TestContext context) {
         given().when().get(getURL(StructureVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -66,33 +72,40 @@ public class StructureTest extends VertxJunitSupport {
      * Gets structure by id with wrong http method test.
      */
     @Test
-    public void getStructureByIdWithWrongHttpMethodTest() {
+    public void getStructureByIdWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .post(getURL(StructureVerticle.GET))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets structure by id with missing parameter test.
      */
     @Test
-    public void getStructureByIdWithMissingParameterTest() {
+    public void getStructureByIdWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .get(getURL(StructureVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets structures list.
      */
     @Test
-    public void getStructuresList() {
+    public void getStructuresList(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_STRUCTURE, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             JsonObject param = new JsonObject()
@@ -108,14 +121,16 @@ public class StructureTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("acronym", hasItem("USDK"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets structures list with non logged user test.
      */
     @Test
-    public void getStructuresListWithNonLoggedUserTest() {
+    public void getStructuresListWithNonLoggedUserTest(TestContext context) {
         given().when().post(getURL(StructureVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -125,33 +140,40 @@ public class StructureTest extends VertxJunitSupport {
      * Gets structures list with wrong http method test.
      */
     @Test
-    public void getStructuresListWithWrongHttpMethodTest() {
+    public void getStructuresListWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .get(getURL(StructureVerticle.GET_LIST))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets structures list with missing parameter test.
      */
     @Test
-    public void getStructuresListWithMissingParameterTest() {
+    public void getStructuresListWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .post(getURL(StructureVerticle.GET_LIST))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets structures list with wrong parameters.
      */
     @Test
-    public void getStructuresListWithWrongParameters() {
+    public void getStructuresListWithWrongParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_STRUCTURE, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             JsonObject param = new JsonObject()
@@ -193,7 +215,9 @@ public class StructureTest extends VertxJunitSupport {
                     .when().post(getURL(StructureVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -201,7 +225,8 @@ public class StructureTest extends VertxJunitSupport {
      * Update structure.
      */
     @Test
-    public void updateStructure() {
+    public void updateStructure(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_STRUCTURE);
         generateLoggedUser().then(u -> {
             JsonObject structure = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
@@ -218,14 +243,16 @@ public class StructureTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body(StructureVerticle.PARAM_LABEL, notNullValue())
                     .body(StructureVerticle.PARAM_LABEL, is("newValue"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update structure with non logged user test.
      */
     @Test
-    public void updateStructureWithNonLoggedUserTest() {
+    public void updateStructureWithNonLoggedUserTest(TestContext context) {
         given().when().post(getURL(StructureVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -235,20 +262,24 @@ public class StructureTest extends VertxJunitSupport {
      * Update structure with wrong http method test.
      */
     @Test
-    public void updateStructureWithWrongHttpMethodTest() {
+    public void updateStructureWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .get(getURL(StructureVerticle.UPDATE))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update structure with missing parameter test.
      */
     @Test
-    public void updateStructureWithMissingParameterTest() {
+    public void updateStructureWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_STRUCTURE);
         generateLoggedUser().then(u -> {
             JsonObject structure = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
@@ -264,16 +295,18 @@ public class StructureTest extends VertxJunitSupport {
                     .post(getURL(StructureVerticle.UPDATE))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Tests addHandler for StructureVerticle
      */
     @Test
-    public void addStructure() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+    public void addStructure(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             final JsonObject params = new JsonObject();
             params.put("label", "labelValue");
@@ -285,14 +318,16 @@ public class StructureTest extends VertxJunitSupport {
                     .when().post(getURL(StructureVerticle.ADD))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue());
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add structure with non logged user test.
      */
     @Test
-    public void addStructureWithNonLoggedUserTest() {
+    public void addStructureWithNonLoggedUserTest(TestContext context) {
         given().when().post(getURL(StructureVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -302,22 +337,25 @@ public class StructureTest extends VertxJunitSupport {
      * Add structure with wrong http method test.
      */
     @Test
-    public void addStructureWithWrongHttpMethodTest() {
+    public void addStructureWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .get(getURL(StructureVerticle.ADD))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add structure with missing parameter test.
      */
     @Test
-    public void addStructureWithMissingParameterTest() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+    public void addStructureWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             final JsonObject params = new JsonObject();
             params.put("label", "labelValue");
@@ -328,6 +366,8 @@ public class StructureTest extends VertxJunitSupport {
                     .when().post(getURL(StructureVerticle.ADD))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 }

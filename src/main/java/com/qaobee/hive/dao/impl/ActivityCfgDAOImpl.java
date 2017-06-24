@@ -90,7 +90,13 @@ public class ActivityCfgDAOImpl implements ActivityCfgDAO {
                 .between("startDate", "endDate", dateRef);
         // Call to mongo
         mongoDB.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.ACTIVITY_CFG)
-                .done(res -> deferred.resolve(res.getJsonObject(0)))
+                .done(res -> {
+                    if(res.size()>0) {
+                        deferred.resolve(res.getJsonObject(0));
+                    } else {
+                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found"));
+                    }
+                })
                 .fail(deferred::reject);
         return deferred.promise();
     }

@@ -1,4 +1,4 @@
-/*************************************************************************
+/* ************************************************************************
  * Qaobee
  * __________________
  * <p/>
@@ -23,13 +23,16 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -45,7 +48,8 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Ignore
     @Test
-    public void getListChampionships() {
+    public void getListChampionships(TestContext context) {
+        Async async = context.async();
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -73,14 +77,17 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("[0].activityId", is(params.getString(ChampionshipVerticle.PARAM_ACTIVITY)));
-        });
+
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list championships with non logged user.
      */
     @Test
-    public void getListChampionshipsWithNonLoggedUser() {
+    public void getListChampionshipsWithNonLoggedUser(TestContext context) {
         given().when().post(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -90,7 +97,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Gets list championships with wrong http method.
      */
     @Test
-    public void getListChampionshipsWithWrongHttpMethod() {
+    public void getListChampionshipsWithWrongHttpMethod(TestContext context) {
         given().when().get(getURL(ChampionshipVerticle.GET_LIST))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -100,7 +107,8 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Gets list championships with missing params.
      */
     @Test
-    public void getListChampionshipsWithMissingParams() {
+    public void getListChampionshipsWithMissingParams(TestContext context) {
+        Async async = context.async();
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -118,14 +126,17 @@ public class ChampionshipTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list championships with wrong params.
      */
     @Test
-    public void getListChampionshipsWithWrongParams() {
+    public void getListChampionshipsWithWrongParams(TestContext context) {
+        Async async = context.async();
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -157,7 +168,9 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .when().post(getURL(ChampionshipVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -166,7 +179,8 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Ignore
     @Test
-    public void getListChampionshipsWithInfra() {
+    public void getListChampionshipsWithInfra(TestContext context) {
+        Async async = context.async();
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -186,14 +200,17 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("[0].participants.id", hasItem(paramParticipant.getString("id")));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list championships with infra unknown.
      */
     @Test
-    public void getListChampionshipsWithInfraUnknown() {
+    public void getListChampionshipsWithInfraUnknown(TestContext context) {
+        Async async = context.async();
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -212,7 +229,9 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .when().post(getURL(ChampionshipVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -220,7 +239,8 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Ignore
     @Test
-    public void getChampionship() {
+    public void getChampionship(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
@@ -229,14 +249,16 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("label", notNullValue())
                     .body("label", is("Championnat du bout du monde"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets championship with non logged user.
      */
     @Test
-    public void getChampionshipWithNonLoggedUser() {
+    public void getChampionshipWithNonLoggedUser(TestContext context) {
         given().when().get(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -246,7 +268,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Gets championship with wrong http method.
      */
     @Test
-    public void getChampionshipWithWrongHttpMethod() {
+    public void getChampionshipWithWrongHttpMethod(TestContext context) {
         given().when().post(getURL(ChampionshipVerticle.GET))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -256,7 +278,8 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Gets championship with missing params.
      */
     @Test
-    public void getChampionshipWithMissingParams() {
+    public void getChampionshipWithMissingParams(TestContext context) {
+        Async async = context.async();
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -265,14 +288,17 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .when().get(getURL(ChampionshipVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets championship with wrong params.
      */
     @Test
-    public void getChampionshipWithWrongParams() {
+    public void getChampionshipWithWrongParams(TestContext context) {
+        Async async = context.async();
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         // User connected
@@ -282,14 +308,17 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .when().get(getURL(ChampionshipVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add championship.
      */
     @Test
-    public void addChampionship() {
+    public void addChampionship(TestContext context) {
+        Async async = context.async();
         generateLoggedAdminUser().then(u -> {
             populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
             final JsonObject params = getShampionship();
@@ -308,14 +337,16 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("label", notNullValue())
                     .body("label", is(params.getString("label")));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add championship with non logged user.
      */
     @Test
-    public void addChampionshipWithNonLoggedUser() {
+    public void addChampionshipWithNonLoggedUser(TestContext context) {
         given().when().post(getURL(ChampionshipVerticle.ADD))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -325,13 +356,16 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Add championship with non admin user.
      */
     @Test
-    public void addChampionshipWithNonAdminUser() {
+    public void addChampionshipWithNonAdminUser(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().post(getURL(ChampionshipVerticle.ADD))
                     .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
                     .body(CODE, is(ExceptionCodes.NOT_ADMIN.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -339,7 +373,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Add championship with wrong http method.
      */
     @Test
-    public void addChampionshipWithWrongHttpMethod() {
+    public void addChampionshipWithWrongHttpMethod(TestContext context) {
         given().when().get(getURL(ChampionshipVerticle.ADD))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -349,7 +383,8 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Add championship with missing params.
      */
     @Test
-    public void addChampionshipWithMissingParams() {
+    public void addChampionshipWithMissingParams(TestContext context) {
+        Async async = context.async();
         generateLoggedAdminUser().then(u -> {
             populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
             final JsonObject params = getShampionship();
@@ -359,7 +394,9 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .when().post(getURL(ChampionshipVerticle.ADD))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -368,7 +405,8 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Ignore
     @Test
-    public void updateChampionship() {
+    public void updateChampionship(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         generateLoggedAdminUser().then(u -> {
 
@@ -393,14 +431,16 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("label", notNullValue())
                     .body("label", is(shampionship.getString("label")));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update championship with non logged user.
      */
     @Test
-    public void updateChampionshipWithNonLoggedUser() {
+    public void updateChampionshipWithNonLoggedUser(TestContext context) {
         given().when().post(getURL(ChampionshipVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -410,13 +450,16 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Update championship with non admin user.
      */
     @Test
-    public void updateChampionshipWithNonAdminUser() {
+    public void updateChampionshipWithNonAdminUser(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().post(getURL(ChampionshipVerticle.UPDATE))
                     .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
                     .body(CODE, is(ExceptionCodes.NOT_ADMIN.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -424,7 +467,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Update championship with wrong http method.
      */
     @Test
-    public void updateChampionshipWithWrongHttpMethod() {
+    public void updateChampionshipWithWrongHttpMethod(TestContext context) {
         given().when().get(getURL(ChampionshipVerticle.UPDATE))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -434,7 +477,8 @@ public class ChampionshipTest extends VertxJunitSupport {
      * Update championship with missing params.
      */
     @Test
-    public void updateChampionshipWithMissingParams() {
+    public void updateChampionshipWithMissingParams(TestContext context) {
+        Async async = context.async();
         generateLoggedAdminUser().then(u -> {
             populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
             final JsonObject params = getShampionship();
@@ -444,7 +488,9 @@ public class ChampionshipTest extends VertxJunitSupport {
                     .when().post(getURL(ChampionshipVerticle.UPDATE))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     private JsonObject getShampionship() {

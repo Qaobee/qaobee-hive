@@ -22,9 +22,12 @@ package com.qaobee.hive.test.api.commons.settings;
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -35,7 +38,8 @@ public class ActivityCfgTest extends VertxJunitSupport {
      * Gets activity cfg.
      */
     @Test
-    public void getActivityCfg() {
+    public void getActivityCfg(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
 
         generateLoggedUser().then(u -> {
@@ -47,14 +51,16 @@ public class ActivityCfgTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("activityId", notNullValue())
                     .body("activityId", is("ACT-HAND"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets activity cfg with non logged user test.
      */
     @Test
-    public void getActivityCfgWithNonLoggedUserTest() {
+    public void getActivityCfgWithNonLoggedUserTest(TestContext context) {
         given().when().get(getURL(ActivityCfgVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -64,20 +70,24 @@ public class ActivityCfgTest extends VertxJunitSupport {
      * Gets activity cfg with wrong http method test.
      */
     @Test
-    public void getActivityCfgWithWrongHttpMethodTest() {
+    public void getActivityCfgWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .post(getURL(ActivityCfgVerticle.GET))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets activity cfg with missing parameter test.
      */
     @Test
-    public void getActivityCfgWithMissingParameterTest() {
+    public void getActivityCfgWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
@@ -97,14 +107,17 @@ public class ActivityCfgTest extends VertxJunitSupport {
                     .get(getURL(ActivityCfgVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets activity cfg with wrong activity id test.
      */
     @Test
-    public void getActivityCfgWithWrongActivityIdTest() {
+    public void getActivityCfgWithWrongActivityIdTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
@@ -114,14 +127,17 @@ public class ActivityCfgTest extends VertxJunitSupport {
                     .get(getURL(ActivityCfgVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Get list of value for one parameter config.
      */
     @Test
-    public void getParamsFields() {
+    public void getParamsFields(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
@@ -132,14 +148,16 @@ public class ActivityCfgTest extends VertxJunitSupport {
                     .when().get(getURL(ActivityCfgVerticle.PARAMS))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(7));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets params fields with non logged user test.
      */
     @Test
-    public void getParamsFieldsWithNonLoggedUserTest() {
+    public void getParamsFieldsWithNonLoggedUserTest(TestContext context) {
         given().when().get(getURL(ActivityCfgVerticle.PARAMS))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -149,20 +167,24 @@ public class ActivityCfgTest extends VertxJunitSupport {
      * Gets params fields with wrong http method test.
      */
     @Test
-    public void getParamsFieldsWithWrongHttpMethodTest() {
+    public void getParamsFieldsWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .post(getURL(ActivityCfgVerticle.PARAMS))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets params fields with missing parameter test.
      */
     @Test
-    public void getParamsFieldsWithMissingParameterTest() {
+    public void getParamsFieldsWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(ActivityCfgVerticle.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
@@ -192,14 +214,17 @@ public class ActivityCfgTest extends VertxJunitSupport {
                     .get(getURL(ActivityCfgVerticle.PARAMS))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets params fields with wrong activity id test.
      */
     @Test
-    public void getParamsFieldsWithWrongActivityIdTest() {
+    public void getParamsFieldsWithWrongActivityIdTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
@@ -210,6 +235,8 @@ public class ActivityCfgTest extends VertxJunitSupport {
                     .get(getURL(ActivityCfgVerticle.PARAMS))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 }
