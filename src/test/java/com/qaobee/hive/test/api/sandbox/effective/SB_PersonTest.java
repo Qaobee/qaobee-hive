@@ -33,7 +33,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 /**

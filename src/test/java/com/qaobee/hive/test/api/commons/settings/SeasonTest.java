@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import java.util.GregorianCalendar;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 /**

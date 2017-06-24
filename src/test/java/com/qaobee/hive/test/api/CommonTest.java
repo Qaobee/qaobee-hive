@@ -22,7 +22,7 @@ package com.qaobee.hive.test.api;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 
 /**
  * The type Common test.

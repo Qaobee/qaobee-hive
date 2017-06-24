@@ -40,9 +40,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
+import static io.restassured.RestAssured.*;
 
 /**
  * The type Shipping

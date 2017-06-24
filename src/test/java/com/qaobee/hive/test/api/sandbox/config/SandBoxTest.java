@@ -25,7 +25,7 @@ import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
 import org.junit.Test;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 /**
