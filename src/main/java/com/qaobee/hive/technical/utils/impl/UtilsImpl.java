@@ -20,13 +20,14 @@ package com.qaobee.hive.technical.utils.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
@@ -61,6 +62,7 @@ public class UtilsImpl implements Utils {
     private static final String STATUS_FIELD = "status";
     private final MongoDB mongo;
     private final HabilitUtils habilitUtils;
+    private final MongoClientCustom mongoClient;
 
     /**
      * Instantiates a new Utils.
@@ -69,9 +71,10 @@ public class UtilsImpl implements Utils {
      * @param habilitUtils the habilit utils
      */
     @Inject
-    public UtilsImpl(MongoDB mongo, HabilitUtils habilitUtils) {
+    public UtilsImpl(MongoDB mongo, HabilitUtils habilitUtils, MongoClientCustom mongoClient) {
         this.mongo = mongo;
         this.habilitUtils = habilitUtils;
+        this.mongoClient = mongoClient;
     }
 
     @Override
@@ -227,35 +230,32 @@ public class UtilsImpl implements Utils {
             if (StringUtils.isBlank(token)) {
                 deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
             } else {
-                mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, "User")
-                        .done(res -> {
-                            if (res.size() != 1) {
-                                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
-                            } else {
-                                // we take the first one (should be only one)
-                                final JsonObject jsonUser = res.getJsonObject(0);
-                                JsonObject userToSave = new JsonObject();
-                                final User user = Json.decodeValue(jsonUser.encode(), User.class);
-                                userToSave.put("_id", user.get_id());
-                                if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
-                                    userToSave.put("account.token", "");
-                                    user.getAccount().setToken(null);
-                                    userToSave.put("account.tokenRenewDate", 0L);
-                                    user.getAccount().setTokenRenewDate(0L);
-                                } else {
-                                    long connectionTime = System.currentTimeMillis();
-                                    userToSave.put("account.tokenRenewDate", connectionTime);
-                                    user.getAccount().setTokenRenewDate(connectionTime);
-                                }
-                                mongo.upsert(userToSave, "User").done(id -> {
-                                    if (user.getAccount().getTokenRenewDate() == 0) {
-                                        deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
-                                    }
-                                    request.setUser(user);
-                                    deferred.resolve(user);
-                                }).fail(deferred::reject);
+                mongoClient.findOne(DBCollections.USER, new JsonObject().put("account.token", token), new JsonObject(), result -> {
+                    if (result.succeeded()) {
+                        // we take the first one (should be only one)
+                        final JsonObject jsonUser = result.result();
+                        final User user = Json.decodeValue(jsonUser.encode(), User.class);
+                        if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
+                            jsonUser.getJsonObject("account").put("token", "");
+                            user.getAccount().setToken(null);
+                            jsonUser.getJsonObject("account").put("tokenRenewDate", 0L);
+                            user.getAccount().setTokenRenewDate(0L);
+                        } else {
+                            long connectionTime = System.currentTimeMillis();
+                            jsonUser.getJsonObject("account").put("tokenRenewDate", connectionTime);
+                            user.getAccount().setTokenRenewDate(connectionTime);
+                        }
+                        mongo.upsert(jsonUser, DBCollections.USER).done(id -> {
+                            if (user.getAccount().getTokenRenewDate() == 0) {
+                                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
                             }
+                            request.setUser(user);
+                            deferred.resolve(user);
                         }).fail(deferred::reject);
+                    } else {
+                        deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
+                    }
+                });
             }
         }
         return deferred.promise();

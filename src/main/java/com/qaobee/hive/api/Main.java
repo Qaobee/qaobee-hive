@@ -220,17 +220,17 @@ public class Main extends AbstractGuiceVerticle {
         restModules.forEach(restMod -> {
             Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
             promises.add(deferred.promise());
-         //   if (restMod.getAnnotation(DeployableVerticle.class).isWorker()) {
-                vertx.deployVerticle(restMod.getName(), new DeploymentOptions()
-                        .setConfig(config())
-                        .setWorker(true)
-                        .setWorkerPoolSize(restMod.getAnnotation(DeployableVerticle.class).poolSize()), res -> {
-                    if (res.succeeded()) {
-                        deferred.resolve(res.result());
-                    } else {
-                        deferred.reject(res.cause());
-                    }
-                });
+            //   if (restMod.getAnnotation(DeployableVerticle.class).isWorker()) {
+            vertx.deployVerticle(restMod.getName(), new DeploymentOptions()
+                    .setConfig(config())
+                    .setWorker(true)
+                    .setWorkerPoolSize(restMod.getAnnotation(DeployableVerticle.class).poolSize()), res -> {
+                if (res.succeeded()) {
+                    deferred.resolve(res.result());
+                } else {
+                    deferred.reject(res.cause());
+                }
+            });
         /*    } else {
                 vertx.deployVerticle(restMod.getName(), new DeploymentOptions().setConfig(config()), res -> {
                     if (res.succeeded()) {
@@ -267,6 +267,41 @@ public class Main extends AbstractGuiceVerticle {
                     Rule rule = rules.get(busAddress);
                     try {
                         testParameters(rule, wrapper);
+
+                        vertx.eventBus().send(busAddress, Json.encode(wrapper), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), message -> {
+                            try {
+                                if (message.succeeded()) {
+                                    final String response = (String) message.result().body();
+                                    if (response.startsWith("[") || !response.startsWith("{")) {
+                                        handleJsonArray(routingContext, response);
+                                    } else {
+                                        handleJsonObject(routingContext, response);
+                                    }
+                                } else {
+                                    throw (ReplyException) message.cause();
+                                }
+                            } catch (ReplyException ex) {
+                                LOG.error(ex.getMessage(), ex);
+                                routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
+                                routingContext.response().setStatusCode(404);
+                                enableCors(routingContext);
+                                if (ex.failureCode() > 0) {
+                                    routingContext.response().setStatusCode(ex.failureCode());
+                                }
+                                if (ex.getMessage() != null) {
+                                    String exStr = ex.getMessage();
+                                    if (ex.getMessage().startsWith("{")) {
+                                        JsonObject jsonEx = new JsonObject(ex.getMessage());
+                                        jsonEx.remove("stackTrace");
+                                        jsonEx.remove("suppressed");
+                                        exStr = jsonEx.encode();
+                                    }
+                                    routingContext.response().end(exStr);
+                                } else {
+                                    manage404Error(routingContext);
+                                }
+                            }
+                        });
                     } catch (QaobeeException e) {
                         LOG.error(e.getMessage(), e);
                         final JsonObject jsonResp = new JsonObject()
@@ -278,40 +313,6 @@ public class Main extends AbstractGuiceVerticle {
                                 .setStatusCode(e.getCode().getCode())
                                 .end(jsonResp.encode());
                     }
-                    vertx.eventBus().send(busAddress, Json.encode(wrapper), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), message -> {
-                        try {
-                            if (message.succeeded()) {
-                                final String response = (String) message.result().body();
-                                if (response.startsWith("[") || !response.startsWith("{")) {
-                                    handleJsonArray(routingContext, response);
-                                } else {
-                                    handleJsonObject(routingContext, response);
-                                }
-                            } else {
-                                throw (ReplyException) message.cause();
-                            }
-                        } catch (ReplyException ex) {
-                            LOG.error(ex.getMessage(), ex);
-                            routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
-                            routingContext.response().setStatusCode(404);
-                            enableCors(routingContext);
-                            if (ex.failureCode() > 0) {
-                                routingContext.response().setStatusCode(ex.failureCode());
-                            }
-                            if (ex.getMessage() != null) {
-                                String exStr = ex.getMessage();
-                                if (ex.getMessage().startsWith("{")) {
-                                    JsonObject jsonEx = new JsonObject(ex.getMessage());
-                                    jsonEx.remove("stackTrace");
-                                    jsonEx.remove("suppressed");
-                                    exStr = jsonEx.encode();
-                                }
-                                routingContext.response().end(exStr);
-                            } else {
-                                manage404Error(routingContext);
-                            }
-                        }
-                    });
                 } else {
                     int code = res.getInteger("httpCode");
                     res.remove("httpCode");
@@ -417,7 +418,6 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @param busAddress address
      * @param wrapper    request wrapper
-     *
      * @return success
      */
     private Promise<JsonObject, QaobeeException, Integer> testRequest(String busAddress, RequestWrapper wrapper) {

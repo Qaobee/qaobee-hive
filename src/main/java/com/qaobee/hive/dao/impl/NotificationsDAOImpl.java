@@ -225,27 +225,31 @@ public class NotificationsDAOImpl implements NotificationsDAO {
         mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, DBCollections.NOTIFICATION)
                 .done(notifications -> {
                     JsonArray jnotif = new JsonArray();
-                    int myLimit = limit;
-                    if (myLimit == -1) {
-                        myLimit = notifications.size();
-                    }
-                    List<Promise> promises = new ArrayList<>();
-                    for (int i = start; i < start + myLimit; i++) {
-                        promises.add(getUser(i, notifications.getJsonObject(i).getString(SENDER_ID)));
-                    }
-                    DeferredManager dm = new DefaultDeferredManager();
-                    dm.when(promises.toArray(new Promise[promises.size()]))
-                            .done(rs -> {
-                                rs.forEach(u -> {
-                                    JsonObject tuple = (JsonObject) u.getResult();
-                                    notifications.getJsonObject(tuple.getInteger("index")).put(SENDER_ID, tuple.getJsonObject("user"));
-                                    jnotif.add(notifications.getJsonObject(tuple.getInteger("index")));
+                    if(notifications.size()==0) {
+                        deferred.resolve(jnotif);
+                    } else {
+                        int myLimit = limit;
+                        if (myLimit == -1) {
+                            myLimit = notifications.size();
+                        }
+                        List<Promise> promises = new ArrayList<>();
+                        for (int i = start; i < start + myLimit; i++) {
+                            promises.add(getUser(i, notifications.getJsonObject(i).getString(SENDER_ID)));
+                        }
+                        DeferredManager dm = new DefaultDeferredManager();
+                        dm.when(promises.toArray(new Promise[promises.size()]))
+                                .done(rs -> {
+                                    rs.forEach(u -> {
+                                        JsonObject tuple = (JsonObject) u.getResult();
+                                        notifications.getJsonObject(tuple.getInteger("index")).put(SENDER_ID, tuple.getJsonObject("user"));
+                                        jnotif.add(notifications.getJsonObject(tuple.getInteger("index")));
+                                    });
+                                    deferred.resolve(jnotif);
+                                })
+                                .fail(e -> {
+                                    LOG.error(((Throwable) e.getReject()).getMessage());
                                 });
-                                deferred.resolve(jnotif);
-                            })
-                            .fail(e -> {
-                                LOG.error(((Throwable) e.getReject()).getMessage());
-                            });
+                    }
 
                 })
                 .fail(deferred::reject);

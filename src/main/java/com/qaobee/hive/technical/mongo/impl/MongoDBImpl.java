@@ -58,7 +58,7 @@ public class MongoDBImpl implements MongoDB {
     @Override
     public Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, String collection) {
         Deferred<String, QaobeeException, Integer> deferred = new DeferredObject<>();
-        if (document.containsKey("_id")) {
+        if (document.containsKey("_id") && document.getString("_id") != null) {
             mongoClient.findOneAndReplaceWithOptions(collection, query, document, new FindOptions().setLimit(1), new UpdateOptions().setUpsert(true), res -> {
                 if (res.succeeded()) {
                     deferred.resolve(document.getString("_id"));
@@ -67,6 +67,7 @@ public class MongoDBImpl implements MongoDB {
                 }
             });
         } else {
+            document.remove("_id");
             mongoClient.insert(collection, document, res -> {
                 if (res.succeeded()) {
                     deferred.resolve(res.result());
@@ -92,8 +93,12 @@ public class MongoDBImpl implements MongoDB {
             mini = getMinimal(minimal);
         }
         mongoClient.findOne(collection, query, mini, res -> {
-            if (res.succeeded()) {
-                deferred.resolve(res.result());
+            if (res.succeeded() ) {
+                if(res.result() != null) {
+                    deferred.resolve(res.result());
+                } else {
+                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found"));
+                }
             } else {
                 deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
             }

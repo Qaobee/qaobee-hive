@@ -29,13 +29,18 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import org.jdeferred.Deferred;
+import org.jdeferred.DeferredManager;
 import org.jdeferred.Promise;
+import org.jdeferred.impl.DefaultDeferredManager;
 import org.jdeferred.impl.DeferredObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -56,15 +61,16 @@ public class NotificationsTest extends VertxJunitSupport {
                 async.complete();
             }
         });
-        async.await();
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets notifications.
      */
     @Test
-    public void getNotifications() {
-        generateLoggedUser().then(u -> {
+    public void getNotifications(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().done(u -> {
             final Notification n = new Notification();
             n.setContent("Hello");
             n.setTitle("Message");
@@ -79,21 +85,26 @@ public class NotificationsTest extends VertxJunitSupport {
                         .body("", hasSize(greaterThan(0)))
                         .body("_id", hasItem(n.get_id()))
                         .body("content", hasItem("Hello"));
-            });
-        });
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets empty notifications.
      */
     @Test
-    public void getEmptyNotifications() {
+    public void getEmptyNotifications(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().get(getURL(NotificationsVerticle.LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -102,8 +113,9 @@ public class NotificationsTest extends VertxJunitSupport {
      */
     @Test
     public void getNotificationsWithLimitAndStart(TestContext context) {
-        Async async = context.async(2);
+        Async async = context.async();
         generateLoggedUser().then(u -> {
+            List<Promise> promises = new ArrayList<>();
             for (int i = 0; i < 15; i++) {
                 final Notification n = new Notification();
                 n.setContent("Hello");
@@ -111,33 +123,35 @@ public class NotificationsTest extends VertxJunitSupport {
                 n.setSenderId(u.get_id());
                 n.setTargetId(u.get_id());
                 n.setTimestamp(i);
-                addNotification(n).then(id -> {
-                    n.set_id(id);
-                    async.countDown();
-                });
+                promises.add(addNotification(n));
             }
-            async.awaitSuccess();
-            given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(NotificationsVerticle.LIST))
-                    .then().assertThat().statusCode(200)
-                    .body("", hasSize(15))
-                    .body("content", hasItem("Hello"));
+            DeferredManager dm = new DefaultDeferredManager();
+            dm.when(promises.toArray(new Promise[promises.size()]))
+                    .done(rs -> {
+                        given().header(TOKEN, u.getAccount().getToken())
+                                .when().get(getURL(NotificationsVerticle.LIST))
+                                .then().assertThat().statusCode(200)
+                                .body("", hasSize(15))
+                                .body("content", hasItem("Hello"));
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .param(NotificationsVerticle.PARAM_START, 5)
-                    .param(NotificationsVerticle.PARAM_LIMIT, 2)
-                    .when().get(getURL(NotificationsVerticle.LIST))
-                    .then().assertThat().statusCode(200)
-                    .body("", hasSize(2))
-                    .body("title", hasItem("Message-9"));
-        });
+                        given().header(TOKEN, u.getAccount().getToken())
+                                .param(NotificationsVerticle.PARAM_START, 5)
+                                .param(NotificationsVerticle.PARAM_LIMIT, 2)
+                                .when().get(getURL(NotificationsVerticle.LIST))
+                                .then().assertThat().statusCode(200)
+                                .body("", hasSize(2))
+                                .body("title", hasItem("Message-9"));
+                        async.complete();
+                    }).fail(e -> Assert.fail(((Throwable)e.getReject()).getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets notifications with non logged user.
      */
     @Test
-    public void getNotificationsWithNonLoggedUser() {
+    public void getNotificationsWithNonLoggedUser(TestContext context) {
         given().when().get(getURL(NotificationsVerticle.LIST))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -147,7 +161,7 @@ public class NotificationsTest extends VertxJunitSupport {
      * Gets notifications with wrong http method.
      */
     @Test
-    public void getNotificationsWithWrongHttpMethod() {
+    public void getNotificationsWithWrongHttpMethod(TestContext context) {
         given().when().post(getURL(NotificationsVerticle.LIST))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -157,7 +171,8 @@ public class NotificationsTest extends VertxJunitSupport {
      * Mark as read.
      */
     @Test
-    public void markAsRead() {
+    public void markAsRead(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             final Notification n = new Notification();
             n.setContent("Hello");
@@ -197,56 +212,68 @@ public class NotificationsTest extends VertxJunitSupport {
                         .body("content", hasItem("Hello"))
                         .body("_id", hasItem(n.get_id()))
                         .body("read", hasItem(false));
-            });
-        });
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Mark as read with wrong id.
      */
     @Test
-    public void markAsReadWithWrongId() {
+    public void markAsReadWithWrongId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                     .when().post(getURL(NotificationsVerticle.READ))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Mark as read with missing id.
      */
     @Test
-    public void markAsReadWithMissingId() {
+    public void markAsReadWithMissingId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().post(getURL(NotificationsVerticle.READ))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Mark as read with wrong http method.
      */
     @Test
-    public void markAsReadWithWrongHttpMethod() {
+    public void markAsReadWithWrongHttpMethod(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                     .when().get(getURL(NotificationsVerticle.READ))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Delete notification.
      */
     @Test
-    public void deleteNotification() {
+    public void deleteNotification(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             final Notification n = new Notification();
             n.setContent("Hello");
@@ -255,69 +282,81 @@ public class NotificationsTest extends VertxJunitSupport {
             n.setTimestamp(System.currentTimeMillis());
             n.setTargetId(u.get_id());
 
-                    addNotification(n).then(id -> {
-            n.set_id(id);
-            given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
-                    .when().delete(getURL(NotificationsVerticle.DEL))
-                    .then().assertThat().statusCode(200)
-                    .body(STATUS, notNullValue())
-                    .body(STATUS, is(true));
+            addNotification(n).done(id -> {
+                n.set_id(id);
+                given().header(TOKEN, u.getAccount().getToken())
+                        .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, n.get_id())
+                        .when().delete(getURL(NotificationsVerticle.DEL))
+                        .then().assertThat().statusCode(200)
+                        .body(STATUS, notNullValue())
+                        .body(STATUS, is(true));
 
-            given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(NotificationsVerticle.LIST))
-                    .then().assertThat().statusCode(200)
-                    .body("", hasSize(0));
-        });
-        });
+                given().header(TOKEN, u.getAccount().getToken())
+                        .when().get(getURL(NotificationsVerticle.LIST))
+                        .then().assertThat().statusCode(200)
+                        .body("", hasSize(0));
+
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Delete notification with wrong id.
      */
     @Test
-    public void deleteNotificationWithWrongId() {
+    public void deleteNotificationWithWrongId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                     .when().delete(getURL(NotificationsVerticle.DEL))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Delete notification with missing id.
      */
     @Test
-    public void deleteNotificationWithMissingId() {
+    public void deleteNotificationWithMissingId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().delete(getURL(NotificationsVerticle.DEL))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Delete notification with wrong http method.
      */
     @Test
-    public void deleteNotificationWithWrongHttpMethod() {
+    public void deleteNotificationWithWrongHttpMethod(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                     .when().get(getURL(NotificationsVerticle.DEL))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Delete notification with not logged.
      */
     @Test
-    public void deleteNotificationWithNotLogged() {
+    public void deleteNotificationWithNotLogged(TestContext context) {
         given().queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                 .when().delete(getURL(NotificationsVerticle.DEL))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
@@ -328,7 +367,8 @@ public class NotificationsTest extends VertxJunitSupport {
      * Add notification to user.
      */
     @Test
-    public void addNotificationToUser() {
+    public void addNotificationToUser(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             JsonObject n = new JsonObject()
                     .put("content", "Hello")
@@ -350,14 +390,17 @@ public class NotificationsTest extends VertxJunitSupport {
                     .body("", hasSize(1))
                     .body("content", hasItem("Hello"))
                     .body("_id", hasItem(notNullValue()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add notification to sandbox and exclude himself.
      */
     @Test
-    public void addNotificationToSandboxAndExcludeHimself() {
+    public void addNotificationToSandboxAndExcludeHimself(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(u -> {
             JsonObject n = new JsonObject()
@@ -379,15 +422,18 @@ public class NotificationsTest extends VertxJunitSupport {
                     .when().get(getURL(NotificationsVerticle.LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add notification to sandbox.
      */
     @Test
-    public void addNotificationToSandbox() {
+    public void addNotificationToSandbox(TestContext context) {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
+        Async async = context.async();
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(u -> {
             JsonObject n = new JsonObject()
                     .put("content", "Hello")
@@ -402,14 +448,17 @@ public class NotificationsTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body(STATUS, notNullValue())
                     .body(STATUS, is(true));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add notification to user with wrong user id.
      */
     @Test
-    public void addNotificationToUserWithWrongUserId() {
+    public void addNotificationToUserWithWrongUserId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             JsonObject n = new JsonObject()
                     .put("content", "Hello")
@@ -430,14 +479,17 @@ public class NotificationsTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body(STATUS, notNullValue())
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add notification to user with no data.
      */
     @Test
-    public void addNotificationToUserWithNoData() {
+    public void addNotificationToUserWithNoData(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .body(new JsonObject().encode())
@@ -449,27 +501,32 @@ public class NotificationsTest extends VertxJunitSupport {
                     .when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add notification to user with wrong http method.
      */
     @Test
-    public void addNotificationToUserWithWrongHttpMethod() {
+    public void addNotificationToUserWithWrongHttpMethod(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().get(getURL(NotificationsVerticle.ADD_TO_USER))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add notification to user with not logged.
      */
     @Test
-    public void addNotificationToUserWithNotLogged() {
+    public void addNotificationToUserWithNotLogged(TestContext context) {
         given().when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -483,7 +540,7 @@ public class NotificationsTest extends VertxJunitSupport {
      */
     private Promise<String, QaobeeException, Integer> addNotification(final Notification n) {
         Deferred<String, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(n).done(deferred::resolve).fail(e -> Assert.fail(e.getMessage()));
+        mongo.upsert(n).done(deferred::resolve).fail(deferred::reject);
         return deferred.promise();
     }
 }

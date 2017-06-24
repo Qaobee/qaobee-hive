@@ -116,8 +116,8 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * </pre></p>
      */
     @Rule(address = ADD_TO_SANDBOX, method = Constants.POST, logged = true,
-          mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
-          scope = Rule.Param.BODY)
+            mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
+            scope = Rule.Param.BODY)
     private void addNotificationToSandBox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
@@ -144,8 +144,8 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * </pre></p>
      */
     @Rule(address = ADD_TO_USER, method = Constants.POST, logged = true,
-          mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
-          scope = Rule.Param.BODY)
+            mandatoryParams = {TARGET_ID, "content", SENDER_ID, "title"},
+            scope = Rule.Param.BODY)
     private void addNotificationToUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
@@ -183,10 +183,12 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = PARAM_NOTIF_ID,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void markAsRead(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyStatus(message, notificationsDAO.markAsRead(req.getParams().get(PARAM_NOTIF_ID).get(0)));
+        notificationsDAO.markAsRead(req.getParams().get(PARAM_NOTIF_ID).get(0))
+                .done(json -> utils.sendStatus(true, message))
+                .fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -200,10 +202,12 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request's method
      */
     @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = PARAM_NOTIF_ID,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void delete(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyStatus(message, notificationsDAO.delete(req.getParams().get(PARAM_NOTIF_ID).get(0)));
+        notificationsDAO.delete(req.getParams().get(PARAM_NOTIF_ID).get(0))
+                .done(json -> utils.sendStatus(true, message))
+                .fail(e -> utils.sendError(message, e));
     }
 
     /**
