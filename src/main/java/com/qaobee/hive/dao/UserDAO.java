@@ -96,7 +96,7 @@ public interface UserDAO {
      * @param login the login
      * @return the user by login
      */
-    Promise<JsonObject, QaobeeException, Integer> getUserByLogin(String login);
+    Promise<JsonObject, QaobeeException, Integer> getUserByLogin(String login, String locale);
 
     /**
      * Gets user info.

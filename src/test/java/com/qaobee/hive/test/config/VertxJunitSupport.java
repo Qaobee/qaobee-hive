@@ -43,8 +43,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
@@ -56,8 +54,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.*;
 
@@ -70,6 +70,7 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
  */
 @RunWith(VertxUnitRunner.class)
 public class VertxJunitSupport implements JSDataMongoTest {
+    protected static final Logger LOG = LoggerFactory.getLogger(VertxJunitSupport.class);
     /**
      * The constant LOCALE.
      */
@@ -99,7 +100,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * The constant config.
      */
     private static JsonObject config;
-    protected static final Logger LOG = LoggerFactory.getLogger(VertxJunitSupport.class);
     private static final String POPULATE_WITHOUT = "without";
     private static final String POPULATE_ALL = "all";
     /**
@@ -132,16 +132,17 @@ public class VertxJunitSupport implements JSDataMongoTest {
     @BeforeClass
     public static void startMongoServer() {
         RestAssured.defaultParser = Parser.JSON;
-        RestAssured.requestSpecification = new RequestSpecBuilder().addHeader(ACCEPT_LANGUAGE, LOCALE).build();
+        RestAssured.requestSpecification = new RequestSpecBuilder()
+                .addHeader(ACCEPT_LANGUAGE, LOCALE)
+                .addHeader("X-qaobee-stack", "true")
+                .build();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
     }
-
     /**
      * Find free port.
      *
      * @return the int
-     *
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static int findFreePort() throws IOException {
@@ -155,7 +156,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Gets url.
      *
      * @param busAddress the bus address
-     *
      * @return the url
      */
     protected String getURL(String busAddress) {
@@ -173,18 +173,20 @@ public class VertxJunitSupport implements JSDataMongoTest {
         config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes()));
         try {
             JunitMongoSingleton.getInstance().startServer(config);
+            LOG.info("Embeded MongoDB started");
+
+            vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config), ar -> {
+                context.assertTrue(ar.succeeded());
+                vertx.exceptionHandler(context.exceptionHandler());
+                Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
+                injector.injectMembers(this);
+                LOG.info("About to execute : " + name.getMethodName());
+                async.complete();
+            });
         } catch (IOException e) {
             Assert.fail(e.getMessage());
             e.printStackTrace();
         }
-        vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config), ar -> {
-            context.assertTrue(ar.succeeded());
-            vertx.exceptionHandler(context.exceptionHandler());
-            Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
-            injector.injectMembers(this);
-            LOG.info("About to execute : " + name.getMethodName());
-            async.complete();
-        });
         async.await(TIMEOUT);
     }
 
@@ -192,12 +194,12 @@ public class VertxJunitSupport implements JSDataMongoTest {
     public void cleanDatas(TestContext context) {
         Async async = context.async();
         mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
-            if(t != null) {
+            if (t != null) {
                 LOG.error(t.getMessage(), t);
             }
+            vertx.close();
 
             JunitMongoSingleton.getInstance().getProcess().stop();
-            vertx.close();
         /*    vertx.close(event -> {
                 if(event.failed()) {
                     LOG.error(event.cause().getMessage(), event.cause());
@@ -254,7 +256,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged user.
      *
      * @param userId the user id
-     *
      * @return the user
      */
     protected Promise<User, QaobeeException, Integer> generateLoggedUser(String userId) {
@@ -287,7 +288,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged admin user.
      *
      * @param userId the user id
-     *
      * @return the user
      */
     protected Promise<User, QaobeeException, Integer> generateLoggedAdminUser(String userId) {
@@ -309,7 +309,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param address bus address
      * @param req     request
-     *
      * @return result string
      */
     protected Promise<String, Throwable, Integer> sendOnBus(final String address, final RequestWrapper req) {
@@ -345,7 +344,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * @param address the address
      * @param req     the req
      * @param token   the token
-     *
      * @return the string
      */
     protected Promise<String, Throwable, Integer> sendOnBus(String address, RequestWrapper req, String token) {
@@ -359,7 +357,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param address the address
      * @param query   the query
-     *
      * @return the json object
      */
     protected Promise<JsonObject, Throwable, Integer> sendOnBus(String address, JsonObject query) {
@@ -426,22 +423,31 @@ public class VertxJunitSupport implements JSDataMongoTest {
                 }
                 //  try {
                 LOG.info("Populating " + scriptMongo.getName());
-                CommandLine mongoCmd = new CommandLine("mongo")
-                        .addArgument(mongoConf.getString("host") + ":" + mongoConf.getInteger("port") + "/" + mongoConf.getString("db_name"))
-                        .addArgument(scriptMongo.getAbsolutePath());
-                DefaultExecutor executor = new DefaultExecutor();
-                try {
-                    int exitValue = executor.execute(mongoCmd);
-                    System.out.println(exitValue);
-                    if (exitValue > 0) {
-                        Assert.fail("[ " + scriptMongo.getAbsolutePath() + " ] " + exitValue);
-                    }
-                } catch (IOException e) {
-                    Assert.fail("[ " + scriptMongo.getAbsolutePath() + " ] " + e.getMessage());
-                    e.printStackTrace();
-                }
+                String command = "mongo " +
+                        mongoConf.getString("host") + ":" + mongoConf.getInteger("port") + "/" + mongoConf.getString("db_name")
+                        + " " + scriptMongo.getAbsolutePath();
+                LOG.info(executeCommand(command));
             }
         }
+    }
+
+    private String executeCommand(String command) {
+        StringBuilder output = new StringBuilder();
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec(command);
+            p.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+        return output.toString();
+
     }
 
     /**
@@ -449,7 +455,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param id   the id
      * @param user the user
-     *
      * @return activity activity
      */
     protected Promise<JsonObject, Throwable, Integer> getActivity(String id, User user) {
@@ -466,7 +471,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
-     *
      * @return country country
      */
     protected Promise<JsonObject, Throwable, Integer> getCountry(String id) {

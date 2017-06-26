@@ -164,7 +164,7 @@ public interface Utils {
      * @return the User
      * @throws QaobeeException the qaobee exception
      */
-    Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request) throws QaobeeException;
+    Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request);
 
     /**
      * Is admin.
@@ -173,5 +173,5 @@ public interface Utils {
      * @return the boolean
      * @throws QaobeeException the qaobee exception
      */
-    Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request) throws QaobeeException;
+    Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request);
 }

@@ -79,7 +79,7 @@ public class SecurityDAOImpl implements SecurityDAO {
         mongo.findByCriterias(cb.get(), null, null, 0, 0, DBCollections.USER)
                 .done(res -> {
                     if (res.size() != 1) {
-                        deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, login)));
+                        deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale)));
                     } else {
                         // we take the first one (should be only one)
                         JsonObject jsonPerson = res.getJsonObject(0);
@@ -159,7 +159,7 @@ public class SecurityDAOImpl implements SecurityDAO {
     @Override
     public Promise<Boolean, QaobeeException, Integer> passwordRenew(String login, String locale) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userDAO.getUserByLogin(login)
+        userDAO.getUserByLogin(login, locale)
                 .done(jsonperson -> {
                     User user = Json.decodeValue(jsonperson.encode(), User.class);
                     user.getAccount().setActivationPasswd(UUID.randomUUID().toString().replaceAll("-", ""));
@@ -209,37 +209,37 @@ public class SecurityDAOImpl implements SecurityDAO {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         if (StringUtils.isBlank(login) || StringUtils.isBlank(password)) {
             deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale)));
-        }
-        userDAO.getUserByLogin(login)
-                .done(jsonPerson -> {
-                    try {
-                        User user = Json.decodeValue(jsonPerson.encode(), User.class);
-                        byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(password, user.getAccount().getSalt());
-                        if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
-                            throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale));
-                        }
-                        if (!user.getAccount().isActive()) {
-                            throw new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", locale));
-                        }
-                        user.getAccount().setToken(UUID.randomUUID().toString());
-                        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                        user.getAccount().setMobileToken(mobileToken);
-                        if (StringUtils.isNotBlank(pushId) && StringUtils.isNotBlank(deviceOS)) {
-                            Device d = new Device();
-                            d.setId(pushId);
-                            d.setOs(deviceOS);
-                            if (!user.getAccount().getDevices().contains(d)) {
-                                user.getAccount().getDevices().add(d);
+        } else {
+            userDAO.getUserByLogin(login, locale)
+                    .done(jsonPerson -> {
+                        try {
+                            User user = Json.decodeValue(jsonPerson.encode(), User.class);
+                            byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(password, user.getAccount().getSalt());
+                            if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
+                                throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale));
                             }
+                            if (!user.getAccount().isActive()) {
+                                throw new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", locale));
+                            }
+                            user.getAccount().setToken(UUID.randomUUID().toString());
+                            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                            user.getAccount().setMobileToken(mobileToken);
+                            if (StringUtils.isNotBlank(pushId) && StringUtils.isNotBlank(deviceOS)) {
+                                Device d = new Device();
+                                d.setId(pushId);
+                                d.setOs(deviceOS);
+                                if (!user.getAccount().getDevices().contains(d)) {
+                                    user.getAccount().getDevices().add(d);
+                                }
+                            }
+                            mongo.upsert(user).done(r -> userDAO.getUserInfo(user.get_id()).done(deferred::resolve).fail(deferred::reject)).fail(deferred::reject);
+                        } catch (QaobeeException e) {
+                            LOG.error(e.getMessage(), e);
+                            deferred.reject(e);
                         }
-                        mongo.upsert(user).done(r -> userDAO.getUserInfo(user.get_id()).done(deferred::resolve).fail(deferred::reject)).fail(deferred::reject);
-                    } catch (QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                        deferred.reject(e);
-                    }
-                })
-                .fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale))));
-
+                    })
+                    .fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale))));
+        }
         return deferred.promise();
     }
 }

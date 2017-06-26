@@ -1,8 +1,5 @@
 package com.qaobee.hive;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.qaobee.hive.technical.utils.guice.GuiceModule;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;

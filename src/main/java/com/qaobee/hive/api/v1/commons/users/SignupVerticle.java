@@ -221,7 +221,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = ACCOUNT_CHECK, method = Constants.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
     private void accountCheck(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        signupDAO.accountCheck(req.getParams().get("id").get(0), req.getParams().get("code").get(0)).done(r -> utils.sendStatus(r, message));
+        replyBoolean(message, signupDAO.accountCheck(req.getParams().get("id").get(0), req.getParams().get("code").get(0)));
     }
 
     /**

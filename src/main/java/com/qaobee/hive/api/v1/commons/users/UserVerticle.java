@@ -24,7 +24,9 @@ import com.qaobee.hive.dao.UserDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -104,8 +106,6 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     private static final String SANDBOX_ID_FIELD = "sandboxId";
     @Inject
-    private Utils utils;
-    @Inject
     private UserDAO userDAO;
     @Inject
     private SecurityDAO securityDAO;
@@ -138,7 +138,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiGroup User API
      */
     @Rule(address = LOGIN_BY_TOKEN, method = Constants.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN},
-          scope = Rule.Param.BODY)
+            scope = Rule.Param.BODY)
     private void loginByToken(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
@@ -155,10 +155,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      */
     @Rule(address = USER_BY_LOGIN, method = Constants.GET, logged = true, admin = true, mandatoryParams = PARAM_LOGIN,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void userByLogin(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, userDAO.getUserByLogin(req.getParams().get("login").get(0)));
+        replyJsonObject(message, userDAO.getUserByLogin(req.getParams().get("login").get(0), req.getLocale()));
     }
 
     /**
@@ -171,7 +171,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      */
     @Rule(address = USER_INFO, method = Constants.GET, logged = true, mandatoryParams = "id",
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void userInfo(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, userDAO.getUserInfo(req.getParams().get("id").get(0)));
@@ -223,7 +223,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = PASSWD_RESET, method = Constants.POST, mandatoryParams = {"id", "code", PASSWD_FIELD},
-          scope = Rule.Param.BODY)
+            scope = Rule.Param.BODY)
     private void passwordReset(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
@@ -247,7 +247,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
      */
     @Rule(address = PASSWD_RENEW_CHK, method = Constants.GET, mandatoryParams = {"id", "code"},
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void passwordRenewCheck(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         securityDAO.passwordRenewCheck(req.getParams().get("id").get(0), req.getParams().get("code").get(0))
@@ -272,7 +272,9 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = PASSWD_RENEW, method = Constants.POST, mandatoryParams = PARAM_LOGIN, scope = Rule.Param.BODY)
     private void passwordRenew(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyBoolean(message, securityDAO.passwordRenew(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale()));
+        securityDAO.passwordRenew(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale())
+                .done(r -> utils.sendStatus(r, message))
+                .fail(e -> utils.sendError(message, new QaobeeException(ExceptionCodes.UNKNOWN_LOGIN, Messages.getString("login.wronglogin", req.getLocale()))));
     }
 
     /**
@@ -285,7 +287,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      */
     @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = Constants.TOKEN,
-          scope = Rule.Param.HEADER)
+            scope = Rule.Param.HEADER)
     private void logout(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyBoolean(message, securityDAO.logout(req.getHeaders().get("token").get(0)));
@@ -306,7 +308,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError NON_ACTIVE the user is not active
      * @apiError HTTP_ERROR wrong request method
      */
-    @Rule(address = LOGIN, method = Constants.POST)
+    @Rule(address = LOGIN, method = Constants.POST, mandatoryParams = {PARAM_LOGIN, PARAM_PWD})
     private void login(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());

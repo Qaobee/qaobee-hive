@@ -32,7 +32,6 @@ import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -144,8 +143,6 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
 
     @Inject
     private MailUtils mailUtils;
-    @Inject
-    private Utils utils;
     @Inject
     private ShareDAO shareDAO;
     @Inject

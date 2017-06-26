@@ -23,7 +23,6 @@ import com.qaobee.hive.dao.AssetDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -52,9 +51,6 @@ public class AssetVerticle extends AbstractGuiceVerticle {
     private static final String COLLECTION_FIELD = "collection";
     private static final String FILENAME_FIELD = "filename";
     private static final String UID_FIELD = "uid";
-
-    @Inject
-    private Utils utils;
     @Inject
     private AssetDAO assetDAO;
 

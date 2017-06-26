@@ -26,7 +26,6 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -51,8 +50,6 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
     private static final String INTERNAL_FEEDBACK = "internal.feedback.send";
     
     private static final Logger LOG = LoggerFactory.getLogger(FeedbackVerticle.class);
-    @Inject
-    private Utils utils;
     @Inject
     private FeedbackDAO feedbackDAO;
 

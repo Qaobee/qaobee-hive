@@ -24,7 +24,6 @@ import com.qaobee.hive.dao.EffectiveDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -72,8 +71,6 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      * Category Age Code
      */
     public static final String PARAM_CATEGORY_AGE_CODE = "categoryAge.code";
-    @Inject
-    private Utils utils;
     @Inject
     private EffectiveDAO effectiveDAO;
 

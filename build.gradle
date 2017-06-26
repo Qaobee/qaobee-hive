@@ -85,7 +85,7 @@ dependencies {
         exclude group: 'junit:junit'
     }
 
-    compile 'org.slf4j:slf4j-api:1.8.0-alpha2'
+    compile 'org.slf4j:slf4j-api:1.7.22'
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'ch.qos.logback:logback-core:1.2.3'
     compile 'com.stripe:stripe-java:5.5.0'

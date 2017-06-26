@@ -230,7 +230,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getUserByLogin(String login) {
+    public Promise<JsonObject, QaobeeException, Integer> getUserByLogin(String login, String locale) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         // Creation of request
         CriteriaBuilder criterias = new CriteriaBuilder();
@@ -238,7 +238,7 @@ public class UserDAOImpl implements UserDAO {
         mongo.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.USER)
                 .done(jsonArray -> {
                     if (jsonArray.size() == 0) {
-                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "Login inconnu"));
+                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, Messages.getString("login.wronglogin", locale)));
                     }
                     if (jsonArray.size() > 1) {
                         deferred.reject(new QaobeeException(ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné"));

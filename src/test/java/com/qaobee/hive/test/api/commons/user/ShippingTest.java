@@ -41,6 +41,7 @@ import org.mockserver.model.HttpResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -66,6 +67,7 @@ public class ShippingTest extends VertxJunitSupport {
             e.printStackTrace();
         }
         mockServer = startClientAndServer(1080);
+        LOG.info("MockServer started");
     }
 
     /**
@@ -73,7 +75,7 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @After
     public void stopMockServer() {
-        if (mockServer.isRunning()) {
+        if (mockServer != null && mockServer.isRunning()) {
             mockServer.stop();
         }
     }
@@ -82,10 +84,8 @@ public class ShippingTest extends VertxJunitSupport {
         JsonObject customer = mockData.getJsonObject("customer")
                 .put("id", u.getAccount().getListPlan().get(0).getCardId())
                 .put("email", u.getContact().getEmail())
-                .put("created", new Date().getTime())
-                .getJsonObject("metadata").put("_id", u.get_id());
-
-
+                .put("created", new Date().getTime());
+        customer.getJsonObject("metadata").put("_id", u.get_id());
         JsonObject subscription = mockData.getJsonObject("subscription");
         subscription.put("customer", u.getAccount().getListPlan().get(0).getCardId());
 
@@ -170,14 +170,14 @@ public class ShippingTest extends VertxJunitSupport {
                         .withPath("/v1/customers"))
                 .respond(HttpResponse.response()
                         .withStatusCode(200)
-                        .withBody(customer.encode()));
+                        .withBody(customer.put("id", UUID.randomUUID().toString()).encode()));
         new MockServerClient("localhost", 1080)
                 .when(HttpRequest.request()
                         .withMethod("POST")
                         .withPath("/v1/subscriptions"))
                 .respond(HttpResponse.response()
                         .withStatusCode(200)
-                        .withBody(subscription.encode()));
+                        .withBody(subscription.put("id", UUID.randomUUID().toString()).encode()));
     }
 
     /**
@@ -194,7 +194,7 @@ public class ShippingTest extends VertxJunitSupport {
                             .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
                     );
             given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
+                    .body(request.encode())
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(200)
                     .body("status", is(true))
@@ -230,7 +230,7 @@ public class ShippingTest extends VertxJunitSupport {
                     );
 
             given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
+                    .body(request.encode())
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
@@ -246,7 +246,7 @@ public class ShippingTest extends VertxJunitSupport {
     public void createPaymentWithNewCustomer(TestContext context) {
         Async async = context.async();
         generateLoggedUser().then(u -> {
-            u.getAccount().getListPlan().get(0).setCardId("12345");
+            u.getAccount().getListPlan().get(0).setCardId(null);
             mongo.upsert(u).done(id -> {
                 initMockStripe(u);
                 JsonObject request = new JsonObject()
@@ -256,7 +256,7 @@ public class ShippingTest extends VertxJunitSupport {
                         );
 
                 given().header(TOKEN, u.getAccount().getToken())
-                        .body(request.encodePrettily())
+                        .body(request.encode())
                         .when().post(getURL(ShippingVerticle.PAY))
                         .then().assertThat().statusCode(200)
                         .body("status", is(true))
@@ -285,7 +285,7 @@ public class ShippingTest extends VertxJunitSupport {
     public void createPaymentWithNewCustomerAndNewSubscription(TestContext context) {
         Async async = context.async();
         generateLoggedUser().then(u -> {
-            u.getAccount().getListPlan().get(0).setCardId("12345");
+            u.getAccount().getListPlan().get(0).setCardId(null);
             u.getAccount().getListPlan().get(0).setPaymentId(null);
 
             mongo.upsert(u).done(id -> {
@@ -297,7 +297,7 @@ public class ShippingTest extends VertxJunitSupport {
                         );
 
                 given().header(TOKEN, u.getAccount().getToken())
-                        .body(request.encodePrettily())
+                        .body(request.encode())
                         .when().post(getURL(ShippingVerticle.PAY))
                         .then().assertThat().statusCode(200)
                         .body("status", is(true))
@@ -336,7 +336,7 @@ public class ShippingTest extends VertxJunitSupport {
                         );
 
                 given().header(TOKEN, u.getAccount().getToken())
-                        .body(request.encodePrettily())
+                        .body(request.encode())
                         .when().post(getURL(ShippingVerticle.PAY))
                         .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                         .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
@@ -364,7 +364,7 @@ public class ShippingTest extends VertxJunitSupport {
                         );
 
                 given().header(TOKEN, u.getAccount().getToken())
-                        .body(request.encodePrettily())
+                        .body(request.encode())
                         .when().post(getURL(ShippingVerticle.PAY))
                         .then().assertThat().statusCode(200)
                         .body("status", is(true))
@@ -403,7 +403,7 @@ public class ShippingTest extends VertxJunitSupport {
                         );
 
                 given().header(TOKEN, u.getAccount().getToken())
-                        .body(request.encodePrettily())
+                        .body(request.encode())
                         .when().post(getURL(ShippingVerticle.PAY))
                         .then().assertThat().statusCode(200)
                         .body("status", is(true))
@@ -442,22 +442,10 @@ public class ShippingTest extends VertxJunitSupport {
                         );
 
                 given().header(TOKEN, u.getAccount().getToken())
-                        .body(request.encodePrettily())
+                        .body(request.encode())
                         .when().post(getURL(ShippingVerticle.PAY))
-                        .then().assertThat().statusCode(200)
-                        .body("status", is(true))
-                        .body("status", notNullValue());
-
-                given().header(TOKEN, u.getAccount().getToken())
-                        .param("id", u.get_id())
-                        .when().get(getURL(UserVerticle.USER_INFO))
-                        .then().assertThat().statusCode(200)
-                        .body("_id", notNullValue())
-                        .body("_id", is(u.get_id()))
-                        .body("account.listPlan[0].cardId", notNullValue())
-                        .body("account.listPlan[0].cardId", not(""))
-                        .body("account.listPlan[0].paymentId", notNullValue())
-                        .body("account.listPlan[0].paymentId", not(""));
+                        .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                        .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
                 async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
         }).fail(e -> Assert.fail(e.getMessage()));
@@ -512,7 +500,7 @@ public class ShippingTest extends VertxJunitSupport {
                             .put("token", "bla")
                     );
             given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
+                    .body(request.encode())
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
@@ -539,7 +527,7 @@ public class ShippingTest extends VertxJunitSupport {
                 mockServer.stop();
             }
             given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
+                    .body(request.encode())
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
@@ -563,7 +551,7 @@ public class ShippingTest extends VertxJunitSupport {
                     );
 
             given().header(TOKEN, u.getAccount().getToken())
-                    .body(request.encodePrettily())
+                    .body(request.encode())
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(200)
                     .body("status", is(true))
@@ -621,7 +609,7 @@ public class ShippingTest extends VertxJunitSupport {
     public void recieveWebHookNotificationWithMissingMandatoryData() {
         JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
         webHookData.remove("created");
-        given().body(webHookData.encodePrettily())
+        given().body(webHookData.encode())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
@@ -634,7 +622,7 @@ public class ShippingTest extends VertxJunitSupport {
     public void recieveWebHookNotificationWithMissingMetadata() {
         JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
         webHookData.getJsonObject("data").getJsonObject("object").getJsonObject("metadata").remove("planId");
-        given().body(webHookData.encodePrettily())
+        given().body(webHookData.encode())
                 .when().post(getURL(ShippingVerticle.WEB_HOOK))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
@@ -655,7 +643,7 @@ public class ShippingTest extends VertxJunitSupport {
                     .getJsonObject("metadata")
                     .put("planId", "sdqsdqd");
 
-            given().body(webHookData.encodePrettily())
+            given().body(webHookData.encode())
                     .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
@@ -677,7 +665,7 @@ public class ShippingTest extends VertxJunitSupport {
                     .getJsonObject("object")
                     .getJsonObject("metadata")
                     .put("planId", "1");
-            given().body(webHookData.encodePrettily())
+            given().body(webHookData.encode())
                     .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
@@ -699,7 +687,7 @@ public class ShippingTest extends VertxJunitSupport {
                     .getJsonObject("object")
                     .getJsonObject("metadata")
                     .remove("planId");
-            given().body(webHookData.encodePrettily())
+            given().body(webHookData.encode())
                     .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
@@ -721,7 +709,7 @@ public class ShippingTest extends VertxJunitSupport {
                     .getJsonObject("object")
                     .getJsonObject("metadata")
                     .put("planId", "");
-            given().body(webHookData.encodePrettily())
+            given().body(webHookData.encode())
                     .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));

@@ -2,7 +2,6 @@ package com.qaobee.hive.api.v1.commons.utils;
 
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import io.netty.handler.codec.http.QueryStringEncoder;
 import io.vertx.core.buffer.Buffer;
@@ -31,8 +30,6 @@ public class CaptchaVerticle extends AbstractGuiceVerticle {
     @Inject
     @Named("runtime")
     private JsonObject runtime;
-    @Inject
-    private Utils utils;
     @Inject
     private WebClient webClient;
 

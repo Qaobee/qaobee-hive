@@ -23,13 +23,15 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.UUID;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -45,7 +47,8 @@ public class UserTest extends VertxJunitSupport {
      * Test Login OK.
      */
     @Test
-    public void loginOk() {
+    public void loginOk(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             JsonObject params = new JsonObject()
                     .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
@@ -55,14 +58,17 @@ public class UserTest extends VertxJunitSupport {
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.getName()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Test Login OK with an uppercase login.
      */
     @Test
-    public void loginOkWithUppercaseLogin() {
+    public void loginOkWithUppercaseLogin(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             JsonObject params = new JsonObject()
                     .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin().toUpperCase())
@@ -72,7 +78,9 @@ public class UserTest extends VertxJunitSupport {
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.getName()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -89,7 +97,8 @@ public class UserTest extends VertxJunitSupport {
      * Login ok with mobile token.
      */
     @Test
-    public void loginOkWithMobileToken() {
+    public void loginOkWithMobileToken(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
 
             JsonObject params = new JsonObject()
@@ -101,11 +110,14 @@ public class UserTest extends VertxJunitSupport {
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.getName()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     @Test
-    public void loginOkWithMobileTokenAndPushId() {
+    public void loginOkWithMobileTokenAndPushId(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             JsonObject params = new JsonObject()
                     .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
@@ -118,14 +130,17 @@ public class UserTest extends VertxJunitSupport {
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.getName()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Test Login with badlogin.
      */
     @Test
-    public void loginKo() {
+    public void loginKo(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
 
             JsonObject params = new JsonObject()
@@ -136,7 +151,9 @@ public class UserTest extends VertxJunitSupport {
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -164,7 +181,8 @@ public class UserTest extends VertxJunitSupport {
      * Test Login with bad password.
      */
     @Test
-    public void loginPasswordKo() {
+    public void loginPasswordKo(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             JsonObject params = new JsonObject()
                     .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
@@ -174,14 +192,17 @@ public class UserTest extends VertxJunitSupport {
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Test login user inactive.
      */
     @Test
-    public void loginUserInactive() {
+    public void loginUserInactive(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             u.getAccount().setActive(false);
             mongo.upsert(u).done(id -> {
@@ -193,15 +214,18 @@ public class UserTest extends VertxJunitSupport {
                         .when().post(getURL(UserVerticle.LOGIN))
                         .then().assertThat().statusCode(ExceptionCodes.NON_ACTIVE.getCode())
                         .body("code", is(ExceptionCodes.NON_ACTIVE.toString()));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Login by mobile token.
      */
     @Test
-    public void loginByMobileToken() {
+    public void loginByMobileToken(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             String token = UUID.randomUUID().toString();
 
@@ -223,14 +247,17 @@ public class UserTest extends VertxJunitSupport {
                     .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.getName()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Login by mobile token trial period.
      */
     @Test
-    public void loginByMobileTokenTrialPeriod() {
+    public void loginByMobileTokenTrialPeriod(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             u.getAccount().getListPlan().get(0).setStatus("open");
             mongo.upsert(u).done(id -> {
@@ -254,15 +281,18 @@ public class UserTest extends VertxJunitSupport {
                         .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                         .then().assertThat().statusCode(200)
                         .body("name", is(u.getName()));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Login by mobile token wrong hTTP method.
      */
     @Test
-    public void loginByMobileTokenWrongHTTPMethod() {
+    public void loginByMobileTokenWrongHTTPMethod(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             String token = UUID.randomUUID().toString();
 
@@ -279,14 +309,17 @@ public class UserTest extends VertxJunitSupport {
             given().when().get(getURL(UserVerticle.LOGIN_BY_TOKEN))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Login by mobile token wrong login.
      */
     @Test
-    public void loginByMobileTokenWrongLogin() {
+    public void loginByMobileTokenWrongLogin(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             String token = UUID.randomUUID().toString();
 
@@ -308,14 +341,17 @@ public class UserTest extends VertxJunitSupport {
                     .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Login by mobile token not paid.
      */
     @Test
-    public void loginByMobileTokenNotPaid() {
+    public void loginByMobileTokenNotPaid(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             u.getAccount().getListPlan().get(0).setStatus("notpaid");
             mongo.upsert(u).done(id -> {
@@ -338,15 +374,18 @@ public class UserTest extends VertxJunitSupport {
                         .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                         .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                         .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Login by mobile token trial period ended.
      */
     @Test
-    public void loginByMobileTokenTrialPeriodEnded() {
+    public void loginByMobileTokenTrialPeriodEnded(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             u.getAccount().getListPlan().get(0).setStatus("open");
             u.getAccount().getListPlan().get(0).setEndPeriodDate(0);
@@ -370,15 +409,18 @@ public class UserTest extends VertxJunitSupport {
                         .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                         .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                         .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Login by mobile token wrong token.
      */
     @Test
-    public void loginByMobileTokenWrongToken() {
+    public void loginByMobileTokenWrongToken(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             String token = UUID.randomUUID().toString();
 
@@ -400,14 +442,17 @@ public class UserTest extends VertxJunitSupport {
                     .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Login by mobile token no data.
      */
     @Test
-    public void loginByMobileTokenNoData() {
+    public void loginByMobileTokenNoData(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             String token = UUID.randomUUID().toString();
 
@@ -424,14 +469,17 @@ public class UserTest extends VertxJunitSupport {
             given().when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Fetch meta information such as current season, activity and structure
      */
     @Test
-    public void getMetas() {
+    public void getMetas(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
@@ -440,11 +488,14 @@ public class UserTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("activityId", notNullValue())
                     .body("structure", notNullValue())).fail(e -> Assert.fail(e.getMessage()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     @Test
-    public void getMetasWithSandboxId() {
+    public void getMetasWithSandboxId(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
@@ -454,14 +505,17 @@ public class UserTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("activityId", notNullValue())
                     .body("structure", notNullValue())).fail(e -> Assert.fail(e.getMessage()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets metas with wrong hTTP method.
      */
     @Test
-    public void getMetasWithWrongHTTPMethod() {
+    public void getMetasWithWrongHTTPMethod(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
@@ -470,23 +524,29 @@ public class UserTest extends VertxJunitSupport {
                             .when().post(getURL(UserVerticle.META))
                             .then().assertThat().statusCode(404)
                             .body(STATUS, is(false))).fail(e -> Assert.fail(e.getMessage()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets metas with wrong user.
      */
     @Test
-    public void getMetasWithWrongUser() {
+    public void getMetasWithWrongUser(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser().then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(user).done(id ->
-                    given().header(TOKEN, user.getAccount().getToken())
-                            .when().get(getURL(UserVerticle.META))
-                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                            .body("code", is(ExceptionCodes.DATA_ERROR.toString()))).fail(e -> Assert.fail(e.getMessage()));
-        });
+            mongo.upsert(user).done(id -> {
+                given().header(TOKEN, user.getAccount().getToken())
+                        .when().get(getURL(UserVerticle.META))
+                        .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                        .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -513,7 +573,8 @@ public class UserTest extends VertxJunitSupport {
      * Fetch a user by id
      */
     @Test
-    public void getUserById() {
+    public void getUserById(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .param("id", user.get_id())
@@ -521,7 +582,9 @@ public class UserTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("_id", is(user.get_id()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -538,27 +601,33 @@ public class UserTest extends VertxJunitSupport {
      * Gets user by id wrong hTTP method.
      */
     @Test
-    public void getUserByIdWrongHTTPMethod() {
+    public void getUserByIdWrongHTTPMethod(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().post(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Fetch the current logged user
      */
     @Test
-    public void getCurrentUser() {
+    public void getCurrentUser(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().get(getURL(UserVerticle.CURRENT))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("_id", is(user.get_id()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -575,27 +644,33 @@ public class UserTest extends VertxJunitSupport {
      * Gets current user wrong hTTP method.
      */
     @Test
-    public void getCurrentUserWrongHTTPMethod() {
+    public void getCurrentUserWrongHTTPMethod(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().post(getURL(UserVerticle.CURRENT))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Logout void.
      */
     @Test
-    public void logout() {
+    public void logout(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().get(getURL(UserVerticle.LOGOUT))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -623,7 +698,8 @@ public class UserTest extends VertxJunitSupport {
      * Password renew.
      */
     @Test
-    public void passwordRenew() {
+    public void passwordRenew(TestContext context) {
+        Async async = context.async();
         generateUser().then(user -> {
             JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
             given().body(query.encodePrettily())
@@ -631,7 +707,9 @@ public class UserTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -670,7 +748,8 @@ public class UserTest extends VertxJunitSupport {
      * Password renew activation code check.
      */
     @Test
-    public void passwordRenewActivationCodeCheck() {
+    public void passwordRenewActivationCodeCheck(TestContext context) {
+        Async async = context.async();
         generateUser().then(user -> {
             JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
             given().body(query.encodePrettily())
@@ -686,15 +765,18 @@ public class UserTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(200)
                         .body("status", notNullValue())
                         .body("status", is(true));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Password renew wrong activation code check.
      */
     @Test
-    public void passwordRenewWrongActivationCodeCheck() {
+    public void passwordRenewWrongActivationCodeCheck(TestContext context) {
+        Async async = context.async();
         generateUser().then(user -> {
             JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
             given().body(query.encodePrettily())
@@ -708,14 +790,17 @@ public class UserTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Password renew activation code check bad hTTP method.
      */
     @Test
-    public void passwordRenewActivationCodeCheckBadHTTPMethod() {
+    public void passwordRenewActivationCodeCheckBadHTTPMethod(TestContext context) {
+        Async async = context.async();
         // First step ask for a new code
         generateUser().then(user -> {
             JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
@@ -728,14 +813,17 @@ public class UserTest extends VertxJunitSupport {
             given().when().post(getURL(UserVerticle.PASSWD_RENEW_CHK))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Password reset.
      */
     @Test
-    public void passwordReset() {
+    public void passwordReset(TestContext context) {
+        Async async = context.async();
         // First step ask for a new code
         generateUser().then(user -> {
             JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
@@ -772,15 +860,18 @@ public class UserTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(200)
                         .body("name", notNullValue())
                         .body("name", is(user.getName()));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Password reset wrong code.
      */
     @Test
-    public void passwordResetWrongCode() {
+    public void passwordResetWrongCode(TestContext context) {
+        Async async = context.async();
         // First step ask for a new code
         generateUser().then(user -> {
             JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
@@ -808,8 +899,10 @@ public class UserTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(200)
                         .body("status", notNullValue())
                         .body("status", is(false));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -826,70 +919,83 @@ public class UserTest extends VertxJunitSupport {
      * Upload avatar
      */
     @Test
-    public void uploadAvatar() {
+    public void uploadAvatar(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(user -> {
             String avatarId = given().header(TOKEN, user.getAccount().getToken())
                     .multiPart(new File("src/test/resources/avatar.jpg")).
                             pathParam("uid", user.get_id()).
                             when().
-                            post(BASE_URL + "/file/User/avatar/{uid}")
+                            post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(200)
                     .body("avatar", notNullValue())
                     .extract().path("avatar");
+            LOG.info(avatarId);
 
             byte[] byteArray = given().pathParam("avatar", avatarId)
-                    .get(BASE_URL + "/file/User/{avatar}")
+                    .get(BASE_URL + "/file/" + DBCollections.USER + "/{avatar}")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
 
             Assert.assertEquals("Files must have same size",
                     byteArray.length,
                     vertx.fileSystem().propsBlocking("src/test/resources/avatar.jpg").size());
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Upload avatar with wrong user id
      */
     @Test
-    public void uploadAvatarWithWrongUserId() {
+    public void uploadAvatarWithWrongUserId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", "blabla").
                     when().
-                    post(BASE_URL + "/file/User/avatar/{uid}")
+                    post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Upload avatar with not logged user
      */
     @Test
-    public void uploadAvatarWithNotLoggedUser() {
+    public void uploadAvatarWithNotLoggedUser(TestContext context) {
+        Async async = context.async();
         generateUser().then(user -> {
             given().multiPart(new File("src/test/resources/avatar.jpg"))
                     .pathParam("uid", user.get_id())
                     .when()
-                    .post(BASE_URL + "/file/User/avatar/{uid}")
-                    .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
-        });
+                    .post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
+                    .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Upload avatar with wrong token.
      */
     @Test
-    public void uploadAvatarWithWrongToken() {
-        generateUser().then(user -> {
+    public void uploadAvatarWithWrongToken(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(user -> {
             given().multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", user.get_id())
                     .header(TOKEN, "11111")
                     .when()
-                    .post(BASE_URL + "/file/User/avatar/{uid}")
+                    .post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -898,7 +1004,7 @@ public class UserTest extends VertxJunitSupport {
     @Test
     public void getAvatarWithWrongAvatarId() {
         given().pathParam("avatar", "blabla")
-                .get(BASE_URL + "/file/User/{avatar}")
+                .get(BASE_URL + "/file/" + DBCollections.USER + "/{avatar}")
                 .then().assertThat().statusCode(404);
     }
 
@@ -916,7 +1022,8 @@ public class UserTest extends VertxJunitSupport {
      * Gets user by login.
      */
     @Test
-    public void getUserByLogin() {
+    public void getUserByLogin(TestContext context) {
+        Async async = context.async();
         generateLoggedAdminUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
@@ -924,18 +1031,23 @@ public class UserTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("name", notNullValue())
                     .body("name", is(u.getName()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets user by login bad http method.
      */
     @Test
-    public void getUserByLoginBadHTTPMethod() {
+    public void getUserByLoginBadHTTPMethod(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().post(getURL(UserVerticle.USER_BY_LOGIN));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -952,20 +1064,24 @@ public class UserTest extends VertxJunitSupport {
      * Gets user by login winth not admin user.
      */
     @Test
-    public void getUserByLoginWinthNotAdminUser() {
+    public void getUserByLoginWinthNotAdminUser(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                     .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
                     .body("code", is(ExceptionCodes.NOT_ADMIN.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets user by login with wrong data.
      */
     @Test
-    public void getUserByLoginWithWrongData() {
+    public void getUserByLoginWithWrongData(TestContext context) {
+        Async async = context.async();
         generateLoggedAdminUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(UserVerticle.PARAM_LOGIN, "blabla")
@@ -977,6 +1093,8 @@ public class UserTest extends VertxJunitSupport {
                     .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 }

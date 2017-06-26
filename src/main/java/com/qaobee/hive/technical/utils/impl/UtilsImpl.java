@@ -231,7 +231,7 @@ public class UtilsImpl implements Utils {
                 deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
             } else {
                 mongoClient.findOne(DBCollections.USER, new JsonObject().put("account.token", token), new JsonObject(), result -> {
-                    if (result.succeeded()) {
+                    if (result.succeeded() && result.result() != null) {
                         // we take the first one (should be only one)
                         final JsonObject jsonUser = result.result();
                         final User user = Json.decodeValue(jsonUser.encode(), User.class);
@@ -262,7 +262,7 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request) throws QaobeeException {
+    public Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request) {
         Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
         isUserLogged(request).done(user -> {
             if (!habilitUtils.hasHabilitation(user, Constants.ADMIN_HABILIT)) { // are we admin ?

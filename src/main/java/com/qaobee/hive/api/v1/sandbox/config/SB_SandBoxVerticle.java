@@ -24,7 +24,6 @@ import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -72,9 +71,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
 
 
     private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxVerticle.class);
-
-    @Inject
-    private Utils utils;
     @Inject
     private SandBoxDAO sandBoxDAO;
 

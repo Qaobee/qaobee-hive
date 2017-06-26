@@ -27,6 +27,7 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.DeliveryOptions;
@@ -166,7 +167,8 @@ public class Main extends AbstractGuiceVerticle {
     }
 
     @Override
-    public void start() {
+    public void start(Future<Void> startFuture) {
+        super.start();
         LOG.debug(this.getClass().getName() + " started");
         final Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
@@ -182,19 +184,23 @@ public class Main extends AbstractGuiceVerticle {
         // API Rest
         router.routeWithRegex("^/api/.*").handler(this::handleAPIRequest);
         // Load Verticles
-        runWebServer(loadVerticles(), router);
-        super.start();
+        runWebServer(loadVerticles(), router, startFuture);
     }
 
     /**
-     * @param promises Promises
-     * @param router   Route matcher
+     * @param promises    Promises
+     * @param router      Route matcher
+     * @param startFuture future
      */
-    private void runWebServer(List<Promise> promises, Router router) {
+    private void runWebServer(List<Promise<String, Throwable, Integer>> promises, Router router, Future<Void> startFuture) {
         DeferredManager dm = new DefaultDeferredManager();
         dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
             handleServerStart(router);
-        }).fail(e -> LOG.error(((Throwable) e.getReject()).getMessage()));
+            startFuture.complete();
+        }).fail(e -> {
+            LOG.error(((Throwable) e.getReject()).getMessage());
+            startFuture.fail((Throwable) e.getReject());
+        });
     }
 
     private void handleServerStart(Router router) {
@@ -213,8 +219,8 @@ public class Main extends AbstractGuiceVerticle {
     /**
      * @return start promises
      */
-    private List<Promise> loadVerticles() {
-        List<Promise> promises = new ArrayList<>();
+    private List<Promise<String, Throwable, Integer>> loadVerticles() {
+        List<Promise<String, Throwable, Integer>> promises = new ArrayList<>();
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
         restModules.forEach(restMod -> {
@@ -231,27 +237,13 @@ public class Main extends AbstractGuiceVerticle {
                     deferred.reject(res.cause());
                 }
             });
-        /*    } else {
-                vertx.deployVerticle(restMod.getName(), new DeploymentOptions().setConfig(config()), res -> {
-                    if (res.succeeded()) {
-                        deferred.resolve(res.result());
-                    } else {
-                        deferred.reject(res.cause());
-                    }
-                });
-            }*/
             manageRules(restMod);
         });
         return promises;
     }
 
     private void handleAPIRequest(RoutingContext routingContext) {
-        final RequestWrapper wrapper = new RequestWrapper();
-        wrapper.setBody(routingContext.getBodyAsString());
-        wrapper.setMethod(routingContext.request().rawMethod());
-        wrapper.setHeaders(toMap(routingContext.request().headers()));
-        wrapper.setParams(toMap(routingContext.request().params()));
-        wrapper.setLocale(routingContext.request().getHeader("Accept-Language"));
+        final RequestWrapper wrapper = wrapRequest(routingContext);
         List<String> path = Arrays.asList(routingContext.request().path().split("/"));
         path = path.subList(3, path.size());
         wrapper.setPath(path);
@@ -281,7 +273,6 @@ public class Main extends AbstractGuiceVerticle {
                                     throw (ReplyException) message.cause();
                                 }
                             } catch (ReplyException ex) {
-                                LOG.error(ex.getMessage(), ex);
                                 routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
                                 routingContext.response().setStatusCode(404);
                                 enableCors(routingContext);
@@ -292,10 +283,13 @@ public class Main extends AbstractGuiceVerticle {
                                     String exStr = ex.getMessage();
                                     if (ex.getMessage().startsWith("{")) {
                                         JsonObject jsonEx = new JsonObject(ex.getMessage());
-                                      //  jsonEx.remove("stackTrace");
-                                    //    jsonEx.remove("suppressed");
+                                        if (!"true".equals(routingContext.request().getHeader("X-qaobee-stack"))) {
+                                            jsonEx.remove("stackTrace");
+                                            jsonEx.remove("suppressed");
+                                        }
                                         exStr = jsonEx.encode();
                                     }
+                                    LOG.error(exStr);
                                     routingContext.response().end(exStr);
                                 } else {
                                     manage404Error(routingContext);
@@ -327,6 +321,16 @@ public class Main extends AbstractGuiceVerticle {
         }
     }
 
+    private RequestWrapper wrapRequest(RoutingContext routingContext) {
+        RequestWrapper wrapper = new RequestWrapper();
+        wrapper.setBody(routingContext.getBodyAsString());
+        wrapper.setMethod(routingContext.request().rawMethod());
+        wrapper.setHeaders(toMap(routingContext.request().headers()));
+        wrapper.setParams(toMap(routingContext.request().params()));
+        wrapper.setLocale(routingContext.request().getHeader("Accept-Language"));
+        return wrapper;
+    }
+
     private HashMap<String, List<String>> toMap(MultiMap multiMap) {
         HashMap<String, List<String>> map = new HashMap<>();
         multiMap.entries().forEach(e -> {
@@ -350,25 +354,27 @@ public class Main extends AbstractGuiceVerticle {
      * @apiparam {String} uid document id
      */
     private void assetUploadHandler(RoutingContext routingContext) {
-        enableCors(routingContext);
-        final JsonObject request = new JsonObject()
-                .put(COLLECTION, routingContext.request().getParam(COLLECTION))
-                .put("field", routingContext.request().getParam("field"))
-                .put("uid", routingContext.request().getParam("uid"))
-                .put("token", routingContext.request().getHeader("token"))
-                .put("locale", routingContext.request().getHeader("Accept-Language"));
-        // We first pause the request so we don't receive any data between now and when the file is opened
-        String datadir = System.getProperty("user.home");
-        if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_DATA_DIR"))) {
-            datadir = System.getenv("OPENSHIFT_DATA_DIR");
-        }
-        final File dir = new File(datadir + "/upload");
-        if (!dir.exists()) {
-            boolean res = dir.mkdirs();
-            LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
-        }
-        request.put("datadir", datadir);
-        routingContext.fileUploads().forEach(upload -> handleUpload(upload, request, dir, routingContext));
+        utils.isUserLogged(wrapRequest(routingContext)).done(ok -> {
+            enableCors(routingContext);
+            final JsonObject request = new JsonObject()
+                    .put(COLLECTION, routingContext.request().getParam(COLLECTION))
+                    .put("field", routingContext.request().getParam("field"))
+                    .put("uid", routingContext.request().getParam("uid"))
+                    .put("token", routingContext.request().getHeader("token"))
+                    .put("locale", routingContext.request().getHeader("Accept-Language"));
+            // We first pause the request so we don't receive any data between now and when the file is opened
+            String datadir = System.getProperty("user.home");
+            if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_DATA_DIR"))) {
+                datadir = System.getenv("OPENSHIFT_DATA_DIR");
+            }
+            final File dir = new File(datadir + "/upload");
+            if (!dir.exists()) {
+                boolean res = dir.mkdirs();
+                LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
+            }
+            request.put("datadir", datadir);
+            routingContext.fileUploads().forEach(upload -> handleUpload(upload, request, dir, routingContext));
+        }).fail(e -> handleError(routingContext, e));
     }
 
 
@@ -392,7 +398,7 @@ public class Main extends AbstractGuiceVerticle {
                 routingContext.response().putHeader(HTTP.CONTENT_LEN, ((JsonObject) message.result().body()).getString(HTTP.CONTENT_LEN))
                         .end(Buffer.buffer(((JsonObject) message.result().body()).getBinary("asset")));
             } else {
-                routingContext.response().setStatusCode(404).end(((JsonObject) message.result().body()).getString(MESSAGE));
+                routingContext.response().setStatusCode(404).end(message.cause().getMessage());
             }
         });
     }
@@ -405,12 +411,18 @@ public class Main extends AbstractGuiceVerticle {
         }
         vertx.fileSystem().copy(upload.uploadedFileName(), destFileName, res -> vertx.eventBus().send(AssetVerticle.ADD, request, message -> {
             routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
-            if (message.result().body() instanceof ReplyException) {
-                final JsonObject resp = new JsonObject(((ReplyException) message.result().body()).getMessage());
-                routingContext.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
-                        .end(resp.getString(MESSAGE, ""));
-            } else if (message.result().body() instanceof JsonObject) {
-                routingContext.response().setStatusCode(200).end(((JsonObject) message.result().body()).encode());
+            if (message.succeeded()) {
+                if (message.result().body() instanceof ReplyException) {
+                    final JsonObject resp = new JsonObject(((ReplyException) message.result().body()).getMessage());
+                    routingContext.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
+                            .end(resp.getString(MESSAGE, ""));
+                } else if (message.result().body() instanceof JsonObject) {
+                    routingContext.response().setStatusCode(200).end(((JsonObject) message.result().body()).encode());
+                } else {
+                    routingContext.response().setStatusCode(200).end((String) message.result().body());
+                }
+            } else {
+                handleError(routingContext, new QaobeeException(ExceptionCodes.DATA_ERROR, message.cause().getMessage()));
             }
         }));
     }
@@ -455,14 +467,6 @@ public class Main extends AbstractGuiceVerticle {
                     .put("status", false)
                     .put(MESSAGE, "Nothing here")
                     .put("httpCode", 404);
-            deferred.resolve(jsonResp);
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            final JsonObject jsonResp = new JsonObject()
-                    .put("status", false)
-                    .put(MESSAGE, e.getMessage())
-                    .put("httpCode", e.getCode().getCode())
-                    .put("code", e.getCode().name());
             deferred.resolve(jsonResp);
         }
         return deferred.promise();

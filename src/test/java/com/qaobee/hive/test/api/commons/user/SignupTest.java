@@ -592,7 +592,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void finalizeSignup() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
         JsonObject p = new JsonObject(given().body(u.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))
@@ -753,7 +753,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void resendRegisterMail() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
         JsonObject p = new JsonObject(given().body(u.encode())
                 .when().put(getURL(SignupVerticle.REGISTER))

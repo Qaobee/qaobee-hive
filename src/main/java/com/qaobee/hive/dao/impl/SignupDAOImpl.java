@@ -290,6 +290,8 @@ public class SignupDAOImpl implements SignupDAO {
             if (user.getAccount().getActivationCode().equals(activationCode)) {
                 user.getAccount().setActive(true);
                 mongo.upsert(user).done(userId -> deferred.resolve(true)).fail(deferred::reject);
+            } else {
+                deferred.resolve(false);
             }
         }).fail(deferred::reject);
         return deferred.promise();
@@ -377,9 +379,10 @@ public class SignupDAOImpl implements SignupDAO {
     @Override
     public Promise<Boolean, QaobeeException, Integer> resendMail(String login, String locale) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userDAO.getUserByLogin(login).done(user -> {
+        userDAO.getUserByLogin(login, locale).done(user -> {
             try {
                 sendRegisterMail(user, locale);
+                deferred.resolve(true);
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
                 deferred.reject(e);

@@ -25,13 +25,15 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -43,7 +45,8 @@ public class SB_EventTest extends VertxJunitSupport {
      * Add event.
      */
     @Test
-    public void addEvent() {
+    public void addEvent(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser().done(user -> {
             final JsonObject params = new JsonObject()
@@ -73,7 +76,9 @@ public class SB_EventTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
                     .body(SB_EventVerticle.PARAM_LABEL, is(params.getString(SB_EventVerticle.PARAM_LABEL)));
-        }).fail(e -> Assert.fail("user id is null"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -100,7 +105,8 @@ public class SB_EventTest extends VertxJunitSupport {
      * Add event with missing params.
      */
     @Test
-    public void addEventWithMissingParams() {
+    public void addEventWithMissingParams(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().done(u -> {
             final JsonObject params = new JsonObject()
                     .put(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
@@ -124,14 +130,17 @@ public class SB_EventTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        }).fail(e -> Assert.fail("user id is null"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list event.
      */
     @Test
-    public void getListEvent() {
+    public void getListEvent(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().done(user -> {
             final JsonObject params = new JsonObject();
@@ -173,7 +182,9 @@ public class SB_EventTest extends VertxJunitSupport {
                     .when().post(getURL(SB_EventVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
-        }).fail(e -> Assert.fail("user id is null"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -200,7 +211,8 @@ public class SB_EventTest extends VertxJunitSupport {
      * Gets list event with missing parameters.
      */
     @Test
-    public void getListEventWithMissingParameters() {
+    public void getListEventWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().done(user -> {
             final JsonObject params = new JsonObject()
@@ -221,21 +233,28 @@ public class SB_EventTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        }).fail(e -> Assert.fail("user id is null"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets event by id.
      */
     @Test
-    public void getEventById() {
+    public void getEventById(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().done(user -> given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
-                .when().get(getURL(SB_EventVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
-                .body(SB_EventVerticle.PARAM_LABEL, is("Amical")));
+        generateLoggedUser().done(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
+                    .when().get(getURL(SB_EventVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                    .body(SB_EventVerticle.PARAM_LABEL, is("Amical"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -262,35 +281,43 @@ public class SB_EventTest extends VertxJunitSupport {
      * Gets event by id with missing parameters.
      */
     @Test
-    public void getEventByIdWithMissingParameters() {
+    public void getEventByIdWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().done(user -> {
-            LOG.debug(user.get_id());
             given().header(TOKEN, user.getAccount().getToken())
                     .when().get(getURL(SB_EventVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        }).fail(e -> Assert.fail("user id is null"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets event by id with wrong parameters.
      */
     @Test
-    public void getEventByIdWithWrongParameters() {
+    public void getEventByIdWithWrongParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().done(user -> given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EventVerticle.PARAM_ID, "bla")
-                .when().get(getURL(SB_EventVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()))).fail(e -> Assert.fail("user id is null"));
+        generateLoggedUser().done(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_EventVerticle.PARAM_ID, "bla")
+                    .when().get(getURL(SB_EventVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update event.
      */
     @Test
-    public void updateEvent() {
+    public void updateEvent(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND, DATA_SANDBOXES_HAND);
         generateLoggedUser().done(user -> {
             JsonObject event = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
@@ -314,7 +341,9 @@ public class SB_EventTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
                     .body(SB_EventVerticle.PARAM_LABEL, is(event.getString(SB_EventVerticle.PARAM_LABEL)));
-        }).fail(e -> Assert.fail("user id is null"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -331,7 +360,7 @@ public class SB_EventTest extends VertxJunitSupport {
      * Update event with wrong http method.
      */
     @Test
-    public void updateEventWithWrongHttpMethod() {
+    public void updateEventWithWrongHttpMethod(TestContext context) {
         given().when().get(getURL(SB_EventVerticle.UPDATE))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -341,7 +370,8 @@ public class SB_EventTest extends VertxJunitSupport {
      * Update event with missing params.
      */
     @Test
-    public void updateEventWithMissingParams() {
+    public void updateEventWithMissingParams(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().done(user -> {
             JsonObject event = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
@@ -361,6 +391,8 @@ public class SB_EventTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        }).fail(e -> Assert.fail("user id is null"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 }

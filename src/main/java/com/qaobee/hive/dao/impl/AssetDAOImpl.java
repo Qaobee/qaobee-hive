@@ -38,6 +38,7 @@ import io.vertx.core.json.JsonObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.protocol.HTTP;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
@@ -78,48 +79,47 @@ public class AssetDAOImpl implements AssetDAO {
                     if (res.size() != 1) {
                         vertx.fileSystem().deleteBlocking(filename);
                         deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", locale)));
-                    }
-                    // Create some custom options
-                    GridFSUploadOptions options = new GridFSUploadOptions()
-                            .chunkSizeBytes(1024)
-                            .metadata(new Document("type", contentType).append(UID_FIELD, userId));
+                    } else {
+                        // Create some custom options
+                        GridFSUploadOptions options = new GridFSUploadOptions()
+                                .chunkSizeBytes(1024)
+                                .metadata(new Document("type", contentType).append(UID_FIELD, userId));
 
-                    try {
-                        GridFSBucket gridFSBucket = GridFSBuckets.create(mongoClient.getDB().getDatabase(dbConfig.getString("db_name")), DBCollections.ASSETS);
-                        final AsyncInputStream streamToUploadFrom = AsyncStreamHelper.toAsyncInputStream(FileUtils.readFileToByteArray(new File(filename)));
+                        try {
+                            GridFSBucket gridFSBucket = GridFSBuckets.create(mongoClient.getDB().getDatabase(dbConfig.getString("db_name")), DBCollections.ASSETS);
+                            final AsyncInputStream streamToUploadFrom = AsyncStreamHelper.toAsyncInputStream(FileUtils.readFileToByteArray(new File(filename)));
 
-                        gridFSBucket.uploadFromStream(userId, streamToUploadFrom, options, (result, e) -> {
-                            streamToUploadFrom.close((closeRes, er) -> {
-                                if (er != null) {
-                                    LOG.error(er.getMessage(), er);
-                                    deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, er.getMessage()));
+                            gridFSBucket.uploadFromStream(userId, streamToUploadFrom, options, (result, e) -> {
+                                streamToUploadFrom.close((closeRes, er) -> {
+                                    if (er != null) {
+                                        LOG.error(er.getMessage(), er);
+                                        deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, er.getMessage()));
+                                    }
+                                });
+                                if (e != null) {
+                                    LOG.error(e.getMessage(), e);
+                                    deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage()));
+                                } else {
+                                    if (DBCollections.PERSON.equals(collection) || DBCollections.USER.equals(collection)) {
+                                        mongo.getById(userId, collection).done(p -> {
+                                            p.put(field, result.toHexString());
+                                            mongo.upsert(p, collection)
+                                                    .done(r -> deferred.resolve(p))
+                                                    .fail(deferred::reject);
+                                        }).fail(deferred::reject);
+                                    } else {
+                                        deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
+                                    }
+                                    if (vertx.fileSystem().existsBlocking(filename)) {
+                                        vertx.fileSystem().deleteBlocking(filename);
+                                    }
                                 }
                             });
-                            if (e != null) {
-                                LOG.error(e.getMessage(), e);
-                                deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage()));
-                            } else {
-                                JsonObject personToSave = new JsonObject()
-                                        .put("_id", userId)
-                                        .put(field, result.toHexString());
-                                if ("SB_Person".equals(collection)) {
-                                    mongo.getById(userId, DBCollections.PERSON);
-                                    mongo.upsert(personToSave, DBCollections.PERSON);
-                                } else {
-                                    mongo.getById(userId, DBCollections.USER);
-                                    mongo.upsert(personToSave, DBCollections.USER);
-                                }
-                                if (vertx.fileSystem().existsBlocking(filename)) {
-                                    vertx.fileSystem().deleteBlocking(filename);
-                                }
-                                deferred.resolve(personToSave);
-                            }
-                        });
-                    } catch (IOException e) {
-                        LOG.error(e.getMessage(), e);
-                        deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage()));
+                        } catch (IOException e) {
+                            LOG.error(e.getMessage(), e);
+                            deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage()));
+                        }
                     }
-
                 }
         ).fail(deferred::reject);
         return deferred.promise();
@@ -131,26 +131,30 @@ public class AssetDAOImpl implements AssetDAO {
         GridFSBucket gridFSBucket = GridFSBuckets.create(mongoClient.getDB().getDatabase(dbConfig.getString("db_name")), DBCollections.ASSETS);
         if (DBCollections.PERSON.equals(collection) || DBCollections.USER.equals(collection)) {
             final ByteBuffer dstByteBuffer = ByteBuffer.allocate(1024 * 1024);
-            final GridFSDownloadStream downloadStream = gridFSBucket.openDownloadStream(id);
-            downloadStream.read(dstByteBuffer, (result, e) -> {
-                if (e != null) {
-                    LOG.error(e.getMessage(), e);
-                    deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
-                } else {
-                    dstByteBuffer.flip();
-                    byte[] bytes = new byte[result];
-                    dstByteBuffer.get(bytes);
-                    downloadStream.close((result1, er) -> {
-                        if (er != null) {
-                            LOG.error(er.getMessage(), er);
-                            deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
-                        }
-                    });
-                    deferred.resolve(new JsonObject()
-                            .put(HTTP.CONTENT_LEN, Integer.toString(bytes.length))
-                            .put("asset", bytes));
-                }
-            });
+            try {
+                final GridFSDownloadStream downloadStream = gridFSBucket.openDownloadStream(new ObjectId(id));
+                downloadStream.read(dstByteBuffer, (result, e) -> {
+                    if (e != null) {
+                        LOG.error(e.getMessage(), e);
+                        deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
+                    } else {
+                        dstByteBuffer.flip();
+                        byte[] bytes = new byte[result];
+                        dstByteBuffer.get(bytes);
+                        downloadStream.close((result1, er) -> {
+                            if (er != null) {
+                                LOG.error(er.getMessage(), er);
+                                deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
+                            }
+                        });
+                        deferred.resolve(new JsonObject()
+                                .put(HTTP.CONTENT_LEN, Integer.toString(bytes.length))
+                                .put("asset", bytes));
+                    }
+                });
+            } catch(IllegalArgumentException e) {
+                deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
+            }
         } else {
             deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
         }

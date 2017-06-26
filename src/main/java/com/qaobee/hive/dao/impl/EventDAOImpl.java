@@ -131,16 +131,17 @@ public class EventDAOImpl implements EventDAO {
             dbObjectParent.put("link.type", dbObjectChild);
         }
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
+        JsonObject sortVal = new JsonObject();
         // $SORT section
         if (params.containsKey(SB_EventVerticle.PARAM_LIST_SORTBY)) {
             for (Object item : params.getJsonArray(SB_EventVerticle.PARAM_LIST_SORTBY)) {
                 JsonObject field = (JsonObject) item;
-                dbObjectParent.put(field.getString("fieldName"), field.getInteger("sortOrder"));
+                sortVal.put(field.getString("fieldName"), field.getInteger("sortOrder"));
             }
         } else {
-            dbObjectParent.put("_id", 1);
+            sortVal.put("_id", 1);
         }
-        JsonObject sort = new JsonObject().put("$sort", dbObjectParent);
+        JsonObject sort = new JsonObject().put("$sort", sortVal);
         JsonArray pipelineAggregation = new JsonArray().add(match).add(sort);
         // $limit section
         if (params.containsKey(SB_EventVerticle.PARAM_LIMIT_RESULT)) {

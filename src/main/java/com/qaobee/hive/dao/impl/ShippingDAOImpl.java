@@ -113,9 +113,10 @@ public class ShippingDAOImpl implements ShippingDAO {
                 if (amount > 0) {
                     // Vérifier si on n'a pas déjà un customer id sur ce user
                     String customerId = user.getAccount().getListPlan().get(planId).getCardId();
-                    getCustomerInfo(customerId, user, paymentData, locale).done(customer ->
+                    getCustomerInfo(customerId, user, paymentData, locale).done(customer -> {
+                        if(user.getAccount().getListPlan().get(planId).getPaymentId() != null) {
                             getSubscriptionInfo(user.getAccount().getListPlan().get(planId).getPaymentId()).done(subscription -> {
-                                if (subscription != null) {
+                                if(subscription != null) {
                                     user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
                                     mongo.upsert(user).done(id -> {
                                         if ("canceled".equals(subscription.getStatus()) || "unpaid".equals(subscription.getStatus())) {
@@ -124,11 +125,14 @@ public class ShippingDAOImpl implements ShippingDAO {
                                             deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale)));
                                         }
                                     }).fail(deferred::reject);
-
-                                } else {
+                                }else {
                                     registerSubscription(user, paymentData, locale, customer, plan, planId, amount).done(deferred::resolve).fail(deferred::reject);
                                 }
-                            }).fail(deferred::reject)).fail(deferred::reject);
+                            }).fail(deferred::reject);
+                        } else {
+                            registerSubscription(user, paymentData, locale, customer, plan, planId, amount).done(deferred::resolve).fail(deferred::reject);
+                        }
+                    }).fail(deferred::reject);
                 } else {
                     deferred.resolve(new JsonObject().put(Constants.STATUS, true));
                 }
@@ -208,8 +212,8 @@ public class ShippingDAOImpl implements ShippingDAO {
             try {
                 deferred.resolve(Subscription.retrieve(paymentId));
             } catch (InvalidRequestException e) {
-                LOG.debug(e.getMessage(), e);
-                deferred.resolve(null);
+                LOG.error(e.getMessage(), e);
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, e.getMessage()));
             } catch (APIConnectionException | APIException | CardException | AuthenticationException e) {
                 LOG.error(e.getMessage(), e);
                 deferred.reject(new QaobeeException(ExceptionCodes.HTTP_ERROR, e.getMessage()));
@@ -245,7 +249,7 @@ public class ShippingDAOImpl implements ShippingDAO {
         return deferred.promise();
     }
 
-    private Promise<JsonObject, QaobeeException, Integer> registerPayment(User user, int planId, String locale)  {
+    private Promise<JsonObject, QaobeeException, Integer> registerPayment(User user, int planId, String locale) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         try {
             final JsonObject tplReq = new JsonObject()
@@ -298,31 +302,32 @@ public class ShippingDAOImpl implements ShippingDAO {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
         if (user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).size() <= planId) {
             deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid"));
+        } else {
+            user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).getJsonObject(planId)
+                    .put(Constants.STATUS, subscription.getString("status"));
+            mongo.upsert(user, DBCollections.USER).done(id -> {
+                try {
+                    final JsonObject tplReq = new JsonObject()
+                            .put(TemplatesDAOImpl.TEMPLATE, "payment.html")
+                            .put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(u,
+                                    subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD),
+                                    u.getAccount().getListPlan().get(planId)));
+                    final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
+                    final JsonObject emailReq = new JsonObject()
+                            .put("from", runtime.getString("mail.from"))
+                            .put("to", u.getContact().getEmail())
+                            .put("subject", Messages.getString("mail.payment.subject",
+                                    subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD)))
+                            .put("content_type", "text/html")
+                            .put("body", tplRes);
+                    vertx.eventBus().publish("mailer.mod", emailReq);
+                    deferred.resolve(true);
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    deferred.reject(e);
+                }
+            });
         }
-        user.getJsonObject(ACCOUNT_FIELD).getJsonArray(LIST_PLAN_FIELD).getJsonObject(planId)
-                .put(Constants.STATUS, subscription.getString("status"));
-        mongo.upsert(user, DBCollections.USER).done(id -> {
-            try {
-                final JsonObject tplReq = new JsonObject()
-                        .put(TemplatesDAOImpl.TEMPLATE, "payment.html")
-                        .put(TemplatesDAOImpl.DATA, mailUtils.generatePaymentBody(u,
-                                subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD),
-                                u.getAccount().getListPlan().get(planId)));
-                final String tplRes = templatesDAO.generateMail(tplReq).getString("result");
-                final JsonObject emailReq = new JsonObject()
-                        .put("from", runtime.getString("mail.from"))
-                        .put("to", u.getContact().getEmail())
-                        .put("subject", Messages.getString("mail.payment.subject",
-                                subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD)))
-                        .put("content_type", "text/html")
-                        .put("body", tplRes);
-                vertx.eventBus().publish("mailer.mod", emailReq);
-                deferred.resolve(true);
-            } catch (QaobeeException e) {
-                LOG.error(e.getMessage(), e);
-                deferred.reject(e);
-            }
-        });
 
         return deferred.promise();
     }
