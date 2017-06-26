@@ -94,7 +94,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * The constant BASE_URL.
      */
     protected static final String BASE_URL = "http://localhost:8888";
-    protected static final long TIMEOUT = 10000L;
+    protected static final long TIMEOUT = 5000L;
     /**
      * The constant config.
      */
@@ -130,7 +130,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Start mongo server.
      */
     @BeforeClass
-    public static void startMongoServer(TestContext context) {
+    public static void startMongoServer() {
         RestAssured.defaultParser = Parser.JSON;
         RestAssured.requestSpecification = new RequestSpecBuilder().addHeader(ACCEPT_LANGUAGE, LOCALE).build();
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -138,16 +138,10 @@ public class VertxJunitSupport implements JSDataMongoTest {
     }
 
     /**
-     * Stop all.
-     */
-    @AfterClass
-    public static void stopAll(TestContext context) {
-    }
-
-    /**
      * Find free port.
      *
      * @return the int
+     *
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public static int findFreePort() throws IOException {
@@ -161,6 +155,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Gets url.
      *
      * @param busAddress the bus address
+     *
      * @return the url
      */
     protected String getURL(String busAddress) {
@@ -182,7 +177,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
             Assert.fail(e.getMessage());
             e.printStackTrace();
         }
-        vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config),ar->{
+        vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config), ar -> {
             context.assertTrue(ar.succeeded());
             vertx.exceptionHandler(context.exceptionHandler());
             Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
@@ -196,9 +191,23 @@ public class VertxJunitSupport implements JSDataMongoTest {
     @After
     public void cleanDatas(TestContext context) {
         Async async = context.async();
-        JunitMongoSingleton.getInstance().getProcess().stop();
-        vertx.close(event -> async.complete());
-        async.await(TIMEOUT);
+        mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
+            if(t != null) {
+                LOG.error(t.getMessage(), t);
+            }
+
+            JunitMongoSingleton.getInstance().getProcess().stop();
+            vertx.close();
+        /*    vertx.close(event -> {
+                if(event.failed()) {
+                    LOG.error(event.cause().getMessage(), event.cause());
+                }
+                async.complete();
+            });*/
+            async.complete();
+
+        });
+        async.await(TIMEOUT * 10);
     }
 
 
@@ -245,6 +254,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Promise<User, QaobeeException, Integer> generateLoggedUser(String userId) {
@@ -269,9 +279,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     protected Promise<User, QaobeeException, Integer> generateLoggedAdminUser() {
         Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
-        generateLoggedUser().done(user -> {
-            generateLoggedAdminUser(user.get_id()).done(deferred::resolve).fail(deferred::reject);
-        }).fail(deferred::reject);
+        generateLoggedUser().done(user -> generateLoggedAdminUser(user.get_id()).done(deferred::resolve).fail(deferred::reject)).fail(deferred::reject);
         return deferred.promise();
     }
 
@@ -279,6 +287,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged admin user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Promise<User, QaobeeException, Integer> generateLoggedAdminUser(String userId) {
@@ -300,6 +309,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param address bus address
      * @param req     request
+     *
      * @return result string
      */
     protected Promise<String, Throwable, Integer> sendOnBus(final String address, final RequestWrapper req) {
@@ -335,6 +345,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * @param address the address
      * @param req     the req
      * @param token   the token
+     *
      * @return the string
      */
     protected Promise<String, Throwable, Integer> sendOnBus(String address, RequestWrapper req, String token) {
@@ -348,6 +359,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param address the address
      * @param query   the query
+     *
      * @return the json object
      */
     protected Promise<JsonObject, Throwable, Integer> sendOnBus(String address, JsonObject query) {
@@ -437,6 +449,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param id   the id
      * @param user the user
+     *
      * @return activity activity
      */
     protected Promise<JsonObject, Throwable, Integer> getActivity(String id, User user) {
@@ -453,6 +466,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
+     *
      * @return country country
      */
     protected Promise<JsonObject, Throwable, Integer> getCountry(String id) {

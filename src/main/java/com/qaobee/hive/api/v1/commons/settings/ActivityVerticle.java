@@ -23,7 +23,6 @@ import com.qaobee.hive.dao.ActivityDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -57,8 +56,6 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ID = "_id";
     private static final Logger LOG = LoggerFactory.getLogger(ActivityVerticle.class);
-    @Inject
-    private Utils utils;
     @Inject
     private ActivityDAO activityDAO;
 

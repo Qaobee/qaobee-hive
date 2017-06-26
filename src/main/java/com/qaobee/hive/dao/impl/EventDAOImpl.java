@@ -148,6 +148,6 @@ public class EventDAOImpl implements EventDAO {
             JsonObject limit = new JsonObject().put("$limit", limitNumber);
             pipelineAggregation.add(limit);
         }
-        return mongo.aggregate("_id", pipelineAggregation, DBCollections.EVENT);
+        return mongo.aggregate(pipelineAggregation, DBCollections.EVENT);
     }
 }

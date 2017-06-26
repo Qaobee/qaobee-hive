@@ -22,7 +22,6 @@ package com.qaobee.hive.api.v1.commons.utils;
 import com.qaobee.hive.dao.PdfDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -63,8 +62,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
      * The constant CONTENT_TYPE.
      */
     public static final String CONTENT_TYPE = "application/pdf";
-    @Inject
-    private Utils utils;
+
     @Inject
     private PdfDAO pdfDAO;
 
@@ -78,7 +76,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
     private void generatePDF(Message<JsonObject> message) {
         try {
             utils.testMandatoryParams(message.body(), DATA, TEMPLATE, FILE_NAME);
-            message.reply(pdfDAO.generatePDF(message.body().getJsonObject(DATA), message.body().getString(TEMPLATE), message.body().getString(FILE_NAME)));
+            replyJsonObjectJ(message, pdfDAO.generatePDF(message.body().getJsonObject(DATA), message.body().getString(TEMPLATE), message.body().getString(FILE_NAME)));
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendErrorJ(message,e );

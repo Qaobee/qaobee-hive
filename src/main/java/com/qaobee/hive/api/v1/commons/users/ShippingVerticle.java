@@ -24,7 +24,6 @@ import com.qaobee.hive.dao.ShippingDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -52,8 +51,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
 
     @Inject
     private ShippingDAO shippingDAO;
-    @Inject
-    private Utils utils;
 
     @Override
     public void start() {

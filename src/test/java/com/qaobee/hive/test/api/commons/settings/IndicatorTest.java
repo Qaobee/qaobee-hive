@@ -24,9 +24,12 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -40,7 +43,8 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets indicator test.
      */
     @Test
-    public void getIndicatorTest() {
+    public void getIndicatorTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
@@ -49,7 +53,9 @@ public class IndicatorTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("code", notNullValue())
                     .body("code", is("hightPerson"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -66,20 +72,24 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets indicator with wrong http method test.
      */
     @Test
-    public void getIndicatorWithWrongHttpMethodTest() {
+    public void getIndicatorWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().post(getURL(IndicatorVerticle.GET))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator with wrong parameter test.
      */
     @Test
-    public void getIndicatorWithWrongParameterTest() {
+    public void getIndicatorWithWrongParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
@@ -87,21 +97,26 @@ public class IndicatorTest extends VertxJunitSupport {
                     .when().get(getURL(IndicatorVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator with missing parameter test.
      */
     @Test
-    public void getIndicatorWithMissingParameterTest() {
+    public void getIndicatorWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().get(getURL(IndicatorVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -109,7 +124,8 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets list indicator test.
      */
     @Test
-    public void getListIndicatorTest() {
+    public void getListIndicatorTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             getCountry("CNTR-250-FR-FRA").then(country -> {
@@ -124,10 +140,11 @@ public class IndicatorTest extends VertxJunitSupport {
                             .when().post(getURL(IndicatorVerticle.GET_LIST))
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(45));
-                });
-            });
-
-        });
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -144,20 +161,24 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets list indicator with wrong http method test.
      */
     @Test
-    public void getListIndicatorWithWrongHttpMethodTest() {
+    public void getListIndicatorWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().get(getURL(IndicatorVerticle.GET_LIST))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list indicator with missing parameter test.
      */
     @Test
-    public void getListIndicatorWithMissingParameterTest() {
+    public void getListIndicatorWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         generateLoggedUser().then(user -> {
             getActivity("ACT-HAND", user).then(activity -> {
@@ -186,17 +207,19 @@ public class IndicatorTest extends VertxJunitSupport {
                             .when().post(getURL(IndicatorVerticle.GET_LIST))
                             .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                             .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-                });
-            });
-
-        });
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator by code test.
      */
     @Test
-    public void getIndicatorByCodeTest() {
+    public void getIndicatorByCodeTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             getActivity("ACT-HAND", u).then(activity -> {
@@ -212,9 +235,11 @@ public class IndicatorTest extends VertxJunitSupport {
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(1))
                             .body("code", hasItem("hightPerson"));
-                });
-            });
-        });
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -231,20 +256,24 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets indicator by code with wrong http method test.
      */
     @Test
-    public void getIndicatorByCodeWithWrongHttpMethodTest() {
+    public void getIndicatorByCodeWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().get(getURL(IndicatorVerticle.GET_BY_CODE))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator by code with wrong parameter test.
      */
     @Test
-    public void getIndicatorByCodeWithWrongParameterTest() {
+    public void getIndicatorByCodeWithWrongParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             getActivity("ACT-HAND", u).then(activity -> {
@@ -275,16 +304,19 @@ public class IndicatorTest extends VertxJunitSupport {
                             .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(0));
-                });
-            });
-        });
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator by code with missing parameter test.
      */
     @Test
-    public void getIndicatorByCodeWithMissingParameterTest() {
+    public void getIndicatorByCodeWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             getActivity("ACT-HAND", u).then(activity -> {
@@ -314,9 +346,11 @@ public class IndicatorTest extends VertxJunitSupport {
                             .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
                             .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                             .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-                });
-            });
-        });
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 }

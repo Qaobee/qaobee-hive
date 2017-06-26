@@ -60,7 +60,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
      * Gets activity cfg with non logged user test.
      */
     @Test
-    public void getActivityCfgWithNonLoggedUserTest(TestContext context) {
+    public void getActivityCfgWithNonLoggedUserTest() {
         given().when().get(getURL(ActivityCfgVerticle.GET))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -157,7 +157,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
      * Gets params fields with non logged user test.
      */
     @Test
-    public void getParamsFieldsWithNonLoggedUserTest(TestContext context) {
+    public void getParamsFieldsWithNonLoggedUserTest() {
         given().when().get(getURL(ActivityCfgVerticle.PARAMS))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));

@@ -151,7 +151,7 @@ public class NotificationsTest extends VertxJunitSupport {
      * Gets notifications with non logged user.
      */
     @Test
-    public void getNotificationsWithNonLoggedUser(TestContext context) {
+    public void getNotificationsWithNonLoggedUser() {
         given().when().get(getURL(NotificationsVerticle.LIST))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -161,7 +161,7 @@ public class NotificationsTest extends VertxJunitSupport {
      * Gets notifications with wrong http method.
      */
     @Test
-    public void getNotificationsWithWrongHttpMethod(TestContext context) {
+    public void getNotificationsWithWrongHttpMethod() {
         given().when().post(getURL(NotificationsVerticle.LIST))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -356,7 +356,7 @@ public class NotificationsTest extends VertxJunitSupport {
      * Delete notification with not logged.
      */
     @Test
-    public void deleteNotificationWithNotLogged(TestContext context) {
+    public void deleteNotificationWithNotLogged() {
         given().queryParam(NotificationsVerticle.PARAM_NOTIF_ID, "blabla")
                 .when().delete(getURL(NotificationsVerticle.DEL))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
@@ -526,7 +526,7 @@ public class NotificationsTest extends VertxJunitSupport {
      * Add notification to user with not logged.
      */
     @Test
-    public void addNotificationToUserWithNotLogged(TestContext context) {
+    public void addNotificationToUserWithNotLogged() {
         given().when().post(getURL(NotificationsVerticle.ADD_TO_USER))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));

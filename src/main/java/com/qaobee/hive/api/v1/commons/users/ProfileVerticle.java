@@ -27,7 +27,6 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.AsyncResult;
@@ -61,8 +60,6 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     public static final String GENERATE_PDF = Module.VERSION + ".commons.users.profile.pdf";
     @Inject
     private UserDAO userDAO;
-    @Inject
-    private Utils utils;
 
     @Override
     public void start() {
@@ -86,7 +83,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     private void generateProfilePDF(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         vertx.eventBus().send(PDFVerticle.GENERATE_PDF, userDAO.generateProfilePDF(req.getUser(), req.getLocale()),
-                new DeliveryOptions().setSendTimeout(15000L), getPdfHandler(message));
+                new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), getPdfHandler(message));
     }
 
     /**
@@ -104,7 +101,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
         replyJsonObject(message, userDAO.updateUser(new JsonObject(req.getBody())));
     }
 
-    private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
+    private Handler<AsyncResult<Message<String>>> getPdfHandler(final Message<String> message) {
         return pdfResp -> {
             try {
                 if (pdfResp.failed()) {
@@ -112,7 +109,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 } else {
                     message.reply(new JsonObject()
                             .put(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
-                            .put(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF))
+                            .put(Main.FILE_SERVE, new JsonObject(pdfResp.result().body()).getString(PDFVerticle.PDF))
                             .encode());
                 }
             } catch (Throwable e) { // NOSONAR

@@ -24,7 +24,6 @@ import com.qaobee.hive.dao.ActivityCfgDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -64,8 +63,6 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_COUNTRY_ID = "countryId";
     private static final Logger LOG = LoggerFactory.getLogger(ActivityCfgVerticle.class);
-    @Inject
-    private Utils utils;
     @Inject
     private ActivityCfgDAO activityCfgDAO;
 

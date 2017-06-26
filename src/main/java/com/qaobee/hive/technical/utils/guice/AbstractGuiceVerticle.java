@@ -58,7 +58,9 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
 
 
     protected void replyJsonObject(Message<String> message, Promise<JsonObject, QaobeeException, Integer> promise) {
-        promise.done(json -> message.reply(json.encode())).fail(e -> utils.sendError(message, e));
+        promise.done(json -> {
+            message.reply(json.encode());
+        }).fail(e -> utils.sendError(message, e));
     }
 
     protected void replyJsonObjectJ(Message<JsonObject> message, Promise<JsonObject, QaobeeException, Integer> promise) {

@@ -76,7 +76,7 @@ public class PersonDAOImpl implements PersonDAO {
         }
         JsonObject project = new JsonObject().put("$project", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
-        return mongo.aggregate(null, pipelineAggregation, DBCollections.PERSON);
+        return mongo.aggregate(pipelineAggregation, DBCollections.PERSON);
     }
 
     @Override

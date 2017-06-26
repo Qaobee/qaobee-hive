@@ -182,7 +182,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         if (limit > 0) {
             pipelineAggregation.add(new JsonObject().put("$limit", limit));
         }
-        return mongo.aggregate("_id", pipelineAggregation, DBCollections.STATS);
+        return mongo.aggregate(pipelineAggregation, DBCollections.STATS);
     }
 
     @Override
@@ -242,6 +242,6 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         if (limit > 0) {
             pipelineAggregation.add(new JsonObject().put("$limit", limit));
         }
-        return mongo.aggregate("_id", pipelineAggregation, DBCollections.STATS);
+        return mongo.aggregate(pipelineAggregation, DBCollections.STATS);
     }
 }

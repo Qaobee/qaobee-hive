@@ -26,6 +26,8 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import com.stripe.Stripe;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -40,9 +42,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
-import static io.restassured.RestAssured.*;
 
 /**
  * The type Shipping
@@ -56,13 +58,13 @@ public class ShippingTest extends VertxJunitSupport {
      */
     @Before
     public void initMockServer() {
+        Stripe.overrideApiBase("http://localhost:1080");
         try {
             mockData = new JsonObject(FileUtils.readFileToString(new File("src/test/resources/mocks.json"), "UTF-8"));
         } catch (IOException e) {
             Assert.fail(e.getMessage());
             e.printStackTrace();
         }
-        Stripe.overrideApiBase("http://localhost:1080");
         mockServer = startClientAndServer(1080);
     }
 
@@ -182,16 +184,15 @@ public class ShippingTest extends VertxJunitSupport {
      * Create payment.
      */
     @Test
-    public void createPayment() {
+    public void createPayment(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
-
             JsonObject request = new JsonObject()
                     .put("data", new JsonObject()
                             .put("planId", 0)
                             .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
                     );
-
             given().header(TOKEN, u.getAccount().getToken())
                     .body(request.encodePrettily())
                     .when().post(getURL(ShippingVerticle.PAY))
@@ -209,14 +210,17 @@ public class ShippingTest extends VertxJunitSupport {
                     .body("account.listPlan[0].cardId", not(""))
                     .body("account.listPlan[0].paymentId", notNullValue())
                     .body("account.listPlan[0].paymentId", not(""));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with wrong plan id.
      */
     @Test
-    public void createPaymentWithWrongPlanId() {
+    public void createPaymentWithWrongPlanId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             JsonObject request = new JsonObject()
@@ -230,14 +234,17 @@ public class ShippingTest extends VertxJunitSupport {
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with new customer.
      */
     @Test
-    public void createPaymentWithNewCustomer() {
+    public void createPaymentWithNewCustomer(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setCardId("12345");
             mongo.upsert(u).done(id -> {
@@ -265,15 +272,18 @@ public class ShippingTest extends VertxJunitSupport {
                         .body("account.listPlan[0].cardId", not(""))
                         .body("account.listPlan[0].paymentId", notNullValue())
                         .body("account.listPlan[0].paymentId", not(""));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with new customer and new subscription.
      */
     @Test
-    public void createPaymentWithNewCustomerAndNewSubscription() {
+    public void createPaymentWithNewCustomerAndNewSubscription(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setCardId("12345");
             u.getAccount().getListPlan().get(0).setPaymentId(null);
@@ -303,15 +313,18 @@ public class ShippingTest extends VertxJunitSupport {
                         .body("account.listPlan[0].cardId", not(""))
                         .body("account.listPlan[0].paymentId", notNullValue())
                         .body("account.listPlan[0].paymentId", not(""));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with existing subscription.
      */
     @Test
-    public void createPaymentWithExistingSubscription() {
+    public void createPaymentWithExistingSubscription(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setPaymentId("sub_AkHS7YtIEi1Oy9");
             mongo.upsert(u).done(id -> {
@@ -327,15 +340,18 @@ public class ShippingTest extends VertxJunitSupport {
                         .when().post(getURL(ShippingVerticle.PAY))
                         .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                         .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with canceled subscription.
      */
     @Test
-    public void createPaymentWithCanceledSubscription() {
+    public void createPaymentWithCanceledSubscription(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setPaymentId("canceled");
             mongo.upsert(u).done(id -> {
@@ -364,20 +380,22 @@ public class ShippingTest extends VertxJunitSupport {
                         .body("account.listPlan[0].cardId", not(""))
                         .body("account.listPlan[0].paymentId", notNullValue())
                         .body("account.listPlan[0].paymentId", not(""));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with new subscription.
      */
     @Test
-    public void createPaymentWithNewSubscription() {
+    public void createPaymentWithNewSubscription(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setPaymentId(null);
             mongo.upsert(u).done(id -> {
                 initMockStripe(u);
-
                 JsonObject request = new JsonObject()
                         .put("data", new JsonObject()
                                 .put("planId", 0)
@@ -401,20 +419,22 @@ public class ShippingTest extends VertxJunitSupport {
                         .body("account.listPlan[0].cardId", not(""))
                         .body("account.listPlan[0].paymentId", notNullValue())
                         .body("account.listPlan[0].paymentId", not(""));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with wrong subscription.
      */
     @Test
-    public void createPaymentWithWrongSubscription() {
+    public void createPaymentWithWrongSubscription(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setPaymentId("12345");
+            initMockStripe(u);
             mongo.upsert(u).done(id -> {
-                initMockStripe(u);
-
                 JsonObject request = new JsonObject()
                         .put("data", new JsonObject()
                                 .put("planId", 0)
@@ -438,43 +458,52 @@ public class ShippingTest extends VertxJunitSupport {
                         .body("account.listPlan[0].cardId", not(""))
                         .body("account.listPlan[0].paymentId", notNullValue())
                         .body("account.listPlan[0].paymentId", not(""));
+                async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with missing plan id.
      */
     @Test
-    public void createPaymentWithMissingPlanId() {
+    public void createPaymentWithMissingPlanId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             given().header(TOKEN, u.getAccount().getToken())
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with wrong http method.
      */
     @Test
-    public void createPaymentWithWrongHttpMethod() {
+    public void createPaymentWithWrongHttpMethod(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             given().header(TOKEN, u.getAccount().getToken())
                     .when().get(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with wrong token.
      */
     @Test
-    public void createPaymentWithWrongToken() {
+    public void createPaymentWithWrongToken(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             JsonObject request = new JsonObject()
@@ -487,14 +516,17 @@ public class ShippingTest extends VertxJunitSupport {
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Create payment with no server.
      */
     @Test
-    public void createPaymentWithNoServer() {
+    public void createPaymentWithNoServer(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             JsonObject request = new JsonObject()
@@ -511,14 +543,17 @@ public class ShippingTest extends VertxJunitSupport {
                     .when().post(getURL(ShippingVerticle.PAY))
                     .then().assertThat().statusCode(ExceptionCodes.HTTP_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.HTTP_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Recieve webhook notification
      */
     @Test
-    public void recieveWebHookNotification() {
+    public void recieveWebHookNotification(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             JsonObject request = new JsonObject()
@@ -564,7 +599,9 @@ public class ShippingTest extends VertxJunitSupport {
                     .body("account.listPlan[0].cardInfo", notNullValue())
                     .body("account.listPlan[0].paymentId", not(""))
                     .body("account.listPlan[0].status", is("active"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -608,7 +645,8 @@ public class ShippingTest extends VertxJunitSupport {
      * Recieve WebHook notification with bad plan id
      */
     @Test
-    public void recieveWebHookNotificationWithBadPlanId() {
+    public void recieveWebHookNotificationWithBadPlanId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
@@ -621,14 +659,17 @@ public class ShippingTest extends VertxJunitSupport {
                     .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Recieve WebHook notification with non existing plan id
      */
     @Test
-    public void recieveWebHookNotificationWithNonExistingPlanId() {
+    public void recieveWebHookNotificationWithNonExistingPlanId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
@@ -640,14 +681,17 @@ public class ShippingTest extends VertxJunitSupport {
                     .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Recieve WebHook notification with  null plan id
      */
     @Test
-    public void recieveWebHookNotificationWithNullPlanId() {
+    public void recieveWebHookNotificationWithNullPlanId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
@@ -659,14 +703,17 @@ public class ShippingTest extends VertxJunitSupport {
                     .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Recieve WebHook notification with empty plan id
      */
     @Test
-    public void recieveWebHookNotificationWithEmptyPlanId() {
+    public void recieveWebHookNotificationWithEmptyPlanId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             initMockStripe(u);
             JsonObject webHookData = mockData.getJsonObject("customer.subscription.created");
@@ -678,6 +725,8 @@ public class ShippingTest extends VertxJunitSupport {
                     .when().post(getURL(ShippingVerticle.WEB_HOOK))
                     .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode())
                     .body(CODE, is(ExceptionCodes.INVALID_PARAMETER.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 }

@@ -106,6 +106,6 @@ public class ChampionshipDAOImpl implements ChampionshipDAO {
         }
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match);
-        return mongo.aggregate("_id", pipelineAggregation, DBCollections.CHAMPIONSHIP);
+        return mongo.aggregate(pipelineAggregation, DBCollections.CHAMPIONSHIP);
     }
 }

@@ -292,8 +292,8 @@ public class Main extends AbstractGuiceVerticle {
                                     String exStr = ex.getMessage();
                                     if (ex.getMessage().startsWith("{")) {
                                         JsonObject jsonEx = new JsonObject(ex.getMessage());
-                                        jsonEx.remove("stackTrace");
-                                        jsonEx.remove("suppressed");
+                                      //  jsonEx.remove("stackTrace");
+                                    //    jsonEx.remove("suppressed");
                                         exStr = jsonEx.encode();
                                     }
                                     routingContext.response().end(exStr);

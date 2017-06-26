@@ -133,11 +133,10 @@ public interface MongoDB {
     /**
      * Aggregate promise.
      *
-     * @param id                  the id
      * @param pipelineAggregation the pipeline aggregation
      * @param collection          the collection
      *
      * @return the promise
      */
-    Promise<JsonArray, QaobeeException, Integer> aggregate(String id, JsonArray pipelineAggregation, String collection);
+    Promise<JsonArray, QaobeeException, Integer> aggregate(JsonArray pipelineAggregation, String collection);
 }

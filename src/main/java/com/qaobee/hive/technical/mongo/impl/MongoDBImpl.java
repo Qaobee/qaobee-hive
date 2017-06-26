@@ -157,7 +157,7 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> aggregate(String id, JsonArray pipelineAggregation, String collection) {
+    public Promise<JsonArray, QaobeeException, Integer> aggregate(JsonArray pipelineAggregation, String collection) {
         Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
         JsonObject command = new JsonObject()
                 .put("aggregate", collection)

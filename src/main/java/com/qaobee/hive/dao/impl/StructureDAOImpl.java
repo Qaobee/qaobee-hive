@@ -73,7 +73,7 @@ public class StructureDAOImpl implements StructureDAO {
                 JsonObject match = new JsonObject().put("$match", dbObjectParent);
                 // Pipeline
                 JsonArray pipelineAggregation = new JsonArray().add(match);
-                mongo.aggregate("_id", pipelineAggregation, DBCollections.STRUCTURE).done(deferred::resolve).fail(deferred::reject);
+                mongo.aggregate(pipelineAggregation, DBCollections.STRUCTURE).done(deferred::resolve).fail(deferred::reject);
             }
         }).fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No Country defined for (" + address.getString("countryAlpha2") + ")")));
         return deferred.promise();

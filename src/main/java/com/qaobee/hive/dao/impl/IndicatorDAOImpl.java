@@ -51,7 +51,7 @@ public class IndicatorDAOImpl implements IndicatorDAO {
         dbObjectParent.put("code", dbObjectChild);
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match);
-        return mongo.aggregate("_id", pipelineAggregation, DBCollections.INDICATOR_CFG);
+        return mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class IndicatorDAOImpl implements IndicatorDAO {
         dbObjectParent.put("listValues", 1);
         JsonObject project = new JsonObject().put("$project", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
-        return mongo.aggregate("_id", pipelineAggregation, DBCollections.INDICATOR_CFG);
+        return mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG);
     }
 
     @Override

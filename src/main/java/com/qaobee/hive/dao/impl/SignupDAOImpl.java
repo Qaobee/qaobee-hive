@@ -115,7 +115,6 @@ public class SignupDAOImpl implements SignupDAO {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         // Converts jSon to Bean (extra parameters are ignored)
         User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
-        // FIXME : to JRO : Est-ce utile?
         userUpdate.set_id(jsonUser.getString("_id"));
         updateStructure(struct, activityId).done(structure -> {
             Structure structureObj = Json.decodeValue(structure.encode(), Structure.class);
@@ -166,7 +165,7 @@ public class SignupDAOImpl implements SignupDAO {
                                     .put(PARAMERTER_FIELD, 1);
                             JsonObject project = new JsonObject().put("$project", dbObjectParent);
                             JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
-                            mongo.aggregate(PARAMERTER_FIELD, pipelineAggregation, DBCollections.ACTIVITY_CFG).done(tabParametersSignup -> {
+                            mongo.aggregate(pipelineAggregation, DBCollections.ACTIVITY_CFG).done(tabParametersSignup -> {
                                 // Création SB_Person
                                 List<String> listPersonsId = new ArrayList<>();
                                 List<Promise> promisesPlayers = new ArrayList<>();
@@ -178,50 +177,53 @@ public class SignupDAOImpl implements SignupDAO {
                                             promisesPlayers.add(addPlayer(tabPlayers.getJsonObject(i), structureObj, categoryAgeObj, sbSandBox, listPersonsId));
                                         }
                                     }
-                                }
-                                dm.when(promisesPlayers.toArray(new Promise[promisesPlayers.size()])).done(rs2 -> {
-                                    // Création Effective
-                                    SB_Effective sbEffective = new SB_Effective();
-                                    sbEffective.setSandboxId(sbSandBox.get_id());
-                                    sbEffective.setLabel("Défaut");
-                                    sbEffective.setCategoryAge(categoryAgeObj);
-                                    // SB_Effective -> members
-                                    for (String playerId : listPersonsId) {
-                                        Member member = new Member();
-                                        member.setRole(new Role("player", "Joueur"));
-                                        member.setPersonId(playerId);
-                                        sbEffective.addMember(member);
-                                    }
-                                    mongo.upsert(sbEffective).done(sbEffectiveId -> {
-                                        sbEffective.set_id(sbEffectiveId);
-                                        sbSandBox.setEffectiveDefault(sbEffective.get_id());
-                                        //Add owner in member's list of sandbox
-                                        Member member = new Member();
-                                        member.setRole(new Role("admin", "Admin"));
-                                        member.setPersonId(user.get_id());
-                                        member.setStatus("activated");
-                                        List<Member> members = new ArrayList<>();
-                                        members.add(member);
-                                        sbSandBox.setMembers(members);
-                                        mongo.upsert(sbSandBox).done(sbId -> {
-                                            user.setSandboxDefault(sbId);
-                                            mongo.upsert(user).done(userId -> {
-                                                // Création SB_Teams
-                                                // My team
-                                                SB_Team team = new SB_Team();
-                                                team.setEffectiveId(sbEffective.get_id());
-                                                team.setSandboxId(sbSandBox.get_id());
-                                                team.setLabel("Mon équipe");
-                                                team.setEnable(true);
-                                                team.setAdversary(false);
-                                                mongo.upsert(team).done(teamId -> deferred.resolve(new JsonObject(Json.encode(user)))).fail(deferred::reject);
+
+                                    dm.when(promisesPlayers.toArray(new Promise[promisesPlayers.size()])).done(rs2 -> {
+                                        // Création Effective
+                                        SB_Effective sbEffective = new SB_Effective();
+                                        sbEffective.setSandboxId(sbSandBox.get_id());
+                                        sbEffective.setLabel("Défaut");
+                                        sbEffective.setCategoryAge(categoryAgeObj);
+                                        // SB_Effective -> members
+                                        for (String playerId : listPersonsId) {
+                                            Member member = new Member();
+                                            member.setRole(new Role("player", "Joueur"));
+                                            member.setPersonId(playerId);
+                                            sbEffective.addMember(member);
+                                        }
+                                        mongo.upsert(sbEffective).done(sbEffectiveId -> {
+                                            sbEffective.set_id(sbEffectiveId);
+                                            sbSandBox.setEffectiveDefault(sbEffective.get_id());
+                                            //Add owner in member's list of sandbox
+                                            Member member = new Member();
+                                            member.setRole(new Role("admin", "Admin"));
+                                            member.setPersonId(user.get_id());
+                                            member.setStatus("activated");
+                                            List<Member> members = new ArrayList<>();
+                                            members.add(member);
+                                            sbSandBox.setMembers(members);
+                                            mongo.upsert(sbSandBox).done(sbId -> {
+                                                user.setSandboxDefault(sbId);
+                                                mongo.upsert(user).done(userId -> {
+                                                    // Création SB_Teams
+                                                    // My team
+                                                    SB_Team team = new SB_Team();
+                                                    team.setEffectiveId(sbEffective.get_id());
+                                                    team.setSandboxId(sbSandBox.get_id());
+                                                    team.setLabel("Mon équipe");
+                                                    team.setEnable(true);
+                                                    team.setAdversary(false);
+                                                    mongo.upsert(team).done(teamId -> deferred.resolve(new JsonObject(Json.encode(user)))).fail(deferred::reject);
+                                                }).fail(deferred::reject);
                                             }).fail(deferred::reject);
                                         }).fail(deferred::reject);
-                                    }).fail(deferred::reject);
-                                }).fail(e -> {
-                                    LOG.error(((Throwable) e.getReject()).getMessage());
-                                    deferred.reject(((QaobeeException) e.getReject()));
-                                });
+                                    }).fail(e -> {
+                                        LOG.error(((Throwable) e.getReject()).getMessage());
+                                        deferred.reject(((QaobeeException) e.getReject()));
+                                    });
+                                } else {
+                                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "tabParametersSignup is empty"));
+                                }
                             }).fail(deferred::reject);
                         }).fail(deferred::reject);
                     }).fail(e -> {
@@ -301,16 +303,17 @@ public class SignupDAOImpl implements SignupDAO {
                 if (!res) {
                     deferred.reject(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha"));
                 } else {
-                    proceedRegister(userJson, locale, deferred);
+                    proceedRegister(userJson, locale).done(deferred::resolve).fail(deferred::reject);
                 }
             }).fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha")));
-        } else{
-            proceedRegister(userJson, locale, deferred);
+        } else {
+            proceedRegister(userJson, locale).done(deferred::resolve).fail(deferred::reject);
         }
         return deferred.promise();
     }
 
-    private void proceedRegister(JsonObject userJson, String locale, Deferred<JsonObject, QaobeeException, Integer> deferred) {
+    private Promise<JsonObject, QaobeeException, Integer> proceedRegister(JsonObject userJson, String locale) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         final User user = Json.decodeValue(userJson.encode(), User.class);
         try {
             // Check user informations
@@ -318,59 +321,63 @@ public class SignupDAOImpl implements SignupDAO {
             // check if email is correct
             userDAO.testEmail(user.getContact().getEmail(), locale);
             userDAO.existingLogin(user.getAccount().getLogin()).done(r -> {
-                user.getAccount().setToken(UUID.randomUUID().toString());
-                user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                user.getAccount().setActive(false);
-                user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
-                final Plan plan = Json.decodeValue(userJson.getJsonObject(PARAM_PLAN).encode(), Plan.class);
-                if (user.getAccount().getListPlan() == null) {
-                    user.getAccount().setListPlan(new ArrayList<>());
-                }
-                plan.setStatus("open");
-                plan.setStartPeriodDate(System.currentTimeMillis());
-                plan.setAmountPaid(runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price"));
-                Calendar gc = GregorianCalendar.getInstance();
-                gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
-                plan.setEndPeriodDate(gc.getTimeInMillis());
-                // Si on vient du mobile, on connait le plan, mais pas par le web
-                Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
-                if (plan.getActivity() != null) {
-                    mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY).done(activity -> {
-                        plan.setActivity(Json.decodeValue(activity.encode(), Activity.class));
+                if (!r) {
+                    user.getAccount().setToken(UUID.randomUUID().toString());
+                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                    user.getAccount().setActive(false);
+                    user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
+                    final Plan plan = Json.decodeValue(userJson.getJsonObject(PARAM_PLAN).encode(), Plan.class);
+                    if (user.getAccount().getListPlan() == null) {
+                        user.getAccount().setListPlan(new ArrayList<>());
+                    }
+                    plan.setStatus("open");
+                    plan.setStartPeriodDate(System.currentTimeMillis());
+                    plan.setAmountPaid(runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price"));
+                    Calendar gc = GregorianCalendar.getInstance();
+                    gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
+                    plan.setEndPeriodDate(gc.getTimeInMillis());
+                    // Si on vient du mobile, on connait le plan, mais pas par le web
+                    Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
+                    if (plan.getActivity() != null) {
+                        mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY).done(activity -> {
+                            plan.setActivity(Json.decodeValue(activity.encode(), Activity.class));
+                            d.resolve(true);
+                        }).fail(deferred::reject);
+                    } else {
                         d.resolve(true);
+                    }
+                    d.promise().done(res -> {
+                        user.getAccount().getListPlan().add(plan);
+                        try {
+                            mongo.upsert(userDAO.prepareUpsert(user)).done(userId -> {
+                                user.set_id(userId);
+                                vertx.eventBus().send(CRMVerticle.REGISTER, new JsonObject(Json.encode(user)));
+                                mongo.getById(user.get_id(), DBCollections.USER).done(u ->
+                                        deferred.resolve(new JsonObject()
+                                                .put("person", u)
+                                                .put("planId", plan.getPaymentId()))
+                                ).fail(deferred::reject);
+                            }).fail(deferred::reject);
+                        } catch (QaobeeException e) {
+                            LOG.error(e.getMessage(), e);
+                            deferred.reject(e);
+                        }
                     }).fail(deferred::reject);
                 } else {
-                    d.resolve(true);
+                    deferred.reject(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale)));
                 }
-                d.promise().done(res -> {
-                    user.getAccount().getListPlan().add(plan);
-                    try {
-                        mongo.upsert(userDAO.prepareUpsert(user)).done(userId -> {
-                            user.set_id(userId);
-                            vertx.eventBus().send(CRMVerticle.REGISTER, new JsonObject(Json.encode(user)));
-                            mongo.getById(user.get_id(), DBCollections.USER).done(u ->
-                                    deferred.resolve(new JsonObject()
-                                            .put("person", u)
-                                            .put("planId", plan.getPaymentId()))
-                            ).fail(deferred::reject);
-                        }).fail(deferred::reject);
-                    } catch (QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                        deferred.reject(e);
-                    }
-                }).fail(deferred::reject);
-
             }).fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale))));
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
             deferred.reject(e);
         }
+        return deferred.promise();
     }
 
     @Override
     public Promise<Boolean, QaobeeException, Integer> resendMail(String login, String locale) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userDAO.getUserByLogin(login).done(user ->{
+        userDAO.getUserByLogin(login).done(user -> {
             try {
                 sendRegisterMail(user, locale);
             } catch (QaobeeException e) {

@@ -25,7 +25,6 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.eventbus.Message;
@@ -72,8 +71,6 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_LOCAL = "local";
     private static final Logger LOG = LoggerFactory.getLogger(CountryVerticle.class);
-    @Inject
-    private Utils utils;
     @Inject
     private CountryDAO countryDAO;
 

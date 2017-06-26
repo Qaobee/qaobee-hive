@@ -106,6 +106,6 @@ public class CollectDAOImpl implements CollectDAO {
         dbObjectParent.put("startDate", o);
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match);
-        return mongo.aggregate("_id", pipelineAggregation, DBCollections.COLLECT);
+        return mongo.aggregate(pipelineAggregation, DBCollections.COLLECT);
     }
 }
