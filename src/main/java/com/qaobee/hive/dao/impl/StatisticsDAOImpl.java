@@ -74,7 +74,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
             rs.forEach(eventStats -> {
                 if (((JsonObject) eventStats.getResult()).getJsonArray("stats").size() == 0) {
-                    promises2.add(pushAllStats(stats, ((JsonObject) eventStats.getResult()).getString("evtId")));
+                    promises2.add(pushAllStats(stats, ((JsonObject) eventStats.getResult()).getString("eventId")));
                 } else {
                     promises2.add(pushNonDuplicateStats(stats, ((JsonObject) eventStats.getResult()).getJsonArray("stats")));
                 }
