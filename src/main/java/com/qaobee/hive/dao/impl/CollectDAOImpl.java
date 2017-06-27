@@ -64,6 +64,7 @@ public class CollectDAOImpl implements CollectDAO {
                             .put("senderId", currentUserId);
                     notificationsDAO.notify(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
                             DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId));
+                    deferred.resolve(collect);
                 })
                 .fail(deferred::reject);
         return deferred.promise();
@@ -81,6 +82,7 @@ public class CollectDAOImpl implements CollectDAO {
                             .put("senderId", currentUserId);
                     notificationsDAO.notify(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
                             DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId));
+                    deferred.resolve(collect);
                 })
                 .fail(deferred::reject);
         return deferred.promise();
