@@ -265,13 +265,16 @@ public class UserDAOImpl implements UserDAO {
     public Promise<JsonObject, QaobeeException, Integer> getMeta(String sandboxId) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         sandBoxDAO.getSandboxById(sandboxId)
-                .done(meta -> {
-                    meta.put("season", seasonDAO.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id")));
-                    meta.put("teams", teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null));
-                    meta.put("activity", activityDAO.getActivity(meta.getString("activityId")));
-                    deferred.resolve(meta);
-                })
-                .fail(deferred::reject);
+                .done(meta -> seasonDAO.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id")).done(season -> {
+                    meta.put("season", season);
+                    teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null).done(teams -> {
+                        meta.put("teams", teams);
+                        activityDAO.getActivity(meta.getString("activityId")).done(activity -> {
+                            meta.put("activity", activity);
+                            deferred.resolve(meta);
+                        }).fail(deferred::reject);
+                    }).fail(deferred::reject);
+                }).fail(deferred::reject)).fail(deferred::reject);
         return deferred.promise();
     }
 }

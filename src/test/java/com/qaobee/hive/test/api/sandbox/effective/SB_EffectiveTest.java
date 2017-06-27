@@ -101,11 +101,16 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      * Gets list members by category with missing parameters.
      */
     @Test
-    public void getListMembersByCategoryWithMissingParameters() {
-        generateLoggedUser().done(user -> given().header(TOKEN, user.getAccount().getToken())
-                .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString())));
+    public void getListMembersByCategoryWithMissingParameters(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().done(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**

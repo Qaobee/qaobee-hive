@@ -101,7 +101,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
         replyJsonObject(message, userDAO.updateUser(new JsonObject(req.getBody())));
     }
 
-    private Handler<AsyncResult<Message<String>>> getPdfHandler(final Message<String> message) {
+    private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
         return pdfResp -> {
             try {
                 if (pdfResp.failed()) {
@@ -109,7 +109,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                 } else {
                     message.reply(new JsonObject()
                             .put(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
-                            .put(Main.FILE_SERVE, new JsonObject(pdfResp.result().body()).getString(PDFVerticle.PDF))
+                            .put(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF))
                             .encode());
                 }
             } catch (Throwable e) { // NOSONAR

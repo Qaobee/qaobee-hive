@@ -483,12 +483,14 @@ public class UserTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(user).done(id -> given().header(TOKEN, user.getAccount().getToken())
-                    .when().get(getURL(UserVerticle.META))
-                    .then().assertThat().statusCode(200)
-                    .body("activityId", notNullValue())
-                    .body("structure", notNullValue())).fail(e -> Assert.fail(e.getMessage()));
-            async.complete();
+            mongo.upsert(user).done(id -> {
+                given().header(TOKEN, user.getAccount().getToken())
+                        .when().get(getURL(UserVerticle.META))
+                        .then().assertThat().statusCode(200)
+                        .body("activityId", notNullValue())
+                        .body("structure", notNullValue());
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
         }).fail(e -> Assert.fail(e.getMessage()));
         async.await(TIMEOUT);
     }
@@ -499,13 +501,15 @@ public class UserTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(user).done(id -> given().header(TOKEN, user.getAccount().getToken())
-                    .param("sandboxId", "558b0efebd2e39cdab651e1f")
-                    .when().get(getURL(UserVerticle.META))
-                    .then().assertThat().statusCode(200)
-                    .body("activityId", notNullValue())
-                    .body("structure", notNullValue())).fail(e -> Assert.fail(e.getMessage()));
-            async.complete();
+            mongo.upsert(user).done(id -> {
+                given().header(TOKEN, user.getAccount().getToken())
+                        .param("sandboxId", "558b0efebd2e39cdab651e1f")
+                        .when().get(getURL(UserVerticle.META))
+                        .then().assertThat().statusCode(200)
+                        .body("activityId", notNullValue())
+                        .body("structure", notNullValue());
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
         }).fail(e -> Assert.fail(e.getMessage()));
         async.await(TIMEOUT);
     }
