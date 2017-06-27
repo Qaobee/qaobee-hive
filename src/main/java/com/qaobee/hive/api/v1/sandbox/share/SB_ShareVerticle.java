@@ -21,6 +21,7 @@ package com.qaobee.hive.api.v1.sandbox.share;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
+import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
@@ -285,7 +286,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 .put("subject", Messages.getString("mail.account.sharingSB.subject", locale, user.getString(FIRSTNAME_FIELD) + " " + user.getString("name")))
                 .put("content_type", "text/html")
                 .put("body", templatesDAO.generateMail(tplReq).getString("result"));
-        vertx.eventBus().publish("mailer.mod", emailReq);
+        vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
     }
 
     /**

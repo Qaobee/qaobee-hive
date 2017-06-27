@@ -20,6 +20,7 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.api.v1.commons.utils.CRMVerticle;
+import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
@@ -402,7 +403,7 @@ public class SignupDAOImpl implements SignupDAO {
                 .put("subject", Messages.getString("mail.account.validation.subject", locale))
                 .put("content_type", "text/html")
                 .put("body", templatesDAO.generateMail(tplReq).getString("result"));
-        vertx.eventBus().publish("mailer.mod", emailReq);
+        vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
     }
 
     private static void testAccount(User user, String activationCode, String locale) throws QaobeeException {

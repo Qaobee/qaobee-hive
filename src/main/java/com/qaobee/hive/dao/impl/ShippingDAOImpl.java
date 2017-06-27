@@ -19,6 +19,7 @@
 
 package com.qaobee.hive.dao.impl;
 
+import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
@@ -264,7 +265,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                     .put("subject", Messages.getString("mail.payment.subject", locale))
                     .put("content_type", "text/html")
                     .put("body", tplRes);
-            vertx.eventBus().publish("mailer.mod", emailReq);
+            vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
             deferred.resolve(new JsonObject().put(Constants.STATUS, true));
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
@@ -320,7 +321,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                                     subscription.getJsonObject(METADATA_FIELD).getString(LOCALE_FIELD)))
                             .put("content_type", "text/html")
                             .put("body", tplRes);
-                    vertx.eventBus().publish("mailer.mod", emailReq);
+                    vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
                     deferred.resolve(true);
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);

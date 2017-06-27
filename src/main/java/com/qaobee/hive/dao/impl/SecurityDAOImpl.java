@@ -20,6 +20,7 @@
 package com.qaobee.hive.dao.impl;
 
 import com.lowagie.text.pdf.codec.Base64;
+import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Device;
 import com.qaobee.hive.dao.*;
@@ -174,7 +175,7 @@ public class SecurityDAOImpl implements SecurityDAO {
                                             .put(TemplatesDAOImpl.TEMPLATE, "newPasswd.html")
                                             .put(TemplatesDAOImpl.DATA, mailUtils.generateNewpasswdBody(user, locale))
                                     ).getString("result"));
-                            vertx.eventBus().publish("mailer.mod", emailReq);
+                            vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
                             deferred.resolve(true);
                         } catch (QaobeeException e) {
                             LOG.error(e.getMessage(), e);

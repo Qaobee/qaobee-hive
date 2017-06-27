@@ -37,6 +37,10 @@ import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mail.LoginOption;
+import io.vertx.ext.mail.MailClient;
+import io.vertx.ext.mail.MailConfig;
+import io.vertx.ext.mail.StartTLSOptions;
 import io.vertx.ext.web.client.WebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +80,20 @@ public class GuiceModule extends AbstractModule {
         // TECHNICAL MODULES
         bind(MongoDB.class).to(MongoDBImpl.class).in(Singleton.class);
         bind(WebClient.class).toInstance(WebClient.create(vertx));
+        MailConfig mailConfig = new MailConfig();
+        mailConfig.setHostname(config.getJsonObject("mailer.mod").getString("host"));
+        mailConfig.setPort(config.getJsonObject("mailer.mod").getInteger("port"));
+        mailConfig.setSsl(config.getJsonObject("mailer.mod").getBoolean("ssl"));
+        if (config.getJsonObject("mailer.mod").getBoolean("auth")) {
+            mailConfig.setUsername(config.getJsonObject("mailer.mod").getString("username"));
+            mailConfig.setPassword(config.getJsonObject("mailer.mod").getString("password"));
+         //   mailConfig.setAuthMethods("LOGIN");
+            mailConfig.setLogin(LoginOption.REQUIRED);
+           mailConfig.setStarttls(StartTLSOptions.REQUIRED);
+        }
+
+
+        bind(MailClient.class).toInstance(MailClient.createShared(vertx, mailConfig, "qaobeeMail"));
         bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
