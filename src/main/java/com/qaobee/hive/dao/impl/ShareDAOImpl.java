@@ -134,8 +134,9 @@ public class ShareDAOImpl implements ShareDAO {
                             }).fail(deferred::reject);
                         }).fail(deferred::reject);
                     }).fail(deferred::reject);
+                }else {
+                    deferred.resolve(null);
                 }
-                deferred.resolve(null);
             }).fail(deferred::reject);
         }).fail(deferred::reject);
         return deferred.promise();
@@ -216,7 +217,7 @@ public class ShareDAOImpl implements ShareDAO {
                     .put(FIELD_STATUS, "activated")
                     .put("startDate", System.currentTimeMillis())
             );
-            mongo.upsert(sandbox, DBCollections.INVITATION).done(id -> {
+            mongo.upsert(sandbox, DBCollections.SANDBOX).done(id -> {
                 sandbox.put("_id", id);
                 sandBoxDAO.getEnrichedSandbox(sandbox).done(deferred::resolve).fail(deferred::reject);
             }).fail(deferred::reject);

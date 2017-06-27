@@ -26,6 +26,8 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,7 +35,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -44,7 +46,8 @@ public class SB_PersonTest extends VertxJunitSupport {
      * Gets by id.
      */
     @Test
-    public void getById() {
+    public void getById(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         final JsonObject params = new JsonObject()
                 .put(SB_PersonVerticle.PARAM_LIST_ID, new JsonArray(
@@ -62,7 +65,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(11))
                     .body("name", hasItem("Batinovic"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -89,7 +94,8 @@ public class SB_PersonTest extends VertxJunitSupport {
      * Gets by id with missing parameters.
      */
     @Test
-    public void getByIdWithMissingParameters() {
+    public void getByIdWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         final JsonObject params = new JsonObject();
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").done(user -> {
@@ -107,14 +113,17 @@ public class SB_PersonTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list person sandbox.
      */
     @Test
-    public void getListPersonSandbox() {
+    public void getListPersonSandbox(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
@@ -123,7 +132,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(17))
                     .body("name", hasItem("Batinovic"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -151,27 +162,33 @@ public class SB_PersonTest extends VertxJunitSupport {
      * Gets list person sandbox with missing parameters.
      */
     @Test
-    public void getListPersonSandboxWithMissingParameters() {
+    public void getListPersonSandboxWithMissingParameters(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .when().get(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list person sandbox with wring parameters.
      */
     @Test
-    public void getListPersonSandboxWithWringParameters() {
+    public void getListPersonSandboxWithWringParameters(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .queryParam(SB_PersonVerticle.PARAM_SANDBOX_ID, "bla")
                     .when().get(getURL(SB_PersonVerticle.GET_LIST_SANDBOX))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -179,7 +196,8 @@ public class SB_PersonTest extends VertxJunitSupport {
      * Upload avatar
      */
     @Test
-    public void uploadAvatar() {
+    public void uploadAvatar(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
 
@@ -208,14 +226,17 @@ public class SB_PersonTest extends VertxJunitSupport {
             Assert.assertEquals("Files must have same size",
                     byteArray.length,
                     vertx.fileSystem().propsBlocking("src/test/resources/avatar.jpg").size());
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Upload avatar with wrong user id
      */
     @Test
-    public void uploadAvatarWithWrongUserId() {
+    public void uploadAvatarWithWrongUserId(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
                     .multiPart(new File("src/test/resources/avatar.jpg")).
@@ -223,28 +244,34 @@ public class SB_PersonTest extends VertxJunitSupport {
                     when().
                     post(BASE_URL + "/file/SB_Person/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Upload avatar with not logged user
      */
     @Test
-    public void uploadAvatarWithNotLoggedUser() {
+    public void uploadAvatarWithNotLoggedUser(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             given().multiPart(new File("src/test/resources/avatar.jpg"))
                     .pathParam("uid", u.get_id())
                     .when()
                     .post(BASE_URL + "/file/SB_Person/avatar/{uid}")
-                    .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
-        });
+                    .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Upload avatar with wrong token.
      */
     @Test
-    public void uploadAvatarWithWrongToken() {
+    public void uploadAvatarWithWrongToken(TestContext context) {
+        Async async = context.async();
         generateUser().then(u -> {
             given().multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", u.get_id())
@@ -252,7 +279,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .when()
                     .post(BASE_URL + "/file/SB_Person/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -269,7 +298,8 @@ public class SB_PersonTest extends VertxJunitSupport {
      * Add person.
      */
     @Test
-    public void addPerson() {
+    public void addPerson(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             JsonObject person = new JsonObject().put("person", generatePerson());
@@ -279,7 +309,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("name", is("Ranu"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -306,21 +338,25 @@ public class SB_PersonTest extends VertxJunitSupport {
      * Add person with missing parameter.
      */
     @Test
-    public void addPersonWithMissingParameter() {
+    public void addPersonWithMissingParameter(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().put(getURL(SB_PersonVerticle.ADD))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update person.
      */
     @Test
-    public void updatePerson() {
+    public void updatePerson(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             String id = "550a05dadb8f8b6e2f51f4db";
@@ -338,7 +374,9 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("name", is("Blabla"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -365,14 +403,17 @@ public class SB_PersonTest extends VertxJunitSupport {
      * Update person with missing parameters.
      */
     @Test
-    public void updatePersonWithMissingParameters() {
+    public void updatePersonWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EFFECTIVE_HAND);
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().put(getURL(SB_EffectiveVerticle.UPDATE))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     private JsonObject generatePerson() {

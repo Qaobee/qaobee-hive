@@ -27,13 +27,15 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -45,7 +47,8 @@ public class SB_ShareTest extends VertxJunitSupport {
      * invite a member to a sandbox.
      */
     @Test
-    public void inviteMemberToSandbox() {
+    public void inviteMemberToSandbox(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             generateLoggedUser().then(user2 -> {
@@ -69,15 +72,18 @@ public class SB_ShareTest extends VertxJunitSupport {
                         .body("", hasSize(1))
                         .body("_id", notNullValue())
                         .body("findAll { it.status == 'waiting' }.userId", hasItem(user2.get_id()));
-            });
-        });
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Invite member to sandbox with wrong email.
      */
     @Test
-    public void inviteMemberToSandboxWithWrongEmail() {
+    public void inviteMemberToSandboxWithWrongEmail(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             final JsonObject params = new JsonObject()
@@ -92,15 +98,18 @@ public class SB_ShareTest extends VertxJunitSupport {
                     .body("_id", notNullValue())
                     .body("userId", nullValue())
                     .extract();
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * acceptation invitation sandbox.
      */
     @Test
-    public void acceptationInvitationToSandbox() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
+    public void acceptationInvitationToSandbox(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS, DATA_USER_QAOBEE);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             generateLoggedUser().then(user2 -> {
                 final JsonObject params = new JsonObject()
@@ -134,12 +143,15 @@ public class SB_ShareTest extends VertxJunitSupport {
                         .body("_id", notNullValue())
                         .body("members", hasSize(3))
                         .body("members.findAll{ it.status = 'activated' }.personId", hasItem("a0ef9c2d-6864-4a20-84ba-b66a666d2bf4"));
-            });
-        });
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     @Test
-    public void refuseInvitationToSandbox() {
+    public void refuseInvitationToSandbox(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             generateLoggedUser().then(user2 -> {
@@ -174,8 +186,10 @@ public class SB_ShareTest extends VertxJunitSupport {
                         .body("_id", notNullValue())
                         .body("members", hasSize(2))
                         .body("members.personId", not(hasItem(user2.get_id())));
-            });
-        });
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -192,7 +206,8 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Acceptation invitation to sandbox with missing params.
      */
     @Test
-    public void acceptationInvitationToSandboxWithMissingParams() {
+    public void acceptationInvitationToSandboxWithMissingParams(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
 
@@ -211,7 +226,9 @@ public class SB_ShareTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -239,7 +256,8 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Add a member to a sandbox with missing params.
      */
     @Test
-    public void inviteMemberToSandboxWithMissingParams() {
+    public void inviteMemberToSandboxWithMissingParams(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             final JsonObject params = new JsonObject()
                     .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
@@ -255,14 +273,17 @@ public class SB_ShareTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Remove a member to a sandbox.
      */
     @Test
-    public void desactivateMemberToSandbox() {
+    public void desactivateMemberToSandbox(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             generateUser().then(user2 -> {
@@ -314,9 +335,11 @@ public class SB_ShareTest extends VertxJunitSupport {
                             .body("_id", notNullValue())
                             .body("members", hasSize(3))
                             .body("members.findAll{ it.status == 'desactivated' }.personId", hasItem(user2.get_id()));
+                    async.complete();
                 }).fail(e -> Assert.fail(e.getMessage()));
-            });
-        });
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -343,7 +366,8 @@ public class SB_ShareTest extends VertxJunitSupport {
      * Remove a member to a sandbox with missing params.
      */
     @Test
-    public void desactivateMemberToSandboxWithMissingParams() {
+    public void desactivateMemberToSandboxWithMissingParams(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(u -> {
             final JsonObject params = new JsonObject()
                     .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
@@ -358,7 +382,9 @@ public class SB_ShareTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**

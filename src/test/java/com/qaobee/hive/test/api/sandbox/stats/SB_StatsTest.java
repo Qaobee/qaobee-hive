@@ -24,12 +24,15 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -40,7 +43,8 @@ public class SB_StatsTest extends VertxJunitSupport {
      * Gets list detail values.
      */
     @Test
-    public void getListDetailValues() {
+    public void getListDetailValues(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);
         generateLoggedUser().then(user -> {
             final JsonObject params = new JsonObject()
@@ -55,7 +59,9 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(10))
                     .body("code", hasItem("originShootAtt"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -82,7 +88,8 @@ public class SB_StatsTest extends VertxJunitSupport {
      * Gets list detail values with missing parameters.
      */
     @Test
-    public void getListDetailValuesWithMissingParameters() {
+    public void getListDetailValuesWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().then(user -> {
             final JsonObject params = new JsonObject()
@@ -100,14 +107,17 @@ public class SB_StatsTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets stat group by.
      */
     @Test
-    public void getStatGroupBy() {
+    public void getStatGroupBy(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);
         generateLoggedUser().then(user -> {
             final JsonObject params = new JsonObject()
@@ -123,7 +133,9 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("value", hasItem(10));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -150,7 +162,8 @@ public class SB_StatsTest extends VertxJunitSupport {
      * Gets stat group by with missing parameters.
      */
     @Test
-    public void getStatGroupByWithMissingParameters() {
+    public void getStatGroupByWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().then(user -> {
             final JsonObject params = new JsonObject()
@@ -169,14 +182,17 @@ public class SB_StatsTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add stat.
      */
     @Test
-    public void addStat() {
+    public void addStat(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(user -> {
             JsonObject s = generateStat(user, "fake", 1);
             given().header(TOKEN, user.getAccount().getToken())
@@ -198,7 +214,9 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("code", hasItem("fake"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -225,7 +243,8 @@ public class SB_StatsTest extends VertxJunitSupport {
      * Add stat with missing parameters.
      */
     @Test
-    public void addStatWithMissingParameters() {
+    public void addStatWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().then(user -> {
             List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_StatisticsVerticle.ADD_STAT).mandatoryParams());
@@ -239,14 +258,17 @@ public class SB_StatsTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add stat bulk with duplicates.
      */
     @Test
-    public void addStatBulkWithDuplicates() {
+    public void addStatBulkWithDuplicates(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().then(user -> {
             JsonArray stats = new JsonArray();
@@ -283,7 +305,9 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(10))
                     .body("code", hasItem("fake"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**

@@ -23,6 +23,9 @@ import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -30,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -43,7 +46,8 @@ public class SB_TeamTest extends VertxJunitSupport {
      * Gets my teams list.
      */
     @Test
-    public void getMyTeamsList() {
+    public void getMyTeamsList(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         final Map<String, String> params = new HashMap<>();
         params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
@@ -57,7 +61,9 @@ public class SB_TeamTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("label", hasItem("Cesson-Sevigne A"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -84,7 +90,8 @@ public class SB_TeamTest extends VertxJunitSupport {
      * Gets my teams liste with missing parameters.
      */
     @Test
-    public void getMyTeamsListeWithMissingParameters() {
+    public void getMyTeamsListeWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_TeamVerticle.GET_LIST).mandatoryParams());
@@ -103,14 +110,17 @@ public class SB_TeamTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets my adversary teams list.
      */
     @Test
-    public void getMyAdversaryTeamsList() {
+    public void getMyAdversaryTeamsList(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         final Map<String, String> params = new HashMap<>();
         params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
@@ -133,14 +143,17 @@ public class SB_TeamTest extends VertxJunitSupport {
                     .when().get(getURL(SB_TeamVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(6));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets by id.
      */
     @Test
-    public void getById() {
+    public void getById(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
@@ -149,7 +162,9 @@ public class SB_TeamTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("label", is("Cesson-Sevigne A"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -176,21 +191,25 @@ public class SB_TeamTest extends VertxJunitSupport {
      * Gets by id with missing parameters.
      */
     @Test
-    public void getByIdWithMissingParameters() {
+    public void getByIdWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().get(getURL(SB_TeamVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add team.
      */
     @Test
-    public void addTeam() {
+    public void addTeam(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         final JsonObject params = new JsonObject()
                 .put(SB_EventVerticle.PARAM_LABEL, "TheNewTeam")
@@ -205,7 +224,9 @@ public class SB_TeamTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("label", is("TheNewTeam"));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -232,7 +253,8 @@ public class SB_TeamTest extends VertxJunitSupport {
      * Update team.
      */
     @Test
-    public void updateTeam() {
+    public void updateTeam(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
 
@@ -262,7 +284,9 @@ public class SB_TeamTest extends VertxJunitSupport {
                     .when().get(getURL(SB_TeamVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**

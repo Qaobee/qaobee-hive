@@ -78,7 +78,9 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         dm.when(promises.toArray(new Promise[promises.size()]))
                 .done(rs -> {
                     JsonArray enrichedMembers = new JsonArray();
-                    rs.forEach(enrichedMembers::add);
+                    rs.forEach(r->{
+                        enrichedMembers.add(r.getResult());
+                    });
                     sandbox.put(FIELD_MEMBERS, enrichedMembers);
                     deferred.resolve(sandbox);
                 })

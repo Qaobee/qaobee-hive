@@ -21,6 +21,7 @@ package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.EffectiveDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import io.vertx.core.json.JsonArray;
@@ -77,12 +78,21 @@ public class EffectiveDAOImpl implements EffectiveDAO {
 
     @Override
     public Promise<JsonArray, QaobeeException, Integer> getEffectiveList(String sandboxId, String categoryAgeCode) {
+        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(PARAM_SANDBOX_ID, sandboxId);
         if (categoryAgeCode != null) {
             criterias.put(PARAM_CATEGORY_AGE_CODE, categoryAgeCode);
         }
-        return mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.EFFECTIVE);
+        mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.EFFECTIVE).done(resultJson -> {
+            if (resultJson.size() == 0) {
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR,
+                        "No Effective found " + "for ( sandBoxId : " + sandboxId + " " + (categoryAgeCode != null ? "and for category : " + categoryAgeCode + ")" : ")")));
+            } else {
+                deferred.resolve(resultJson);
+            }
+        }).fail(deferred::reject);
+        return deferred;
     }
 
     @Override

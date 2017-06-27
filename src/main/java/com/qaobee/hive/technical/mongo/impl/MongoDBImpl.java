@@ -26,7 +26,7 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
-import io.vertx.ext.mongo.UpdateOptions;
+import io.vertx.ext.mongo.WriteOption;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
@@ -58,7 +58,7 @@ public class MongoDBImpl implements MongoDB {
     public Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, String collection) {
         Deferred<String, QaobeeException, Integer> deferred = new DeferredObject<>();
         if (document.containsKey("_id") && document.getString("_id") != null) {
-            mongoClient.findOneAndReplaceWithOptions(collection, query, document, new FindOptions().setLimit(1), new UpdateOptions().setUpsert(true), res -> {
+            mongoClient.saveWithOptions(collection, document, WriteOption.FSYNCED , res -> {
                 if (res.succeeded()) {
                     deferred.resolve(document.getString("_id"));
                 } else {

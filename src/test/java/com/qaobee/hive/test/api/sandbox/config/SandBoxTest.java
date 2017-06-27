@@ -23,9 +23,12 @@ import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -39,7 +42,8 @@ public class SandBoxTest extends VertxJunitSupport {
      * Retrieve sand box by his owner.
      */
     @Test
-    public void getSandBoxByOwner() {
+    public void getSandBoxByOwner(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(u -> {
             getActivity("ACT-HAND", u).then(activity -> {
@@ -49,8 +53,10 @@ public class SandBoxTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(200)
                         .body("owner", notNullValue())
                         .body("owner", is(u.get_id()));
-            });
-        });
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -77,20 +83,24 @@ public class SandBoxTest extends VertxJunitSupport {
      * Gets sand box by owner with missing parameters.
      */
     @Test
-    public void getSandBoxByOwnerWithMissingParameters() {
+    public void getSandBoxByOwnerWithMissingParameters(TestContext context) {
+        Async async = context.async();
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets sand box by owner with wrong parameters.
      */
     @Test
-    public void getSandBoxByOwnerWithWrongParameters() {
+    public void getSandBoxByOwnerWithWrongParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
@@ -98,14 +108,17 @@ public class SandBoxTest extends VertxJunitSupport {
                     .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets sand box by owner with wrong user.
      */
     @Test
-    public void getSandBoxByOwnerWithWrongUser() {
+    public void getSandBoxByOwnerWithWrongUser(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         generateLoggedUser().then(user -> {
             getActivity("ACT-HAND", user).then(activity -> {
@@ -114,32 +127,38 @@ public class SandBoxTest extends VertxJunitSupport {
                         .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
                         .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                         .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-            });
-        });
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets sand box by owner with wrong activity.
      */
     @Test
-    public void getSandBoxByOwnerWithWrongActivity() {
+    public void getSandBoxByOwnerWithWrongActivity(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
-            getActivity("ACT-HAND", user).then(activity -> {
+            getActivity("ACT-FOOT", user).then(activity -> {
                 given().header(TOKEN, user.getAccount().getToken())
                         .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
                         .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
                         .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                         .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-            });
-        });
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets sand box list by owner.
      */
     @Test
-    public void getSandBoxListByOwner() {
+    public void getSandBoxListByOwner(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
 
@@ -168,7 +187,9 @@ public class SandBoxTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("owner", hasItem(user.get_id()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -195,7 +216,8 @@ public class SandBoxTest extends VertxJunitSupport {
      * Gets sand box list by owner with wrong parameters.
      */
     @Test
-    public void getSandBoxListByOwnerWithWrongParameters() {
+    public void getSandBoxListByOwnerWithWrongParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
@@ -203,14 +225,17 @@ public class SandBoxTest extends VertxJunitSupport {
                     .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update sand box.
      */
     @Test
-    public void updateSandBox() {
+    public void updateSandBox(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             getActivity("ACT-HAND", user).then(activity -> {
@@ -230,8 +255,10 @@ public class SandBoxTest extends VertxJunitSupport {
                         .then().assertThat().statusCode(200)
                         .body("_id", notNullValue())
                         .body("effectiveDefault", is("123456"));
-            });
-        });
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -258,13 +285,16 @@ public class SandBoxTest extends VertxJunitSupport {
      * Update sand box with missing params.
      */
     @Test
-    public void updateSandBoxWithMissingParams() {
-        generateLoggedUser().then(user-> {
+    public void updateSandBoxWithMissingParams(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().post(getURL(SB_SandBoxVerticle.UPDATE))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -291,12 +321,15 @@ public class SandBoxTest extends VertxJunitSupport {
      * Gets sandbox with missing params.
      */
     @Test
-    public void getSandboxByIWithMissingParams() {
-        generateLoggedUser().then(user-> {
+    public void getSandboxByIWithMissingParams(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
                     .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 }

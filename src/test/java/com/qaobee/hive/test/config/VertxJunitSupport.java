@@ -34,6 +34,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.parsing.Parser;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.file.FileSystem;
@@ -168,7 +169,8 @@ public class VertxJunitSupport implements JSDataMongoTest {
     @Before
     public void printInfo(TestContext context) {
         Async async = context.async();
-        vertx = Vertx.vertx();
+        vertx = Vertx.vertx(new VertxOptions().setBlockedThreadCheckInterval(20000).setWorkerPoolSize(50));
+        vertx.exceptionHandler(context.exceptionHandler());
         FileSystem fs = vertx.fileSystem();
         config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes()));
         try {
