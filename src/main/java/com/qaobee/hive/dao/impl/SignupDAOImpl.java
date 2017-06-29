@@ -36,6 +36,7 @@ import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.dao.*;
+import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -43,6 +44,7 @@ import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -393,7 +395,8 @@ public class SignupDAOImpl implements SignupDAO {
     }
 
     @Override
-    public void sendRegisterMail(JsonObject user, String locale) throws QaobeeException {
+    public Promise<Boolean, QaobeeException, Integer> sendRegisterMail(JsonObject user, String locale) throws QaobeeException {
+        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
         final JsonObject tplReq = new JsonObject()
                 .put(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
                 .put(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(user.encode(), User.class), locale));
@@ -403,7 +406,14 @@ public class SignupDAOImpl implements SignupDAO {
                 .put("subject", Messages.getString("mail.account.validation.subject", locale))
                 .put("content_type", "text/html")
                 .put("body", templatesDAO.generateMail(tplReq).getString("result"));
-        vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
+        vertx.eventBus().send(MailVerticle.INTERNAL_MAIL, emailReq, new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), ar -> {
+            if(ar.succeeded()) {
+                deferred.resolve(true);
+            } else {
+                deferred.reject(new QaobeeException(ExceptionCodes.MAIL_EXCEPTION, Messages.getString("email.invalid", locale)));
+            }
+        });
+        return deferred.promise();
     }
 
     private static void testAccount(User user, String activationCode, String locale) throws QaobeeException {

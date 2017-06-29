@@ -9,6 +9,7 @@ build
 .classpath
 .project
 .settings
+application
 .yardoc
 .yardopts
 bin

@@ -136,7 +136,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiGroup Object Status
      */
     @Rule(address = RESEND_MAIL, method = Constants.POST, mandatoryParams = {PARAM_LOGIN},
-          scope = Rule.Param.BODY)
+            scope = Rule.Param.BODY)
     private void resendMail(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         signupDAO.resendMail(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale())
@@ -158,8 +158,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      */
     @Rule(address = FINALIZE_SIGNUP, method = Constants.POST,
-          mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
-          scope = Rule.Param.BODY)
+            mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
+            scope = Rule.Param.BODY)
     private void finalizeSignup(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject body = new JsonObject(req.getBody());
@@ -172,18 +172,19 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 req.getLocale())
                 .done(u -> {
                     try {
-                        signupDAO.sendRegisterMail(u, req.getLocale());
-                        JsonObject notification = new JsonObject()
-                                .put("id", u.getString("_id"))
-                                .put("target", "User")
-                                .put("notification", new JsonObject()
-                                        .put("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), req.getLocale()))
-                                        .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
-                                        .put("senderId", runtime.getString("admin.id")
-                                        )
-                                );
-                        vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
-                        message.reply(u.encode());
+                        signupDAO.sendRegisterMail(u, req.getLocale()).done(r -> {
+                            JsonObject notification = new JsonObject()
+                                    .put("id", u.getString("_id"))
+                                    .put("target", "User")
+                                    .put("notification", new JsonObject()
+                                            .put("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), req.getLocale()))
+                                            .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
+                                            .put("senderId", runtime.getString("admin.id")
+                                            )
+                                    );
+                            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+                            message.reply(u.encode());
+                        }).fail(e -> utils.sendError(message, e));
                     } catch (final QaobeeException e) {
                         LOG.error(e.getMessage(), e);
                         utils.sendError(message, e);
@@ -202,7 +203,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      */
     @Rule(address = FIRST_CONNECTION_CHECK, method = Constants.GET, mandatoryParams = {PARAM_ID, PARAM_CODE},
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void firstConnectionCheck(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, signupDAO.firstConnectionCheck(req.getParams().get(PARAM_ID).get(0), req.getParams().get(PARAM_CODE).get(0), req.getLocale()));

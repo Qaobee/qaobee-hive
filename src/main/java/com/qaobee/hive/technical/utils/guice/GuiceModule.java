@@ -45,10 +45,6 @@ import io.vertx.ext.web.client.WebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Locale;
 
 /**
@@ -87,9 +83,8 @@ public class GuiceModule extends AbstractModule {
         if (config.getJsonObject("mailer.mod").getBoolean("auth")) {
             mailConfig.setUsername(config.getJsonObject("mailer.mod").getString("username"));
             mailConfig.setPassword(config.getJsonObject("mailer.mod").getString("password"));
-         //   mailConfig.setAuthMethods("LOGIN");
             mailConfig.setLogin(LoginOption.REQUIRED);
-           mailConfig.setStarttls(StartTLSOptions.REQUIRED);
+            mailConfig.setStarttls(StartTLSOptions.REQUIRED);
         }
 
 
@@ -99,23 +94,17 @@ public class GuiceModule extends AbstractModule {
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
-        // BUSINESS MODULES
+
+        //
         Configuration cfgMails = new Configuration(new Version("2.3.23"));
-        // Where do we load the templates from:
-        try {
-            URL mailTemplates = GuiceModule.class.getResource("/mailTemplates");
-            cfgMails.setDirectoryForTemplateLoading(Paths.get(mailTemplates.toURI()).toFile());
-            cfgMails.setIncompatibleImprovements(new Version(2, 3, 20));
-            cfgMails.setDefaultEncoding("UTF-8");
-            cfgMails.setLocale(Locale.US);
-            cfgMails.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-            Configuration cfgPDF = new Configuration(new Version("2.3.23"));
-            URL pdfTemplates = GuiceModule.class.getResource("/pdfTemplates");
-            cfgPDF.setDirectoryForTemplateLoading(Paths.get(pdfTemplates.toURI()).toFile());
-            bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
-        } catch (final IOException | URISyntaxException e) {
-            LOG.error(e.getMessage(), e);
-        }
+        cfgMails.setClassForTemplateLoading(this.getClass(), "/mailTemplates");
+        cfgMails.setIncompatibleImprovements(new Version(2, 3, 20));
+        cfgMails.setDefaultEncoding("UTF-8");
+        cfgMails.setLocale(Locale.US);
+        cfgMails.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        Configuration cfgPDF = new Configuration(new Version("2.3.23"));
+        cfgPDF.setClassForTemplateLoading(this.getClass(), "/mailTemplates");
+        bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
 
         // DAO
         bind(ActivityCfgDAO.class).to(ActivityCfgDAOImpl.class).in(Singleton.class);

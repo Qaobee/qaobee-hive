@@ -1,91 +1,273 @@
 {
-  "runtime": {
-    "version": 1,
-    "site.url": "http://localhost:3000/",
-    "defaultHost": "0.0.0.0",
-    "defaultPort": 8888,
-    "mail.site.url.api": "#/signup/end",
-    "mail.send": true,
-    "mail.to": "jerome.roue@gmail.com",
-    "mail.from": "contact@qaobee.com",
-    "newpasswd.site.url.api": "#/recoverpasswd",
-    "pay.url.api": "#/private/billing",
-    "external.invitation.site.url.api": "#/externalInvitation",
-    "internal.invitation.site.url.api": "#/internalInvitation",
-    "recaptcha.pkey": "6LcTjvcSAAAAAKqDo7-xwQmc4K6gDcDSntKc2Pqs",
-    "recaptcha.site": "localhost",
-    "recaptcha" : true,
-    "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
-    "trial.duration" : 12,
-    "plan": {
-      "FREEMIUM": {
-        "price": 8
-      },
-      "DISCOVERY": {
-        "price": 5
-      },
-      "PREMIUM": {
-        "price": 7
-      },
-      "TEAM_PLUS": {
-        "price": 9
+  "DEV": {
+    "runtime": {
+      "version": 1,
+      "site.url": "http://localhost:3000/",
+      "defaultHost": "0.0.0.0",
+      "defaultPort": 8888,
+      "mail.site.url.api": "#/signup/end",
+      "mail.send": true,
+      "mail.to": "jerome.roue@gmail.com",
+      "mail.from": "contact@qaobee.com",
+      "newpasswd.site.url.api": "#/recoverpasswd",
+      "pay.url.api": "#/private/billing",
+      "external.invitation.site.url.api": "#/externalInvitation",
+      "internal.invitation.site.url.api": "#/internalInvitation",
+      "recaptcha.pkey": "6LcTjvcSAAAAAKqDo7-xwQmc4K6gDcDSntKc2Pqs",
+      "recaptcha.site": "localhost",
+      "recaptcha": true,
+      "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
+      "trial.duration": 12,
+      "plan": {
+        "FREEMIUM": {
+          "price": 8
+        },
+        "DISCOVERY": {
+          "price": 5
+        },
+        "PREMIUM": {
+          "price": 7
+        },
+        "TEAM_PLUS": {
+          "price": 9
+        }
       }
+    },
+    "cors": {
+      "enabled": true
+    },
+    "pdf": {
+      "css": [
+      ]
+    },
+    "stripe": {
+      "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp",
+      "api_key": "pk_test_9Fc4Bc9dUkSK9vSzTTVVQgP5"
+    },
+    "metrix.mod": {
+      "address": "metrix"
+    },
+    "mongo.db": {
+      "host": "localhost",
+      "port": 27017,
+      "pool_size": 2,
+      "db_name": "hive",
+      "read_preference": "nearest"
+    },
+    "mailchimp": {
+      "env": "DEV",
+      "key": "97567b006b5c9f3d77cc5729bafb8d6d-us13",
+      "user": "qaobee",
+      "host": "us13.api.mailchimp.com",
+      "port": 443,
+      "path": "/3.0/lists/883987d33d"
+    },
+    "mailer.mod": {
+      "test": true,
+      "address": "mailer.mod",
+      "host": "ssl0.ovh.net",
+      "port": 465,
+      "ssl": true,
+      "auth": true,
+      "username": "contact@qaobee.com",
+      "password": "qaobee29",
+      "content_type": "text/html",
+      "sendTimeout": 5000,
+      "debug": true,
+      "debugAddress": "logger"
+    },
+    "firebase": {
+      "api_key": "AIzaSyC_jXXbc9Zb8c4HksR74z5_i2ppFUj37qw",
+      "host": "fcm.googleapis.com",
+      "port": 443,
+      "basePath": "/fcm/send"
+    },
+    "jira": {
+      "user": "contact@qaobee.com",
+      "passwd": "qaobee16!",
+      "url": "https://qaobee.atlassian.net",
+      "project": "QHBWEB",
+      "userName": "feedback"
     }
   },
-  "cors": {
-    "enabled": true
+  "REC": {
+    "runtime": {
+      "version": 1,
+      "site.url": "http://rec.qaobee.com/",
+      "defaultHost": "0.0.0.0",
+      "defaultPort": 8080,
+      "mail.site.url.api": "#/signup/end",
+      "mail.send": true,
+      "mail.to": "contact@qaobee.com",
+      "mail.from": "contact@qaobee.com",
+      "newpasswd.site.url.api": "#/recoverpasswd",
+      "pay.url.api": "#/private/billing",
+      "external.invitation.site.url.api": "#/externalInvitation",
+      "internal.invitation.site.url.api": "#/internalInvitation",
+      "recaptcha.pkey": "6LcTjvcSAAAAAKqDo7-xwQmc4K6gDcDSntKc2Pqs",
+      "recaptcha.site": "https://rec.qaobee.com",
+      "recaptcha": true,
+      "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
+      "trial.duration": 12,
+      "plan": {
+        "FREEMIUM": {
+          "price": 8
+        },
+        "DISCOVERY": {
+          "price": 5
+        },
+        "PREMIUM": {
+          "price": 7
+        },
+        "TEAM_PLUS": {
+          "price": 9
+        }
+      }
+    },
+    "cors": {
+      "enabled": true
+    },
+    "pdf": {
+      "css": [
+      ]
+    },
+    "metrix.mod": {
+      "address": "metrix"
+    },
+    "mongo.db": {
+      "address": "mongo.db",
+      "pool_size": 10,
+      "db_name": "hive",
+      "read_preference": "nearest"
+    },
+    "stripe": {
+      "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp",
+      "api_key": "pk_test_9Fc4Bc9dUkSK9vSzTTVVQgP5"
+    },
+    "mailchimp": {
+      "env": "REC",
+      "key": "97567b006b5c9f3d77cc5729bafb8d6d-us13",
+      "user": "qaobee",
+      "host": "us13.api.mailchimp.com",
+      "port": 443,
+      "path": "/3.0/lists/883987d33d"
+    },
+    "mailer.mod": {
+      "test": true,
+      "address": "mailer.mod",
+      "host": "ssl0.ovh.net",
+      "port": 465,
+      "ssl": true,
+      "auth": true,
+      "username": "contact@qaobee.com",
+      "password": "qaobee29",
+      "content_type": "text/html",
+      "sendTimeout": 5000,
+      "debug": true,
+      "debugAddress": "logger"
+    },
+    "firebase": {
+      "api_key": "AIzaSyC_jXXbc9Zb8c4HksR74z5_i2ppFUj37qw",
+      "host": "fcm.googleapis.com",
+      "port": 443,
+      "basePath": "/fcm/send"
+    },
+    "jira": {
+      "user": "contact@qaobee.com",
+      "passwd": "qaobee16!",
+      "url": "https://qaobee.atlassian.net",
+      "project": "QHBWEB",
+      "userName": "feedback"
+    }
   },
-  "pdf": {
-    "css": [
-    ]
-  },
-  "stripe": {
-    "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp",
-    "api_key" : "pk_test_9Fc4Bc9dUkSK9vSzTTVVQgP5"
-  },
-  "metrix.mod": {
-    "address": "metrix"
-  },
-  "mongo.db": {
-    "host": "localhost",
-    "port": 27017,
-    "pool_size": 2,
-    "db_name": "hive",
-    "read_preference": "nearest"
-  },
-  "mailchimp" : {
-    "env" : "DEV",
-    "key" : "97567b006b5c9f3d77cc5729bafb8d6d-us13",
-    "user" : "qaobee",
-    "host" : "us13.api.mailchimp.com",
-    "port" : 443,
-    "path" : "/3.0/lists/883987d33d"
-  },
-  "mailer.mod": {
-    "test": true,
-    "address": "mailer.mod",
-    "host": "ssl0.ovh.net",
-    "port": 465,
-    "ssl": true,
-    "auth": true,
-    "username": "contact@qaobee.com",
-    "password": "qaobee29",
-    "content_type": "text/html",
-    "sendTimeout": 5000,
-    "debug": true,
-    "debugAddress": "logger"
-  },
-  "firebase" : {
-    "api_key" : "AIzaSyC_jXXbc9Zb8c4HksR74z5_i2ppFUj37qw",
-    "host" : "fcm.googleapis.com",
-    "port" : 443,
-    "basePath" : "/fcm/send"
-  },
-  "jira" : {
-    "user" : "contact@qaobee.com",
-    "passwd" : "qaobee16!",
-    "url" : "https://qaobee.atlassian.net",
-    "project" : "QHBWEB",
-    "userName" : "feedback"
+  "PROD": {
+    "runtime": {
+      "version": 1,
+      "site.url": "https://www.qaobee.com/",
+      "defaultHost": "0.0.0.0",
+      "defaultPort": 8080,
+      "mail.site.url.api": "#/signup/end",
+      "mail.send": true,
+      "mail.to": "contact@qaobee.com",
+      "mail.from": "contact@qaobee.com",
+      "newpasswd.site.url.api": "#/recoverpasswd",
+      "pay.url.api": "#/private/profile/billing",
+      "external.invitation.site.url.api": "#/externalInvitation",
+      "internal.invitation.site.url.api": "#/internalInvitation",
+      "recaptcha.pkey": "6LcTjvcSAAAAAKqDo7-xwQmc4K6gDcDSntKc2Pqs",
+      "recaptcha.site": "https://www.qaobee.com",
+      "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
+      "recaptcha": true,
+      "trial.duration": 12,
+      "plan": {
+        "FREEMIUM": {
+          "price": 8
+        },
+        "DISCOVERY": {
+          "price": 5
+        },
+        "PREMIUM": {
+          "price": 9
+        },
+        "TEAM_PLUS": {
+          "price": 12
+        }
+      }
+    },
+    "cors": {
+      "enabled": true
+    },
+    "pdf": {
+      "css": [
+      ]
+    },
+    "metrix.mod": {
+      "address": "metrix"
+    },
+    "mongo.db": {
+      "address": "mongo.db",
+      "pool_size": 10,
+      "db_name": "hive",
+      "read_preference": "nearest"
+    },
+    "stripe": {
+      "api_secret": "sk_live_231nVDKVdKgHfAHBMyF9b1h9",
+      "api_key": "pk_live_wMBB5DpHStTvx8z2NdZ4wnIk"
+    },
+    "mailchimp": {
+      "env": "PROD",
+      "key": "97567b006b5c9f3d77cc5729bafb8d6d-us13",
+      "user": "qaobee",
+      "host": "us13.api.mailchimp.com",
+      "port": 443,
+      "path": "/3.0/lists/883987d33d"
+    },
+    "mailer.mod": {
+      "test": true,
+      "address": "mailer.mod",
+      "host": "ssl0.ovh.net",
+      "port": 465,
+      "ssl": true,
+      "auth": true,
+      "username": "contact@qaobee.com",
+      "password": "qaobee29",
+      "content_type": "text/html",
+      "sendTimeout": 5000,
+      "debug": true,
+      "debugAddress": "logger"
+    },
+    "firebase": {
+      "api_key": "AIzaSyC_jXXbc9Zb8c4HksR74z5_i2ppFUj37qw",
+      "host": "fcm.googleapis.com",
+      "port": 443,
+      "basePath": "/fcm/send"
+    },
+    "jira": {
+      "user": "contact@qaobee.com",
+      "passwd": "qaobee16!",
+      "url": "https://qaobee.atlassian.net",
+      "project": "QHBWEB",
+      "userName": "feedback"
+    }
   }
 }

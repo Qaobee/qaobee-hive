@@ -86,5 +86,5 @@ public interface SignupDAO {
      * @param locale the locale
      * @throws QaobeeException the qaobee exception
      */
-    void sendRegisterMail(JsonObject user, String locale) throws QaobeeException;
+    Promise<Boolean, QaobeeException, Integer> sendRegisterMail(JsonObject user, String locale) throws QaobeeException;
 }

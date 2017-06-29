@@ -172,7 +172,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
         vertx = Vertx.vertx(new VertxOptions().setBlockedThreadCheckInterval(20000).setWorkerPoolSize(50));
         vertx.exceptionHandler(context.exceptionHandler());
         FileSystem fs = vertx.fileSystem();
-        config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes()));
+        config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes())).getJsonObject("TEST");
         try {
             JunitMongoSingleton.getInstance().startServer(config);
             LOG.info("Embeded MongoDB started");

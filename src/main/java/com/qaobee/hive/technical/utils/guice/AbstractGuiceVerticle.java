@@ -36,7 +36,7 @@ import javax.inject.Inject;
  * The type Abstract guice verticle.
  */
 public class AbstractGuiceVerticle extends AbstractVerticle {
-    private static final String MONGO_CONF_KEY = "mongo.persistor";
+    private static final String MONGO_CONF_KEY = "mongo.db";
     @Inject
     protected
     Utils utils;
@@ -64,7 +64,7 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
     }
 
     protected void replyJsonObjectJ(Message<JsonObject> message, Promise<JsonObject, QaobeeException, Integer> promise) {
-        promise.done(json -> message.reply(json)).fail(e -> utils.sendErrorJ(message, e));
+        promise.done(message::reply).fail(e -> utils.sendErrorJ(message, e));
     }
 
     protected void replyString(Message<String> message, Promise<String, QaobeeException, Integer> promise) {
