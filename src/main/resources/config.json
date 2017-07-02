@@ -44,9 +44,6 @@
       "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp",
       "api_key": "pk_test_9Fc4Bc9dUkSK9vSzTTVVQgP5"
     },
-    "metrix.mod": {
-      "address": "metrix"
-    },
     "mongo.db": {
       "host": "localhost",
       "port": 27017,
@@ -129,9 +126,6 @@
     "pdf": {
       "css": [
       ]
-    },
-    "metrix.mod": {
-      "address": "metrix"
     },
     "mongo.db": {
       "address": "mongo.db",
@@ -218,9 +212,6 @@
     "pdf": {
       "css": [
       ]
-    },
-    "metrix.mod": {
-      "address": "metrix"
     },
     "mongo.db": {
       "address": "mongo.db",

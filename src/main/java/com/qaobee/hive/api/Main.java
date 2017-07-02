@@ -246,11 +246,6 @@ public class Main extends AbstractGuiceVerticle {
         List<String> path = Arrays.asList(routingContext.request().path().split("/"));
         path = path.subList(3, path.size());
         wrapper.setPath(path);
-        // Collect metrics : number of requests
-        final JsonObject json = new JsonObject()
-                .put("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
-                .put("action", "mark");
-        vertx.eventBus().send("metrix", json);
         String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
         if (rules.containsKey(busAddress)) {
             testRequest(busAddress, wrapper).done(res -> {

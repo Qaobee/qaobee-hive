@@ -42,9 +42,6 @@
       "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp",
       "api_key": "pk_test_9Fc4Bc9dUkSK9vSzTTVVQgP5"
     },
-    "metrix.mod": {
-      "address": "metrix"
-    },
     "mongo.db": {
       "host": "localhost",
       "port": 12345,

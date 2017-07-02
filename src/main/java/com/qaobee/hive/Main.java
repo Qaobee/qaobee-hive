@@ -5,25 +5,36 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+
     private Main() {
         // empty
     }
+
     /**
      * The entry point of application.
      *
      * @param args the input arguments
      */
     public static void main(String... args) {
-        Vertx vertx = Vertx.vertx(new VertxOptions().setWorkerPoolSize(40));
+        Vertx vertx = Vertx.vertx(
+                new VertxOptions()
+                        .setWorkerPoolSize(40)
+                        .setMetricsOptions(
+                                new DropwizardMetricsOptions()
+                                        .setEnabled(true)
+                                        .setJmxEnabled(true)
+                        )
+        );
         FileSystem fs = vertx.fileSystem();
         String env = System.getenv("ENV");
-        if(StringUtils.isBlank(env)) {
+        if (StringUtils.isBlank(env)) {
             env = "DEV";
         }
         LOG.info("Running with env : {}", env);
