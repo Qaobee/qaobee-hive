@@ -28,6 +28,7 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
@@ -88,18 +89,17 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     private NotificationsDAO notificationsDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(LIST, this::notificationList);
-        vertx.eventBus().consumer(DEL, this::delete);
-        vertx.eventBus().consumer(READ, this::markAsRead);
-        vertx.eventBus().consumer(NOTIFY, this::notifyPeople);
-        vertx.eventBus().consumer(ADD_TO_USER, this::addNotificationToUser);
-        vertx.eventBus().consumer(ADD_TO_SANDBOX, this::addNotificationToSandBox);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(LIST, this::notificationList)
+                .add(DEL, this::delete)
+                .add(READ, this::markAsRead)
+                .add(NOTIFY, this::notifyPeople)
+                .add(ADD_TO_USER, this::addNotificationToUser)
+                .add(ADD_TO_SANDBOX, this::addNotificationToSandBox)
+                .register(startFuture);
     }
+
 
     /**
      * Add a notification to a collection

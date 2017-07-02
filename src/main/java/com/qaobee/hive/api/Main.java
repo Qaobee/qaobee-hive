@@ -171,8 +171,7 @@ public class Main extends AbstractGuiceVerticle {
 
     @Override
     public void start(Future<Void> startFuture) {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
+        super.inject(this);
         final Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
         router.get("/file/:collection/:id").handler(this::getAssetHandler);

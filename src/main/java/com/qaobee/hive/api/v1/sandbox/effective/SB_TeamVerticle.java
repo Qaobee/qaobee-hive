@@ -26,11 +26,10 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -39,7 +38,6 @@ import javax.inject.Inject;
  */
 @DeployableVerticle
 public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
-    private static final Logger LOG = LoggerFactory.getLogger(SB_TeamVerticle.class);
     /**
      * Handler to get a set of team
      */
@@ -84,13 +82,13 @@ public class SB_TeamVerticle extends AbstractGuiceVerticle {// NOSONAR
     private TeamDAO teamDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(ADD, this::addTeam);
-        vertx.eventBus().consumer(UPDATE, this::updateTeam);
-        vertx.eventBus().consumer(GET, this::getTeam);
-        vertx.eventBus().consumer(GET_LIST, this::getTeamList);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(ADD, this::addTeam)
+                .add(UPDATE, this::updateTeam)
+                .add(GET, this::getTeam)
+                .add(GET_LIST, this::getTeamList)
+                .register(startFuture);
     }
 
     /**

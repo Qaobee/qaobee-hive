@@ -3,6 +3,7 @@ package com.qaobee.hive.api.v1.commons.utils;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mail.MailClient;
@@ -31,10 +32,8 @@ public class MailVerticle extends AbstractGuiceVerticle {
     private JsonObject conf;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(INTERNAL_MAIL, this::sendMail);
+    public void start(Future<Void> startFuture) {
+        inject(this).add(INTERNAL_MAIL, this::sendMail).register(startFuture);
     }
 
     private void sendMail(Message<JsonObject> message) {

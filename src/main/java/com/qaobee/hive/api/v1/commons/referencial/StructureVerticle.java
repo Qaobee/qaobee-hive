@@ -25,11 +25,10 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -85,20 +84,17 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * Address
      */
     public static final String PARAM_ADDRESS = "address";
-    private static final Logger LOG = LoggerFactory.getLogger(StructureVerticle.class);
     @Inject
     private StructureDAO structureDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(ADD, this::addStructure);
-        vertx.eventBus().consumer(GET, this::getStructure);
-        vertx.eventBus().consumer(GET_LIST, this::getListOfStructures);
-        vertx.eventBus().consumer(UPDATE, this::updateStructure);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(ADD, this::addStructure)
+                .add(GET, this::getStructure)
+                .add(GET_LIST, this::getListOfStructures)
+                .add(UPDATE, this::updateStructure)
+                .register(startFuture);
     }
 
     /**
@@ -120,8 +116,8 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-          scope = Rule.Param.BODY)
+            mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+            scope = Rule.Param.BODY)
     private void updateStructure(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyString(message, structureDAO.update(new JsonObject(req.getBody())));
@@ -139,7 +135,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Structure}   structure            The Structure found.
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY)
+            mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY)
     private void getListOfStructures(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
@@ -158,7 +154,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void getStructure(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, structureDAO.getStructure(req.getParams().get(PARAM_ID).get(0)));
@@ -182,8 +178,8 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = ADD, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-          scope = Rule.Param.BODY)
+            mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
+            scope = Rule.Param.BODY)
     private void addStructure(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, structureDAO.addStructure(new JsonObject(req.getBody())));

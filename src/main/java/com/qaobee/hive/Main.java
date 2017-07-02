@@ -6,6 +6,7 @@ import io.vertx.core.VertxOptions;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
+import io.vertx.ext.dropwizard.Match;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,8 @@ public class Main {
                         .setMetricsOptions(
                                 new DropwizardMetricsOptions()
                                         .setEnabled(true)
-                                        .setJmxEnabled(true)
+                                        .setJmxEnabled(true).
+                                        addMonitoredHttpServerUri(new Match().setValue("/"))
                         )
         );
         FileSystem fs = vertx.fileSystem();

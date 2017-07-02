@@ -29,6 +29,7 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -111,21 +112,19 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private SecurityDAO securityDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(LOGIN, this::login);
-        vertx.eventBus().consumer(LOGOUT, this::logout);
-        vertx.eventBus().consumer(PASSWD_RENEW, this::passwordRenew);
-        vertx.eventBus().consumer(PASSWD_RENEW_CHK, this::passwordRenewCheck);
-        vertx.eventBus().consumer(PASSWD_RESET, this::passwordReset);
-        vertx.eventBus().consumer(CURRENT, this::currentUser);
-        vertx.eventBus().consumer(META, this::getMeta);
-        vertx.eventBus().consumer(USER_INFO, this::userInfo);
-        vertx.eventBus().consumer(USER_BY_LOGIN, this::userByLogin);
-        vertx.eventBus().consumer(LOGIN_BY_TOKEN, this::loginByToken);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(LOGIN, this::login)
+                .add(LOGOUT, this::logout)
+                .add(PASSWD_RENEW, this::passwordRenew)
+                .add(PASSWD_RENEW_CHK, this::passwordRenewCheck)
+                .add(PASSWD_RESET, this::passwordReset)
+                .add(CURRENT, this::currentUser)
+                .add(META, this::getMeta)
+                .add(USER_INFO, this::userInfo)
+                .add(USER_BY_LOGIN, this::userByLogin)
+                .add(LOGIN_BY_TOKEN, this::loginByToken)
+                .register(startFuture);
     }
 
     /**

@@ -23,6 +23,7 @@ import com.qaobee.hive.dao.PdfDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
@@ -67,10 +68,8 @@ public class PDFVerticle extends AbstractGuiceVerticle {
     private PdfDAO pdfDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(GENERATE_PDF, this::generatePDF);
+    public void start(Future<Void> startFuture) {
+        inject(this).add(GENERATE_PDF, this::generatePDF).register(startFuture);
     }
 
     private void generatePDF(Message<JsonObject> message) {

@@ -26,11 +26,10 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -105,18 +104,17 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * limit number of result
      */
     public static final String PARAM_LIMIT_RESULT = "limitResult";
-    private static final Logger LOG = LoggerFactory.getLogger(SB_EventVerticle.class);
     @Inject
     private EventDAO eventDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(GET_LIST, this::getEventList);
-        vertx.eventBus().consumer(ADD, this::addEvent);
-        vertx.eventBus().consumer(UPDATE, this::updateEvent);
-        vertx.eventBus().consumer(GET, this::getEvent);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET_LIST, this::getEventList)
+                .add(ADD, this::addEvent)
+                .add(UPDATE, this::updateEvent)
+                .add(GET, this::getEvent)
+                .register(startFuture);
     }
 
     /**

@@ -25,12 +25,11 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -83,22 +82,22 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     private static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
     private static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
     private static final String PARAM_LIMIT_RESULT = "limitResult";
-    private static final Logger LOG = LoggerFactory.getLogger(SB_StatisticsVerticle.class);
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
     private static final String TIMER_FIELD = "timer";
+
     @Inject
     private StatisticsDAO statisticsDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(GET_STAT_GROUPBY, this::getStatsGroupedBy);
-        vertx.eventBus().consumer(GET_LISTDETAIL_VALUES, this::getListDetailValue);
-        vertx.eventBus().consumer(ADD_STAT, this::addStat);
-        vertx.eventBus().consumer(GET_STATS, this::getListForEvent);
-        vertx.eventBus().consumer(ADD_STAT_BULK, this::addBulk);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET_STAT_GROUPBY, this::getStatsGroupedBy)
+                .add(GET_LISTDETAIL_VALUES, this::getListDetailValue)
+                .add(ADD_STAT, this::addStat)
+                .add(GET_STATS, this::getListForEvent)
+                .add(ADD_STAT_BULK, this::addBulk)
+                .register(startFuture);
     }
 
     /**

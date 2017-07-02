@@ -35,6 +35,7 @@ import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -50,7 +51,6 @@ import javax.inject.Inject;
 @DeployableVerticle
 public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_ShareVerticle.class);
-
     /**
      * The constant GET_SANDBOX_SHARING_LIST.
      */
@@ -152,20 +152,20 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private TemplatesDAO templatesDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(GET_SANDBOX_SHARING_LIST, this::getListOfSharedSandboxes);
-        vertx.eventBus().consumer(GET_ADMIN_SANDBOX_SHARING_LIST, this::getAdminListOfSharedSandboxes);
-        vertx.eventBus().consumer(GET_LIST_INVITATION_TO_SANDBOX, this::getListInvitationOfSandbox);
-        vertx.eventBus().consumer(INVITE_MEMBER_TO_SANDBOX, this::inviteMemberToSandbox);
-        vertx.eventBus().consumer(CONFIRM_INVITATION_TO_SANDBOX, this::confirmInvitationToSandbox);
-        vertx.eventBus().consumer(ACTIVATE_MEMBER_TO_SANDBOX, this::activateMemberToSandbox);
-        vertx.eventBus().consumer(DESACTIVATE_MEMBER_TO_SANDBOX, this::desactivateMemberToSandbox);
-        vertx.eventBus().consumer(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification);
-        vertx.eventBus().consumer(REVIVE_INVITATION_TO_SANDBOX, this::reviveInvitationToSandbox);
-        vertx.eventBus().consumer(REMOVE_INVITATION_TO_SANDBOX, this::removeInvitationToSandbox);
-        vertx.eventBus().consumer(GET_INVITATION_TO_SANDBOX, this::getInvitationToSandbox);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET_SANDBOX_SHARING_LIST, this::getListOfSharedSandboxes)
+                .add(GET_ADMIN_SANDBOX_SHARING_LIST, this::getAdminListOfSharedSandboxes)
+                .add(GET_LIST_INVITATION_TO_SANDBOX, this::getListInvitationOfSandbox)
+                .add(INVITE_MEMBER_TO_SANDBOX, this::inviteMemberToSandbox)
+                .add(CONFIRM_INVITATION_TO_SANDBOX, this::confirmInvitationToSandbox)
+                .add(ACTIVATE_MEMBER_TO_SANDBOX, this::activateMemberToSandbox)
+                .add(DESACTIVATE_MEMBER_TO_SANDBOX, this::desactivateMemberToSandbox)
+                .add(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification)
+                .add(REVIVE_INVITATION_TO_SANDBOX, this::reviveInvitationToSandbox)
+                .add(REMOVE_INVITATION_TO_SANDBOX, this::removeInvitationToSandbox)
+                .add(GET_INVITATION_TO_SANDBOX, this::getInvitationToSandbox)
+                .register(startFuture);
     }
 
     private void internalShareNotification(Message<JsonObject> message) {

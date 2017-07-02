@@ -26,10 +26,9 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -62,18 +61,16 @@ public class ActivityCfgVerticle extends AbstractGuiceVerticle {
      * Country Id
      */
     public static final String PARAM_COUNTRY_ID = "countryId";
-    private static final Logger LOG = LoggerFactory.getLogger(ActivityCfgVerticle.class);
+
     @Inject
     private ActivityCfgDAO activityCfgDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(GET, this::getActivityCfgHandler);
-        vertx.eventBus().consumer(PARAMS, this::getActivityCfgParamsHandler);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET, this::getActivityCfgHandler)
+                .add(PARAMS, this::getActivityCfgParamsHandler)
+                .register(startFuture);
     }
 
     /**

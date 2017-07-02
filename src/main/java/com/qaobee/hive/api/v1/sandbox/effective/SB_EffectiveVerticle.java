@@ -26,12 +26,11 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -42,7 +41,6 @@ import java.util.Map;
  */
 @DeployableVerticle
 public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
-    private static final Logger LOG = LoggerFactory.getLogger(SB_EffectiveVerticle.class);
     /**
      * The constant GET.
      */
@@ -75,13 +73,13 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
     private EffectiveDAO effectiveDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(GET, this::getEffective);
-        vertx.eventBus().consumer(GET_LIST, this::getEffectiveList);
-        vertx.eventBus().consumer(UPDATE, this::updateEffective);
-        vertx.eventBus().consumer(ADD, this::addEffective);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET, this::getEffective)
+                .add(GET_LIST, this::getEffectiveList)
+                .add(UPDATE, this::updateEffective)
+                .add(ADD, this::addEffective)
+                .register(startFuture);
     }
 
     /**

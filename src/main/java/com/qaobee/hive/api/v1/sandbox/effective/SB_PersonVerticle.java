@@ -26,11 +26,10 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -39,7 +38,6 @@ import javax.inject.Inject;
  */
 @DeployableVerticle
 public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
-    private static final Logger LOG = LoggerFactory.getLogger(SB_PersonVerticle.class);
     /**
      * Handler to get a set of persons
      */
@@ -80,14 +78,14 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     private PersonDAO personDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(ADD, this::addPerson);
-        vertx.eventBus().consumer(GET, this::getPerson);
-        vertx.eventBus().consumer(UPDATE, this::updatePerson);
-        vertx.eventBus().consumer(GET_LIST, this::getPersonList);
-        vertx.eventBus().consumer(GET_LIST_SANDBOX, this::getPersonListBySandbox);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(ADD, this::addPerson)
+                .add(GET, this::getPerson)
+                .add(UPDATE, this::updatePerson)
+                .add(GET_LIST, this::getPersonList)
+                .add(GET_LIST_SANDBOX, this::getPersonListBySandbox)
+                .register(startFuture);
     }
 
     /**

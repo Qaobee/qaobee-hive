@@ -25,6 +25,7 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import org.slf4j.Logger;
@@ -60,14 +61,12 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
     private ActivityDAO activityDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(GET, this::get);
-        vertx.eventBus().consumer(GET_LIST, this::getList);
-        vertx.eventBus().consumer(GET_LIST_ENABLE, this::getEnabled);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET, this::get)
+                .add(GET_LIST, this::getList)
+                .add(GET_LIST_ENABLE, this::getEnabled)
+                .register(startFuture);
     }
 
     /**
@@ -81,7 +80,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET_LIST_ENABLE, method = Constants.GET)
     private void getEnabled(Message<String> message) {
-        activityDAO.getEnabled().done(activities->message.reply(activities.encode())).fail(e -> utils.sendError(message, e));
+        activityDAO.getEnabled().done(activities -> message.reply(activities.encode())).fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -95,7 +94,7 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET_LIST, method = Constants.GET)
     private void getList(Message<String> message) {
-        activityDAO.getActivityList().done(activities->message.reply(activities.encode())).fail(e -> utils.sendError(message, e));
+        activityDAO.getActivityList().done(activities -> message.reply(activities.encode())).fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -111,6 +110,6 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
     @Rule(address = GET, method = Constants.GET, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        activityDAO.getActivity(req.getParams().get(PARAM_ID).get(0)).done(activity->message.reply(activity.encode())).fail(e -> utils.sendError(message, e));
+        activityDAO.getActivity(req.getParams().get(PARAM_ID).get(0)).done(activity -> message.reply(activity.encode())).fail(e -> utils.sendError(message, e));
     }
 }

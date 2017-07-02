@@ -25,11 +25,10 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -40,8 +39,6 @@ import javax.inject.Inject;
  */
 @DeployableVerticle
 public class ChampionshipVerticle extends AbstractGuiceVerticle {
-    private static final Logger LOG = LoggerFactory.getLogger(ChampionshipVerticle.class);
-
     /**
      * Handler to get a set of events
      */
@@ -110,15 +107,13 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
     private ChampionshipDAO championshipDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(GET_LIST, this::getListChampionships);
-        vertx.eventBus().consumer(GET, this::getChampionship);
-        vertx.eventBus().consumer(ADD, this::addChampionship);
-        vertx.eventBus().consumer(UPDATE, this::updateChampionship);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET_LIST, this::getListChampionships)
+                .add(GET, this::getChampionship)
+                .add(ADD, this::addChampionship)
+                .add(UPDATE, this::updateChampionship)
+                .register(startFuture);
     }
 
     /**
@@ -143,8 +138,8 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true, admin = true,
-          mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                  PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
+            mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
+                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void updateChampionship(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyString(message, championshipDAO.updateChampionship(new JsonObject(req.getBody())));
@@ -172,8 +167,8 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = ADD, method = Constants.POST, logged = true, admin = true,
-          mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                  PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
+            mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
+                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void addChampionship(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, championshipDAO.addChampionship(new JsonObject(req.getBody())));
@@ -208,7 +203,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array} list of championships
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
+            mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
     private void getListChampionships(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonArray(message, championshipDAO.getListChampionships(new JsonObject(req.getBody())));

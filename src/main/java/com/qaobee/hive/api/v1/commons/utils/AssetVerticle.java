@@ -24,6 +24,7 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
@@ -55,13 +56,11 @@ public class AssetVerticle extends AbstractGuiceVerticle {
     private AssetDAO assetDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(ADD, this::addAsset);
-        vertx.eventBus().consumer(GET, this::getAssetHandler);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(ADD, this::addAsset)
+                .add(GET, this::getAssetHandler)
+                .register(startFuture);
     }
 
     /**

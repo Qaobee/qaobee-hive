@@ -28,6 +28,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -48,18 +49,18 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
     private static final String POST_FEEDBACK = Module.VERSION + ".commons.feedback.send";
     private static final String POST_FEEDBACK_MOB = Module.VERSION + ".commons.feedback.send.mob";
     private static final String INTERNAL_FEEDBACK = "internal.feedback.send";
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(FeedbackVerticle.class);
     @Inject
     private FeedbackDAO feedbackDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(POST_FEEDBACK, this::postFeedback);
-        vertx.eventBus().consumer(POST_FEEDBACK_MOB, this::postFeedbackMob);
-        vertx.eventBus().consumer(INTERNAL_FEEDBACK, this::internalFeeback);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(POST_FEEDBACK, this::postFeedback)
+                .add(POST_FEEDBACK_MOB, this::postFeedbackMob)
+                .add(INTERNAL_FEEDBACK, this::internalFeeback)
+                .register(startFuture);
     }
 
     private void internalFeeback(Message<JsonObject> message) {

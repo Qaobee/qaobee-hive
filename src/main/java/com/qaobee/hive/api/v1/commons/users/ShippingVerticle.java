@@ -26,11 +26,10 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -39,7 +38,6 @@ import javax.inject.Inject;
  */
 @DeployableVerticle
 public class ShippingVerticle extends AbstractGuiceVerticle {
-    private static final Logger LOG = LoggerFactory.getLogger(ShippingVerticle.class);
     /**
      * The constant PAY.
      */
@@ -53,13 +51,11 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     private ShippingDAO shippingDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(WEB_HOOK, this::webHook);
-        vertx.eventBus().consumer(PAY, this::pay);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(WEB_HOOK, this::webHook)
+                .add(PAY, this::pay)
+                .register(startFuture);
     }
 
     /**
@@ -89,6 +85,6 @@ public class ShippingVerticle extends AbstractGuiceVerticle {
     @Rule(address = WEB_HOOK, method = Constants.POST, mandatoryParams = {"id", "created"}, scope = Rule.Param.BODY)
     private void webHook(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shippingDAO.webHook(new JsonObject(req.getBody())).done(r->utils.sendStatus(r, message)).fail(e -> utils.sendError(message, e));
+        shippingDAO.webHook(new JsonObject(req.getBody())).done(r -> utils.sendStatus(r, message)).fail(e -> utils.sendError(message, e));
     }
 }

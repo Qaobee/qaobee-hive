@@ -3,10 +3,9 @@ package com.qaobee.hive.api.v1.commons.utils;
 import com.qaobee.hive.dao.CRMDao;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -15,7 +14,6 @@ import javax.inject.Inject;
  */
 @DeployableVerticle(isWorker = false)
 public class CRMVerticle extends AbstractGuiceVerticle {
-    private static final Logger LOG = LoggerFactory.getLogger(CRMVerticle.class);
     /**
      * The constant REGISTER.
      */
@@ -28,11 +26,11 @@ public class CRMVerticle extends AbstractGuiceVerticle {
     private CRMDao crmDao;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(REGISTER, this::register);
-        vertx.eventBus().consumer(UPDATE, this::update);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(REGISTER, this::registerMail)
+                .add(UPDATE, this::update)
+                .register(startFuture);
     }
 
     private void update(Message<JsonObject> message) {
@@ -40,7 +38,7 @@ public class CRMVerticle extends AbstractGuiceVerticle {
     }
 
 
-    private void register(Message<JsonObject> message) {
+    private void registerMail(Message<JsonObject> message) {
         crmDao.registerUser(message.body(), true);
     }
 }

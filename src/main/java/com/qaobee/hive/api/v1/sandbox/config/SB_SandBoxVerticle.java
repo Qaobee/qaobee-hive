@@ -26,11 +26,10 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -69,19 +68,17 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String PARAM_ACTIVITY_ID = "activity";
 
-
-    private static final Logger LOG = LoggerFactory.getLogger(SB_SandBoxVerticle.class);
     @Inject
     private SandBoxDAO sandBoxDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(GET_BY_OWNER, this::getByOwner);
-        vertx.eventBus().consumer(GET_LIST_BY_OWNER, this::getListByOwner);
-        vertx.eventBus().consumer(GET_BY_ID, this::getSandboxById);
-        vertx.eventBus().consumer(UPDATE, this::update);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET_BY_OWNER, this::getByOwner)
+                .add(GET_LIST_BY_OWNER, this::getListByOwner)
+                .add(GET_BY_ID, this::getSandboxById)
+                .add(UPDATE, this::update)
+                .register(startFuture);
     }
 
     /**
@@ -124,7 +121,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {sandBox}   sandBox    The sandBox updated.
      */
     @Rule(address = GET_BY_OWNER, method = Constants.GET, logged = true, mandatoryParams = PARAM_ACTIVITY_ID,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void getByOwner(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, sandBoxDAO.getByOwner(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getUser().get_id()));
@@ -142,7 +139,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {Object} sandbox
      */
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = PARAM_ID,
-          scope = Rule.Param.BODY)
+            scope = Rule.Param.BODY)
     private void update(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, sandBoxDAO.updateSandbox(new JsonObject(req.getBody())));

@@ -3,6 +3,7 @@ package com.qaobee.hive.api.v1.commons.utils;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import io.netty.handler.codec.http.QueryStringEncoder;
+import io.vertx.core.Future;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
@@ -31,12 +32,8 @@ public class CaptchaVerticle extends AbstractGuiceVerticle {
     private WebClient webClient;
 
     @Override
-    public void start() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        super.start();
-        vertx.eventBus().consumer(VERIFY, this::verify);
+    public void start(Future<Void> startFuture) {
+        inject(this).add(VERIFY, this::verify).register(startFuture);
     }
 
     private void verify(Message<JsonObject> message) {

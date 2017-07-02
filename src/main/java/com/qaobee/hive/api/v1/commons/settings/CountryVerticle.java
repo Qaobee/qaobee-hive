@@ -27,11 +27,10 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -70,19 +69,16 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * The constant PARAM_LOCAL.
      */
     public static final String PARAM_LOCAL = "local";
-    private static final Logger LOG = LoggerFactory.getLogger(CountryVerticle.class);
     @Inject
     private CountryDAO countryDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(GET, this::get);
-        vertx.eventBus().consumer(GET_ALPHA2, this::getAlpha2);
-        vertx.eventBus().consumer(GET_LIST, this::getList);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET, this::get)
+                .add(GET_ALPHA2, this::getAlpha2)
+                .add(GET_LIST, this::getList)
+                .register(startFuture);
     }
 
     /**
@@ -96,7 +92,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array} countries The list of countries found.
      */
     @Rule(address = GET_LIST, method = Constants.GET, mandatoryParams = PARAM_LOCAL,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void getList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         String label = null;
@@ -117,7 +113,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} country The Country found.
      */
     @Rule(address = GET_ALPHA2, method = Constants.GET, mandatoryParams = PARAM_ALPHA2,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void getAlpha2(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         countryDAO.getCountryFromAlpha2(req.getParams().get(PARAM_ALPHA2).get(0)).done(country -> {
@@ -142,7 +138,7 @@ public class CountryVerticle extends AbstractGuiceVerticle {
      * @apiError DATA_ERROR Error on DB request
      */
     @Rule(address = GET, method = Constants.GET, mandatoryParams = PARAM_ID,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, countryDAO.getCountry(req.getParams().get(PARAM_ID).get(0)));

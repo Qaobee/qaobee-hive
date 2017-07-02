@@ -25,11 +25,10 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -72,19 +71,17 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * The constant PARAM_INDICATOR_CODE.
      */
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
-    private static final Logger LOG = LoggerFactory.getLogger(IndicatorVerticle.class);
+
     @Inject
     private IndicatorDAO indicatorDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(GET, this::getIndicator);
-        vertx.eventBus().consumer(GET_LIST, this::getIndicatorsList);
-        vertx.eventBus().consumer(GET_BY_CODE, this::getIndicatorByCode);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET, this::getIndicator)
+                .add(GET_LIST, this::getIndicatorsList)
+                .add(GET_BY_CODE, this::getIndicatorByCode)
+                .register(startFuture);
     }
 
     /**
@@ -101,8 +98,8 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array} indicators The list of indicators found.
      */
     @Rule(address = GET_BY_CODE, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
-          scope = Rule.Param.BODY)
+            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
+            scope = Rule.Param.BODY)
     private void getIndicatorByCode(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
@@ -124,8 +121,8 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Array} indicators The list of indicators found.
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
-          scope = Rule.Param.BODY)
+            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
+            scope = Rule.Param.BODY)
     private void getIndicatorsList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
@@ -145,7 +142,7 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Indicator} indicator The Indicator found.
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void getIndicator(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, indicatorDAO.getIndicator(req.getParams().get(PARAM_ID).get(0)));

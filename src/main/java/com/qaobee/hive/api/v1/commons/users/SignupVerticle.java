@@ -29,6 +29,7 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -113,18 +114,16 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     private SignupDAO signupDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(LOGIN_EXISTS, this::existingLogin);
-        vertx.eventBus().consumer(LOGIN_TEST, this::loginTest);
-        vertx.eventBus().consumer(REGISTER, this::register);
-        vertx.eventBus().consumer(ACCOUNT_CHECK, this::accountCheck);
-        vertx.eventBus().consumer(FIRST_CONNECTION_CHECK, this::firstConnectionCheck);
-        vertx.eventBus().consumer(RESEND_MAIL, this::resendMail);
-        vertx.eventBus().consumer(FINALIZE_SIGNUP, this::finalizeSignup);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(LOGIN_EXISTS, this::existingLogin)
+                .add(LOGIN_TEST, this::loginTest)
+                .add(REGISTER, this::registerUser)
+                .add(ACCOUNT_CHECK, this::accountCheck)
+                .add(FIRST_CONNECTION_CHECK, this::firstConnectionCheck)
+                .add(RESEND_MAIL, this::resendMail)
+                .add(FINALIZE_SIGNUP, this::finalizeSignup)
+                .register(startFuture);
     }
 
     /**
@@ -229,7 +228,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiDescription Register a new account
      * @api {put} /api/1/commons/users/signup/register Register a new account
      * @apiVersion 0.1.0
-     * @apiName register
+     * @apiName registerUser
      * @apiGroup Signup API
      * @apiParam {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
      * @apiSuccess {Object} person com.qaobee.swarn.business.model.tranversal.person.Person
@@ -238,7 +237,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiError MAIL_EXCEPTION problème d'envoi d'email
      */
     @Rule(address = REGISTER, method = Constants.PUT)
-    private void register(Message<String> message) {
+    private void registerUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
         replyJsonObject(message, signupDAO.register(body.getString(PARAM_CAPTCHA), body, req.getLocale()));

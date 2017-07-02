@@ -30,6 +30,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
@@ -62,13 +63,11 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     private UserDAO userDAO;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(UPDATE, this::updateUser);
-        vertx.eventBus().consumer(GENERATE_PDF, this::generateProfilePDF);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(UPDATE, this::updateUser)
+                .add(GENERATE_PDF, this::generateProfilePDF)
+                .register(startFuture);
     }
 
     /**

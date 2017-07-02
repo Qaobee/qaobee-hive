@@ -25,11 +25,10 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -92,19 +91,18 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      * Event End date
      */
     public static final String PARAM_END_DATE = "endDate";
-    private static final Logger LOG = LoggerFactory.getLogger(SB_CollectVerticle.class);
 
     @Inject
     private CollectDAO collectDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus().consumer(GET_LIST, this::getList);
-        vertx.eventBus().consumer(ADD, this::add);
-        vertx.eventBus().consumer(UPDATE, this::update);
-        vertx.eventBus().consumer(GET, this::get);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET_LIST, this::getList)
+                .add(ADD, this::addStat)
+                .add(UPDATE, this::update)
+                .add(GET, this::get)
+                .register(startFuture);
     }
 
     /**
@@ -145,7 +143,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {Object} collect Created collect
      */
     @Rule(address = ADD, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
-    private void add(Message<String> message) {
+    private void addStat(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, collectDAO.add(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
     }

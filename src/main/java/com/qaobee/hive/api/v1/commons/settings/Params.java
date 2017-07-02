@@ -6,10 +6,9 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,8 +18,10 @@ import javax.inject.Named;
  */
 @DeployableVerticle
 public class Params extends AbstractGuiceVerticle {
+    /**
+     * The constant GET.
+     */
     public static final String GET = Module.VERSION + ".commons.settings.get";
-    private static final Logger LOG = LoggerFactory.getLogger(IndicatorVerticle.class);
 
     @Inject
     @Named("runtime")
@@ -30,12 +31,8 @@ public class Params extends AbstractGuiceVerticle {
     private JsonObject stripe;
 
     @Override
-    public void start() {
-        super.start();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(this.getClass().getName() + " started");
-        }
-        vertx.eventBus().consumer(GET, this::getParams);
+    public void start(Future<Void> startFuture) {
+        inject(this).add(GET, this::getParams).register(startFuture);
     }
 
     @Rule(address = GET, method = Constants.GET)
