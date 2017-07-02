@@ -41,7 +41,7 @@ public enum ActivityTypeEnum {
     /**
      * Label.
      */
-    private String label;
+    private final String label;
 
     /**
      * Constructor.

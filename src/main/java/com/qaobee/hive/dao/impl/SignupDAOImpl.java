@@ -77,7 +77,7 @@ public class SignupDAOImpl implements SignupDAO {
     private final ReCaptcha reCaptcha;
     private final JsonObject runtime;
     private final Vertx vertx;
-    private static Random rand = new Random();
+    private final static Random RANDOM = new Random();
     private final MailUtils mailUtils;
     private final TemplatesDAO templatesDAO;
 
@@ -442,10 +442,10 @@ public class SignupDAOImpl implements SignupDAO {
             sbPerson.setContact(new Contact());
             Status status = new Status();
             status.setAvailability(new Availability("available", "available"));
-            status.setHeight(rand.nextInt(30) + 150);
+            status.setHeight(RANDOM.nextInt(30) + 150);
             status.setLaterality(Math.random() > 0.5 ? "right-handed" : "left-handed");
             status.setStateForm("good");
-            status.setWeight(rand.nextInt(20) + 70);
+            status.setWeight(RANDOM.nextInt(20) + 70);
             sbPerson.setStatus(status);
             sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
             sbPerson.getStatus().setPositionType(player.getString("positionType"));
@@ -476,9 +476,9 @@ public class SignupDAOImpl implements SignupDAO {
         if (yearOldMin >= yearOldMax) {
             calendar.add(GregorianCalendar.YEAR, -1 * yearOldMin);
         } else {
-            calendar.add(GregorianCalendar.YEAR, -1 * rand.nextInt(yearOldMax - yearOldMin) + yearOldMin);
+            calendar.add(GregorianCalendar.YEAR, -1 * RANDOM.nextInt(yearOldMax - yearOldMin) + yearOldMin);
         }
-        calendar.set(GregorianCalendar.DAY_OF_YEAR, rand.nextInt(365));
+        calendar.set(GregorianCalendar.DAY_OF_YEAR, RANDOM.nextInt(365));
         return calendar.getTimeInMillis();
     }
 }

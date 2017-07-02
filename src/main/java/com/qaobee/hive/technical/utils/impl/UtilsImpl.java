@@ -60,6 +60,8 @@ public class UtilsImpl implements Utils {
     private static final String NOT_LOGGED_KEY = "not.logged";
     private static final String SESSION_EXPIRED = "session.expired";
     private static final String STATUS_FIELD = "status";
+    private static final String MISSING_PARAMS = "Missing mandatory parameters : ";
+    private static final String ACCOUNT_FIELD = "account";
     private final MongoDB mongo;
     private final HabilitUtils habilitUtils;
     private final MongoClientCustom mongoClient;
@@ -170,7 +172,7 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void testMandatoryParams(HashMap<String, List<String>> map, String... fields) throws QaobeeException {
+    public void testMandatoryParams(Map<String, List<String>> map, String... fields) throws QaobeeException {
         final List<String> missingFields = new ArrayList<>();
         for (final String field : fields) {
             if (!map.containsKey(field) || map.get(field) == null || StringUtils.isBlank(map.get(field).get(0))) {
@@ -178,31 +180,13 @@ public class UtilsImpl implements Utils {
             }
         }
         if (!missingFields.isEmpty()) {
-            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "Missing mandatory parameters : " + missingFields);
-        }
-    }
-
-    private void testMandatoryParams(Map<String, ?> mapParams, String... fields) throws QaobeeException {
-        final List<String> missingFields = new ArrayList<>();
-        Map<String, ?> map = new HashMap<>();
-        if (mapParams != null) {
-            map = mapParams;
-        }
-        for (final String field : fields) {
-            if (!map.containsKey(field) || map.get(field) == null || (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field))) || map.get(field) instanceof List && (((List<?>) map.get(field)).isEmpty() || ((List<?>) map.get(field)).get(0) instanceof String && StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0)) || ((List<?>) map.get(field)).get(0) == null)) { // NOSONAR
-                missingFields.add(field);
-            }
-        }
-        if (!missingFields.isEmpty()) {
-            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "Missing mandatory parameters : " + missingFields);
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, MISSING_PARAMS + missingFields);
         }
     }
 
     @Override
-    public void testMandatoryParams(JsonObject body, final String... fields) throws QaobeeException {
-        if (body == null) {
-            body = new JsonObject();
-        }
+    public void testMandatoryParams(JsonObject payload, final String... fields) throws QaobeeException {
+        JsonObject body = Optional.ofNullable(payload).orElse(new JsonObject());
         final List<String> missingFields = new ArrayList<>();
         for (String field : fields) {
             if (!body.containsKey(field) || body.getValue(field) == null || (body.getValue(field) instanceof String && StringUtils.isEmpty(body.getString(field)))) {
@@ -210,48 +194,23 @@ public class UtilsImpl implements Utils {
             }
         }
         if (!missingFields.isEmpty()) {
-            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "Missing mandatory parameters : " + missingFields);
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, MISSING_PARAMS + missingFields);
         }
     }
 
     @Override
     public Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request) {
         Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
-        String token = "";
         if (request.getUser() != null) {
             deferred.resolve(request.getUser());
         } else {
-            if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
-                token = request.getHeaders().get(Constants.TOKEN).get(0);
-            }
-            if (request.getParams() != null && request.getParams().containsKey(Constants.TOKEN)) {
-                token = request.getParams().get(Constants.TOKEN).get(0);
-            }
+            String token = getToken(request);
             if (StringUtils.isBlank(token)) {
                 deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
             } else {
                 mongoClient.findOne(DBCollections.USER, new JsonObject().put("account.token", token), new JsonObject(), result -> {
                     if (result.succeeded() && result.result() != null) {
-                        // we take the first one (should be only one)
-                        final JsonObject jsonUser = result.result();
-                        final User user = Json.decodeValue(jsonUser.encode(), User.class);
-                        if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
-                            jsonUser.getJsonObject("account").put("token", "");
-                            user.getAccount().setToken(null);
-                            jsonUser.getJsonObject("account").put("tokenRenewDate", 0L);
-                            user.getAccount().setTokenRenewDate(0L);
-                        } else {
-                            long connectionTime = System.currentTimeMillis();
-                            jsonUser.getJsonObject("account").put("tokenRenewDate", connectionTime);
-                            user.getAccount().setTokenRenewDate(connectionTime);
-                        }
-                        mongo.upsert(jsonUser, DBCollections.USER).done(id -> {
-                            if (user.getAccount().getTokenRenewDate() == 0) {
-                                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
-                            }
-                            request.setUser(user);
-                            deferred.resolve(user);
-                        }).fail(deferred::reject);
+                        testSession(result.result(), request, deferred);
                     } else {
                         deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
                     }
@@ -259,6 +218,38 @@ public class UtilsImpl implements Utils {
             }
         }
         return deferred.promise();
+    }
+
+    private void testSession(JsonObject jsonUser, RequestWrapper request, Deferred<User, QaobeeException, Integer> deferred) {
+        // we take the first one (should be only one)
+        final User user = Json.decodeValue(jsonUser.encode(), User.class);
+        if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
+            jsonUser.getJsonObject(ACCOUNT_FIELD).put("token", "");
+            user.getAccount().setToken(null);
+            jsonUser.getJsonObject(ACCOUNT_FIELD).put("tokenRenewDate", 0L);
+            user.getAccount().setTokenRenewDate(0L);
+        } else {
+            long connectionTime = System.currentTimeMillis();
+            jsonUser.getJsonObject(ACCOUNT_FIELD).put("tokenRenewDate", connectionTime);
+            user.getAccount().setTokenRenewDate(connectionTime);
+        }
+        mongo.upsert(jsonUser, DBCollections.USER).done(id -> {
+            if (user.getAccount().getTokenRenewDate() == 0) {
+                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
+            }
+            request.setUser(user);
+            deferred.resolve(user);
+        }).fail(deferred::reject);
+    }
+
+    private String getToken(RequestWrapper request) {
+        if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
+            return request.getHeaders().get(Constants.TOKEN).get(0);
+        }
+        if (request.getParams() != null && request.getParams().containsKey(Constants.TOKEN)) {
+            return request.getParams().get(Constants.TOKEN).get(0);
+        }
+        return null;
     }
 
     @Override

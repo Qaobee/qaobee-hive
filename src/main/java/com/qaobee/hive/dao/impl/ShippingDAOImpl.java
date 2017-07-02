@@ -112,28 +112,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                 Plan plan = user.getAccount().getListPlan().get(planId);
                 int amount = getAmountToPay(plan);
                 if (amount > 0) {
-                    // Vérifier si on n'a pas déjà un customer id sur ce user
-                    String customerId = user.getAccount().getListPlan().get(planId).getCardId();
-                    getCustomerInfo(customerId, user, paymentData, locale).done(customer -> {
-                        if(user.getAccount().getListPlan().get(planId).getPaymentId() != null) {
-                            getSubscriptionInfo(user.getAccount().getListPlan().get(planId).getPaymentId()).done(subscription -> {
-                                if(subscription != null) {
-                                    user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
-                                    mongo.upsert(user).done(id -> {
-                                        if ("canceled".equals(subscription.getStatus()) || "unpaid".equals(subscription.getStatus())) {
-                                            registerSubscription(user, paymentData, locale, customer, plan, planId, amount).done(deferred::resolve).fail(deferred::reject);
-                                        } else {
-                                            deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale)));
-                                        }
-                                    }).fail(deferred::reject);
-                                }else {
-                                    registerSubscription(user, paymentData, locale, customer, plan, planId, amount).done(deferred::resolve).fail(deferred::reject);
-                                }
-                            }).fail(deferred::reject);
-                        } else {
-                            registerSubscription(user, paymentData, locale, customer, plan, planId, amount).done(deferred::resolve).fail(deferred::reject);
-                        }
-                    }).fail(deferred::reject);
+                    doPay(user, paymentData, locale, planId, plan, amount, deferred);
                 } else {
                     deferred.resolve(new JsonObject().put(Constants.STATUS, true));
                 }
@@ -143,6 +122,31 @@ public class ShippingDAOImpl implements ShippingDAO {
             deferred.reject(e);
         }
         return deferred.promise();
+    }
+
+    private void doPay(User user, JsonObject paymentData, String locale, int planId, Plan plan, int amount, Deferred<JsonObject, QaobeeException, Integer> deferred) {
+        // Vérifier si on n'a pas déjà un customer id sur ce user
+        String customerId = user.getAccount().getListPlan().get(planId).getCardId();
+        getCustomerInfo(customerId, user, paymentData, locale).done(customer -> {
+            if (user.getAccount().getListPlan().get(planId).getPaymentId() != null) {
+                getSubscriptionInfo(user.getAccount().getListPlan().get(planId).getPaymentId()).done(subscription -> {
+                    if (subscription != null) {
+                        user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
+                        mongo.upsert(user).done(id -> {
+                            if ("canceled".equals(subscription.getStatus()) || "unpaid".equals(subscription.getStatus())) {
+                                registerSubscription(user, paymentData, locale, customer, plan, planId, amount).done(deferred::resolve).fail(deferred::reject);
+                            } else {
+                                deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale)));
+                            }
+                        }).fail(deferred::reject);
+                    } else {
+                        registerSubscription(user, paymentData, locale, customer, plan, planId, amount).done(deferred::resolve).fail(deferred::reject);
+                    }
+                }).fail(deferred::reject);
+            } else {
+                registerSubscription(user, paymentData, locale, customer, plan, planId, amount).done(deferred::resolve).fail(deferred::reject);
+            }
+        }).fail(deferred::reject);
     }
 
     private Promise<JsonObject, QaobeeException, Integer> registerSubscription(User user, JsonObject paymentData, String locale, Customer customer, Plan plan,

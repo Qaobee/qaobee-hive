@@ -31,8 +31,8 @@ import org.jdeferred.Promise;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The interface Utils.
@@ -146,7 +146,7 @@ public interface Utils {
      * @param fields array of fields to test
      * @throws QaobeeException explain missing fields
      */
-    void testMandatoryParams(HashMap<String, List<String>> map, String... fields) throws QaobeeException;
+    void testMandatoryParams(Map<String, List<String>> map, String... fields) throws QaobeeException;
 
     /**
      * Test mandatory params.
@@ -162,7 +162,6 @@ public interface Utils {
      *
      * @param request the request
      * @return the User
-     * @throws QaobeeException the qaobee exception
      */
     Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request);
 
@@ -171,7 +170,6 @@ public interface Utils {
      *
      * @param request the request
      * @return the boolean
-     * @throws QaobeeException the qaobee exception
      */
     Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request);
 }

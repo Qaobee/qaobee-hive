@@ -42,8 +42,6 @@ import io.vertx.ext.mail.MailClient;
 import io.vertx.ext.mail.MailConfig;
 import io.vertx.ext.mail.StartTLSOptions;
 import io.vertx.ext.web.client.WebClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
 
@@ -51,7 +49,7 @@ import java.util.Locale;
  * The type Guice module.
  */
 public class GuiceModule extends AbstractModule {
-    private static final Logger LOG = LoggerFactory.getLogger(GuiceModule.class);
+    private static final String MAIL_CONF_KEY = "mailer.mod";
     private final JsonObject config;
     private final Vertx vertx;
 
@@ -77,12 +75,12 @@ public class GuiceModule extends AbstractModule {
         bind(MongoDB.class).to(MongoDBImpl.class).in(Singleton.class);
         bind(WebClient.class).toInstance(WebClient.create(vertx));
         MailConfig mailConfig = new MailConfig();
-        mailConfig.setHostname(config.getJsonObject("mailer.mod").getString("host"));
-        mailConfig.setPort(config.getJsonObject("mailer.mod").getInteger("port"));
-        mailConfig.setSsl(config.getJsonObject("mailer.mod").getBoolean("ssl"));
-        if (config.getJsonObject("mailer.mod").getBoolean("auth")) {
-            mailConfig.setUsername(config.getJsonObject("mailer.mod").getString("username"));
-            mailConfig.setPassword(config.getJsonObject("mailer.mod").getString("password"));
+        mailConfig.setHostname(config.getJsonObject(MAIL_CONF_KEY).getString("host"));
+        mailConfig.setPort(config.getJsonObject(MAIL_CONF_KEY).getInteger("port"));
+        mailConfig.setSsl(config.getJsonObject(MAIL_CONF_KEY).getBoolean("ssl"));
+        if (config.getJsonObject(MAIL_CONF_KEY).getBoolean("auth")) {
+            mailConfig.setUsername(config.getJsonObject(MAIL_CONF_KEY).getString("username"));
+            mailConfig.setPassword(config.getJsonObject(MAIL_CONF_KEY).getString("password"));
             mailConfig.setLogin(LoginOption.REQUIRED);
             mailConfig.setStarttls(StartTLSOptions.REQUIRED);
         }
@@ -133,7 +131,5 @@ public class GuiceModule extends AbstractModule {
         bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
         bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
         bind(CRMDao.class).to(CRMDaoImpl.class).in(Singleton.class);
-        // Services
-        // bind(UserService.class).toInstance(UserService.createProxy(vertx, UserService.ADDRESS));
     }
 }

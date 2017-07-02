@@ -42,8 +42,6 @@ public class MailVerticle extends AbstractGuiceVerticle {
         mailMessage.addHeader(HTTP.CONTENT_TYPE, message.body().getString("content_type"));
         mailClient.sendMail(mailMessage, result -> {
             if (result.succeeded()) {
-                System.out.println(result.result().toJson()
-                );
                 message.reply(result.result().toJson());
             } else {
                 LOG.error(result.cause().getMessage(), result.cause());

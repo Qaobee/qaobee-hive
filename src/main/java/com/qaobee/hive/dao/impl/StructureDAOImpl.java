@@ -37,9 +37,9 @@ import javax.inject.Inject;
  * The type Structure dao.
  */
 public class StructureDAOImpl implements StructureDAO {
+    private static final String COUNTRY_ALPHA_2_FIELD = "countryAlpha2";
     private final MongoDB mongo;
-    @Inject
-    private CountryDAO countryDAO;
+    private final CountryDAO countryDAO;
 
     /**
      * Instantiates a new Structure dao.
@@ -47,8 +47,9 @@ public class StructureDAOImpl implements StructureDAO {
      * @param mongo the mongo
      */
     @Inject
-    public StructureDAOImpl(MongoDB mongo) {
+    public StructureDAOImpl(MongoDB mongo, CountryDAO countryDAO) {
         this.mongo = mongo;
+        this.countryDAO = countryDAO;
     }
 
     @Override
@@ -59,9 +60,9 @@ public class StructureDAOImpl implements StructureDAO {
     @Override
     public Promise<JsonArray, QaobeeException, Integer> getListOfStructures(String activity, JsonObject address) {
         Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
-        countryDAO.getCountryFromAlpha2(address.getString("countryAlpha2", "FR")).done(country -> {
+        countryDAO.getCountryFromAlpha2(address.getString(COUNTRY_ALPHA_2_FIELD, "FR")).done(country -> {
             if (country == null) {
-                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No Country defined for (" + address.getString("countryAlpha2") + ")"));
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No Country defined for (" + address.getString(COUNTRY_ALPHA_2_FIELD) + ")"));
             } else {
                 // $MACTH section
                 JsonObject dbObjectParent = new JsonObject().put("activity._id", activity).put("country._id", country.getString("_id"));
@@ -75,19 +76,19 @@ public class StructureDAOImpl implements StructureDAO {
                 JsonArray pipelineAggregation = new JsonArray().add(match);
                 mongo.aggregate(pipelineAggregation, DBCollections.STRUCTURE).done(deferred::resolve).fail(deferred::reject);
             }
-        }).fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No Country defined for (" + address.getString("countryAlpha2") + ")")));
+        }).fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No Country defined for (" + address.getString(COUNTRY_ALPHA_2_FIELD) + ")")));
         return deferred.promise();
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getStructure(String id)  {
+    public Promise<JsonObject, QaobeeException, Integer> getStructure(String id) {
         return mongo.getById(id, DBCollections.STRUCTURE);
     }
 
     @Override
     public Promise<JsonObject, QaobeeException, Integer> addStructure(JsonObject structure) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(structure, DBCollections.STRUCTURE).done(id->{
+        mongo.upsert(structure, DBCollections.STRUCTURE).done(id -> {
             structure.put("_id", id);
             deferred.resolve(structure);
         }).fail(deferred::reject);

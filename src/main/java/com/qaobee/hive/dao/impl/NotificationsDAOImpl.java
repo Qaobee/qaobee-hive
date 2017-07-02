@@ -60,6 +60,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     private static final String ACCOUNT = "account";
     private static final String FIELD_PERSON_ID = "personId";
     private static final String FIELD_MEMBER_STATUS = "status";
+    private static final String FIELD_INDEX = "index";
 
     @Inject
     private MongoDB mongo;
@@ -241,19 +242,15 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                                 .done(rs -> {
                                     rs.forEach(u -> {
                                         JsonObject tuple = (JsonObject) u.getResult();
-                                        notifications.getJsonObject(tuple.getInteger("index")).put(SENDER_ID, tuple.getJsonObject("user"));
-                                        jnotif.add(notifications.getJsonObject(tuple.getInteger("index")));
+                                        notifications.getJsonObject(tuple.getInteger(FIELD_INDEX)).put(SENDER_ID, tuple.getJsonObject("user"));
+                                        jnotif.add(notifications.getJsonObject(tuple.getInteger(FIELD_INDEX)));
                                     });
                                     deferred.resolve(jnotif);
                                 })
-                                .fail(e -> {
-                                    LOG.error(((Throwable) e.getReject()).getMessage());
-                                });
+                                .fail(e -> LOG.error(((Throwable) e.getReject()).getMessage()));
                     }
-
                 })
                 .fail(deferred::reject);
-
         return deferred.promise();
     }
 
@@ -265,7 +262,7 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                     u.fieldNames().stream()
                             .filter(Arrays.asList("_id", "name", "firstname", "avatar")::contains)
                             .forEachOrdered(f -> cu.put(f, u.getValue(f)));
-                    deferred.resolve(new JsonObject().put("index", i).put("user", cu));
+                    deferred.resolve(new JsonObject().put(FIELD_INDEX, i).put("user", cu));
                 })
                 .fail(deferred::reject);
         return deferred.promise();

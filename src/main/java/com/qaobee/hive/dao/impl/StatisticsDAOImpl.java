@@ -49,8 +49,9 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private static final String CODE_FIELD = "code";
     private static final String VALUE_FIELD = "value";
     private static final String EVENT_ID_FIELD = "eventId";
+    private static final String STAT_FIELD = "stats";
     private final MongoDB mongo;
-    private DeferredManager dm = new DefaultDeferredManager();
+    private final DeferredManager dm = new DefaultDeferredManager();
 
     /**
      * Instantiates a new Statistics dao.
@@ -73,14 +74,17 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         }
         dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
             rs.forEach(eventStats -> {
-                if (((JsonObject) eventStats.getResult()).getJsonArray("stats").size() == 0) {
-                    promises2.add(pushAllStats(stats, ((JsonObject) eventStats.getResult()).getString("eventId")));
+                if (((JsonObject) eventStats.getResult()).getJsonArray(STAT_FIELD).size() == 0) {
+                    promises2.add(pushAllStats(stats, ((JsonObject) eventStats.getResult()).getString(EVENT_ID_FIELD)));
                 } else {
-                    promises2.add(pushNonDuplicateStats(stats, ((JsonObject) eventStats.getResult()).getJsonArray("stats")));
+                    promises2.add(pushNonDuplicateStats(stats, ((JsonObject) eventStats.getResult()).getJsonArray(STAT_FIELD)));
                 }
             });
             dm.when(promises2.toArray(new Promise[promises2.size()])).done(counts -> {
-                counts.forEach(c -> count[0] += (Integer) c.getResult());
+                counts.forEach(c -> {
+                    int res = (Integer) c.getResult();
+                    count[0] += res;
+                });
                 deferred.resolve(new JsonObject().put("count", count[0]));
             });
         }).fail(e -> {
@@ -143,8 +147,8 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     @Override
     public Promise<JsonObject, QaobeeException, Integer> getListForEvent(String eventId) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.findByCriterias(new CriteriaBuilder().add("eventId", eventId).get(), null, null, -1, -1, DBCollections.STATS).done(res ->
-                deferred.resolve(new JsonObject().put("eventId", eventId).put("stats", res))
+        mongo.findByCriterias(new CriteriaBuilder().add(EVENT_ID_FIELD, eventId).get(), null, null, -1, -1, DBCollections.STATS).done(res ->
+                deferred.resolve(new JsonObject().put(EVENT_ID_FIELD, eventId).put(STAT_FIELD, res))
         ).fail(deferred::reject);
         return deferred.promise();
     }

@@ -111,35 +111,38 @@ public class ShareDAOImpl implements ShareDAO {
                             owner.getJsonObject(FIELD_COUNTRY).getString(FIELD_ID),
                             System.currentTimeMillis(),
                             "listRoleSandbox"
-                    ).done(activityCfg -> {
-                        activityCfg.getJsonObject(0).getJsonArray("listRoleSandbox").forEach(n -> {
-                            if (((JsonObject) n).getString("code").equals(roleCode)) {
-                                role[0] = (JsonObject) n;
-                            }
-                        });
-                        JsonObject invitation = new JsonObject()
-                                .put("senderId", owner.getString("_id"))
-                                .put("userEmail", userEmail)
-                                .put("role", role[0])
-                                .put(FIELD_SANDBOX_ID, sandbox.getString("_id"))
-                                .put(FIELD_STATUS, "waiting")
-                                .put("invitationDate", System.currentTimeMillis());
-                        mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER).done(invited -> {
-                            if (invited.size() > 0) {
-                                invitation.put("userId", invited.getJsonObject(0).getString("_id"));
-                            }
-                            mongo.upsert(invitation, DBCollections.INVITATION).done(id -> {
-                                invitation.put("_id", id);
-                                deferred.resolve(invitation);
-                            }).fail(deferred::reject);
-                        }).fail(deferred::reject);
-                    }).fail(deferred::reject);
-                }else {
+                    ).done(activityCfg -> sendInvitation(activityCfg, roleCode, role, owner, userEmail, sandbox, deferred)).fail(deferred::reject);
+                } else {
                     deferred.resolve(null);
                 }
             }).fail(deferred::reject);
         }).fail(deferred::reject);
         return deferred.promise();
+    }
+
+    private void sendInvitation(JsonArray activityCfg, String roleCode, JsonObject[] role, JsonObject owner, String userEmail, JsonObject sandbox, Deferred<JsonObject, QaobeeException, Integer> deferred) {
+        activityCfg.getJsonObject(0).getJsonArray("listRoleSandbox").forEach(n -> {
+            if (((JsonObject) n).getString("code").equals(roleCode)) {
+                role[0] = (JsonObject) n;
+            }
+        });
+        JsonObject invitation = new JsonObject()
+                .put("senderId", owner.getString("_id"))
+                .put("userEmail", userEmail)
+                .put("role", role[0])
+                .put(FIELD_SANDBOX_ID, sandbox.getString("_id"))
+                .put(FIELD_STATUS, "waiting")
+                .put("invitationDate", System.currentTimeMillis());
+        mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER).done(invited -> {
+            if (invited.size() > 0) {
+                invitation.put("userId", invited.getJsonObject(0).getString("_id"));
+            }
+            mongo.upsert(invitation, DBCollections.INVITATION).done(id -> {
+                invitation.put("_id", id);
+                deferred.resolve(invitation);
+            }).fail(deferred::reject);
+        }).fail(deferred::reject);
+
     }
 
     @Override
@@ -242,7 +245,7 @@ public class ShareDAOImpl implements ShareDAO {
                     DeferredManager dm = new DefaultDeferredManager();
                     dm.when(promises.toArray(new Promise[promises.size()]))
                             .done(rs -> {
-                                rs.forEach(r-> result.getJsonArray(FIELD_OWNER).add(r.getResult()));
+                                rs.forEach(r -> result.getJsonArray(FIELD_OWNER).add(r.getResult()));
                                 mongoClientCustom.find(DBCollections.SANDBOX, query, res -> {
                                     if (res.succeeded()) {
                                         List<Promise> promises2 = new ArrayList<>();

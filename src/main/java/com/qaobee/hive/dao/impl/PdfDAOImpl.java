@@ -59,16 +59,13 @@ public class PdfDAOImpl implements PdfDAO {
     private JsonObject pdfConfig;
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> generatePDF(JsonObject data, String template, String filename) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> generatePDF(JsonObject data, String template, String filename) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         vertx.executeBlocking(bl -> {
             OutputStream os = null;
-            try {
+            try {// NOSONAR
                 final StringBuilder cssStr = new StringBuilder();
-                for (final Object c : pdfConfig.getJsonArray("css").getList()) {
-                    // FIXME : à vérifier ici
-                    cssStr.append(vertx.fileSystem().readFileBlocking((String) c).toString());
-                }
+                pdfConfig.getJsonArray("css").getList().forEach(c -> cssStr.append(vertx.fileSystem().readFileBlocking((String) c).toString()));
                 data.put("css", cssStr.toString());
                 String datadir = System.getProperty("user.home");
                 if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_DATA_DIR"))) {
@@ -79,11 +76,8 @@ public class PdfDAOImpl implements PdfDAO {
                     assert dir.mkdirs();
                 }
                 final File temp = new File(datadir + "/tmp/" + filename + ".pdf");
-                if (temp.exists()) {
-                    assert temp.delete();
-                }
+                vertx.fileSystem().deleteBlocking(temp.getAbsolutePath());
                 os = new FileOutputStream(temp);
-
                 final ITextRenderer renderer = new ITextRenderer();
                 renderer.getSharedContext().setReplacedElementFactory(new MediaReplacedElementFactory(renderer.getSharedContext().getReplacedElementFactory(), dir));
                 renderer.setDocumentFromString(templatesDAO.generatePDF(data, template));
@@ -104,8 +98,8 @@ public class PdfDAOImpl implements PdfDAO {
                     IOUtils.closeQuietly(os);
                 }
             }
-        }, ar-> {
-            if(ar.succeeded()) {
+        }, ar -> {
+            if (ar.succeeded()) {
                 deferred.resolve((JsonObject) ar.result());
             } else {
                 deferred.reject((QaobeeException) ar.cause());

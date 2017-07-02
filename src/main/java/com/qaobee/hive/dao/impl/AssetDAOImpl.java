@@ -80,49 +80,53 @@ public class AssetDAOImpl implements AssetDAO {
                         vertx.fileSystem().deleteBlocking(filename);
                         deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString("not.logged", locale)));
                     } else {
-                        // Create some custom options
-                        GridFSUploadOptions options = new GridFSUploadOptions()
-                                .chunkSizeBytes(1024)
-                                .metadata(new Document("type", contentType).append(UID_FIELD, userId));
-
-                        try {
-                            GridFSBucket gridFSBucket = GridFSBuckets.create(mongoClient.getDB().getDatabase(dbConfig.getString("db_name")), DBCollections.ASSETS);
-                            final AsyncInputStream streamToUploadFrom = AsyncStreamHelper.toAsyncInputStream(FileUtils.readFileToByteArray(new File(filename)));
-
-                            gridFSBucket.uploadFromStream(userId, streamToUploadFrom, options, (result, e) -> {
-                                streamToUploadFrom.close((closeRes, er) -> {
-                                    if (er != null) {
-                                        LOG.error(er.getMessage(), er);
-                                        deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, er.getMessage()));
-                                    }
-                                });
-                                if (e != null) {
-                                    LOG.error(e.getMessage(), e);
-                                    deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage()));
-                                } else {
-                                    if (DBCollections.PERSON.equals(collection) || DBCollections.USER.equals(collection)) {
-                                        mongo.getById(userId, collection).done(p -> {
-                                            p.put(field, result.toHexString());
-                                            mongo.upsert(p, collection)
-                                                    .done(r -> deferred.resolve(p))
-                                                    .fail(deferred::reject);
-                                        }).fail(deferred::reject);
-                                    } else {
-                                        deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
-                                    }
-                                    if (vertx.fileSystem().existsBlocking(filename)) {
-                                        vertx.fileSystem().deleteBlocking(filename);
-                                    }
-                                }
-                            });
-                        } catch (IOException e) {
-                            LOG.error(e.getMessage(), e);
-                            deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage()));
-                        }
+                        saveAsset(collection, field, userId, filename, contentType, deferred);
                     }
                 }
         ).fail(deferred::reject);
         return deferred.promise();
+    }
+
+    private void saveAsset(String collection, String field, String userId, String filename, String contentType, Deferred<JsonObject, QaobeeException, Integer> deferred) {
+        // Create some custom options
+        GridFSUploadOptions options = new GridFSUploadOptions()
+                .chunkSizeBytes(1024)
+                .metadata(new Document("type", contentType).append(UID_FIELD, userId));
+
+        try {
+            GridFSBucket gridFSBucket = GridFSBuckets.create(mongoClient.getDB().getDatabase(dbConfig.getString("db_name")), DBCollections.ASSETS);
+            final AsyncInputStream streamToUploadFrom = AsyncStreamHelper.toAsyncInputStream(FileUtils.readFileToByteArray(new File(filename)));
+
+            gridFSBucket.uploadFromStream(userId, streamToUploadFrom, options, (result, e) -> {
+                streamToUploadFrom.close((closeRes, er) -> {
+                    if (er != null) {
+                        LOG.error(er.getMessage(), er);
+                        deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, er.getMessage()));
+                    }
+                });
+                if (e != null) {
+                    LOG.error(e.getMessage(), e);
+                    deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage()));
+                } else {
+                    if (DBCollections.PERSON.equals(collection) || DBCollections.USER.equals(collection)) {
+                        mongo.getById(userId, collection).done(p -> {
+                            p.put(field, result.toHexString());
+                            mongo.upsert(p, collection)
+                                    .done(r -> deferred.resolve(p))
+                                    .fail(deferred::reject);
+                        }).fail(deferred::reject);
+                    } else {
+                        deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
+                    }
+                    if (vertx.fileSystem().existsBlocking(filename)) {
+                        vertx.fileSystem().deleteBlocking(filename);
+                    }
+                }
+            });
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+            deferred.reject(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage()));
+        }
     }
 
     @Override
@@ -152,7 +156,7 @@ public class AssetDAOImpl implements AssetDAO {
                                 .put("asset", bytes));
                     }
                 });
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 deferred.reject(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND));
             }
         } else {

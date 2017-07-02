@@ -301,17 +301,16 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Rule(address = REVIVE_INVITATION_TO_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = {PARAM_INVITATION_ID}, scope = Rule.Param.REQUEST)
     private void reviveInvitationToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shareDAO.reviveInvitationToUser(req.getParams().get(PARAM_INVITATION_ID).get(0)).done(invitation -> {
-            userDAO.getUserInfo(req.getUser().get_id()).done(user -> {
-                try {
-                    sendNotification(invitation, user, invitation.getString(USER_EMAIL_FIELD), req.getLocale());
-                    message.reply(invitation.encode());
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    utils.sendError(message, e);
-                }
-            }).fail(e -> utils.sendError(message, e));
-        }).fail(e -> utils.sendError(message, e));
+        shareDAO.reviveInvitationToUser(req.getParams().get(PARAM_INVITATION_ID).get(0))
+                .done(invitation -> userDAO.getUserInfo(req.getUser().get_id()).done(user -> {
+                    try {
+                        sendNotification(invitation, user, invitation.getString(USER_EMAIL_FIELD), req.getLocale());
+                        message.reply(invitation.encode());
+                    } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                        utils.sendError(message, e);
+                    }
+                }).fail(e -> utils.sendError(message, e))).fail(e -> utils.sendError(message, e));
     }
 
     /**

@@ -121,7 +121,7 @@ public enum ExceptionCodes {
      *
      * @param code the new code
      */
-    public void setCode(final int code) {
+    public void setCode(final int code) {// NOSONAR
         this.code = code;
     }
 

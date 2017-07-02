@@ -138,7 +138,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean checkUserInformations(User user, String locale) throws QaobeeException {
+    public void checkUserInformations(User user, String locale) throws QaobeeException {
         if (user == null || user.getAccount() == null || user.getContact() == null) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.required", locale));
         }
@@ -152,7 +152,6 @@ public class UserDAOImpl implements UserDAO {
         } else if (user.getAccount().getPasswd().length() < 6) {
             throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.password.short", locale));
         }
-        return true;
     }
 
     private static void checkUserLogin(String login, String locale) throws QaobeeException {

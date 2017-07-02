@@ -49,8 +49,8 @@ public class TemplatesDAOImpl implements TemplatesDAO {
      * The constant TEMPLATE.
      */
     public static final String TEMPLATE = "template";
-    private Configuration cfgMail;
-    private Configuration cfgPDF;
+    private final Configuration cfgMail;
+    private final Configuration cfgPDF;
 
     /**
      * Instantiates a new Templates dao.

@@ -54,7 +54,7 @@ public interface UserDAO {
      * @return the boolean
      * @throws QaobeeException the qaobee exception
      */
-    boolean checkUserInformations(User user, String locale) throws QaobeeException;
+    void checkUserInformations(User user, String locale) throws QaobeeException;
 
     /**
      * Existing login.

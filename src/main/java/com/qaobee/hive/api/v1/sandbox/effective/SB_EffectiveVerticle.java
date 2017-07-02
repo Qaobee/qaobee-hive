@@ -34,8 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type Effective verticle.
@@ -132,7 +132,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
             scope = Rule.Param.REQUEST)
     private void getEffectiveList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        HashMap<String, List<String>> params = req.getParams();
+        Map<String, List<String>> params = req.getParams();
         String categoryAgeCode = null;
         if (params.get(PARAM_CATEGORY_AGE_CODE) != null && !StringUtils.isBlank(params.get(PARAM_CATEGORY_AGE_CODE).get(0))) {
             categoryAgeCode = params.get(PARAM_CATEGORY_AGE_CODE).get(0);

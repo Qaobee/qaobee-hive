@@ -48,7 +48,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Ignore
     @Test
-    public void getListChampionships(TestContext context) {
+    public void getListChampionships(TestContext context) {// NOSONAR
         Async async = context.async();
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
@@ -179,7 +179,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Ignore
     @Test
-    public void getListChampionshipsWithInfra(TestContext context) {
+    public void getListChampionshipsWithInfra(TestContext context) {// NOSONAR
         Async async = context.async();
         // Populate default value
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
@@ -239,7 +239,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Ignore
     @Test
-    public void getChampionship(TestContext context) {
+    public void getChampionship(TestContext context) {// NOSONAR
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         generateLoggedUser().then(u -> {
@@ -405,7 +405,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Ignore
     @Test
-    public void updateChampionship(TestContext context) {
+    public void updateChampionship(TestContext context) {// NOSONAR
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         generateLoggedAdminUser().then(u -> {

@@ -26,7 +26,7 @@ public class Main {
         if(StringUtils.isBlank(env)) {
             env = "DEV";
         }
-        LOG.info("Running with env : " + env);
+        LOG.info("Running with env : {}", env);
         JsonObject config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes())).getJsonObject(env);
         vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config));
     }

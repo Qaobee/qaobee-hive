@@ -26,11 +26,13 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.Json;
@@ -74,6 +76,7 @@ public class Main extends AbstractGuiceVerticle {
     private static final String APPLICATION_JSON = "application/json";
     private static final String MESSAGE = "message";
     private static final Map<String, Rule> rules = new HashMap<>();
+    private static final String HTTP_CODE = "httpCode";
 
     @Inject
     @Named("runtime")
@@ -138,9 +141,9 @@ public class Main extends AbstractGuiceVerticle {
 
     private static void manage404Error(RoutingContext routingContext) {
         final JsonObject jsonResp = new JsonObject()
-                .put("status", false)
+                .put(Constants.STATUS, false)
                 .put(MESSAGE, "Nothing here")
-                .put("httpCode", 404);
+                .put(HTTP_CODE, 404);
         routingContext.response().setStatusCode(404).end(jsonResp.encode());
     }
 
@@ -212,8 +215,8 @@ public class Main extends AbstractGuiceVerticle {
         sockJSHandler.bridge(new BridgeOptions());
         router.route("/eventbus/*").handler(sockJSHandler);
         server.listen(port, ip);
-        LOG.info("The http server is started on : " + ip + ":" + port);
-        System.out.println("Server started");
+        LOG.info("The http server is started on : {} : {}", ip, port);
+        LOG.info("Server started");
     }
 
     /**
@@ -226,7 +229,6 @@ public class Main extends AbstractGuiceVerticle {
         restModules.forEach(restMod -> {
             Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
             promises.add(deferred.promise());
-            //   if (restMod.getAnnotation(DeployableVerticle.class).isWorker()) {
             vertx.deployVerticle(restMod.getName(), new DeploymentOptions()
                     .setConfig(config())
                     .setWorker(true)
@@ -255,51 +257,17 @@ public class Main extends AbstractGuiceVerticle {
         String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
         if (rules.containsKey(busAddress)) {
             testRequest(busAddress, wrapper).done(res -> {
-                if (res.getBoolean("status")) {
+                if (res.getBoolean(Constants.STATUS)) {
                     Rule rule = rules.get(busAddress);
                     try {
                         testParameters(rule, wrapper);
-
-                        vertx.eventBus().send(busAddress, Json.encode(wrapper), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), message -> {
-                            try {
-                                if (message.succeeded()) {
-                                    final String response = (String) message.result().body();
-                                    if (response.startsWith("[") || !response.startsWith("{")) {
-                                        handleJsonArray(routingContext, response);
-                                    } else {
-                                        handleJsonObject(routingContext, response);
-                                    }
-                                } else {
-                                    throw (ReplyException) message.cause();
-                                }
-                            } catch (ReplyException ex) {
-                                routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
-                                routingContext.response().setStatusCode(404);
-                                enableCors(routingContext);
-                                if (ex.failureCode() > 0) {
-                                    routingContext.response().setStatusCode(ex.failureCode());
-                                }
-                                if (ex.getMessage() != null) {
-                                    String exStr = ex.getMessage();
-                                    if (ex.getMessage().startsWith("{")) {
-                                        JsonObject jsonEx = new JsonObject(ex.getMessage());
-                                        if (!"true".equals(routingContext.request().getHeader("X-qaobee-stack"))) {
-                                            jsonEx.remove("stackTrace");
-                                            jsonEx.remove("suppressed");
-                                        }
-                                        exStr = jsonEx.encode();
-                                    }
-                                    LOG.error(exStr);
-                                    routingContext.response().end(exStr);
-                                } else {
-                                    manage404Error(routingContext);
-                                }
-                            }
-                        });
+                        vertx.eventBus().send(busAddress, Json.encode(wrapper),
+                                new DeliveryOptions().setSendTimeout(Constants.TIMEOUT),
+                                message -> handleResponse(message, routingContext));
                     } catch (QaobeeException e) {
                         LOG.error(e.getMessage(), e);
                         final JsonObject jsonResp = new JsonObject()
-                                .put("status", false)
+                                .put(Constants.STATUS, false)
                                 .put(MESSAGE, e.getMessage())
                                 .put("code", e.getCode().name());
                         routingContext.response()
@@ -308,14 +276,55 @@ public class Main extends AbstractGuiceVerticle {
                                 .end(jsonResp.encode());
                     }
                 } else {
-                    int code = res.getInteger("httpCode");
-                    res.remove("httpCode");
+                    int code = res.getInteger(HTTP_CODE);
+                    res.remove(HTTP_CODE);
                     routingContext.response()
                             .putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
                             .setStatusCode(code)
                             .end(res.encode());
                 }
             });
+        } else {
+            manage404Error(routingContext);
+        }
+    }
+
+    private void handleResponse(AsyncResult<Message<Object>> message, RoutingContext routingContext) {
+        try {
+            if (message.succeeded()) {
+                final String response = (String) message.result().body();
+                if (response.startsWith("[") || !response.startsWith("{")) {
+                    handleJsonArray(routingContext, response);
+                } else {
+                    handleJsonObject(routingContext, response);
+                }
+            } else {
+                throw (ReplyException) message.cause();
+            }
+        } catch (ReplyException ex) {
+            handleException(ex, routingContext);
+        }
+    }
+
+    private void handleException(ReplyException ex, RoutingContext routingContext) {
+        routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
+        routingContext.response().setStatusCode(404);
+        enableCors(routingContext);
+        if (ex.failureCode() > 0) {
+            routingContext.response().setStatusCode(ex.failureCode());
+        }
+        if (ex.getMessage() != null) {
+            String exStr = ex.getMessage();
+            if (ex.getMessage().startsWith("{")) {
+                JsonObject jsonEx = new JsonObject(ex.getMessage());
+                if (!"true".equals(routingContext.request().getHeader("X-qaobee-stack"))) {
+                    jsonEx.remove("stackTrace");
+                    jsonEx.remove("suppressed");
+                }
+                exStr = jsonEx.encode();
+            }
+            LOG.error(exStr);
+            routingContext.response().end(exStr);
         } else {
             manage404Error(routingContext);
         }
@@ -404,7 +413,7 @@ public class Main extends AbstractGuiceVerticle {
     }
 
     private void handleUpload(FileUpload upload, JsonObject request, File dir, RoutingContext routingContext) {
-        final String destFileName = dir.getAbsolutePath() + "/" + routingContext.request().getParam("uid") + "." + FilenameUtils.getExtension(upload.fileName());
+        final String destFileName = dir.getAbsolutePath() + File.pathSeparator + routingContext.request().getParam("uid") + "." + FilenameUtils.getExtension(upload.fileName());
         request.put("filename", destFileName).put(HTTP.CONTENT_TYPE, upload.contentType());
         if (vertx.fileSystem().existsBlocking(destFileName)) {
             vertx.fileSystem().deleteBlocking(destFileName);
@@ -447,16 +456,16 @@ public class Main extends AbstractGuiceVerticle {
                 promises.add(utils.isLoggedAndAdmin(wrapper));
             }
             if (promises.isEmpty()) {
-                deferred.resolve(new JsonObject().put("status", true));
+                deferred.resolve(new JsonObject().put(Constants.STATUS, true));
             } else {
                 DeferredManager dm = new DefaultDeferredManager();
-                dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> deferred.resolve(new JsonObject().put("status", true))).fail(e -> {
+                dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> deferred.resolve(new JsonObject().put(Constants.STATUS, true))).fail(e -> {
                     QaobeeException ex = (QaobeeException) e.getReject();
                     LOG.error(ex.getMessage(), ex);
                     final JsonObject jsonResp = new JsonObject()
-                            .put("status", false)
+                            .put(Constants.STATUS, false)
                             .put(MESSAGE, ex.getMessage())
-                            .put("httpCode", ex.getCode().getCode())
+                            .put(HTTP_CODE, ex.getCode().getCode())
                             .put("code", ex.getCode().name());
                     deferred.resolve(jsonResp);
                 });
@@ -464,9 +473,9 @@ public class Main extends AbstractGuiceVerticle {
         } catch (final NoSuchMethodException e) {
             LOG.error(e.getMessage(), e);
             final JsonObject jsonResp = new JsonObject()
-                    .put("status", false)
+                    .put(Constants.STATUS, false)
                     .put(MESSAGE, "Nothing here")
-                    .put("httpCode", 404);
+                    .put(HTTP_CODE, 404);
             deferred.resolve(jsonResp);
         }
         return deferred.promise();

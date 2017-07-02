@@ -35,7 +35,6 @@ public interface PdfDAO {
      * @param template the template
      * @param filename the filename
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    Promise<JsonObject, QaobeeException, Integer> generatePDF(JsonObject data, String template, String filename) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> generatePDF(JsonObject data, String template, String filename);
 }
