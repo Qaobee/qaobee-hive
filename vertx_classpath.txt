@@ -1,7 +1,0 @@
-src/main/resources
-bin
-out/production/com.qaobee:hive:0.1
-out/test/com.qaobee:hive:0.1
-build/deps
-build/classes/main
-build/resources/main
