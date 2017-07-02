@@ -72,19 +72,6 @@ public class UserDAOImpl implements UserDAO {
     @Inject
     private ActivityDAO activityDAO;
 
-    public Promise<JsonObject, QaobeeException, Integer> updateAvatar(String uid, String filename) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(uid, DBCollections.USER)
-                .done(jsonperson -> {
-                    jsonperson.put(AVATAR_FIELD, filename);
-                    mongo.upsert(jsonperson, DBCollections.USER)
-                            .done(res -> deferred.resolve(jsonperson))
-                            .fail(deferred::reject);
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
-    }
-
     @Override
     public JsonObject generateProfilePDF(User user, String locale) {
         final JsonObject juser = new JsonObject().put("firstname", user.getFirstname())
@@ -105,7 +92,7 @@ public class UserDAOImpl implements UserDAO {
         }
         return new JsonObject()
                 .put(PDFVerticle.FILE_NAME, user.getAccount().getLogin())
-                .put(PDFVerticle.TEMPLATE, "profile/profile.ftl")
+                .put(PDFVerticle.TEMPLATE, "profile.ftl")
                 .put(PDFVerticle.DATA, juser);
     }
 

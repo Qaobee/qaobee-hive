@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * The type Mail verticle.
@@ -25,6 +26,9 @@ public class MailVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(MailVerticle.class);
     @Inject
     private MailClient mailClient;
+    @Inject
+    @Named("mailer.mod")
+    private JsonObject conf;
 
     @Override
     public void start() {
@@ -34,19 +38,23 @@ public class MailVerticle extends AbstractGuiceVerticle {
     }
 
     private void sendMail(Message<JsonObject> message) {
-        MailMessage mailMessage = new MailMessage();
-        mailMessage.setFrom(message.body().getString("from"));
-        mailMessage.setTo(message.body().getString("to"));
-        mailMessage.setSubject(message.body().getString("subject"));
-        mailMessage.setHtml(message.body().getString("body"));
-        mailMessage.addHeader(HTTP.CONTENT_TYPE, message.body().getString("content_type"));
-        mailClient.sendMail(mailMessage, result -> {
-            if (result.succeeded()) {
-                message.reply(result.result().toJson());
-            } else {
-                LOG.error(result.cause().getMessage(), result.cause());
-                message.fail(ExceptionCodes.MAIL_EXCEPTION.getCode(), result.cause().getMessage());
-            }
-        });
+        if (!conf.getBoolean("test", false)) {
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.setFrom(message.body().getString("from"));
+            mailMessage.setTo(message.body().getString("to"));
+            mailMessage.setSubject(message.body().getString("subject"));
+            mailMessage.setHtml(message.body().getString("body"));
+            mailMessage.addHeader(HTTP.CONTENT_TYPE, message.body().getString("content_type"));
+            mailClient.sendMail(mailMessage, result -> {
+                if (result.succeeded()) {
+                    message.reply(result.result().toJson());
+                } else {
+                    LOG.error(result.cause().getMessage(), result.cause());
+                    message.fail(ExceptionCodes.MAIL_EXCEPTION.getCode(), result.cause().getMessage());
+                }
+            });
+        } else {
+            message.reply(new JsonObject());
+        }
     }
 }

@@ -59,7 +59,6 @@ public class UtilsImpl implements Utils {
     private static final Logger LOG = LoggerFactory.getLogger(UtilsImpl.class);
     private static final String NOT_LOGGED_KEY = "not.logged";
     private static final String SESSION_EXPIRED = "session.expired";
-    private static final String STATUS_FIELD = "status";
     private static final String MISSING_PARAMS = "Missing mandatory parameters : ";
     private static final String ACCOUNT_FIELD = "account";
     private final MongoDB mongo;
@@ -155,18 +154,18 @@ public class UtilsImpl implements Utils {
 
     @Override
     public void sendStatus(final boolean b, final Message<String> message) {
-        message.reply(new JsonObject().put(STATUS_FIELD, b).encode());
+        message.reply(new JsonObject().put(Constants.STATUS, b).encode());
     }
 
     @Override
     public void sendStatusJson(final boolean b, final Message<JsonObject> message) {
-        message.reply(new JsonObject().put(STATUS_FIELD, b));
+        message.reply(new JsonObject().put(Constants.STATUS, b));
     }
 
     @Override
     public void sendStatusJson(boolean b, String cause, Message<JsonObject> message) {
         final JsonObject jsonResp = new JsonObject()
-                .put(STATUS_FIELD, b)
+                .put(Constants.STATUS, b)
                 .put("cause", cause);
         message.reply(jsonResp);
     }

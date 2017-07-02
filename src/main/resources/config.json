@@ -63,8 +63,7 @@
       "path": "/3.0/lists/883987d33d"
     },
     "mailer.mod": {
-      "test": true,
-      "address": "mailer.mod",
+      "test": false,
       "host": "ssl0.ovh.net",
       "port": 465,
       "ssl": true,
@@ -154,7 +153,6 @@
     },
     "mailer.mod": {
       "test": true,
-      "address": "mailer.mod",
       "host": "ssl0.ovh.net",
       "port": 465,
       "ssl": true,
@@ -243,8 +241,7 @@
       "path": "/3.0/lists/883987d33d"
     },
     "mailer.mod": {
-      "test": true,
-      "address": "mailer.mod",
+      "test": false,
       "host": "ssl0.ovh.net",
       "port": 465,
       "ssl": true,

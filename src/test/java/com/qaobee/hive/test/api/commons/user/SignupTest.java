@@ -46,7 +46,7 @@ public class SignupTest extends VertxJunitSupport {
         Async async = context.async();
         generateUser().then(u -> {
             JsonObject param = new JsonObject().put(SignupVerticle.PARAM_LOGIN, u.getAccount().getLogin());
-            sendOnBus(SignupVerticle.LOGIN_EXISTS, param).then(res -> {
+            sendOnBus(SignupVerticle.LOGIN_EXISTS, param).done(res -> {
                 Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
                 given().body(param.encode())
                         .when().post(getURL(SignupVerticle.LOGIN_TEST))

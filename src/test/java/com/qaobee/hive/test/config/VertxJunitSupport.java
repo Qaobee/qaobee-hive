@@ -200,16 +200,8 @@ public class VertxJunitSupport implements JSDataMongoTest {
                 LOG.error(t.getMessage(), t);
             }
             vertx.close();
-
             JunitMongoSingleton.getInstance().getProcess().stop();
-        /*    vertx.close(event -> {
-                if(event.failed()) {
-                    LOG.error(event.cause().getMessage(), event.cause());
-                }
-                async.complete();
-            });*/
             async.complete();
-
         });
         async.await(TIMEOUT * 10);
     }

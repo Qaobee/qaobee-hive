@@ -187,36 +187,33 @@ public class Main extends AbstractGuiceVerticle {
         // API Rest
         router.routeWithRegex("^/api/.*").handler(this::handleAPIRequest);
         // Load Verticles
-        runWebServer(loadVerticles(), router, startFuture);
+        runWebServer(loadVerticles(), router).done(r->startFuture.complete()).fail(startFuture::fail);
     }
 
     /**
      * @param promises    Promises
      * @param router      Route matcher
-     * @param startFuture future
      */
-    private void runWebServer(List<Promise<String, Throwable, Integer>> promises, Router router, Future<Void> startFuture) {
+    private Promise<Boolean, Throwable, Integer> runWebServer(List<Promise<String, Throwable, Integer>> promises, Router router) {
+        Deferred<Boolean, Throwable, Integer> deferred = new DeferredObject<>();
         DeferredManager dm = new DefaultDeferredManager();
         dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
-            handleServerStart(router);
-            startFuture.complete();
+            final HttpServer server = vertx.createHttpServer();
+            server.requestHandler(router::accept);
+            String ip = runtime.getString("defaultHost");
+            int port = runtime.getInteger("defaultPort");
+            SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
+            sockJSHandler.bridge(new BridgeOptions());
+            router.route("/eventbus/*").handler(sockJSHandler);
+            server.listen(port, ip);
+            LOG.info("The http server is started on : {} : {}", ip, port);
+            LOG.info("Server started");
+            deferred.resolve(true);
         }).fail(e -> {
             LOG.error(((Throwable) e.getReject()).getMessage());
-            startFuture.fail((Throwable) e.getReject());
+            deferred.reject((Throwable) e.getReject());
         });
-    }
-
-    private void handleServerStart(Router router) {
-        final HttpServer server = vertx.createHttpServer();
-        server.requestHandler(router::accept);
-        String ip = runtime.getString("defaultHost");
-        int port = runtime.getInteger("defaultPort");
-        SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
-        sockJSHandler.bridge(new BridgeOptions());
-        router.route("/eventbus/*").handler(sockJSHandler);
-        server.listen(port, ip);
-        LOG.info("The http server is started on : {} : {}", ip, port);
-        LOG.info("Server started");
+        return deferred.promise();
     }
 
     /**

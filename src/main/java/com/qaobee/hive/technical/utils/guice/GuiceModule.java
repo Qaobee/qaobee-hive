@@ -101,7 +101,7 @@ public class GuiceModule extends AbstractModule {
         cfgMails.setLocale(Locale.US);
         cfgMails.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         Configuration cfgPDF = new Configuration(new Version("2.3.23"));
-        cfgPDF.setClassForTemplateLoading(this.getClass(), "/mailTemplates");
+        cfgPDF.setClassForTemplateLoading(this.getClass(), "/pdfTemplates");
         bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
 
         // DAO

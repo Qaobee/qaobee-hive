@@ -56,17 +56,21 @@ public class SeasonDAOImpl implements SeasonDAO {
                     long currentDate = System.currentTimeMillis();
                     if (resultJson.size() == 0) {
                         deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")"));
-                    }
-                    for (int i = 0; i < resultJson.size(); i++) {
-                        JsonObject s = resultJson.getJsonObject(i);
-                        if (s.getLong(END_DATE_FIELD, 0L) > currentDate && s.getLong("startDate") < currentDate) {
-                            deferred.resolve(s);
-                            return;
+                    } else {
+                        JsonObject season = null;
+                        for (int i = 0; i < resultJson.size(); i++) {
+                            JsonObject s = resultJson.getJsonObject(i);
+                            if (s.getLong(END_DATE_FIELD, 0L) > currentDate && s.getLong("startDate") < currentDate) {
+                                season = s;
+                            }
+                        }
+                        if (season != null) {
+                            deferred.resolve(season);
+                        } else {
+                            deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")"));
                         }
                     }
-                    deferred.resolve(new JsonObject());
-                })
-                .fail(deferred::reject);
+                }).fail(deferred::reject);
         return deferred.promise();
     }
 

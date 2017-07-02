@@ -133,7 +133,7 @@ public class SeasonTest extends VertxJunitSupport {
                             .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) activity.getString(ActivityVerticle.PARAM_ID))
                             .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
                             .then().assertThat().statusCode(200)
-                            .body("", hasSize(4));
+                            .body("", hasSize(5));
                     async.complete();
                 }).fail(e -> Assert.fail(e.getMessage()));
             }).fail(e -> Assert.fail(e.getMessage()));
@@ -233,7 +233,7 @@ public class SeasonTest extends VertxJunitSupport {
                             .when().get(getURL(SeasonVerticle.GET_CURRENT))
                             .then().assertThat().statusCode(200)
                             .body("label", notNullValue())
-                            .body("label", is("SAISON 2016-2017"))
+                            .body("label", is("SAISON 2017-2018"))
                             .body("code", is("SAI-" + year));
                     async.complete();
                 }).fail(e -> Assert.fail(e.getMessage()));
