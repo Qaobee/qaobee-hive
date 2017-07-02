@@ -242,14 +242,14 @@ public class ShareDAOImpl implements ShareDAO {
                     DeferredManager dm = new DefaultDeferredManager();
                     dm.when(promises.toArray(new Promise[promises.size()]))
                             .done(rs -> {
-                                rs.forEach(result.getJsonArray(FIELD_OWNER)::add);
+                                rs.forEach(r-> result.getJsonArray(FIELD_OWNER).add(r.getResult()));
                                 mongoClientCustom.find(DBCollections.SANDBOX, query, res -> {
                                     if (res.succeeded()) {
                                         List<Promise> promises2 = new ArrayList<>();
                                         res.result().forEach(sandboxRes -> promises2.add(sandBoxDAO.getEnrichedSandbox(new JsonObject(sandboxRes.toString()))));
                                         dm.when(promises2.toArray(new Promise[promises2.size()]))
                                                 .done(rs2 -> {
-                                                    rs2.forEach(sb -> result.getJsonArray(FIELD_MEMBERS).add(sb));
+                                                    rs2.forEach(sb -> result.getJsonArray(FIELD_MEMBERS).add(sb.getResult()));
                                                     deferred.resolve(result);
                                                 })
                                                 .fail(e -> {
