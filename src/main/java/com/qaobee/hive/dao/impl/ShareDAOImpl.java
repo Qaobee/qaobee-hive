@@ -19,12 +19,13 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.qaobee.hive.dao.ActivityCfgDAO;
 import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.dao.ShareDAO;
+import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
@@ -60,7 +61,7 @@ public class ShareDAOImpl implements ShareDAO {
     @Inject
     private MongoClientCustom mongoClientCustom;
     @Inject
-    private ActivityCfgDAO activityCfgDAO;
+    private ActivityCfgService activityCfgService;
     @Inject
     private SandBoxDAO sandBoxDAO;
 
@@ -106,12 +107,17 @@ public class ShareDAOImpl implements ShareDAO {
             final JsonObject[] role = {new JsonObject().put("code", roleCode)};
             mongo.getById(sandbox.getString(FIELD_OWNER), DBCollections.USER).done(owner -> {
                 if (owner.containsKey(FIELD_COUNTRY) && owner.getJsonObject(FIELD_COUNTRY) != null && owner.getJsonObject(FIELD_COUNTRY).containsKey(FIELD_ID)) {
-                    activityCfgDAO.getActivityCfgParams(
+                    activityCfgService.getActivityCfgParams(
                             sandbox.getString("activityId"),
                             owner.getJsonObject(FIELD_COUNTRY).getString(FIELD_ID),
                             System.currentTimeMillis(),
-                            "listRoleSandbox"
-                    ).done(activityCfg -> sendInvitation(activityCfg, roleCode, role, owner, userEmail, sandbox, deferred)).fail(deferred::reject);
+                            "listRoleSandbox", ar -> {
+                                if (ar.succeeded()) {
+                                    sendInvitation(ar.result(), roleCode, role, owner, userEmail, sandbox, deferred);
+                                } else {
+                                    deferred.reject(new QaobeeException((QaobeeSvcException) ar.cause()));
+                                }
+                            });
                 } else {
                     deferred.resolve(null);
                 }

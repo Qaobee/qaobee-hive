@@ -1,6 +1,5 @@
 package com.qaobee.hive.technical.annotations;
 
-import io.vertx.core.Vertx;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -40,10 +39,9 @@ public @interface VertxRoute {
         /**
          * Init router.
          *
-         * @param vertx the vertx
          * @return the router
          */
-        Router init(Vertx vertx);
+        Router init();
     }
 
     /**

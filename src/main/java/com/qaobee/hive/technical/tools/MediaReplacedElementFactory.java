@@ -92,7 +92,7 @@ public class MediaReplacedElementFactory implements ReplacedElementFactory {
                 return null;
             }
             InputStream input = null;
-            File media = new File(dir.getAbsolutePath() + File.pathSeparator + UUID.randomUUID().toString());
+            File media = new File(dir.getAbsolutePath() + File.separator + UUID.randomUUID().toString());
             try {// NOSONAR
                 if (element.getAttribute(DATA_SRC).startsWith("http")) {
                     FileUtils.copyURLToFile(new URL(element.getAttribute(DATA_SRC)), media);

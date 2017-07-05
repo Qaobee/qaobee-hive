@@ -29,11 +29,13 @@ import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
 import org.jdeferred.Deferred;
@@ -70,12 +72,36 @@ public class UtilsImpl implements Utils {
      *
      * @param mongo        the mongo
      * @param habilitUtils the habilit utils
+     * @param mongoClient  the mongo client
      */
     @Inject
     public UtilsImpl(MongoDB mongo, HabilitUtils habilitUtils, MongoClientCustom mongoClient) {
         this.mongo = mongo;
         this.habilitUtils = habilitUtils;
         this.mongoClient = mongoClient;
+    }
+
+    @Override
+    public RequestWrapper wrapRequest(RoutingContext context) {
+        RequestWrapper wrapper = new RequestWrapper();
+        wrapper.setBody(context.getBodyAsString());
+        wrapper.setMethod(context.request().rawMethod());
+        wrapper.setHeaders(toMap(context.request().headers()));
+        wrapper.setParams(toMap(context.request().params()));
+        wrapper.setLocale(context.request().getHeader("Accept-Language"));
+        return wrapper;
+    }
+
+
+    private HashMap<String, List<String>> toMap(MultiMap multiMap) {
+        HashMap<String, List<String>> map = new HashMap<>();
+        multiMap.entries().forEach(e -> {
+            if (!map.containsKey(e.getKey())) {
+                map.put(e.getKey(), new ArrayList<>());
+            }
+            map.get(e.getKey()).add(e.getValue());
+        });
+        return map;
     }
 
     @Override
@@ -261,5 +287,10 @@ public class UtilsImpl implements Utils {
             deferred.resolve(user);
         }).fail(deferred::reject);
         return deferred.promise();
+    }
+
+    @Override
+    public void testMandatoryParams(MultiMap params, String... fields) throws QaobeeException {
+        testMandatoryParams(toMap(params), fields);
     }
 }

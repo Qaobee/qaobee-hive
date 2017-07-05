@@ -52,10 +52,9 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      * The Utils.
      */
     @Inject
-    protected
-    Utils utils;
+    protected Utils utils;
     private List<Promise<Boolean, Throwable, Integer>> promises = new ArrayList<>();
-
+    protected Injector injector;
     /**
      * Inject abstract guice verticle.
      *
@@ -69,7 +68,7 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
             config().getJsonObject(MONGO_CONF_KEY).put("password", System.getenv("OPENSHIFT_MONGODB_DB_PASSWORD"));
             config().getJsonObject(MONGO_CONF_KEY).put("username", System.getenv("OPENSHIFT_MONGODB_DB_USERNAME"));
         }
-        Injector injector = Guice.createInjector(new GuiceModule(this.config(), vertx));
+        injector = Guice.createInjector(new GuiceModule(this.config(), vertx));
         injector.injectMembers(this);
         LOG.debug(clazz.getClass().getName() + " started");
         return this;

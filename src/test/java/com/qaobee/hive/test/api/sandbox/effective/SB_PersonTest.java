@@ -22,6 +22,7 @@ package com.qaobee.hive.test.api.sandbox.effective;
 import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_EffectiveVerticle;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_PersonVerticle;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
@@ -198,6 +199,7 @@ public class SB_PersonTest extends VertxJunitSupport {
     @Test
     public void uploadAvatar(TestContext context) {
         Async async = context.async();
+        File avatar = new File("src/test/resources/avatar.jpg");
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
 
@@ -210,22 +212,21 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .body("name", is("Ranu")).extract().path("_id");
 
             String avatarId = given().header(TOKEN, user.getAccount().getToken())
-                    .multiPart(new File("src/test/resources/avatar.jpg")).
+                    .multiPart(avatar).
                             pathParam("uid", id).
                             when().
-                            post(BASE_URL + "/file/SB_Person/avatar/{uid}")
+                            post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(200)
                     .body("avatar", notNullValue())
                     .extract().path("avatar");
 
-            byte[] byteArray = given().pathParam("avatar", avatarId)
-                    .get(BASE_URL + "/file/SB_Person/{avatar}")
+            byte[] byteArray = given()
+                    .pathParam("avatar", avatarId)
+                    .get(BASE_URL + "/file/" + DBCollections.PERSON + "/{avatar}")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
 
-            Assert.assertEquals("Files must have same size",
-                    byteArray.length,
-                    vertx.fileSystem().propsBlocking("src/test/resources/avatar.jpg").size());
+            Assert.assertEquals("Files must have same size", avatar.length(), byteArray.length);
             async.complete();
         }).fail(e -> Assert.fail(e.getMessage()));
         async.await(TIMEOUT);
@@ -242,7 +243,7 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", "blabla").
                     when().
-                    post(BASE_URL + "/file/SB_Person/avatar/{uid}")
+                    post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
             async.complete();
         }).fail(e -> Assert.fail(e.getMessage()));
@@ -259,7 +260,7 @@ public class SB_PersonTest extends VertxJunitSupport {
             given().multiPart(new File("src/test/resources/avatar.jpg"))
                     .pathParam("uid", u.get_id())
                     .when()
-                    .post(BASE_URL + "/file/SB_Person/avatar/{uid}")
+                    .post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
         }).fail(e -> Assert.fail(e.getMessage()));
@@ -277,7 +278,7 @@ public class SB_PersonTest extends VertxJunitSupport {
                     pathParam("uid", u.get_id())
                     .header(TOKEN, "11111")
                     .when()
-                    .post(BASE_URL + "/file/SB_Person/avatar/{uid}")
+                    .post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
         }).fail(e -> Assert.fail(e.getMessage()));
@@ -289,9 +290,10 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void getAvatarWithWrongAvatarId() {
-        given().pathParam("avatar", "blabla")
-                .get(BASE_URL + "/file/SB_Person/{avatar}")
-                .then().assertThat().statusCode(404);
+        given()
+                .pathParam("avatar", "blabla")
+                .get(BASE_URL + "/file/" + DBCollections.PERSON + "/{avatar}")
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
     }
 
     /**

@@ -94,6 +94,18 @@ public class QaobeeException extends Exception {
     }
 
     /**
+     * Instantiates a new Qaobee exception.
+     *
+     * @param e the e
+     */
+    public QaobeeException(QaobeeSvcException e) {
+        super(e.getMessage());
+        this.jsonContext = e.getJsonContext();
+        this.code = e.getCode();
+        this.report = e.isReport();
+    }
+
+    /**
      * Gets the code.
      *
      * @return the code

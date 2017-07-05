@@ -926,7 +926,8 @@ public class UserTest extends VertxJunitSupport {
     public void uploadAvatar(TestContext context) {
         Async async = context.async();
         generateLoggedUser().then(user -> {
-            String avatarId = given().header(TOKEN, user.getAccount().getToken())
+            String avatarId = given()
+                    .header(TOKEN, user.getAccount().getToken())
                     .multiPart(new File("src/test/resources/avatar.jpg")).
                             pathParam("uid", user.get_id()).
                             when().
@@ -936,14 +937,14 @@ public class UserTest extends VertxJunitSupport {
                     .extract().path("avatar");
             LOG.info(avatarId);
 
-            byte[] byteArray = given().pathParam("avatar", avatarId)
+            byte[] byteArray = given()
+                    .pathParam("avatar", avatarId)
                     .get(BASE_URL + "/file/" + DBCollections.USER + "/{avatar}")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
 
             Assert.assertEquals("Files must have same size",
-                    byteArray.length,
-                    vertx.fileSystem().propsBlocking("src/test/resources/avatar.jpg").size());
+                    new File("src/test/resources/avatar.jpg").length(), byteArray.length);
             async.complete();
         }).fail(e -> Assert.fail(e.getMessage()));
         async.await(TIMEOUT);
@@ -1007,9 +1008,10 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getAvatarWithWrongAvatarId() {
-        given().pathParam("avatar", "blabla")
+        given()
+                .pathParam("avatar", "blabla")
                 .get(BASE_URL + "/file/" + DBCollections.USER + "/{avatar}")
-                .then().assertThat().statusCode(404);
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
     }
 
     /**
@@ -1017,9 +1019,10 @@ public class UserTest extends VertxJunitSupport {
      */
     @Test
     public void getAvatarWithWrongCollection() {
-        given().pathParam("avatar", "bla")
+        given()
+                .pathParam("avatar", "bla")
                 .get(BASE_URL + "/file/toto/{avatar}")
-                .then().assertThat().statusCode(404);
+                .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
     }
 
     /**

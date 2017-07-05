@@ -20,6 +20,7 @@ package com.qaobee.hive.test.config;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -71,6 +72,9 @@ import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
  */
 @RunWith(VertxUnitRunner.class)
 public class VertxJunitSupport implements JSDataMongoTest {
+    /**
+     * The constant LOG.
+     */
     protected static final Logger LOG = LoggerFactory.getLogger(VertxJunitSupport.class);
     /**
      * The constant LOCALE.
@@ -96,6 +100,9 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * The constant BASE_URL.
      */
     protected static final String BASE_URL = "http://localhost:8888";
+    /**
+     * The constant TIMEOUT.
+     */
     protected static final long TIMEOUT = 5000L;
     /**
      * The constant config.
@@ -140,6 +147,15 @@ public class VertxJunitSupport implements JSDataMongoTest {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 
     }
+
+    /**
+     * Unconfigure rest assured.
+     */
+    @AfterClass
+    public static void unconfigureRestAssured() {
+        RestAssured.reset();
+    }
+
     /**
      * Find free port.
      *
@@ -164,7 +180,19 @@ public class VertxJunitSupport implements JSDataMongoTest {
     }
 
     /**
+     * Gets base url.
+     *
+     * @param s the s
+     * @return the base url
+     */
+    protected static String getBaseURL(String s) {
+        return BASE_URL + "/api/v" + Module.VERSION + s;
+    }
+
+    /**
      * Prints the info.
+     *
+     * @param context the context
      */
     @Before
     public void printInfo(TestContext context) {
@@ -192,6 +220,11 @@ public class VertxJunitSupport implements JSDataMongoTest {
         async.await(TIMEOUT);
     }
 
+    /**
+     * Clean datas.
+     *
+     * @param context the context
+     */
     @After
     public void cleanDatas(TestContext context) {
         Async async = context.async();

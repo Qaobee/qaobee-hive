@@ -24,10 +24,13 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
+import com.qaobee.hive.services.ActivityCfgService;
+import com.qaobee.hive.services.AssetsService;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.MailUtils;
+import com.qaobee.hive.technical.utils.QaobeeAuthHandler;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.impl.HabilitUtilsImpl;
 import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
@@ -42,6 +45,7 @@ import io.vertx.ext.mail.MailClient;
 import io.vertx.ext.mail.MailConfig;
 import io.vertx.ext.mail.StartTLSOptions;
 import io.vertx.ext.web.client.WebClient;
+import io.vertx.ext.web.handler.AuthHandler;
 
 import java.util.Locale;
 
@@ -74,6 +78,7 @@ public class GuiceModule extends AbstractModule {
         // TECHNICAL MODULES
         bind(MongoDB.class).to(MongoDBImpl.class).in(Singleton.class);
         bind(WebClient.class).toInstance(WebClient.create(vertx));
+        bind(AuthHandler.class).toInstance(new QaobeeAuthHandler());
         MailConfig mailConfig = new MailConfig();
         mailConfig.setHostname(config.getJsonObject(MAIL_CONF_KEY).getString("host"));
         mailConfig.setPort(config.getJsonObject(MAIL_CONF_KEY).getInteger("port"));
@@ -105,7 +110,6 @@ public class GuiceModule extends AbstractModule {
         bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
 
         // DAO
-        bind(ActivityCfgDAO.class).to(ActivityCfgDAOImpl.class).in(Singleton.class);
         bind(ActivityDAO.class).to(ActivityDAOImpl.class).in(Singleton.class);
         bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
         bind(NotificationsDAO.class).to(NotificationsDAOImpl.class).in(Singleton.class);
@@ -121,7 +125,6 @@ public class GuiceModule extends AbstractModule {
         bind(SignupDAO.class).to(SignupDAOImpl.class).in(Singleton.class);
         bind(SandBoxDAO.class).to(SandBoxDAOImpl.class).in(Singleton.class);
         bind(SecurityDAO.class).to(SecurityDAOImpl.class).in(Singleton.class);
-        bind(AssetDAO.class).to(AssetDAOImpl.class).in(Singleton.class);
         bind(FeedbackDAO.class).to(FeedbackDAOImpl.class).in(Singleton.class);
         bind(FeedbackDAO.class).to(FeedbackDAOImpl.class).in(Singleton.class);
         bind(EffectiveDAO.class).to(EffectiveDAOImpl.class).in(Singleton.class);
@@ -131,5 +134,10 @@ public class GuiceModule extends AbstractModule {
         bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
         bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
         bind(CRMDao.class).to(CRMDaoImpl.class).in(Singleton.class);
+
+        // Services
+        bind(AssetsService.class).toInstance(AssetsService.createProxy(vertx, AssetsService.ADDRESS));
+        bind(ActivityCfgService.class).toInstance(ActivityCfgService.createProxy(vertx, ActivityCfgService.ADDRESS));
+
     }
 }

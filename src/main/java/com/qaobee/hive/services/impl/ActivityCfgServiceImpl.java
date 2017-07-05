@@ -17,42 +17,56 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.api.v1.commons.settings.ActivityCfgVerticle;
-import com.qaobee.hive.dao.ActivityCfgDAO;
+import com.qaobee.hive.api.v1.commons.settings.ActivityCfgRoute;
+import com.qaobee.hive.services.ActivityCfgService;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 
 
-/**
- * The type Activity cfg dao.
- */
-public class ActivityCfgDAOImpl implements ActivityCfgDAO {
+@ProxyService(address = ActivityCfgService.ADDRESS, iface = ActivityCfgService.class)
+public class ActivityCfgServiceImpl implements ActivityCfgService {
 
     @Inject
     private MongoClientCustom mongoClient;
     @Inject
     private MongoDB mongoDB;
 
+    private Vertx vertx;
+
+    public ActivityCfgServiceImpl(Vertx vertx) {
+        super();
+        this.vertx = vertx;
+    }
+
+    /**
+     * Gets activity cfg params.
+     *
+     * @param activityId    the activity id
+     * @param countryId     the country id
+     * @param dateRef       the date ref
+     * @param paramField    the param field
+     * @param resultHandler the result handler
+     */
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField) {
-        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
-        // $MATCH section
+    public void getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject dbObjectParent = new JsonObject()
-                .put(ActivityCfgVerticle.PARAM_ACTIVITY_ID, activityId)
-                .put(ActivityCfgVerticle.PARAM_COUNTRY_ID, countryId)
+                .put(ActivityCfgRoute.PARAM_ACTIVITY_ID, activityId)
+                .put(ActivityCfgRoute.PARAM_COUNTRY_ID, countryId)
                 .put("startDate", new JsonObject().put("$lte", dateRef))
                 .put("endDate", new JsonObject().put("$gte", dateRef));
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
@@ -69,35 +83,39 @@ public class ActivityCfgDAOImpl implements ActivityCfgDAO {
             if (res.succeeded()) {
                 JsonArray resultJSon = res.result().getJsonArray("result");
                 if (resultJSon.size() != 1 || !resultJSon.getJsonObject(0).containsKey(paramField)) {
-                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")"));
+                    resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")")));
                 } else {
-                    deferred.resolve(resultJSon);
+                    resultHandler.handle(Future.succeededFuture(resultJSon));
                 }
             } else {
-                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause()));
+                resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, res.cause())));
             }
         });
-        return deferred.promise();
     }
 
+    /**
+     * Gets activity cfg.
+     *
+     * @param activityId    the activity id
+     * @param countryId     the country id
+     * @param dateRef       the date ref
+     * @param resultHandler the result handler
+     */
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getActivityCfg(String activityId, String countryId, Long dateRef) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        // Creation of request
+    public void getActivityCfg(String activityId, String countryId, Long dateRef, Handler<AsyncResult<JsonObject>> resultHandler) {
         CriteriaBuilder criterias = new CriteriaBuilder()
-                .add(ActivityCfgVerticle.PARAM_ACTIVITY_ID, activityId)
-                .add(ActivityCfgVerticle.PARAM_COUNTRY_ID, countryId)
+                .add(ActivityCfgRoute.PARAM_ACTIVITY_ID, activityId)
+                .add(ActivityCfgRoute.PARAM_COUNTRY_ID, countryId)
                 .between("startDate", "endDate", dateRef);
         // Call to mongo
         mongoDB.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.ACTIVITY_CFG)
                 .done(res -> {
                     if(res.size()>0) {
-                        deferred.resolve(res.getJsonObject(0));
+                        resultHandler.handle(Future.succeededFuture(res.getJsonObject(0)));
                     } else {
-                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found"));
+                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "no data found")));
                     }
                 })
-                .fail(deferred::reject);
-        return deferred.promise();
+                .fail(e-> resultHandler.handle(Future.failedFuture(e)));
     }
 }
