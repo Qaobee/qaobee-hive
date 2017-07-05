@@ -146,7 +146,7 @@
       "path": "/3.0/lists/883987d33d"
     },
     "mailer.mod": {
-      "test": true,
+      "test": false,
       "host": "ssl0.ovh.net",
       "port": 465,
       "ssl": true,
