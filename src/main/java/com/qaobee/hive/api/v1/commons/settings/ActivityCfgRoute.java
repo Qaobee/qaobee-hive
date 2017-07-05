@@ -33,7 +33,7 @@ import javax.inject.Inject;
 /**
  * The type Activity cfg verticle.
  */
-@VertxRoute(rootPath = "/api/v" + Module.VERSION + "/commons/settings/activitycfg")
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/activitycfg")
 public class ActivityCfgRoute extends AbstractRoute {
     public static final String PARAM_FIELD_LIST = "paramFieldList";
     public static final String PARAM_DATE = "date";

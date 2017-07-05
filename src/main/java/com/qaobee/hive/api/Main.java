@@ -31,12 +31,15 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import org.apache.commons.lang3.StringUtils;
@@ -133,11 +136,11 @@ public class Main extends AbstractGuiceVerticle {
      * @param routingContext the req
      */
     private void enableCors(final RoutingContext routingContext) {
-        if (cors.getBoolean("enabled")) {
+       /* if (cors.getBoolean("enabled")) {
             routingContext.response().headers().add("Access-Control-Allow-Origin", "*");
             routingContext.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
             routingContext.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
-        }
+        }*/
     }
 
     /**
@@ -152,15 +155,33 @@ public class Main extends AbstractGuiceVerticle {
     @Override
     public void start(Future<Void> startFuture) {
         super.inject(this);
+        String env = System.getenv("ENV");
+        if (StringUtils.isBlank(env)) {
+            env = "DEV";
+        }
         ProxyService.Loader.load("com.qaobee.hive.services.impl", injector, vertx);
         final Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
-        router.optionsWithRegex(".*").handler(req -> {
+        if ("DEV".equals(env)) {
+            router.route().handler(CorsHandler.create("*")
+                    .allowedMethod(HttpMethod.GET)
+                    .allowedMethod(HttpMethod.POST)
+                    .allowedMethod(HttpMethod.PUT)
+                    .allowedMethod(HttpMethod.DELETE)
+                    .allowedHeader("X-Requested-With")
+                    .allowedHeader("Content-Type")
+                    .allowedHeader("Origin")
+                    .allowedHeader("token")
+                    .allowedHeader("uid")
+            );
+        }
+        router.route().path("/*").produces("application/json").handler(this::jsonHandler);
+      /*  router.optionsWithRegex(".*").handler(req -> {
             if (config().getJsonObject("cors").getBoolean("enabled", false)) {
                 enableCors(req);
             }
             req.response().end();
-        });
+        });*/
         router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
         VertxRoute.Loader.getRoutesInPackage("com.qaobee.hive.api")
                 .entrySet().stream().sorted(Comparator.comparingInt(e -> e.getKey().order()))
@@ -174,10 +195,19 @@ public class Main extends AbstractGuiceVerticle {
                             }
                         }
                 );
+
         // API Rest
         router.routeWithRegex("^/api/.*").handler(this::handleAPIRequest);
         // Load Verticles
         runWebServer(loadVerticles(), router).done(r -> startFuture.complete()).fail(startFuture::fail);
+    }
+
+    private void jsonHandler(RoutingContext context) {
+        context.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8")
+                .putHeader(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, max-age=0, must-revalidate")
+                .putHeader("Pragma", "no-cache")
+                .putHeader(HttpHeaders.EXPIRES, "0");
+        context.next();
     }
 
     /**

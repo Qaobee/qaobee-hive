@@ -186,7 +186,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * @return the base url
      */
     protected static String getBaseURL(String s) {
-        return BASE_URL + "/api/v" + Module.VERSION + s;
+        return BASE_URL + "/api/" + Module.VERSION + s;
     }
 
     /**
