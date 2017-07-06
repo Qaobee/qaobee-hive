@@ -138,7 +138,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Start mongo server.
      */
     @BeforeClass
-    public static void startMongoServer() {
+    public static void init() {
         RestAssured.defaultParser = Parser.JSON;
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .addHeader(ACCEPT_LANGUAGE, LOCALE)

@@ -228,7 +228,7 @@ public class ShippingTest extends VertxJunitSupport {
                             .put("planId", 1)
                             .put("token", "tok_1AMilbArxO1IWesL3vBI9RXu")
                     );
-
+            System.out.println(getURL(ShippingVerticle.PAY));
             given().header(TOKEN, u.getAccount().getToken())
                     .body(request.encode())
                     .when().post(getURL(ShippingVerticle.PAY))

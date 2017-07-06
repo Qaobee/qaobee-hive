@@ -23,6 +23,7 @@ import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -31,6 +32,7 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
@@ -43,7 +45,6 @@ import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.protocol.HTTP;
 import org.jdeferred.Deferred;
 import org.jdeferred.DeferredManager;
 import org.jdeferred.Promise;
@@ -79,9 +80,6 @@ public class Main extends AbstractGuiceVerticle {
     @Inject
     @Named("runtime")
     private JsonObject runtime;
-    @Inject
-    @Named("cors")
-    private JsonObject cors;
 
     /**
      * @param restMod Class to scan
@@ -102,24 +100,21 @@ public class Main extends AbstractGuiceVerticle {
         if (json.containsKey(FILE_SERVE)) {
             final File f = new File(json.getString(FILE_SERVE));
             routingContext.response().putHeader("Content-Description", "File Transfer")
-                    .putHeader(HTTP.CONTENT_TYPE, json.getString(HTTP.CONTENT_TYPE))
+                    .putHeader(HttpHeaders.CONTENT_TYPE, json.getString(HttpHeaders.CONTENT_TYPE.toString()))
                     .putHeader("Content-Disposition", "attachment; filename=" + f.getName())
                     .putHeader("Expires", "0")
                     .putHeader("Cache-Control", "must-revalidate")
                     .putHeader("Pragma", "public")
-                    .putHeader(HTTP.CONTENT_LEN, String.valueOf(f.length()));
-            enableCors(routingContext);
+                    .putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(f.length()));
             routingContext.response().sendFile(f.getAbsolutePath());
         } else {
-            enableCors(routingContext);
-            routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
+            routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
             routingContext.response().end(response);
         }
     }
 
     private void handleJsonArray(RoutingContext routingContext, String response) {
-        enableCors(routingContext);
-        routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON).end(response);
+        routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).end(response);
     }
 
     private static void manage404Error(RoutingContext routingContext) {
@@ -127,20 +122,7 @@ public class Main extends AbstractGuiceVerticle {
                 .put(Constants.STATUS, false)
                 .put(MESSAGE, "Nothing here")
                 .put(HTTP_CODE, 404);
-        routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
-    }
-
-    /**
-     * Enable cors.
-     *
-     * @param routingContext the req
-     */
-    private void enableCors(final RoutingContext routingContext) {
-       /* if (cors.getBoolean("enabled")) {
-            routingContext.response().headers().add("Access-Control-Allow-Origin", "*");
-            routingContext.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-            routingContext.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
-        }*/
+        routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
     }
 
     /**
@@ -176,12 +158,6 @@ public class Main extends AbstractGuiceVerticle {
             );
         }
         router.route().path("/*").produces("application/json").handler(this::jsonHandler);
-      /*  router.optionsWithRegex(".*").handler(req -> {
-            if (config().getJsonObject("cors").getBoolean("enabled", false)) {
-                enableCors(req);
-            }
-            req.response().end();
-        });*/
         router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
         VertxRoute.Loader.getRoutesInPackage("com.qaobee.hive.api")
                 .entrySet().stream().sorted(Comparator.comparingInt(e -> e.getKey().order()))
@@ -283,7 +259,7 @@ public class Main extends AbstractGuiceVerticle {
                                 .put(MESSAGE, e.getMessage())
                                 .put("code", e.getCode().name());
                         routingContext.response()
-                                .putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+                                .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                                 .setStatusCode(e.getCode().getCode())
                                 .end(jsonResp.encode());
                     }
@@ -291,7 +267,7 @@ public class Main extends AbstractGuiceVerticle {
                     int code = res.getInteger(HTTP_CODE);
                     res.remove(HTTP_CODE);
                     routingContext.response()
-                            .putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+                            .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                             .setStatusCode(code)
                             .end(res.encode());
                 }
@@ -301,41 +277,37 @@ public class Main extends AbstractGuiceVerticle {
         }
     }
 
-    private void handleResponse(AsyncResult<Message<Object>> message, RoutingContext routingContext) {
-        try {
-            if (message.succeeded()) {
-                final String response = (String) message.result().body();
-                if (response.startsWith("[") || !response.startsWith("{")) {
-                    handleJsonArray(routingContext, response);
-                } else {
-                    handleJsonObject(routingContext, response);
-                }
+    private void handleResponse(AsyncResult<Message<Object>> message, RoutingContext context) {
+        if (message.succeeded()) {
+            final String response = (String) message.result().body();
+            if (response.startsWith("[") || !response.startsWith("{")) {
+                handleJsonArray(context, response);
             } else {
-                throw message.cause();
+                handleJsonObject(context, response);
             }
-        } catch (Throwable ex) {
-            handleException(ex, routingContext);
+        } else {
+            handleException((ReplyException) message.cause(), context);
         }
     }
 
-    private void handleException(Throwable ex, RoutingContext routingContext) {
-        routingContext.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON);
-        routingContext.response().setStatusCode(500);
-        enableCors(routingContext);
+    private void handleException(ReplyException ex, RoutingContext context) {
+        context.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+        context.response().setStatusCode(500);
         if (ex.getMessage() != null) {
             String exStr = ex.getMessage();
             if (ex.getMessage().startsWith("{")) {
                 JsonObject jsonEx = new JsonObject(ex.getMessage());
-                if (!"true".equals(routingContext.request().getHeader("X-qaobee-stack"))) {
+                context.response().setStatusCode(ExceptionCodes.valueOf(jsonEx.getString("code", "INTERNAL_ERROR")).getCode());
+                if (!"true".equals(context.request().getHeader("X-qaobee-stack"))) {
                     jsonEx.remove("stackTrace");
                     jsonEx.remove("suppressed");
                 }
                 exStr = jsonEx.encode();
             }
             LOG.error(exStr);
-            routingContext.response().end(exStr);
+            context.response().end(exStr);
         } else {
-            manage404Error(routingContext);
+            manage404Error(context);
         }
     }
 

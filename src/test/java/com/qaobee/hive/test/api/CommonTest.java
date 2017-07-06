@@ -44,13 +44,4 @@ public class CommonTest extends VertxJunitSupport {
         given().when().head(BASE_URL + "/nothing/real")
                 .then().assertThat().statusCode(404);
     }
-
-    /**
-     * Test cors request
-     */
-    @Test
-    public void testCORSRequest() {
-        given().when().options(BASE_URL + "/nothing/real")
-                .then().assertThat().statusCode(200);
-    }
 }
