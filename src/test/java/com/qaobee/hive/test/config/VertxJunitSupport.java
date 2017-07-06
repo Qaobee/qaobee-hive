@@ -211,6 +211,11 @@ public class VertxJunitSupport implements JSDataMongoTest {
                 Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
                 injector.injectMembers(this);
                 LOG.info("About to execute : " + name.getMethodName());
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 async.complete();
             });
         } catch (IOException e) {
