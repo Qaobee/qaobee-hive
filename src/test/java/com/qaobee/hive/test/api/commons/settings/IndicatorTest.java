@@ -20,14 +20,16 @@ package com.qaobee.hive.test.api.commons.settings;
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.api.v1.commons.settings.IndicatorVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -41,14 +43,19 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets indicator test.
      */
     @Test
-    public void getIndicatorTest() {
+    public void getIndicatorTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(IndicatorVerticle.PARAM_ID, "559a9294889089a442f3d464")
-                .when().get(getURL(IndicatorVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body("code", notNullValue())
-                .body("code", is("hightPerson"));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(IndicatorVerticle.PARAM_ID, "559a9294889089a442f3d464")
+                    .when().get(getURL(IndicatorVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body("code", notNullValue())
+                    .body("code", is("hightPerson"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -65,36 +72,51 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets indicator with wrong http method test.
      */
     @Test
-    public void getIndicatorWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().post(getURL(IndicatorVerticle.GET))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+    public void getIndicatorWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().post(getURL(IndicatorVerticle.GET))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator with wrong parameter test.
      */
     @Test
-    public void getIndicatorWithWrongParameterTest() {
+    public void getIndicatorWithWrongParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .queryParam(IndicatorVerticle.PARAM_ID, "blabla")
-                .when().get(getURL(IndicatorVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .queryParam(IndicatorVerticle.PARAM_ID, "blabla")
+                    .when().get(getURL(IndicatorVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator with missing parameter test.
      */
     @Test
-    public void getIndicatorWithMissingParameterTest() {
+    public void getIndicatorWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().get(getURL(IndicatorVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(IndicatorVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 
@@ -102,20 +124,27 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets list indicator test.
      */
     @Test
-    public void getListIndicatorTest() {
+    public void getListIndicatorTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
-        User user = generateLoggedUser();
+        generateLoggedUser().then(u -> {
+            getCountry("CNTR-250-FR-FRA").then(country -> {
+                getActivity("ACT-HAND", u).then(activity -> {
+                    final JsonObject params = new JsonObject();
+                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_SCREEN, new JsonArray().add("COLLECTE"));
 
-        final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
-        params.putArray(IndicatorVerticle.PARAM_SCREEN, new JsonArray(new String[]{"COLLECTE"}));
-
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(45));
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_LIST))
+                            .then().assertThat().statusCode(200)
+                            .body("", hasSize(45));
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -132,65 +161,85 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets list indicator with wrong http method test.
      */
     @Test
-    public void getListIndicatorWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().get(getURL(IndicatorVerticle.GET_LIST))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+    public void getListIndicatorWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(IndicatorVerticle.GET_LIST))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list indicator with missing parameter test.
      */
     @Test
-    public void getListIndicatorWithMissingParameterTest() {
+    public void getListIndicatorWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
-        User user = generateLoggedUser();
+        generateLoggedUser().then(user -> {
+            getActivity("ACT-HAND", user).then(activity -> {
+                getCountry("CNTR-250-FR-FRA").then(country -> {
+                    final JsonObject params = new JsonObject();
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_SCREEN, new JsonArray().add("COLLECTE"));
+                    given().header(TOKEN, user.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_LIST))
+                            .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                            .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-        final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
-        params.putArray(IndicatorVerticle.PARAM_SCREEN, new JsonArray(new String[]{"COLLECTE"}));
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
+                    params.remove(IndicatorVerticle.PARAM_ACTIVITY_ID);
+                    given().header(TOKEN, user.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_LIST))
+                            .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                            .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.removeField(IndicatorVerticle.PARAM_ACTIVITY_ID);
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
-        params.removeField(IndicatorVerticle.PARAM_SCREEN);
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.remove(IndicatorVerticle.PARAM_SCREEN);
+                    given().header(TOKEN, user.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_LIST))
+                            .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                            .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator by code test.
      */
     @Test
-    public void getIndicatorByCodeTest() {
+    public void getIndicatorByCodeTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
-        User user = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
-        params.putArray(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[]{"hightPerson"}));
+        generateLoggedUser().then(u -> {
+            getActivity("ACT-HAND", u).then(activity -> {
+                getCountry("CNTR-250-FR-FRA").then(country -> {
+                    final JsonObject params = new JsonObject();
+                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
 
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(1))
-                .body("code", hasItem("hightPerson"));
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .then().assertThat().statusCode(200)
+                            .body("", hasSize(1))
+                            .body("code", hasItem("hightPerson"));
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -207,80 +256,101 @@ public class IndicatorTest extends VertxJunitSupport {
      * Gets indicator by code with wrong http method test.
      */
     @Test
-    public void getIndicatorByCodeWithWrongHttpMethodTest() {
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .when().get(getURL(IndicatorVerticle.GET_BY_CODE))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+    public void getIndicatorByCodeWithWrongHttpMethodTest(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .when().get(getURL(IndicatorVerticle.GET_BY_CODE))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator by code with wrong parameter test.
      */
     @Test
-    public void getIndicatorByCodeWithWrongParameterTest() {
+    public void getIndicatorByCodeWithWrongParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
-        User user = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
-        params.putArray(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[]{"blabla"}));
+        generateLoggedUser().then(u -> {
+            getActivity("ACT-HAND", u).then(activity -> {
+                getCountry("CNTR-250-FR-FRA").then(country -> {
+                    final JsonObject params = new JsonObject();
+                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("blabla"));
 
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(0));
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .then().assertThat().statusCode(200)
+                            .body("", hasSize(0));
 
-        params.putArray(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[]{"hightPerson"}));
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, "123");
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(0));
+                    params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
+                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, "123");
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .then().assertThat().statusCode(200)
+                            .body("", hasSize(0));
 
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, "123");
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(0));
+                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, "123");
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .then().assertThat().statusCode(200)
+                            .body("", hasSize(0));
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets indicator by code with missing parameter test.
      */
     @Test
-    public void getIndicatorByCodeWithMissingParameterTest() {
+    public void getIndicatorByCodeWithMissingParameterTest(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_INDICATOR, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
-        User user = generateLoggedUser();
-        final JsonObject params = new JsonObject();
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.putString(IndicatorVerticle.PARAM_ACTIVITY_ID, getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID));
+        generateLoggedUser().then(u -> {
+            getActivity("ACT-HAND", u).then(activity -> {
+                getCountry("CNTR-250-FR-FRA").then(country -> {
+                    final JsonObject params = new JsonObject();
+                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
 
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                            .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-        params.putArray(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray(new String[]{"hightPerson"}));
-        params.removeField(IndicatorVerticle.PARAM_COUNTRY_ID);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                    params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
+                    params.remove(IndicatorVerticle.PARAM_COUNTRY_ID);
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                            .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-        params.putString(IndicatorVerticle.PARAM_COUNTRY_ID, getCountry("CNTR-250-FR-FRA").getField(CountryVerticle.PARAM_ID));
-        params.removeField(IndicatorVerticle.PARAM_ACTIVITY_ID);
-        given().header(TOKEN, generateLoggedUser().getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
+                    params.remove(IndicatorVerticle.PARAM_ACTIVITY_ID);
+                    given().header(TOKEN, u.getAccount().getToken())
+                            .body(params.encode())
+                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                            .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                    async.complete();
+                }).fail(e -> Assert.fail(e.getMessage()));
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
 }

@@ -22,7 +22,7 @@ package com.qaobee.hive.test.api;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 
 /**
  * The type Common test.
@@ -43,14 +43,5 @@ public class CommonTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(404);
         given().when().head(BASE_URL + "/nothing/real")
                 .then().assertThat().statusCode(404);
-    }
-
-    /**
-     * Test cors request
-     */
-    @Test
-    public void testCORSRequest() {
-        given().when().options(BASE_URL + "/nothing/real")
-                .then().assertThat().statusCode(200);
     }
 }

@@ -25,15 +25,16 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 
@@ -85,22 +86,20 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     private static final String SENDER_ID = "senderId";
 
     @Inject
-    private Utils utils;
-    @Inject
     private NotificationsDAO notificationsDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(LIST, this::notificationList)
-                .registerHandler(DEL, this::delete)
-                .registerHandler(READ, this::markAsRead)
-                .registerHandler(NOTIFY, this::notify)
-                .registerHandler(ADD_TO_USER, this::addNotificationToUser)
-                .registerHandler(ADD_TO_SANDBOX, this::addNotificationToSandBox);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(LIST, this::notificationList)
+                .add(DEL, this::delete)
+                .add(READ, this::markAsRead)
+                .add(NOTIFY, this::notifyPeople)
+                .add(ADD_TO_USER, this::addNotificationToUser)
+                .add(ADD_TO_SANDBOX, this::addNotificationToSandBox)
+                .register(startFuture);
     }
+
 
     /**
      * Add a notification to a collection
@@ -123,10 +122,10 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
         vertx.eventBus().send(NOTIFY, new JsonObject()
-                .putString("id", notification.getString(TARGET_ID))
-                .putString(TARGET, "SB_SandBox")
-                .putObject(NOTIFICATION, notification), (Handler<Message<JsonObject>>) event ->
-                utils.sendStatus(event.body().getBoolean("status", false), message)
+                        .put("id", notification.getString(TARGET_ID))
+                        .put(TARGET, "SB_SandBox")
+                        .put(NOTIFICATION, notification),
+                (Handler<AsyncResult<Message<JsonObject>>>) event -> utils.sendStatus(event.result().body().getBoolean("status", false), message)
         );
     }
 
@@ -151,20 +150,22 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject notification = new JsonObject(req.getBody());
         vertx.eventBus().send(NOTIFY, new JsonObject()
-                .putString("id", notification.getString(TARGET_ID))
-                .putString(TARGET, "User")
-                .putObject(NOTIFICATION, notification), (Handler<Message<JsonObject>>) event ->
-                utils.sendStatus(event.body().getBoolean("status", false), message)
+                .put("id", notification.getString(TARGET_ID))
+                .put(TARGET, "User")
+                .put(NOTIFICATION, notification), (Handler<AsyncResult<Message<JsonObject>>>) event ->
+                utils.sendStatus(event.result().body().getBoolean("status", false), message)
         );
     }
 
-    private void notify(Message<JsonObject> message) {
+    private void notifyPeople(Message<JsonObject> message) {
         try {
-            utils.testMandatoryParams(message.body().encode(), "id", TARGET, NOTIFICATION);
-            utils.sendStatusJson(notificationsDAO.notify(message.body().getString("id"),
-                    message.body().getString(TARGET), message.body().getObject(NOTIFICATION),
-                    message.body().getObject(NOTIFICATION).getArray("exclude")
-            ), message);
+            utils.testMandatoryParams(message.body(), "id", TARGET, NOTIFICATION);
+            notificationsDAO.notify(message.body().getString("id"),
+                    message.body().getString(TARGET), message.body().getJsonObject(NOTIFICATION),
+                    message.body().getJsonObject(NOTIFICATION).getJsonArray("exclude")
+            )
+                    .done(r -> utils.sendStatusJson(r, message))
+                    .fail(e -> utils.sendStatusJson(false, message));
         } catch (final QaobeeException e) {
             LOG.error(e.getMessage(), e);
             utils.sendStatusJson(false, message);
@@ -181,16 +182,13 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = PARAM_NOTIF_ID, scope = Rule.Param.REQUEST)
+    @Rule(address = READ, method = Constants.POST, logged = true, mandatoryParams = PARAM_NOTIF_ID,
+            scope = Rule.Param.REQUEST)
     private void markAsRead(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            notificationsDAO.markAsRead(req.getParams().get(PARAM_NOTIF_ID).get(0));
-            utils.sendStatus(true, message);
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        notificationsDAO.markAsRead(req.getParams().get(PARAM_NOTIF_ID).get(0))
+                .done(json -> utils.sendStatus(true, message))
+                .fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -203,16 +201,13 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status
      * @apiError HTTP_ERROR wrong request's method
      */
-    @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = PARAM_NOTIF_ID, scope = Rule.Param.REQUEST)
+    @Rule(address = DEL, method = Constants.DELETE, logged = true, mandatoryParams = PARAM_NOTIF_ID,
+            scope = Rule.Param.REQUEST)
     private void delete(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            notificationsDAO.delete(req.getParams().get(PARAM_NOTIF_ID).get(0));
-            utils.sendStatus(true, message);
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        notificationsDAO.delete(req.getParams().get(PARAM_NOTIF_ID).get(0))
+                .done(json -> utils.sendStatus(true, message))
+                .fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -230,19 +225,14 @@ public class NotificationsVerticle extends AbstractGuiceVerticle {
     @Rule(address = LIST, method = Constants.GET, logged = true)
     private void notificationList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            int start = 0;
-            if (req.getParams() != null && req.getParams().containsKey(PARAM_START)) {
-                start = Integer.parseInt(req.getParams().get(PARAM_START).get(0));
-            }
-            int limit = -1;
-            if (req.getParams() != null && req.getParams().containsKey(PARAM_LIMIT)) {
-                limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
-            }
-            message.reply(notificationsDAO.getList(req.getUser().get_id(), start, limit).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
+        int start = 0;
+        if (req.getParams() != null && req.getParams().containsKey(PARAM_START)) {
+            start = Integer.parseInt(req.getParams().get(PARAM_START).get(0));
         }
+        int limit = -1;
+        if (req.getParams() != null && req.getParams().containsKey(PARAM_LIMIT)) {
+            limit = Integer.parseInt(req.getParams().get(PARAM_LIMIT).get(0));
+        }
+        replyJsonArray(message, notificationsDAO.getList(req.getUser().get_id(), start, limit));
     }
 }

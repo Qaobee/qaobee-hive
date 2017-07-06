@@ -30,9 +30,9 @@ import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.config.IRuntimeConfig;
 import de.flapdoodle.embed.process.config.io.ProcessOutput;
 import de.flapdoodle.embed.process.runtime.Network;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.json.JsonObject;
 
 import java.io.IOException;
 
@@ -75,7 +75,7 @@ class JunitMongoSingleton {
         System.out.println("testing process : " + process);
         if (process == null || !process.isProcessRunning()) {
             System.out.println("Running mongod");
-            int port = config.getObject("mongo.persistor").getInteger("port");
+            int port = config.getJsonObject("mongo.db").getInteger("port");
             IMongodConfig mongodConfig = new MongodConfigBuilder()
                     .version(Version.Main.V2_4)
                     .net(new Net(port, Network.localhostIsIPv6()))

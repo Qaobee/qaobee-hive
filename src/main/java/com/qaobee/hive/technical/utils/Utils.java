@@ -23,11 +23,13 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.vertx.java.core.MultiMap;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.MultiMap;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.RoutingContext;
+import org.jdeferred.Promise;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +40,14 @@ import java.util.Map;
  * The interface Utils.
  */
 public interface Utils {
+    /**
+     * Wrap request request wrapper.
+     *
+     * @param routingContext the routing context
+     * @return the request wrapper
+     */
+    RequestWrapper wrapRequest(RoutingContext routingContext);
+
     /**
      * Send error.
      *
@@ -55,14 +65,6 @@ public interface Utils {
      * @throws NoSuchMethodException si les deux ne correspondent pas
      */
     void testHTTPMetod(String allowed, String tested) throws NoSuchMethodException;
-
-    /**
-     * To map.
-     *
-     * @param multiMap the multi map
-     * @return the map
-     */
-    Map<String, List<String>> toMap(MultiMap multiMap);
 
     /**
      * Send error.
@@ -154,7 +156,7 @@ public interface Utils {
      * @param fields array of fields to test
      * @throws QaobeeException explain missing fields
      */
-    void testMandatoryParams(Map<String, ?> map, String... fields) throws QaobeeException;
+    void testMandatoryParams(Map<String, List<String>> map, String... fields) throws QaobeeException;
 
     /**
      * Test mandatory params.
@@ -163,23 +165,29 @@ public interface Utils {
      * @param fields array of fields to test
      * @throws QaobeeException explain missing fields
      */
-    void testMandatoryParams(String json, String... fields) throws QaobeeException;
+    void testMandatoryParams(JsonObject json, String... fields) throws QaobeeException;
 
     /**
      * Is user logged.
      *
      * @param request the request
      * @return the User
-     * @throws QaobeeException the qaobee exception
      */
-    User isUserLogged(RequestWrapper request) throws QaobeeException;
+    Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request);
 
     /**
      * Is admin.
      *
      * @param request the request
      * @return the boolean
-     * @throws QaobeeException the qaobee exception
      */
-    User isLoggedAndAdmin(RequestWrapper request) throws QaobeeException;
+    Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request);
+
+    /**
+     * Test mandatory params.
+     *
+     * @param params the params
+     * @param fields the fields
+     */
+    void testMandatoryParams(MultiMap params, String... fields) throws QaobeeException;
 }

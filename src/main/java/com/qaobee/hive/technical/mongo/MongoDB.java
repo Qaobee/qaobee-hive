@@ -19,92 +19,92 @@
 
 package com.qaobee.hive.technical.mongo;
 
-import com.mongodb.DB;
-import com.mongodb.DBObject;
-import com.mongodb.MongoException;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * The interface Mongo dB.
+ * The interface Mongo db.
  */
 public interface MongoDB {
 
     /**
-     * Save string.
+     * Upsert.
      *
-     * @param o object to save
-     * @return id string
-     * @throws QaobeeException can't save
+     * @param o the o
+     *
+     * @return the promise
      */
-    String save(Object o) throws QaobeeException;
+    Promise<String, QaobeeException, Integer> upsert(Object o);
 
     /**
-     * Update string.
+     * Upsert.
      *
      * @param document   the document
      * @param collection the collection
-     * @return the string
-     * @throws MongoException the mongo exception
-     */
-    String update(JsonObject document, String collection);
-
-    /**
-     * Update a document.
      *
-     * @param query      (JSonObject) : The selection criteria for the update.
-     * @param set        (JSonObject) : The modifications to apply.(need to have a                   {                   "$set" :                   {                   ...                   }                   }
-     * @param collection (Class) : collection to update
-     * @return string string
-     * @throws MongoException the mongo exception
+     * @return the promise
      */
-    String update(JsonObject query, JsonObject set, Class<?> collection);
+    Promise<String, QaobeeException, Integer> upsert(JsonObject document, String collection);
 
     /**
-     * Saves a document in a colection.
+     * Upsert.
      *
-     * @param document   object to save
-     * @param collection target
-     * @return id string
-     * @throws QaobeeException the qaobee exception
+     * @param query      the query
+     * @param document   the document
+     * @param collection the collection
+     *
+     * @return the promise
      */
-    String save(JsonObject document, String collection) throws QaobeeException;
+    Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, Class<?> collection);
 
     /**
-     * Get a document by id.
+     * Upsert.
+     *
+     * @param query      the query
+     * @param document   the document
+     * @param collection the collection
+     *
+     * @return the promise
+     */
+    Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, String collection);
+
+    /**
+     * Gets by id.
      *
      * @param id         the id
      * @param collection the collection
-     * @return the document
-     * @throws QaobeeException not found
+     *
+     * @return the by id
      */
-    JsonObject getById(String id, String collection) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer>  getById(String id, String collection);
 
     /**
-     * Get a document by id.
+     * Gets by id.
      *
      * @param id         the id
      * @param collection the collection
-     * @param minimal    fields to retrieve
-     * @return the document
-     * @throws QaobeeException not found
-     */
-    JsonObject getById(String id, String collection, List<String> minimal) throws QaobeeException;
-
-    /**
-     * Gets the minimal.
+     * @param minimal    the minimal
      *
-     * @param minimal minimal list of fields to retrieve
-     * @return a map
+     * @return the by id
      */
-    Map<String, Boolean> getMinimal(List<String> minimal);
+    Promise<JsonObject, QaobeeException, Integer> getById(String id, String collection, List<String> minimal);
 
     /**
-     * Find by criterias json array.
+     * Gets minimal.
+     *
+     * @param minimal the minimal
+     *
+     * @return the minimal
+     */
+    JsonObject getMinimal(List<String> minimal);
+
+    /**
+     * Find by criterias.
      *
      * @param criteria   the criteria
      * @param fields     the fields
@@ -112,38 +112,31 @@ public interface MongoDB {
      * @param order      the order
      * @param limit      the limit
      * @param collection the collection
-     * @return the json array
+     *
+     * @return the promise
      */
-    JsonArray findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit,
-                              String collection);
+    Promise<JsonArray, QaobeeException, Integer> findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, String collection);
 
     /**
-     * Find all documents with minimal fields and a sort order.
+     * Find all.
      *
-     * @param fields     fields to include
-     * @param sort       sort field
-     * @param order      sort order
-     * @param limit      limit
-     * @param collection collection
-     * @return an array
-     */
-    JsonArray findAll(List<String> fields, String sort, int order, int limit, String collection);
-
-    /**
-     * Aggregate json array.
-     *
-     * @param field      the field
-     * @param pipeline   the pipeline
+     * @param fields     the fields
+     * @param sort       the sort
+     * @param order      the order
+     * @param limit      the limit
      * @param collection the collection
-     * @return the json array
-     * @throws QaobeeException the qaobee exception
+     *
+     * @return the promise
      */
-    JsonArray aggregate(String field, List<DBObject> pipeline, String collection) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> findAll(List<String> fields, String sort, int order, int limit, String collection);
 
     /**
-     * Gets db.
+     * Aggregate promise.
      *
-     * @return the db
+     * @param pipelineAggregation the pipeline aggregation
+     * @param collection          the collection
+     *
+     * @return the promise
      */
-    DB getDb();
+    Promise<JsonArray, QaobeeException, Integer> aggregate(JsonArray pipelineAggregation, String collection);
 }

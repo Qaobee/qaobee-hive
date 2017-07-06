@@ -18,20 +18,22 @@
 package com.qaobee.hive.test.api.sandbox.effective;
 
 import com.qaobee.hive.api.Main;
-import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_TeamVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -44,20 +46,24 @@ public class SB_TeamTest extends VertxJunitSupport {
      * Gets my teams list.
      */
     @Test
-    public void getMyTeamsList() {
+    public void getMyTeamsList(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         final Map<String, String> params = new HashMap<>();
         params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
         params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
         params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
         params.put(SB_TeamVerticle.PARAM_ADVERSARY, "false");
-
-        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
-                .queryParams(params)
-                .when().get(getURL(SB_TeamVerticle.GET_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(1))
-                .body("label", hasItem("Cesson-Sevigne A"));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParams(params)
+                    .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("label", hasItem("Cesson-Sevigne A"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -84,68 +90,81 @@ public class SB_TeamTest extends VertxJunitSupport {
      * Gets my teams liste with missing parameters.
      */
     @Test
-    public void getMyTeamsListeWithMissingParameters() {
+    public void getMyTeamsListeWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_TeamVerticle.GET_LIST).mandatoryParams());
-        final Map<String, String> params = new HashMap<>();
-        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
-        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
-        params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
-        params.put(SB_TeamVerticle.PARAM_ADVERSARY, "false");
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_TeamVerticle.GET_LIST).mandatoryParams());
+            final Map<String, String> params = new HashMap<>();
+            params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
+            params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
+            params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
+            params.put(SB_TeamVerticle.PARAM_ADVERSARY, "false");
 
-        params.keySet().stream().filter(mandatoryParams::contains).forEach(k -> {
-            Map<String, String> params2 = new HashMap<>(params);
-            params2.remove(k);
-            given().header(TOKEN, user.getAccount().getToken())
-                    .queryParams(params2)
-                    .when().get(getURL(SB_TeamVerticle.GET_LIST))
-                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        });
+            params.keySet().stream().filter(mandatoryParams::contains).forEach(k -> {
+                Map<String, String> params2 = new HashMap<>(params);
+                params2.remove(k);
+                given().header(TOKEN, user.getAccount().getToken())
+                        .queryParams(params2)
+                        .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                        .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                        .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            });
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets my adversary teams list.
      */
     @Test
-    public void getMyAdversaryTeamsList() {
+    public void getMyAdversaryTeamsList(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         final Map<String, String> params = new HashMap<>();
         params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
         params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
         params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
         params.put(SB_TeamVerticle.PARAM_ADVERSARY, "true");
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParams(params)
+                    .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(7))
+                    .body("label", hasItem("AIX En Provence HB"))
+                    .body("label", hasItem("Nantes HBC"));
 
-        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
-                .queryParams(params)
-                .when().get(getURL(SB_TeamVerticle.GET_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(7))
-                .body("label", hasItem("AIX En Provence HB"))
-                .body("label", hasItem("Nantes HBC"));
+            params.put(SB_TeamVerticle.PARAM_LINK_TEAM_ID, "552d5e08644a77b3a20afdfe");
 
-        params.put(SB_TeamVerticle.PARAM_LINK_TEAM_ID, "552d5e08644a77b3a20afdfe");
-
-        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
-                .queryParams(params)
-                .when().get(getURL(SB_TeamVerticle.GET_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(6));
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParams(params)
+                    .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(6));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets by id.
      */
     @Test
-    public void getById() {
+    public void getById(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
-                .queryParam(SB_TeamVerticle.PARAM_ID, "552d5e08644a77b3a20afdfe")
-                .when().get(getURL(SB_TeamVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("label", is("Cesson-Sevigne A"));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_TeamVerticle.PARAM_ID, "552d5e08644a77b3a20afdfe")
+                    .when().get(getURL(SB_TeamVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("label", is("Cesson-Sevigne A"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -172,33 +191,42 @@ public class SB_TeamTest extends VertxJunitSupport {
      * Gets by id with missing parameters.
      */
     @Test
-    public void getByIdWithMissingParameters() {
+    public void getByIdWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
-                .when().get(getURL(SB_TeamVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(SB_TeamVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add team.
      */
     @Test
-    public void addTeam() {
+    public void addTeam(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         final JsonObject params = new JsonObject()
-                .putString(SB_EventVerticle.PARAM_LABEL, "TheNewTeam")
-                .putString(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f")
-                .putString(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23")
-                .putBoolean(SB_TeamVerticle.PARAM_ENABLE, true)
-                .putBoolean(SB_TeamVerticle.PARAM_ADVERSARY, true);
-
-        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
-                .body(params.encode())
-                .when().post(getURL(SB_TeamVerticle.ADD))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("label", is("TheNewTeam"));
+                .put(SB_EventVerticle.PARAM_LABEL, "TheNewTeam")
+                .put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f")
+                .put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23")
+                .put(SB_TeamVerticle.PARAM_ENABLE, true)
+                .put(SB_TeamVerticle.PARAM_ADVERSARY, true);
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(getURL(SB_TeamVerticle.ADD))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("label", is("TheNewTeam"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -225,36 +253,40 @@ public class SB_TeamTest extends VertxJunitSupport {
      * Update team.
      */
     @Test
-    public void updateTeam() {
+    public void updateTeam(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
 
-        JsonObject team = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_TeamVerticle.PARAM_ID, "552d5e08644a77b3a20afdfe")
-                .when().get(getURL(SB_TeamVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("label", is("Cesson-Sevigne A")).extract().asString());
-        team.putBoolean(SB_TeamVerticle.PARAM_ENABLE, false);
+            JsonObject team = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_TeamVerticle.PARAM_ID, "552d5e08644a77b3a20afdfe")
+                    .when().get(getURL(SB_TeamVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("label", is("Cesson-Sevigne A")).extract().asString());
+            team.put(SB_TeamVerticle.PARAM_ENABLE, false);
 
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(team.encode())
-                .when().put(getURL(SB_TeamVerticle.UPDATE))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("label", is("Cesson-Sevigne A"));
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(team.encode())
+                    .when().put(getURL(SB_TeamVerticle.UPDATE))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("label", is("Cesson-Sevigne A"));
 
-        final Map<String, String> params = new HashMap<>();
-        params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
-        params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
-        params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
-        params.put(SB_TeamVerticle.PARAM_ADVERSARY, "false");
+            final Map<String, String> params = new HashMap<>();
+            params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
+            params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");
+            params.put(SB_TeamVerticle.PARAM_ENABLE, "true");
+            params.put(SB_TeamVerticle.PARAM_ADVERSARY, "false");
 
-        given().header(TOKEN, generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").getAccount().getToken())
-                .queryParams(params)
-                .when().get(getURL(SB_TeamVerticle.GET_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(0));
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParams(params)
+                    .when().get(getURL(SB_TeamVerticle.GET_LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(0));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**

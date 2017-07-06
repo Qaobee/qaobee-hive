@@ -18,46 +18,49 @@
  */
 package com.qaobee.hive.api;
 
-import com.englishtown.promises.Promise;
-import com.englishtown.promises.When;
-import com.qaobee.hive.api.v1.commons.utils.AssetVerticle;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import com.qaobee.hive.technical.vertx.ServerHook;
-import org.apache.commons.io.FilenameUtils;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Future;
+import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServer;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.CorsHandler;
+import io.vertx.ext.web.handler.sockjs.BridgeOptions;
+import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.jdeferred.Deferred;
+import org.jdeferred.DeferredManager;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DefaultDeferredManager;
+import org.jdeferred.impl.DeferredObject;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.AsyncResult;
-import org.vertx.java.core.Future;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.buffer.Buffer;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.http.HttpServer;
-import org.vertx.java.core.http.HttpServerFileUpload;
-import org.vertx.java.core.http.HttpServerRequest;
-import org.vertx.java.core.http.RouteMatcher;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
-import org.vertx.java.core.sockjs.SockJSServer;
-import org.vertx.mods.Mailer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
 import java.util.*;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.*;
+import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 /**
  * The Class Main.
@@ -70,32 +73,13 @@ public class Main extends AbstractGuiceVerticle {
      */
     public static final String FILE_SERVE = "fileserve";
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
-    private static final String COLLECTION = "collection";
-    private static final String APPLICATION_JSON = "application/json";
     private static final String MESSAGE = "message";
     private static final Map<String, Rule> rules = new HashMap<>();
-    @Inject
-    private Utils utils;
+    private static final String HTTP_CODE = "httpCode";
+
     @Inject
     @Named("runtime")
     private JsonObject runtime;
-    @Inject
-    @Named("cors")
-    private JsonObject cors;
-
-    /**
-     * @param req request
-     * @param e   exception
-     */
-    private void handleError(HttpServerRequest req, QaobeeException e) {
-        enableCors(req);
-        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-        req.response().setStatusCode(e.getCode().getCode());
-        JsonObject jsonEx = new JsonObject(Json.encode(e));
-        jsonEx.removeField("stackTrace");
-        jsonEx.removeField("suppressed");
-        req.response().end(jsonEx.encode());
-    }
 
     /**
      * @param restMod Class to scan
@@ -111,90 +95,34 @@ public class Main extends AbstractGuiceVerticle {
         });
     }
 
-    /**
-     * @param message Vert.X message
-     * @param req     Request
-     */
-    private void handleResult(AsyncResult<Message<Object>> message, HttpServerRequest req) {
-        try {
-            if (message.succeeded()) {
-                final String response = (String) message.result().body();
-                if (response.startsWith("[") || !response.startsWith("{")) {
-                    handleJsonArray(req, response);
-                } else {
-                    handleJsonObject(req, response);
-                }
-            } else {
-                throw (ReplyException) message.cause();
-            }
-        } catch (ReplyException ex) {
-            LOG.error(ex.getMessage(), ex);
-            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-            req.response().setStatusCode(404);
-            enableCors(req);
-            if (ex.failureCode() > 0) {
-                req.response().setStatusCode(ex.failureCode());
-            }
-            if (ex.getMessage() != null) {
-                String exStr = ex.getMessage();
-                if (ex.getMessage().startsWith("{")) {
-                    JsonObject jsonEx = new JsonObject(ex.getMessage());
-                    jsonEx.removeField("stackTrace");
-                    jsonEx.removeField("suppressed");
-                    exStr = jsonEx.encode();
-                }
-                req.response().end(exStr);
-            } else {
-                manage404Error(req);
-            }
-        }
-    }
-
-    private void handleJsonObject(HttpServerRequest req, String response) {
+    private void handleJsonObject(RoutingContext routingContext, String response) {
         final JsonObject json = new JsonObject(response);
-        if (json.containsField(FILE_SERVE)) {
+        if (json.containsKey(FILE_SERVE)) {
             final File f = new File(json.getString(FILE_SERVE));
-            req.response().putHeader("Content-Description", "File Transfer")
-                    .putHeader(CONTENT_TYPE, json.getString(CONTENT_TYPE))
+            routingContext.response().putHeader("Content-Description", "File Transfer")
+                    .putHeader(HttpHeaders.CONTENT_TYPE, json.getString(HttpHeaders.CONTENT_TYPE.toString()))
                     .putHeader("Content-Disposition", "attachment; filename=" + f.getName())
                     .putHeader("Expires", "0")
                     .putHeader("Cache-Control", "must-revalidate")
                     .putHeader("Pragma", "public")
-                    .putHeader(CONTENT_LENGTH, String.valueOf(f.length()));
-            enableCors(req);
-            req.response().sendFile(f.getAbsolutePath());
+                    .putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(f.length()));
+            routingContext.response().sendFile(f.getAbsolutePath());
         } else {
-            enableCors(req);
-            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-            req.response().end(response);
+            routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+            routingContext.response().end(response);
         }
     }
 
-    private void handleJsonArray(HttpServerRequest req, String response) {
-        enableCors(req);
-        req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-        req.response().end(response);
+    private void handleJsonArray(RoutingContext routingContext, String response) {
+        routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).end(response);
     }
 
-    private static void manage404Error(HttpServerRequest req) {
-        final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean("status", false);
-        jsonResp.putString(MESSAGE, "Nothing here");
-        jsonResp.putNumber("httpCode", 404);
-        req.response().setStatusCode(404).end(jsonResp.encode());
-    }
-
-    /**
-     * Enable cors.
-     *
-     * @param req the req
-     */
-    private void enableCors(final HttpServerRequest req) {
-        if(cors.getBoolean("enabled")) {
-            req.response().headers().add("Access-Control-Allow-Origin", "*");
-            req.response().headers().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
-            req.response().headers().add("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, token, uid");
-        }
+    private static void manage404Error(RoutingContext routingContext) {
+        final JsonObject jsonResp = new JsonObject()
+                .put(Constants.STATUS, false)
+                .put(MESSAGE, "Nothing here")
+                .put(HTTP_CODE, 404);
+        routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
     }
 
     /**
@@ -206,238 +134,236 @@ public class Main extends AbstractGuiceVerticle {
         return rules;
     }
 
-    /**
-     * Start void.
-     *
-     * @param startedResult the started result
-     */
     @Override
-    public void start(final Future<Void> startedResult) {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        final RouteMatcher rm = new RouteMatcher();
-        rm.get("/file/:collection/:id", this::getAssetHandler);
-        rm.post("/file/:collection/:field/:uid", this::assetUploadHandler);
-        rm.optionsWithRegEx(".*", req -> {
-            if (container.config().getObject("cors").getBoolean("enabled", false)) {
-                enableCors(req);
-            }
-            req.response().end();
-        });
-        rm.get("/", event -> event.response().end("Welcome to Qaobee Hive"));
+    public void start(Future<Void> startFuture) {
+        super.inject(this);
+        String env = System.getenv("ENV");
+        if (StringUtils.isBlank(env)) {
+            env = "DEV";
+        }
+        ProxyService.Loader.load("com.qaobee.hive.services.impl", injector, vertx);
+        final Router router = Router.router(vertx);
+        router.route().handler(BodyHandler.create());
+        if ("DEV".equals(env)) {
+            router.route().handler(CorsHandler.create("*")
+                    .allowedMethod(HttpMethod.GET)
+                    .allowedMethod(HttpMethod.POST)
+                    .allowedMethod(HttpMethod.PUT)
+                    .allowedMethod(HttpMethod.DELETE)
+                    .allowedHeader("X-Requested-With")
+                    .allowedHeader("Content-Type")
+                    .allowedHeader("Origin")
+                    .allowedHeader("token")
+                    .allowedHeader("uid")
+            );
+        }
+        router.route().path("/*").produces("application/json").handler(this::jsonHandler);
+        router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
+        VertxRoute.Loader.getRoutesInPackage("com.qaobee.hive.api")
+                .entrySet().stream().sorted(Comparator.comparingInt(e -> e.getKey().order()))
+                .forEachOrdered(item -> {
+                            LOG.info("Injecting " + item.getKey());
+                            injector.injectMembers(item.getValue());
+                            try {
+                                router.mountSubRouter(item.getKey().rootPath(), item.getValue().init());
+                            } catch (Exception e) {
+                                LOG.error(e.getMessage(), e);
+                            }
+                        }
+                );
+
         // API Rest
-        rm.allWithRegEx("^/api/.*", req -> req.bodyHandler(event -> handleAPIRequest(req, event)));
+        router.routeWithRegex("^/api/.*").handler(this::handleAPIRequest);
         // Load Verticles
-        List<Promise<String, Void>> promises = loadVerticles();
-        runWebServer(promises, rm, startedResult);
+        runWebServer(loadVerticles(), router).done(r -> startFuture.complete()).fail(startFuture::fail);
+    }
+
+    private void jsonHandler(RoutingContext context) {
+        context.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8")
+                .putHeader(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, max-age=0, must-revalidate")
+                .putHeader("Pragma", "no-cache")
+                .putHeader(HttpHeaders.EXPIRES, "0");
+        context.next();
     }
 
     /**
-     * @param promises    Promises
-     * @param rm          Route matcher
-     * @param startResult Start result
+     * @param promises Promises
+     * @param router   Route matcher
      */
-    private void runWebServer(List<Promise<String, Void>> promises, Handler<HttpServerRequest> rm, Future<Void> startResult) {
-        final HttpServer server = vertx.createHttpServer();
-        new When<String, Void>().all(promises, value -> {
-            handleServerStart(server, rm);
-            startResult.setResult(null);
-            return null;
-        }, value -> {
-            LOG.error(value.error.getMessage());
-            startResult.setFailure(value.error);
-            return null;
+    private Promise<Boolean, Throwable, Integer> runWebServer(List<Promise<String, Throwable, Integer>> promises, Router router) {
+        Deferred<Boolean, Throwable, Integer> deferred = new DeferredObject<>();
+        DeferredManager dm = new DefaultDeferredManager();
+        dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
+            final HttpServer server = vertx.createHttpServer();
+            server.requestHandler(router::accept);
+            String ip = runtime.getString("defaultHost");
+            int port = runtime.getInteger("defaultPort");
+            SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
+            sockJSHandler.bridge(new BridgeOptions());
+            router.route("/eventbus/*").handler(sockJSHandler);
+            server.listen(port, ip);
+            LOG.info("The http server is started on : {} : {}", ip, port);
+            LOG.info("Server started");
+            deferred.resolve(true);
+        }).fail(e -> {
+            LOG.error(((Throwable) e.getReject()).getMessage());
+            deferred.reject((Throwable) e.getReject());
         });
-    }
-
-    private void handleServerStart(HttpServer server, Handler<HttpServerRequest> rm) {
-        server.requestHandler(rm);
-        String ip = runtime.getString("defaultHost");
-        int port = runtime.getInteger("defaultPort");
-        if (container.env().containsKey("OPENSHIFT_VERTX_IP")) {
-            ip = container.env().get("OPENSHIFT_VERTX_IP");
-        }
-        if (container.env().containsKey("OPENSHIFT_VERTX_PORT")) {
-            port = Integer.parseInt(container.env().get("OPENSHIFT_VERTX_PORT"));
-        }
-        SockJSServer sockJSServer = vertx.createSockJSServer(server);
-        JsonObject wsConfig = new JsonObject().putString("prefix", "/eventbus");
-        JsonArray outboundPermitted = new JsonArray();
-        JsonArray inboundPermitted = new JsonArray();
-        outboundPermitted.add(new JsonObject());
-        inboundPermitted.add(new JsonObject().putObject("match", new JsonObject().putString("secret", UUID.randomUUID().toString())));
-        sockJSServer.setHook(new ServerHook(runtime.getString("site.url")));
-        sockJSServer.bridge(wsConfig, inboundPermitted, outboundPermitted);
-        server.listen(port, ip);
-        LOG.info("The http server is started on : " + ip + ":" + port);
-        System.out.println("Server started");
+        return deferred.promise();
     }
 
     /**
      * @return start promises
      */
-    private List<Promise<String, Void>> loadVerticles() {
-        final List<Promise<String, Void>> promises = new ArrayList<>();
-        // Loading modules
-        promises.add(whenContainer.deployWorkerVerticle(Mailer.class.getCanonicalName(), container.config().getObject("mailer.mod"), 1, true));
+    private List<Promise<String, Throwable, Integer>> loadVerticles() {
+        List<Promise<String, Throwable, Integer>> promises = new ArrayList<>();
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
         restModules.forEach(restMod -> {
-            if (restMod.getAnnotation(DeployableVerticle.class).isWorker()) {
-                promises.add(whenContainer.deployWorkerVerticle(restMod.getName(), container.config(), restMod.getAnnotation(DeployableVerticle.class).poolSize(), true));
-            } else {
-                promises.add(whenContainer.deployVerticle(restMod.getName(), container.config()));
-            }
+            Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
+            promises.add(deferred.promise());
+            vertx.deployVerticle(restMod.getName(), new DeploymentOptions()
+                    .setConfig(config())
+                    .setWorker(true)
+                    .setWorkerPoolSize(restMod.getAnnotation(DeployableVerticle.class).poolSize()), res -> {
+                if (res.succeeded()) {
+                    deferred.resolve(res.result());
+                } else {
+                    deferred.reject(res.cause());
+                }
+            });
             manageRules(restMod);
         });
         return promises;
     }
 
-    private void handleAPIRequest(HttpServerRequest req, Buffer event) {
-        final RequestWrapper wrapper = new RequestWrapper();
-        wrapper.setBody(event.toString());
-        wrapper.setMethod(req.method());
-        wrapper.setHeaders(utils.toMap(req.headers()));
-        wrapper.setParams(utils.toMap(req.params()));
-        wrapper.setLocale(req.headers().get(ACCEPT_LANGUAGE));
-        List<String> path = Arrays.asList(req.path().split("/"));
+    private void handleAPIRequest(RoutingContext routingContext) {
+        final RequestWrapper wrapper = utils.wrapRequest(routingContext);
+        List<String> path = Arrays.asList(routingContext.request().path().split("/"));
         path = path.subList(3, path.size());
         wrapper.setPath(path);
-        // Collect metrics : number of requests
-        final JsonObject json = new JsonObject()
-                .putString("name", "meter." + StringUtils.join(wrapper.getPath(), '.'))
-                .putString("action", "mark");
-        vertx.eventBus().send("metrix", json);
         String busAddress = runtime.getInteger("version") + "." + StringUtils.join(path, '.');
         if (rules.containsKey(busAddress)) {
-            if (testRequest(req, busAddress, wrapper)) {
-                vertx.eventBus().sendWithTimeout(busAddress, Json.encode(wrapper), Constants.TIMEOUT, message -> this.handleResult(message, req));
-            }
-        } else {
-            manage404Error(req);
-        }
-    }
-
-    /**
-     * @apiDescription Put an asset in a collection
-     * @api {post} /file/:collection/:field/:uid
-     * @apiName Post asset
-     * @apiGroup Main
-     * @apiParam {String} collection collection
-     * @apiparam {String} field field
-     * @apiparam {String} token token
-     * @apiparam {String} locale locale
-     * @apiparam {String} uid document id
-     */
-    private void assetUploadHandler(HttpServerRequest req) {
-        enableCors(req);
-        final JsonObject request = new JsonObject()
-                .putString(COLLECTION, req.params().get(COLLECTION))
-                .putString("field", req.params().get("field"))
-                .putString("uid", req.params().get("uid"))
-                .putString("token", req.headers().get("token"))
-                .putString("locale", req.headers().get(ACCEPT_LANGUAGE));
-        // We first pause the request so we don't receive any data between now and when the file is opened
-        String datadir = System.getProperty("user.home");
-        if (container.env().containsKey("OPENSHIFT_DATA_DIR")) {
-            datadir = container.env().get("OPENSHIFT_DATA_DIR");
-        }
-        final File dir = new File(datadir + "/upload");
-        if (!dir.exists()) {
-            boolean res = dir.mkdirs();
-            LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
-        }
-        request.putString("datadir", datadir);
-        req.expectMultiPart(true).uploadHandler(upload -> handleUpload(upload, request, dir, req));
-    }
-
-
-    /**
-     * @apiDescription Get an asset from a collection
-     * @api {get} /file/:collection/:id  Get an asset from a collection
-     * @apiVersion 0.1.0
-     * @apiName Get asset
-     * @apiGroup Main
-     * @apiPermission all
-     * @apiParam {String} collection Mandatory The collection.
-     * @apiParam {String} id Mandatory The Asset-ID.
-     */
-    private void getAssetHandler(HttpServerRequest req) {
-        enableCors(req);
-        final JsonObject request = new JsonObject()
-                .putString(COLLECTION, req.params().get(COLLECTION))
-                .putString("id", req.params().get("id"));
-        vertx.eventBus().send(AssetVerticle.GET, request, (Handler<Message<JsonObject>>) message -> {
-            if (message.body().containsField(CONTENT_LENGTH)) {
-                req.response().putHeader(CONTENT_LENGTH, message.body().getString(CONTENT_LENGTH))
-                        .end(new Buffer(message.body().getBinary("asset")));
-            } else {
-                req.response().setStatusCode(404).end(message.body().getString(MESSAGE));
-            }
-        });
-    }
-
-    private void handleUpload(HttpServerFileUpload upload, JsonObject request, File dir, HttpServerRequest req) {
-        final String filename = dir.getAbsolutePath() + "/" + req.params().get("uid") + "." + FilenameUtils.getExtension(upload.filename());
-        request.putString("filename", filename).putString(CONTENT_TYPE, upload.contentType());
-        if (vertx.fileSystem().existsSync(filename)) {
-            vertx.fileSystem().deleteSync(filename);
-        }
-        upload.streamToFileSystem(filename).endHandler(event -> {
-            upload.pause();
-            vertx.eventBus().send(AssetVerticle.ADD, request, (Handler<Message<Object>>) message -> {
-                req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON);
-                if (message.body() instanceof ReplyException) {
-                    final JsonObject resp = new JsonObject(((ReplyException) message.body()).getMessage());
-                    req.response().setStatusCode(ExceptionCodes.valueOf(resp.getString("code")).getCode())
-                            .end(resp.getString(MESSAGE, ""));
-                } else if (message.body() instanceof JsonObject) {
-                    req.response().setStatusCode(200).end(((JsonObject) message.body()).encode());
+            testRequest(busAddress, wrapper).done(res -> {
+                if (res.getBoolean(Constants.STATUS)) {
+                    Rule rule = rules.get(busAddress);
+                    try {
+                        testParameters(rule, wrapper);
+                        vertx.eventBus().send(busAddress, Json.encode(wrapper),
+                                new DeliveryOptions().setSendTimeout(Constants.TIMEOUT),
+                                message -> handleResponse(message, routingContext));
+                    } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                        final JsonObject jsonResp = new JsonObject()
+                                .put(Constants.STATUS, false)
+                                .put(MESSAGE, e.getMessage())
+                                .put("code", e.getCode().name());
+                        routingContext.response()
+                                .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                                .setStatusCode(e.getCode().getCode())
+                                .end(jsonResp.encode());
+                    }
+                } else {
+                    int code = res.getInteger(HTTP_CODE);
+                    res.remove(HTTP_CODE);
+                    routingContext.response()
+                            .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                            .setStatusCode(code)
+                            .end(res.encode());
                 }
             });
-            upload.resume();
-        });
+        } else {
+            manage404Error(routingContext);
+        }
+    }
+
+    private void handleResponse(AsyncResult<Message<Object>> message, RoutingContext context) {
+        if (message.succeeded()) {
+            final String response = (String) message.result().body();
+            if (response.startsWith("[") || !response.startsWith("{")) {
+                handleJsonArray(context, response);
+            } else {
+                handleJsonObject(context, response);
+            }
+        } else {
+            handleException((ReplyException) message.cause(), context);
+        }
+    }
+
+    private void handleException(ReplyException ex, RoutingContext context) {
+        context.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+        context.response().setStatusCode(500);
+        if (ex.getMessage() != null) {
+            String exStr = ex.getMessage();
+            if (ex.getMessage().startsWith("{")) {
+                JsonObject jsonEx = new JsonObject(ex.getMessage());
+                context.response().setStatusCode(ExceptionCodes.valueOf(jsonEx.getString("code", "INTERNAL_ERROR")).getCode());
+                if (!"true".equals(context.request().getHeader("X-qaobee-stack"))) {
+                    jsonEx.remove("stackTrace");
+                    jsonEx.remove("suppressed");
+                }
+                exStr = jsonEx.encode();
+            }
+            LOG.error(exStr);
+            context.response().end(exStr);
+        } else {
+            manage404Error(context);
+        }
     }
 
     /**
-     * @param req        Request
      * @param busAddress address
      * @param wrapper    request wrapper
      * @return success
      */
-    private boolean testRequest(HttpServerRequest req, String busAddress, RequestWrapper wrapper) {
+    private Promise<JsonObject, QaobeeException, Integer> testRequest(String busAddress, RequestWrapper wrapper) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         try {
             Rule rule = rules.get(busAddress);
             if (StringUtils.isNotBlank(rule.method())) {
                 utils.testHTTPMetod(rule.method(), wrapper.getMethod());
             }
+            List<Promise> promises = new ArrayList<>();
             if (rule.logged()) {
-                utils.isUserLogged(wrapper);
+                promises.add(utils.isUserLogged(wrapper));
             }
             if (rule.admin()) {
-                utils.isLoggedAndAdmin(wrapper);
+                promises.add(utils.isLoggedAndAdmin(wrapper));
             }
-            testParameters(rule, wrapper);
+            if (promises.isEmpty()) {
+                deferred.resolve(new JsonObject().put(Constants.STATUS, true));
+            } else {
+                DeferredManager dm = new DefaultDeferredManager();
+                dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> deferred.resolve(new JsonObject().put(Constants.STATUS, true))).fail(e -> {
+                    QaobeeException ex = (QaobeeException) e.getReject();
+                    LOG.error(ex.getMessage(), ex);
+                    final JsonObject jsonResp = new JsonObject()
+                            .put(Constants.STATUS, false)
+                            .put(MESSAGE, ex.getMessage())
+                            .put(HTTP_CODE, ex.getCode().getCode())
+                            .put("code", ex.getCode().name());
+                    deferred.resolve(jsonResp);
+                });
+            }
         } catch (final NoSuchMethodException e) {
             LOG.error(e.getMessage(), e);
             final JsonObject jsonResp = new JsonObject()
-                    .putBoolean("status", false)
-                    .putString(MESSAGE, "Nothing here")
-                    .putNumber("httpCode", 404);
-            req.response().putHeader(CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
-            return false;
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            handleError(req, e);
-            return false;
+                    .put(Constants.STATUS, false)
+                    .put(MESSAGE, "Nothing here")
+                    .put(HTTP_CODE, 404);
+            deferred.resolve(jsonResp);
         }
-        return true;
+        return deferred.promise();
     }
 
     private void testParameters(Rule rule, RequestWrapper wrapper) throws QaobeeException {
         switch (rule.scope()) {
             case BODY:
-                utils.testMandatoryParams(wrapper.getBody(), rule.mandatoryParams());
+                JsonObject body = new JsonObject();
+                if (StringUtils.isNotBlank(wrapper.getBody())) {
+                    body = new JsonObject(wrapper.getBody());
+                }
+                utils.testMandatoryParams(body, rule.mandatoryParams());
                 break;
             case REQUEST:
                 utils.testMandatoryParams(wrapper.getParams(), rule.mandatoryParams());

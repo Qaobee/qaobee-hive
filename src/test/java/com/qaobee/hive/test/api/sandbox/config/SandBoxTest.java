@@ -20,13 +20,15 @@ package com.qaobee.hive.test.api.sandbox.config;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -40,15 +42,21 @@ public class SandBoxTest extends VertxJunitSupport {
      * Retrieve sand box by his owner.
      */
     @Test
-    public void getSandBoxByOwner() {
+    public void getSandBoxByOwner(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
-                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                .then().assertThat().statusCode(200)
-                .body("owner", notNullValue())
-                .body("owner", is(user.get_id()));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(u -> {
+            getActivity("ACT-HAND", u).then(activity -> {
+                given().header(TOKEN, u.getAccount().getToken())
+                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                        .then().assertThat().statusCode(200)
+                        .body("owner", notNullValue())
+                        .body("owner", is(u.get_id()));
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -75,89 +83,113 @@ public class SandBoxTest extends VertxJunitSupport {
      * Gets sand box by owner with missing parameters.
      */
     @Test
-    public void getSandBoxByOwnerWithMissingParameters() {
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    public void getSandBoxByOwnerWithMissingParameters(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets sand box by owner with wrong parameters.
      */
     @Test
-    public void getSandBoxByOwnerWithWrongParameters() {
+    public void getSandBoxByOwnerWithWrongParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, "bla")
-                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, "bla")
+                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets sand box by owner with wrong user.
      */
     @Test
-    public void getSandBoxByOwnerWithWrongUser() {
+    public void getSandBoxByOwnerWithWrongUser(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
-                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().then(user -> {
+            getActivity("ACT-HAND", user).then(activity -> {
+                given().header(TOKEN, user.getAccount().getToken())
+                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                        .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                        .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets sand box by owner with wrong activity.
      */
     @Test
-    public void getSandBoxByOwnerWithWrongActivity() {
+    public void getSandBoxByOwnerWithWrongActivity(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-FOOT", user).getField(ActivityVerticle.PARAM_ID))
-                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            getActivity("ACT-FOOT", user).then(activity -> {
+                given().header(TOKEN, user.getAccount().getToken())
+                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                        .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                        .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets sand box list by owner.
      */
     @Test
-    public void getSandBoxListByOwner() {
+    public void getSandBoxListByOwner(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
 
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, user.get_id())
-                .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(1))
-                .body("owner", hasItem(user.get_id()));
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, user.get_id())
+                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("owner", hasItem(user.get_id()));
 
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, "")
-                .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(1))
-                .body("owner", hasItem(user.get_id()));
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, "")
+                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("owner", hasItem(user.get_id()));
 
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, "bla")
-                .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, "bla")
+                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
-        given().header(TOKEN, user.getAccount().getToken())
-                .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(1))
-                .body("owner", hasItem(user.get_id()));
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("owner", hasItem(user.get_id()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -184,39 +216,49 @@ public class SandBoxTest extends VertxJunitSupport {
      * Gets sand box list by owner with wrong parameters.
      */
     @Test
-    public void getSandBoxListByOwnerWithWrongParameters() {
+    public void getSandBoxListByOwnerWithWrongParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, user.get_id())
-                .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, user.get_id())
+                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update sand box.
      */
     @Test
-    public void updateSandBox() {
+    public void updateSandBox(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        JsonObject sb = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, (String) getActivity("ACT-HAND", user).getField(ActivityVerticle.PARAM_ID))
-                .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("owner", notNullValue())
-                .body("owner", is(user.get_id()))
-                .extract().asString());
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            getActivity("ACT-HAND", user).then(activity -> {
+                JsonObject sb = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                        .then().assertThat().statusCode(200)
+                        .body("_id", notNullValue())
+                        .body("owner", notNullValue())
+                        .body("owner", is(user.get_id()))
+                        .extract().asString());
 
-        sb.putString("effectiveDefault", "123456");
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(sb.encode())
-                .when().post(getURL(SB_SandBoxVerticle.UPDATE))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("effectiveDefault", is("123456"));
+                sb.put("effectiveDefault", "123456");
+                given().header(TOKEN, user.getAccount().getToken())
+                        .body(sb.encode())
+                        .when().post(getURL(SB_SandBoxVerticle.UPDATE))
+                        .then().assertThat().statusCode(200)
+                        .body("_id", notNullValue())
+                        .body("effectiveDefault", is("123456"));
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -243,13 +285,16 @@ public class SandBoxTest extends VertxJunitSupport {
      * Update sand box with missing params.
      */
     @Test
-    public void updateSandBoxWithMissingParams() {
-        User user = generateLoggedUser();
-
-        given().header(TOKEN, user.getAccount().getToken())
-            .when().post(getURL(SB_SandBoxVerticle.UPDATE))
-            .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-            .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    public void updateSandBoxWithMissingParams(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().post(getURL(SB_SandBoxVerticle.UPDATE))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -276,11 +321,15 @@ public class SandBoxTest extends VertxJunitSupport {
      * Gets sandbox with missing params.
      */
     @Test
-    public void getSandboxByIWithMissingParams() {
-        User u = generateLoggedUser();
-        given().header(TOKEN, u.getAccount().getToken())
-                .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    public void getSandboxByIWithMissingParams(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 }

@@ -19,10 +19,9 @@
 
 package com.qaobee.hive.dao.impl;
 
+import com.lowagie.text.pdf.codec.Base64;
 import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
-import com.qaobee.hive.business.model.commons.users.account.Payment;
-import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -31,11 +30,14 @@ import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Base64;
-import org.vertx.java.core.json.impl.Json;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.text.DateFormat;
@@ -46,6 +48,7 @@ import java.util.regex.Pattern;
  * The type User dao.
  */
 public class UserDAOImpl implements UserDAO {
+    private static final Logger LOG = LoggerFactory.getLogger(UserDAOImpl.class);
     private static final String ACCOUNT_FIELD = "account";
     private static final String AVATAR_FIELD = "avatar";
     private static final String ADDRESS_FIELD = "address";
@@ -54,130 +57,75 @@ public class UserDAOImpl implements UserDAO {
     private static final Pattern VALID_LOGIN_REGEX = Pattern.compile("^([a-z0-9.\\-]+)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
-    private final MongoDB mongo;
-    private final Utils utils;
-    private final PasswordEncryptionService passwordEncryptionService;
-    private final SandBoxDAO sandBoxDAO;
-    private final SeasonDAO seasonDAO;
-    private final TeamDAO teamDAO;
-    private final ActivityDAO activityDAO;
-
-    /**
-     * Instantiates a new User dao.
-     *
-     * @param mongo                     the mongo
-     * @param utils                     the utils
-     * @param passwordEncryptionService the password encryption service
-     * @param sandBoxDAO                the sand box dao
-     * @param seasonDAO                 the season dao
-     * @param teamDAO                   the team dao
-     * @param activityDAO               the activity dao
-     */
     @Inject
-    public UserDAOImpl(MongoDB mongo, Utils utils, PasswordEncryptionService passwordEncryptionService, SandBoxDAO sandBoxDAO, SeasonDAO seasonDAO, TeamDAO teamDAO, ActivityDAO activityDAO) {
-        this.mongo = mongo;
-        this.utils = utils;
-        this.passwordEncryptionService = passwordEncryptionService;
-        this.sandBoxDAO = sandBoxDAO;
-        this.seasonDAO = seasonDAO;
-        this.teamDAO = teamDAO;
-        this.activityDAO = activityDAO;
-    }
-
-    @Override
-    public JsonObject updateAvatar(String uid, String filename) throws QaobeeException {
-        JsonObject jsonperson = mongo.getById(uid, DBCollections.USER)
-                .putString(AVATAR_FIELD, filename);
-        mongo.save(jsonperson, DBCollections.USER);
-        return jsonperson;
-    }
-
-    @Override
-    public JsonObject generateBillPDF(User user, String payId, String planId, String locale) throws QaobeeException {
-        Plan planItem = user.getAccount().getListPlan().get(Integer.parseInt(planId));
-        Payment payment = null;
-        for (Payment p : planItem.getShippingList()) {
-            if (p.getId().equals(payId)) {
-                payment = p;
-            }
-        }
-        if (payment == null) {
-            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "unknown bill");
-        }
-        final JsonObject juser = new JsonObject().putString("firstname", user.getFirstname())
-                .putString("name", user.getName())
-                .putString("username", user.getAccount().getLogin())
-                .putString("phoneNumber", user.getContact().getHome())
-                .putString("email", user.getContact().getEmail())
-                .putString("paidDate", utils.formatDate(payment.getPaidDate() / 1000L, DateFormat.MEDIUM, DateFormat.MEDIUM, locale))
-                .putString("paymentId", payment.getPaymentId())
-                .putString("plan", planItem.getLevelPlan().name())
-                .putString("amountPaid", String.valueOf(payment.getAmountPaid()))
-                .putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, locale));
-        if (StringUtils.isNoneBlank(user.getAvatar())) {
-            juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
-        }
-        if (user.getAddress() != null) {
-            if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
-            } else {
-                juser.putString(ADDRESS_FIELD, user.getAddress().getPlace()
-                        + " " + user.getAddress().getZipcode()
-                        + " "
-                        + user.getAddress().getCity()
-                        + " "
-                        + user.getAddress().getCountry());
-            }
-        }
-        return new JsonObject()
-                .putString(PDFVerticle.FILE_NAME, payment.getPaymentId() + "-Qaobee")
-                .putString(PDFVerticle.TEMPLATE, "billing/bill.ftl")
-                .putObject(PDFVerticle.DATA, juser);
-    }
+    private MongoDB mongo;
+    @Inject
+    private Utils utils;
+    @Inject
+    private PasswordEncryptionService passwordEncryptionService;
+    @Inject
+    private SandBoxDAO sandBoxDAO;
+    @Inject
+    private SeasonDAO seasonDAO;
+    @Inject
+    private TeamDAO teamDAO;
+    @Inject
+    private ActivityDAO activityDAO;
 
     @Override
     public JsonObject generateProfilePDF(User user, String locale) {
-        final JsonObject juser = new JsonObject().putString("firstname", user.getFirstname())
-                .putString("name", user.getName())
-                .putString("username", user.getAccount().getLogin())
-                .putString("phoneNumber", user.getContact().getHome())
-                .putString("email", user.getContact().getEmail())
-                .putString("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, locale));
+        final JsonObject juser = new JsonObject().put("firstname", user.getFirstname())
+                .put("name", user.getName())
+                .put("username", user.getAccount().getLogin())
+                .put("phoneNumber", user.getContact().getHome())
+                .put("email", user.getContact().getEmail())
+                .put("birthdate", utils.formatDate(user.getBirthdate(), DateFormat.MEDIUM, DateFormat.MEDIUM, locale));
         if (StringUtils.isNoneBlank(user.getAvatar())) {
-            juser.putString(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
+            juser.put(AVATAR_FIELD, new String(Base64.decode(user.getAvatar())));
         }
         if (user.getAddress() != null) {
             if (StringUtils.isNotBlank(user.getAddress().getFormatedAddress())) {
-                juser.putString(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
+                juser.put(ADDRESS_FIELD, user.getAddress().getFormatedAddress());
             } else {
-                juser.putString(ADDRESS_FIELD, user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
+                juser.put(ADDRESS_FIELD, user.getAddress().getPlace() + " " + user.getAddress().getZipcode() + " " + user.getAddress().getCity() + " " + user.getAddress().getCountry());
             }
         }
         return new JsonObject()
-                .putString(PDFVerticle.FILE_NAME, user.getAccount().getLogin())
-                .putString(PDFVerticle.TEMPLATE, "profile/profile.ftl")
-                .putObject(PDFVerticle.DATA, juser);
+                .put(PDFVerticle.FILE_NAME, user.getAccount().getLogin())
+                .put(PDFVerticle.TEMPLATE, "profile.ftl")
+                .put(PDFVerticle.DATA, juser);
     }
 
     @Override
-    public JsonObject updateUser(JsonObject u) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> updateUser(JsonObject u) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         final User user = Json.decodeValue(u.encode(), User.class);
-        JsonObject p = mongo.getById(user.get_id(), DBCollections.USER);
-        if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
-            final byte[] salt = passwordEncryptionService.generateSalt();
-            user.getAccount().setSalt(salt);
-            user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
-            user.getAccount().setPasswd(null);
-            u.putObject(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
-        } else {
-            u.putObject(ACCOUNT_FIELD, p.getObject(ACCOUNT_FIELD));
-        }
-        mongo.save(u, DBCollections.USER);
-        return u;
+        mongo.getById(user.get_id(), DBCollections.USER)
+                .done(p -> {
+                    try {
+                        if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
+                            final byte[] salt = passwordEncryptionService.generateSalt();
+                            user.getAccount().setSalt(salt);
+                            user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
+                            user.getAccount().setPasswd(null);
+                            u.put(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
+                        } else {
+                            u.put(ACCOUNT_FIELD, p.getJsonObject(ACCOUNT_FIELD));
+                        }
+                        mongo.upsert(u, DBCollections.USER)
+                                .done(res -> deferred.resolve(u))
+                                .fail(deferred::reject);
+                    } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                        deferred.reject(e);
+                    }
+                })
+                .fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public boolean checkUserInformations(User user, String locale) throws QaobeeException {
+    public void checkUserInformations(User user, String locale) throws QaobeeException {
         if (user == null || user.getAccount() == null || user.getContact() == null) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.required", locale));
         }
@@ -191,7 +139,6 @@ public class UserDAOImpl implements UserDAO {
         } else if (user.getAccount().getPasswd().length() < 6) {
             throw new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.password.short", locale));
         }
-        return true;
     }
 
     private static void checkUserLogin(String login, String locale) throws QaobeeException {
@@ -225,9 +172,12 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public boolean existingLogin(String login) {
-        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, DBCollections.USER);
-        return res.size() > 0;
+    public Promise<Boolean, QaobeeException, Integer> existingLogin(String login) {
+        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, DBCollections.USER)
+                .done(res -> deferred.resolve(res.size() > 0))
+                .fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
@@ -260,47 +210,57 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
-    /**
-     * Gets user.
-     *
-     * @param id the id
-     * @return the user
-     */
     @Override
-    public JsonObject getUser(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getUser(String id) {
         return mongo.getById(id, DBCollections.USER);
     }
 
     @Override
-    public JsonObject getUserByLogin(String login) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getUserByLogin(String login, String locale) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         // Creation of request
         CriteriaBuilder criterias = new CriteriaBuilder();
         criterias.add("account.login", login.toLowerCase());
-        JsonArray jsonArray = mongo.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.USER);
-        if (jsonArray.size() == 0) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Login inconnu");
-        }
-        if (jsonArray.size() > 1) {
-            throw new QaobeeException(ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné");
-        }
-        return jsonArray.get(0);
+        mongo.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.USER)
+                .done(jsonArray -> {
+                    if (jsonArray.size() == 0) {
+                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, Messages.getString("login.wronglogin", locale)));
+                    }
+                    if (jsonArray.size() > 1) {
+                        deferred.reject(new QaobeeException(ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné"));
+                    }
+                    deferred.resolve(jsonArray.getJsonObject(0));
+                })
+                .fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject getUserInfo(String id) throws QaobeeException {
-        JsonObject u = getUser(id);
-        u.removeField("salt");
-        u.removeField(PASSWD_FIELD);
-        u.removeField("password");
-        return u;
+    public Promise<JsonObject, QaobeeException, Integer> getUserInfo(String id) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        getUser(id).done(u -> {
+            u.remove("salt");
+            u.remove(PASSWD_FIELD);
+            u.remove("password");
+            deferred.resolve(u);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject getMeta(String sandboxId) throws QaobeeException {
-        JsonObject meta = sandBoxDAO.getSandboxById(sandboxId);
-        meta.putObject("season", seasonDAO.getCurrentSeason(meta.getString("activityId"), meta.getObject("structure").getObject("country").getString("_id")));
-        meta.putArray("teams", teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null));
-        meta.putObject("activity", activityDAO.getActivity(meta.getString("activityId")));
-        return meta;
+    public Promise<JsonObject, QaobeeException, Integer> getMeta(String sandboxId) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        sandBoxDAO.getSandboxById(sandboxId)
+                .done(meta -> seasonDAO.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id")).done(season -> {
+                    meta.put("season", season);
+                    teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null).done(teams -> {
+                        meta.put("teams", teams);
+                        activityDAO.getActivity(meta.getString("activityId")).done(activity -> {
+                            meta.put("activity", activity);
+                            deferred.resolve(meta);
+                        }).fail(deferred::reject);
+                    }).fail(deferred::reject);
+                }).fail(deferred::reject)).fail(deferred::reject);
+        return deferred.promise();
     }
 }

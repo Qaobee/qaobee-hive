@@ -23,23 +23,25 @@ import com.qaobee.hive.dao.StructureDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
+import io.vertx.core.Future;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
 /**
  * Module commons - referencial - Structure.
  *
- * @author Nada Vujanic-Maquin<br>         <br>         <strong>Description de la classe:</strong>         <ul>         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>         </ul>
+ * @author Nada Vujanic-Maquin<br>         <br>
+ *         <strong>Description de la classe:</strong>
+ *         <ul>
+ *         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>
+ *         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>
+ *         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>
+ *         </ul>
  */
 @DeployableVerticle
 public class StructureVerticle extends AbstractGuiceVerticle {
@@ -82,21 +84,17 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * Address
      */
     public static final String PARAM_ADDRESS = "address";
-    private static final Logger LOG = LoggerFactory.getLogger(StructureVerticle.class);
-    @Inject
-    private Utils utils;
     @Inject
     private StructureDAO structureDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(ADD, this::addStructure)
-                .registerHandler(GET, this::getStructure)
-                .registerHandler(GET_LIST, this::getListOfStructures)
-                .registerHandler(UPDATE, this::updateStructure);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(ADD, this::addStructure)
+                .add(GET, this::getStructure)
+                .add(GET_LIST, this::getListOfStructures)
+                .add(UPDATE, this::updateStructure)
+                .register(startFuture);
     }
 
     /**
@@ -121,13 +119,8 @@ public class StructureVerticle extends AbstractGuiceVerticle {
             mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
             scope = Rule.Param.BODY)
     private void updateStructure(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(structureDAO.update(new JsonObject(req.getBody())).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyString(message, structureDAO.update(new JsonObject(req.getBody())));
     }
 
     /**
@@ -144,14 +137,9 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     @Rule(address = GET_LIST, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY)
     private void getListOfStructures(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject params = new JsonObject(req.getBody());
-            message.reply(structureDAO.getListOfStructures(params.getString(PARAM_ACTIVITY), params.getObject(PARAM_ADDRESS)).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject body = new JsonObject(req.getBody());
+        replyJsonArray(message, structureDAO.getListOfStructures(body.getString(PARAM_ACTIVITY), body.getJsonObject(PARAM_ADDRESS)));
     }
 
     /**
@@ -168,13 +156,8 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
             scope = Rule.Param.REQUEST)
     private void getStructure(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(structureDAO.getStructure(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, structureDAO.getStructure(req.getParams().get(PARAM_ID).get(0)));
     }
 
     /**
@@ -198,12 +181,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
             scope = Rule.Param.BODY)
     private void addStructure(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(structureDAO.addStructure(new JsonObject(req.getBody())).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, ExceptionCodes.DATA_ERROR, e.getMessage());
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, structureDAO.addStructure(new JsonObject(req.getBody())));
     }
 }

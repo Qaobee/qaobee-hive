@@ -25,9 +25,9 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.json.JsonObject;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -49,8 +49,8 @@ public class TemplatesDAOImpl implements TemplatesDAO {
      * The constant TEMPLATE.
      */
     public static final String TEMPLATE = "template";
-    private Configuration cfgMail;
-    private Configuration cfgPDF;
+    private final Configuration cfgMail;
+    private final Configuration cfgPDF;
 
     /**
      * Instantiates a new Templates dao.
@@ -65,10 +65,10 @@ public class TemplatesDAOImpl implements TemplatesDAO {
 
     @Override
     public String generatePDF(JsonObject body) throws QaobeeException {
-        if (!body.containsField(DATA) || !body.containsField(TEMPLATE)) {
+        if (!body.containsKey(DATA) || !body.containsKey(TEMPLATE)) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "wrong json format");
         }
-        return generatePDF(body.getObject(DATA), body.getString(TEMPLATE));
+        return generatePDF(body.getJsonObject(DATA), body.getString(TEMPLATE));
     }
 
     @Override
@@ -76,7 +76,7 @@ public class TemplatesDAOImpl implements TemplatesDAO {
         try {
             StringWriter out = new StringWriter();
             Template tpls = cfgPDF.getTemplate(template);
-            tpls.process(data.toMap(), out);
+            tpls.process(data.getMap(), out);
             return out.getBuffer().toString();
         } catch (IOException | TemplateException e) {
             LOG.error(e.getMessage(), e);
@@ -86,10 +86,10 @@ public class TemplatesDAOImpl implements TemplatesDAO {
 
     @Override
     public JsonObject generateMail(JsonObject body) throws QaobeeException {
-        if (!body.containsField(DATA) || !body.containsField(TEMPLATE)) {
+        if (!body.containsKey(DATA) || !body.containsKey(TEMPLATE)) {
             throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "wrong json format");
         }
-        return generateMail(body.getObject(DATA), body.getString(TEMPLATE));
+        return generateMail(body.getJsonObject(DATA), body.getString(TEMPLATE));
     }
 
     @Override
@@ -97,12 +97,12 @@ public class TemplatesDAOImpl implements TemplatesDAO {
         try {
             final JsonObject res = new JsonObject();
             final Map<String, Object> input = new HashMap<>();
-            input.putAll(data.toMap());
+            input.putAll(data.getMap());
             final Writer writer = new StringWriter();
             final Template tmpl = cfgMail.getTemplate(template);
             tmpl.process(input, writer);
             final String resTpl = writer.toString();
-            res.putString("result", resTpl);
+            res.put("result", resTpl);
             return res;
         } catch (IOException | TemplateException e) {
             LOG.error(e.getMessage(), e);

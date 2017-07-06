@@ -24,8 +24,11 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -50,32 +53,50 @@ public class EffectiveDAOImpl implements EffectiveDAO {
     }
 
     @Override
-    public JsonObject add(JsonObject effective) throws QaobeeException {
-        return effective.putString("_id", mongo.save(effective, DBCollections.EFFECTIVE));
+    public Promise<JsonObject, QaobeeException, Integer> add(JsonObject effective) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.upsert(effective, DBCollections.EFFECTIVE)
+                .done(res -> {
+                    effective.put("_id", res);
+                    deferred.resolve(effective);
+                })
+                .fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject update(JsonObject effective) {
-        return effective.putString("_id", mongo.update(effective, DBCollections.EFFECTIVE));
+    public Promise<JsonObject, QaobeeException, Integer> update(JsonObject effective) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.upsert(effective, DBCollections.EFFECTIVE)
+                .done(res -> {
+                    effective.put("_id", res);
+                    deferred.resolve(effective);
+                })
+                .fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonArray getEffectiveList(String sandboxId, String categoryAgeCode) throws QaobeeException {
+    public Promise<JsonArray, QaobeeException, Integer> getEffectiveList(String sandboxId, String categoryAgeCode) {
+        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(PARAM_SANDBOX_ID, sandboxId);
         if (categoryAgeCode != null) {
             criterias.put(PARAM_CATEGORY_AGE_CODE, categoryAgeCode);
         }
-        JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.EFFECTIVE);
-        if (resultJson.size() == 0) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                    "No Effective found " + "for ( sandBoxId : " + sandboxId + " " + (categoryAgeCode != null ? "and for category : " + categoryAgeCode + ")" : ")"));
-        }
-        return resultJson;
+        mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.EFFECTIVE).done(resultJson -> {
+            if (resultJson.size() == 0) {
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR,
+                        "No Effective found " + "for ( sandBoxId : " + sandboxId + " " + (categoryAgeCode != null ? "and for category : " + categoryAgeCode + ")" : ")")));
+            } else {
+                deferred.resolve(resultJson);
+            }
+        }).fail(deferred::reject);
+        return deferred;
     }
 
     @Override
-    public JsonObject getEffective(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getEffective(String id) {
         return mongo.getById(id, DBCollections.EFFECTIVE);
     }
 }

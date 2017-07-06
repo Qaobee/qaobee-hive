@@ -21,8 +21,9 @@ package com.qaobee.hive.dao;
 
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Statistics dao.
@@ -34,7 +35,7 @@ public interface StatisticsDAO {
      * @param stats the stats
      * @return the json object
      */
-    JsonObject addBulk(JsonArray stats);
+    Promise<JsonObject, QaobeeException, Integer> addBulk(JsonArray stats);
 
     /**
      * Gets list for event.
@@ -42,16 +43,15 @@ public interface StatisticsDAO {
      * @param eventId the event id
      * @return the list for event
      */
-    JsonArray getListForEvent(String eventId);
+    Promise<JsonObject, QaobeeException, Integer> getListForEvent(String eventId);
 
     /**
      * Add stat json object.
      *
      * @param stat the stat
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject addStat(JsonObject stat) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> addStat(JsonObject stat);
 
     /**
      * Gets list detail value.
@@ -63,9 +63,8 @@ public interface StatisticsDAO {
      * @param values         the values
      * @param limit          the limit
      * @return the list detail value
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit);
 
     /**
      * Gets stats grouped by.
@@ -81,9 +80,8 @@ public interface StatisticsDAO {
      * @param sortedBy       the sorted by
      * @param limit          the limit
      * @return the stats grouped by
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, // NOSONAR
-                                Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId,
-                                JsonArray groupBy, JsonArray sortedBy, Integer limit) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, // NOSONAR
+                                                                   Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId,
+                                                                   JsonArray groupBy, JsonArray sortedBy, Integer limit);
 }

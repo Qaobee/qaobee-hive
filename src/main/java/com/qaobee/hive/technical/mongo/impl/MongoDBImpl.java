@@ -18,217 +18,96 @@
  */
 package com.qaobee.hive.technical.mongo.impl;
 
-import com.mongodb.*;
-import com.mongodb.util.JSONSerializers;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
+import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.FindOptions;
+import io.vertx.ext.mongo.WriteOption;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
-import javax.net.ssl.SSLSocketFactory;
-import java.net.UnknownHostException;
-import java.util.*;
-import java.util.regex.Pattern;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Map;
 
-/**
- * The Class MongoDB.
- *
- * @author xavier
- */
 public class MongoDBImpl implements MongoDB {
-    private DB db;
-    private JsonObject config;
-    private WriteConcern writeConcern;
-    private static final String NOT_FOUND_MESS = "%s not found in %s";
+    @Inject
+    private MongoClientCustom mongoClient;
 
-    /**
-     * Instantiates a new Mongo dB impl.
-     *
-     * @param config the config
-     * @throws UnknownHostException the unknown host exception
-     */
-    public MongoDBImpl(JsonObject config) throws UnknownHostException {
-        this.config = config;
-        String host = getOptionalStringConfig("host", "localhost");
-        writeConcern = WriteConcern.valueOf(getOptionalStringConfig("writeConcern", ""));
-        final int port = getOptionalIntConfig("port", 27017);
-        final String dbName = getOptionalStringConfig("db_name", "default_db");
-        final String username = getOptionalStringConfig("username", null);
-        final String password = getOptionalStringConfig("password", null); // NOSONAR
-        final ReadPreference readPreference = ReadPreference.valueOf(getOptionalStringConfig("read_preference", "primary"));
-        final int poolSize = getOptionalIntConfig("pool_size", 10);
-        final int socketTimeout = getOptionalIntConfig("socket_timeout", 60000);
-        final boolean useSSL = getOptionalBooleanConfig("use_ssl", false);
-        final JsonArray seedsProperty = config.getArray("seeds");
-        final MongoClientOptions.Builder builder = new MongoClientOptions.Builder()
-                .connectionsPerHost(poolSize)
-                .socketTimeout(socketTimeout)
-                .readPreference(readPreference);
-        if (useSSL) {
-            builder.socketFactory(SSLSocketFactory.getDefault());
+    @Override
+    public Promise<String, QaobeeException, Integer> upsert(final Object o) {
+        return upsert(new JsonObject(Json.encode(o)), o.getClass().getSimpleName());
+    }
+
+    @Override
+    public Promise<String, QaobeeException, Integer> upsert(JsonObject document, String collection) {
+        return upsert(new JsonObject().put("_id", document.getString("_id")), document, collection);
+    }
+
+    @Override
+    public Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, Class<?> collection) {
+        return upsert(query, document, collection.getClass().getSimpleName());
+    }
+
+    @Override
+    public Promise<String, QaobeeException, Integer> upsert(JsonObject query, JsonObject document, String collection) {
+        Deferred<String, QaobeeException, Integer> deferred = new DeferredObject<>();
+        if (document.containsKey("_id") && document.getString("_id") != null) {
+            mongoClient.saveWithOptions(collection, document, WriteOption.FSYNCED , res -> {
+                if (res.succeeded()) {
+                    deferred.resolve(document.getString("_id"));
+                } else {
+                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
+                }
+            });
+        } else {
+            document.remove("_id");
+            mongoClient.insert(collection, document, res -> {
+                if (res.succeeded()) {
+                    deferred.resolve(res.result());
+                } else {
+                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
+                }
+            });
         }
-        MongoClient mongo;
-        if (seedsProperty == null) {
-            final ServerAddress address = new ServerAddress(host, port);
-            if (username != null && password != null) {
-                final MongoCredential credential = MongoCredential.createMongoCRCredential(username, dbName, password.toCharArray());
-                mongo = new MongoClient(address, Collections.singletonList(credential), builder.build());
+        return deferred.promise();
+    }
+
+    @Override
+    public Promise<JsonObject, QaobeeException, Integer> getById(String id, String collection) {
+        return getById(id, collection, null);
+    }
+
+    @Override
+    public Promise<JsonObject, QaobeeException, Integer> getById(String id, String collection, List<String> minimal) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        JsonObject query = new JsonObject().put("_id", id);
+        JsonObject mini = null;
+        if (minimal != null) {
+            mini = getMinimal(minimal);
+        }
+        mongoClient.findOne(collection, query, mini, res -> {
+            if (res.succeeded() ) {
+                if(res.result() != null) {
+                    deferred.resolve(res.result());
+                } else {
+                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found"));
+                }
             } else {
-                mongo = new MongoClient(address, builder.build());
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
             }
-        } else {
-            final List<ServerAddress> seeds = makeSeeds(seedsProperty);
-            if (username != null && password != null) {
-                final MongoCredential credential = MongoCredential.createMongoCRCredential(username, dbName, password.toCharArray());
-                mongo = new MongoClient(seeds, Collections.singletonList(credential), builder.build());
-            } else {
-                mongo = new MongoClient(seeds, builder.build());
-            }
-
-        }
-
-        db = mongo.getDB(dbName);
-    }
-
-    /**
-     * Gets the optional boolean config.
-     *
-     * @param fieldName the field name
-     * @param defValue  the def value
-     * @return the optional boolean config
-     */
-    private boolean getOptionalBooleanConfig(final String fieldName, final boolean defValue) {
-        return config.containsField(fieldName) ? config.getBoolean(fieldName) : defValue;
-    }
-
-    /**
-     * Gets the optional int config.
-     *
-     * @param fieldName the field name
-     * @param defValue  the def value
-     * @return the optional int config
-     */
-    private int getOptionalIntConfig(final String fieldName, final int defValue) {
-        return config.containsField(fieldName) ? config.getInteger(fieldName) : defValue;
-    }
-
-    /**
-     * Gets the optional string config.
-     *
-     * @param fieldName the field name
-     * @param defValue  the def value
-     * @return the optional string config
-     */
-    private String getOptionalStringConfig(final String fieldName, final String defValue) {
-        return config.containsField(fieldName) ? config.getString(fieldName) : defValue;
-    }
-
-    /**
-     * Make seeds.
-     *
-     * @param seedsProperty the seeds property
-     * @return the list
-     * @throws UnknownHostException the unknown host exception
-     */
-    private static List<ServerAddress> makeSeeds(final JsonArray seedsProperty) throws UnknownHostException {
-        final List<ServerAddress> seeds = new ArrayList<>();
-        for (final Object elem : seedsProperty) {
-            final JsonObject address = (JsonObject) elem;
-            final String host = address.getString("host");
-            final int port = address.getInteger("port");
-            seeds.add(new ServerAddress(host, port));
-        }
-        return seeds;
-    }
-
-    /**
-     * Gets the write concern.
-     *
-     * @return the writeConcern
-     */
-    private WriteConcern getWriteConcern() {
-        if (writeConcern == null) {
-            writeConcern = db.getWriteConcern();
-        }
-        return writeConcern;
+        });
+        return deferred.promise();
     }
 
     @Override
-    public String save(final Object o) throws QaobeeException {
-        return save(new JsonObject(Json.encode(o)), o.getClass().getSimpleName());
-    }
-
-    @Override
-    public String update(final JsonObject document, final String collection) {
-        final DBCollection coll = db.getCollection(collection);
-        JsonObject q = new JsonObject().putString("_id", document.getString("_id"));
-        document.removeField("_id");
-        JsonObject set = new JsonObject().putObject("$set", document);
-        coll.update(new BasicDBObject(q.toMap()), new BasicDBObject(set.toMap()));
-        return q.getString("_id");
-    }
-
-    @Override
-    public String update(JsonObject query, JsonObject set, Class<?> collection) {
-        final DBCollection coll = db.getCollection(collection.getSimpleName());
-        WriteResult res = coll.update(new BasicDBObject(query.toMap()), new BasicDBObject(set.toMap()));
-        return (String) res.getUpsertedId();
-    }
-
-    private static String getUpsertedId(WriteResult res, String genID, JsonObject document) throws QaobeeException {
-        if (res.getN() > 0) {
-            if (genID != null) {
-                return genID;
-            } else {
-                return (String) res.getUpsertedId();
-            }
-        } else {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "Can't save " + document.encode());
-        }
-    }
-
-    @Override
-    public String save(final JsonObject document, String collection) throws QaobeeException {
-        final DBCollection coll = db.getCollection(collection);
-        String genID;
-        if (document.getField("_id") == null) {
-            genID = UUID.randomUUID().toString();
-            document.putString("_id", genID);
-        } else {
-            genID = document.getField("_id");
-        }
-        final DBObject obj = new BasicDBObject(document.toMap());
-        final WriteResult res = coll.save(obj, getWriteConcern());
-        return getUpsertedId(res, genID, document);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject getById(final String id, final String collection) throws QaobeeException {
-        final DBCursor res = db.getCollection(collection).find(new BasicDBObject("_id", id));
-        if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NOT_FOUND_MESS, id, collection));
-        } else {
-            return new JsonObject(res.next().toMap());
-        }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject getById(final String id, final String collection, final List<String> minimal) throws QaobeeException {
-        final DBCursor res = db.getCollection(collection).find(new BasicDBObject("_id", id), new BasicDBObject(getMinimal(minimal)));
-        if (res.count() != 1) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NOT_FOUND_MESS, id, collection));
-        } else {
-            return new JsonObject(res.next().toMap());
-        }
-    }
-
-    @Override
-    public Map<String, Boolean> getMinimal(final List<String> minimal) {
-        final Map<String, Boolean> map = new HashMap<>();
+    public JsonObject getMinimal(final List<String> minimal) {
+        final JsonObject map = new JsonObject();
         for (final String key : minimal) {
             map.put(key, Boolean.TRUE);
         }
@@ -236,80 +115,60 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public JsonArray findByCriterias(final Map<String, Object> criteria, final List<String> fields, final String sort, final int order, final int limit,
-                                     final String collection) {
-        final DBCollection coll = db.getCollection(collection);
-        DBObject query = new BasicDBObject();
+    public Promise<JsonArray, QaobeeException, Integer> findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, String collection) {
+        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
+        JsonObject query = new JsonObject();
         if (criteria != null) {
-            final BasicDBList and = new BasicDBList();
+            final JsonArray and = new JsonArray();
             criteria.keySet().forEach(k -> {
                 if (criteria.get(k) instanceof String && ((String) criteria.get(k)).startsWith("//")) {
-                    and.add(new BasicDBObject(k, Pattern.compile(((String) criteria.get(k)).substring(2))));
+                    and.add(new JsonObject().put(k, new JsonObject().put("$regex", ((String)criteria.get(k)).substring(2)).put("$options", "i")));
                 } else {
-                    and.add(new BasicDBObject(k, criteria.get(k)));
+                    and.add(new JsonObject().put(k, criteria.get(k)));
                 }
             });
-            query = new BasicDBObject("$and", and);
+            query = new JsonObject().put("$and", and);
         }
-
-        DBCursor res;
+        FindOptions options = new FindOptions();
         if (fields != null) {
-            res = coll.find(query, new BasicDBObject(getMinimal(fields)));
-        } else {
-            res = coll.find(query);
+            options.setFields(getMinimal(fields));
         }
         if (limit > 0) {
-            res = res.limit(limit);
+            options.setLimit(limit);
         }
         if (sort != null) {
-            res = res.sort(new BasicDBObject(sort, order));
+            options.setSort(new JsonObject().put(sort, order));
         }
-        final JsonArray json = new JsonArray();
-        while (res.hasNext()) {
-            json.add(new JsonObject(res.next().toMap()));
-        }
-        return json;
+        mongoClient.findWithOptions(collection, query, options, res -> {
+            if (res.succeeded()) {
+                final JsonArray json = new JsonArray();
+                res.result().forEach(json::add);
+                deferred.resolve(json);
+            } else {
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage()));
+            }
+        });
+        return deferred.promise();
     }
 
     @Override
-    public JsonArray findAll(List<String> fields, String sort, int order, int limit, String collection) {
+    public Promise<JsonArray, QaobeeException, Integer> findAll(List<String> fields, String sort, int order, int limit, String collection) {
         return findByCriterias(null, fields, sort, order, limit, collection);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public JsonArray aggregate(String field, List<DBObject> pipeline, String collection) throws QaobeeException {
-        JsonArray res = new JsonArray();
-        for (DBObject next : db.getCollection(collection).aggregate(pipeline).results()) {
-            if (next instanceof BasicDBList) {
-                ListIterator<Object> it = ((BasicDBList) next).listIterator();
-                JsonArray jar = new JsonArray();
-                while (it.hasNext()) {
-                    jar.add(convertBsonToJson((DBObject) it.next()));
-                }
-                res.addArray(jar);
+    public Promise<JsonArray, QaobeeException, Integer> aggregate(JsonArray pipelineAggregation, String collection) {
+        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
+        JsonObject command = new JsonObject()
+                .put("aggregate", collection)
+                .put("pipeline", pipelineAggregation);
+        mongoClient.runCommand("aggregate", command, res -> {
+            if (res.succeeded()) {
+                deferred.resolve(res.result().getJsonArray("result"));
             } else {
-                res.addObject(convertBsonToJson(next));
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause()));
             }
-        }
-        return res;
+        });
+        return deferred.promise();
     }
-
-    @Override
-    public DB getDb() {
-        return db;
-    }
-
-    private static JsonObject convertBsonToJson(DBObject dbObject) throws QaobeeException {
-        if (dbObject == null) {
-            throw new QaobeeException(ExceptionCodes.JSON_EXCEPTION, "Cannot convert null to JsonObject");
-        }
-        // Create JSON string from DBObject
-        String serialize = JSONSerializers.getStrict().serialize(dbObject);
-        // Convert to JsonObject
-        HashMap<String, Object> jsonMap = Json.decodeValue(serialize, HashMap.class);
-        return new JsonObject(jsonMap);
-    }
-
 }

@@ -25,35 +25,11 @@ package com.qaobee.hive.technical.exceptions;
  */
 public class QaobeeException extends Exception {
 
-    /**
-     * The Constant serialVersionUID.
-     */
     private static final long serialVersionUID = 3702929307917485614L;
-
-    /**
-     * The code.
-     */
-    private ExceptionCodes code; // NOSONAR
-
-    /**
-     * The json context.
-     */
+    private final ExceptionCodes code; // NOSONAR
     private String jsonContext = ""; // NOSONAR
-
-    /**
-     * The timestamp.
-     */
-    private long timestamp = System.currentTimeMillis(); // NOSONAR
-
-    /**
-     * The report.
-     */
+    private final long timestamp = System.currentTimeMillis(); // NOSONAR
     private boolean report; // NOSONAR
-
-    /**
-     * The error.
-     */
-    private boolean error = true; // NOSONAR
 
     /**
      * Instantiates a new qaobee exception.
@@ -112,9 +88,21 @@ public class QaobeeException extends Exception {
      * @param code the code
      * @param e    the e
      */
-    public QaobeeException(ExceptionCodes code, Exception e) {
+    public QaobeeException(ExceptionCodes code, Throwable e) {
         super(e.getMessage());
         this.code = code;
+    }
+
+    /**
+     * Instantiates a new Qaobee exception.
+     *
+     * @param e the e
+     */
+    public QaobeeException(QaobeeSvcException e) {
+        super(e.getMessage());
+        this.jsonContext = e.getJsonContext();
+        this.code = e.getCode();
+        this.report = e.isReport();
     }
 
     /**
@@ -142,15 +130,6 @@ public class QaobeeException extends Exception {
      */
     public long getTimestamp() {
         return timestamp;
-    }
-
-    /**
-     * Checks if is the error.
-     *
-     * @return the error
-     */
-    public boolean isError() {
-        return error;
     }
 
     /**

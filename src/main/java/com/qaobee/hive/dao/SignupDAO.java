@@ -20,7 +20,8 @@
 package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Signup dao.
@@ -37,9 +38,8 @@ public interface SignupDAO {
      * @param countryId      the country id
      * @param locale         the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject structure, JsonObject categoryAge, String countryId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject structure, JsonObject categoryAge, String countryId, String locale);
 
     /**
      * First connection check json object.
@@ -48,9 +48,8 @@ public interface SignupDAO {
      * @param activationCode the activation code
      * @param locale         the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject firstConnectionCheck(String id, String activationCode, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> firstConnectionCheck(String id, String activationCode, String locale);
 
     /**
      * Account check boolean.
@@ -58,9 +57,8 @@ public interface SignupDAO {
      * @param id             the id
      * @param activationCode the activation code
      * @return the boolean
-     * @throws QaobeeException the qaobee exception
      */
-    boolean accountCheck(String id, String activationCode) throws QaobeeException;
+    Promise<Boolean, QaobeeException, Integer> accountCheck(String id, String activationCode);
 
     /**
      * Register json object.
@@ -69,9 +67,8 @@ public interface SignupDAO {
      * @param user               the user
      * @param locale             the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject register(String reCaptchaChallenge, JsonObject user, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> register(String reCaptchaChallenge, JsonObject user, String locale);
 
     /**
      * Resend mail.
@@ -79,9 +76,8 @@ public interface SignupDAO {
      * @param login  the login
      * @param locale the locale
      * @return the status
-     * @throws QaobeeException the qaobee exception
      */
-    boolean resendMail(String login, String locale) throws QaobeeException;
+    Promise<Boolean, QaobeeException, Integer> resendMail(String login, String locale);
 
     /**
      * Send register mail.
@@ -90,5 +86,5 @@ public interface SignupDAO {
      * @param locale the locale
      * @throws QaobeeException the qaobee exception
      */
-    void sendRegisterMail(JsonObject user, String locale) throws QaobeeException;
+    Promise<Boolean, QaobeeException, Integer> sendRegisterMail(JsonObject user, String locale) throws QaobeeException;
 }

@@ -23,15 +23,12 @@ import com.qaobee.hive.dao.ChampionshipDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
+import io.vertx.core.Future;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
@@ -42,7 +39,6 @@ import javax.inject.Inject;
  */
 @DeployableVerticle
 public class ChampionshipVerticle extends AbstractGuiceVerticle {
-
     /**
      * Handler to get a set of events
      */
@@ -107,21 +103,17 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * Participants
      */
     public static final String PARAM_LIST_PARTICIPANTS = "participants";
-    private static final Logger LOG = LoggerFactory.getLogger(ChampionshipVerticle.class);
-    @Inject
-    private Utils utils;
     @Inject
     private ChampionshipDAO championshipDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(GET_LIST, this::getListChampionships)
-                .registerHandler(GET, this::getChampionship)
-                .registerHandler(ADD, this::addChampionship)
-                .registerHandler(UPDATE, this::updateChampionship);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET_LIST, this::getListChampionships)
+                .add(GET, this::getChampionship)
+                .add(ADD, this::addChampionship)
+                .add(UPDATE, this::updateChampionship)
+                .register(startFuture);
     }
 
     /**
@@ -149,14 +141,10 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
             mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
                     PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void updateChampionship(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(championshipDAO.updateChampionship(new JsonObject(req.getBody())).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyString(message, championshipDAO.updateChampionship(new JsonObject(req.getBody())));
     }
+
 
     /**
      * @apiDescription Add a championship.
@@ -182,13 +170,8 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
             mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
                     PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void addChampionship(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(championshipDAO.addChampionship(new JsonObject(req.getBody())).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, championshipDAO.addChampionship(new JsonObject(req.getBody())));
     }
 
     /**
@@ -203,13 +186,8 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getChampionship(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(championshipDAO.getChampionship(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, championshipDAO.getChampionship(req.getParams().get(PARAM_ID).get(0)));
     }
 
     /**
@@ -224,15 +202,10 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiParam {Participant} participant : participant (optionnal)
      * @apiSuccess {Array} list of championships
      */
-    @Rule(address = GET_LIST, method = Constants.POST, logged = true, mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
+    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
+            mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
     private void getListChampionships(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(championshipDAO.getListChampionships(new JsonObject(req.getBody())).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonArray(message, championshipDAO.getListChampionships(new JsonObject(req.getBody())));
     }
-
 }

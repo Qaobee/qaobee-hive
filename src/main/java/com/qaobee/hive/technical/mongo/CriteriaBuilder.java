@@ -18,7 +18,7 @@
  */
 package com.qaobee.hive.technical.mongo;
 
-import com.mongodb.BasicDBObject;
+import io.vertx.core.json.JsonObject;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -56,8 +56,8 @@ public class CriteriaBuilder {
      * @return CriteriaBuilder : a criteria
      */
     public CriteriaBuilder addRegExp(final String key, final String value) {
-        BasicDBObject regexp = new BasicDBObject("$regex", value);
-        regexp.append("$options", "i");
+        JsonObject regexp = new JsonObject().put("$regex", value);
+        regexp.put("$options", "i");
         map.put(key, regexp);
         return this;
     }
@@ -80,8 +80,8 @@ public class CriteriaBuilder {
      * @return a criteria
      */
     public CriteriaBuilder between(final String floor, final String ceil, long value) {
-        add(floor, new BasicDBObject("$lt", value));
-        add(ceil, new BasicDBObject("$gt", value));
+        add(floor, new JsonObject().put("$lt", value));
+        add(ceil, new JsonObject().put("$gt", value));
         return this;
     }
 
@@ -93,7 +93,7 @@ public class CriteriaBuilder {
      * @return CriteriaBuilder criteria builder
      */
     public CriteriaBuilder in(final String key, final String... values) {
-        add(key, new BasicDBObject("$in", Arrays.asList(values)));
+        add(key, new JsonObject().put("$in", Arrays.asList(values)));
         return this;
     }
 

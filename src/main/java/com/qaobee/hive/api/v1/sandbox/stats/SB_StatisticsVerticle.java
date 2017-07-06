@@ -23,16 +23,13 @@ import com.qaobee.hive.dao.StatisticsDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
+import io.vertx.core.Future;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
@@ -62,7 +59,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant GET_STATS.
      */
-    public static final String GET_STATS  = Module.VERSION + ".sandbox.stats.statistics";
+    public static final String GET_STATS = Module.VERSION + ".sandbox.stats.statistics";
     /**
      * List of Indicator code
      */
@@ -85,25 +82,22 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     private static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
     private static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
     private static final String PARAM_LIMIT_RESULT = "limitResult";
-    private static final Logger LOG = LoggerFactory.getLogger(SB_StatisticsVerticle.class);
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
     private static final String TIMER_FIELD = "timer";
-    @Inject
-    private Utils utils;
+
     @Inject
     private StatisticsDAO statisticsDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(GET_STAT_GROUPBY, this::getStatsGroupedBy)
-                .registerHandler(GET_LISTDETAIL_VALUES, this::getListDetailValue)
-                .registerHandler(ADD_STAT, this::addStat)
-                .registerHandler(GET_STATS, this::getListForEvent)
-                .registerHandler(ADD_STAT_BULK, this::addBulk);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET_STAT_GROUPBY, this::getStatsGroupedBy)
+                .add(GET_LISTDETAIL_VALUES, this::getListDetailValue)
+                .add(ADD_STAT, this::addStat)
+                .add(GET_STATS, this::getListForEvent)
+                .add(ADD_STAT_BULK, this::addBulk)
+                .register(startFuture);
     }
 
     /**
@@ -119,8 +113,9 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = ADD_STAT_BULK, method = Constants.PUT, logged = true)
     private void addBulk(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        message.reply(statisticsDAO.addBulk(new JsonArray(req.getBody())).encode());
+        replyJsonObject(message, statisticsDAO.addBulk(new JsonArray(req.getBody())));
     }
+
     /**
      * @api {get} /api/1/sandbox/stats/statistics/?eventId
      * @apiVersion 0.1.0
@@ -134,7 +129,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_STATS, method = Constants.GET, logged = true)
     private void getListForEvent(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        message.reply(statisticsDAO.getListForEvent(req.getParams().get("eventId").get(0)).encode());
+        replyJsonObject(message, statisticsDAO.getListForEvent(req.getParams().get("eventId").get(0)));
     }
 
     /**
@@ -150,13 +145,8 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = ADD_STAT, method = Constants.PUT, logged = true, mandatoryParams = {CODE_FIELD, TIMER_FIELD, OWNER_FIELD},
             scope = Rule.Param.BODY)
     private void addStat(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(statisticsDAO.addStat(new JsonObject(req.getBody())).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, statisticsDAO.addStat(new JsonObject(req.getBody())));
     }
 
     /**
@@ -178,20 +168,15 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
             mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
             scope = Rule.Param.BODY)
     private void getListDetailValue(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject params = new JsonObject(req.getBody());
-            message.reply(statisticsDAO.getListDetailValue(params.getArray(PARAM_INDICATOR_CODE),
-                    params.getArray(PARAM_LIST_OWNERS),
-                    params.getLong(PARAM_START_DATE),
-                    params.getLong(PARAM_END_DATE),
-                    params.getArray(PARAM_VALUES),
-                    params.containsField(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0
-            ).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject params = new JsonObject(req.getBody());
+        replyJsonArray(message, statisticsDAO.getListDetailValue(params.getJsonArray(PARAM_INDICATOR_CODE),
+                params.getJsonArray(PARAM_LIST_OWNERS),
+                params.getLong(PARAM_START_DATE),
+                params.getLong(PARAM_END_DATE),
+                params.getJsonArray(PARAM_VALUES),
+                params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0
+        ));
     }
 
     /**
@@ -216,23 +201,18 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
             mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
             scope = Rule.Param.BODY)
     private void getStatsGroupedBy(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject params = new JsonObject(req.getBody());
-            message.reply(statisticsDAO.getStatsGroupedBy(params.getArray(PARAM_INDICATOR_CODE),
-                    params.getArray(PARAM_LIST_OWNERS),
-                    params.getLong(PARAM_START_DATE),
-                    params.getLong(PARAM_END_DATE),
-                    params.getString(PARAM_AGGREGAT),
-                    params.getArray(PARAM_VALUES),
-                    params.getArray(PARAM_LIST_SHOOTSEQID),
-                    params.getArray(PARAM_LIST_GROUPBY),
-                    params.getArray(PARAM_LIST_SORTBY),
-                    params.containsField(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0
-            ).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject params = new JsonObject(req.getBody());
+        replyJsonArray(message, statisticsDAO.getStatsGroupedBy(params.getJsonArray(PARAM_INDICATOR_CODE),
+                params.getJsonArray(PARAM_LIST_OWNERS),
+                params.getLong(PARAM_START_DATE),
+                params.getLong(PARAM_END_DATE),
+                params.getString(PARAM_AGGREGAT),
+                params.getJsonArray(PARAM_VALUES),
+                params.getJsonArray(PARAM_LIST_SHOOTSEQID),
+                params.getJsonArray(PARAM_LIST_GROUPBY),
+                params.getJsonArray(PARAM_LIST_SORTBY),
+                params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0
+        ));
     }
 }

@@ -20,8 +20,9 @@
 package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Collect dao.
@@ -32,9 +33,8 @@ public interface CollectDAO {
      *
      * @param id the id
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject get(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> get(String id);
 
     /**
      * Update json object.
@@ -44,7 +44,7 @@ public interface CollectDAO {
      * @param locale        the locale
      * @return the json object
      */
-    JsonObject update(JsonObject collect, String currentUserId, String locale);
+    Promise<JsonObject, QaobeeException, Integer> update(JsonObject collect, String currentUserId, String locale);
 
     /**
      * Add json object.
@@ -53,16 +53,14 @@ public interface CollectDAO {
      * @param currentUserId the current user id
      * @param locale        the locale
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject add(JsonObject collect, String currentUserId, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> add(JsonObject collect, String currentUserId, String locale);
 
     /**
      * Gets list.
      *
      * @param params the params
      * @return the list
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getList(JsonObject params) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getList(JsonObject params);
 }

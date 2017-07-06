@@ -24,17 +24,13 @@ import com.qaobee.hive.dao.EffectiveDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -45,7 +41,6 @@ import java.util.Map;
  */
 @DeployableVerticle
 public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
-    private static final Logger LOG = LoggerFactory.getLogger(SB_EffectiveVerticle.class);
     /**
      * The constant GET.
      */
@@ -75,21 +70,16 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String PARAM_CATEGORY_AGE_CODE = "categoryAge.code";
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private Utils utils;
-    @Inject
     private EffectiveDAO effectiveDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(GET, this::getEffective)
-                .registerHandler(GET_LIST, this::getEffectiveList)
-                .registerHandler(UPDATE, this::updateEffective)
-                .registerHandler(ADD, this::addEffective);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET, this::getEffective)
+                .add(GET_LIST, this::getEffectiveList)
+                .add(UPDATE, this::updateEffective)
+                .add(ADD, this::addEffective)
+                .register(startFuture);
     }
 
     /**
@@ -104,13 +94,8 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = ADD, method = Constants.POST, logged = true)
     private void addEffective(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(effectiveDAO.add(new JsonObject(req.getBody())).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, effectiveDAO.add(new JsonObject(req.getBody())));
     }
 
     /**
@@ -124,10 +109,10 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {Object}   effective    The effective updated.
      */
     @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = PARAM_ID,
-          scope = Rule.Param.BODY)
+            scope = Rule.Param.BODY)
     private void updateEffective(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        message.reply(effectiveDAO.update(new JsonObject(req.getBody())).encode());
+        replyJsonObject(message, effectiveDAO.update(new JsonObject(req.getBody())));
     }
 
     /**
@@ -142,20 +127,15 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {Array}   effectives            The list of effectives found.
      */
     @Rule(address = GET_LIST, method = Constants.GET, logged = true, mandatoryParams = PARAM_SANDBOX_ID,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void getEffectiveList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            Map<String, List<String>> params = req.getParams();
-            String categoryAgeCode = null;
-            if (params.get(PARAM_CATEGORY_AGE_CODE) != null && !StringUtils.isBlank(params.get(PARAM_CATEGORY_AGE_CODE).get(0))) {
-                categoryAgeCode = params.get(PARAM_CATEGORY_AGE_CODE).get(0);
-            }
-            message.reply(effectiveDAO.getEffectiveList(params.get(PARAM_SANDBOX_ID).get(0),categoryAgeCode).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
+        Map<String, List<String>> params = req.getParams();
+        String categoryAgeCode = null;
+        if (params.get(PARAM_CATEGORY_AGE_CODE) != null && !StringUtils.isBlank(params.get(PARAM_CATEGORY_AGE_CODE).get(0))) {
+            categoryAgeCode = params.get(PARAM_CATEGORY_AGE_CODE).get(0);
         }
+        replyJsonArray(message, effectiveDAO.getEffectiveList(params.get(PARAM_SANDBOX_ID).get(0), categoryAgeCode));
     }
 
     /**
@@ -169,14 +149,9 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {Object}   effective    The effective found.
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
-          scope = Rule.Param.REQUEST)
+            scope = Rule.Param.REQUEST)
     private void getEffective(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(effectiveDAO.getEffective(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, effectiveDAO.getEffective(req.getParams().get(PARAM_ID).get(0)));
     }
 }

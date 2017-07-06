@@ -20,8 +20,9 @@
 package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Season dao.
@@ -33,9 +34,8 @@ public interface SeasonDAO {
      * @param activityId the activity id
      * @param countryId  the country id
      * @return the current season
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getCurrentSeason(String activityId, String countryId) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getCurrentSeason(String activityId, String countryId);
 
     /**
      * Gets list by activity.
@@ -43,16 +43,14 @@ public interface SeasonDAO {
      * @param activityId the activity id
      * @param countryId  the country id
      * @return the list by activity
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getListByActivity(String activityId, String countryId) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getListByActivity(String activityId, String countryId);
 
     /**
      * Gets season.
      *
      * @param id the id
      * @return the season
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getSeason(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getSeason(String id);
 }

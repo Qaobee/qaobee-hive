@@ -3,80 +3,84 @@ import groovy.json.JsonOutput
 
 group 'com.qaobee'
 version '0.1'
-/*
-Usage:
-./gradlew task_name
-(or gradlew.bat task_name if you have the misfortune to have to use Windows)
-If no task name is specified then the default task 'assemble' is run
-Task names are:
-idea - generate a skeleton IntelliJ IDEA project
-eclipse - generate a skeleton Eclipse IDE project
-assemble - builds the outputs, by default this is the module zip file. It can also include a jar file if produceJar
-          in gradle.properties is set to true. Outputs are created in build/libs.
-          if pullInDeps in gradle.properties is set to 'true' then the modules dependencies will be
-          automatically pulled into a nested mods directory inside the module during the build
-copyMod - builds and copies the module to the local 'mods' directory so you can execute vertx runmod (etc)
-          directly from the command line
-modZip - creates the module zip into build/libs
-clean - cleans everything up
-test - runs the tests. An nice html test report is created in build/reports/tests (index.html)
-runMod - runs the module. This is similar to executing vertx runmod from the command line except that it does
-         not use the version of Vert.x installed and on the PATH to run it. Instead it uses the version of Vert.x
-         that the module was compiled and tested against.
-pullInDeps - pulls in all dependencies of the module into a nested module directory
-uploadArchives - upload the module zip file (and jar if one has been created) to Nexus. You will need to
-                 configure sonatypeUsername and sonatypePassword in ~/.gradle/gradle.properties.
-install - install any jars produced to the local Maven repository (.m2)
- */
-
-repositories {
-    flatDir {
-        dirs 'lib'
-    }
-}
 buildscript {
     repositories {
-        maven {
-            url "http://repo1.maven.org/maven2/"
-        }
+        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
-        mavenLocal()
     }
     dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.1"
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
         classpath 'org.ajoberstar:gradle-jacoco:0.3.0'
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5"
         classpath "gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.40"
     }
 }
-apply plugin: 'groovy'
-apply from: "gradle/vertx.gradle"
-apply plugin: 'org.sonarqube'
+apply plugin: 'application'
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'idea'
+apply plugin: 'java'
 apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'org.sonarqube'
 apply plugin: 'project-report'
 apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
 
-dependencies {
-    compile "org.codehaus.groovy:groovy-all:$groovyVersion"
-    compile "io.vertx:lang-groovy:$groovyLangModVersion@jar"
+def generateSrcPath="$buildDir/generated-src"
+def generatedSrcDir = file("$buildDir/generated-src")
+def version = '3.4.2'
+mainClassName = 'com.qaobee.hive.Main'
+repositories {
+    jcenter()
+}
+sourceSets {
+    main {
+        java.srcDirs += generatedSrcDir
+        output.dir(builtBy: 'generateServiceProxy', generateSrcPath)
+    }
+}
 
-    compile 'org.mongodb:mongo-java-driver:2.13.2'
+if (!JavaVersion.current().java8Compatible) {
+    throw new IllegalStateException('''A Haiku:
+                                      |  This needs Java 8,
+                                      |  You are using something else,
+                                      |  Refresh. Try again.'''.stripMargin())
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'http://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compile "io.vertx:vertx-core:$version"
+    compile "io.vertx:vertx-mongo-client:$version"
+    compile "io.vertx:vertx-web:$version"
+    compile "io.vertx:vertx-service-proxy:$version"
+    compile "io.vertx:vertx-codegen:$version"
+    compile "io.vertx:vertx-mail-client:$version"
+    compile "io.vertx:vertx-web-client:$version"
+    compile "io.vertx:vertx-dropwizard-metrics:$version"
+    compile "io.vertx:vertx-auth-common:$version"
+    compile 'org.reflections:reflections:0.9.11'
     compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'com.google.inject:guice:4.1.0'
+    compile 'com.google.inject.extensions:guice-assistedinject:4.1.0'
+    compile 'com.google.inject.extensions:guice-throwingproviders:4.1.0'
+    compile 'org.apache.commons:commons-lang3:3.6'
     compile 'commons-io:commons-io:2.5'
     compile 'org.apache.commons:commons-email:1.4'
     compile 'commons-codec:commons-codec:1.10'
-    compile 'com.englishtown:vertx-mod-when:1.2.0-final'
+    compile 'org.apache.commons:commons-exec:1.3'
     compile 'com.google.inject:guice:4.0'
-    compile 'com.google.code.findbugs:jsr305:3.0.1'
-    compile 'org.reflections:reflections:0.9.10'
-    compile 'org.imgscalr:imgscalr-lib:4.2'
-    compile 'org.xhtmlrenderer:flying-saucer-pdf:9.1.1'
+    compile 'com.google.code.findbugs:jsr305:3.0.2'
+    compile 'org.xhtmlrenderer:flying-saucer-pdf:9.1.6'
     compile 'com.google.api-client:google-api-client:1.22.0'
-    compile 'org.freemarker:freemarker:2.3.23'
+    compile 'org.freemarker:freemarker:2.3.26-incubating'
     compile 'commons-beanutils:commons-beanutils:1.9.3'
-    compile 'io.vertx:mod-mailer:2.0.0-final'
     compile('net.rcarz:jira-client:0.5') {
         transitive = true
         exclude group: 'org.mockito'
@@ -84,18 +88,51 @@ dependencies {
     }
 
     compile 'org.slf4j:slf4j-api:1.7.22'
-    compile 'ch.qos.logback:logback-classic:1.1.8'
-    compile 'ch.qos.logback:logback-core:1.1.8'
-    compile 'com.stripe:stripe-java:4.7.0'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+    compile 'ch.qos.logback:logback-core:1.2.3'
+    compile 'com.stripe:stripe-java:5.5.0'
+    compile 'org.jdeferred:jdeferred-core:1.2.6'
+    compile 'org.imgscalr:imgscalr-lib:4.2'
 
 
+    testCompile "io.vertx:vertx-unit:$version"
+    testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:2.0.0'
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mock-server:mockserver-netty:3.10.8'
+    testCompile 'io.rest-assured:rest-assured:3.0.3'
     testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5'
-    testCompile 'com.jayway.restassured:rest-assured:2.9.0'
-    testCompile "junit:junit:$junitVersion"
-    testCompile name: 'vertx-junit-annotations-2.1RC2'
-    testCompile 'org.mock-server:mockserver-netty:3.10.4'
-
 }
+
+shadowJar {
+    classifier = 'fat'
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+    doLast {
+        copy {
+            from "$buildDir/libs/"
+            into "application/"
+        }
+    }
+}
+
+task generateServiceProxy(type: JavaCompile, description: 'Generates EBServiceProxies') {
+    source = sourceSets.main.java
+    classpath = configurations.compile
+    destinationDir = generatedSrcDir
+    options.compilerArgs = [
+            "-proc:only",
+            "-processor", "io.vertx.codegen.CodeGenProcessor",
+            "-AoutputDirectory=$generateSrcPath"
+    ]
+}
+
+
+compileJava.dependsOn generateServiceProxy
+
 test {
     minHeapSize = "128m"
     maxHeapSize = "1024m"

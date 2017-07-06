@@ -27,17 +27,17 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.AsyncResult;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.inject.Inject;
 
@@ -61,16 +61,13 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     public static final String GENERATE_PDF = Module.VERSION + ".commons.users.profile.pdf";
     @Inject
     private UserDAO userDAO;
-    @Inject
-    private Utils utils;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(UPDATE, this::updateUser)
-                .registerHandler(GENERATE_PDF, this::generateProfilePDF);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(UPDATE, this::updateUser)
+                .add(GENERATE_PDF, this::generateProfilePDF)
+                .register(startFuture);
     }
 
     /**
@@ -84,7 +81,8 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     @Rule(address = GENERATE_PDF, method = Constants.GET, logged = true)
     private void generateProfilePDF(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        vertx.eventBus().sendWithTimeout(PDFVerticle.GENERATE_PDF, userDAO.generateProfilePDF(req.getUser(), req.getLocale()), 15000L, getPdfHandler(message));
+        vertx.eventBus().send(PDFVerticle.GENERATE_PDF, userDAO.generateProfilePDF(req.getUser(), req.getLocale()),
+                new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), getPdfHandler(message));
     }
 
     /**
@@ -99,12 +97,7 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = "_id", scope = Rule.Param.BODY)
     private void updateUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(userDAO.updateUser(new JsonObject(req.getBody())).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        replyJsonObject(message, userDAO.updateUser(new JsonObject(req.getBody())));
     }
 
     private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
@@ -114,8 +107,8 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
                     throw pdfResp.cause();
                 } else {
                     message.reply(new JsonObject()
-                            .putString(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
-                            .putString(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF))
+                            .put(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
+                            .put(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF))
                             .encode());
                 }
             } catch (Throwable e) { // NOSONAR

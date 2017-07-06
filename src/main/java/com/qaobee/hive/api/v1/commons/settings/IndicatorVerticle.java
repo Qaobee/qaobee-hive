@@ -23,16 +23,12 @@ import com.qaobee.hive.dao.IndicatorDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
+import io.vertx.core.Future;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
@@ -75,20 +71,17 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * The constant PARAM_INDICATOR_CODE.
      */
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
-    private static final Logger LOG = LoggerFactory.getLogger(IndicatorVerticle.class);
-    @Inject
-    private Utils utils;
+
     @Inject
     private IndicatorDAO indicatorDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(GET, this::getIndicator)
-                .registerHandler(GET_LIST, this::getIndicatorsList)
-                .registerHandler(GET_BY_CODE, this::getIndicatorByCode);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(GET, this::getIndicator)
+                .add(GET_LIST, this::getIndicatorsList)
+                .add(GET_BY_CODE, this::getIndicatorByCode)
+                .register(startFuture);
     }
 
     /**
@@ -109,14 +102,9 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
             scope = Rule.Param.BODY)
     private void getIndicatorByCode(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            JsonObject params = new JsonObject(req.getBody());
-            message.reply(indicatorDAO.getIndicatorByCode(params.getString(PARAM_ACTIVITY_ID),
-                    params.getString(PARAM_COUNTRY_ID), params.getArray(PARAM_INDICATOR_CODE)).encode());
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-        }
+        JsonObject body = new JsonObject(req.getBody());
+        replyJsonArray(message, indicatorDAO.getIndicatorByCode(body.getString(PARAM_ACTIVITY_ID),
+                body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_INDICATOR_CODE)));
     }
 
     /**
@@ -137,15 +125,9 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
             scope = Rule.Param.BODY)
     private void getIndicatorsList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            JsonObject params = new JsonObject(req.getBody());
-            message.reply(indicatorDAO.getIndicatorsList(params.getString(PARAM_ACTIVITY_ID),
-                    params.getString(PARAM_COUNTRY_ID), params.getArray(PARAM_SCREEN))
-                    .encode());
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
-        }
+        JsonObject body = new JsonObject(req.getBody());
+        replyJsonArray(message, indicatorDAO.getIndicatorsList(body.getString(PARAM_ACTIVITY_ID),
+                body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_SCREEN)));
     }
 
     /**
@@ -159,14 +141,10 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiSuccess {Indicator} indicator The Indicator found.
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
+    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
+            scope = Rule.Param.REQUEST)
     private void getIndicator(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(indicatorDAO.getIndicator(req.getParams().get(PARAM_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, indicatorDAO.getIndicator(req.getParams().get(PARAM_ID).get(0)));
     }
 }

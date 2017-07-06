@@ -1,4 +1,4 @@
-/*************************************************************************
+/* ************************************************************************
  * Qaobee
  * __________________
  * <p/>
@@ -18,14 +18,16 @@
 package com.qaobee.hive.test.api.sandbox.effective;
 
 import com.qaobee.hive.api.v1.sandbox.effective.SB_EffectiveVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -38,33 +40,41 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      * Gets list members by category.
      */
     @Test
-    public void getListMembersByCategory() {
+    public void getListMembersByCategory(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        String id = "558b0efebd2e39cdab651e1f";
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, id)
-                .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "sen")
-                .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
-                .then().assertThat().statusCode(200)
-                .body("", hasSize(1))
-                .body("[0].members", hasSize(16));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            String id = "558b0efebd2e39cdab651e1f";
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, id)
+                    .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "sen")
+                    .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("[0].members", hasSize(16));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list members by unknow category.
      */
     @Test
-    public void getListMembersByUnknowCategory() {
+    public void getListMembersByUnknowCategory(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        String id = "558b0efebd2e39cdab651e1f";
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, id)
-                .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "zzz")
-                .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").done(user -> {
+            String id = "558b0efebd2e39cdab651e1f";
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, id)
+                    .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "zzz")
+                    .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -91,42 +101,54 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      * Gets list members by category with missing parameters.
      */
     @Test
-    public void getListMembersByCategoryWithMissingParameters() {
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    public void getListMembersByCategoryWithMissingParameters(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().done(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets list members by category with wrong parameters.
      */
     @Test
-    public void getListMembersByCategoryWithWrongParameters() {
+    public void getListMembersByCategoryWithWrongParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, "bla")
-                .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().done(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, "bla")
+                    .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets effective.
      */
     @Test
-    public void getEffective() {
+    public void getEffective(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        String id = "550b31f925da07681592db23";
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
-                .when().get(getURL(SB_EffectiveVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body("_id", is(id))
-                .body("members", hasSize(16));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            String id = "550b31f925da07681592db23";
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
+                    .when().get(getURL(SB_EffectiveVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", is(id))
+                    .body("members", hasSize(16));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -153,42 +175,54 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      * Gets effective with missing parameters.
      */
     @Test
-    public void getEffectiveWithMissingParameters() {
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .when().get(getURL(SB_EffectiveVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+    public void getEffectiveWithMissingParameters(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().done(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .when().get(getURL(SB_EffectiveVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Gets effective with wrong parameters.
      */
     @Test
-    public void getEffectiveWithWrongParameters() {
+    public void getEffectiveWithWrongParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser();
-        given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_ID, "bla")
-                .when().get(getURL(SB_EffectiveVerticle.GET))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().done(user -> {
+            given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_EffectiveVerticle.PARAM_ID, "bla")
+                    .when().get(getURL(SB_EffectiveVerticle.GET))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Add effective.
      */
     @Test
-    public void addEffective() {
+    public void addEffective(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        JsonObject effective = generateEffective();
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(effective.encode())
-                .when().post(getURL(SB_EffectiveVerticle.ADD))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("members", hasSize(effective.getArray("members").size()));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            JsonObject effective = generateEffective();
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(effective.encode())
+                    .when().post(getURL(SB_EffectiveVerticle.ADD))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("members", hasSize(effective.getJsonArray("members").size()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -215,59 +249,67 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      * Update effective remove one member.
      */
     @Test
-    public void updateEffectiveRemoveOneMember() {
+    public void updateEffectiveRemoveOneMember(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        String id = "550b31f925da07681592db23";
-        JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
-                .when().get(getURL(SB_EffectiveVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body("_id", is(id))
-                .body("members", hasSize(16)).extract().asString());
-        JsonArray newMembers = new JsonArray();
-        for (Object object : effective.getArray("members")) {
-            JsonObject item = (JsonObject) object;
-            if (!"550a05dadb8f8b6e2f51f4db".equals(item.getString("personId"))) {
-                newMembers.add(item);
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            String id = "550b31f925da07681592db23";
+            JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
+                    .when().get(getURL(SB_EffectiveVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", is(id))
+                    .body("members", hasSize(16)).extract().asString());
+            JsonArray newMembers = new JsonArray();
+            for (Object object : effective.getJsonArray("members")) {
+                JsonObject item = (JsonObject) object;
+                if (!"550a05dadb8f8b6e2f51f4db".equals(item.getString("personId"))) {
+                    newMembers.add(item);
+                }
             }
-        }
-        effective.putArray("members", newMembers);
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(effective.encode())
-                .when().put(getURL(SB_EffectiveVerticle.UPDATE))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("members", hasSize(15));
+            effective.put("members", newMembers);
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(effective.encode())
+                    .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("members", hasSize(15));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update effective add one member.
      */
     @Test
-    public void updateEffectiveAddOneMember() {
+    public void updateEffectiveAddOneMember(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        String id = "550b31f925da07681592db23";
-        JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
-                .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
-                .when().get(getURL(SB_EffectiveVerticle.GET))
-                .then().assertThat().statusCode(200)
-                .body("_id", is(id))
-                .body("members", hasSize(16)).extract().asString());
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            String id = "550b31f925da07681592db23";
+            JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+                    .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
+                    .when().get(getURL(SB_EffectiveVerticle.GET))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", is(id))
+                    .body("members", hasSize(16)).extract().asString());
 
-        effective.getArray("members").add(new JsonObject()
-                .putString("_id", "test")
-                .putObject("role", new JsonObject()
-                        .putString("code", "player")
-                        .putString("label", "Joueur"))
-        );
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(effective.encode())
-                .when().put(getURL(SB_EffectiveVerticle.UPDATE))
-                .then().assertThat().statusCode(200)
-                .body("_id", notNullValue())
-                .body("members", hasSize(17));
+            effective.getJsonArray("members").add(new JsonObject()
+                    .put("_id", "test")
+                    .put("role", new JsonObject()
+                            .put("code", "player")
+                            .put("label", "Joueur"))
+            );
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(effective.encode())
+                    .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("members", hasSize(17));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -294,38 +336,42 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      * Update effective with missing parameters.
      */
     @Test
-    public void updateEffectiveWithMissingParameters() {
+    public void updateEffectiveWithMissingParameters(TestContext context) {
+        Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        User user = generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce");
-        JsonObject effective = generateEffective();
-        given().header(TOKEN, user.getAccount().getToken())
-                .body(effective.encode())
-                .when().put(getURL(SB_EffectiveVerticle.UPDATE))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+            JsonObject effective = generateEffective();
+            given().header(TOKEN, user.getAccount().getToken())
+                    .body(effective.encode())
+                    .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     private JsonObject generateEffective() {
         JsonObject effective = new JsonObject()
-                .putObject("categoryAge", new JsonObject()
-                        .putString("code", "u19")
-                        .putString("label", "U19")
-                        .putString("genre", "Masculin")
-                        .putNumber("ageMax", 18)
-                        .putNumber("ageMin", 17)
-                        .putNumber("order", 4)
+                .put("categoryAge", new JsonObject()
+                        .put("code", "u19")
+                        .put("label", "U19")
+                        .put("genre", "Masculin")
+                        .put("ageMax", 18)
+                        .put("ageMin", 17)
+                        .put("order", 4)
                 )
-                .putString("sandBoxCfgId", "blabla");
+                .put("sandBoxCfgId", "blabla");
         JsonArray members = new JsonArray();
         for (int i = 0; i < 10; i++) {
             members.add(new JsonObject()
-                    .putString("_id", i + "-test")
-                    .putObject("role", new JsonObject()
-                            .putString("code", "player")
-                            .putString("label", "Joueur"))
+                    .put("_id", i + "-test")
+                    .put("role", new JsonObject()
+                            .put("code", "player")
+                            .put("label", "Joueur"))
             );
         }
-        effective.putArray("members", members);
+        effective.put("members", members);
         return effective;
     }
 

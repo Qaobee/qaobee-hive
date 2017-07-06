@@ -20,8 +20,9 @@
 package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Notifications dao.
@@ -37,7 +38,7 @@ public interface NotificationsDAO {
      * @param exclude      the exclude
      * @return the boolean
      */
-    boolean notify(String id, String collection, JsonObject notification, JsonArray exclude) ;
+    Promise<Boolean, QaobeeException, Integer> notify(String id, String collection, JsonObject notification, JsonArray exclude);
 
     /**
      * Add notification to user.
@@ -46,25 +47,23 @@ public interface NotificationsDAO {
      * @param notification the notification
      * @return the boolean
      */
-    boolean addNotificationToUser(String id, JsonObject notification);
+    Promise<Boolean, QaobeeException, Integer> addNotificationToUser(String id, JsonObject notification);
 
     /**
      * Mark as read json object.
      *
      * @param id the id
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject markAsRead(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> markAsRead(String id);
 
     /**
      * Delete json object.
      *
      * @param id the id
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject delete(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> delete(String id);
 
     /**
      * Gets list.
@@ -73,7 +72,6 @@ public interface NotificationsDAO {
      * @param start the start
      * @param limit the limit
      * @return the list
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getList(String id, int start, int limit) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getList(String id, int start, int limit);
 }

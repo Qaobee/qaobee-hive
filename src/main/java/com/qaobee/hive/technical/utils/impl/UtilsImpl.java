@@ -20,25 +20,29 @@ package com.qaobee.hive.technical.utils.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.MultiMap;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 import org.imgscalr.Scalr;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.MultiMap;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.eventbus.ReplyException;
-import org.vertx.java.core.json.EncodeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
@@ -57,20 +61,47 @@ public class UtilsImpl implements Utils {
     private static final Logger LOG = LoggerFactory.getLogger(UtilsImpl.class);
     private static final String NOT_LOGGED_KEY = "not.logged";
     private static final String SESSION_EXPIRED = "session.expired";
-    private static final String STATUS_FIELD = "status";
+    private static final String MISSING_PARAMS = "Missing mandatory parameters : ";
+    private static final String ACCOUNT_FIELD = "account";
     private final MongoDB mongo;
     private final HabilitUtils habilitUtils;
+    private final MongoClientCustom mongoClient;
 
     /**
      * Instantiates a new Utils.
      *
      * @param mongo        the mongo
      * @param habilitUtils the habilit utils
+     * @param mongoClient  the mongo client
      */
     @Inject
-    public UtilsImpl(MongoDB mongo, HabilitUtils habilitUtils) {
+    public UtilsImpl(MongoDB mongo, HabilitUtils habilitUtils, MongoClientCustom mongoClient) {
         this.mongo = mongo;
         this.habilitUtils = habilitUtils;
+        this.mongoClient = mongoClient;
+    }
+
+    @Override
+    public RequestWrapper wrapRequest(RoutingContext context) {
+        RequestWrapper wrapper = new RequestWrapper();
+        wrapper.setBody(context.getBodyAsString());
+        wrapper.setMethod(context.request().rawMethod());
+        wrapper.setHeaders(toMap(context.request().headers()));
+        wrapper.setParams(toMap(context.request().params()));
+        wrapper.setLocale(context.request().getHeader("Accept-Language"));
+        return wrapper;
+    }
+
+
+    private HashMap<String, List<String>> toMap(MultiMap multiMap) {
+        HashMap<String, List<String>> map = new HashMap<>();
+        multiMap.entries().forEach(e -> {
+            if (!map.containsKey(e.getKey())) {
+                map.put(e.getKey(), new ArrayList<>());
+            }
+            map.get(e.getKey()).add(e.getValue());
+        });
+        return map;
     }
 
     @Override
@@ -85,14 +116,6 @@ public class UtilsImpl implements Utils {
         }
     }
 
-    @Override
-    public Map<String, List<String>> toMap(final MultiMap multiMap) {
-        final Map<String, List<String>> map = new HashMap<>();
-        for (final String key : multiMap.names()) {
-            map.put(key, multiMap.getAll(key));
-        }
-        return map;
-    }
 
     @Override
     public void sendError(final Message<String> message, final QaobeeException e) {
@@ -109,7 +132,7 @@ public class UtilsImpl implements Utils {
     public void sendErrorJ(final Message<JsonObject> message, final QaobeeException e) {
         JsonObject err = new JsonObject(Json.encode(e));
         if (!err.getBoolean("report")) {
-            err.removeField("stackTrace");
+            err.remove("stackTrace");
         }
         message.fail(e.getCode().getCode(), err.encode());
     }
@@ -147,7 +170,7 @@ public class UtilsImpl implements Utils {
     @Override
     public JsonObject find(final String key, final String value, final JsonArray res) {
         for (int i = 0; i < res.size(); i++) {
-            final JsonObject jsonObj = res.get(i);
+            final JsonObject jsonObj = res.getJsonObject(i);
             if (jsonObj.getString(key).equals(value)) {
                 return jsonObj;
             }
@@ -157,103 +180,117 @@ public class UtilsImpl implements Utils {
 
     @Override
     public void sendStatus(final boolean b, final Message<String> message) {
-        final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean(STATUS_FIELD, b);
-        message.reply(jsonResp.encode());
-
+        message.reply(new JsonObject().put(Constants.STATUS, b).encode());
     }
 
     @Override
     public void sendStatusJson(final boolean b, final Message<JsonObject> message) {
-        final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean(STATUS_FIELD, b);
-        message.reply(jsonResp);
+        message.reply(new JsonObject().put(Constants.STATUS, b));
     }
 
     @Override
     public void sendStatusJson(boolean b, String cause, Message<JsonObject> message) {
-        final JsonObject jsonResp = new JsonObject();
-        jsonResp.putBoolean(STATUS_FIELD, b);
-        jsonResp.putString("cause", cause);
+        final JsonObject jsonResp = new JsonObject()
+                .put(Constants.STATUS, b)
+                .put("cause", cause);
         message.reply(jsonResp);
     }
 
     @Override
-    public void testMandatoryParams(Map<String, ?> mapParams, String... fields) throws QaobeeException {
+    public void testMandatoryParams(Map<String, List<String>> map, String... fields) throws QaobeeException {
         final List<String> missingFields = new ArrayList<>();
-        Map<String, ?> map = new HashMap<>();
-        if (mapParams != null) {
-            map = mapParams;
-        }
         for (final String field : fields) {
-            if (!map.containsKey(field) || map.get(field) == null || (map.get(field) instanceof String && StringUtils.isBlank((String) map.get(field))) || map.get(field) instanceof List && (((List<?>) map.get(field)).isEmpty() || ((List<?>) map.get(field)).get(0) instanceof String && StringUtils.isBlank((String) ((List<?>) map.get(field)).get(0)) || ((List<?>) map.get(field)).get(0) == null)) { // NOSONAR
+            if (!map.containsKey(field) || map.get(field) == null || StringUtils.isBlank(map.get(field).get(0))) {
                 missingFields.add(field);
             }
         }
         if (!missingFields.isEmpty()) {
-            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, "Missing mandatory parameters : " + missingFields);
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, MISSING_PARAMS + missingFields);
         }
     }
 
     @Override
-    public void testMandatoryParams(String body, final String... fields) throws QaobeeException {
-        testMandatoryParams(new JsonObject(StringUtils.isBlank(body) ? "{}" : body).toMap(), fields);
+    public void testMandatoryParams(JsonObject payload, final String... fields) throws QaobeeException {
+        JsonObject body = Optional.ofNullable(payload).orElse(new JsonObject());
+        final List<String> missingFields = new ArrayList<>();
+        for (String field : fields) {
+            if (!body.containsKey(field) || body.getValue(field) == null || (body.getValue(field) instanceof String && StringUtils.isEmpty(body.getString(field)))) {
+                missingFields.add(field);
+            }
+        }
+        if (!missingFields.isEmpty()) {
+            throw new QaobeeException(ExceptionCodes.MANDATORY_FIELD, MISSING_PARAMS + missingFields);
+        }
     }
 
     @Override
-    public User isUserLogged(RequestWrapper request) throws QaobeeException {
-        String token = "";
+    public Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request) {
+        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
         if (request.getUser() != null) {
-            return request.getUser();
+            deferred.resolve(request.getUser());
+        } else {
+            String token = getToken(request);
+            if (StringUtils.isBlank(token)) {
+                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
+            } else {
+                mongoClient.findOne(DBCollections.USER, new JsonObject().put("account.token", token), new JsonObject(), result -> {
+                    if (result.succeeded() && result.result() != null) {
+                        testSession(result.result(), request, deferred);
+                    } else {
+                        deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
+                    }
+                });
+            }
         }
+        return deferred.promise();
+    }
+
+    private void testSession(JsonObject jsonUser, RequestWrapper request, Deferred<User, QaobeeException, Integer> deferred) {
+        // we take the first one (should be only one)
+        final User user = Json.decodeValue(jsonUser.encode(), User.class);
+        if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
+            jsonUser.getJsonObject(ACCOUNT_FIELD).put("token", "");
+            user.getAccount().setToken(null);
+            jsonUser.getJsonObject(ACCOUNT_FIELD).put("tokenRenewDate", 0L);
+            user.getAccount().setTokenRenewDate(0L);
+        } else {
+            long connectionTime = System.currentTimeMillis();
+            jsonUser.getJsonObject(ACCOUNT_FIELD).put("tokenRenewDate", connectionTime);
+            user.getAccount().setTokenRenewDate(connectionTime);
+        }
+        mongo.upsert(jsonUser, DBCollections.USER).done(id -> {
+            if (user.getAccount().getTokenRenewDate() == 0) {
+                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
+            }
+            request.setUser(user);
+            deferred.resolve(user);
+        }).fail(deferred::reject);
+    }
+
+    private String getToken(RequestWrapper request) {
         if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
-            token = request.getHeaders().get(Constants.TOKEN).get(0);
+            return request.getHeaders().get(Constants.TOKEN).get(0);
         }
         if (request.getParams() != null && request.getParams().containsKey(Constants.TOKEN)) {
-            token = request.getParams().get(Constants.TOKEN).get(0);
+            return request.getParams().get(Constants.TOKEN).get(0);
         }
-        if (StringUtils.isBlank(token)) {
-            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
-        }
-        final JsonArray res = mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, "User");
-        if (res.size() != 1) {
-            throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
-        } else {
-            // we take the first one (should be only one)
-            final JsonObject jsonUser = res.get(0);
-            JsonObject userToSave = new JsonObject();
-            final User user = Json.decodeValue(jsonUser.encode(), User.class);
-            userToSave.putString("_id", user.get_id());
-            if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
-                userToSave.putString("account.token", null);
-                user.getAccount().setToken(null);
-                userToSave.putNumber("account.tokenRenewDate", 0L);
-                user.getAccount().setTokenRenewDate(0L);
-            } else {
-                long connectionTime = System.currentTimeMillis();
-                userToSave.putNumber("account.tokenRenewDate", connectionTime);
-                user.getAccount().setTokenRenewDate(connectionTime);
-            }
-            try {
-                mongo.update(userToSave, "User");
-                if (user.getAccount().getTokenRenewDate() == 0) {
-                    throw new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale()));
-                }
-                request.setUser(user);
-                return user;
-            } catch (final EncodeException e) {
-                LOG.error(e.getMessage(), e);
-                throw new QaobeeException(ExceptionCodes.JSON_EXCEPTION, e.getMessage());
-            }
-        }
+        return null;
     }
 
     @Override
-    public User isLoggedAndAdmin(RequestWrapper request) throws QaobeeException {
-        User user = isUserLogged(request);
-        if (!habilitUtils.hasHabilitation(user, Constants.ADMIN_HABILIT)) { // are we admin ?
-            throw new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", request.getLocale()));
-        }
-        return user;
+    public Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request) {
+        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+        isUserLogged(request).done(user -> {
+            if (!habilitUtils.hasHabilitation(user, Constants.ADMIN_HABILIT)) { // are we admin ?
+                deferred.reject(new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", request.getLocale())));
+            }
+            deferred.resolve(user);
+        }).fail(deferred::reject);
+        return deferred.promise();
+    }
+
+    @Override
+    public void testMandatoryParams(MultiMap params, String... fields) throws QaobeeException {
+        testMandatoryParams(toMap(params), fields);
     }
 }

@@ -21,7 +21,8 @@ package com.qaobee.hive.dao;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Shipping dao.
@@ -31,20 +32,18 @@ public interface ShippingDAO {
     /**
      * Pay.
      *
-     * @param user   the user
+     * @param user        the user
      * @param paymentData the plan id
-     * @param locale the locale
+     * @param locale      the locale
      * @return the completable future
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject pay(User user, JsonObject paymentData, String locale) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> pay(User user, JsonObject paymentData, String locale);
 
     /**
      * webHook boolean.
      *
      * @param body the body
      * @return the boolean
-     * @throws QaobeeException the qaobee exception
      */
-    boolean webHook(JsonObject body) throws QaobeeException;
+    Promise<Boolean, QaobeeException, Integer> webHook(JsonObject body);
 }

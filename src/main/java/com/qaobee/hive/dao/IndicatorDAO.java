@@ -20,8 +20,9 @@
 package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Indicator dao.
@@ -34,9 +35,8 @@ public interface IndicatorDAO {
      * @param countryId      the country id
      * @param listIndicators the list indicators
      * @return the indicator by code
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators);
 
     /**
      * Gets indicators list.
@@ -45,16 +45,14 @@ public interface IndicatorDAO {
      * @param countryId  the country id
      * @param screen     the screen
      * @return the indicators list
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getIndicatorsList(String activityId, String countryId, JsonArray screen) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getIndicatorsList(String activityId, String countryId, JsonArray screen);
 
     /**
      * Gets indicator.
      *
      * @param id the id
      * @return the indicator
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getIndicator(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getIndicator(String id);
 }

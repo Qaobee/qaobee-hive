@@ -24,16 +24,12 @@ import com.qaobee.hive.dao.PersonDAO;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vertx.java.core.eventbus.Message;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
+import io.vertx.core.Future;
+import io.vertx.core.eventbus.Message;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
@@ -42,7 +38,6 @@ import javax.inject.Inject;
  */
 @DeployableVerticle
 public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
-    private static final Logger LOG = LoggerFactory.getLogger(SB_PersonVerticle.class);
     /**
      * Handler to get a set of persons
      */
@@ -80,22 +75,17 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     public static final String PARAM_PERSON_ID = "_id";
     @Inject
-    private MongoDB mongo;
-    @Inject
-    private Utils utils;
-    @Inject
     private PersonDAO personDAO;
 
     @Override
-    public void start() {
-        super.start();
-        LOG.debug(this.getClass().getName() + " started");
-        vertx.eventBus()
-                .registerHandler(ADD, this::addPerson)
-                .registerHandler(GET, this::getPerson)
-                .registerHandler(UPDATE, this::updatePerson)
-                .registerHandler(GET_LIST, this::getPersonList)
-                .registerHandler(GET_LIST_SANDBOX, this::getPersonListBySandbox);
+    public void start(Future<Void> startFuture) {
+        inject(this)
+                .add(ADD, this::addPerson)
+                .add(GET, this::getPerson)
+                .add(UPDATE, this::updatePerson)
+                .add(GET_LIST, this::getPersonList)
+                .add(GET_LIST_SANDBOX, this::getPersonListBySandbox)
+                .register(startFuture);
     }
 
     /**
@@ -110,13 +100,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_LIST_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = PARAM_SANDBOX_ID, scope = Rule.Param.REQUEST)
     private void getPersonListBySandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        try {
-            message.reply(personDAO.getPersonListBySandbox(req.getParams().get(PARAM_SANDBOX_ID).get(0)).encode());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
-
+        replyJsonArray(message, personDAO.getPersonListBySandbox(req.getParams().get(PARAM_SANDBOX_ID).get(0)));
     }
 
     /**
@@ -130,14 +114,9 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = GET_LIST, method = Constants.POST, logged = true, mandatoryParams = {PARAM_LIST_ID, PARAM_LIST_FIELD}, scope = Rule.Param.BODY)
     private void getPersonList(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            JsonObject params = new JsonObject(req.getBody());
-            message.reply(personDAO.getPersonList(params.getArray(PARAM_LIST_ID), params.getArray(PARAM_LIST_FIELD)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e.getCode(), e.getMessage());
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        JsonObject params = new JsonObject(req.getBody());
+        replyJsonArray(message, personDAO.getPersonList(params.getJsonArray(PARAM_LIST_ID), params.getJsonArray(PARAM_LIST_FIELD)));
     }
 
     /**
@@ -153,7 +132,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = PARAM_PERSON_ID, scope = Rule.Param.BODY)
     private void updatePerson(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        message.reply(personDAO.updatePerson(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()).encode());
+        replyJsonObject(message, personDAO.updatePerson(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
     }
 
     /**
@@ -168,13 +147,8 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_PERSON_ID, scope = Rule.Param.REQUEST)
     private void getPerson(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            message.reply(personDAO.getPerson(req.getParams().get(PARAM_PERSON_ID).get(0)).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        replyJsonObject(message, personDAO.getPerson(req.getParams().get(PARAM_PERSON_ID).get(0)));
     }
 
     /**
@@ -188,13 +162,8 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      */
     @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = "person", scope = Rule.Param.BODY)
     private void addPerson(Message<String> message) {
-        try {
-            final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-            final JsonObject body = new JsonObject(req.getBody());
-            message.reply(personDAO.addPerson(body.getObject("person"), req.getUser().get_id(), req.getLocale()).encode());
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            utils.sendError(message, e);
-        }
+        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
+        final JsonObject body = new JsonObject(req.getBody());
+        replyJsonObject(message, personDAO.addPerson(body.getJsonObject("person"), req.getUser().get_id(), req.getLocale()));
     }
 }

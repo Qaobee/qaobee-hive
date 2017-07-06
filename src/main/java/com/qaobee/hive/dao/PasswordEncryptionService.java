@@ -25,13 +25,16 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
  * The interface Password encryption service.
  */
 public interface PasswordEncryptionService {
+
     /**
-     * Authenticate.
+     * Authenticate boolean.
      *
      * @param attemptedPassword the attempted password
      * @param encryptedPassword the encrypted password
      * @param salt              the salt
-     * @return true, if successful
+     *
+     * @return the boolean
+     *
      * @throws QaobeeException the qaobee exception
      */
     boolean authenticate(String attemptedPassword, byte[] encryptedPassword, byte[] salt) throws QaobeeException;
@@ -41,7 +44,9 @@ public interface PasswordEncryptionService {
      *
      * @param password the password
      * @param salt     the salt
+     *
      * @return the encrypted password
+     *
      * @throws QaobeeException the qaobee exception
      */
     byte[] getEncryptedPassword(String password, byte[] salt) throws QaobeeException;
@@ -50,6 +55,7 @@ public interface PasswordEncryptionService {
      * Generate salt.
      *
      * @return the byte[]
+     *
      * @throws QaobeeException the qaobee exception
      */
     byte[] generateSalt() throws QaobeeException;

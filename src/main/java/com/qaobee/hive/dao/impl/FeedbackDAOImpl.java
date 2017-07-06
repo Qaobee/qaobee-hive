@@ -22,12 +22,12 @@ package com.qaobee.hive.dao.impl;
 import com.qaobee.hive.dao.FeedbackDAO;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.json.JsonObject;
 import net.rcarz.jiraclient.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vertx.java.core.json.JsonObject;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,17 +42,9 @@ import java.util.List;
 public class FeedbackDAOImpl implements FeedbackDAO {
     private static final Logger LOG = LoggerFactory.getLogger(FeedbackDAOImpl.class);
     private static final String PROJECT_FIELD = "project";
-    private final JsonObject config;
-
-    /**
-     * Instantiates a new Feedback dao.
-     *
-     * @param config the config
-     */
     @Inject
-    public FeedbackDAOImpl(@Named("jira") JsonObject config) {
-        this.config = config;
-    }
+    @Named("jira")
+    private JsonObject config;
 
     @Override
     public void sendFeedback(JsonObject data) throws QaobeeException {
@@ -60,33 +52,28 @@ public class FeedbackDAOImpl implements FeedbackDAO {
         JiraClient jira = new JiraClient(config.getString("url"), creds);
         try {
             File temp = null;
-            if(data.containsField("img")) {
+            if (data.containsKey("img")) {
                 byte[] img = Base64.decodeBase64(data.getString("img").replace("data:image/png;base64,", ""));
                 temp = File.createTempFile("temp-file-name", ".png");
                 FileUtils.writeByteArrayToFile(temp, img);
             }
             String title = "Anonymous Feedback";
-            if (data.containsField("meta") && data.getObject("meta").containsField("user")) {
-                title = data.getObject("meta").getObject("user").getString("firstname") + " " + data.getObject("meta").getObject("user").getString("name");
+            if (data.containsKey("meta") && data.getJsonObject("meta").containsKey("user")) {
+                title = data.getJsonObject("meta").getJsonObject("user").getString("firstname") + " " + data.getJsonObject("meta").getJsonObject("user").getString("name");
             }
-            List<String> labels =  new ArrayList<>();
+            List<String> labels = new ArrayList<>();
             labels.add("feedback");
             String project = config.getString(PROJECT_FIELD);
-            if(data.containsField(PROJECT_FIELD)) {
+            if (data.containsKey(PROJECT_FIELD)) {
                 project = data.getString(PROJECT_FIELD);
-            }
-            List<String> versions =  new ArrayList<>();
-            if(data.containsField("version")) {
-                versions.add(data.getString("version"));
             }
             Issue newIssue = jira.createIssue(project, "Bug")
                     .field(Field.SUMMARY, "[" + title + "] " + data.getString("note").replaceAll("\n", " "))
-                    .field(Field.DESCRIPTION, data.getString("description", data.getString("note")) + "\n" +  data.getString("url") + "\n" + data.getObject("browser").encodePrettily())
-                    .field(Field.LABELS,labels)
-                    .field(Field.ISSUE_TYPE,data.getString("type", "feedback"))
-              //      .field(Field.VERSIONS, versions)
+                    .field(Field.DESCRIPTION, data.getString("description", data.getString("note")) + "\n" + data.getString("url") + "\n" + data.getJsonObject("browser").encodePrettily())
+                    .field(Field.LABELS, labels)
+                    .field(Field.ISSUE_TYPE, data.getString("type", "feedback"))
                     .execute();
-            if(temp !=null) {
+            if (temp != null) {
                 newIssue.addAttachment(temp);
                 FileUtils.deleteQuietly(temp);
             }

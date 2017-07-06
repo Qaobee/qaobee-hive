@@ -20,8 +20,9 @@
 package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Activity dao.
@@ -32,21 +33,20 @@ public interface ActivityDAO {
      *
      * @return the enabled
      */
-    JsonArray getEnabled();
+    Promise<JsonArray, QaobeeException, Integer> getEnabled();
 
     /**
      * Gets list.
      *
      * @return the list
      */
-    JsonArray getActivityList();
+    Promise<JsonArray, QaobeeException, Integer> getActivityList();
 
     /**
      * Get json object.
      *
      * @param id the id
      * @return the json object
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getActivity(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getActivity(String id);
 }

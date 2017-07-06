@@ -88,7 +88,8 @@ public enum ExceptionCodes {
     /**
      * Business Error
      */
-    BUSINESS_ERROR(200), /**
+    BUSINESS_ERROR(501),
+    /**
      * Unknown login exception codes.
      */
     UNKNOWN_LOGIN(401);
@@ -121,7 +122,7 @@ public enum ExceptionCodes {
      *
      * @param code the new code
      */
-    public void setCode(final int code) {
+    public void setCode(final int code) {// NOSONAR
         this.code = code;
     }
 

@@ -23,8 +23,9 @@ import com.qaobee.hive.dao.ActivityDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -33,33 +34,25 @@ import java.util.Map;
 /**
  * The type Activity dao.
  */
-public class ActivityDAOImpl implements ActivityDAO{
+public class ActivityDAOImpl implements ActivityDAO {
 
-    private final MongoDB mongo;
-
-    /**
-     * Instantiates a new Activity dao.
-     *
-     * @param mongo the mongo
-     */
     @Inject
-    public ActivityDAOImpl(MongoDB mongo) {
-        this.mongo = mongo;
-    }
+    private MongoDB mongo;
 
     @Override
-    public JsonArray getEnabled() {
+    public Promise<JsonArray, QaobeeException, Integer> getEnabled() {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put("enable", true);
         return mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.ACTIVITY);
     }
+
     @Override
-    public JsonArray getActivityList() {
+    public Promise<JsonArray, QaobeeException, Integer> getActivityList() {
         return mongo.findByCriterias(null, null, null, -1, -1, DBCollections.ACTIVITY);
     }
 
     @Override
-    public JsonObject getActivity(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getActivity(String id) {
         return mongo.getById(id, DBCollections.ACTIVITY);
     }
 }

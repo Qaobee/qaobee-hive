@@ -19,7 +19,8 @@
 
 package com.qaobee.hive.dao;
 
-import java.util.concurrent.CompletableFuture;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import org.jdeferred.Promise;
 
 /**
  * The interface Re captcha.
@@ -32,5 +33,5 @@ public interface ReCaptcha {
      * @param challenge the chalenge
      * @return the boolean
      */
-    CompletableFuture<Boolean> verify(String challenge);
+    Promise<Boolean, QaobeeException, Integer> verify(String challenge);
 }

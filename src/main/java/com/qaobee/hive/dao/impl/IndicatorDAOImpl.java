@@ -19,19 +19,15 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.dao.IndicatorDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * The type Indicator dao.
@@ -39,55 +35,39 @@ import java.util.List;
 public class IndicatorDAOImpl implements IndicatorDAO {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
-    private final MongoDB mongo;
-
-    /**
-     * Instantiates a new Indicator dao.
-     *
-     * @param mongo the mongo
-     */
     @Inject
-    public IndicatorDAOImpl(MongoDB mongo) {
-        this.mongo = mongo;
-    }
+    private MongoDB mongo;
 
     @Override
-    public JsonArray getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators) throws QaobeeException {
-        DBObject match;
-        BasicDBObject dbObjectParent;
-        BasicDBObject dbObjectChild;
+    public Promise<JsonArray, QaobeeException, Integer> getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators) {
         // $MATCH section
-        dbObjectParent = new BasicDBObject();
+        JsonObject dbObjectParent = new JsonObject();
         // - activity code
         dbObjectParent.put(PARAM_ACTIVITY_ID, activityId);
         // - country
         dbObjectParent.put(PARAM_COUNTRY_ID, countryId);
         // - code
-        dbObjectChild = new BasicDBObject("$in", listIndicators.toArray());
+        JsonObject dbObjectChild = new JsonObject().put("$in", listIndicators);
         dbObjectParent.put("code", dbObjectChild);
-        match = new BasicDBObject("$match", dbObjectParent);
-        List<DBObject> pipelineAggregation = Collections.singletonList(match);
-        return mongo.aggregate("_id", pipelineAggregation, DBCollections.INDICATOR_CFG);
+        JsonObject match = new JsonObject().put("$match", dbObjectParent);
+        JsonArray pipelineAggregation = new JsonArray().add(match);
+        return mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG);
     }
 
     @Override
-    public JsonArray getIndicatorsList(String activityId, String countryId, JsonArray screen) throws QaobeeException {
-        DBObject match;
-        DBObject project;
-        BasicDBObject dbObjectParent;
-        BasicDBObject dbObjectChild;
+    public Promise<JsonArray, QaobeeException, Integer> getIndicatorsList(String activityId, String countryId, JsonArray screen) {
         // $MATCH section
-        dbObjectParent = new BasicDBObject();
+        JsonObject dbObjectParent = new JsonObject();
         // - activity code
         dbObjectParent.put(PARAM_ACTIVITY_ID, activityId);
         // - country
         dbObjectParent.put(PARAM_COUNTRY_ID, countryId);
         // - SCREEN
-        dbObjectChild = new BasicDBObject("$in", screen.toArray());
+        JsonObject dbObjectChild = new JsonObject().put("$in", screen);
         dbObjectParent.put("listScreen", dbObjectChild);
-        match = new BasicDBObject("$match", dbObjectParent);
+        JsonObject match = new JsonObject().put("$match", dbObjectParent);
         // $PROJECT section
-        dbObjectParent = new BasicDBObject();
+        dbObjectParent = new JsonObject();
         dbObjectParent.put("_id", 1);
         dbObjectParent.put("code", 1);
         dbObjectParent.put(PARAM_ACTIVITY_ID, 1);
@@ -95,13 +75,13 @@ public class IndicatorDAOImpl implements IndicatorDAO {
         dbObjectParent.put("listScreen", 1);
         dbObjectParent.put("listField", 1);
         dbObjectParent.put("listValues", 1);
-        project = new BasicDBObject("$project", dbObjectParent);
-        List<DBObject> pipelineAggregation = Arrays.asList(match, project);
-       return mongo.aggregate("_id", pipelineAggregation, DBCollections.INDICATOR_CFG);
+        JsonObject project = new JsonObject().put("$project", dbObjectParent);
+        JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
+        return mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG);
     }
 
     @Override
-    public JsonObject getIndicator(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getIndicator(String id) {
         return mongo.getById(id, DBCollections.INDICATOR_CFG);
     }
 }

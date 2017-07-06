@@ -21,7 +21,7 @@ package com.qaobee.hive.technical.utils;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonObject;
 
 /**
  * The interface Mail utils.

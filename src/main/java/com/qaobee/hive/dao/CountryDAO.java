@@ -20,8 +20,9 @@
 package com.qaobee.hive.dao;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Promise;
 
 /**
  * The interface Country dao.
@@ -33,7 +34,7 @@ public interface CountryDAO {
      * @param alpha2 the alpha 2
      * @return the country from alpha 2
      */
-    JsonObject getCountryFromAlpha2(String alpha2);
+    Promise<JsonObject, QaobeeException, Integer> getCountryFromAlpha2(String alpha2);
 
     /**
      * Gets country list.
@@ -41,16 +42,14 @@ public interface CountryDAO {
      * @param locale the locale
      * @param label  the label
      * @return the country list
-     * @throws QaobeeException the qaobee exception
      */
-    JsonArray getCountryList(String locale, String label) throws QaobeeException;
+    Promise<JsonArray, QaobeeException, Integer> getCountryList(String locale, String label);
 
     /**
      * Gets country.
      *
      * @param id the id
      * @return the country
-     * @throws QaobeeException the qaobee exception
      */
-    JsonObject getCountry(String id) throws QaobeeException;
+    Promise<JsonObject, QaobeeException, Integer> getCountry(String id);
 }

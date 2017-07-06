@@ -19,29 +19,27 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.qaobee.hive.dao.CountryDAO;
 import com.qaobee.hive.dao.StructureDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * The type Structure dao.
  */
 public class StructureDAOImpl implements StructureDAO {
+    private static final String COUNTRY_ALPHA_2_FIELD = "countryAlpha2";
     private final MongoDB mongo;
-    @Inject
-    private CountryDAO countryDAO;
+    private final CountryDAO countryDAO;
 
     /**
      * Instantiates a new Structure dao.
@@ -49,51 +47,51 @@ public class StructureDAOImpl implements StructureDAO {
      * @param mongo the mongo
      */
     @Inject
-    public StructureDAOImpl(MongoDB mongo) {
+    public StructureDAOImpl(MongoDB mongo, CountryDAO countryDAO) {
         this.mongo = mongo;
+        this.countryDAO = countryDAO;
     }
 
     @Override
-    public JsonObject update(JsonObject structure) throws QaobeeException {
-        mongo.save(structure, DBCollections.STRUCTURE);
-        return structure;
+    public Promise<String, QaobeeException, Integer> update(JsonObject structure) {
+        return mongo.upsert(structure, DBCollections.STRUCTURE);
     }
 
     @Override
-    public JsonArray getListOfStructures(String activity, JsonObject address) throws QaobeeException {
-        JsonObject country = countryDAO.getCountryFromAlpha2(address.getString("countryAlpha2", "FR"));
-        if (country == null) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR, "No Country defined for (" + address.getString("countryAlpha2") + ")");
-        }
-        // Aggregat section
-        DBObject match;
-        BasicDBObject dbObjectParent;
-        // $MACTH section
-        dbObjectParent = new BasicDBObject();
-        // Activity ID
-        dbObjectParent.put("activity._id", activity);
-        // Country ID
-        dbObjectParent.put("country._id", country.getString("_id"));
-        // City OR Zipcode
-        BasicDBList dbList = new BasicDBList();
-        dbList.add(new BasicDBObject("address.city", address.getString("city").toUpperCase()));
-        dbList.add(new BasicDBObject("address.zipcode", address.getString("zipcode")));
-        dbObjectParent.put("$or", dbList.toArray());
-        match = new BasicDBObject("$match", dbObjectParent);
-        // Pipeline
-        List<DBObject> pipelineAggregation = Collections.singletonList(match);
-       return mongo.aggregate("_id", pipelineAggregation, DBCollections.STRUCTURE);
+    public Promise<JsonArray, QaobeeException, Integer> getListOfStructures(String activity, JsonObject address) {
+        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
+        countryDAO.getCountryFromAlpha2(address.getString(COUNTRY_ALPHA_2_FIELD, "FR")).done(country -> {
+            if (country == null) {
+                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No Country defined for (" + address.getString(COUNTRY_ALPHA_2_FIELD) + ")"));
+            } else {
+                // $MACTH section
+                JsonObject dbObjectParent = new JsonObject().put("activity._id", activity).put("country._id", country.getString("_id"));
+                // City OR Zipcode
+                JsonArray dbList = new JsonArray()
+                        .add(new JsonObject().put("address.city", address.getString("city").toUpperCase()))
+                        .add(new JsonObject().put("address.zipcode", address.getString("zipcode")));
+                dbObjectParent.put("$or", dbList);
+                JsonObject match = new JsonObject().put("$match", dbObjectParent);
+                // Pipeline
+                JsonArray pipelineAggregation = new JsonArray().add(match);
+                mongo.aggregate(pipelineAggregation, DBCollections.STRUCTURE).done(deferred::resolve).fail(deferred::reject);
+            }
+        }).fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No Country defined for (" + address.getString(COUNTRY_ALPHA_2_FIELD) + ")")));
+        return deferred.promise();
     }
 
     @Override
-    public JsonObject getStructure(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getStructure(String id) {
         return mongo.getById(id, DBCollections.STRUCTURE);
     }
 
     @Override
-    public JsonObject addStructure(JsonObject structure) throws QaobeeException {
-        final String id = mongo.save(structure, DBCollections.STRUCTURE);
-        structure.putString("_id", id);
-        return structure;
+    public Promise<JsonObject, QaobeeException, Integer> addStructure(JsonObject structure) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.upsert(structure, DBCollections.STRUCTURE).done(id -> {
+            structure.put("_id", id);
+            deferred.resolve(structure);
+        }).fail(deferred::reject);
+        return deferred.promise();
     }
 }

@@ -22,12 +22,14 @@ package com.qaobee.hive.dao.impl;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.dao.CountryDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.vertx.java.core.json.JsonArray;
-import org.vertx.java.core.json.JsonObject;
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -37,8 +39,7 @@ import java.util.Map;
  * The type Country dao.
  */
 public class CountryDAOImpl implements CountryDAO {
-    private Map<String, JsonObject> mapCountry;
-
+    private final JsonObject mapCountry = new JsonObject();
     private final MongoDB mongo;
 
     /**
@@ -52,42 +53,42 @@ public class CountryDAOImpl implements CountryDAO {
     }
 
     @Override
-    public JsonObject getCountryFromAlpha2(String alpha2) {
-        if (mapCountry == null) {
-            getCountries();
-        }
-        if (mapCountry == null) {
-            return null;
-        }
-        return mapCountry.get(alpha2.toUpperCase());
+    public Promise<JsonObject, QaobeeException, Integer> getCountryFromAlpha2(String alpha2) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        getCountries()
+                .done(map -> deferred.resolve(map.getJsonObject(alpha2.toUpperCase())))
+                .fail(deferred::reject);
+        return deferred.promise();
     }
 
     @Override
-    public JsonArray getCountryList(String locale, String label) throws QaobeeException {
+    public Promise<JsonArray, QaobeeException, Integer> getCountryList(String locale, String label) {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(CountryVerticle.PARAM_LOCAL, locale);
         // label
         if (StringUtils.isNotBlank(label)) {
             criterias.put(CountryVerticle.PARAM_LABEL, label);
         }
-        JsonArray resultJson = mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.COUNTRY);
-        if (resultJson.size() == 0) {
-            throw new QaobeeException(ExceptionCodes.DATA_ERROR,
-                    "No Country defined for (" + label + ")");
-        }
-        return resultJson;
+        return mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.COUNTRY);
     }
 
     @Override
-    public JsonObject getCountry(String id) throws QaobeeException {
+    public Promise<JsonObject, QaobeeException, Integer> getCountry(String id) {
         return mongo.getById(id, DBCollections.COUNTRY);
     }
 
-    private void getCountries() {
-        JsonArray resultJson = mongo.findAll(null, null, -1, 0, DBCollections.COUNTRY);
-        if (resultJson != null) {
-            mapCountry = new HashMap<>();
-            resultJson.forEach(c -> mapCountry.put(((JsonObject) c).getString("_id").split("-")[2], (JsonObject) c));
+    private Promise<JsonObject, QaobeeException, Integer> getCountries() {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        if (mapCountry == null || mapCountry.fieldNames().isEmpty()) {
+            mongo.findAll(null, null, -1, 0, DBCollections.COUNTRY)
+                    .done(resultJson -> {
+                        resultJson.forEach(c -> mapCountry.put(((JsonObject) c).getString("_id").split("-")[2], (JsonObject) c));
+                        deferred.resolve(mapCountry);
+                    })
+                    .fail(deferred::reject);
+        } else {
+            deferred.resolve(mapCountry);
         }
+        return deferred.promise();
     }
 }

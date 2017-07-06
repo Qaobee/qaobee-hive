@@ -21,16 +21,16 @@ package com.qaobee.hive.test.api.commons.user;
 
 import com.qaobee.hive.api.v1.commons.users.ProfileVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.unit.Async;
+import io.vertx.ext.unit.TestContext;
 import org.junit.Assert;
 import org.junit.Test;
-import org.vertx.java.core.json.JsonObject;
-import org.vertx.java.core.json.impl.Json;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 
 /**
@@ -44,36 +44,44 @@ public class ProfileTest extends VertxJunitSupport {
      * Update profile with common data.
      */
     @Test
-    public void updateProfileWithCommonData() {
-        User u = generateLoggedUser();
-        u.setGender("androgyn");
-        given().header(TOKEN, u.getAccount().getToken())
-               .body(Json.encode(u))
-               .when().post(getURL(ProfileVerticle.UPDATE))
-               .then().assertThat().statusCode(200)
-               .body("name", is(u.getName()))
-               .body("gender", is("androgyn"));
+    public void updateProfileWithCommonData(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            u.setGender("androgyn");
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(Json.encode(u))
+                    .when().post(getURL(ProfileVerticle.UPDATE))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()))
+                    .body("gender", is("androgyn"));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update profile with password change.
      */
     @Test
-    public void updateProfileWithPasswordChange() {
-        User u = generateLoggedUser();
-        u.getAccount().setPasswd("toto");
-        given().header(TOKEN, u.getAccount().getToken())
-               .body(Json.encode(u))
-               .when().post(getURL(ProfileVerticle.UPDATE))
-               .then().assertThat().statusCode(200)
-               .body("name", is(u.getName()));
-        final JsonObject params = new JsonObject();
-        params.putString(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
-        params.putString(UserVerticle.PARAM_PWD, "toto");
-        given().body(params.encode())
-               .when().post(getURL(UserVerticle.LOGIN))
-               .then().assertThat().statusCode(200)
-               .body("name", is(u.getName()));
+    public void updateProfileWithPasswordChange(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            u.getAccount().setPasswd("toto");
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(Json.encode(u))
+                    .when().post(getURL(ProfileVerticle.UPDATE))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+            final JsonObject params = new JsonObject();
+            params.put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
+            params.put(UserVerticle.PARAM_PWD, "toto");
+            given().body(params.encode())
+                    .when().post(getURL(UserVerticle.LOGIN))
+                    .then().assertThat().statusCode(200)
+                    .body("name", is(u.getName()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -100,91 +108,112 @@ public class ProfileTest extends VertxJunitSupport {
      * Update profile with missing id.
      */
     @Test
-    public void updateProfileWithMissingId() {
-        User u = generateLoggedUser();
-        u.setGender("androgyn");
-        JsonObject user = new JsonObject(Json.encode(u));
-        user.removeField("_id");
+    public void updateProfileWithMissingId(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            u.setGender("androgyn");
+            JsonObject user = new JsonObject(Json.encode(u));
+            user.remove("_id");
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(user.encode())
-                .when().post(getURL(ProfileVerticle.UPDATE))
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(user.encode())
+                    .when().post(getURL(ProfileVerticle.UPDATE))
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Update profile with wrong id.
      */
     @Test
-    public void updateProfileWithWrongId() {
-        User u = generateLoggedUser();
-        u.setGender("androgyn");
-        JsonObject user = new JsonObject(Json.encode(u));
-        user.putString("_id", "bla");
+    public void updateProfileWithWrongId(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            u.setGender("androgyn");
+            JsonObject user = new JsonObject(Json.encode(u));
+            user.put("_id", "bla");
 
-        given().header(TOKEN, u.getAccount().getToken())
-                .body(user.encode())
-                .when().post(getURL(ProfileVerticle.UPDATE))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            given().header(TOKEN, u.getAccount().getToken())
+                    .body(user.encode())
+                    .when().post(getURL(ProfileVerticle.UPDATE))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Generate profile pdf.
      */
     @Test
-    public void generateProfilePDF() {
-        User u = generateLoggedUser();
-        byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
-                                  .get(getURL(ProfileVerticle.GENERATE_PDF))
-                                  .then().assertThat().statusCode(200)
-                                  .extract().asByteArray();
-        Assert.assertTrue(byteArray.length > 0);
+    public void generateProfilePDF(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
+                    .get(getURL(ProfileVerticle.GENERATE_PDF))
+                    .then().assertThat().statusCode(200)
+                    .extract().asByteArray();
+            Assert.assertTrue(byteArray.length > 0);
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Generate profile pdf with another temp dir.
      */
     @Test
-    public void generateProfilePDFWithAnotherTempDir() {
+    public void generateProfilePDFWithAnotherTempDir(TestContext context) {
+        Async async = context.async();
         System.setProperty("OPENSHIFT_DATA_DIR", System.getProperty("java.io.tmpdir") + "/bla");
-        User u = generateLoggedUser();
-        byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
-                                  .get(getURL(ProfileVerticle.GENERATE_PDF))
-                                  .then().assertThat().statusCode(200)
-                                  .extract().asByteArray();
-        Assert.assertTrue(byteArray.length > 0);
+        generateLoggedUser().then(u -> {
+            byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
+                    .get(getURL(ProfileVerticle.GENERATE_PDF))
+                    .then().assertThat().statusCode(200)
+                    .extract().asByteArray();
+            Assert.assertTrue(byteArray.length > 0);
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Generate profile pdf with wrong datas.
      */
     @Test
-    public void generateProfilePDFWithWrongDatas() {
-        User u = generateLoggedUser();
-        u.setName("<&#\"\\-+}]à@");
-        try {
-            mongo.save(u);
-        } catch (QaobeeException e) {
-            Assert.fail(e.getMessage());
-        }
-        given().header(TOKEN, u.getAccount().getToken())
-                .get(getURL(ProfileVerticle.GENERATE_PDF))
-                .then().assertThat().statusCode(ExceptionCodes.INTERNAL_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.INTERNAL_ERROR.toString()));
+    public void generateProfilePDFWithWrongDatas(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            u.setName("<&#\"\\-+}]à@");
+            mongo.upsert(u).then(id -> {
+                given().header(TOKEN, u.getAccount().getToken())
+                        .get(getURL(ProfileVerticle.GENERATE_PDF))
+                        .then().assertThat().statusCode(ExceptionCodes.INTERNAL_ERROR.getCode())
+                        .body(CODE, is(ExceptionCodes.INTERNAL_ERROR.toString()));
+                async.complete();
+            }).fail(e -> Assert.fail(e.getMessage()));
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
      * Generate profile with wrong http method.
      */
     @Test
-    public void generateProfileWithWrongHttpMethod() {
-        User u = generateLoggedUser();
-        given().header(TOKEN, u.getAccount().getToken())
-               .post(getURL(ProfileVerticle.GENERATE_PDF))
-                .then().assertThat().statusCode(404)
-                .body(STATUS, is(false));
+    public void generateProfileWithWrongHttpMethod(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().then(u -> {
+            given().header(TOKEN, u.getAccount().getToken())
+                    .post(getURL(ProfileVerticle.GENERATE_PDF))
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+            async.complete();
+        }).fail(e -> Assert.fail(e.getMessage()));
+        async.await(TIMEOUT);
     }
 
     /**
@@ -193,7 +222,7 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateProfilePDFWithNonLoggedUser() {
         given().get(getURL(ProfileVerticle.GENERATE_PDF))
-               .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-               .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 }

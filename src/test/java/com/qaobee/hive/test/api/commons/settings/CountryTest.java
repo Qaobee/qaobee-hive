@@ -23,7 +23,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
 
-import static com.jayway.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -133,8 +133,8 @@ public class CountryTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
         given().queryParam(CountryVerticle.PARAM_LOCAL, "Kl")
                 .get(getURL(CountryVerticle.GET_LIST))
-                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+                .then().assertThat().statusCode(200)
+                .body("", hasSize(0));
     }
 
     /**
