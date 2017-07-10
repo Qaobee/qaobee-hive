@@ -27,6 +27,7 @@ import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.AssetsService;
+import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
 import com.qaobee.hive.technical.utils.HabilitUtils;
@@ -117,7 +118,6 @@ public class GuiceModule extends AbstractModule {
         bind(StructureDAO.class).to(StructureDAOImpl.class).in(Singleton.class);
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
         bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
-        bind(CountryDAO.class).to(CountryDAOImpl.class).in(Singleton.class);
         bind(IndicatorDAO.class).to(IndicatorDAOImpl.class).in(Singleton.class);
         bind(SeasonDAO.class).to(SeasonDAOImpl.class).in(Singleton.class);
         bind(UserDAO.class).to(UserDAOImpl.class).in(Singleton.class);
@@ -139,5 +139,6 @@ public class GuiceModule extends AbstractModule {
         bind(AssetsService.class).toInstance(AssetsService.createProxy(vertx, AssetsService.ADDRESS));
         bind(ActivityCfgService.class).toInstance(ActivityCfgService.createProxy(vertx, ActivityCfgService.ADDRESS));
         bind(ActivityService.class).toInstance(ActivityService.createProxy(vertx, ActivityService.ADDRESS));
+        bind(CountryService.class).toInstance(CountryService.createProxy(vertx, CountryService.ADDRESS));
     }
 }

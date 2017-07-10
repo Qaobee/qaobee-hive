@@ -21,10 +21,10 @@ package com.qaobee.hive.test.config;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
 import com.qaobee.hive.services.ActivityService;
+import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -135,6 +135,8 @@ public class VertxJunitSupport implements JSDataMongoTest {
     private JsonObject mongoConf;
     @Inject
     private ActivityService activityService;
+    @Inject
+    private CountryService countryService;
 
     /**
      * Start mongo server.
@@ -208,6 +210,9 @@ public class VertxJunitSupport implements JSDataMongoTest {
             LOG.info("Embeded MongoDB started");
 
             vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config), ar -> {
+                if (ar.failed()) {
+                    ar.cause().printStackTrace();
+                }
                 context.assertTrue(ar.succeeded());
                 vertx.exceptionHandler(context.exceptionHandler());
                 Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
@@ -230,14 +235,19 @@ public class VertxJunitSupport implements JSDataMongoTest {
     @After
     public void cleanDatas(TestContext context) {
         Async async = context.async();
-        mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
-            if (t != null) {
-                LOG.error(t.getMessage(), t);
-            }
+        if (mongoClientCustom != null && mongoClientCustom.getDB() != null && mongoClientCustom.getDB().getDatabase("hive") != null) {
+            mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
+                if (t != null) {
+                    LOG.error(t.getMessage(), t);
+                }
+                vertx.close();
+                JunitMongoSingleton.getInstance().getProcess().stop();
+                async.complete();
+            });
+        } else {
             vertx.close();
-            JunitMongoSingleton.getInstance().getProcess().stop();
             async.complete();
-        });
+        }
         async.await(TIMEOUT * 10);
     }
 
@@ -488,8 +498,8 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     protected Promise<JsonObject, Throwable, Integer> getActivity(String id, User user) {
         Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        activityService.getActivity(id, res->{
-            if(res.succeeded()) {
+        activityService.getActivity(id, res -> {
+            if (res.succeeded()) {
                 deferred.resolve(res.result());
             } else {
                 deferred.reject(res.cause());
@@ -506,11 +516,13 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     protected Promise<JsonObject, Throwable, Integer> getCountry(String id) {
         Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constants.GET);
-        req.getParams().put(CountryVerticle.PARAM_ID, Collections.singletonList(id));
-        sendOnBus(CountryVerticle.GET, req).done(res -> deferred.resolve(new JsonObject(res))).fail(deferred::reject);
+        countryService.getCountry(id, res -> {
+            if (res.succeeded()) {
+                deferred.resolve(res.result());
+            } else {
+                deferred.reject(res.cause());
+            }
+        });
         return deferred.promise();
     }
 }

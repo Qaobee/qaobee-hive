@@ -116,6 +116,6 @@ public class ActivityCfgServiceImpl implements ActivityCfgService {
                         resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "no data found")));
                     }
                 })
-                .fail(e-> resultHandler.handle(Future.failedFuture(e)));
+                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
     }
 }

@@ -37,10 +37,12 @@ import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.services.ActivityService;
+import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
@@ -73,7 +75,7 @@ public class SignupDAOImpl implements SignupDAO {
 
     private final ActivityService activityService;
     private final MongoDB mongo;
-    private final CountryDAO countryDAO;
+    private final CountryService countryService;
     private final UserDAO userDAO;
     private final StructureDAO structureDAO;
     private final ReCaptcha reCaptcha;
@@ -88,7 +90,7 @@ public class SignupDAOImpl implements SignupDAO {
      *
      * @param activityService  the activity dao
      * @param mongo        the mongo
-     * @param countryDAO   the country dao
+     * @param countryService   the country dao
      * @param userDAO      the user dao
      * @param structureDAO the structure dao
      * @param reCaptcha    the re captcha
@@ -98,12 +100,12 @@ public class SignupDAOImpl implements SignupDAO {
      * @param vertx        the vertx
      */
     @Inject
-    public SignupDAOImpl(ActivityService activityService, MongoDB mongo, CountryDAO countryDAO, UserDAO userDAO, // NOSONAR
+    public SignupDAOImpl(ActivityService activityService, MongoDB mongo, CountryService countryService, UserDAO userDAO, // NOSONAR
                          StructureDAO structureDAO, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime,
                          MailUtils mailUtils, TemplatesDAO templatesDAO, Vertx vertx) {
         this.activityService = activityService;
         this.mongo = mongo;
-        this.countryDAO = countryDAO;
+        this.countryService = countryService;
         this.userDAO = userDAO;
         this.structureDAO = structureDAO;
         this.reCaptcha = reCaptcha;
@@ -253,18 +255,22 @@ public class SignupDAOImpl implements SignupDAO {
                 deferred.resolve(structure);
             }).fail(deferred::reject);
         } else {
-            countryDAO.getCountryFromAlpha2(structure.getJsonObject(COUNTRY_FIELD).getString("_id").split("-")[2]).done(country -> {
-                structure.put(COUNTRY_FIELD, country);
-                structure.getJsonObject("address").put(COUNTRY_FIELD, country.getString("label"));
-                activityService.getActivity(activityId, activity -> {
-                    if(activity.succeeded()) {
-                        structure.put("activity", activity);
-                        deferred.resolve(structure);
-                    } else {
-                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, activity.cause()));
-                    }
-                });
-            }).fail(deferred::reject);
+            countryService.getCountryFromAlpha2(structure.getJsonObject(COUNTRY_FIELD).getString("_id").split("-")[2],country -> {
+                if(country.succeeded()) {
+                    structure.put(COUNTRY_FIELD, country.result());
+                    structure.getJsonObject("address").put(COUNTRY_FIELD, country.result().getString("label"));
+                    activityService.getActivity(activityId, activity -> {
+                        if (activity.succeeded()) {
+                            structure.put("activity", activity);
+                            deferred.resolve(structure);
+                        } else {
+                            deferred.reject(new QaobeeException(((QaobeeSvcException) activity.cause()).getCode(), activity.cause()));
+                        }
+                    });
+                } else {
+                    deferred.reject(new QaobeeException(((QaobeeSvcException) country.cause()).getCode(), country.cause()));
+                }
+            });
         }
         return deferred.promise();
     }

@@ -18,7 +18,7 @@
 package com.qaobee.hive.test.api.commons.settings;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityRoute;
-import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
+import com.qaobee.hive.api.v1.commons.settings.CountryRoute;
 import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -129,7 +129,7 @@ public class SeasonTest extends VertxJunitSupport {
             getCountry("CNTR-250-FR-FRA").then(country -> {
                 getActivity("ACT-HAND", u).then(activity -> {
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) country.getString(CountryVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) country.getString(CountryRoute.PARAM_ID))
                             .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) activity.getString(ActivityRoute.PARAM_ID))
                             .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
                             .then().assertThat().statusCode(200)
@@ -185,7 +185,7 @@ public class SeasonTest extends VertxJunitSupport {
                             .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
                             .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
                             .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
                             .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
@@ -228,7 +228,7 @@ public class SeasonTest extends VertxJunitSupport {
                     GregorianCalendar today = new GregorianCalendar();
                     int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
                             .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
                             .when().get(getURL(SeasonVerticle.GET_CURRENT))
                             .then().assertThat().statusCode(200)
@@ -286,7 +286,7 @@ public class SeasonTest extends VertxJunitSupport {
                             .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
                             .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
                             .when().get(getURL(SeasonVerticle.GET_CURRENT))
                             .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())

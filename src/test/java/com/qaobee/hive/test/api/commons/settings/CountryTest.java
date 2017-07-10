@@ -18,7 +18,7 @@
  */
 package com.qaobee.hive.test.api.commons.settings;
 
-import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
+import com.qaobee.hive.api.v1.commons.settings.CountryRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
@@ -32,14 +32,16 @@ import static org.hamcrest.Matchers.*;
  * @author cke
  */
 public class CountryTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/commons/settings/country");
+    
     /**
      * Gets country.
      */
     @Test
     public void getCountry() {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-        given().queryParam(CountryVerticle.PARAM_ID, "CNTR-250-FR-FRA")
-                .when().get(getURL(CountryVerticle.GET))
+        given().queryParam(CountryRoute.PARAM_ID, "CNTR-250-FR-FRA")
+                .when().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
                 .body("label", is("France"));
@@ -50,7 +52,7 @@ public class CountryTest extends VertxJunitSupport {
      */
     @Test
     public void getCountryWithWrongHttpMethodTest() {
-        given().post(getURL(CountryVerticle.GET))
+        given().post(BASE_URL + "/get")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -60,11 +62,11 @@ public class CountryTest extends VertxJunitSupport {
      */
     @Test
     public void getCountryWithMissingParameterTest() {
-        given().get(getURL(CountryVerticle.GET))
+        given().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        given().queryParam(CountryVerticle.PARAM_ID, "")
-                .get(getURL(CountryVerticle.GET))
+        given().queryParam(CountryRoute.PARAM_ID, "")
+                .get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -75,8 +77,8 @@ public class CountryTest extends VertxJunitSupport {
     @Test
     public void getCountryWithWrongActivityIdTest() {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-        given().queryParam(CountryVerticle.PARAM_ID, "Pastafarie")
-                .get(getURL(CountryVerticle.GET))
+        given().queryParam(CountryRoute.PARAM_ID, "Pastafarie")
+                .get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
@@ -89,14 +91,14 @@ public class CountryTest extends VertxJunitSupport {
     public void getListOfCountries() {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
 
-        given().queryParam(CountryVerticle.PARAM_LOCAL, "fr")
-                .when().get(getURL(CountryVerticle.GET_LIST))
+        given().queryParam(CountryRoute.PARAM_LOCAL, "fr")
+                .when().get(BASE_URL + "/getList")
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(202));
 
-        given().queryParam(CountryVerticle.PARAM_LABEL, "//Fra")
-                .queryParam(CountryVerticle.PARAM_LOCAL, "fr")
-                .when().get(getURL(CountryVerticle.GET_LIST))
+        given().queryParam(CountryRoute.PARAM_LABEL, "//Fra")
+                .queryParam(CountryRoute.PARAM_LOCAL, "fr")
+                .when().get(BASE_URL + "/getList")
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(4));
     }
@@ -106,7 +108,7 @@ public class CountryTest extends VertxJunitSupport {
      */
     @Test
     public void getListOfCountriesWithWrongHttpMethodTest() {
-        given().post(getURL(CountryVerticle.GET_LIST))
+        given().post(BASE_URL + "/getList")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -116,11 +118,11 @@ public class CountryTest extends VertxJunitSupport {
      */
     @Test
     public void getListOfCountriesWithMissingParameterTest() {
-        given().get(getURL(CountryVerticle.GET_LIST))
+        given().get(BASE_URL + "/getList")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        given().queryParam(CountryVerticle.PARAM_LOCAL, "")
-                .get(getURL(CountryVerticle.GET_LIST))
+        given().queryParam(CountryRoute.PARAM_LOCAL, "")
+                .get(BASE_URL + "/getList")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -131,8 +133,8 @@ public class CountryTest extends VertxJunitSupport {
     @Test
     public void getListOfCountriesWithWrongParamLocalTest() {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-        given().queryParam(CountryVerticle.PARAM_LOCAL, "Kl")
-                .get(getURL(CountryVerticle.GET_LIST))
+        given().queryParam(CountryRoute.PARAM_LOCAL, "Kl")
+                .get(BASE_URL + "/getList")
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(0));
     }
@@ -143,13 +145,13 @@ public class CountryTest extends VertxJunitSupport {
     @Test
     public void getCountryAlpha2() {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-        given().queryParam(CountryVerticle.PARAM_ALPHA2, "fr")
-                .when().get(getURL(CountryVerticle.GET_ALPHA2))
+        given().queryParam(CountryRoute.PARAM_ALPHA2, "fr")
+                .when().get(BASE_URL + "/getAlpha2")
                 .then().assertThat().statusCode(200)
                 .body("", notNullValue())
                 .body("label", is("France"));
-        given().queryParam(CountryVerticle.PARAM_ALPHA2, "FR")
-                .when().get(getURL(CountryVerticle.GET_ALPHA2))
+        given().queryParam(CountryRoute.PARAM_ALPHA2, "FR")
+                .when().get(BASE_URL + "/getAlpha2")
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
                 .body("label", is("France"));
@@ -160,7 +162,7 @@ public class CountryTest extends VertxJunitSupport {
      */
     @Test
     public void getCountryAlpha2WithWrongHttpMethodTest() {
-        given().post(getURL(CountryVerticle.GET_ALPHA2))
+        given().post(BASE_URL + "/getAlpha2")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -170,11 +172,11 @@ public class CountryTest extends VertxJunitSupport {
      */
     @Test
     public void getCountryAlpha2WithMissingParameterTest() {
-        given().get(getURL(CountryVerticle.GET_ALPHA2))
+        given().get(BASE_URL + "/getAlpha2")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        given().queryParam(CountryVerticle.PARAM_ALPHA2, "")
-                .get(getURL(CountryVerticle.GET_ALPHA2))
+        given().queryParam(CountryRoute.PARAM_ALPHA2, "")
+                .get(BASE_URL + "/getAlpha2")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -185,8 +187,8 @@ public class CountryTest extends VertxJunitSupport {
     @Test
     public void getCountryAlpha2WithWrongActivityIdTest() {
         populate(POPULATE_ONLY, SETTINGS_COUNTRY);
-        given().queryParam(CountryVerticle.PARAM_ALPHA2, "kl")
-                .get(getURL(CountryVerticle.GET_ALPHA2))
+        given().queryParam(CountryRoute.PARAM_ALPHA2, "kl")
+                .get(BASE_URL + "/getAlpha2")
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
