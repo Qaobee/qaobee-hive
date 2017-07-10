@@ -51,7 +51,6 @@ public interface UserDAO {
      *
      * @param user   the user
      * @param locale the locale
-     * @return the boolean
      * @throws QaobeeException the qaobee exception
      */
     void checkUserInformations(User user, String locale) throws QaobeeException;
@@ -93,7 +92,8 @@ public interface UserDAO {
     /**
      * Gets user by login.
      *
-     * @param login the login
+     * @param login  the login
+     * @param locale the locale
      * @return the user by login
      */
     Promise<JsonObject, QaobeeException, Integer> getUserByLogin(String login, String locale);
