@@ -119,6 +119,7 @@ public class AssetsServiceImpl implements AssetsService {
                     }
                 });
             } catch (IllegalArgumentException e) {
+                LOG.error(e.getMessage(), e);
                 resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
             }
         } else {
