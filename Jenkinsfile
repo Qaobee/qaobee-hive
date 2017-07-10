@@ -51,7 +51,7 @@ node {
         sh 'npm install'
         sh 'node_modules/apidoc/bin/apidoc -i src/main/java/ -o build/docs/api-doc'
         sh 'git_stats generate -o build/docs/git'
-        sh './gradlew gitChangelogTask'
+        sh './gradlew gitChangelogTask javadoc'
         step([$class: 'JavadocArchiver', javadocDir: 'build/docs/javadoc/', keepAll: true])
         publishHTML (target: [
                 allowMissing: false,
