@@ -19,6 +19,7 @@ buildscript {
     }
 }
 apply plugin: 'application'
+apply plugin: "jacoco"
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: 'idea'
 apply plugin: 'java'
@@ -132,8 +133,11 @@ task generateServiceProxy(type: JavaCompile, description: 'Generates EBServicePr
 
 
 compileJava.dependsOn generateServiceProxy
-
 test {
+    jacoco {
+        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+        classDumpDir = file("$buildDir/jacoco/classpathdumps")
+    }
     minHeapSize = "128m"
     maxHeapSize = "1024m"
     maxParallelForks = 1
@@ -159,8 +163,8 @@ sonarqube {
         property 'sonar.language', 'java'
         property 'sonar.sources', 'src/main/java'
         property 'sonar.tests', 'src/test/java'
-        property 'sonar.jacoco.reportPath', 'build/jacoco/jacocoTest.exec'
-        property 'sonar.binaries', 'build/classes/main'
+        property 'sonar.jacoco.reportPaths', "$buildDir/jacoco/jacocoTest.exec"
+        property 'sonar.binaries', "$buildDir/classes/main"
     }
 }
 
@@ -213,47 +217,6 @@ task updateRancherImage {
                 if("active" == state.state) return 0
             }
             ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' -d '{}' ${url}?action=finishupgrade"].execute()
-        }
-    }
-}
-
-/*
-If you're uploading stuff to Maven, Gradle needs to generate a POM.
-Please edit the details below.
- */
-
-@SuppressWarnings(["GroovyAssignabilityCheck", "GroovyAssignabilityCheck", "GroovyAssignabilityCheck", "GroovyAssignabilityCheck", "GroovyAssignabilityCheck"])
-def configurePom(def pom) {
-    pom.project {
-        name rootProject.name
-        description 'Qaobee Hive'
-        inceptionYear '2015'
-        packaging 'jar'
-
-        url 'Your project url'
-
-        developers {
-            developer {
-                id 'Giwi'
-                name 'Xavier MARIN'
-                email 'marin.xavier@gmail.com'
-            }
-        }
-
-        scm {
-            url 'url to your repo - e.g. github repo url'
-        }
-
-        licenses {
-            license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                distribution 'repo'
-            }
-        }
-
-        properties {
-            setProperty('project.build.sourceEncoding', 'UTF8')
         }
     }
 }
