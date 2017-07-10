@@ -18,7 +18,7 @@
  */
 package com.qaobee.hive.test.api.sandbox.config;
 
-import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
+import com.qaobee.hive.api.v1.commons.settings.ActivityRoute;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -48,7 +48,7 @@ public class SandBoxTest extends VertxJunitSupport {
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(u -> {
             getActivity("ACT-HAND", u).then(activity -> {
                 given().header(TOKEN, u.getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
                         .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
                         .then().assertThat().statusCode(200)
                         .body("owner", notNullValue())
@@ -123,7 +123,7 @@ public class SandBoxTest extends VertxJunitSupport {
         generateLoggedUser().then(user -> {
             getActivity("ACT-HAND", user).then(activity -> {
                 given().header(TOKEN, user.getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
                         .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
                         .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                         .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
@@ -143,7 +143,7 @@ public class SandBoxTest extends VertxJunitSupport {
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             getActivity("ACT-FOOT", user).then(activity -> {
                 given().header(TOKEN, user.getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
                         .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
                         .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                         .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
@@ -240,7 +240,7 @@ public class SandBoxTest extends VertxJunitSupport {
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             getActivity("ACT-HAND", user).then(activity -> {
                 JsonObject sb = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
                         .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
                         .then().assertThat().statusCode(200)
                         .body("_id", notNullValue())

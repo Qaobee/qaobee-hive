@@ -127,7 +127,7 @@ task generateServiceProxy(type: JavaCompile, description: 'Generates EBServicePr
     options.compilerArgs = [
             "-proc:only",
             "-processor", "io.vertx.codegen.CodeGenProcessor",
-            "-AoutputDirectory=$generateSrcPath"
+            "-Acodegen.output=$generateSrcPath"
     ]
 }
 

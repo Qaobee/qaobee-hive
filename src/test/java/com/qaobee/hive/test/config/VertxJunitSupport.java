@@ -21,10 +21,10 @@ package com.qaobee.hive.test.config;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
+import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -133,6 +133,8 @@ public class VertxJunitSupport implements JSDataMongoTest {
     @Inject
     @Named("mongo.db")
     private JsonObject mongoConf;
+    @Inject
+    private ActivityService activityService;
 
     /**
      * Start mongo server.
@@ -211,11 +213,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
                 Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
                 injector.injectMembers(this);
                 LOG.info("About to execute : " + name.getMethodName());
-                try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 async.complete();
             });
         } catch (IOException e) {
@@ -491,11 +488,13 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     protected Promise<JsonObject, Throwable, Integer> getActivity(String id, User user) {
         Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constants.GET);
-        req.getParams().put(ActivityVerticle.PARAM_ID, Collections.singletonList(id));
-        sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()).done(res -> deferred.resolve(new JsonObject(res))).fail(deferred::reject);
+        activityService.getActivity(id, res->{
+            if(res.succeeded()) {
+                deferred.resolve(res.result());
+            } else {
+                deferred.reject(res.cause());
+            }
+        });
         return deferred.promise();
     }
 
@@ -514,6 +513,4 @@ public class VertxJunitSupport implements JSDataMongoTest {
         sendOnBus(CountryVerticle.GET, req).done(res -> deferred.resolve(new JsonObject(res))).fail(deferred::reject);
         return deferred.promise();
     }
-
-
 }

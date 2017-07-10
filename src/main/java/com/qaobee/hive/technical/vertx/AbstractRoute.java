@@ -90,6 +90,22 @@ public abstract class AbstractRoute implements VertxRoute.Route {
         };
     }
 
+    /**
+     * Handle response array handler.
+     *
+     * @param context the context
+     * @return the handler
+     */
+    protected Handler<AsyncResult<JsonArray>> handleResponseArray(RoutingContext context) {
+        return event -> {
+            if (event.succeeded()) {
+                handleResponse(context, event.result());
+            } else {
+                handleError(context, (QaobeeSvcException) event.cause());
+            }
+        };
+    }
+
 
     /**
      * Handle response.

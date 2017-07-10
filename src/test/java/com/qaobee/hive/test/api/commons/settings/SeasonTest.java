@@ -17,7 +17,7 @@
  */
 package com.qaobee.hive.test.api.commons.settings;
 
-import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
+import com.qaobee.hive.api.v1.commons.settings.ActivityRoute;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -130,7 +130,7 @@ public class SeasonTest extends VertxJunitSupport {
                 getActivity("ACT-HAND", u).then(activity -> {
                     given().header(TOKEN, u.getAccount().getToken())
                             .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) country.getString(CountryVerticle.PARAM_ID))
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) activity.getString(ActivityVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) activity.getString(ActivityRoute.PARAM_ID))
                             .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(5));
@@ -179,7 +179,7 @@ public class SeasonTest extends VertxJunitSupport {
                 getActivity("ACT-HAND", u).then(activity -> {
                     given().header(TOKEN, u.getAccount().getToken())
                             .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
                             .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
                             .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                             .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
@@ -229,7 +229,7 @@ public class SeasonTest extends VertxJunitSupport {
                     int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
                     given().header(TOKEN, u.getAccount().getToken())
                             .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID))
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
                             .when().get(getURL(SeasonVerticle.GET_CURRENT))
                             .then().assertThat().statusCode(200)
                             .body("label", notNullValue())
@@ -280,7 +280,7 @@ public class SeasonTest extends VertxJunitSupport {
                 getActivity("ACT-HAND", u).then(activity -> {
                     given().header(TOKEN, u.getAccount().getToken())
                             .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID))
+                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
                             .when().get(getURL(SeasonVerticle.GET_CURRENT))
                             .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                             .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));

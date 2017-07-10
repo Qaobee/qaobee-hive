@@ -25,6 +25,7 @@ import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.services.ActivityCfgService;
+import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.AssetsService;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
@@ -110,7 +111,6 @@ public class GuiceModule extends AbstractModule {
         bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
 
         // DAO
-        bind(ActivityDAO.class).to(ActivityDAOImpl.class).in(Singleton.class);
         bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
         bind(NotificationsDAO.class).to(NotificationsDAOImpl.class).in(Singleton.class);
         bind(ChampionshipDAO.class).to(ChampionshipDAOImpl.class).in(Singleton.class);
@@ -138,6 +138,6 @@ public class GuiceModule extends AbstractModule {
         // Services
         bind(AssetsService.class).toInstance(AssetsService.createProxy(vertx, AssetsService.ADDRESS));
         bind(ActivityCfgService.class).toInstance(ActivityCfgService.createProxy(vertx, ActivityCfgService.ADDRESS));
-
+        bind(ActivityService.class).toInstance(ActivityService.createProxy(vertx, ActivityService.ADDRESS));
     }
 }

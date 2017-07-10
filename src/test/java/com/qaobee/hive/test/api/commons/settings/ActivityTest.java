@@ -18,7 +18,7 @@
  */
 package com.qaobee.hive.test.api.commons.settings;
 
-import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
+import com.qaobee.hive.api.v1.commons.settings.ActivityRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import org.junit.Test;
@@ -32,14 +32,15 @@ import static org.hamcrest.Matchers.*;
  * @author cke
  */
 public class ActivityTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/commons/settings/activity");
     /**
      * Gets activity.
      */
     @Test
     public void getActivity() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-        given().queryParam(ActivityVerticle.PARAM_ID, "ACT-HAND")
-                .when().get(getURL(ActivityVerticle.GET))
+        given().queryParam(ActivityRoute.PARAM_ID, "ACT-HAND")
+                .when().get(BASE_URL+ "/get")
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
                 .body("label", is("commons.settings.activity.handball"));
@@ -50,7 +51,7 @@ public class ActivityTest extends VertxJunitSupport {
      */
     @Test
     public void getActivityWithWrongHttpMethodTest() {
-        given().post(getURL(ActivityVerticle.GET))
+        given().post(BASE_URL+ "/get")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -60,11 +61,11 @@ public class ActivityTest extends VertxJunitSupport {
      */
     @Test
     public void getActivityWithMissingParameterTest() {
-        given().get(getURL(ActivityVerticle.GET))
+        given().get(BASE_URL+ "/get")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-        given().queryParam(ActivityVerticle.PARAM_ID, "")
-                .get(getURL(ActivityVerticle.GET))
+        given().queryParam(ActivityRoute.PARAM_ID, "")
+                .get(BASE_URL+ "/get")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -75,8 +76,8 @@ public class ActivityTest extends VertxJunitSupport {
     @Test
     public void getActivityWithWrongActivityIdTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        given().queryParam(ActivityVerticle.PARAM_ID, "ACT-BIDON")
-                .get(getURL(ActivityVerticle.GET))
+        given().queryParam(ActivityRoute.PARAM_ID, "ACT-BIDON")
+                .get(BASE_URL+ "/get")
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
@@ -87,8 +88,8 @@ public class ActivityTest extends VertxJunitSupport {
     @Test
     public void getList() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-        given().queryParam(ActivityVerticle.PARAM_ID, "ACT-HAND")
-                .when().get(getURL(ActivityVerticle.GET_LIST))
+        given().queryParam(ActivityRoute.PARAM_ID, "ACT-HAND")
+                .when().get(BASE_URL+ "/list")
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(26));
     }
@@ -98,7 +99,7 @@ public class ActivityTest extends VertxJunitSupport {
      */
     @Test
     public void getListWithWrongHttpMethodTest() {
-        given().post(getURL(ActivityVerticle.GET_LIST))
+        given().post(getURL(BASE_URL+ "/list"))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -109,8 +110,8 @@ public class ActivityTest extends VertxJunitSupport {
     @Test
     public void getListEnable() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
-        given().queryParam(ActivityVerticle.PARAM_ID, "ACT-HAND")
-                .when().get(getURL(ActivityVerticle.GET_LIST_ENABLE))
+        given().queryParam(ActivityRoute.PARAM_ID, "ACT-HAND")
+                .when().get(BASE_URL+ "/listEnable")
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(2));
     }
@@ -120,7 +121,7 @@ public class ActivityTest extends VertxJunitSupport {
      */
     @Test
     public void getListEnableWithWrongHttpMethodTest() {
-        given().post(getURL(ActivityVerticle.GET_LIST_ENABLE))
+        given().post(BASE_URL+ "/listEnable")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }

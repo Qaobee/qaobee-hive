@@ -17,7 +17,7 @@
  */
 package com.qaobee.hive.test.api.commons.settings;
 
-import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
+import com.qaobee.hive.api.v1.commons.settings.ActivityRoute;
 import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.api.v1.commons.settings.IndicatorVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -132,7 +132,7 @@ public class IndicatorTest extends VertxJunitSupport {
                 getActivity("ACT-HAND", u).then(activity -> {
                     final JsonObject params = new JsonObject();
                     params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
                     params.put(IndicatorVerticle.PARAM_SCREEN, new JsonArray().add("COLLECTE"));
 
                     given().header(TOKEN, u.getAccount().getToken())
@@ -184,7 +184,7 @@ public class IndicatorTest extends VertxJunitSupport {
             getActivity("ACT-HAND", user).then(activity -> {
                 getCountry("CNTR-250-FR-FRA").then(country -> {
                     final JsonObject params = new JsonObject();
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
                     params.put(IndicatorVerticle.PARAM_SCREEN, new JsonArray().add("COLLECTE"));
                     given().header(TOKEN, user.getAccount().getToken())
                             .body(params.encode())
@@ -200,7 +200,7 @@ public class IndicatorTest extends VertxJunitSupport {
                             .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                             .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
                     params.remove(IndicatorVerticle.PARAM_SCREEN);
                     given().header(TOKEN, user.getAccount().getToken())
                             .body(params.encode())
@@ -226,7 +226,7 @@ public class IndicatorTest extends VertxJunitSupport {
                 getCountry("CNTR-250-FR-FRA").then(country -> {
                     final JsonObject params = new JsonObject();
                     params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
                     params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
 
                     given().header(TOKEN, u.getAccount().getToken())
@@ -280,7 +280,7 @@ public class IndicatorTest extends VertxJunitSupport {
                 getCountry("CNTR-250-FR-FRA").then(country -> {
                     final JsonObject params = new JsonObject();
                     params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
                     params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("blabla"));
 
                     given().header(TOKEN, u.getAccount().getToken())
@@ -323,7 +323,7 @@ public class IndicatorTest extends VertxJunitSupport {
                 getCountry("CNTR-250-FR-FRA").then(country -> {
                     final JsonObject params = new JsonObject();
                     params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryVerticle.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityVerticle.PARAM_ID));
+                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
 
                     given().header(TOKEN, u.getAccount().getToken())
                             .body(params.encode())

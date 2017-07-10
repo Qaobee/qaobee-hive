@@ -36,6 +36,7 @@ import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.dao.*;
+import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -70,7 +71,7 @@ public class SignupDAOImpl implements SignupDAO {
     private static final String PARAM_PLAN = "plan";
     private final static Random RANDOM = new Random();
 
-    private final ActivityDAO activityDAO;
+    private final ActivityService activityService;
     private final MongoDB mongo;
     private final CountryDAO countryDAO;
     private final UserDAO userDAO;
@@ -85,7 +86,7 @@ public class SignupDAOImpl implements SignupDAO {
     /**
      * Instantiates a new Signup dao.
      *
-     * @param activityDAO  the activity dao
+     * @param activityService  the activity dao
      * @param mongo        the mongo
      * @param countryDAO   the country dao
      * @param userDAO      the user dao
@@ -97,10 +98,10 @@ public class SignupDAOImpl implements SignupDAO {
      * @param vertx        the vertx
      */
     @Inject
-    public SignupDAOImpl(ActivityDAO activityDAO, MongoDB mongo, CountryDAO countryDAO, UserDAO userDAO, // NOSONAR
+    public SignupDAOImpl(ActivityService activityService, MongoDB mongo, CountryDAO countryDAO, UserDAO userDAO, // NOSONAR
                          StructureDAO structureDAO, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime,
                          MailUtils mailUtils, TemplatesDAO templatesDAO, Vertx vertx) {
-        this.activityDAO = activityDAO;
+        this.activityService = activityService;
         this.mongo = mongo;
         this.countryDAO = countryDAO;
         this.userDAO = userDAO;
@@ -133,10 +134,12 @@ public class SignupDAOImpl implements SignupDAO {
                     List<Promise> promises = new ArrayList<>();
                     user.getAccount().getListPlan().stream().filter(plan -> plan.getActivity() != null).forEachOrdered(plan -> {
                         Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
-                        activityDAO.getActivity(plan.getActivity().get_id()).done(a -> {
-                            Activity activity = Json.decodeValue(a.encode(), Activity.class);
-                            plan.setActivity(activity);
-                            d.resolve(true);
+                        activityService.getActivity(plan.getActivity().get_id(),a -> {
+                            if(a.succeeded()) {
+                                Activity activity = Json.decodeValue(a.result().encode(), Activity.class);
+                                plan.setActivity(activity);
+                                d.resolve(true);
+                            }
                         });
                         promises.add(d.promise());
                     });
@@ -253,10 +256,14 @@ public class SignupDAOImpl implements SignupDAO {
             countryDAO.getCountryFromAlpha2(structure.getJsonObject(COUNTRY_FIELD).getString("_id").split("-")[2]).done(country -> {
                 structure.put(COUNTRY_FIELD, country);
                 structure.getJsonObject("address").put(COUNTRY_FIELD, country.getString("label"));
-                activityDAO.getActivity(activityId).done(activity -> {
-                    structure.put("activity", activity);
-                    deferred.resolve(structure);
-                }).fail(deferred::reject);
+                activityService.getActivity(activityId, activity -> {
+                    if(activity.succeeded()) {
+                        structure.put("activity", activity);
+                        deferred.resolve(structure);
+                    } else {
+                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, activity.cause()));
+                    }
+                });
             }).fail(deferred::reject);
         }
         return deferred.promise();
