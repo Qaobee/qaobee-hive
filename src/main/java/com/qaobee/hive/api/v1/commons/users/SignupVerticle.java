@@ -181,7 +181,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                             .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
                                             .put("senderId", runtime.getString("admin.id")
                                     );
-                            notificationsService.notify(u.getString("_id"), DBCollections.USER, notification, new JsonArray(), null);
+                            notificationsService.sendNotification(u.getString("_id"), DBCollections.USER, notification, new JsonArray(), ar->{});
                             message.reply(u.encode());
                         }).fail(e -> utils.sendError(message, e));
                     } catch (final QaobeeException e) {

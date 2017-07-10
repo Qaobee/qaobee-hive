@@ -261,7 +261,7 @@ public class SignupDAOImpl implements SignupDAO {
                     structure.getJsonObject("address").put(COUNTRY_FIELD, country.result().getString("label"));
                     activityService.getActivity(activityId, activity -> {
                         if (activity.succeeded()) {
-                            structure.put("activity", activity);
+                            structure.put("activity", activity.result());
                             deferred.resolve(structure);
                         } else {
                             deferred.reject(new QaobeeException(((QaobeeSvcException) activity.cause()).getCode(), activity.cause()));

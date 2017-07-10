@@ -141,7 +141,7 @@ public class NotificationsRoute extends AbstractRoute {
     private void notifyPeople(JsonObject obj, RoutingContext context) {
         try {
             utils.testMandatoryParams(obj, "id", TARGET, NOTIFICATION);
-            notificationsService.notify(obj.getString("id"),
+            notificationsService.sendNotification(obj.getString("id"),
                     obj.getString(TARGET), obj.getJsonObject(NOTIFICATION),
                     obj.getJsonObject(NOTIFICATION).getJsonArray("exclude"), ar -> {
                         if (ar.succeeded()) {

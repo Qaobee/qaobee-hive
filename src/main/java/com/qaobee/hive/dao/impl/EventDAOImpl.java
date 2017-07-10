@@ -58,10 +58,10 @@ public class EventDAOImpl implements EventDAO {
                     deferred.resolve(event);
                     mongo.getById(event.getJsonObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX)
                             .done(sandbox ->
-                                    notificationsService.notify(sandbox.getString("_id"), DBCollections.SANDBOX, new JsonObject()
+                                    notificationsService.sendNotification(sandbox.getString("_id"), DBCollections.SANDBOX, new JsonObject()
                                             .put("content", Messages.getString("notification.event.update.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
                                             .put("title", Messages.getString("notification.event.update.title", locale))
-                                            .put("senderId", currentUserId), new JsonArray().add(currentUserId), null));
+                                            .put("senderId", currentUserId), new JsonArray().add(currentUserId), ar->{}));
 
                 })
                 .fail(deferred::reject);
@@ -77,10 +77,10 @@ public class EventDAOImpl implements EventDAO {
                     deferred.resolve(event);
                     mongo.getById(event.getJsonObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX)
                             .done(sandbox ->
-                                    notificationsService.notify(sandbox.getString("_id"), DBCollections.SANDBOX, new JsonObject()
+                                    notificationsService.sendNotification(sandbox.getString("_id"), DBCollections.SANDBOX, new JsonObject()
                                             .put("content", Messages.getString("notification.event.add.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
                                             .put("title", Messages.getString("notification.event.add.title", locale))
-                                            .put("senderId", currentUserId), new JsonArray().add(currentUserId), null));
+                                            .put("senderId", currentUserId), new JsonArray().add(currentUserId), ar->{}));
                 })
                 .fail(deferred::reject);
         return deferred.promise();

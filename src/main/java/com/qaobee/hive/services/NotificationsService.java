@@ -72,7 +72,7 @@ public interface NotificationsService {
      * @param exclude       the exclude
      * @param resultHandler the result handler
      */
-    void notify(String id, String collection, JsonObject notification, JsonArray exclude, Handler<AsyncResult<Boolean>> resultHandler);
+    void sendNotification(String id, String collection, JsonObject notification, JsonArray exclude, Handler<AsyncResult<Boolean>> resultHandler);
 
     /**
      * Add notification to user.

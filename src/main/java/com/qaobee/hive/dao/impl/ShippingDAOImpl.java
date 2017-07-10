@@ -291,7 +291,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                     notificationsService.addNotificationToUser(user.getString("_id"), new JsonObject()
                             .put("content", Messages.getString("notification." + body.getString("type") + ".content", customer.getMetadata().get(LOCALE_FIELD)))
                             .put("title", Messages.getString("notification." + body.getString("type") + ".title", customer.getMetadata().get(LOCALE_FIELD)))
-                            .put("senderId", runtime.getString("admin.id")), null);
+                            .put("senderId", runtime.getString("admin.id")), ar->{});
                     registerPayment(body.getJsonObject("data").getJsonObject(OBJECT_FIELD), user, u, planId).done(deferred::resolve).fail(deferred::reject);
                 }).fail(deferred::reject);
             } else {

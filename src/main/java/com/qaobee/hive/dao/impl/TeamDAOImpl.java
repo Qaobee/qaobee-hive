@@ -91,7 +91,7 @@ public class TeamDAOImpl implements TeamDAO {
                             "/#/private/updateTeam/" + team.getString("_id") + "/" + team.getBoolean(PARAM_ADVERSARY)))
                     .put("title", Messages.getString("notification.team.update.title", locale))
                     .put("senderId", userId);
-            notificationsService.notify(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), null);
+            notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
             deferred.resolve(team);
         }).fail(deferred::reject);
         return deferred.promise();
@@ -108,7 +108,7 @@ public class TeamDAOImpl implements TeamDAO {
                             "/#/private/updateTeam/" + team.getString("_id") + "/" + team.getBoolean(PARAM_ADVERSARY)))
                     .put("title", Messages.getString("notification.team.add.title", locale))
                     .put("senderId", userId);
-            notificationsService.notify(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), null);
+            notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
             deferred.resolve(team);
         }).fail(deferred::reject);
         return deferred.promise();

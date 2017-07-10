@@ -258,7 +258,7 @@ public class UserDAOImpl implements UserDAO {
                         meta.put("teams", teams);
                         activityService.getActivity(meta.getString("activityId"), activity -> {
                             if (activity.succeeded()) {
-                                meta.put("activity", activity);
+                                meta.put("activity", activity.result());
                                 deferred.resolve(meta);
                             } else {
                                 deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, activity.cause()));

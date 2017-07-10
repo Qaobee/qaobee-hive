@@ -173,10 +173,10 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     }
 
     private void internalShareNotification(Message<JsonObject> message) {
-        notificationsService.notify(message.body().getString(PARAM_USERID), DBCollections.USER, new JsonObject()
+        notificationsService.sendNotification(message.body().getString(PARAM_USERID), DBCollections.USER, new JsonObject()
                 .put(CONTENT_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".content", message.body().getString(FIELD_LOCALE)))
                 .put(TITLE_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".title", message.body().getString(FIELD_LOCALE)))
-                .put(SENDER_ID_FIELD, message.body().getString(FIELD_UID)), new JsonArray(), null);
+                .put(SENDER_ID_FIELD, message.body().getString(FIELD_UID)), new JsonArray(), ar->{});
     }
 
     /**
@@ -262,10 +262,10 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private void sendNotification(JsonObject invitation, JsonObject user, String userEmail, String locale) throws QaobeeException {
         final JsonObject tplReq = new JsonObject();
         if (StringUtils.isNotBlank(invitation.getString(PARAM_USERID, ""))) {
-            notificationsService.notify(invitation.getString(PARAM_USERID), DBCollections.USER, new JsonObject()
+            notificationsService.sendNotification(invitation.getString(PARAM_USERID), DBCollections.USER, new JsonObject()
                     .put(CONTENT_FIELD, Messages.getString("notification.sandbox.add.content", locale, user.getString(FIRSTNAME_FIELD) + " " + user.getString("name")))
                     .put(TITLE_FIELD, Messages.getString("notification.sandbox.add.title", locale))
-                    .put(SENDER_ID_FIELD, user.getString("_id")), new JsonArray(), null);
+                    .put(SENDER_ID_FIELD, user.getString("_id")), new JsonArray(), ar->{});
                 /* send an E-mail to guest */
             tplReq.put(TemplatesDAOImpl.TEMPLATE, INVITE_URL)
                     .put(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), User.class), locale, userEmail, invitation.getString("_id"), "internal"));
@@ -365,7 +365,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                                 .put(SENDER_ID_FIELD, request.getString(PARAM_USERID)
                                 );
                     }
-                    notificationsService.notify(invitation.getString(SENDER_ID_FIELD), DBCollections.USER, notification, new JsonArray(), null);
+                    notificationsService.sendNotification(invitation.getString(SENDER_ID_FIELD), DBCollections.USER, notification, new JsonArray(), ar->{});
                     message.reply(invitation.encode());
                 }).fail(e -> utils.sendError(message, e));
     }

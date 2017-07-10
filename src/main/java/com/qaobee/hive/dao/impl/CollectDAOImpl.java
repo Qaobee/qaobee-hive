@@ -62,8 +62,8 @@ public class CollectDAOImpl implements CollectDAO {
                                     collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                             .put("title", Messages.getString("notification.collect.update.title", locale))
                             .put("senderId", currentUserId);
-                    notificationsService.notify(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
-                            DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), null);
+                    notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                            DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar->{});
                     deferred.resolve(collect);
                 })
                 .fail(deferred::reject);
@@ -80,8 +80,8 @@ public class CollectDAOImpl implements CollectDAO {
                             .put("content", Messages.getString("notification.collect.start.content", locale, collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                             .put("title", Messages.getString("notification.collect.start.title", locale))
                             .put("senderId", currentUserId);
-                    notificationsService.notify(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
-                            DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), null);
+                    notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                            DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar->{});
                     deferred.resolve(collect);
                 })
                 .fail(deferred::reject);

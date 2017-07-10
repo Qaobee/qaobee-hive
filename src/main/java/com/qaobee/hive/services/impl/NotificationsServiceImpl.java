@@ -112,7 +112,7 @@ public class NotificationsServiceImpl implements NotificationsService {
     }
 
     @Override
-    public void notify(String id, String collection, JsonObject notification, JsonArray exclude, Handler<AsyncResult<Boolean>> resultHandler) {
+    public void sendNotification(String id, String collection, JsonObject notification, JsonArray exclude, Handler<AsyncResult<Boolean>> resultHandler) {
         mongo.getById(id, collection)
                 .done(target -> {
                     if (target == null) {
