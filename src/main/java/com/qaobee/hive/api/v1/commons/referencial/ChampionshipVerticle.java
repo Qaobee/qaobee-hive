@@ -40,13 +40,13 @@ import javax.inject.Inject;
 @DeployableVerticle
 public class ChampionshipVerticle extends AbstractGuiceVerticle {
     /**
-     * Handler to get a set of events
+     * The constant GET_LIST.
      */
     public static final String GET_LIST = Module.VERSION + ".commons.referencial.championship.list";
     /**
-     * Handler to add a event.
+     * The constant ADD_CHAMPIONSHIP.
      */
-    public static final String ADD = Module.VERSION + ".commons.referencial.championship.add";
+    public static final String ADD_CHAMPIONSHIP = Module.VERSION + ".commons.referencial.championship.add";
     /**
      * Handler to get a particular championship from its ID.
      */
@@ -111,7 +111,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
         inject(this)
                 .add(GET_LIST, this::getListChampionships)
                 .add(GET, this::getChampionship)
-                .add(ADD, this::addChampionship)
+                .add(ADD_CHAMPIONSHIP, this::addChampionship)
                 .add(UPDATE, this::updateChampionship)
                 .register(startFuture);
     }
@@ -166,7 +166,7 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = ADD, method = Constants.POST, logged = true, admin = true,
+    @Rule(address = ADD_CHAMPIONSHIP, method = Constants.POST, logged = true, admin = true,
             mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
                     PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
     private void addChampionship(Message<String> message) {

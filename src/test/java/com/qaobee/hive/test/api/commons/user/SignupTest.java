@@ -133,7 +133,7 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))
@@ -156,7 +156,7 @@ public class SignupTest extends VertxJunitSupport {
             JsonObject params = generateNewUser();
             params.getJsonObject("account").put("login", u.getAccount().getLogin());
             given().body(params.encode())
-                    .when().put(getURL(SignupVerticle.REGISTER))
+                    .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                     .then().assertThat().statusCode(ExceptionCodes.NON_UNIQUE_LOGIN.getCode())
                     .body(CODE, is(ExceptionCodes.NON_UNIQUE_LOGIN.toString()));
             async.complete();
@@ -169,7 +169,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void registerWithWrongHttpMethod() {
-        given().when().get(getURL(SignupVerticle.REGISTER))
+        given().when().get(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -188,13 +188,13 @@ public class SignupTest extends VertxJunitSupport {
             params.getJsonObject("account").put("login", l);
 
             given().body(params.encode())
-                    .when().put(getURL(SignupVerticle.REGISTER))
+                    .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                     .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
         }
         params.getJsonObject("account").put("login", "aaaa");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.name", notNullValue())
@@ -211,13 +211,13 @@ public class SignupTest extends VertxJunitSupport {
         JsonObject params = generateNewUser();
         params.getJsonObject("account").put("login", "");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
         params.getJsonObject("account").remove("login");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -231,13 +231,13 @@ public class SignupTest extends VertxJunitSupport {
         JsonObject params = generateNewUser();
         params.getJsonObject("account").put("passwd", "");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
         params.getJsonObject("account").remove("passwd");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -251,12 +251,12 @@ public class SignupTest extends VertxJunitSupport {
         JsonObject params = generateNewUser();
         params.put("name", "");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         params.remove("name");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -275,13 +275,13 @@ public class SignupTest extends VertxJunitSupport {
             params.put("name", l);
 
             given().body(params.encode())
-                    .when().put(getURL(SignupVerticle.REGISTER))
+                    .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                     .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
         }
         params.put("name", "aaa");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.name", notNullValue())
@@ -298,12 +298,12 @@ public class SignupTest extends VertxJunitSupport {
         JsonObject params = generateNewUser();
         params.put("firstname", "");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         params.remove("firstname");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -322,13 +322,13 @@ public class SignupTest extends VertxJunitSupport {
             params.put("firstname", l);
 
             given().body(params.encode())
-                    .when().put(getURL(SignupVerticle.REGISTER))
+                    .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                     .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
         }
         params.put("firstname", "aaa");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.firstname", notNullValue())
@@ -346,49 +346,49 @@ public class SignupTest extends VertxJunitSupport {
 
         params.getJsonObject("contact").put("email", "");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                 .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getJsonObject("contact").remove("email");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                 .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getJsonObject("contact").put("email", "a");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                 .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getJsonObject("contact").put("email", "@a");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                 .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getJsonObject("contact").put("email", "a@");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                 .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getJsonObject("contact").put("email", "a@a");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                 .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getJsonObject("contact").put("email", "a@.a");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                 .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
 
         params.getJsonObject("contact").put("email", "@a.a");
         given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
                 .body(CODE, is(ExceptionCodes.BAD_FORMAT.toString()));
     }
@@ -401,7 +401,7 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         JsonObject p = new JsonObject(given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))
@@ -483,7 +483,7 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         JsonObject p = new JsonObject(given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))
@@ -512,7 +512,7 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         JsonObject p = new JsonObject(given().body(params.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))
@@ -595,7 +595,7 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
         JsonObject p = new JsonObject(given().body(u.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))
@@ -626,7 +626,7 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
         JsonObject p = new JsonObject(given().body(u.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))
@@ -676,7 +676,7 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
         JsonObject p = new JsonObject(given().body(u.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))
@@ -710,7 +710,7 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
         JsonObject p = new JsonObject(given().body(u.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))
@@ -756,7 +756,7 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
         JsonObject p = new JsonObject(given().body(u.encode())
-                .when().put(getURL(SignupVerticle.REGISTER))
+                .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))

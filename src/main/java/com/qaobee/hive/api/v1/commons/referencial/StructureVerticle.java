@@ -35,21 +35,14 @@ import javax.inject.Inject;
 /**
  * Module commons - referencial - Structure.
  *
- * @author Nada Vujanic-Maquin<br>         <br>
- *         <strong>Description de la classe:</strong>
- *         <ul>
- *         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>
- *         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>
- *         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>
- *         </ul>
+ * @author Nada Vujanic-Maquin<br>         <br>         <strong>Description de la classe:</strong>         <ul>         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>         </ul>
  */
 @DeployableVerticle
 public class StructureVerticle extends AbstractGuiceVerticle {
     /**
-     * The Constant ADD_TO_USER.
+     * The constant ADD_STRUCTURE.
      */
-    public static final String ADD = Module.VERSION + ".commons.referencial.structure.add";
-    /* List of handlers */
+    public static final String ADD_STRUCTURE = Module.VERSION + ".commons.referencial.structure.add";
     /**
      * The Constant GET
      */
@@ -90,7 +83,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
     @Override
     public void start(Future<Void> startFuture) {
         inject(this)
-                .add(ADD, this::addStructure)
+                .add(ADD_STRUCTURE, this::addStructure)
                 .add(GET, this::getStructure)
                 .add(GET_LIST, this::getListOfStructures)
                 .add(UPDATE, this::updateStructure)
@@ -177,7 +170,7 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Structure}   structure            The Structure added with the id.
      * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = ADD, method = Constants.POST, logged = true,
+    @Rule(address = ADD_STRUCTURE, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
             scope = Rule.Param.BODY)
     private void addStructure(Message<String> message) {

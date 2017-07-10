@@ -263,7 +263,7 @@ public class ShareDAOImpl implements ShareDAO {
                                                 })
                                                 .fail(e -> {
                                                     LOG.error(((Throwable) e.getReject()).getMessage());
-                                                    deferred.reject(((QaobeeException) e.getReject()));
+                                                    deferred.reject((QaobeeException) e.getReject());
                                                 });
 
                                     } else {
@@ -273,7 +273,7 @@ public class ShareDAOImpl implements ShareDAO {
                             })
                             .fail(e -> {
                                 LOG.error(((Throwable) e.getReject()).getMessage());
-                                deferred.reject(((QaobeeException) e.getReject()));
+                                deferred.reject((QaobeeException) e.getReject());
                             });
                 }).fail(deferred::reject);
         return deferred.promise();

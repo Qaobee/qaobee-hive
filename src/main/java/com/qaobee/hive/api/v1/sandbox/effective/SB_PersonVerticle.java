@@ -49,7 +49,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * Handler to add a person.
      */
-    public static final String ADD = Module.VERSION + ".sandbox.effective.person.add";
+    public static final String ADD_PERSON = Module.VERSION + ".sandbox.effective.person.add";
     /**
      * Handler to get a particular person from its ID.
      */
@@ -80,7 +80,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Override
     public void start(Future<Void> startFuture) {
         inject(this)
-                .add(ADD, this::addPerson)
+                .add(ADD_PERSON, this::addPerson)
                 .add(GET, this::getPerson)
                 .add(UPDATE, this::updatePerson)
                 .add(GET_LIST, this::getPersonList)
@@ -160,7 +160,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiGroup Person API
      * @apiSuccess {Object} Person com.qaobee.hive.business.model.sandbox.effective.Person
      */
-    @Rule(address = ADD, method = Constants.PUT, logged = true, mandatoryParams = "person", scope = Rule.Param.BODY)
+    @Rule(address = ADD_PERSON, method = Constants.PUT, logged = true, mandatoryParams = "person", scope = Rule.Param.BODY)
     private void addPerson(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject body = new JsonObject(req.getBody());

@@ -50,7 +50,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * Handler for adding a collecte document
      */
-    public static final String ADD = Module.VERSION + ".sandbox.stats.collect.add";
+    public static final String ADD_COLLECT = Module.VERSION + ".sandbox.stats.collect.add";
     /**
      * Handler for update a collecte document
      */
@@ -99,7 +99,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     public void start(Future<Void> startFuture) {
         inject(this)
                 .add(GET_LIST, this::getList)
-                .add(ADD, this::addStat)
+                .add(ADD_COLLECT, this::addStat)
                 .add(UPDATE, this::update)
                 .add(GET, this::get)
                 .register(startFuture);
@@ -142,7 +142,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Object} collect Created collect
      */
-    @Rule(address = ADD, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
+    @Rule(address = ADD_COLLECT, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
     private void addStat(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, collectDAO.add(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));

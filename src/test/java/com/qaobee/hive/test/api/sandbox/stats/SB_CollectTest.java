@@ -62,7 +62,7 @@ public class SB_CollectTest extends VertxJunitSupport {
 
             given().header(TOKEN, user.getAccount().getToken())
                     .body(Collect.encode())
-                    .when().post(getURL(SB_CollectVerticle.ADD))
+                    .when().post(getURL(SB_CollectVerticle.ADD_COLLECT))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("eventRef.address.city", is("Brest"));
@@ -77,7 +77,7 @@ public class SB_CollectTest extends VertxJunitSupport {
      */
     @Test
     public void addCollectWithNonLoggedUser() {
-        given().when().post(getURL(SB_CollectVerticle.ADD))
+        given().when().post(getURL(SB_CollectVerticle.ADD_COLLECT))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -87,7 +87,7 @@ public class SB_CollectTest extends VertxJunitSupport {
      */
     @Test
     public void addCollectWithWrongHttpMethod() {
-        given().when().get(getURL(SB_CollectVerticle.ADD))
+        given().when().get(getURL(SB_CollectVerticle.ADD_COLLECT))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -112,13 +112,13 @@ public class SB_CollectTest extends VertxJunitSupport {
 
             final JsonObject Collect = generateCollect(event);
 
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollectVerticle.ADD).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollectVerticle.ADD_COLLECT).mandatoryParams());
             Collect.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(Collect.encode());
                 params2.remove(k);
                 given().header(TOKEN, user.getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_CollectVerticle.ADD))
+                        .when().post(getURL(SB_CollectVerticle.ADD_COLLECT))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -147,7 +147,7 @@ public class SB_CollectTest extends VertxJunitSupport {
             JsonObject collect = new JsonObject(
                     given().header(TOKEN, user.getAccount().getToken())
                             .body(generateCollect(event).encode())
-                            .when().post(getURL(SB_CollectVerticle.ADD))
+                            .when().post(getURL(SB_CollectVerticle.ADD_COLLECT))
                             .then().assertThat().statusCode(200)
                             .body("_id", notNullValue())
                             .body("eventRef.address.city", is("Brest"))
@@ -206,7 +206,7 @@ public class SB_CollectTest extends VertxJunitSupport {
             JsonObject collect = new JsonObject(
                     given().header(TOKEN, user.getAccount().getToken())
                             .body(generateCollect(event).encode())
-                            .when().post(getURL(SB_CollectVerticle.ADD))
+                            .when().post(getURL(SB_CollectVerticle.ADD_COLLECT))
                             .then().assertThat().statusCode(200)
                             .body("_id", notNullValue())
                             .body("eventRef.address.city", is("Brest"))

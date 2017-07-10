@@ -48,9 +48,9 @@ import javax.inject.Named;
 public class SignupVerticle extends AbstractGuiceVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(SignupVerticle.class);
     /**
-     * The Constant REGISTER.
+     * The Constant REGISTER_NEW_USER.
      */
-    public static final String REGISTER = Module.VERSION + ".commons.users.signup.register";
+    public static final String REGISTER_NEW_USER = Module.VERSION + ".commons.users.signup.register";
     /**
      * The Constant LOGIN_TEST.
      */
@@ -118,7 +118,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
         inject(this)
                 .add(LOGIN_EXISTS, this::existingLogin)
                 .add(LOGIN_TEST, this::loginTest)
-                .add(REGISTER, this::registerUser)
+                .add(REGISTER_NEW_USER, this::registerUser)
                 .add(ACCOUNT_CHECK, this::accountCheck)
                 .add(FIRST_CONNECTION_CHECK, this::firstConnectionCheck)
                 .add(RESEND_MAIL, this::resendMail)
@@ -236,7 +236,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiError NON_UNIQUE_LOGIN Non unique login
      * @apiError MAIL_EXCEPTION problème d'envoi d'email
      */
-    @Rule(address = REGISTER, method = Constants.PUT)
+    @Rule(address = REGISTER_NEW_USER, method = Constants.PUT)
     private void registerUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());

@@ -79,7 +79,7 @@ public class QaobeeAuthHandler implements AuthHandler {
         }).fail(e->handle401(context, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
     }
 
-    private void handle401(RoutingContext context, String message) {
+    private static void handle401(RoutingContext context, String message) {
         context.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
                 .setStatusCode(401)
                 .end(new JsonObject()
@@ -101,7 +101,7 @@ public class QaobeeAuthHandler implements AuthHandler {
         return this;
     }
 
-    private String getToken(RequestWrapper request) {
+    private static String getToken(RequestWrapper request) {
         if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
             return request.getHeaders().get(Constants.TOKEN).get(0);
         }

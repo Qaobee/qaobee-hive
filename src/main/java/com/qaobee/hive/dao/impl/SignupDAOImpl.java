@@ -68,6 +68,7 @@ public class SignupDAOImpl implements SignupDAO {
     private static final String COUNTRY_FIELD = "country";
     private static final String PARAMERTER_FIELD = "parametersSignup";
     private static final String PARAM_PLAN = "plan";
+    private final static Random RANDOM = new Random();
 
     private final ActivityDAO activityDAO;
     private final MongoDB mongo;
@@ -77,7 +78,6 @@ public class SignupDAOImpl implements SignupDAO {
     private final ReCaptcha reCaptcha;
     private final JsonObject runtime;
     private final Vertx vertx;
-    private final static Random RANDOM = new Random();
     private final MailUtils mailUtils;
     private final TemplatesDAO templatesDAO;
 
@@ -222,7 +222,7 @@ public class SignupDAOImpl implements SignupDAO {
                                         }).fail(deferred::reject);
                                     }).fail(e -> {
                                         LOG.error(((Throwable) e.getReject()).getMessage());
-                                        deferred.reject(((QaobeeException) e.getReject()));
+                                        deferred.reject((QaobeeException) e.getReject());
                                     });
                                 } else {
                                     deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "tabParametersSignup is empty"));
@@ -231,7 +231,7 @@ public class SignupDAOImpl implements SignupDAO {
                         }).fail(deferred::reject);
                     }).fail(e -> {
                         LOG.error(((Throwable) e.getReject()).getMessage());
-                        deferred.reject(((QaobeeException) e.getReject()));
+                        deferred.reject((QaobeeException) e.getReject());
                     });
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
@@ -356,7 +356,7 @@ public class SignupDAOImpl implements SignupDAO {
                         try {
                             mongo.upsert(userDAO.prepareUpsert(user)).done(userId -> {
                                 user.set_id(userId);
-                                vertx.eventBus().send(CRMVerticle.REGISTER, new JsonObject(Json.encode(user)));
+                                vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
                                 mongo.getById(user.get_id(), DBCollections.USER).done(u ->
                                         deferred.resolve(new JsonObject()
                                                 .put("person", u)

@@ -27,6 +27,8 @@ import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -35,6 +37,7 @@ import javax.inject.Inject;
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/activitycfg")
 public class ActivityCfgRoute extends AbstractRoute {
+    private static final Logger LOG = LoggerFactory.getLogger(ActivityCfgRoute.class);
     public static final String PARAM_FIELD_LIST = "paramFieldList";
     public static final String PARAM_DATE = "date";
     public static final String PARAM_ACTIVITY_ID = "activityId";
@@ -81,7 +84,7 @@ public class ActivityCfgRoute extends AbstractRoute {
                         if (ar.succeeded()) {
                             handleResponse(context, ar.result().getJsonObject(0).getJsonArray(context.request().getParam(PARAM_FIELD_LIST)));
                         } else {
-                            ar.cause().printStackTrace();
+                            LOG.error(ar.cause().getMessage(), ar.cause());
                             handleError(context, (QaobeeSvcException) ar.cause());
                         }
                     });

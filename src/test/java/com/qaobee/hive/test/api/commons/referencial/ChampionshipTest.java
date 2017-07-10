@@ -325,7 +325,7 @@ public class ChampionshipTest extends VertxJunitSupport {
 
             String id = given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.ADD))
+                    .when().post(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("label", is(params.getString("label")))
@@ -347,7 +347,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void addChampionshipWithNonLoggedUser(TestContext context) {
-        given().when().post(getURL(ChampionshipVerticle.ADD))
+        given().when().post(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -360,7 +360,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().post(getURL(ChampionshipVerticle.ADD))
+                    .when().post(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
                     .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
                     .body(CODE, is(ExceptionCodes.NOT_ADMIN.toString()));
             async.complete();
@@ -374,7 +374,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void addChampionshipWithWrongHttpMethod(TestContext context) {
-        given().when().get(getURL(ChampionshipVerticle.ADD))
+        given().when().get(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -391,7 +391,7 @@ public class ChampionshipTest extends VertxJunitSupport {
             params.remove("label");
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.ADD))
+                    .when().post(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();

@@ -45,9 +45,9 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String GET_LIST = Module.VERSION + ".sandbox.event.event.list";
     /**
-     * The constant ADD.
+     * The constant ADD_CHAMPIONSHIP.
      */
-    public static final String ADD = Module.VERSION + ".sandbox.event.event.add";
+    public static final String ADD_EVENT = Module.VERSION + ".sandbox.event.event.add";
     /**
      * The constant GET.
      */
@@ -111,7 +111,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
     public void start(Future<Void> startFuture) {
         inject(this)
                 .add(GET_LIST, this::getEventList)
-                .add(ADD, this::addEvent)
+                .add(ADD_EVENT, this::addEvent)
                 .add(UPDATE, this::updateEvent)
                 .add(GET, this::getEvent)
                 .register(startFuture);
@@ -165,7 +165,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup SB_Event API
      * @apiSuccess {Object} event created event
      */
-    @Rule(address = ADD, method = Constants.POST, logged = true,
+    @Rule(address = ADD_EVENT, method = Constants.POST, logged = true,
             mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
             scope = Rule.Param.BODY)
     private void addEvent(Message<String> message) {

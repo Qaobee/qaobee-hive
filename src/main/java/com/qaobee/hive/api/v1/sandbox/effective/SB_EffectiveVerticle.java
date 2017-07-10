@@ -52,7 +52,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * The constant ADD_TO_USER.
      */
-    public static final String ADD = Module.VERSION + ".sandbox.effective.effective.add";
+    public static final String ADD_EFFECTIVE = Module.VERSION + ".sandbox.effective.effective.add";
     /**
      * The constant update.
      */
@@ -78,7 +78,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
                 .add(GET, this::getEffective)
                 .add(GET_LIST, this::getEffectiveList)
                 .add(UPDATE, this::updateEffective)
-                .add(ADD, this::addEffective)
+                .add(ADD_EFFECTIVE, this::addEffective)
                 .register(startFuture);
     }
 
@@ -92,7 +92,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {Object}   effective    The effective added.
      * @apiHeader {String} token
      */
-    @Rule(address = ADD, method = Constants.POST, logged = true)
+    @Rule(address = ADD_EFFECTIVE, method = Constants.POST, logged = true)
     private void addEffective(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         replyJsonObject(message, effectiveDAO.add(new JsonObject(req.getBody())));

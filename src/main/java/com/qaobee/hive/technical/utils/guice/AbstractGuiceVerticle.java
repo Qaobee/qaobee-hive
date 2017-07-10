@@ -98,7 +98,7 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
         DeferredManager dm = new DefaultDeferredManager();
         dm.when(promises.toArray(new Promise[promises.size()]))
                 .done(rs -> startFuture.complete())
-                .fail(ex -> startFuture.fail(((Throwable) ex.getReject())));
+                .fail(ex -> startFuture.fail((Throwable) ex.getReject()));
     }
 
 

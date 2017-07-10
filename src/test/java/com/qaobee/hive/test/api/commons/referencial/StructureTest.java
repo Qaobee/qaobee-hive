@@ -315,7 +315,7 @@ public class StructureTest extends VertxJunitSupport {
             params.put(StructureVerticle.PARAM_ACTIVITY, getActivity("ACT-HAND", u));
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(StructureVerticle.ADD))
+                    .when().post(getURL(StructureVerticle.ADD_STRUCTURE))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue());
             async.complete();
@@ -328,7 +328,7 @@ public class StructureTest extends VertxJunitSupport {
      */
     @Test
     public void addStructureWithNonLoggedUserTest(TestContext context) {
-        given().when().post(getURL(StructureVerticle.ADD))
+        given().when().post(getURL(StructureVerticle.ADD_STRUCTURE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -341,7 +341,7 @@ public class StructureTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .get(getURL(StructureVerticle.ADD))
+                    .get(getURL(StructureVerticle.ADD_STRUCTURE))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
@@ -363,7 +363,7 @@ public class StructureTest extends VertxJunitSupport {
             params.put(StructureVerticle.PARAM_COUNTRY, getCountry("CNTR-250-FR-FRA"));
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(StructureVerticle.ADD))
+                    .when().post(getURL(StructureVerticle.ADD_STRUCTURE))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();

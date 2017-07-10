@@ -216,7 +216,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
             JsonObject effective = generateEffective();
             given().header(TOKEN, user.getAccount().getToken())
                     .body(effective.encode())
-                    .when().post(getURL(SB_EffectiveVerticle.ADD))
+                    .when().post(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("members", hasSize(effective.getJsonArray("members").size()));
@@ -230,7 +230,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void addEffectiveWithNonLoggedUser() {
-        given().when().post(getURL(SB_EffectiveVerticle.ADD))
+        given().when().post(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -240,7 +240,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void addEffectiveWithWrongHttpMethod() {
-        given().when().get(getURL(SB_EffectiveVerticle.ADD))
+        given().when().get(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }

@@ -64,7 +64,7 @@ public class SB_EventTest extends VertxJunitSupport {
 
             String id = given().header(TOKEN, user.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_EventVerticle.ADD))
+                    .when().post(getURL(SB_EventVerticle.ADD_EVENT))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body(SB_EventVerticle.PARAM_LABEL, is(params.getString(SB_EventVerticle.PARAM_LABEL)))
@@ -86,7 +86,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void addEventWithNonLoggedUser() {
-        given().when().post(getURL(SB_EventVerticle.ADD))
+        given().when().post(getURL(SB_EventVerticle.ADD_EVENT))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -96,7 +96,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void addEventWithWrongHttpMethod() {
-        given().when().get(getURL(SB_EventVerticle.ADD))
+        given().when().get(getURL(SB_EventVerticle.ADD_EVENT))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -120,13 +120,13 @@ public class SB_EventTest extends VertxJunitSupport {
                             .put(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
                     );
 
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.ADD).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.ADD_EVENT).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
                 given().header(TOKEN, u.getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_EventVerticle.ADD))
+                        .when().post(getURL(SB_EventVerticle.ADD_EVENT))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });

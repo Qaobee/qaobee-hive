@@ -9,8 +9,6 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import org.apache.http.protocol.HTTP;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,7 +18,6 @@ import javax.inject.Named;
  */
 @DeployableVerticle(isWorker = false)
 public class CaptchaVerticle extends AbstractGuiceVerticle {
-    private static final Logger LOG = LoggerFactory.getLogger(CaptchaVerticle.class);
     /**
      * The constant VERIFY.
      */

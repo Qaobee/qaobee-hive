@@ -95,7 +95,7 @@ public class Main extends AbstractGuiceVerticle {
         });
     }
 
-    private void handleJsonObject(RoutingContext routingContext, String response) {
+    private static void handleJsonObject(RoutingContext routingContext, String response) {
         final JsonObject json = new JsonObject(response);
         if (json.containsKey(FILE_SERVE)) {
             final File f = new File(json.getString(FILE_SERVE));
@@ -113,7 +113,7 @@ public class Main extends AbstractGuiceVerticle {
         }
     }
 
-    private void handleJsonArray(RoutingContext routingContext, String response) {
+    private static void handleJsonArray(RoutingContext routingContext, String response) {
         routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).end(response);
     }
 
@@ -157,7 +157,7 @@ public class Main extends AbstractGuiceVerticle {
                     .allowedHeader("uid")
             );
         }
-        router.route().path("/*").produces("application/json").handler(this::jsonHandler);
+        router.route().path("/*").produces("application/json").handler(Main::jsonHandler);
         router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
         VertxRoute.Loader.getRoutesInPackage("com.qaobee.hive.api")
                 .entrySet().stream().sorted(Comparator.comparingInt(e -> e.getKey().order()))
@@ -178,7 +178,7 @@ public class Main extends AbstractGuiceVerticle {
         runWebServer(loadVerticles(), router).done(r -> startFuture.complete()).fail(startFuture::fail);
     }
 
-    private void jsonHandler(RoutingContext context) {
+    private static void jsonHandler(RoutingContext context) {
         context.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8")
                 .putHeader(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, max-age=0, must-revalidate")
                 .putHeader("Pragma", "no-cache")
@@ -290,7 +290,7 @@ public class Main extends AbstractGuiceVerticle {
         }
     }
 
-    private void handleException(ReplyException ex, RoutingContext context) {
+    private static void handleException(ReplyException ex, RoutingContext context) {
         context.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
         context.response().setStatusCode(500);
         if (ex.getMessage() != null) {
@@ -359,11 +359,11 @@ public class Main extends AbstractGuiceVerticle {
     private void testParameters(Rule rule, RequestWrapper wrapper) throws QaobeeException {
         switch (rule.scope()) {
             case BODY:
-                JsonObject body = new JsonObject();
                 if (StringUtils.isNotBlank(wrapper.getBody())) {
-                    body = new JsonObject(wrapper.getBody());
+                    utils.testMandatoryParams(new JsonObject(wrapper.getBody()), rule.mandatoryParams());
+                } else {
+                    utils.testMandatoryParams(new JsonObject(), rule.mandatoryParams());
                 }
-                utils.testMandatoryParams(body, rule.mandatoryParams());
                 break;
             case REQUEST:
                 utils.testMandatoryParams(wrapper.getParams(), rule.mandatoryParams());

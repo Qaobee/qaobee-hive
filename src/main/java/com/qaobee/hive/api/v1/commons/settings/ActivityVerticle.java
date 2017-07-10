@@ -28,8 +28,6 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -56,7 +54,6 @@ public class ActivityVerticle extends AbstractGuiceVerticle {
      * Id of the structure
      */
     public static final String PARAM_ID = "_id";
-    private static final Logger LOG = LoggerFactory.getLogger(ActivityVerticle.class);
     @Inject
     private ActivityDAO activityDAO;
 

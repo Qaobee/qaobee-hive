@@ -93,7 +93,7 @@ public class UtilsImpl implements Utils {
     }
 
 
-    private HashMap<String, List<String>> toMap(MultiMap multiMap) {
+    private static HashMap<String, List<String>> toMap(MultiMap multiMap) {
         HashMap<String, List<String>> map = new HashMap<>();
         multiMap.entries().forEach(e -> {
             if (!map.containsKey(e.getKey())) {
@@ -267,7 +267,7 @@ public class UtilsImpl implements Utils {
         }).fail(deferred::reject);
     }
 
-    private String getToken(RequestWrapper request) {
+    private static String getToken(RequestWrapper request) {
         if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
             return request.getHeaders().get(Constants.TOKEN).get(0);
         }

@@ -89,7 +89,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
             });
         }).fail(e -> {
             LOG.error(((Throwable) e.getReject()).getMessage());
-            deferred.reject(((QaobeeException) e.getReject()));
+            deferred.reject((QaobeeException) e.getReject());
         });
         return deferred.promise();
     }
@@ -120,7 +120,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
             deferred.resolve(count[0]);
         }).fail(e -> {
             LOG.error(((Throwable) e.getReject()).getMessage());
-            deferred.reject(((QaobeeException) e.getReject()));
+            deferred.reject((QaobeeException) e.getReject());
         });
     }
 

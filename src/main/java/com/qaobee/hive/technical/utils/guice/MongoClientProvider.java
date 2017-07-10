@@ -24,7 +24,7 @@ public class MongoClientProvider implements Provider<MongoClientCustom> {
         return createShared(vertx, config);
     }
 
-    private MongoClientCustom createShared(Vertx vertx, JsonObject config) {
+    private static MongoClientCustom createShared(Vertx vertx, JsonObject config) {
          return new MongoClientCustomImpl(vertx, config, DEFAULT_POOL_NAME);
     }
 }

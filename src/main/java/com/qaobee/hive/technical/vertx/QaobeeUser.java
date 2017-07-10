@@ -7,8 +7,11 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.AbstractUser;
 import io.vertx.ext.auth.AuthProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class QaobeeUser extends AbstractUser {
+    private static final Logger LOG = LoggerFactory.getLogger(QaobeeUser.class);
     private JsonObject principal;
 
     public QaobeeUser(JsonObject principal) {
@@ -35,14 +38,15 @@ public class QaobeeUser extends AbstractUser {
      */
     @Override
     public void setAuthProvider(AuthProvider authProvider) {
-
+        // nothing
     }
 
     private void doHasRole(String role, Handler<AsyncResult<Boolean>> resultHandler) {
         try {
             JsonArray roles = principal.getJsonObject("account").getJsonArray("habilitations", new JsonArray());
             resultHandler.handle(Future.succeededFuture(roles.contains(role)));
-        } catch (Throwable e) {
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
             resultHandler.handle(Future.failedFuture(e));
         }
     }

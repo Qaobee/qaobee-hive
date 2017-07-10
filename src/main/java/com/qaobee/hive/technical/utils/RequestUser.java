@@ -57,6 +57,6 @@ public class RequestUser implements User {
      */
     @Override
     public void setAuthProvider(AuthProvider authProvider) {
-
+        // empty
     }
 }

@@ -73,7 +73,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         JsonArray members = sandbox.getJsonArray(FIELD_MEMBERS);
         List<Promise> promises = new ArrayList<>();
-        members.forEach(m -> promises.add(getPerson(m)));
+        members.forEach(m -> promises.add(getPerson((JsonObject) m)));
         DeferredManager dm = new DefaultDeferredManager();
         dm.when(promises.toArray(new Promise[promises.size()]))
                 .done(rs -> {
@@ -86,12 +86,12 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         return deferred.promise();
     }
 
-    private Promise getPerson(Object m) {
+    private Promise getPerson(JsonObject m) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(((JsonObject) m).getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY))
+        mongo.getById(m.getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY))
                 .done(u -> {
-                    ((JsonObject) m).put("person", u);
-                    deferred.resolve(((JsonObject) m));
+                    m.put("person", u);
+                    deferred.resolve(m);
                 })
                 .fail(deferred::reject);
         return deferred.promise();

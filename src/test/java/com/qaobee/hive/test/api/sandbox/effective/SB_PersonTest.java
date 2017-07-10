@@ -206,7 +206,7 @@ public class SB_PersonTest extends VertxJunitSupport {
             JsonObject person = new JsonObject().put("person", generatePerson());
             String id = given().header(TOKEN, user.getAccount().getToken())
                     .body(person.encode())
-                    .when().put(getURL(SB_PersonVerticle.ADD))
+                    .when().put(getURL(SB_PersonVerticle.ADD_PERSON))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("name", is("Ranu")).extract().path("_id");
@@ -307,7 +307,7 @@ public class SB_PersonTest extends VertxJunitSupport {
             JsonObject person = new JsonObject().put("person", generatePerson());
             given().header(TOKEN, user.getAccount().getToken())
                     .body(person.encode())
-                    .when().put(getURL(SB_PersonVerticle.ADD))
+                    .when().put(getURL(SB_PersonVerticle.ADD_PERSON))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("name", is("Ranu"));
@@ -321,7 +321,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void addPersonWithNonLoggedUser() {
-        given().when().post(getURL(SB_EffectiveVerticle.ADD))
+        given().when().post(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -331,7 +331,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void addPersonWithWrongHttpMethod() {
-        given().when().get(getURL(SB_EffectiveVerticle.ADD))
+        given().when().get(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -345,7 +345,7 @@ public class SB_PersonTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
-                    .when().put(getURL(SB_PersonVerticle.ADD))
+                    .when().put(getURL(SB_PersonVerticle.ADD_PERSON))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();

@@ -15,9 +15,9 @@ import javax.inject.Inject;
 @DeployableVerticle(isWorker = false)
 public class CRMVerticle extends AbstractGuiceVerticle {
     /**
-     * The constant REGISTER.
+     * The constant CRMVERTICLE_REGISTER.
      */
-    public static final String REGISTER = "CRMVerticle.register";
+    public static final String CRMVERTICLE_REGISTER = "CRMVerticle.register";
     /**
      * The constant UPDATE.
      */
@@ -28,7 +28,7 @@ public class CRMVerticle extends AbstractGuiceVerticle {
     @Override
     public void start(Future<Void> startFuture) {
         inject(this)
-                .add(REGISTER, this::registerMail)
+                .add(CRMVERTICLE_REGISTER, this::registerMail)
                 .add(UPDATE, this::update)
                 .register(startFuture);
     }

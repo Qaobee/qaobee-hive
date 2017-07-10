@@ -33,8 +33,6 @@ import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -43,7 +41,6 @@ import javax.inject.Inject;
  */
 @DeployableVerticle
 public class UserVerticle extends AbstractGuiceVerticle {
-    private static final Logger LOG = LoggerFactory.getLogger(UserVerticle.class);
     /**
      * The constant LOGIN.
      */
