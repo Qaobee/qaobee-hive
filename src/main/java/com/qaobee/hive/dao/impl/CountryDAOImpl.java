@@ -79,7 +79,7 @@ public class CountryDAOImpl implements CountryDAO {
 
     private Promise<JsonObject, QaobeeException, Integer> getCountries() {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        if (mapCountry == null || mapCountry.fieldNames().isEmpty()) {
+        if (mapCountry.fieldNames().isEmpty()) {
             mongo.findAll(null, null, -1, 0, DBCollections.COUNTRY)
                     .done(resultJson -> {
                         resultJson.forEach(c -> mapCountry.put(((JsonObject) c).getString("_id").split("-")[2], (JsonObject) c));
