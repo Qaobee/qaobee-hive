@@ -19,12 +19,13 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.dao.SignupDAO;
 import com.qaobee.hive.dao.UserDAO;
+import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -32,6 +33,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +114,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     private UserDAO userDAO;
     @Inject
     private SignupDAO signupDAO;
+    @Inject
+    private NotificationsService notificationsService;
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -173,15 +177,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     try {
                         signupDAO.sendRegisterMail(u, req.getLocale()).done(r -> {
                             JsonObject notification = new JsonObject()
-                                    .put("id", u.getString("_id"))
-                                    .put("target", "User")
-                                    .put("notification", new JsonObject()
                                             .put("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), req.getLocale()))
                                             .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
                                             .put("senderId", runtime.getString("admin.id")
-                                            )
                                     );
-                            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+                            notificationsService.notify(u.getString("_id"), DBCollections.USER, notification, new JsonArray(), null);
                             message.reply(u.encode());
                         }).fail(e -> utils.sendError(message, e));
                     } catch (final QaobeeException e) {

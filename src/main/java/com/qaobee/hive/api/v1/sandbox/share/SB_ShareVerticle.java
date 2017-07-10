@@ -20,16 +20,17 @@
 package com.qaobee.hive.api.v1.sandbox.share;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.UserDAO;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
+import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
@@ -38,6 +39,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.Future;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -150,6 +152,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private UserDAO userDAO;
     @Inject
     private TemplatesDAO templatesDAO;
+    @Inject
+    private NotificationsService notificationsService;
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -169,15 +173,10 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     }
 
     private void internalShareNotification(Message<JsonObject> message) {
-        JsonObject notification = new JsonObject()
-                .put("id", message.body().getString(PARAM_USERID))
-                .put(TARGET_FIELD, User.class.getSimpleName())
-                .put(NOTIFICATION_FIELD, new JsonObject()
-                        .put(CONTENT_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".content", message.body().getString(FIELD_LOCALE)))
-                        .put(TITLE_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".title", message.body().getString(FIELD_LOCALE)))
-                        .put(SENDER_ID_FIELD, message.body().getString(FIELD_UID))
-                );
-        vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+        notificationsService.notify(message.body().getString(PARAM_USERID), DBCollections.USER, new JsonObject()
+                .put(CONTENT_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".content", message.body().getString(FIELD_LOCALE)))
+                .put(TITLE_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".title", message.body().getString(FIELD_LOCALE)))
+                .put(SENDER_ID_FIELD, message.body().getString(FIELD_UID)), new JsonArray(), null);
     }
 
     /**
@@ -263,15 +262,10 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private void sendNotification(JsonObject invitation, JsonObject user, String userEmail, String locale) throws QaobeeException {
         final JsonObject tplReq = new JsonObject();
         if (StringUtils.isNotBlank(invitation.getString(PARAM_USERID, ""))) {
-            JsonObject notification = new JsonObject()
-                    .put("id", invitation.getString(PARAM_USERID))
-                    .put(TARGET_FIELD, User.class.getSimpleName())
-                    .put(NOTIFICATION_FIELD, new JsonObject()
-                            .put(CONTENT_FIELD, Messages.getString("notification.sandbox.add.content", locale, user.getString(FIRSTNAME_FIELD) + " " + user.getString("name")))
-                            .put(TITLE_FIELD, Messages.getString("notification.sandbox.add.title", locale))
-                            .put(SENDER_ID_FIELD, user.getString("_id"))
-                    );
-            vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+            notificationsService.notify(invitation.getString(PARAM_USERID), DBCollections.USER, new JsonObject()
+                    .put(CONTENT_FIELD, Messages.getString("notification.sandbox.add.content", locale, user.getString(FIRSTNAME_FIELD) + " " + user.getString("name")))
+                    .put(TITLE_FIELD, Messages.getString("notification.sandbox.add.title", locale))
+                    .put(SENDER_ID_FIELD, user.getString("_id")), new JsonArray(), null);
                 /* send an E-mail to guest */
             tplReq.put(TemplatesDAOImpl.TEMPLATE, INVITE_URL)
                     .put(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), User.class), locale, userEmail, invitation.getString("_id"), "internal"));
@@ -361,23 +355,17 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                 .done(invitation -> {
                     JsonObject notification = new JsonObject();
                     if ("accepted".equals(request.getString(PARAM_ANSWER_INVITATION))) {
-                        notification.put("id", invitation.getString(SENDER_ID_FIELD))
-                                .put(TARGET_FIELD, User.class.getSimpleName())
-                                .put(NOTIFICATION_FIELD, new JsonObject()
-                                        .put(CONTENT_FIELD, Messages.getString("notification.sandbox.accept.content", req.getLocale(), invitation.getString(USER_EMAIL_FIELD)))
-                                        .put(TITLE_FIELD, Messages.getString("notification.sandbox.accept.title", req.getLocale()))
-                                        .put(SENDER_ID_FIELD, request.getString(PARAM_USERID))
+                        notification.put(CONTENT_FIELD, Messages.getString("notification.sandbox.accept.content", req.getLocale(), invitation.getString(USER_EMAIL_FIELD)))
+                                .put(TITLE_FIELD, Messages.getString("notification.sandbox.accept.title", req.getLocale()))
+                                .put(SENDER_ID_FIELD, request.getString(PARAM_USERID)
                                 );
                     } else {
-                        notification.put("id", invitation.getString(SENDER_ID_FIELD))
-                                .put(TARGET_FIELD, User.class.getSimpleName())
-                                .put(NOTIFICATION_FIELD, new JsonObject()
-                                        .put(CONTENT_FIELD, Messages.getString("notification.sandbox.refuse.content", req.getLocale(), invitation.getString(USER_EMAIL_FIELD)))
-                                        .put(TITLE_FIELD, Messages.getString("notification.sandbox.refuse.title", req.getLocale()))
-                                        .put(SENDER_ID_FIELD, request.getString(PARAM_USERID))
+                        notification.put(CONTENT_FIELD, Messages.getString("notification.sandbox.refuse.content", req.getLocale(), invitation.getString(USER_EMAIL_FIELD)))
+                                .put(TITLE_FIELD, Messages.getString("notification.sandbox.refuse.title", req.getLocale()))
+                                .put(SENDER_ID_FIELD, request.getString(PARAM_USERID)
                                 );
                     }
-                    vertx.eventBus().send(NotificationsVerticle.NOTIFY, notification);
+                    notificationsService.notify(invitation.getString(SENDER_ID_FIELD), DBCollections.USER, notification, new JsonArray(), null);
                     message.reply(invitation.encode());
                 }).fail(e -> utils.sendError(message, e));
     }

@@ -32,6 +32,7 @@ import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.json.DecodeException;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -292,5 +293,15 @@ public class UtilsImpl implements Utils {
     @Override
     public void testMandatoryParams(MultiMap params, String... fields) throws QaobeeException {
         testMandatoryParams(toMap(params), fields);
+    }
+
+    @Override
+    public void testMandatoryParams(RoutingContext context, String... fields) throws QaobeeException {
+        try {
+            testMandatoryParams(context.getBodyAsJson(), fields);
+        } catch (DecodeException e){
+            LOG.warn(e.getMessage(), e);
+            testMandatoryParams(new JsonObject(), fields);
+        }
     }
 }

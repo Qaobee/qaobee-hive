@@ -188,6 +188,16 @@ public interface Utils {
      *
      * @param params the params
      * @param fields the fields
+     * @throws QaobeeException the qaobee exception
      */
     void testMandatoryParams(MultiMap params, String... fields) throws QaobeeException;
+
+    /**
+     * Test mandatory params.
+     *
+     * @param context the context
+     * @param fields  the fields
+     * @throws QaobeeException the qaobee exception
+     */
+    void testMandatoryParams(RoutingContext context, String... fields) throws QaobeeException;
 }

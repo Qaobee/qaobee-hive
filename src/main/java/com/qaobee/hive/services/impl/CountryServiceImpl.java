@@ -51,7 +51,6 @@ public class CountryServiceImpl implements CountryService {
     @Inject
     private MongoDB mongo;
 
-
     private Vertx vertx;
 
     public CountryServiceImpl(Vertx vertx) {

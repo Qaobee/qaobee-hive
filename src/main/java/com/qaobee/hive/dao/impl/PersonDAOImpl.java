@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.qaobee.hive.dao.NotificationsDAO;
+import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.dao.PersonDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -45,7 +45,7 @@ public class PersonDAOImpl implements PersonDAO {
     @Inject
     private MongoDB mongo;
     @Inject
-    private NotificationsDAO notificationsDAO;
+    private NotificationsService notificationsService;
 
     @Override
     public Promise<JsonArray, QaobeeException, Integer> getPersonListBySandbox(String sandboxId) {
@@ -93,7 +93,7 @@ public class PersonDAOImpl implements PersonDAO {
                                         "/#/private/viewPlayer/" + person.getString("_id")))
                                 .put("title", Messages.getString("notification.person.update.title", locale))
                                 .put("senderId", userId);
-                        notificationsDAO.notify(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId));
+                        notificationsService.notify(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), null);
                     }
                 })
                 .fail(deferred::reject);
@@ -119,7 +119,7 @@ public class PersonDAOImpl implements PersonDAO {
                                         "/#/private/viewPlayer/" + person.getString("_id")))
                                 .put("title", Messages.getString("notification.person.add.title", locale))
                                 .put("senderId", userId);
-                        notificationsDAO.notify(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId));
+                        notificationsService.notify(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), null);
                     }
                 })
                 .fail(deferred::reject);

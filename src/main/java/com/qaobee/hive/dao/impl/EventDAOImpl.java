@@ -19,14 +19,13 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.qaobee.hive.api.v1.commons.communication.NotificationsVerticle;
 import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
 import com.qaobee.hive.dao.EventDAO;
+import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.jdeferred.Deferred;
@@ -39,12 +38,11 @@ import javax.inject.Inject;
  * The type Event dao.
  */
 public class EventDAOImpl implements EventDAO {
-
     private static final String FIELD_SANDBOX_ID = "sandboxId";
     @Inject
     private MongoDB mongo;
     @Inject
-    private Vertx vertx;
+    private NotificationsService notificationsService;
 
     @Override
     public Promise<JsonObject, QaobeeException, Integer> getEvent(String id) {
@@ -59,11 +57,11 @@ public class EventDAOImpl implements EventDAO {
                     event.put("_id", id);
                     deferred.resolve(event);
                     mongo.getById(event.getJsonObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX)
-                            .done(sandbox -> vertx.eventBus().send(NotificationsVerticle.NOTIFY,
-                                    buildNotification(sandbox, event, currentUserId,
-                                            "notification.event.update.title",
-                                            "notification.event.update.content", locale )))
-                            .fail(deferred::reject);
+                            .done(sandbox ->
+                                    notificationsService.notify(sandbox.getString("_id"), DBCollections.SANDBOX, new JsonObject()
+                                            .put("content", Messages.getString("notification.event.update.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
+                                            .put("title", Messages.getString("notification.event.update.title", locale))
+                                            .put("senderId", currentUserId), new JsonArray().add(currentUserId), null));
 
                 })
                 .fail(deferred::reject);
@@ -78,26 +76,14 @@ public class EventDAOImpl implements EventDAO {
                     event.put("_id", id);
                     deferred.resolve(event);
                     mongo.getById(event.getJsonObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX)
-                            .done(sandbox -> vertx.eventBus().send(NotificationsVerticle.NOTIFY,
-                                    buildNotification(sandbox, event, currentUserId,
-                                            "notification.event.add.title",
-                                            "notification.event.add.content", locale)))
-                            .fail(deferred::reject);
+                            .done(sandbox ->
+                                    notificationsService.notify(sandbox.getString("_id"), DBCollections.SANDBOX, new JsonObject()
+                                            .put("content", Messages.getString("notification.event.add.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
+                                            .put("title", Messages.getString("notification.event.add.title", locale))
+                                            .put("senderId", currentUserId), new JsonArray().add(currentUserId), null));
                 })
                 .fail(deferred::reject);
         return deferred.promise();
-    }
-
-    private JsonObject buildNotification(JsonObject sandbox, JsonObject event, String currentUserId, String title, String content, String locale) {
-        return new JsonObject()
-                .put("id", sandbox.getString("_id"))
-                .put("target", DBCollections.SANDBOX)
-                .put("exclude", new JsonArray().add(currentUserId))
-                .put("notification", new JsonObject()
-                        .put("content", Messages.getString(content, locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
-                        .put("title", Messages.getString(title, locale))
-                        .put("senderId", currentUserId)
-                );
     }
 
     @Override

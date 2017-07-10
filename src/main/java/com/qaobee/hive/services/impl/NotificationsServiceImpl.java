@@ -17,13 +17,18 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.dao.NotificationsDAO;
+import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -47,8 +52,9 @@ import java.util.UUID;
 /**
  * The type Notifications dao.
  */
-public class NotificationsDAOImpl implements NotificationsDAO {
-    private static final Logger LOG = LoggerFactory.getLogger(NotificationsDAOImpl.class);
+@ProxyService(address = NotificationsService.ADDRESS, iface = NotificationsService.class)
+public class NotificationsServiceImpl implements NotificationsService {
+    private static final Logger LOG = LoggerFactory.getLogger(NotificationsServiceImpl.class);
     private static final String WS_NOTIFICATION_PREFIX = "qaobee.notification.";
     private static final String SENDER_ID = "senderId";
     private static final String TARGET_ID = "targetId";
@@ -65,36 +71,18 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     @Inject
     private MongoDB mongo;
     @Inject
-    private Vertx vertx;
-    @Inject
     @Named("firebase")
     private JsonObject firebase;
     @Inject
     private WebClient webClient;
 
-    @Override
-    public Promise<Boolean, QaobeeException, Integer> notify(String id, String collection, JsonObject notification, JsonArray exclude) {
-        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(id, collection)
-                .done(target -> {
-                    if (target == null) {
-                        deferred.resolve(false);
-                    } else {
-                        switch (collection) {
-                            case DBCollections.USER:
-                                addNotificationToUser(id, notification).done(deferred::resolve).fail(deferred::reject);
-                                break;
-                            case DBCollections.SANDBOX:
-                                addNotificationToSandbox(target, notification, exclude).done(deferred::resolve).fail(deferred::reject);
-                                break;
-                            default:
-                                deferred.resolve(false);
-                        }
-                    }
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+    private Vertx vertx;
+
+    public NotificationsServiceImpl(Vertx vertx) {
+        super();
+        this.vertx = vertx;
     }
+
 
     private Promise<Boolean, QaobeeException, Integer> addNotificationToSandbox(JsonObject target, JsonObject notification, JsonArray exclude) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
@@ -109,9 +97,13 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                 if (!excludeList.contains((target.getJsonArray(FIELD_MEMBERS).getJsonObject(i)).getString(FIELD_PERSON_ID))
                         && "activated".equals((target.getJsonArray(FIELD_MEMBERS).getJsonObject(i)).getString(FIELD_MEMBER_STATUS))) {
                     LOG.info(target.getJsonArray(FIELD_MEMBERS).getJsonObject(i).getString(FIELD_PERSON_ID));
-                    addNotificationToUser(target.getJsonArray(FIELD_MEMBERS).getJsonObject(i).getString(FIELD_PERSON_ID), notification)
-                            .done(addRes -> res[0] = res[0] && addRes)
-                            .fail(deferred::reject);
+
+                    addNotificationToUser(target.getJsonArray(FIELD_MEMBERS).getJsonObject(i).getString(FIELD_PERSON_ID),
+                            notification, addRes -> {
+                                if (addRes.succeeded()) {
+                                    res[0] = res[0] && addRes.result();
+                                }
+                            });
                 }
             }
         }
@@ -120,14 +112,36 @@ public class NotificationsDAOImpl implements NotificationsDAO {
     }
 
     @Override
-    public Promise<Boolean, QaobeeException, Integer> addNotificationToUser(String id, JsonObject notification) {
-        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
+    public void notify(String id, String collection, JsonObject notification, JsonArray exclude, Handler<AsyncResult<Boolean>> resultHandler) {
+        mongo.getById(id, collection)
+                .done(target -> {
+                    if (target == null) {
+                        resultHandler.handle(Future.succeededFuture(false));
+                    } else {
+                        switch (collection) {
+                            case DBCollections.USER:
+                                addNotificationToUser(id, notification,res -> resultHandler.handle(Future.succeededFuture(res.result())));
+                                break;
+                            case DBCollections.SANDBOX:
+                                addNotificationToSandbox(target, notification, exclude)
+                                        .done(res -> resultHandler.handle(Future.succeededFuture(res)))
+                                        .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                                break;
+                            default:
+                                resultHandler.handle(Future.succeededFuture(false));
+                        }
+                    }
+                }).fail(e -> resultHandler.handle(Future.succeededFuture(false)));
+    }
+
+    @Override
+    public void addNotificationToUser(String id, JsonObject notification, Handler<AsyncResult<Boolean>> resultHandler) {
         notification.put("_id", UUID.randomUUID().toString())
                 .put(TARGET_ID, id)
                 .put("timestamp", System.currentTimeMillis())
                 .put("read", false)
                 .put(DELETED, false);
-        mongo.upsert(notification, DBCollections.NOTIFICATION).fail(deferred::reject);
+        mongo.upsert(notification, DBCollections.NOTIFICATION).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
         mongo.getById(id, DBCollections.USER)
                 .done(u -> {
                     if (u != null && u.containsKey(ACCOUNT) && u.getJsonObject(ACCOUNT).containsKey(FIELD_DEVICES)) {
@@ -146,7 +160,79 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                         });
                     }
                     vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
-                    deferred.resolve(true);
+                    resultHandler.handle(Future.succeededFuture(true));
+                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+    }
+
+    @Override
+    public void markAsRead(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.getById(id, DBCollections.NOTIFICATION)
+                .done(n -> {
+                    n.put("read", !n.getBoolean("read"));
+                    mongo.upsert(n, DBCollections.NOTIFICATION)
+                            .done(updtRes -> {
+                                vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
+                                resultHandler.handle(Future.succeededFuture(n));
+                            }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+    }
+
+    @Override
+    public void delete(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.getById(id, DBCollections.NOTIFICATION)
+                .done(n -> {
+                    n.put(DELETED, true);
+                    mongo.upsert(n, DBCollections.NOTIFICATION)
+                            .done(updtRes -> {
+                                vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
+                                resultHandler.handle(Future.succeededFuture(n));
+                            }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+    }
+
+    @Override
+    public void getList(String id, int start, int limit, Handler<AsyncResult<JsonArray>> resultHandler) {
+        CriteriaBuilder cb = new CriteriaBuilder()
+                .add(TARGET_ID, id)
+                .add(DELETED, false);
+        mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, DBCollections.NOTIFICATION)
+                .done(notifications -> {
+                    JsonArray jnotif = new JsonArray();
+                    if (notifications.size() == 0) {
+                        resultHandler.handle(Future.succeededFuture(jnotif));
+                    } else {
+                        int myLimit = limit;
+                        if (myLimit == -1) {
+                            myLimit = notifications.size();
+                        }
+                        List<Promise> promises = new ArrayList<>();
+                        for (int i = start; i < start + myLimit; i++) {
+                            promises.add(getUser(i, notifications.getJsonObject(i).getString(SENDER_ID)));
+                        }
+                        DeferredManager dm = new DefaultDeferredManager();
+                        dm.when(promises.toArray(new Promise[promises.size()]))
+                                .done(rs -> {
+                                    rs.forEach(u -> {
+                                        JsonObject tuple = (JsonObject) u.getResult();
+                                        notifications.getJsonObject(tuple.getInteger(FIELD_INDEX)).put(SENDER_ID, tuple.getJsonObject("user"));
+                                        jnotif.add(notifications.getJsonObject(tuple.getInteger(FIELD_INDEX)));
+                                    });
+                                    resultHandler.handle(Future.succeededFuture(jnotif));
+                                })
+                                .fail(e -> LOG.error(((Throwable) e.getReject()).getMessage()));
+                    }
+                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+    }
+
+    private Promise<JsonObject, QaobeeException, Integer> getUser(int i, String id) {
+        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+        mongo.getById(id, DBCollections.USER)
+                .done(u -> {
+                    JsonObject cu = new JsonObject();
+                    u.fieldNames().stream()
+                            .filter(Arrays.asList("_id", "name", "firstname", "avatar")::contains)
+                            .forEachOrdered(f -> cu.put(f, u.getValue(f)));
+                    deferred.resolve(new JsonObject().put(FIELD_INDEX, i).put("user", cu));
                 })
                 .fail(deferred::reject);
         return deferred.promise();
@@ -181,90 +267,5 @@ public class NotificationsDAOImpl implements NotificationsDAO {
                         LOG.error(res.cause().getMessage(), res.cause());
                     }
                 });
-    }
-
-    @Override
-    public Promise<JsonObject, QaobeeException, Integer> markAsRead(String id) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(id, DBCollections.NOTIFICATION)
-                .done(n -> {
-                    n.put("read", !n.getBoolean("read"));
-                    mongo.upsert(n, DBCollections.NOTIFICATION)
-                            .done(updtRes -> {
-                                vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
-                                deferred.resolve(n);
-                            })
-                            .fail(deferred::reject);
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
-    }
-
-    @Override
-    public Promise<JsonObject, QaobeeException, Integer> delete(String id) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(id, DBCollections.NOTIFICATION)
-                .done(n -> {
-                    n.put(DELETED, true);
-                    mongo.upsert(n, DBCollections.NOTIFICATION)
-                            .done(updtRes -> {
-                                vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
-                                deferred.resolve(n);
-                            })
-                            .fail(deferred::reject);
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
-    }
-
-    @Override
-    public Promise<JsonArray, QaobeeException, Integer> getList(String id, int start, int limit) {
-        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
-        CriteriaBuilder cb = new CriteriaBuilder()
-                .add(TARGET_ID, id)
-                .add(DELETED, false);
-        mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, DBCollections.NOTIFICATION)
-                .done(notifications -> {
-                    JsonArray jnotif = new JsonArray();
-                    if(notifications.size()==0) {
-                        deferred.resolve(jnotif);
-                    } else {
-                        int myLimit = limit;
-                        if (myLimit == -1) {
-                            myLimit = notifications.size();
-                        }
-                        List<Promise> promises = new ArrayList<>();
-                        for (int i = start; i < start + myLimit; i++) {
-                            promises.add(getUser(i, notifications.getJsonObject(i).getString(SENDER_ID)));
-                        }
-                        DeferredManager dm = new DefaultDeferredManager();
-                        dm.when(promises.toArray(new Promise[promises.size()]))
-                                .done(rs -> {
-                                    rs.forEach(u -> {
-                                        JsonObject tuple = (JsonObject) u.getResult();
-                                        notifications.getJsonObject(tuple.getInteger(FIELD_INDEX)).put(SENDER_ID, tuple.getJsonObject("user"));
-                                        jnotif.add(notifications.getJsonObject(tuple.getInteger(FIELD_INDEX)));
-                                    });
-                                    deferred.resolve(jnotif);
-                                })
-                                .fail(e -> LOG.error(((Throwable) e.getReject()).getMessage()));
-                    }
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
-    }
-
-    private Promise<JsonObject, QaobeeException, Integer> getUser(int i, String id) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(id, DBCollections.USER)
-                .done(u -> {
-                    JsonObject cu = new JsonObject();
-                    u.fieldNames().stream()
-                            .filter(Arrays.asList("_id", "name", "firstname", "avatar")::contains)
-                            .forEachOrdered(f -> cu.put(f, u.getValue(f)));
-                    deferred.resolve(new JsonObject().put(FIELD_INDEX, i).put("user", cu));
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
     }
 }

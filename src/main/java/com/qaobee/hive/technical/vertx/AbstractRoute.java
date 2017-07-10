@@ -132,4 +132,15 @@ public abstract class AbstractRoute implements VertxRoute.Route {
                 .setStatusCode(200)
                 .end(result.encode());
     }
+
+    /**
+     * Handle status.
+     *
+     * @param b       the b
+     * @param context the context
+     */
+    protected void handleStatus(boolean b, RoutingContext context) {
+        handleResponse(context, new JsonObject().put(Constants.STATUS, b));
+    }
+
 }

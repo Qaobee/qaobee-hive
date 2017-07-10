@@ -24,10 +24,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
-import com.qaobee.hive.services.ActivityCfgService;
-import com.qaobee.hive.services.ActivityService;
-import com.qaobee.hive.services.AssetsService;
-import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.*;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
 import com.qaobee.hive.technical.utils.HabilitUtils;
@@ -113,7 +110,6 @@ public class GuiceModule extends AbstractModule {
 
         // DAO
         bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
-        bind(NotificationsDAO.class).to(NotificationsDAOImpl.class).in(Singleton.class);
         bind(ChampionshipDAO.class).to(ChampionshipDAOImpl.class).in(Singleton.class);
         bind(StructureDAO.class).to(StructureDAOImpl.class).in(Singleton.class);
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
@@ -140,5 +136,6 @@ public class GuiceModule extends AbstractModule {
         bind(ActivityCfgService.class).toInstance(ActivityCfgService.createProxy(vertx, ActivityCfgService.ADDRESS));
         bind(ActivityService.class).toInstance(ActivityService.createProxy(vertx, ActivityService.ADDRESS));
         bind(CountryService.class).toInstance(CountryService.createProxy(vertx, CountryService.ADDRESS));
+        bind(NotificationsService.class).toInstance(NotificationsService.createProxy(vertx, NotificationsService.ADDRESS));
     }
 }
