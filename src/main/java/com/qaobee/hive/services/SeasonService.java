@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.IndicatorImpl;
+import com.qaobee.hive.services.impl.SeasonServiceImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -30,62 +30,60 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Indicator.
+ * The interface Season.
  */
 @ProxyGen
 @VertxGen
-public interface Indicator {
+public interface SeasonService {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.Indicator.service";
+    String ADDRESS = "vertx.Season.service";
 
     /**
-     * Create indicator.
+     * Create season.
      *
      * @param vertx the vertx
-     * @return the indicator
+     * @return the season
      */
-    static Indicator create(Vertx vertx) {
-        return new IndicatorImpl(vertx);
+    static SeasonService create(Vertx vertx) {
+        return new SeasonServiceImpl(vertx);
     }
 
     /**
-     * Create proxy indicator.
+     * Create proxy season.
      *
      * @param vertx   the vertx
      * @param address the address
-     * @return the indicator
+     * @return the season
      */
-    static Indicator createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(Indicator.class, vertx, address);
+    static SeasonService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(SeasonService.class, vertx, address);
     }
 
     /**
-     * Gets indicator by code.
-     *
-     * @param activityId     the activity id
-     * @param countryId      the country id
-     * @param listIndicators the list indicators
-     * @param resultHandler  the result handler
-     */
-    void getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators, Handler<AsyncResult<JsonArray>> resultHandler);
-
-    /**
-     * Gets indicators list.
+     * Gets current season.
      *
      * @param activityId    the activity id
      * @param countryId     the country id
-     * @param screen        the screen
      * @param resultHandler the result handler
      */
-    void getIndicatorsList(String activityId, String countryId, JsonArray screen, Handler<AsyncResult<JsonArray>> resultHandler);
+    void getCurrentSeason(String activityId, String countryId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Gets indicator.
+     * Gets list by activity.
+     *
+     * @param activityId    the activity id
+     * @param countryId     the country id
+     * @param resultHandler the result handler
+     */
+    void getListByActivity(String activityId, String countryId, Handler<AsyncResult<JsonArray>> resultHandler);
+
+    /**
+     * Gets season.
      *
      * @param id            the id
      * @param resultHandler the result handler
      */
-    void getIndicator(String id, Handler<AsyncResult<JsonObject>> resultHandler);
+    void getSeason(String id, Handler<AsyncResult<JsonObject>> resultHandler);
 }

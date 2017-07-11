@@ -19,8 +19,8 @@
 
 package com.qaobee.hive.test.api.commons.user;
 
-import com.qaobee.hive.api.v1.commons.users.ProfileVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.Json;
@@ -39,6 +39,7 @@ import static org.hamcrest.Matchers.is;
  * @author Xavier MARIN (b3605)
  */
 public class ProfileTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/commons/users/profile");
 
     /**
      * Update profile with common data.
@@ -50,7 +51,7 @@ public class ProfileTest extends VertxJunitSupport {
             u.setGender("androgyn");
             given().header(TOKEN, u.getAccount().getToken())
                     .body(Json.encode(u))
-                    .when().post(getURL(ProfileVerticle.UPDATE))
+                    .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.getName()))
                     .body("gender", is("androgyn"));
@@ -69,7 +70,7 @@ public class ProfileTest extends VertxJunitSupport {
             u.getAccount().setPasswd("toto");
             given().header(TOKEN, u.getAccount().getToken())
                     .body(Json.encode(u))
-                    .when().post(getURL(ProfileVerticle.UPDATE))
+                    .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.getName()));
             final JsonObject params = new JsonObject();
@@ -89,7 +90,7 @@ public class ProfileTest extends VertxJunitSupport {
      */
     @Test
     public void updateProfileNonLoggedUser() {
-        given().when().post(getURL(ProfileVerticle.UPDATE))
+        given().when().post(BASE_URL + "/")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -99,7 +100,7 @@ public class ProfileTest extends VertxJunitSupport {
      */
     @Test
     public void updateProfileWithWrongHttpMethod() {
-        given().when().get(getURL(ProfileVerticle.UPDATE))
+        given().when().get(BASE_URL + "/")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -117,7 +118,7 @@ public class ProfileTest extends VertxJunitSupport {
 
             given().header(TOKEN, u.getAccount().getToken())
                     .body(user.encode())
-                    .when().post(getURL(ProfileVerticle.UPDATE))
+                    .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -138,7 +139,7 @@ public class ProfileTest extends VertxJunitSupport {
 
             given().header(TOKEN, u.getAccount().getToken())
                     .body(user.encode())
-                    .when().post(getURL(ProfileVerticle.UPDATE))
+                    .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
@@ -154,7 +155,7 @@ public class ProfileTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
-                    .get(getURL(ProfileVerticle.GENERATE_PDF))
+                    .get(BASE_URL + "/pdf")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
             Assert.assertTrue(byteArray.length > 0);
@@ -172,7 +173,7 @@ public class ProfileTest extends VertxJunitSupport {
         System.setProperty("OPENSHIFT_DATA_DIR", System.getProperty("java.io.tmpdir") + "/bla");
         generateLoggedUser().then(u -> {
             byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
-                    .get(getURL(ProfileVerticle.GENERATE_PDF))
+                    .get(BASE_URL + "/pdf")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
             Assert.assertTrue(byteArray.length > 0);
@@ -189,9 +190,9 @@ public class ProfileTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             u.setName("<&#\"\\-+}]à@");
-            mongo.upsert(u).then(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).then(id -> {
                 given().header(TOKEN, u.getAccount().getToken())
-                        .get(getURL(ProfileVerticle.GENERATE_PDF))
+                        .get(BASE_URL + "/pdf")
                         .then().assertThat().statusCode(ExceptionCodes.INTERNAL_ERROR.getCode())
                         .body(CODE, is(ExceptionCodes.INTERNAL_ERROR.toString()));
                 async.complete();
@@ -208,7 +209,7 @@ public class ProfileTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .post(getURL(ProfileVerticle.GENERATE_PDF))
+                    .post(BASE_URL + "/pdf")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
@@ -221,7 +222,7 @@ public class ProfileTest extends VertxJunitSupport {
      */
     @Test
     public void generateProfilePDFWithNonLoggedUser() {
-        given().get(getURL(ProfileVerticle.GENERATE_PDF))
+        given().get(BASE_URL + "/pdf")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }

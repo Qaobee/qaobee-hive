@@ -22,6 +22,7 @@ import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -41,7 +42,7 @@ import static org.hamcrest.Matchers.notNullValue;
  *
  * @author cke
  */
-public class UserTest extends VertxJunitSupport {
+public class UserServiceTest extends VertxJunitSupport {
 
     /**
      * Test Login OK.
@@ -205,7 +206,7 @@ public class UserTest extends VertxJunitSupport {
         Async async = context.async();
         generateUser().then(u -> {
             u.getAccount().setActive(false);
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 JsonObject params = new JsonObject()
                         .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
                         .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
@@ -260,7 +261,7 @@ public class UserTest extends VertxJunitSupport {
         Async async = context.async();
         generateUser().then(u -> {
             u.getAccount().getListPlan().get(0).setStatus("open");
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 String token = UUID.randomUUID().toString();
 
                 JsonObject params = new JsonObject()
@@ -354,7 +355,7 @@ public class UserTest extends VertxJunitSupport {
         Async async = context.async();
         generateUser().then(u -> {
             u.getAccount().getListPlan().get(0).setStatus("notpaid");
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 String token = UUID.randomUUID().toString();
                 JsonObject params = new JsonObject()
                         .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
@@ -389,7 +390,7 @@ public class UserTest extends VertxJunitSupport {
         generateUser().then(u -> {
             u.getAccount().getListPlan().get(0).setStatus("open");
             u.getAccount().getListPlan().get(0).setEndPeriodDate(0);
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 String token = UUID.randomUUID().toString();
                 JsonObject params = new JsonObject()
                         .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
@@ -483,7 +484,7 @@ public class UserTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(user).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(id -> {
                 given().header(TOKEN, user.getAccount().getToken())
                         .when().get(getURL(UserVerticle.META))
                         .then().assertThat().statusCode(200)
@@ -501,7 +502,7 @@ public class UserTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(user).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(id -> {
                 given().header(TOKEN, user.getAccount().getToken())
                         .param("sandboxId", "558b0efebd2e39cdab651e1f")
                         .when().get(getURL(UserVerticle.META))
@@ -523,7 +524,7 @@ public class UserTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(user).done(id ->
+            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(id ->
                     given().header(TOKEN, user.getAccount().getToken())
                             .when().post(getURL(UserVerticle.META))
                             .then().assertThat().statusCode(404)
@@ -542,7 +543,7 @@ public class UserTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         generateLoggedUser().then(user -> {
             user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(user).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(id -> {
                 given().header(TOKEN, user.getAccount().getToken())
                         .when().get(getURL(UserVerticle.META))
                         .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())

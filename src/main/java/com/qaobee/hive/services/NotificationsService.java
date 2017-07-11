@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.NotificationsImpl;
+import com.qaobee.hive.services.impl.NotificationsServiceImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -34,7 +34,7 @@ import io.vertx.serviceproxy.ProxyHelper;
  */
 @ProxyGen
 @VertxGen
-public interface Notifications {
+public interface NotificationsService {
     /**
      * The constant ADDRESS.
      */
@@ -46,8 +46,8 @@ public interface Notifications {
      * @param vertx the vertx
      * @return the notifications service
      */
-    static Notifications create(Vertx vertx) {
-        return new NotificationsImpl(vertx);
+    static NotificationsService create(Vertx vertx) {
+        return new NotificationsServiceImpl(vertx);
     }
 
     /**
@@ -57,8 +57,8 @@ public interface Notifications {
      * @param address the address
      * @return the notifications service
      */
-    static Notifications createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(Notifications.class, vertx, address);
+    static NotificationsService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(NotificationsService.class, vertx, address);
     }
 
     /**

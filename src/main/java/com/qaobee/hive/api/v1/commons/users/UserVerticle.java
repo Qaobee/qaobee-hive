@@ -20,12 +20,13 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.dao.SecurityDAO;
-import com.qaobee.hive.dao.UserDAO;
+import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -104,7 +105,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private static final String PASSWD_FIELD = "passwd"; // NOSONAR
     private static final String SANDBOX_ID_FIELD = "sandboxId";
     @Inject
-    private UserDAO userDAO;
+    private UserService userService;
     @Inject
     private SecurityDAO securityDAO;
 
@@ -154,7 +155,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
             scope = Rule.Param.REQUEST)
     private void userByLogin(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, userDAO.getUserByLogin(req.getParams().get("login").get(0), req.getLocale()));
+        userService.getUserByLogin(req.getParams().get("login").get(0), req.getLocale(), ar -> {
+            if (ar.succeeded()) {
+                message.reply(ar.result().encode());
+            } else {
+                utils.sendError(message, new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+            }
+        });
     }
 
     /**
@@ -170,7 +177,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
             scope = Rule.Param.REQUEST)
     private void userInfo(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, userDAO.getUserInfo(req.getParams().get("id").get(0)));
+        userService.getUserInfo(req.getParams().get("id").get(0), ar -> {
+            if (ar.succeeded()) {
+                message.reply(ar.result().encode());
+            } else {
+                utils.sendError(message, new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+            }
+        });
     }
 
     /**
@@ -189,7 +202,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
         if (req.getParams().containsKey(SANDBOX_ID_FIELD) && !req.getParams().get(SANDBOX_ID_FIELD).isEmpty()) {
             sandBoxId = req.getParams().get(SANDBOX_ID_FIELD).get(0);
         }
-        replyJsonObject(message, userDAO.getMeta(sandBoxId));
+        userService.getMeta(sandBoxId, ar -> {
+            if (ar.succeeded()) {
+                message.reply(ar.result().encode());
+            } else {
+                utils.sendError(message, new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+            }
+        });
     }
 
     /**
@@ -205,7 +224,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = CURRENT, method = Constants.GET, logged = true)
     private void currentUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, userDAO.getUserInfo(req.getUser().get_id()));
+        userService.getUserInfo(req.getUser().get_id(), ar-> {
+            if(ar.succeeded()) {
+                message.reply(ar.result().encode());
+            } else {
+                utils.sendError(message, new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+            }
+        });
     }
 
     /**

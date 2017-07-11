@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.*;
  *
  * @author cke
  */
-public class CountryTest extends VertxJunitSupport {
+public class CountryServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/settings/country");
     
     /**

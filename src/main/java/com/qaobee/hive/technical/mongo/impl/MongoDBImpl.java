@@ -22,7 +22,6 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
@@ -35,14 +34,12 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Mongo db.
+ */
 public class MongoDBImpl implements MongoDB {
     @Inject
     private MongoClientCustom mongoClient;
-
-    @Override
-    public Promise<String, QaobeeException, Integer> upsert(final Object o) {
-        return upsert(new JsonObject(Json.encode(o)), o.getClass().getSimpleName());
-    }
 
     @Override
     public Promise<String, QaobeeException, Integer> upsert(JsonObject document, String collection) {

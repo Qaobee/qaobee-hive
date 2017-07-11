@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.services.Season;
+import com.qaobee.hive.services.SeasonService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -39,8 +39,8 @@ import java.util.Map;
 /**
  * The type Season.
  */
-@ProxyService(address = Season.ADDRESS, iface = Season.class)
-public class SeasonImpl implements Season {
+@ProxyService(address = SeasonService.ADDRESS, iface = SeasonService.class)
+public class SeasonServiceImpl implements SeasonService {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
     private static final String END_DATE_FIELD = "endDate";
@@ -53,7 +53,7 @@ public class SeasonImpl implements Season {
      *
      * @param vertx the vertx
      */
-    public SeasonImpl(Vertx vertx) {
+    public SeasonServiceImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
     }

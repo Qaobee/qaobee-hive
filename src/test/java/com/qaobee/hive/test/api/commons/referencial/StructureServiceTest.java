@@ -35,7 +35,7 @@ import static org.hamcrest.Matchers.*;
  *
  * @author cke
  */
-public class StructureTest extends VertxJunitSupport {
+public class StructureServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/referencial/structure");
 
     /**

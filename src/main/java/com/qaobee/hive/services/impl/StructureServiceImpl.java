@@ -19,8 +19,8 @@
 
 package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.services.Country;
-import com.qaobee.hive.services.Structure;
+import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.StructureService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
@@ -37,13 +37,13 @@ import javax.inject.Inject;
 /**
  * The type Structure.
  */
-@ProxyService(address = Structure.ADDRESS, iface = Structure.class)
-public class StructureImpl implements Structure {
+@ProxyService(address = StructureService.ADDRESS, iface = StructureService.class)
+public class StructureServiceImpl implements StructureService {
     private static final String COUNTRY_ALPHA_2_FIELD = "countryAlpha2";
     @Inject
     private MongoDB mongo;
     @Inject
-    private Country country;
+    private CountryService countryService;
     private Vertx vertx;
 
     /**
@@ -51,7 +51,7 @@ public class StructureImpl implements Structure {
      *
      * @param vertx the vertx
      */
-    public StructureImpl(Vertx vertx) {
+    public StructureServiceImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
     }
@@ -65,7 +65,7 @@ public class StructureImpl implements Structure {
 
     @Override
     public void getListOfStructures(String activity, JsonObject address, Handler<AsyncResult<JsonArray>> resultHandler) {
-        country.getCountryFromAlpha2(address.getString(COUNTRY_ALPHA_2_FIELD, "FR"), country -> {
+        countryService.getCountryFromAlpha2(address.getString(COUNTRY_ALPHA_2_FIELD, "FR"), country -> {
             if (country.succeeded()) {
                 // $MACTH section
                 JsonObject dbObjectParent = new JsonObject().put("activity._id", activity).put("country._id", country.result().getString("_id"));

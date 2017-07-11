@@ -22,9 +22,11 @@ package com.qaobee.hive.test.api.commons.user;
 import com.qaobee.hive.api.v1.commons.users.ShippingVerticle;
 import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import com.stripe.Stripe;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
@@ -247,7 +249,7 @@ public class ShippingTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setCardId(null);
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 initMockStripe(u);
                 JsonObject request = new JsonObject()
                         .put("data", new JsonObject()
@@ -288,7 +290,7 @@ public class ShippingTest extends VertxJunitSupport {
             u.getAccount().getListPlan().get(0).setCardId(null);
             u.getAccount().getListPlan().get(0).setPaymentId(null);
 
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 initMockStripe(u);
                 JsonObject request = new JsonObject()
                         .put("data", new JsonObject()
@@ -327,7 +329,7 @@ public class ShippingTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setPaymentId("sub_AkHS7YtIEi1Oy9");
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 initMockStripe(u);
                 JsonObject request = new JsonObject()
                         .put("data", new JsonObject()
@@ -354,7 +356,7 @@ public class ShippingTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setPaymentId("canceled");
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 initMockStripe(u);
 
                 JsonObject request = new JsonObject()
@@ -394,7 +396,7 @@ public class ShippingTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setPaymentId(null);
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 initMockStripe(u);
                 JsonObject request = new JsonObject()
                         .put("data", new JsonObject()
@@ -434,7 +436,7 @@ public class ShippingTest extends VertxJunitSupport {
         generateLoggedUser().then(u -> {
             u.getAccount().getListPlan().get(0).setPaymentId("12345");
             initMockStripe(u);
-            mongo.upsert(u).done(id -> {
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
                 JsonObject request = new JsonObject()
                         .put("data", new JsonObject()
                                 .put("planId", 0)

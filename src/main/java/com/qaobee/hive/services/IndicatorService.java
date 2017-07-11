@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.ChampionshipImpl;
+import com.qaobee.hive.services.impl.IndicatorServiceImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -30,66 +30,62 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Championship service.
+ * The interface Indicator.
  */
 @ProxyGen
 @VertxGen
-public interface Championship {
+public interface IndicatorService {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.Championship.service";
+    String ADDRESS = "vertx.Indicator.service";
 
     /**
-     * Create championship service.
+     * Create indicator.
      *
      * @param vertx the vertx
-     * @return the championship service
+     * @return the indicator
      */
-    static Championship create(Vertx vertx) {
-        return new ChampionshipImpl(vertx);
+    static IndicatorService create(Vertx vertx) {
+        return new IndicatorServiceImpl(vertx);
     }
 
     /**
-     * Create proxy championship service.
+     * Create proxy indicator.
      *
      * @param vertx   the vertx
      * @param address the address
-     * @return the championship service
+     * @return the indicator
      */
-    static Championship createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(Championship.class, vertx, address);
+    static IndicatorService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(IndicatorService.class, vertx, address);
     }
 
     /**
-     * Update championship.
+     * Gets indicator by code.
      *
-     * @param championship  the championship
-     * @param resultHandler the result handler
+     * @param activityId     the activity id
+     * @param countryId      the country id
+     * @param listIndicators the list indicators
+     * @param resultHandler  the result handler
      */
-    void updateChampionship(JsonObject championship, Handler<AsyncResult<String>> resultHandler);
+    void getIndicatorByCode(String activityId, String countryId, JsonArray listIndicators, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
-     * Add championship.
+     * Gets indicators list.
      *
-     * @param championship  the championship
+     * @param activityId    the activity id
+     * @param countryId     the country id
+     * @param screen        the screen
      * @param resultHandler the result handler
      */
-    void addChampionship(JsonObject championship, Handler<AsyncResult<JsonObject>> resultHandler);
+    void getIndicatorsList(String activityId, String countryId, JsonArray screen, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
-     * Gets championship.
+     * Gets indicator.
      *
      * @param id            the id
      * @param resultHandler the result handler
      */
-    void getChampionship(String id, Handler<AsyncResult<JsonObject>> resultHandler);
-
-    /**
-     * Gets list championships.
-     *
-     * @param params        the params
-     * @param resultHandler the result handler
-     */
-    void getListChampionships(JsonObject params, Handler<AsyncResult<JsonArray>> resultHandler);
+    void getIndicator(String id, Handler<AsyncResult<JsonObject>> resultHandler);
 }

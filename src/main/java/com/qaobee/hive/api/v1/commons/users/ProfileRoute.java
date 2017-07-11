@@ -22,20 +22,19 @@ package com.qaobee.hive.api.v1.commons.users;
 import com.qaobee.hive.api.Main;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
-import com.qaobee.hive.dao.UserDAO;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.services.UserService;
+import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
+import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,30 +43,25 @@ import javax.inject.Inject;
 import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 
 /**
- * The Class ProfileVerticle.
- *
- * @author Xavier MARIN
+ * The type Profile route.
  */
-@DeployableVerticle
-public class ProfileVerticle extends AbstractGuiceVerticle {
-    private static final Logger LOG = LoggerFactory.getLogger(ProfileVerticle.class);
-    /**
-     * The Constant UPDATE.
-     */
-    public static final String UPDATE = Module.VERSION + ".commons.users.profile";
-    /**
-     * The Constant GENERATE_PDF.
-     */
-    public static final String GENERATE_PDF = Module.VERSION + ".commons.users.profile.pdf";
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/users/profile")
+public class ProfileRoute extends AbstractRoute {
+    private static final Logger LOG = LoggerFactory.getLogger(ProfileRoute.class);
     @Inject
-    private UserDAO userDAO;
+    private UserService userService;
 
     @Override
-    public void start(Future<Void> startFuture) {
-        inject(this)
-                .add(UPDATE, this::updateUser)
-                .add(GENERATE_PDF, this::generateProfilePDF)
-                .register(startFuture);
+    public Router init() {
+        Router router = Router.router(vertx);
+
+        router.post("/").handler(authHandler);
+        router.post("/").handler(c -> mandatoryHandler.testBodyParams(c, "_id"));
+        router.post("/").handler(this::updateUser);
+
+        router.get("/pdf").handler(authHandler);
+        router.get("/pdf").handler(this::generateProfilePDF);
+        return router;
     }
 
     /**
@@ -78,11 +72,15 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} PDF { "Content-Type" : "application/pdf", 'fileserve" : "path to local pdf file" }
      * @apiHeader {String} token
      */
-    @Rule(address = GENERATE_PDF, method = Constants.GET, logged = true)
-    private void generateProfilePDF(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        vertx.eventBus().send(PDFVerticle.GENERATE_PDF, userDAO.generateProfilePDF(req.getUser(), req.getLocale()),
-                new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), getPdfHandler(message));
+    private void generateProfilePDF(RoutingContext context) {
+        userService.generateProfilePDF(context.user().principal(), context.request().getHeader("Accept-Language"), ar -> {
+            if (ar.succeeded()) {
+                vertx.eventBus().send(PDFVerticle.GENERATE_PDF, ar.result(), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), getPdfHandler(context));
+            } else {
+                utils.handleError(context, (QaobeeSvcException) ar.cause());
+            }
+        });
+
     }
 
     /**
@@ -94,26 +92,23 @@ public class ProfileVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} User com.qaobee.hive.business.model.commons.users.User
      * @apiHeader {String} token
      */
-    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = "_id", scope = Rule.Param.BODY)
-    private void updateUser(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, userDAO.updateUser(new JsonObject(req.getBody())));
+    private void updateUser(RoutingContext context) {
+        userService.updateUser(context.getBodyAsJson(), handleResponse(context));
     }
 
-    private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final Message<String> message) {
+    private Handler<AsyncResult<Message<JsonObject>>> getPdfHandler(final RoutingContext context) {
         return pdfResp -> {
             try {
                 if (pdfResp.failed()) {
                     throw pdfResp.cause();
                 } else {
-                    message.reply(new JsonObject()
+                    handleResponse(context, new JsonObject()
                             .put(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
-                            .put(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF))
-                            .encode());
+                            .put(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF)));
                 }
             } catch (Throwable e) { // NOSONAR
                 LOG.error(e.getMessage(), e);
-                utils.sendError(message, ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+                utils.handleError(context, new QaobeeSvcException(ExceptionCodes.INTERNAL_ERROR, e));
             }
         };
     }

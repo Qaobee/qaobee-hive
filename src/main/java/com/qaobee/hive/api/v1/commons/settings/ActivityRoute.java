@@ -19,7 +19,7 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.Activity;
+import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.ext.web.Router;
@@ -39,7 +39,7 @@ public class ActivityRoute extends AbstractRoute {
      */
     public static final String PARAM_ID = "_id";
     @Inject
-    private Activity activity;
+    private ActivityService activityService;
 
 
     /**
@@ -70,7 +70,7 @@ public class ActivityRoute extends AbstractRoute {
      * @apiSuccess {Array}   activities  List of enabled activities
      */
     private void getEnabled(RoutingContext context) {
-        activity.getEnabled(handleResponseArray(context));
+        activityService.getEnabled(handleResponseArray(context));
     }
 
     /**
@@ -83,7 +83,7 @@ public class ActivityRoute extends AbstractRoute {
      * @apiSuccess {Array}   activities List all activity
      */
     private void getList(RoutingContext context) {
-        activity.getActivityList(handleResponseArray(context));
+        activityService.getActivityList(handleResponseArray(context));
     }
 
     /**
@@ -97,6 +97,6 @@ public class ActivityRoute extends AbstractRoute {
      * @apiSuccess {Object} activity The Activity found.
      */
     private void get(RoutingContext context) {
-        activity.getActivity(context.request().getParam(PARAM_ID), handleResponse(context));
+        activityService.getActivity(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 }

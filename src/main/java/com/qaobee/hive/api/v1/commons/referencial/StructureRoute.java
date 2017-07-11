@@ -19,7 +19,7 @@
 package com.qaobee.hive.api.v1.commons.referencial;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.Structure;
+import com.qaobee.hive.services.StructureService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
@@ -60,7 +60,7 @@ public class StructureRoute extends AbstractRoute {
      */
     public static final String PARAM_ADDRESS = "address";
     @Inject
-    private Structure structure;
+    private StructureService structureService;
 
     @Override
     public Router init() {
@@ -101,7 +101,7 @@ public class StructureRoute extends AbstractRoute {
      * @apiSuccess {Structure}   structure  The Structure updated.
      */
     private void updateStructure(RoutingContext context) {
-        structure.update(context.getBodyAsJson(), handleResponse(context));
+        structureService.update(context.getBodyAsJson(), handleResponse(context));
     }
 
     /**
@@ -117,7 +117,7 @@ public class StructureRoute extends AbstractRoute {
      */
     private void getListOfStructures(RoutingContext context) {
         JsonObject body = context.getBodyAsJson();
-        structure.getListOfStructures(body.getString(PARAM_ACTIVITY), body.getJsonObject(PARAM_ADDRESS), handleResponseArray(context));
+        structureService.getListOfStructures(body.getString(PARAM_ACTIVITY), body.getJsonObject(PARAM_ADDRESS), handleResponseArray(context));
     }
 
     /**
@@ -131,7 +131,7 @@ public class StructureRoute extends AbstractRoute {
      * @apiSuccess {Structure}   structure            The Structure found.
      */
     private void getStructure(RoutingContext context) {
-        structure.getStructure(context.request().getParam(PARAM_ID), handleResponse(context));
+        structureService.getStructure(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 
     /**
@@ -151,6 +151,6 @@ public class StructureRoute extends AbstractRoute {
      * @apiSuccess {Structure}   structure            The Structure added with the id.
      */
     private void addStructure(RoutingContext context) {
-        structure.addStructure(context.getBodyAsJson(), handleResponse(context));
+        structureService.addStructure(context.getBodyAsJson(), handleResponse(context));
     }
 }

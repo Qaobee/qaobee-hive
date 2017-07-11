@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.ActivityCfgImpl;
+import com.qaobee.hive.services.impl.CountryServiceImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -30,55 +30,59 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Activity cfg service.
+ * The interface Country service.
  */
 @ProxyGen
 @VertxGen
-public interface ActivityCfg {
+public interface CountryService {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.ActivityCfg.service";
+    String ADDRESS = "vertx.Country.service";
 
     /**
-     * Create activity cfg service.
+     * Create country service.
      *
      * @param vertx the vertx
-     * @return the activity cfg service
+     * @return the country service
      */
-    static ActivityCfg create(Vertx vertx) {
-        return new ActivityCfgImpl(vertx);
+    static CountryService create(Vertx vertx) {
+        return new CountryServiceImpl(vertx);
     }
 
     /**
-     * Create proxy activity cfg service.
+     * Create proxy country service.
      *
      * @param vertx   the vertx
      * @param address the address
-     * @return the activity cfg service
+     * @return the country service
      */
-    static ActivityCfg createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(ActivityCfg.class, vertx, address);
+    static CountryService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(CountryService.class, vertx, address);
     }
 
     /**
-     * Gets activity cfg params.
+     * Gets country from alpha 2.
      *
-     * @param activityId    the activity id
-     * @param countryId     the country id
-     * @param dateRef       the date ref
-     * @param paramField    the param field
+     * @param alpha2        the alpha 2
      * @param resultHandler the result handler
      */
-    void getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField, Handler<AsyncResult<JsonArray>> resultHandler);
+    void getCountryFromAlpha2(String alpha2, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Gets activity cfg.
+     * Gets country list.
      *
-     * @param activityId    the activity id
-     * @param countryId     the country id
-     * @param dateRef       the date ref
+     * @param locale        the locale
+     * @param label         the label
      * @param resultHandler the result handler
      */
-    void getActivityCfg(String activityId, String countryId, Long dateRef, Handler<AsyncResult<JsonObject>> resultHandler);
+    void getCountryList(String locale, String label, Handler<AsyncResult<JsonArray>> resultHandler);
+
+    /**
+     * Gets country.
+     *
+     * @param id            the id
+     * @param resultHandler the result handler
+     */
+    void getCountry(String id, Handler<AsyncResult<JsonObject>> resultHandler);
 }

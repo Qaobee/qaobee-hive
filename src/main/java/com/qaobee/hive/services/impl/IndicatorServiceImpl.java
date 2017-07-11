@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.services.Indicator;
+import com.qaobee.hive.services.IndicatorService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
@@ -36,8 +36,8 @@ import javax.inject.Inject;
 /**
  * The type Indicator.
  */
-@ProxyService(address = Indicator.ADDRESS, iface = Indicator.class)
-public class IndicatorImpl implements Indicator {
+@ProxyService(address = IndicatorService.ADDRESS, iface = IndicatorService.class)
+public class IndicatorServiceImpl implements IndicatorService {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
     @Inject
@@ -49,7 +49,7 @@ public class IndicatorImpl implements Indicator {
      *
      * @param vertx the vertx
      */
-    public IndicatorImpl(Vertx vertx) {
+    public IndicatorServiceImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
     }

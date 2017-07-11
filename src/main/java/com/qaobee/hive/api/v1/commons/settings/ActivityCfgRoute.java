@@ -20,7 +20,7 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.ActivityCfg;
+import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
@@ -43,7 +43,7 @@ public class ActivityCfgRoute extends AbstractRoute {
     public static final String PARAM_COUNTRY_ID = "countryId";
 
     @Inject
-    private ActivityCfg activityCfg;
+    private ActivityCfgService activityCfgService;
 
     /**
      * Init router.
@@ -77,7 +77,7 @@ public class ActivityCfgRoute extends AbstractRoute {
      * @apiParam {String} paramFieldList the list of value
      */
     private void getActivityCfgParamsHandler(RoutingContext context) {
-        activityCfg.getActivityCfgParams(
+        activityCfgService.getActivityCfgParams(
                 context.request().getParam(PARAM_ACTIVITY_ID),
                 context.request().getParam(PARAM_COUNTRY_ID),
                 Long.parseLong(context.request().getParam(PARAM_DATE)),
@@ -102,7 +102,7 @@ public class ActivityCfgRoute extends AbstractRoute {
      * @apiParam {String} activityId Activity Id
      */
     private void getActivityCfgHandler(RoutingContext context) {
-        activityCfg.getActivityCfg(
+        activityCfgService.getActivityCfg(
                 context.request().getParam(PARAM_ACTIVITY_ID),
                 context.request().getParam(PARAM_COUNTRY_ID),
                 Long.parseLong(context.request().getParam(PARAM_DATE)), handleResponse(context));

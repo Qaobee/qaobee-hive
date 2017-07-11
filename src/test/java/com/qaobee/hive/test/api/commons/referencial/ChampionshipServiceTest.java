@@ -41,7 +41,7 @@ import static org.hamcrest.Matchers.*;
  * @author jerome
  */
 @Ignore // missing data_championship_Hand.js
-public class ChampionshipTest extends VertxJunitSupport {
+public class ChampionshipServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/referencial/championship");
 
     /**

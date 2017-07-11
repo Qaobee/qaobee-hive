@@ -20,7 +20,7 @@
 package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.api.v1.commons.referencial.ChampionshipRoute;
-import com.qaobee.hive.services.Championship;
+import com.qaobee.hive.services.ChampionshipService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
@@ -38,8 +38,8 @@ import java.util.Collections;
 /**
  * The type Championship dao.
  */
-@ProxyService(address = Championship.ADDRESS, iface = Championship.class)
-public class ChampionshipImpl implements Championship {
+@ProxyService(address = ChampionshipService.ADDRESS, iface = ChampionshipService.class)
+public class ChampionshipServiceImpl implements ChampionshipService {
 
     @Inject
     private MongoDB mongo;
@@ -50,7 +50,7 @@ public class ChampionshipImpl implements Championship {
      *
      * @param vertx the vertx
      */
-    public ChampionshipImpl(Vertx vertx) {
+    public ChampionshipServiceImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
     }

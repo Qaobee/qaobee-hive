@@ -19,7 +19,7 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.Country;
+import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.ext.web.Router;
@@ -50,7 +50,7 @@ public class CountryRoute extends AbstractRoute {
      */
     public static final String PARAM_LOCAL = "local";
     @Inject
-    private Country country;
+    private CountryService countryService;
 
 
     @Override
@@ -83,7 +83,7 @@ public class CountryRoute extends AbstractRoute {
         if (context.request().params().contains(CountryRoute.PARAM_LABEL) && StringUtils.isNotBlank(context.request().getParam(PARAM_LABEL))) {
             label = context.request().getParam(PARAM_LABEL);
         }
-        country.getCountryList(context.request().getParam(PARAM_LOCAL), label, handleResponseArray(context));
+        countryService.getCountryList(context.request().getParam(PARAM_LOCAL), label, handleResponseArray(context));
     }
 
     /**
@@ -97,7 +97,7 @@ public class CountryRoute extends AbstractRoute {
      * @apiSuccess {Object} country The Country found.
      */
     private void getAlpha2(RoutingContext context) {
-        country.getCountryFromAlpha2(context.request().getParam(PARAM_ALPHA2), handleResponse(context));
+        countryService.getCountryFromAlpha2(context.request().getParam(PARAM_ALPHA2), handleResponse(context));
     }
 
     /**
@@ -111,6 +111,6 @@ public class CountryRoute extends AbstractRoute {
      * @apiSuccess {Country} country The Country found.
      */
     private void get(RoutingContext context) {
-        country.getCountry(context.request().getParam(PARAM_ID), handleResponse(context));
+        countryService.getCountry(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 }

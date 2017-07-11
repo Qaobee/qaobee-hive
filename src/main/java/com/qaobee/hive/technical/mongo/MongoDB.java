@@ -35,15 +35,6 @@ public interface MongoDB {
     /**
      * Upsert.
      *
-     * @param o the o
-     *
-     * @return the promise
-     */
-    Promise<String, QaobeeException, Integer> upsert(Object o);
-
-    /**
-     * Upsert.
-     *
      * @param document   the document
      * @param collection the collection
      *

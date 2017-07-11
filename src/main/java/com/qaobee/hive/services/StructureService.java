@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.SeasonImpl;
+import com.qaobee.hive.services.impl.StructureServiceImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -30,60 +30,67 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Season.
+ * The interface Structure.
  */
 @ProxyGen
 @VertxGen
-public interface Season {
+public interface StructureService {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.Season.service";
+    String ADDRESS = "vertx.Structure.service";
 
     /**
-     * Create season.
+     * Create structure.
      *
      * @param vertx the vertx
-     * @return the season
+     * @return the structure
      */
-    static Season create(Vertx vertx) {
-        return new SeasonImpl(vertx);
+    static StructureService create(Vertx vertx) {
+        return new StructureServiceImpl(vertx);
     }
 
     /**
-     * Create proxy season.
+     * Create proxy structure.
      *
      * @param vertx   the vertx
      * @param address the address
-     * @return the season
+     * @return the structure
      */
-    static Season createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(Season.class, vertx, address);
+    static StructureService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(StructureService.class, vertx, address);
     }
 
     /**
-     * Gets current season.
+     * Update.
      *
-     * @param activityId    the activity id
-     * @param countryId     the country id
+     * @param structure      the structure
      * @param resultHandler the result handler
      */
-    void getCurrentSeason(String activityId, String countryId, Handler<AsyncResult<JsonObject>> resultHandler);
+    void update(JsonObject structure, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Gets list by activity.
+     * Gets list of structures.
      *
-     * @param activityId    the activity id
-     * @param countryId     the country id
+     * @param activity      the activity
+     * @param address       the address
      * @param resultHandler the result handler
      */
-    void getListByActivity(String activityId, String countryId, Handler<AsyncResult<JsonArray>> resultHandler);
+    void getListOfStructures(String activity, JsonObject address, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
-     * Gets season.
+     * Gets structure.
      *
      * @param id            the id
      * @param resultHandler the result handler
      */
-    void getSeason(String id, Handler<AsyncResult<JsonObject>> resultHandler);
+    void getStructure(String id, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    /**
+     * Add structure.
+     *
+     * @param structure     the structure
+     * @param resultHandler the result handler
+     */
+    void addStructure(JsonObject structure, Handler<AsyncResult<JsonObject>> resultHandler);
 }

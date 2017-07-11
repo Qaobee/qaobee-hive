@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.*;
  *
  * @author cke
  */
-public class IndicatorTest extends VertxJunitSupport {
+public class IndicatorServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/settings/indicator");
 
     /**

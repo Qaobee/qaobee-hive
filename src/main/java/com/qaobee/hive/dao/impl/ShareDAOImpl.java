@@ -21,7 +21,7 @@ package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.dao.ShareDAO;
-import com.qaobee.hive.services.ActivityCfg;
+import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -61,7 +61,7 @@ public class ShareDAOImpl implements ShareDAO {
     @Inject
     private MongoClientCustom mongoClientCustom;
     @Inject
-    private ActivityCfg activityCfg;
+    private ActivityCfgService activityCfgService;
     @Inject
     private SandBoxDAO sandBoxDAO;
 
@@ -107,7 +107,7 @@ public class ShareDAOImpl implements ShareDAO {
             final JsonObject[] role = {new JsonObject().put("code", roleCode)};
             mongo.getById(sandbox.getString(FIELD_OWNER), DBCollections.USER).done(owner -> {
                 if (owner.containsKey(FIELD_COUNTRY) && owner.getJsonObject(FIELD_COUNTRY) != null && owner.getJsonObject(FIELD_COUNTRY).containsKey(FIELD_ID)) {
-                    activityCfg.getActivityCfgParams(
+                    activityCfgService.getActivityCfgParams(
                             sandbox.getString("activityId"),
                             owner.getJsonObject(FIELD_COUNTRY).getString(FIELD_ID),
                             System.currentTimeMillis(),

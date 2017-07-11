@@ -20,8 +20,8 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.dao.SignupDAO;
-import com.qaobee.hive.dao.UserDAO;
-import com.qaobee.hive.services.Notifications;
+import com.qaobee.hive.services.UserService;
+import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -111,11 +111,11 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Named("runtime")
     private JsonObject runtime;
     @Inject
-    private UserDAO userDAO;
+    private UserService userService;
     @Inject
     private SignupDAO signupDAO;
     @Inject
-    private Notifications notifications;
+    private NotificationsService notificationsService;
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -177,11 +177,12 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                     try {
                         signupDAO.sendRegisterMail(u, req.getLocale()).done(r -> {
                             JsonObject notification = new JsonObject()
-                                            .put("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), req.getLocale()))
-                                            .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
-                                            .put("senderId", runtime.getString("admin.id")
+                                    .put("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), req.getLocale()))
+                                    .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
+                                    .put("senderId", runtime.getString("admin.id")
                                     );
-                            notifications.sendNotification(u.getString("_id"), DBCollections.USER, notification, new JsonArray(), ar->{});
+                            notificationsService.sendNotification(u.getString("_id"), DBCollections.USER, notification, new JsonArray(), ar -> {
+                            });
                             message.reply(u.encode());
                         }).fail(e -> utils.sendError(message, e));
                     } catch (final QaobeeException e) {
@@ -255,7 +256,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = LOGIN_TEST, method = Constants.POST, mandatoryParams = PARAM_LOGIN, scope = Rule.Param.BODY)
     private void loginTest(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyBoolean(message, userDAO.existingLogin(new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase()));
+        userService.existingLogin(new JsonObject(req.getBody()).getString(PARAM_LOGIN).toLowerCase(),
+                ar -> utils.sendStatus(ar.succeeded() && ar.result(), message));
     }
 
 
@@ -269,6 +271,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      */
     private void existingLogin(Message<JsonObject> message) {
-        replyBooleanJ(message, userDAO.existingLogin(message.body().getString(PARAM_LOGIN).toLowerCase()));
+        userService.existingLogin(message.body().getString(PARAM_LOGIN).toLowerCase(),
+                ar -> utils.sendStatusJson(ar.succeeded() && ar.result(), message));
     }
 }

@@ -20,7 +20,7 @@
 package com.qaobee.hive.api.v1.commons.communication;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.Notifications;
+import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -58,7 +58,7 @@ public class NotificationsRoute extends AbstractRoute {
     private static final String SENDER_ID = "senderId";
 
     @Inject
-    private Notifications notifications;
+    private NotificationsService notificationsService;
 
     @Override
     public Router init() {
@@ -141,7 +141,7 @@ public class NotificationsRoute extends AbstractRoute {
 
     private void notifyPeople(JsonObject obj, RoutingContext context) throws QaobeeException {
         utils.testMandatoryParams(obj, "id", TARGET, NOTIFICATION);
-        notifications.sendNotification(obj.getString("id"),
+        notificationsService.sendNotification(obj.getString("id"),
                 obj.getString(TARGET), obj.getJsonObject(NOTIFICATION),
                 obj.getJsonObject(NOTIFICATION).getJsonArray("exclude"), ar -> {
                     if (ar.succeeded()) {
@@ -163,7 +163,7 @@ public class NotificationsRoute extends AbstractRoute {
      * @apiHeader {String} token
      */
     private void markAsRead(RoutingContext context) {
-        notifications.markAsRead(context.request().getParam(PARAM_NOTIF_ID), ar -> {
+        notificationsService.markAsRead(context.request().getParam(PARAM_NOTIF_ID), ar -> {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
@@ -182,7 +182,7 @@ public class NotificationsRoute extends AbstractRoute {
      * @apiSuccess {Object} status
      */
     private void delete(RoutingContext context) {
-        notifications.delete(context.request().getParam(PARAM_NOTIF_ID), ar -> {
+        notificationsService.delete(context.request().getParam(PARAM_NOTIF_ID), ar -> {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
@@ -211,6 +211,6 @@ public class NotificationsRoute extends AbstractRoute {
         if (context.request().params().contains(PARAM_LIMIT)) {
             limit = Integer.parseInt(context.request().getParam(PARAM_LIMIT));
         }
-        notifications.getList(context.user().principal().getString("_id"), start, limit, handleResponseArray(context));
+        notificationsService.getList(context.user().principal().getString("_id"), start, limit, handleResponseArray(context));
     }
 }

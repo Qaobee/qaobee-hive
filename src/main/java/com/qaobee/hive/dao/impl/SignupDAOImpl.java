@@ -22,7 +22,6 @@ package com.qaobee.hive.dao.impl;
 import com.qaobee.hive.api.v1.commons.utils.CRMVerticle;
 import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.business.model.sandbox.effective.Availability;
@@ -34,9 +33,10 @@ import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.dao.*;
-import com.qaobee.hive.services.Activity;
-import com.qaobee.hive.services.Country;
-import com.qaobee.hive.services.Structure;
+import com.qaobee.hive.services.ActivityService;
+import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.StructureService;
+import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -72,11 +72,11 @@ public class SignupDAOImpl implements SignupDAO {
     private static final String PARAM_PLAN = "plan";
     private final static Random RANDOM = new Random();
 
-    private final Activity activity;
+    private final ActivityService activityService;
     private final MongoDB mongo;
-    private final Country country;
-    private final UserDAO userDAO;
-    private final Structure structure;
+    private final CountryService countryService;
+    private final UserService userService;
+    private final StructureService structureService;
     private final ReCaptcha reCaptcha;
     private final JsonObject runtime;
     private final Vertx vertx;
@@ -87,26 +87,26 @@ public class SignupDAOImpl implements SignupDAO {
     /**
      * Instantiates a new Signup dao.
      *
-     * @param activity  the activity dao
-     * @param mongo        the mongo
-     * @param country   the country dao
-     * @param userDAO      the user dao
-     * @param structure the structure dao
-     * @param reCaptcha    the re captcha
-     * @param runtime      the runtime
-     * @param mailUtils    the mail utils
-     * @param templatesDAO the templates dao
-     * @param vertx        the vertx
+     * @param activityService  the activity dao
+     * @param mongo            the mongo
+     * @param countryService   the country dao
+     * @param userService      the user dao
+     * @param structureService the structure dao
+     * @param reCaptcha        the re captcha
+     * @param runtime          the runtime
+     * @param mailUtils        the mail utils
+     * @param templatesDAO     the templates dao
+     * @param vertx            the vertx
      */
     @Inject
-    public SignupDAOImpl(Activity activity, MongoDB mongo, Country country, UserDAO userDAO, // NOSONAR
-                         Structure structure, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime,
+    public SignupDAOImpl(ActivityService activityService, MongoDB mongo, CountryService countryService, UserService userService, // NOSONAR
+                         StructureService structureService, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime,
                          MailUtils mailUtils, TemplatesDAO templatesDAO, Vertx vertx) {
-        this.activity = activity;
+        this.activityService = activityService;
         this.mongo = mongo;
-        this.country = country;
-        this.userDAO = userDAO;
-        this.structure = structure;
+        this.countryService = countryService;
+        this.userService = userService;
+        this.structureService = structureService;
         this.reCaptcha = reCaptcha;
         this.mailUtils = mailUtils;
         this.templatesDAO = templatesDAO;
@@ -119,7 +119,7 @@ public class SignupDAOImpl implements SignupDAO {
 
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         // Converts jSon to Bean (extra parameters are ignored)
-        User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
+        com.qaobee.hive.business.model.commons.users.User userUpdate = Json.decodeValue(jsonUser.encode(), com.qaobee.hive.business.model.commons.users.User.class);
         userUpdate.set_id(jsonUser.getString("_id"));
         updateStructure(struct, activityId).done(structure -> {
             com.qaobee.hive.business.model.commons.referencial.Structure structureObj = Json.decodeValue(structure.encode(), com.qaobee.hive.business.model.commons.referencial.Structure.class);
@@ -135,8 +135,8 @@ public class SignupDAOImpl implements SignupDAO {
                     List<Promise> promises = new ArrayList<>();
                     user.getAccount().getListPlan().stream().filter(plan -> plan.getActivity() != null).forEachOrdered(plan -> {
                         Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
-                        activity.getActivity(plan.getActivity().get_id(), a -> {
-                            if(a.succeeded()) {
+                        activityService.getActivity(plan.getActivity().get_id(), a -> {
+                            if (a.succeeded()) {
                                 com.qaobee.hive.business.model.commons.settings.Activity activity = Json.decodeValue(a.result().encode(), com.qaobee.hive.business.model.commons.settings.Activity.class);
                                 plan.setActivity(activity);
                                 d.resolve(true);
@@ -159,7 +159,7 @@ public class SignupDAOImpl implements SignupDAO {
                         sbSandBox.setActivityId(activityId);
                         sbSandBox.setOwner(user.get_id());
                         sbSandBox.setStructure(structureObj);
-                        mongo.upsert(sbSandBox).done(sbSandBoxId -> {
+                        mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX).done(sbSandBoxId -> {
                             sbSandBox.set_id(sbSandBoxId);
                             // $MATCH section
                             JsonObject dbObjectParent = new JsonObject()
@@ -198,7 +198,7 @@ public class SignupDAOImpl implements SignupDAO {
                                             member.setPersonId(playerId);
                                             sbEffective.addMember(member);
                                         }
-                                        mongo.upsert(sbEffective).done(sbEffectiveId -> {
+                                        mongo.upsert(new JsonObject(Json.encode(sbEffective)), DBCollections.EFFECTIVE).done(sbEffectiveId -> {
                                             sbEffective.set_id(sbEffectiveId);
                                             sbSandBox.setEffectiveDefault(sbEffective.get_id());
                                             //Add owner in member's list of sandbox
@@ -209,9 +209,9 @@ public class SignupDAOImpl implements SignupDAO {
                                             List<Member> members = new ArrayList<>();
                                             members.add(member);
                                             sbSandBox.setMembers(members);
-                                            mongo.upsert(sbSandBox).done(sbId -> {
+                                            mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX).done(sbId -> {
                                                 user.setSandboxDefault(sbId);
-                                                mongo.upsert(user).done(userId -> {
+                                                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(userId -> {
                                                     // Création SB_Teams
                                                     // My team
                                                     SB_Team team = new SB_Team();
@@ -220,7 +220,7 @@ public class SignupDAOImpl implements SignupDAO {
                                                     team.setLabel("Mon équipe");
                                                     team.setEnable(true);
                                                     team.setAdversary(false);
-                                                    mongo.upsert(team).done(teamId -> deferred.resolve(new JsonObject(Json.encode(user)))).fail(deferred::reject);
+                                                    mongo.upsert(new JsonObject(Json.encode(team)), DBCollections.TEAM).done(teamId -> deferred.resolve(new JsonObject(Json.encode(user)))).fail(deferred::reject);
                                                 }).fail(deferred::reject);
                                             }).fail(deferred::reject);
                                         }).fail(deferred::reject);
@@ -249,8 +249,8 @@ public class SignupDAOImpl implements SignupDAO {
     private Promise<JsonObject, QaobeeException, Integer> updateStructure(JsonObject structure, String activityId) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         if (structure.containsKey("_id")) {
-            this.structure.getStructure(structure.getString("_id"), s -> {
-                if(s.succeeded()) {
+            this.structureService.getStructure(structure.getString("_id"), s -> {
+                if (s.succeeded()) {
                     structure.mergeIn(s.result());
                     deferred.resolve(structure);
                 } else {
@@ -258,11 +258,11 @@ public class SignupDAOImpl implements SignupDAO {
                 }
             });
         } else {
-            country.getCountryFromAlpha2(structure.getJsonObject(COUNTRY_FIELD).getString("_id").split("-")[2], country -> {
-                if(country.succeeded()) {
+            countryService.getCountryFromAlpha2(structure.getJsonObject(COUNTRY_FIELD).getString("_id").split("-")[2], country -> {
+                if (country.succeeded()) {
                     structure.put(COUNTRY_FIELD, country.result());
                     structure.getJsonObject("address").put(COUNTRY_FIELD, country.result().getString("label"));
-                    activity.getActivity(activityId, activity -> {
+                    activityService.getActivity(activityId, activity -> {
                         if (activity.succeeded()) {
                             structure.put("activity", activity.result());
                             deferred.resolve(structure);
@@ -289,7 +289,7 @@ public class SignupDAOImpl implements SignupDAO {
                 // MaJ User
                 user.getAccount().setActive(true);
                 user.getAccount().setFirstConnexion(false);
-                mongo.upsert(user).done(userId -> {
+                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(userId -> {
                     vertx.eventBus().send(CRMVerticle.UPDATE, new JsonObject(Json.encode(user)));
                     deferred.resolve(new JsonObject(Json.encode(user)));
                 }).fail(deferred::reject);
@@ -305,10 +305,10 @@ public class SignupDAOImpl implements SignupDAO {
     public Promise<Boolean, QaobeeException, Integer> accountCheck(String id, String activationCode) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
         mongo.getById(id, DBCollections.USER).done(u -> {
-            final User user = Json.decodeValue(u.encode(), User.class);
+            final com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(u.encode(), com.qaobee.hive.business.model.commons.users.User.class);
             if (user.getAccount().getActivationCode().equals(activationCode)) {
                 user.getAccount().setActive(true);
-                mongo.upsert(user).done(userId -> deferred.resolve(true)).fail(deferred::reject);
+                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(userId -> deferred.resolve(true)).fail(deferred::reject);
             } else {
                 deferred.resolve(false);
             }
@@ -335,78 +335,87 @@ public class SignupDAOImpl implements SignupDAO {
 
     private Promise<JsonObject, QaobeeException, Integer> proceedRegister(JsonObject userJson, String locale) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        final User user = Json.decodeValue(userJson.encode(), User.class);
-        try {
-            // Check user informations
-            userDAO.checkUserInformations(user, locale);
-            // check if email is correct
-            userDAO.testEmail(user.getContact().getEmail(), locale);
-            userDAO.existingLogin(user.getAccount().getLogin()).done(r -> {
-                if (!r) {
-                    user.getAccount().setToken(UUID.randomUUID().toString());
-                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                    user.getAccount().setActive(false);
-                    user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
-                    final Plan plan = Json.decodeValue(userJson.getJsonObject(PARAM_PLAN).encode(), Plan.class);
-                    if (user.getAccount().getListPlan() == null) {
-                        user.getAccount().setListPlan(new ArrayList<>());
-                    }
-                    plan.setStatus("open");
-                    plan.setStartPeriodDate(System.currentTimeMillis());
-                    plan.setAmountPaid(runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price"));
-                    Calendar gc = GregorianCalendar.getInstance();
-                    gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
-                    plan.setEndPeriodDate(gc.getTimeInMillis());
-                    // Si on vient du mobile, on connait le plan, mais pas par le web
-                    Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
-                    if (plan.getActivity() != null) {
-                        mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY).done(activity -> {
-                            plan.setActivity(Json.decodeValue(activity.encode(), com.qaobee.hive.business.model.commons.settings.Activity.class));
-                            d.resolve(true);
-                        }).fail(deferred::reject);
+        final com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(userJson.encode(), com.qaobee.hive.business.model.commons.users.User.class);
+        // Check user informations
+        userService.checkUserInformations(userJson, locale, ar -> {
+            if (ar.succeeded()) {
+                // check if email is correct
+                userService.testEmail(user.getContact().getEmail(), locale, ar2 -> {
+                    if (ar2.succeeded()) {
+                        userService.existingLogin(user.getAccount().getLogin(), r -> {
+                            if (r.succeeded() && !r.result()) {
+                                user.getAccount().setToken(UUID.randomUUID().toString());
+                                user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                                user.getAccount().setActive(false);
+                                user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
+                                final Plan plan = Json.decodeValue(userJson.getJsonObject(PARAM_PLAN).encode(), Plan.class);
+                                if (user.getAccount().getListPlan() == null) {
+                                    user.getAccount().setListPlan(new ArrayList<>());
+                                }
+                                plan.setStatus("open");
+                                plan.setStartPeriodDate(System.currentTimeMillis());
+                                plan.setAmountPaid(runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price"));
+                                Calendar gc = GregorianCalendar.getInstance();
+                                gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
+                                plan.setEndPeriodDate(gc.getTimeInMillis());
+                                // Si on vient du mobile, on connait le plan, mais pas par le web
+                                Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
+                                if (plan.getActivity() != null) {
+                                    mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY).done(activity -> {
+                                        plan.setActivity(Json.decodeValue(activity.encode(), com.qaobee.hive.business.model.commons.settings.Activity.class));
+                                        d.resolve(true);
+                                    }).fail(deferred::reject);
+                                } else {
+                                    d.resolve(true);
+                                }
+                                d.promise().done(res -> {
+                                    user.getAccount().getListPlan().add(plan);
+                                    this.userService.prepareUpsert(new JsonObject(Json.encode(user)), ar3 -> {
+                                        if (ar3.succeeded()) {
+                                            mongo.upsert(ar3.result(), DBCollections.USER).done(userId -> {
+                                                user.set_id(userId);
+                                                vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
+                                                mongo.getById(userId, DBCollections.USER).done(u ->
+                                                        deferred.resolve(new JsonObject()
+                                                                .put("person", u)
+                                                                .put("planId", plan.getPaymentId()))
+                                                ).fail(deferred::reject);
+                                            }).fail(deferred::reject);
+                                        }
+                                    });
+                                }).fail(deferred::reject);
+                            } else {
+                                deferred.reject(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale)));
+                            }
+                        });
                     } else {
-                        d.resolve(true);
+                        deferred.reject(new QaobeeException(((QaobeeSvcException) ar2.cause()).getCode(), ar2.cause().getMessage()));
                     }
-                    d.promise().done(res -> {
-                        user.getAccount().getListPlan().add(plan);
-                        try {
-                            mongo.upsert(userDAO.prepareUpsert(user)).done(userId -> {
-                                user.set_id(userId);
-                                vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
-                                mongo.getById(user.get_id(), DBCollections.USER).done(u ->
-                                        deferred.resolve(new JsonObject()
-                                                .put("person", u)
-                                                .put("planId", plan.getPaymentId()))
-                                ).fail(deferred::reject);
-                            }).fail(deferred::reject);
-                        } catch (QaobeeException e) {
-                            LOG.error(e.getMessage(), e);
-                            deferred.reject(e);
-                        }
-                    }).fail(deferred::reject);
-                } else {
-                    deferred.reject(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale)));
-                }
-            }).fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale))));
-        } catch (QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            deferred.reject(e);
-        }
+                });
+            } else {
+                deferred.reject(new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+            }
+        });
+
         return deferred.promise();
     }
 
     @Override
     public Promise<Boolean, QaobeeException, Integer> resendMail(String login, String locale) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userDAO.getUserByLogin(login, locale).done(user -> {
-            try {
-                sendRegisterMail(user, locale);
-                deferred.resolve(true);
-            } catch (QaobeeException e) {
-                LOG.error(e.getMessage(), e);
-                deferred.reject(e);
+        userService.getUserByLogin(login, locale, ar -> {
+            if(ar.succeeded()) {
+                try {
+                    sendRegisterMail(ar.result(), locale);
+                    deferred.resolve(true);
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    deferred.reject(e);
+                }
+            } else {
+                deferred.reject(new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
             }
-        }).fail(deferred::reject);
+        });
         return deferred.promise();
     }
 
@@ -415,7 +424,7 @@ public class SignupDAOImpl implements SignupDAO {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
         final JsonObject tplReq = new JsonObject()
                 .put(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
-                .put(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(user.encode(), User.class), locale));
+                .put(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(user.encode(), com.qaobee.hive.business.model.commons.users.User.class), locale));
         final JsonObject emailReq = new JsonObject()
                 .put("from", runtime.getString("mail.from"))
                 .put("to", user.getJsonObject("contact").getString("email"))
@@ -423,7 +432,7 @@ public class SignupDAOImpl implements SignupDAO {
                 .put("content_type", "text/html")
                 .put("body", templatesDAO.generateMail(tplReq).getString("result"));
         vertx.eventBus().send(MailVerticle.INTERNAL_MAIL, emailReq, new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), ar -> {
-            if(ar.succeeded()) {
+            if (ar.succeeded()) {
                 deferred.resolve(true);
             } else {
                 deferred.reject(new QaobeeException(ExceptionCodes.MAIL_EXCEPTION, Messages.getString("email.invalid", locale)));
@@ -432,7 +441,7 @@ public class SignupDAOImpl implements SignupDAO {
         return deferred.promise();
     }
 
-    private static void testAccount(User user, String activationCode, String locale) throws QaobeeException {
+    private static void testAccount(com.qaobee.hive.business.model.commons.users.User user, String activationCode, String locale) throws QaobeeException {
         if (user.getAccount().isActive()) {
             throw new QaobeeException(ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", locale));
         } else if (!user.getAccount().isFirstConnexion()) {
@@ -465,7 +474,7 @@ public class SignupDAOImpl implements SignupDAO {
             sbPerson.setStatus(status);
             sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
             sbPerson.getStatus().setPositionType(player.getString("positionType"));
-            promises.add(mongo.upsert(sbPerson));
+            promises.add(mongo.upsert(new JsonObject(Json.encode(sbPerson)), DBCollections.PERSON));
         }
         DeferredManager dm = new DefaultDeferredManager();
         dm.when(promises.toArray(new Promise[promises.size()]))
@@ -480,9 +489,15 @@ public class SignupDAOImpl implements SignupDAO {
         return deferred.promise();
     }
 
-    private Promise<User, QaobeeException, Integer> getUser(String id, String locale) {
-        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userDAO.getUser(id).done(u -> deferred.resolve(Json.decodeValue(u.encode(), User.class))).fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", locale))));
+    private Promise<com.qaobee.hive.business.model.commons.users.User, QaobeeException, Integer> getUser(String id, String locale) {
+        Deferred<com.qaobee.hive.business.model.commons.users.User, QaobeeException, Integer> deferred = new DeferredObject<>();
+        userService.getUser(id, ar -> {
+            if(ar.succeeded()) {
+                deferred.resolve(Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class));
+            } else {
+                deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", locale)));
+            }
+        });
         return deferred.promise();
     }
 

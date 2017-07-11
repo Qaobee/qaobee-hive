@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.*;
 /**
  * The type Activity cfg testBodyParams.
  */
-public class ActivityCfgTest extends VertxJunitSupport {
+public class ActivityServiceCfgTest extends VertxJunitSupport {
 
     private static final String BASE_URL = getBaseURL("/commons/settings/activitycfg");
 

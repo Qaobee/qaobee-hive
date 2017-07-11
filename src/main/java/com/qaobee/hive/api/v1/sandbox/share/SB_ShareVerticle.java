@@ -21,17 +21,17 @@ package com.qaobee.hive.api.v1.sandbox.share;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
-import com.qaobee.hive.dao.UserDAO;
+import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
-import com.qaobee.hive.services.Notifications;
+import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -149,11 +149,11 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Inject
     private ShareDAO shareDAO;
     @Inject
-    private UserDAO userDAO;
+    private UserService userService;
     @Inject
     private TemplatesDAO templatesDAO;
     @Inject
-    private Notifications notifications;
+    private NotificationsService notificationsService;
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -173,10 +173,11 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     }
 
     private void internalShareNotification(Message<JsonObject> message) {
-        notifications.sendNotification(message.body().getString(PARAM_USERID), DBCollections.USER, new JsonObject()
+        notificationsService.sendNotification(message.body().getString(PARAM_USERID), DBCollections.USER, new JsonObject()
                 .put(CONTENT_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".content", message.body().getString(FIELD_LOCALE)))
                 .put(TITLE_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".title", message.body().getString(FIELD_LOCALE)))
-                .put(SENDER_ID_FIELD, message.body().getString(FIELD_UID)), new JsonArray(), ar->{});
+                .put(SENDER_ID_FIELD, message.body().getString(FIELD_UID)), new JsonArray(), ar -> {
+        });
     }
 
     /**
@@ -245,34 +246,39 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private void inviteMemberToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject request = new JsonObject(req.getBody());
-        userDAO.getUserInfo(req.getUser().get_id())
-                .done(user -> shareDAO.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USER_EMAIL), request.getString(PARAM_ROLE_CODE))
+        userService.getUserInfo(req.getUser().get_id(), u -> {
+            if (u.succeeded()) {
+                shareDAO.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USER_EMAIL), request.getString(PARAM_ROLE_CODE))
                         .done(invitation -> {
                             try {
-                                sendNotification(invitation, user, request.getString(PARAM_USER_EMAIL), req.getLocale());
+                                sendNotification(invitation, u.result(), request.getString(PARAM_USER_EMAIL), req.getLocale());
                                 message.reply(invitation.encode());
                             } catch (QaobeeException e) {
                                 LOG.error(e.getMessage(), e);
                                 utils.sendError(message, e);
                             }
-                        }).fail(e -> utils.sendError(message, e)))
-                .fail(e -> utils.sendError(message, e));
+                        }).fail(e -> utils.sendError(message, e));
+            } else {
+                utils.sendError(message, new QaobeeException(((QaobeeSvcException) u.cause()).getCode(), u.cause().getMessage()));
+            }
+        });
     }
 
     private void sendNotification(JsonObject invitation, JsonObject user, String userEmail, String locale) throws QaobeeException {
         final JsonObject tplReq = new JsonObject();
         if (StringUtils.isNotBlank(invitation.getString(PARAM_USERID, ""))) {
-            notifications.sendNotification(invitation.getString(PARAM_USERID), DBCollections.USER, new JsonObject()
+            notificationsService.sendNotification(invitation.getString(PARAM_USERID), DBCollections.USER, new JsonObject()
                     .put(CONTENT_FIELD, Messages.getString("notification.sandbox.add.content", locale, user.getString(FIRSTNAME_FIELD) + " " + user.getString("name")))
                     .put(TITLE_FIELD, Messages.getString("notification.sandbox.add.title", locale))
-                    .put(SENDER_ID_FIELD, user.getString("_id")), new JsonArray(), ar->{});
+                    .put(SENDER_ID_FIELD, user.getString("_id")), new JsonArray(), ar -> {
+            });
                 /* send an E-mail to guest */
             tplReq.put(TemplatesDAOImpl.TEMPLATE, INVITE_URL)
-                    .put(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), User.class), locale, userEmail, invitation.getString("_id"), "internal"));
+                    .put(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), com.qaobee.hive.business.model.commons.users.User.class), locale, userEmail, invitation.getString("_id"), "internal"));
         } else {
                 /* send an E-mail to guest */
             tplReq.put(TemplatesDAOImpl.TEMPLATE, INVITE_URL)
-                    .put(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), User.class), locale, userEmail, invitation.getString("_id"), "external"));
+                    .put(TemplatesDAOImpl.DATA, mailUtils.generateInvitationToSandboxBody(Json.decodeValue(user.encode(), com.qaobee.hive.business.model.commons.users.User.class), locale, userEmail, invitation.getString("_id"), "external"));
         }
         final JsonObject emailReq = new JsonObject()
                 .put("from", user.getJsonObject("contact").getString(PARAM_USER_EMAIL))
@@ -296,15 +302,19 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private void reviveInvitationToSandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         shareDAO.reviveInvitationToUser(req.getParams().get(PARAM_INVITATION_ID).get(0))
-                .done(invitation -> userDAO.getUserInfo(req.getUser().get_id()).done(user -> {
-                    try {
-                        sendNotification(invitation, user, invitation.getString(USER_EMAIL_FIELD), req.getLocale());
-                        message.reply(invitation.encode());
-                    } catch (QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                        utils.sendError(message, e);
+                .done(invitation -> userService.getUserInfo(req.getUser().get_id(), u -> {
+                    if (u.succeeded()) {
+                        try {
+                            sendNotification(invitation, u.result(), invitation.getString(USER_EMAIL_FIELD), req.getLocale());
+                            message.reply(invitation.encode());
+                        } catch (QaobeeException e) {
+                            LOG.error(e.getMessage(), e);
+                            utils.sendError(message, e);
+                        }
+                    } else {
+                        utils.sendError(message, new QaobeeException(((QaobeeSvcException) u.cause()).getCode(), u.cause().getMessage()));
                     }
-                }).fail(e -> utils.sendError(message, e))).fail(e -> utils.sendError(message, e));
+                })).fail(e -> utils.sendError(message, e));
     }
 
     /**
@@ -365,7 +375,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                                 .put(SENDER_ID_FIELD, request.getString(PARAM_USERID)
                                 );
                     }
-                    notifications.sendNotification(invitation.getString(SENDER_ID_FIELD), DBCollections.USER, notification, new JsonArray(), ar->{});
+                    notificationsService.sendNotification(invitation.getString(SENDER_ID_FIELD), DBCollections.USER, notification, new JsonArray(), ar -> {
+                    });
                     message.reply(invitation.encode());
                 }).fail(e -> utils.sendError(message, e));
     }

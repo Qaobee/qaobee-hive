@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.*;
  *
  * @author cke
  */
-public class ActivityTest extends VertxJunitSupport {
+public class ActivityServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/settings/activity");
     /**
      * Gets activity.

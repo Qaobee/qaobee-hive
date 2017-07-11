@@ -19,7 +19,7 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.Season;
+import com.qaobee.hive.services.SeasonService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.ext.web.Router;
@@ -29,9 +29,6 @@ import javax.inject.Inject;
 
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/season")
 public class SeasonRoute extends AbstractRoute {
-  /*  public static final String GET = Module.VERSION + ".commons.settings.season.get";
-    public static final String GET_LIST_BY_ACTIVITY = Module.VERSION + ".commons.settings.season.getListByActivity";
-    public static final String GET_CURRENT = Module.VERSION + ".commons.settings.season.current";*/
     /**
      * Id of the season
      */
@@ -45,7 +42,7 @@ public class SeasonRoute extends AbstractRoute {
      */
     public static final String PARAM_COUNTRY_ID = "countryId";
     @Inject
-    private Season season;
+    private SeasonService seasonService;
 
     @Override
     public Router init() {
@@ -75,7 +72,7 @@ public class SeasonRoute extends AbstractRoute {
      * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
     private void getCurrentSeason(RoutingContext context) {
-        season.getCurrentSeason(context.request().getParam(PARAM_ACTIVITY_ID), context.request().getParam(PARAM_COUNTRY_ID), handleResponse(context));
+        seasonService.getCurrentSeason(context.request().getParam(PARAM_ACTIVITY_ID), context.request().getParam(PARAM_COUNTRY_ID), handleResponse(context));
     }
 
     /**
@@ -90,7 +87,7 @@ public class SeasonRoute extends AbstractRoute {
      * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
     private void getListByActivity(RoutingContext context) {
-        season.getListByActivity(context.request().getParam(PARAM_ACTIVITY_ID), context.request().getParam(PARAM_COUNTRY_ID), handleResponseArray(context));
+        seasonService.getListByActivity(context.request().getParam(PARAM_ACTIVITY_ID), context.request().getParam(PARAM_COUNTRY_ID), handleResponseArray(context));
     }
 
     /**
@@ -104,6 +101,6 @@ public class SeasonRoute extends AbstractRoute {
      * @apiSuccess {Object} the object found
      */
     private void getSeason(RoutingContext context) {
-        season.getSeason(context.request().getParam(PARAM_ID), handleResponse(context));
+        seasonService.getSeason(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 }

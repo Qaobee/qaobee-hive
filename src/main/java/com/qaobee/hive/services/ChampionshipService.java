@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.ActivityImpl;
+import com.qaobee.hive.services.impl.ChampionshipServiceImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -30,56 +30,66 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Activity dao.
+ * The interface Championship service.
  */
 @ProxyGen
 @VertxGen
-public interface Activity {
+public interface ChampionshipService {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.Activity.service";
+    String ADDRESS = "vertx.Championship.service";
 
     /**
-     * Create activity service.
+     * Create championship service.
      *
      * @param vertx the vertx
-     * @return the activity service
+     * @return the championship service
      */
-    static Activity create(Vertx vertx) {
-        return new ActivityImpl(vertx);
+    static ChampionshipService create(Vertx vertx) {
+        return new ChampionshipServiceImpl(vertx);
     }
 
     /**
-     * Create proxy activity service.
+     * Create proxy championship service.
      *
      * @param vertx   the vertx
      * @param address the address
-     * @return the activity service
+     * @return the championship service
      */
-    static Activity createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(Activity.class, vertx, address);
+    static ChampionshipService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(ChampionshipService.class, vertx, address);
     }
 
     /**
-     * Gets enabled.
+     * Update championship.
      *
+     * @param championship  the championship
      * @param resultHandler the result handler
      */
-    void getEnabled(Handler<AsyncResult<JsonArray>> resultHandler);
+    void updateChampionship(JsonObject championship, Handler<AsyncResult<String>> resultHandler);
 
     /**
-     * Gets activity list.
+     * Add championship.
      *
+     * @param championship  the championship
      * @param resultHandler the result handler
      */
-    void getActivityList(Handler<AsyncResult<JsonArray>> resultHandler);
+    void addChampionship(JsonObject championship, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Gets activity.
+     * Gets championship.
      *
      * @param id            the id
      * @param resultHandler the result handler
      */
-    void getActivity(String id, Handler<AsyncResult<JsonObject>> resultHandler);
+    void getChampionship(String id, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    /**
+     * Gets list championships.
+     *
+     * @param params        the params
+     * @param resultHandler the result handler
+     */
+    void getListChampionships(JsonObject params, Handler<AsyncResult<JsonArray>> resultHandler);
 }

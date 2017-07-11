@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.services.Notifications;
+import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -52,9 +52,9 @@ import java.util.UUID;
 /**
  * The type Notifications dao.
  */
-@ProxyService(address = Notifications.ADDRESS, iface = Notifications.class)
-public class NotificationsImpl implements Notifications {
-    private static final Logger LOG = LoggerFactory.getLogger(NotificationsImpl.class);
+@ProxyService(address = NotificationsService.ADDRESS, iface = NotificationsService.class)
+public class NotificationsServiceImpl implements NotificationsService {
+    private static final Logger LOG = LoggerFactory.getLogger(NotificationsServiceImpl.class);
     private static final String WS_NOTIFICATION_PREFIX = "qaobee.notification.";
     private static final String SENDER_ID = "senderId";
     private static final String TARGET_ID = "targetId";
@@ -78,7 +78,7 @@ public class NotificationsImpl implements Notifications {
 
     private Vertx vertx;
 
-    public NotificationsImpl(Vertx vertx) {
+    public NotificationsServiceImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
     }

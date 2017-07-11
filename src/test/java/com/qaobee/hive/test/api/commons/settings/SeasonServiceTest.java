@@ -37,7 +37,7 @@ import static org.hamcrest.Matchers.*;
  *
  * @author cke
  */
-public class SeasonTest extends VertxJunitSupport {
+public class SeasonServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/settings/season");
     /**
      * Gets season testBodyParams.

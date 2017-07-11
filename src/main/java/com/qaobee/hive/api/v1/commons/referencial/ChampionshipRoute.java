@@ -19,7 +19,7 @@
 package com.qaobee.hive.api.v1.commons.referencial;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.Championship;
+import com.qaobee.hive.services.ChampionshipService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -89,7 +89,7 @@ public class ChampionshipRoute extends AbstractRoute {
      */
     public static final String PARAM_LIST_PARTICIPANTS = "participants";
     @Inject
-    private Championship championship;
+    private ChampionshipService championshipService;
 
     @Override
     public Router init() {
@@ -137,7 +137,7 @@ public class ChampionshipRoute extends AbstractRoute {
                     utils.testMandatoryParams(context, "_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME,
                             PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
 
-                    championship.updateChampionship(context.getBodyAsJson(), ar -> {
+                    championshipService.updateChampionship(context.getBodyAsJson(), ar -> {
                         if (ar.succeeded()) {
                             handleResponse(context, new JsonObject().put("_id", ar.result()));
                         } else {
@@ -180,7 +180,7 @@ public class ChampionshipRoute extends AbstractRoute {
                 try {
                     utils.testMandatoryParams(context, PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL,
                             PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
-                    championship.addChampionship(context.getBodyAsJson(), handleResponse(context));
+                    championshipService.addChampionship(context.getBodyAsJson(), handleResponse(context));
                 } catch (QaobeeException e) {
                     LOG.warn(e.getMessage(), e);
                     utils.handleError(context, e);
@@ -201,7 +201,7 @@ public class ChampionshipRoute extends AbstractRoute {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      */
     private void getChampionship(RoutingContext context) {
-        championship.getChampionship(context.request().getParam(PARAM_ID), handleResponse(context));
+        championshipService.getChampionship(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 
     /**
@@ -217,6 +217,6 @@ public class ChampionshipRoute extends AbstractRoute {
      * @apiSuccess {Array} list of championships
      */
     private void getListChampionships(RoutingContext context) {
-        championship.getListChampionships(context.getBodyAsJson(), handleResponseArray(context));
+        championshipService.getListChampionships(context.getBodyAsJson(), handleResponseArray(context));
     }
 }

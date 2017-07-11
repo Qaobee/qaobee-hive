@@ -21,9 +21,11 @@ package com.qaobee.hive.test.api.commons.communication;
 
 import com.qaobee.hive.api.v1.commons.communication.NotificationsRoute;
 import com.qaobee.hive.business.model.commons.users.communication.Notification;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.test.config.VertxJunitSupport;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
@@ -45,7 +47,7 @@ import static org.hamcrest.Matchers.*;
 /**
  * The type Notifications.
  */
-public class NotificationsTest extends VertxJunitSupport {
+public class NotificationsServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/communication/notifications");
 
     /**
@@ -524,7 +526,7 @@ public class NotificationsTest extends VertxJunitSupport {
      */
     private Promise<String, QaobeeException, Integer> addNotification(final Notification n) {
         Deferred<String, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(n).done(deferred::resolve).fail(deferred::reject);
+        mongo.upsert(new JsonObject(Json.encode(n)), DBCollections.NOTIFICATION).done(deferred::resolve).fail(deferred::reject);
         return deferred.promise();
     }
 }

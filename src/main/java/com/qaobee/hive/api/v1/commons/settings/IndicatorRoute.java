@@ -19,7 +19,7 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.Indicator;
+import com.qaobee.hive.services.IndicatorService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
@@ -55,7 +55,7 @@ public class IndicatorRoute extends AbstractRoute {
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
 
     @Inject
-    private Indicator indicator;
+    private IndicatorService indicatorService;
 
     @Override
     public Router init() {
@@ -90,7 +90,7 @@ public class IndicatorRoute extends AbstractRoute {
      */
     private void getIndicatorByCode(RoutingContext context) {
         JsonObject body = context.getBodyAsJson();
-        indicator.getIndicatorByCode(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_INDICATOR_CODE), handleResponseArray(context));
+        indicatorService.getIndicatorByCode(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_INDICATOR_CODE), handleResponseArray(context));
     }
 
     /**
@@ -108,7 +108,7 @@ public class IndicatorRoute extends AbstractRoute {
      */
     private void getIndicatorsList(RoutingContext context) {
         JsonObject body = context.getBodyAsJson();
-        indicator.getIndicatorsList(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_SCREEN), handleResponseArray(context));
+        indicatorService.getIndicatorsList(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_SCREEN), handleResponseArray(context));
     }
 
     /**
@@ -123,6 +123,6 @@ public class IndicatorRoute extends AbstractRoute {
      * @apiSuccess {Indicator} indicator The Indicator found.
      */
     private void getIndicator(RoutingContext context) {
-        indicator.getIndicator(context.request().getParam(PARAM_ID), handleResponse(context));
+        indicatorService.getIndicator(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 }

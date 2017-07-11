@@ -21,12 +21,13 @@ package com.qaobee.hive.dao.impl;
 
 import com.lowagie.text.pdf.codec.Base64;
 import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
-import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Device;
 import com.qaobee.hive.dao.*;
+import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
@@ -58,7 +59,7 @@ public class SecurityDAOImpl implements SecurityDAO {
     @Inject
     private MailUtils mailUtils;
     @Inject
-    private UserDAO userDAO;
+    private UserService userService;
     @Inject
     private TemplatesDAO templatesDAO;
     @Inject
@@ -84,10 +85,10 @@ public class SecurityDAOImpl implements SecurityDAO {
                     } else {
                         // we take the first one (should be only one)
                         JsonObject jsonPerson = res.getJsonObject(0);
-                        User user = Json.decodeValue(jsonPerson.encode(), User.class);
+                        com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(jsonPerson.encode(), com.qaobee.hive.business.model.commons.users.User.class);
                         user.getAccount().setToken(UUID.randomUUID().toString());
                         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                        mongo.upsert(user)
+                        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER)
                                 .done(u -> deferred.resolve(new JsonObject(Json.encode(user))))
                                 .fail(deferred::reject);
                     }
@@ -101,38 +102,42 @@ public class SecurityDAOImpl implements SecurityDAO {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
         if (runtime.getBoolean("recaptcha", false)) {
             reCaptcha.verify(reCaptchaChallenge)
-                    .done(captcha -> proceedPassWordReset(id, code, passwd, byPassActivationCode).done(deferred::resolve).fail(deferred::reject))
+                    .done(captcha -> proceedPasswordReset(id, code, passwd, byPassActivationCode).done(deferred::resolve).fail(deferred::reject))
                     .fail(deferred::reject);
         } else {
-            proceedPassWordReset(id, code, passwd, byPassActivationCode).done(deferred::resolve).fail(deferred::reject);
+            proceedPasswordReset(id, code, passwd, byPassActivationCode).done(deferred::resolve).fail(deferred::reject);
         }
         return deferred.promise();
     }
 
-    private Promise<Boolean, QaobeeException, Integer> proceedPassWordReset(String id, String code, String passwd, boolean byPassActivationCode) {
+    private Promise<Boolean, QaobeeException, Integer> proceedPasswordReset(String id, String code, String passwd, boolean byPassActivationCode) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userDAO.getUser(id)
-                .done(u -> {
-                    User user = Json.decodeValue(u.encode(), User.class);
-                    try {
-                        if (byPassActivationCode) {
-                            user.getAccount().setPasswd(passwd);
-                            mongo.upsert(userDAO.prepareUpsert(user)).done(up -> deferred.resolve(true)).fail(deferred::reject);
-                        } else {
-                            if (code.equals(user.getAccount().getActivationPasswd())) {
-                                user.getAccount().setPasswd(passwd);
-                                mongo.upsert(userDAO.prepareUpsert(user)).done(up -> deferred.resolve(true)).fail(deferred::reject);
-                            } else {
-                                deferred.resolve(false);
-                            }
-                        }
-                    } catch (QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                        deferred.reject(e);
+        userService.getUser(id, ar -> {
+            com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class);
+            if (byPassActivationCode) {
+                user.getAccount().setPasswd(passwd);
+                this.userService.prepareUpsert(new JsonObject(Json.encode(user)), up -> {
+                    if (up.succeeded()) {
+                        mongo.upsert(up.result(), DBCollections.USER).done(r -> deferred.resolve(true)).fail(deferred::reject);
+                    } else {
+                        deferred.reject(new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
                     }
-                })
-
-                .fail(deferred::reject);
+                });
+            } else {
+                if (code.equals(user.getAccount().getActivationPasswd())) {
+                    user.getAccount().setPasswd(passwd);
+                    this.userService.prepareUpsert(new JsonObject(Json.encode(user)), up -> {
+                        if (up.succeeded()) {
+                            mongo.upsert(up.result(), DBCollections.USER).done(r -> deferred.resolve(true)).fail(deferred::reject);
+                        } else {
+                            deferred.reject(new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+                        }
+                    });
+                } else {
+                    deferred.resolve(false);
+                }
+            }
+        });
         return deferred.promise();
 
     }
@@ -140,49 +145,52 @@ public class SecurityDAOImpl implements SecurityDAO {
     @Override
     public Promise<JsonObject, QaobeeException, Integer> passwordRenewCheck(String id, String code) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userDAO.getUser(id)
-                .done(jsonUser -> {
-                    if (jsonUser != null) {
-                        User user = Json.decodeValue(jsonUser.encode(), User.class);
-                        if (code.equals(user.getAccount().getActivationPasswd())) {
-                            deferred.resolve(new JsonObject()
-                                    .put("status", true)
-                                    .put("user", jsonUser));
-                        } else {
-                            deferred.resolve(new JsonObject().put("status", false));
-                        }
-                    }
-                })
-                .fail(deferred::reject);
+        userService.getUser(id, ar -> {
+            if (ar.succeeded()) {
+                com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class);
+                if (code.equals(user.getAccount().getActivationPasswd())) {
+                    deferred.resolve(new JsonObject()
+                            .put("status", true)
+                            .put("user", ar.result()));
+                } else {
+                    deferred.resolve(new JsonObject().put("status", false));
+                }
+            } else {
+                deferred.reject(new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+            }
+        });
         return deferred.promise();
     }
 
     @Override
     public Promise<Boolean, QaobeeException, Integer> passwordRenew(String login, String locale) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userDAO.getUserByLogin(login, locale)
-                .done(jsonperson -> {
-                    User user = Json.decodeValue(jsonperson.encode(), User.class);
-                    user.getAccount().setActivationPasswd(UUID.randomUUID().toString().replaceAll("-", ""));
-                    mongo.upsert(user).done(res -> {
-                        try {
-                            JsonObject emailReq = new JsonObject()
-                                    .put("from", runtime.getString("mail.from"))
-                                    .put("to", user.getContact().getEmail())
-                                    .put("subject", Messages.getString("mail.newpasswd.subject", locale))
-                                    .put("content_type", "text/html")
-                                    .put("body", templatesDAO.generateMail(new JsonObject()
-                                            .put(TemplatesDAOImpl.TEMPLATE, "newPasswd.html")
-                                            .put(TemplatesDAOImpl.DATA, mailUtils.generateNewpasswdBody(user, locale))
-                                    ).getString("result"));
-                            vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
-                            deferred.resolve(true);
-                        } catch (QaobeeException e) {
-                            LOG.error(e.getMessage(), e);
-                            deferred.reject(e);
-                        }
-                    }).fail(deferred::reject);
+        userService.getUserByLogin(login, locale, ar -> {
+            if (ar.succeeded()) {
+                com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class);
+                user.getAccount().setActivationPasswd(UUID.randomUUID().toString().replaceAll("-", ""));
+                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(res -> {
+                    try {
+                        JsonObject emailReq = new JsonObject()
+                                .put("from", runtime.getString("mail.from"))
+                                .put("to", user.getContact().getEmail())
+                                .put("subject", Messages.getString("mail.newpasswd.subject", locale))
+                                .put("content_type", "text/html")
+                                .put("body", templatesDAO.generateMail(new JsonObject()
+                                        .put(TemplatesDAOImpl.TEMPLATE, "newPasswd.html")
+                                        .put(TemplatesDAOImpl.DATA, mailUtils.generateNewpasswdBody(user, locale))
+                                ).getString("result"));
+                        vertx.eventBus().publish(MailVerticle.INTERNAL_MAIL, emailReq);
+                        deferred.resolve(true);
+                    } catch (QaobeeException e) {
+                        LOG.error(e.getMessage(), e);
+                        deferred.reject(e);
+                    }
                 }).fail(deferred::reject);
+            } else {
+                deferred.reject(new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+            }
+        });
         return deferred.promise();
     }
 
@@ -195,11 +203,11 @@ public class SecurityDAOImpl implements SecurityDAO {
                         deferred.resolve(false);
                     } else {
                         JsonObject jsonperson = res.getJsonObject(0);
-                        User user = Json.decodeValue(jsonperson.encode(), User.class);
+                        com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(jsonperson.encode(), com.qaobee.hive.business.model.commons.users.User.class);
                         user.getAccount().setToken(null);
                         user.getAccount().setTokenRenewDate(0L);
                         user.getAccount().setMobileToken(null);
-                        mongo.upsert(user).done(r -> deferred.resolve(true)).fail(deferred::reject);
+                        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(r -> deferred.resolve(true)).fail(deferred::reject);
                     }
                 }).fail(deferred::reject);
         return deferred.promise();
@@ -217,34 +225,42 @@ public class SecurityDAOImpl implements SecurityDAO {
     }
 
     private void doLogin(String login, String password, Deferred<JsonObject, QaobeeException, Integer> deferred, String locale, String mobileToken, String pushId, String deviceOS) {
-        userDAO.getUserByLogin(login, locale)
-                .done(jsonPerson -> {
-                    try {
-                        User user = Json.decodeValue(jsonPerson.encode(), User.class);
-                        byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(password, user.getAccount().getSalt());
-                        if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
-                            throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale));
-                        }
-                        if (!user.getAccount().isActive()) {
-                            throw new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", locale));
-                        }
-                        user.getAccount().setToken(UUID.randomUUID().toString());
-                        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                        user.getAccount().setMobileToken(mobileToken);
-                        if (StringUtils.isNotBlank(pushId) && StringUtils.isNotBlank(deviceOS)) {
-                            Device d = new Device();
-                            d.setId(pushId);
-                            d.setOs(deviceOS);
-                            if (!user.getAccount().getDevices().contains(d)) {
-                                user.getAccount().getDevices().add(d);
-                            }
-                        }
-                        mongo.upsert(user).done(r -> userDAO.getUserInfo(user.get_id()).done(deferred::resolve).fail(deferred::reject)).fail(deferred::reject);
-                    } catch (QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                        deferred.reject(e);
+        userService.getUserByLogin(login, locale, ar -> {
+            if (ar.succeeded()) {
+                try {
+                    com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class);
+                    byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(password, user.getAccount().getSalt());
+                    if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
+                        throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale));
                     }
-                })
-                .fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale))));
+                    if (!user.getAccount().isActive()) {
+                        throw new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", locale));
+                    }
+                    user.getAccount().setToken(UUID.randomUUID().toString());
+                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                    user.getAccount().setMobileToken(mobileToken);
+                    if (StringUtils.isNotBlank(pushId) && StringUtils.isNotBlank(deviceOS)) {
+                        Device d = new Device();
+                        d.setId(pushId);
+                        d.setOs(deviceOS);
+                        if (!user.getAccount().getDevices().contains(d)) {
+                            user.getAccount().getDevices().add(d);
+                        }
+                    }
+                    mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(r -> this.userService.getUserInfo(user.get_id(), res -> {
+                        if (res.succeeded()) {
+                            deferred.resolve(res.result());
+                        } else {
+                            deferred.reject(new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+                        }
+                    })).fail(deferred::reject);
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    deferred.reject(e);
+                }
+            } else {
+                deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale)));
+            }
+        });
     }
 }

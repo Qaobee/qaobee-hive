@@ -114,7 +114,6 @@ public class GuiceModule extends AbstractModule {
         bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
         bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
-        bind(UserDAO.class).to(UserDAOImpl.class).in(Singleton.class);
         bind(ShippingDAO.class).to(ShippingDAOImpl.class).in(Singleton.class);
         bind(SignupDAO.class).to(SignupDAOImpl.class).in(Singleton.class);
         bind(SandBoxDAO.class).to(SandBoxDAOImpl.class).in(Singleton.class);
@@ -130,14 +129,15 @@ public class GuiceModule extends AbstractModule {
         bind(CRMDao.class).to(CRMDaoImpl.class).in(Singleton.class);
 
         // Services
-        bind(Assets.class).toInstance(Assets.createProxy(vertx, Assets.ADDRESS));
-        bind(ActivityCfg.class).toInstance(ActivityCfg.createProxy(vertx, ActivityCfg.ADDRESS));
-        bind(Activity.class).toInstance(Activity.createProxy(vertx, Activity.ADDRESS));
-        bind(Country.class).toInstance(Country.createProxy(vertx, Country.ADDRESS));
-        bind(Notifications.class).toInstance(Notifications.createProxy(vertx, Notifications.ADDRESS));
-        bind(Championship.class).toInstance(Championship.createProxy(vertx, Championship.ADDRESS));
-        bind(Structure.class).toInstance(Structure.createProxy(vertx, Structure.ADDRESS));
-        bind(Indicator.class).toInstance(Indicator.createProxy(vertx, Indicator.ADDRESS));
-        bind(Season.class).toInstance(Season.createProxy(vertx, Season.ADDRESS));
+        bind(AssetsService.class).toInstance(AssetsService.createProxy(vertx, AssetsService.ADDRESS));
+        bind(ActivityCfgService.class).toInstance(ActivityCfgService.createProxy(vertx, ActivityCfgService.ADDRESS));
+        bind(ActivityService.class).toInstance(ActivityService.createProxy(vertx, ActivityService.ADDRESS));
+        bind(CountryService.class).toInstance(CountryService.createProxy(vertx, CountryService.ADDRESS));
+        bind(NotificationsService.class).toInstance(NotificationsService.createProxy(vertx, NotificationsService.ADDRESS));
+        bind(ChampionshipService.class).toInstance(ChampionshipService.createProxy(vertx, ChampionshipService.ADDRESS));
+        bind(StructureService.class).toInstance(StructureService.createProxy(vertx, StructureService.ADDRESS));
+        bind(IndicatorService.class).toInstance(IndicatorService.createProxy(vertx, IndicatorService.ADDRESS));
+        bind(SeasonService.class).toInstance(SeasonService.createProxy(vertx, SeasonService.ADDRESS));
+        bind(UserService.class).toInstance(UserService.createProxy(vertx, UserService.ADDRESS));
     }
 }
