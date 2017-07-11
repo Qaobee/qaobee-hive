@@ -112,7 +112,6 @@ public class GuiceModule extends AbstractModule {
         bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
         bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
-        bind(IndicatorDAO.class).to(IndicatorDAOImpl.class).in(Singleton.class);
         bind(SeasonDAO.class).to(SeasonDAOImpl.class).in(Singleton.class);
         bind(UserDAO.class).to(UserDAOImpl.class).in(Singleton.class);
         bind(ShippingDAO.class).to(ShippingDAOImpl.class).in(Singleton.class);
@@ -137,5 +136,6 @@ public class GuiceModule extends AbstractModule {
         bind(Notifications.class).toInstance(Notifications.createProxy(vertx, Notifications.ADDRESS));
         bind(Championship.class).toInstance(Championship.createProxy(vertx, Championship.ADDRESS));
         bind(Structure.class).toInstance(Structure.createProxy(vertx, Structure.ADDRESS));
+        bind(Indicator.class).toInstance(Indicator.createProxy(vertx, Indicator.ADDRESS));
     }
 }

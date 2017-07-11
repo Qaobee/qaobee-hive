@@ -30,9 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 
 /**
- * The type Country verticle.
- *
- * @author cke
+ * The type Country route.
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/country")
 public class CountryRoute extends AbstractRoute {

@@ -1,4 +1,4 @@
-/*************************************************************************
+/* ************************************************************************
  * Qaobee
  * __________________
  * <p/>
@@ -19,7 +19,7 @@ package com.qaobee.hive.test.api.commons.settings;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityRoute;
 import com.qaobee.hive.api.v1.commons.settings.CountryRoute;
-import com.qaobee.hive.api.v1.commons.settings.IndicatorVerticle;
+import com.qaobee.hive.api.v1.commons.settings.IndicatorRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
@@ -38,6 +38,7 @@ import static org.hamcrest.Matchers.*;
  * @author cke
  */
 public class IndicatorTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/commons/settings/indicator");
 
     /**
      * Gets indicator test.
@@ -48,8 +49,8 @@ public class IndicatorTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_INDICATOR);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(IndicatorVerticle.PARAM_ID, "559a9294889089a442f3d464")
-                    .when().get(getURL(IndicatorVerticle.GET))
+                    .queryParam(IndicatorRoute.PARAM_ID, "559a9294889089a442f3d464")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
                     .body("code", notNullValue())
                     .body("code", is("hightPerson"));
@@ -63,7 +64,7 @@ public class IndicatorTest extends VertxJunitSupport {
      */
     @Test
     public void getIndicatorWithNonLoggedUserTest() {
-        given().when().get(getURL(IndicatorVerticle.GET))
+        given().when().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -76,7 +77,7 @@ public class IndicatorTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().post(getURL(IndicatorVerticle.GET))
+                    .when().post(BASE_URL + "/get")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
@@ -93,8 +94,8 @@ public class IndicatorTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_INDICATOR);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(IndicatorVerticle.PARAM_ID, "blabla")
-                    .when().get(getURL(IndicatorVerticle.GET))
+                    .queryParam(IndicatorRoute.PARAM_ID, "blabla")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
@@ -111,7 +112,7 @@ public class IndicatorTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_INDICATOR);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(IndicatorVerticle.GET))
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -131,13 +132,13 @@ public class IndicatorTest extends VertxJunitSupport {
             getCountry("CNTR-250-FR-FRA").then(country -> {
                 getActivity("ACT-HAND", u).then(activity -> {
                     final JsonObject params = new JsonObject();
-                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_SCREEN, new JsonArray().add("COLLECTE"));
+                    params.put(IndicatorRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_SCREEN, new JsonArray().add("COLLECTE"));
 
                     given().header(TOKEN, u.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_LIST))
+                            .when().post(BASE_URL + "/getList")
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(45));
                     async.complete();
@@ -152,7 +153,7 @@ public class IndicatorTest extends VertxJunitSupport {
      */
     @Test
     public void getListIndicatorWithNonLoggedUserTest() {
-        given().when().post(getURL(IndicatorVerticle.GET_LIST))
+        given().when().post(BASE_URL + "/getList")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -165,7 +166,7 @@ public class IndicatorTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(IndicatorVerticle.GET_LIST))
+                    .when().get(BASE_URL + "/getList")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
@@ -184,27 +185,27 @@ public class IndicatorTest extends VertxJunitSupport {
             getActivity("ACT-HAND", user).then(activity -> {
                 getCountry("CNTR-250-FR-FRA").then(country -> {
                     final JsonObject params = new JsonObject();
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_SCREEN, new JsonArray().add("COLLECTE"));
+                    params.put(IndicatorRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_SCREEN, new JsonArray().add("COLLECTE"));
                     given().header(TOKEN, user.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_LIST))
+                            .when().post(BASE_URL + "/getList")
                             .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                             .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
-                    params.remove(IndicatorVerticle.PARAM_ACTIVITY_ID);
+                    params.put(IndicatorRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
+                    params.remove(IndicatorRoute.PARAM_ACTIVITY_ID);
                     given().header(TOKEN, user.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_LIST))
+                            .when().post(BASE_URL + "/getList")
                             .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                             .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
-                    params.remove(IndicatorVerticle.PARAM_SCREEN);
+                    params.put(IndicatorRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
+                    params.remove(IndicatorRoute.PARAM_SCREEN);
                     given().header(TOKEN, user.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_LIST))
+                            .when().post(BASE_URL + "/getList")
                             .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                             .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
                     async.complete();
@@ -225,13 +226,13 @@ public class IndicatorTest extends VertxJunitSupport {
             getActivity("ACT-HAND", u).then(activity -> {
                 getCountry("CNTR-250-FR-FRA").then(country -> {
                     final JsonObject params = new JsonObject();
-                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
+                    params.put(IndicatorRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
 
                     given().header(TOKEN, u.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .when().post(BASE_URL + "/getByCode")
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(1))
                             .body("code", hasItem("hightPerson"));
@@ -247,7 +248,7 @@ public class IndicatorTest extends VertxJunitSupport {
      */
     @Test
     public void getIndicatorByCodeWithNonLoggedUserTest() {
-        given().when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+        given().when().post(BASE_URL + "/getByCode")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -260,7 +261,7 @@ public class IndicatorTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(IndicatorVerticle.GET_BY_CODE))
+                    .when().get(BASE_URL + "/getByCode")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
@@ -279,29 +280,29 @@ public class IndicatorTest extends VertxJunitSupport {
             getActivity("ACT-HAND", u).then(activity -> {
                 getCountry("CNTR-250-FR-FRA").then(country -> {
                     final JsonObject params = new JsonObject();
-                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("blabla"));
+                    params.put(IndicatorRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_INDICATOR_CODE, new JsonArray().add("blabla"));
 
                     given().header(TOKEN, u.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .when().post(BASE_URL + "/getByCode")
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(0));
 
-                    params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
-                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, "123");
+                    params.put(IndicatorRoute.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
+                    params.put(IndicatorRoute.PARAM_COUNTRY_ID, "123");
                     given().header(TOKEN, u.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .when().post(BASE_URL + "/getByCode")
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(0));
 
-                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, "123");
+                    params.put(IndicatorRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_ACTIVITY_ID, "123");
                     given().header(TOKEN, u.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .when().post(BASE_URL + "/getByCode")
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(0));
                     async.complete();
@@ -322,28 +323,28 @@ public class IndicatorTest extends VertxJunitSupport {
             getActivity("ACT-HAND", u).then(activity -> {
                 getCountry("CNTR-250-FR-FRA").then(country -> {
                     final JsonObject params = new JsonObject();
-                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
-                    params.put(IndicatorVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
+                    params.put(IndicatorRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID));
 
                     given().header(TOKEN, u.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .when().post(BASE_URL + "/getByCode")
                             .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                             .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-                    params.put(IndicatorVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
-                    params.remove(IndicatorVerticle.PARAM_COUNTRY_ID);
+                    params.put(IndicatorRoute.PARAM_INDICATOR_CODE, new JsonArray().add("hightPerson"));
+                    params.remove(IndicatorRoute.PARAM_COUNTRY_ID);
                     given().header(TOKEN, u.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .when().post(BASE_URL + "/getByCode")
                             .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                             .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
 
-                    params.put(IndicatorVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
-                    params.remove(IndicatorVerticle.PARAM_ACTIVITY_ID);
+                    params.put(IndicatorRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID));
+                    params.remove(IndicatorRoute.PARAM_ACTIVITY_ID);
                     given().header(TOKEN, u.getAccount().getToken())
                             .body(params.encode())
-                            .when().post(getURL(IndicatorVerticle.GET_BY_CODE))
+                            .when().post(BASE_URL + "/getByCode")
                             .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                             .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
                     async.complete();

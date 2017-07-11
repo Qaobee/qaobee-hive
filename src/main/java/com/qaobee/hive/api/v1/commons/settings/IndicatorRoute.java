@@ -19,38 +19,21 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.dao.IndicatorDAO;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import io.vertx.core.Future;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
+import com.qaobee.hive.services.Indicator;
+import com.qaobee.hive.technical.annotations.VertxRoute;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 
-/**
- * The type Indicator verticle.
- *
- * @author cke
- */
-@DeployableVerticle
-public class IndicatorVerticle extends AbstractGuiceVerticle {
-    /**
-     * The Constant GET.
-     */
-    public static final String GET = Module.VERSION + ".commons.settings.indicator.get";
-    /**
-     * Handler for retrieve list of indicators
-     */
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/indicator")
+public class IndicatorRoute extends AbstractRoute {
+ /*   public static final String GET = Module.VERSION + ".commons.settings.indicator.get";
     public static final String GET_LIST = Module.VERSION + ".commons.settings.indicator.getList";
-    /**
-     * Handler for retrieve one indicator by his code
-     */
-    public static final String GET_BY_CODE = Module.VERSION + ".commons.settings.indicator.getByCode";
+    public static final String GET_BY_CODE = Module.VERSION + ".commons.settings.indicator.getByCode";*/
     /**
      * Indicator id
      */
@@ -73,15 +56,18 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
     public static final String PARAM_INDICATOR_CODE = "listIndicators";
 
     @Inject
-    private IndicatorDAO indicatorDAO;
+    private Indicator indicator;
 
     @Override
-    public void start(Future<Void> startFuture) {
-        inject(this)
-                .add(GET, this::getIndicator)
-                .add(GET_LIST, this::getIndicatorsList)
-                .add(GET_BY_CODE, this::getIndicatorByCode)
-                .register(startFuture);
+    public Router init() {
+        Router router = Router.router(vertx);
+        router.get("/get").handler(authHandler);
+        router.get("/get").handler(this::getIndicator);
+        router.post("/getList").handler(authHandler);
+        router.post("/getList").handler(this::getIndicatorsList);
+        router.post("/getByCode").handler(authHandler);
+        router.post("/getByCode").handler(this::getIndicatorByCode);
+        return router;
     }
 
     /**
@@ -97,14 +83,14 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiSuccess {Array} indicators The list of indicators found.
      */
-    @Rule(address = GET_BY_CODE, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE},
-            scope = Rule.Param.BODY)
-    private void getIndicatorByCode(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject body = new JsonObject(req.getBody());
-        replyJsonArray(message, indicatorDAO.getIndicatorByCode(body.getString(PARAM_ACTIVITY_ID),
-                body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_INDICATOR_CODE)));
+    private void getIndicatorByCode(RoutingContext context) {
+        try {
+            utils.testMandatoryParams(context, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE);
+            JsonObject body = context.getBodyAsJson();
+            indicator.getIndicatorByCode(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_INDICATOR_CODE), handleResponseArray(context));
+        } catch (QaobeeException e) {
+            handleError(context, e);
+        }
     }
 
     /**
@@ -120,14 +106,14 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiSuccess {Array} indicators The list of indicators found.
      */
-    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN},
-            scope = Rule.Param.BODY)
-    private void getIndicatorsList(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject body = new JsonObject(req.getBody());
-        replyJsonArray(message, indicatorDAO.getIndicatorsList(body.getString(PARAM_ACTIVITY_ID),
-                body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_SCREEN)));
+    private void getIndicatorsList(RoutingContext context) {
+        try {
+            utils.testMandatoryParams(context, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN);
+            JsonObject body = context.getBodyAsJson();
+            indicator.getIndicatorsList(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_SCREEN), handleResponseArray(context));
+        } catch (QaobeeException e) {
+            handleError(context, e);
+        }
     }
 
     /**
@@ -141,10 +127,12 @@ public class IndicatorVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiSuccess {Indicator} indicator The Indicator found.
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
-            scope = Rule.Param.REQUEST)
-    private void getIndicator(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, indicatorDAO.getIndicator(req.getParams().get(PARAM_ID).get(0)));
+    private void getIndicator(RoutingContext context) {
+        try {
+            utils.testMandatoryParams(context.request().params(), PARAM_ID);
+            indicator.getIndicator(context.request().getParam(PARAM_ID), handleResponse(context));
+        } catch (QaobeeException e) {
+            handleError(context, e);
+        }
     }
 }
