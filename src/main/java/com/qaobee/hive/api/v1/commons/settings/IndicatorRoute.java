@@ -34,9 +34,6 @@ import javax.inject.Inject;
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/indicator")
 public class IndicatorRoute extends AbstractRoute {
- /*   public static final String GET = Module.VERSION + ".commons.settings.indicator.get";
-    public static final String GET_LIST = Module.VERSION + ".commons.settings.indicator.getList";
-    public static final String GET_BY_CODE = Module.VERSION + ".commons.settings.indicator.getByCode";*/
     /**
      * Indicator id
      */
