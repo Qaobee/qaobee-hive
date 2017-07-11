@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.ChampionshipServiceImpl;
+import com.qaobee.hive.services.impl.ChampionshipImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -34,11 +34,11 @@ import io.vertx.serviceproxy.ProxyHelper;
  */
 @ProxyGen
 @VertxGen
-public interface ChampionshipService {
+public interface Championship {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.ChampionshipService.service";
+    String ADDRESS = "vertx.Championship.service";
 
     /**
      * Create championship service.
@@ -46,8 +46,8 @@ public interface ChampionshipService {
      * @param vertx the vertx
      * @return the championship service
      */
-    static ChampionshipService create(Vertx vertx) {
-        return new ChampionshipServiceImpl(vertx);
+    static Championship create(Vertx vertx) {
+        return new ChampionshipImpl(vertx);
     }
 
     /**
@@ -57,8 +57,8 @@ public interface ChampionshipService {
      * @param address the address
      * @return the championship service
      */
-    static ChampionshipService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(ChampionshipService.class, vertx, address);
+    static Championship createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(Championship.class, vertx, address);
     }
 
     /**

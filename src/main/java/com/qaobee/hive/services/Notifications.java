@@ -19,8 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.NotificationsServiceImpl;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.services.impl.NotificationsImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -29,18 +28,17 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
-import org.jdeferred.Promise;
 
 /**
  * The interface Notifications service.
  */
 @ProxyGen
 @VertxGen
-public interface NotificationsService {
+public interface Notifications {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.NotificationsService.service";
+    String ADDRESS = "vertx.Notifications.service";
 
     /**
      * Create notifications service.
@@ -48,8 +46,8 @@ public interface NotificationsService {
      * @param vertx the vertx
      * @return the notifications service
      */
-    static NotificationsService create(Vertx vertx) {
-        return new NotificationsServiceImpl(vertx);
+    static Notifications create(Vertx vertx) {
+        return new NotificationsImpl(vertx);
     }
 
     /**
@@ -59,8 +57,8 @@ public interface NotificationsService {
      * @param address the address
      * @return the notifications service
      */
-    static NotificationsService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(NotificationsService.class, vertx, address);
+    static Notifications createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(Notifications.class, vertx, address);
     }
 
     /**

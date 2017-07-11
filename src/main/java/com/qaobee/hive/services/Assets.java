@@ -1,6 +1,6 @@
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.AssetsServiceImpl;
+import com.qaobee.hive.services.impl.AssetsImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -14,11 +14,11 @@ import io.vertx.serviceproxy.ProxyHelper;
  */
 @ProxyGen
 @VertxGen
-public interface AssetsService {
+public interface Assets {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.AssetsService.service";
+    String ADDRESS = "vertx.Assets.service";
 
     /**
      * Create assets service.
@@ -26,8 +26,8 @@ public interface AssetsService {
      * @param vertx the vertx
      * @return the assets service
      */
-    static AssetsService create(Vertx vertx) {
-        return new AssetsServiceImpl(vertx);
+    static Assets create(Vertx vertx) {
+        return new AssetsImpl(vertx);
     }
 
     /**
@@ -37,8 +37,8 @@ public interface AssetsService {
      * @param address the address
      * @return the assets service
      */
-    static AssetsService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(AssetsService.class, vertx, address);
+    static Assets createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(Assets.class, vertx, address);
     }
 
     /**

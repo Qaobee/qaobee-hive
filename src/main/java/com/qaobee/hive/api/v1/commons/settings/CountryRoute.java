@@ -19,7 +19,7 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.Country;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
@@ -53,7 +53,7 @@ public class CountryRoute extends AbstractRoute {
      */
     public static final String PARAM_LOCAL = "local";
     @Inject
-    private CountryService countryService;
+    private Country country;
 
 
     @Override
@@ -82,7 +82,7 @@ public class CountryRoute extends AbstractRoute {
             if (context.request().params().contains(CountryRoute.PARAM_LABEL) && StringUtils.isNotBlank(context.request().getParam(PARAM_LABEL))) {
                 label = context.request().getParam(PARAM_LABEL);
             }
-            countryService.getCountryList(context.request().getParam(PARAM_LOCAL), label, handleResponseArray(context));
+            country.getCountryList(context.request().getParam(PARAM_LOCAL), label, handleResponseArray(context));
         } catch (QaobeeException e) {
             handleError(context, e);
         }
@@ -101,7 +101,7 @@ public class CountryRoute extends AbstractRoute {
     private void getAlpha2(RoutingContext context) {
         try {
             utils.testMandatoryParams(context.request().params(), PARAM_ALPHA2);
-            countryService.getCountryFromAlpha2(context.request().getParam(PARAM_ALPHA2), handleResponse(context));
+            country.getCountryFromAlpha2(context.request().getParam(PARAM_ALPHA2), handleResponse(context));
         } catch (QaobeeException e) {
             handleError(context, e);
         }
@@ -121,7 +121,7 @@ public class CountryRoute extends AbstractRoute {
     private void get(RoutingContext context) {
         try {
             utils.testMandatoryParams(context.request().params(), PARAM_ID);
-            countryService.getCountry(context.request().getParam(PARAM_ID), handleResponse(context));
+            country.getCountry(context.request().getParam(PARAM_ID), handleResponse(context));
         } catch (QaobeeException e) {
             handleError(context, e);
         }

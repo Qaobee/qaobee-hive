@@ -23,7 +23,7 @@ import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
-import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.Notifications;
 import com.qaobee.hive.dao.ShippingDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -71,7 +71,7 @@ public class ShippingDAOImpl implements ShippingDAO {
     private final JsonObject runtime;
     private final MailUtils mailUtils;
     private final TemplatesDAO templatesDAO;
-    private final NotificationsService notificationsService;
+    private final Notifications notifications;
     private final Utils utils;
 
     /**
@@ -83,19 +83,19 @@ public class ShippingDAOImpl implements ShippingDAO {
      * @param stripe           the stripe
      * @param mailUtils        the mail utils
      * @param templatesDAO     the templates dao
-     * @param notificationsService the notifications dao
+     * @param notifications the notifications dao
      * @param utils            the utils
      */
     @Inject
     public ShippingDAOImpl(MongoDB mongo, Vertx vertx, @Named("runtime") JsonObject runtime, // NOSONAR
                            @Named("stripe") JsonObject stripe, MailUtils mailUtils, TemplatesDAO templatesDAO,
-                           NotificationsService notificationsService, Utils utils) {
+                           Notifications notifications, Utils utils) {
         this.mongo = mongo;
         this.vertx = vertx;
         this.runtime = runtime;
         this.mailUtils = mailUtils;
         this.templatesDAO = templatesDAO;
-        this.notificationsService = notificationsService;
+        this.notifications = notifications;
         this.utils = utils;
         Stripe.apiKey = stripe.getString("api_secret");
     }
@@ -288,7 +288,7 @@ public class ShippingDAOImpl implements ShippingDAO {
                 Customer customer = Customer.retrieve(body.getJsonObject("data").getJsonObject(OBJECT_FIELD).getString("customer"));
                 mongo.getById(customer.getMetadata().get("_id"), DBCollections.USER).done(user -> {
                     final User u = Json.decodeValue(user.encode(), User.class);
-                    notificationsService.addNotificationToUser(user.getString("_id"), new JsonObject()
+                    notifications.addNotificationToUser(user.getString("_id"), new JsonObject()
                             .put("content", Messages.getString("notification." + body.getString("type") + ".content", customer.getMetadata().get(LOCALE_FIELD)))
                             .put("title", Messages.getString("notification." + body.getString("type") + ".title", customer.getMetadata().get(LOCALE_FIELD)))
                             .put("senderId", runtime.getString("admin.id")), ar->{});

@@ -6,7 +6,7 @@ import com.mongodb.async.client.gridfs.GridFSBuckets;
 import com.mongodb.async.client.gridfs.GridFSDownloadStream;
 import com.mongodb.async.client.gridfs.helpers.AsyncStreamHelper;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
-import com.qaobee.hive.services.AssetsService;
+import com.qaobee.hive.services.Assets;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -31,9 +31,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-@ProxyService(address = AssetsService.ADDRESS, iface = AssetsService.class)
-public class AssetsServiceImpl implements AssetsService {
-    private static final Logger LOG = LoggerFactory.getLogger(AssetsService.class);
+@ProxyService(address = Assets.ADDRESS, iface = Assets.class)
+public class AssetsImpl implements Assets {
+    private static final Logger LOG = LoggerFactory.getLogger(Assets.class);
     private static final String MESS_NOT_FOUND = "Not found";
     @Inject
     private MongoDB mongo;
@@ -45,7 +45,7 @@ public class AssetsServiceImpl implements AssetsService {
 
     private Vertx vertx;
 
-    public AssetsServiceImpl(Vertx vertx) {
+    public AssetsImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
     }

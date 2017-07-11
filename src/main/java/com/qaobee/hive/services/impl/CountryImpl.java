@@ -20,7 +20,7 @@
 package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.api.v1.commons.settings.CountryRoute;
-import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.Country;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -45,15 +45,15 @@ import java.util.Map;
 /**
  * The type Country dao.
  */
-@ProxyService(address = CountryService.ADDRESS, iface = CountryService.class)
-public class CountryServiceImpl implements CountryService {
+@ProxyService(address = Country.ADDRESS, iface = Country.class)
+public class CountryImpl implements Country {
     private final JsonObject mapCountry = new JsonObject();
     @Inject
     private MongoDB mongo;
 
     private Vertx vertx;
 
-    public CountryServiceImpl(Vertx vertx) {
+    public CountryImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
     }

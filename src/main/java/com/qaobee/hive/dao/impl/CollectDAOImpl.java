@@ -22,7 +22,7 @@ package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
 import com.qaobee.hive.dao.CollectDAO;
-import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.Notifications;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -44,7 +44,7 @@ public class CollectDAOImpl implements CollectDAO {
     @Inject
     private MongoDB mongo;
     @Inject
-    private NotificationsService notificationsService;
+    private Notifications notifications;
 
     @Override
     public Promise<JsonObject, QaobeeException, Integer> get(String id) {
@@ -62,7 +62,7 @@ public class CollectDAOImpl implements CollectDAO {
                                     collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                             .put("title", Messages.getString("notification.collect.update.title", locale))
                             .put("senderId", currentUserId);
-                    notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                    notifications.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
                             DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar->{});
                     deferred.resolve(collect);
                 })
@@ -80,7 +80,7 @@ public class CollectDAOImpl implements CollectDAO {
                             .put("content", Messages.getString("notification.collect.start.content", locale, collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
                             .put("title", Messages.getString("notification.collect.start.title", locale))
                             .put("senderId", currentUserId);
-                    notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                    notifications.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
                             DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar->{});
                     deferred.resolve(collect);
                 })

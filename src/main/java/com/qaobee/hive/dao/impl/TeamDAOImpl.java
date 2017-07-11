@@ -20,7 +20,7 @@
 package com.qaobee.hive.dao.impl;
 
 
-import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.Notifications;
 import com.qaobee.hive.dao.TeamDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -46,18 +46,18 @@ public class TeamDAOImpl implements TeamDAO {
     private static final String PARAM_LINK_TEAM_ID = "linkTeamId";
 
     private final MongoDB mongo;
-    private final NotificationsService notificationsService;
+    private final Notifications notifications;
 
     /**
      * Instantiates a new Team dao.
      *
      * @param mongo            the mongo
-     * @param notificationsService the notifications dao
+     * @param notifications the notifications dao
      */
     @Inject
-    public TeamDAOImpl(MongoDB mongo, NotificationsService notificationsService) {
+    public TeamDAOImpl(MongoDB mongo, Notifications notifications) {
         this.mongo = mongo;
-        this.notificationsService = notificationsService;
+        this.notifications = notifications;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class TeamDAOImpl implements TeamDAO {
                             "/#/private/updateTeam/" + team.getString("_id") + "/" + team.getBoolean(PARAM_ADVERSARY)))
                     .put("title", Messages.getString("notification.team.update.title", locale))
                     .put("senderId", userId);
-            notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
+            notifications.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
             deferred.resolve(team);
         }).fail(deferred::reject);
         return deferred.promise();
@@ -108,7 +108,7 @@ public class TeamDAOImpl implements TeamDAO {
                             "/#/private/updateTeam/" + team.getString("_id") + "/" + team.getBoolean(PARAM_ADVERSARY)))
                     .put("title", Messages.getString("notification.team.add.title", locale))
                     .put("senderId", userId);
-            notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
+            notifications.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
             deferred.resolve(team);
         }).fail(deferred::reject);
         return deferred.promise();

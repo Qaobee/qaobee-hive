@@ -23,7 +23,7 @@ import com.lowagie.text.pdf.codec.Base64;
 import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.*;
-import com.qaobee.hive.services.ActivityService;
+import com.qaobee.hive.services.Activity;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -71,7 +71,7 @@ public class UserDAOImpl implements UserDAO {
     @Inject
     private TeamDAO teamDAO;
     @Inject
-    private ActivityService activityService;
+    private Activity activity;
 
     @Override
     public JsonObject generateProfilePDF(User user, String locale) {
@@ -256,7 +256,7 @@ public class UserDAOImpl implements UserDAO {
                     meta.put("season", season);
                     teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null).done(teams -> {
                         meta.put("teams", teams);
-                        activityService.getActivity(meta.getString("activityId"), activity -> {
+                        activity.getActivity(meta.getString("activityId"), activity -> {
                             if (activity.succeeded()) {
                                 meta.put("activity", activity.result());
                                 deferred.resolve(meta);

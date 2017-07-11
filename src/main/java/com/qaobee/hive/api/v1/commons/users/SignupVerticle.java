@@ -21,7 +21,7 @@ package com.qaobee.hive.api.v1.commons.users;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.dao.SignupDAO;
 import com.qaobee.hive.dao.UserDAO;
-import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.Notifications;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -115,7 +115,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Inject
     private SignupDAO signupDAO;
     @Inject
-    private NotificationsService notificationsService;
+    private Notifications notifications;
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -181,7 +181,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                                             .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
                                             .put("senderId", runtime.getString("admin.id")
                                     );
-                            notificationsService.sendNotification(u.getString("_id"), DBCollections.USER, notification, new JsonArray(), ar->{});
+                            notifications.sendNotification(u.getString("_id"), DBCollections.USER, notification, new JsonArray(), ar->{});
                             message.reply(u.encode());
                         }).fail(e -> utils.sendError(message, e));
                     } catch (final QaobeeException e) {

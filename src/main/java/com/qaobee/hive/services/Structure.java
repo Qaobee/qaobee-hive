@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.ActivityCfgServiceImpl;
+import com.qaobee.hive.services.impl.StructureImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -30,55 +30,67 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Activity cfg service.
+ * The interface Structure.
  */
 @ProxyGen
 @VertxGen
-public interface ActivityCfgService {
+public interface Structure {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.ActivityCfgService.service";
+    String ADDRESS = "vertx.Structure.service";
 
     /**
-     * Create activity cfg service.
+     * Create structure.
      *
      * @param vertx the vertx
-     * @return the activity cfg service
+     * @return the structure
      */
-    static ActivityCfgService create(Vertx vertx) {
-        return new ActivityCfgServiceImpl(vertx);
+    static Structure create(Vertx vertx) {
+        return new StructureImpl(vertx);
     }
 
     /**
-     * Create proxy activity cfg service.
+     * Create proxy structure.
      *
      * @param vertx   the vertx
      * @param address the address
-     * @return the activity cfg service
+     * @return the structure
      */
-    static ActivityCfgService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(ActivityCfgService.class, vertx, address);
+    static Structure createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(Structure.class, vertx, address);
     }
 
     /**
-     * Gets activity cfg params.
+     * Update.
      *
-     * @param activityId    the activity id
-     * @param countryId     the country id
-     * @param dateRef       the date ref
-     * @param paramField    the param field
+     * @param structure      the structure
      * @param resultHandler the result handler
      */
-    void getActivityCfgParams(String activityId, String countryId, Long dateRef, String paramField, Handler<AsyncResult<JsonArray>> resultHandler);
+    void update(JsonObject structure, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Gets activity cfg.
+     * Gets list of structures.
      *
-     * @param activityId    the activity id
-     * @param countryId     the country id
-     * @param dateRef       the date ref
+     * @param activity      the activity
+     * @param address       the address
      * @param resultHandler the result handler
      */
-    void getActivityCfg(String activityId, String countryId, Long dateRef, Handler<AsyncResult<JsonObject>> resultHandler);
+    void getListOfStructures(String activity, JsonObject address, Handler<AsyncResult<JsonArray>> resultHandler);
+
+    /**
+     * Gets structure.
+     *
+     * @param id            the id
+     * @param resultHandler the result handler
+     */
+    void getStructure(String id, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    /**
+     * Add structure.
+     *
+     * @param structure     the structure
+     * @param resultHandler the result handler
+     */
+    void addStructure(JsonObject structure, Handler<AsyncResult<JsonObject>> resultHandler);
 }

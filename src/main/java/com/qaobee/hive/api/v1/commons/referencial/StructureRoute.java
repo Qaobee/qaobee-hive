@@ -19,16 +19,13 @@
 package com.qaobee.hive.api.v1.commons.referencial;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.dao.StructureDAO;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import io.vertx.core.Future;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
+import com.qaobee.hive.services.Structure;
+import com.qaobee.hive.technical.annotations.VertxRoute;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 
@@ -37,30 +34,16 @@ import javax.inject.Inject;
  *
  * @author Nada Vujanic-Maquin<br>         <br>         <strong>Description de la classe:</strong>         <ul>         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>         </ul>
  */
-@DeployableVerticle
-public class StructureVerticle extends AbstractGuiceVerticle {
-    /**
-     * The constant ADD_STRUCTURE.
-     */
-    public static final String ADD_STRUCTURE = Module.VERSION + ".commons.referencial.structure.add";
-    /**
-     * The Constant GET
-     */
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/referencial/structure")
+public class StructureRoute extends AbstractRoute {
+/*    public static final String ADD_STRUCTURE = Module.VERSION + ".commons.referencial.structure.add";
     public static final String GET = Module.VERSION + ".commons.referencial.structure.get";
-    /**
-     * The Constant GET_LIST.
-     */
     public static final String GET_LIST = Module.VERSION + ".commons.referencial.structure.getList";
-    /**
-     * The Constant UPDATE.
-     */
-    public static final String UPDATE = Module.VERSION + ".commons.referencial.structure.update";
+    public static final String UPDATE = Module.VERSION + ".commons.referencial.structure.update";*/
     /**
      * Id of the structure
      */
     public static final String PARAM_ID = "_id";
-
-    // List of parameters
     /**
      * Label of the structure
      */
@@ -78,16 +61,23 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_ADDRESS = "address";
     @Inject
-    private StructureDAO structureDAO;
+    private Structure structure;
 
     @Override
-    public void start(Future<Void> startFuture) {
-        inject(this)
-                .add(ADD_STRUCTURE, this::addStructure)
-                .add(GET, this::getStructure)
-                .add(GET_LIST, this::getListOfStructures)
-                .add(UPDATE, this::updateStructure)
-                .register(startFuture);
+    public Router init() {
+        Router router = Router.router(vertx);
+        router.post("/add").handler(authHandler);
+        router.post("/add").handler(this::addStructure);
+
+        router.get("/get").handler(authHandler);
+        router.get("/get").handler(this::getStructure);
+
+        router.post("/getList").handler(authHandler);
+        router.post("/getList").handler(this::getListOfStructures);
+
+        router.post("/update").handler(authHandler);
+        router.post("/update").handler(this::updateStructure);
+        return router;
     }
 
     /**
@@ -105,15 +95,15 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiParam {Address} address Optional The Structure-ID.
      * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
      * @apiParam {String} avatar Optional The Structure logo.
-     * @apiSuccess {Structure}   structure            The Structure updated.
-     * @apiError DATA_ERROR Error on DB request
+     * @apiSuccess {Structure}   structure  The Structure updated.
      */
-    @Rule(address = UPDATE, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-            scope = Rule.Param.BODY)
-    private void updateStructure(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyString(message, structureDAO.update(new JsonObject(req.getBody())));
+    private void updateStructure(RoutingContext context) {
+        try {
+            utils.testMandatoryParams(context, "_id", PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY);
+            structure.update(context.getBodyAsJson(), handleResponse(context));
+        } catch (QaobeeException e) {
+            handleError(context, e);
+        }
     }
 
     /**
@@ -127,12 +117,14 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiParam {Object} address The address
      * @apiSuccess {Structure}   structure            The Structure found.
      */
-    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_ACTIVITY, PARAM_ADDRESS}, scope = Rule.Param.BODY)
-    private void getListOfStructures(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject body = new JsonObject(req.getBody());
-        replyJsonArray(message, structureDAO.getListOfStructures(body.getString(PARAM_ACTIVITY), body.getJsonObject(PARAM_ADDRESS)));
+    private void getListOfStructures(RoutingContext context) {
+        try {
+            utils.testMandatoryParams(context, PARAM_ACTIVITY, PARAM_ADDRESS);
+            JsonObject body = context.getBodyAsJson();
+            structure.getListOfStructures(body.getString(PARAM_ACTIVITY), body.getJsonObject(PARAM_ADDRESS), handleResponseArray(context));
+        } catch (QaobeeException e) {
+            handleError(context, e);
+        }
     }
 
     /**
@@ -144,13 +136,14 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiDescription get a structure to the collection structure in referencial module
      * @apiParam {String} id The Structure-ID.
      * @apiSuccess {Structure}   structure            The Structure found.
-     * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
-            scope = Rule.Param.REQUEST)
-    private void getStructure(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, structureDAO.getStructure(req.getParams().get(PARAM_ID).get(0)));
+    private void getStructure(RoutingContext context) {
+        try {
+            utils.testMandatoryParams(context.request().params(), PARAM_ID);
+            structure.getStructure(context.request().getParam(PARAM_ID), handleResponse(context));
+        } catch (QaobeeException e) {
+            handleError(context, e);
+        }
     }
 
     /**
@@ -168,13 +161,13 @@ public class StructureVerticle extends AbstractGuiceVerticle {
      * @apiParam {Contact} contact Optional The Structure contact (phone number, email...).
      * @apiParam {String} avatar Optional The Structure logo.
      * @apiSuccess {Structure}   structure            The Structure added with the id.
-     * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = ADD_STRUCTURE, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY},
-            scope = Rule.Param.BODY)
-    private void addStructure(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, structureDAO.addStructure(new JsonObject(req.getBody())));
+    private void addStructure(RoutingContext context) {
+        try {
+            utils.testMandatoryParams(context, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY);
+            structure.addStructure(context.getBodyAsJson(), handleResponse(context));
+        } catch (QaobeeException e) {
+            handleError(context, e);
+        }
     }
 }

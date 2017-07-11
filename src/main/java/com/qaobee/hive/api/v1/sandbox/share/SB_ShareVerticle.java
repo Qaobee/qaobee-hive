@@ -26,7 +26,7 @@ import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.UserDAO;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
-import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.Notifications;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -153,7 +153,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Inject
     private TemplatesDAO templatesDAO;
     @Inject
-    private NotificationsService notificationsService;
+    private Notifications notifications;
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -173,7 +173,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     }
 
     private void internalShareNotification(Message<JsonObject> message) {
-        notificationsService.sendNotification(message.body().getString(PARAM_USERID), DBCollections.USER, new JsonObject()
+        notifications.sendNotification(message.body().getString(PARAM_USERID), DBCollections.USER, new JsonObject()
                 .put(CONTENT_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".content", message.body().getString(FIELD_LOCALE)))
                 .put(TITLE_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".title", message.body().getString(FIELD_LOCALE)))
                 .put(SENDER_ID_FIELD, message.body().getString(FIELD_UID)), new JsonArray(), ar->{});
@@ -262,7 +262,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     private void sendNotification(JsonObject invitation, JsonObject user, String userEmail, String locale) throws QaobeeException {
         final JsonObject tplReq = new JsonObject();
         if (StringUtils.isNotBlank(invitation.getString(PARAM_USERID, ""))) {
-            notificationsService.sendNotification(invitation.getString(PARAM_USERID), DBCollections.USER, new JsonObject()
+            notifications.sendNotification(invitation.getString(PARAM_USERID), DBCollections.USER, new JsonObject()
                     .put(CONTENT_FIELD, Messages.getString("notification.sandbox.add.content", locale, user.getString(FIRSTNAME_FIELD) + " " + user.getString("name")))
                     .put(TITLE_FIELD, Messages.getString("notification.sandbox.add.title", locale))
                     .put(SENDER_ID_FIELD, user.getString("_id")), new JsonArray(), ar->{});
@@ -365,7 +365,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
                                 .put(SENDER_ID_FIELD, request.getString(PARAM_USERID)
                                 );
                     }
-                    notificationsService.sendNotification(invitation.getString(SENDER_ID_FIELD), DBCollections.USER, notification, new JsonArray(), ar->{});
+                    notifications.sendNotification(invitation.getString(SENDER_ID_FIELD), DBCollections.USER, notification, new JsonArray(), ar->{});
                     message.reply(invitation.encode());
                 }).fail(e -> utils.sendError(message, e));
     }

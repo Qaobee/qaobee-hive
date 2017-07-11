@@ -20,7 +20,7 @@
 package com.qaobee.hive.api.v1.commons.communication;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.Notifications;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -58,7 +58,7 @@ public class NotificationsRoute extends AbstractRoute {
     private static final String SENDER_ID = "senderId";
 
     @Inject
-    private NotificationsService notificationsService;
+    private Notifications notifications;
 
     @Override
     public Router init() {
@@ -134,7 +134,7 @@ public class NotificationsRoute extends AbstractRoute {
     private void notifyPeople(JsonObject obj, RoutingContext context) {
         try {
             utils.testMandatoryParams(obj, "id", TARGET, NOTIFICATION);
-            notificationsService.sendNotification(obj.getString("id"),
+            notifications.sendNotification(obj.getString("id"),
                     obj.getString(TARGET), obj.getJsonObject(NOTIFICATION),
                     obj.getJsonObject(NOTIFICATION).getJsonArray("exclude"), ar -> {
                         if (ar.succeeded()) {
@@ -162,7 +162,7 @@ public class NotificationsRoute extends AbstractRoute {
     private void markAsRead(RoutingContext context) {
         try {
             utils.testMandatoryParams(context.request().params(), PARAM_NOTIF_ID);
-            notificationsService.markAsRead(context.request().getParam(PARAM_NOTIF_ID), ar -> {
+            notifications.markAsRead(context.request().getParam(PARAM_NOTIF_ID), ar -> {
                 if(ar.succeeded()) {
                     handleStatus(ar.succeeded(), context);
                 } else {
@@ -186,7 +186,7 @@ public class NotificationsRoute extends AbstractRoute {
     private void delete(RoutingContext context) {
         try {
             utils.testMandatoryParams(context.request().params(), PARAM_NOTIF_ID);
-            notificationsService.delete(context.request().getParam(PARAM_NOTIF_ID),ar -> {
+            notifications.delete(context.request().getParam(PARAM_NOTIF_ID), ar -> {
                 if (ar.succeeded()) {
                     handleStatus(ar.succeeded(), context);
                 } else {
@@ -218,6 +218,6 @@ public class NotificationsRoute extends AbstractRoute {
         if (context.request().params().contains(PARAM_LIMIT)) {
             limit = Integer.parseInt(context.request().getParam(PARAM_LIMIT));
         }
-        notificationsService.getList(context.user().principal().getString("_id"), start, limit, handleResponseArray(context));
+        notifications.getList(context.user().principal().getString("_id"), start, limit, handleResponseArray(context));
     }
 }

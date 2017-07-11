@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.ActivityServiceImpl;
+import com.qaobee.hive.services.impl.CountryImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -30,56 +30,59 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Activity dao.
+ * The interface Country service.
  */
 @ProxyGen
 @VertxGen
-public interface ActivityService {
+public interface Country {
     /**
      * The constant ADDRESS.
      */
-    String ADDRESS = "vertx.ActivityService.service";
+    String ADDRESS = "vertx.Country.service";
 
     /**
-     * Create activity service.
+     * Create country service.
      *
      * @param vertx the vertx
-     * @return the activity service
+     * @return the country service
      */
-    static ActivityService create(Vertx vertx) {
-        return new ActivityServiceImpl(vertx);
+    static Country create(Vertx vertx) {
+        return new CountryImpl(vertx);
     }
 
     /**
-     * Create proxy activity service.
+     * Create proxy country service.
      *
      * @param vertx   the vertx
      * @param address the address
-     * @return the activity service
+     * @return the country service
      */
-    static ActivityService createProxy(Vertx vertx, String address) {
-        return ProxyHelper.createProxy(ActivityService.class, vertx, address);
+    static Country createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(Country.class, vertx, address);
     }
 
     /**
-     * Gets enabled.
+     * Gets country from alpha 2.
      *
+     * @param alpha2        the alpha 2
      * @param resultHandler the result handler
      */
-    void getEnabled(Handler<AsyncResult<JsonArray>> resultHandler);
+    void getCountryFromAlpha2(String alpha2, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Gets activity list.
+     * Gets country list.
      *
+     * @param locale        the locale
+     * @param label         the label
      * @param resultHandler the result handler
      */
-    void getActivityList(Handler<AsyncResult<JsonArray>> resultHandler);
+    void getCountryList(String locale, String label, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
-     * Gets activity.
+     * Gets country.
      *
      * @param id            the id
      * @param resultHandler the result handler
      */
-    void getActivity(String id, Handler<AsyncResult<JsonObject>> resultHandler);
+    void getCountry(String id, Handler<AsyncResult<JsonObject>> resultHandler);
 }

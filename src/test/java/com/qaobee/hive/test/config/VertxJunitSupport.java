@@ -23,8 +23,8 @@ import com.google.inject.Injector;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
-import com.qaobee.hive.services.ActivityService;
-import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.Activity;
+import com.qaobee.hive.services.Country;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
@@ -134,9 +134,9 @@ public class VertxJunitSupport implements JSDataMongoTest {
     @Named("mongo.db")
     private JsonObject mongoConf;
     @Inject
-    private ActivityService activityService;
+    private Activity activity;
     @Inject
-    private CountryService countryService;
+    private Country country;
 
     /**
      * Start mongo server.
@@ -498,7 +498,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     protected Promise<JsonObject, Throwable, Integer> getActivity(String id, User user) {
         Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        activityService.getActivity(id, res -> {
+        activity.getActivity(id, res -> {
             if (res.succeeded()) {
                 deferred.resolve(res.result());
             } else {
@@ -516,7 +516,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     protected Promise<JsonObject, Throwable, Integer> getCountry(String id) {
         Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        countryService.getCountry(id, res -> {
+        country.getCountry(id, res -> {
             if (res.succeeded()) {
                 deferred.resolve(res.result());
             } else {

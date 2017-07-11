@@ -20,7 +20,7 @@
 package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgRoute;
-import com.qaobee.hive.services.ActivityCfgService;
+import com.qaobee.hive.services.ActivityCfg;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -38,8 +38,8 @@ import io.vertx.core.json.JsonObject;
 import javax.inject.Inject;
 
 
-@ProxyService(address = ActivityCfgService.ADDRESS, iface = ActivityCfgService.class)
-public class ActivityCfgServiceImpl implements ActivityCfgService {
+@ProxyService(address = ActivityCfg.ADDRESS, iface = ActivityCfg.class)
+public class ActivityCfgImpl implements ActivityCfg {
 
     @Inject
     private MongoClientCustom mongoClient;
@@ -48,7 +48,7 @@ public class ActivityCfgServiceImpl implements ActivityCfgService {
 
     private Vertx vertx;
 
-    public ActivityCfgServiceImpl(Vertx vertx) {
+    public ActivityCfgImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
     }

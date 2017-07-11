@@ -19,7 +19,7 @@
 package com.qaobee.hive.api.v1.commons.referencial;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.ChampionshipService;
+import com.qaobee.hive.services.Championship;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -86,7 +86,7 @@ public class ChampionshipRoute extends AbstractRoute {
      */
     public static final String PARAM_LIST_PARTICIPANTS = "participants";
     @Inject
-    private ChampionshipService championshipService;
+    private Championship championship;
 
     @Override
     public Router init() {
@@ -131,7 +131,7 @@ public class ChampionshipRoute extends AbstractRoute {
                 try {
                     utils.testMandatoryParams(context, "_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME,
                             PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
-                    championshipService.updateChampionship(context.getBodyAsJson(), ar -> {
+                    championship.updateChampionship(context.getBodyAsJson(), ar -> {
                         if (ar.succeeded()) {
                             handleResponse(context, new JsonObject().put("_id", ar.result()));
                         } else {
@@ -173,7 +173,7 @@ public class ChampionshipRoute extends AbstractRoute {
                 try {
                     utils.testMandatoryParams(context, PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL,
                             PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
-                    championshipService.addChampionship(context.getBodyAsJson(), handleResponse(context));
+                    championship.addChampionship(context.getBodyAsJson(), handleResponse(context));
                 } catch (QaobeeException e) {
                     handleError(context, e);
                 }
@@ -195,7 +195,7 @@ public class ChampionshipRoute extends AbstractRoute {
     private void getChampionship(RoutingContext context) {
         try {
             utils.testMandatoryParams(context.request().params(), PARAM_ID);
-            championshipService.getChampionship(context.request().getParam(PARAM_ID), handleResponse(context));
+            championship.getChampionship(context.request().getParam(PARAM_ID), handleResponse(context));
         } catch (QaobeeException e) {
             handleError(context, e);
         }
@@ -216,7 +216,7 @@ public class ChampionshipRoute extends AbstractRoute {
     private void getListChampionships(RoutingContext context) {
         try {
             utils.testMandatoryParams(context, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE);
-            championshipService.getListChampionships(context.getBodyAsJson(), handleResponseArray(context));
+            championship.getListChampionships(context.getBodyAsJson(), handleResponseArray(context));
         } catch (QaobeeException e) {
             handleError(context, e);
         }

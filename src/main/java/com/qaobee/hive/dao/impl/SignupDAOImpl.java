@@ -21,8 +21,6 @@ package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.api.v1.commons.utils.CRMVerticle;
 import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
-import com.qaobee.hive.business.model.commons.referencial.Structure;
-import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
@@ -36,8 +34,9 @@ import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.dao.*;
-import com.qaobee.hive.services.ActivityService;
-import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.Activity;
+import com.qaobee.hive.services.Country;
+import com.qaobee.hive.services.Structure;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -73,11 +72,11 @@ public class SignupDAOImpl implements SignupDAO {
     private static final String PARAM_PLAN = "plan";
     private final static Random RANDOM = new Random();
 
-    private final ActivityService activityService;
+    private final Activity activity;
     private final MongoDB mongo;
-    private final CountryService countryService;
+    private final Country country;
     private final UserDAO userDAO;
-    private final StructureDAO structureDAO;
+    private final Structure structure;
     private final ReCaptcha reCaptcha;
     private final JsonObject runtime;
     private final Vertx vertx;
@@ -88,11 +87,11 @@ public class SignupDAOImpl implements SignupDAO {
     /**
      * Instantiates a new Signup dao.
      *
-     * @param activityService  the activity dao
+     * @param activity  the activity dao
      * @param mongo        the mongo
-     * @param countryService   the country dao
+     * @param country   the country dao
      * @param userDAO      the user dao
-     * @param structureDAO the structure dao
+     * @param structure the structure dao
      * @param reCaptcha    the re captcha
      * @param runtime      the runtime
      * @param mailUtils    the mail utils
@@ -100,14 +99,14 @@ public class SignupDAOImpl implements SignupDAO {
      * @param vertx        the vertx
      */
     @Inject
-    public SignupDAOImpl(ActivityService activityService, MongoDB mongo, CountryService countryService, UserDAO userDAO, // NOSONAR
-                         StructureDAO structureDAO, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime,
+    public SignupDAOImpl(Activity activity, MongoDB mongo, Country country, UserDAO userDAO, // NOSONAR
+                         Structure structure, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime,
                          MailUtils mailUtils, TemplatesDAO templatesDAO, Vertx vertx) {
-        this.activityService = activityService;
+        this.activity = activity;
         this.mongo = mongo;
-        this.countryService = countryService;
+        this.country = country;
         this.userDAO = userDAO;
-        this.structureDAO = structureDAO;
+        this.structure = structure;
         this.reCaptcha = reCaptcha;
         this.mailUtils = mailUtils;
         this.templatesDAO = templatesDAO;
@@ -123,7 +122,7 @@ public class SignupDAOImpl implements SignupDAO {
         User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
         userUpdate.set_id(jsonUser.getString("_id"));
         updateStructure(struct, activityId).done(structure -> {
-            Structure structureObj = Json.decodeValue(structure.encode(), Structure.class);
+            com.qaobee.hive.business.model.commons.referencial.Structure structureObj = Json.decodeValue(structure.encode(), com.qaobee.hive.business.model.commons.referencial.Structure.class);
             CategoryAge categoryAgeObj = Json.decodeValue(categoryAge.encode(), CategoryAge.class);
             getUser(userUpdate.get_id(), locale).done(user -> {
                 try {
@@ -136,9 +135,9 @@ public class SignupDAOImpl implements SignupDAO {
                     List<Promise> promises = new ArrayList<>();
                     user.getAccount().getListPlan().stream().filter(plan -> plan.getActivity() != null).forEachOrdered(plan -> {
                         Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
-                        activityService.getActivity(plan.getActivity().get_id(),a -> {
+                        activity.getActivity(plan.getActivity().get_id(), a -> {
                             if(a.succeeded()) {
-                                Activity activity = Json.decodeValue(a.result().encode(), Activity.class);
+                                com.qaobee.hive.business.model.commons.settings.Activity activity = Json.decodeValue(a.result().encode(), com.qaobee.hive.business.model.commons.settings.Activity.class);
                                 plan.setActivity(activity);
                                 d.resolve(true);
                             }
@@ -250,16 +249,20 @@ public class SignupDAOImpl implements SignupDAO {
     private Promise<JsonObject, QaobeeException, Integer> updateStructure(JsonObject structure, String activityId) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         if (structure.containsKey("_id")) {
-            structureDAO.getStructure(structure.getString("_id")).done(s -> {
-                structure.mergeIn(s);
-                deferred.resolve(structure);
-            }).fail(deferred::reject);
+            this.structure.getStructure(structure.getString("_id"), s -> {
+                if(s.succeeded()) {
+                    structure.mergeIn(s.result());
+                    deferred.resolve(structure);
+                } else {
+                    deferred.reject(new QaobeeException(((QaobeeSvcException) s.cause()).getCode(), s.cause()));
+                }
+            });
         } else {
-            countryService.getCountryFromAlpha2(structure.getJsonObject(COUNTRY_FIELD).getString("_id").split("-")[2],country -> {
+            country.getCountryFromAlpha2(structure.getJsonObject(COUNTRY_FIELD).getString("_id").split("-")[2], country -> {
                 if(country.succeeded()) {
                     structure.put(COUNTRY_FIELD, country.result());
                     structure.getJsonObject("address").put(COUNTRY_FIELD, country.result().getString("label"));
-                    activityService.getActivity(activityId, activity -> {
+                    activity.getActivity(activityId, activity -> {
                         if (activity.succeeded()) {
                             structure.put("activity", activity.result());
                             deferred.resolve(structure);
@@ -358,7 +361,7 @@ public class SignupDAOImpl implements SignupDAO {
                     Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
                     if (plan.getActivity() != null) {
                         mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY).done(activity -> {
-                            plan.setActivity(Json.decodeValue(activity.encode(), Activity.class));
+                            plan.setActivity(Json.decodeValue(activity.encode(), com.qaobee.hive.business.model.commons.settings.Activity.class));
                             d.resolve(true);
                         }).fail(deferred::reject);
                     } else {
@@ -439,7 +442,7 @@ public class SignupDAOImpl implements SignupDAO {
         }
     }
 
-    private Promise<Boolean, QaobeeException, Integer> addPlayer(JsonObject player, Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, List<String> listPersonsId) {
+    private Promise<Boolean, QaobeeException, Integer> addPlayer(JsonObject player, com.qaobee.hive.business.model.commons.referencial.Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, List<String> listPersonsId) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
         List<Promise> promises = new ArrayList<>();
         for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {

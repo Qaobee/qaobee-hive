@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.Notifications;
 import com.qaobee.hive.dao.PersonDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -45,7 +45,7 @@ public class PersonDAOImpl implements PersonDAO {
     @Inject
     private MongoDB mongo;
     @Inject
-    private NotificationsService notificationsService;
+    private Notifications notifications;
 
     @Override
     public Promise<JsonArray, QaobeeException, Integer> getPersonListBySandbox(String sandboxId) {
@@ -93,7 +93,7 @@ public class PersonDAOImpl implements PersonDAO {
                                         "/#/private/viewPlayer/" + person.getString("_id")))
                                 .put("title", Messages.getString("notification.person.update.title", locale))
                                 .put("senderId", userId);
-                        notificationsService.sendNotification(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
+                        notifications.sendNotification(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
                     }
                 })
                 .fail(deferred::reject);
@@ -119,7 +119,7 @@ public class PersonDAOImpl implements PersonDAO {
                                         "/#/private/viewPlayer/" + person.getString("_id")))
                                 .put("title", Messages.getString("notification.person.add.title", locale))
                                 .put("senderId", userId);
-                        notificationsService.sendNotification(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar-> {});
+                        notifications.sendNotification(person.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar-> {});
                     }
                 })
                 .fail(deferred::reject);

@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.services.ActivityService;
+import com.qaobee.hive.services.Activity;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
@@ -38,8 +38,8 @@ import java.util.Map;
 /**
  * The type Activity service.
  */
-@ProxyService(address = ActivityService.ADDRESS, iface = ActivityService.class)
-public class ActivityServiceImpl implements ActivityService {
+@ProxyService(address = Activity.ADDRESS, iface = Activity.class)
+public class ActivityImpl implements Activity {
 
     @Inject
     private MongoDB mongo;
@@ -51,7 +51,7 @@ public class ActivityServiceImpl implements ActivityService {
      *
      * @param vertx the vertx
      */
-    public ActivityServiceImpl(Vertx vertx) {
+    public ActivityImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
     }

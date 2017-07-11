@@ -19,7 +19,7 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.ActivityService;
+import com.qaobee.hive.services.Activity;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
@@ -40,7 +40,7 @@ public class ActivityRoute extends AbstractRoute {
      */
     public static final String PARAM_ID = "_id";
     @Inject
-    private ActivityService activityService;
+    private Activity activity;
 
 
     /**
@@ -67,7 +67,7 @@ public class ActivityRoute extends AbstractRoute {
      * @apiSuccess {Array}   activities  List of enabled activities
      */
     private void getEnabled(RoutingContext context) {
-        activityService.getEnabled(handleResponseArray(context));
+        activity.getEnabled(handleResponseArray(context));
     }
 
     /**
@@ -80,7 +80,7 @@ public class ActivityRoute extends AbstractRoute {
      * @apiSuccess {Array}   activities List all activity
      */
     private void getList(RoutingContext context) {
-        activityService.getActivityList(handleResponseArray(context));
+        activity.getActivityList(handleResponseArray(context));
     }
 
     /**
@@ -96,7 +96,7 @@ public class ActivityRoute extends AbstractRoute {
     private void get(RoutingContext context) {
         try {
             utils.testMandatoryParams(context.request().params(), PARAM_ID);
-            activityService.getActivity(context.request().getParam(PARAM_ID), handleResponse(context));
+            activity.getActivity(context.request().getParam(PARAM_ID), handleResponse(context));
         } catch (QaobeeException e) {
             handleError(context, e);
         }

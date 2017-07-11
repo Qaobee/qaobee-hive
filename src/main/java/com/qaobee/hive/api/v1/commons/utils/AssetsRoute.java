@@ -1,6 +1,6 @@
 package com.qaobee.hive.api.v1.commons.utils;
 
-import com.qaobee.hive.services.AssetsService;
+import com.qaobee.hive.services.Assets;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -28,7 +28,7 @@ public class AssetsRoute extends AbstractRoute  {
 
     private static final String COLLECTION = "collection";
     @Inject
-    private AssetsService assetsService;
+    private Assets assets;
 
     @Override
     public Router init() {
@@ -85,7 +85,7 @@ public class AssetsRoute extends AbstractRoute  {
     private void getAssetHandler(RoutingContext context) {
         try {
             utils.testMandatoryParams(context.request().params(), COLLECTION, "id");
-            assetsService.getAsset(context.request().getParam(COLLECTION), context.request().getParam("id"), event -> {
+            assets.getAsset(context.request().getParam(COLLECTION), context.request().getParam("id"), event -> {
                 if (event.succeeded()) {
                     context.response().putHeader(HTTP.CONTENT_LEN, event.result().getString(HTTP.CONTENT_LEN))
                             .putHeader(HTTP.CONTENT_TYPE, "application/image")
@@ -106,7 +106,7 @@ public class AssetsRoute extends AbstractRoute  {
             vertx.fileSystem().deleteBlocking(destFileName);
         }
         vertx.fileSystem().copy(upload.uploadedFileName(), destFileName, res ->
-                assetsService.addAsset(
+                assets.addAsset(
                         context.request().getParam("uid"),
                         destFileName,
                         context.request().getParam(COLLECTION),
