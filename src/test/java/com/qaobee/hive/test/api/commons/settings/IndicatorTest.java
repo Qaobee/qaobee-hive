@@ -42,6 +42,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets indicator test.
+     *
+     * @param context the context
      */
     @Test
     public void getIndicatorTest(TestContext context) {
@@ -71,6 +73,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets indicator with wrong http method test.
+     *
+     * @param context the context
      */
     @Test
     public void getIndicatorWithWrongHttpMethodTest(TestContext context) {
@@ -87,6 +91,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets indicator with wrong parameter test.
+     *
+     * @param context the context
      */
     @Test
     public void getIndicatorWithWrongParameterTest(TestContext context) {
@@ -105,6 +111,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets indicator with missing parameter test.
+     *
+     * @param context the context
      */
     @Test
     public void getIndicatorWithMissingParameterTest(TestContext context) {
@@ -123,6 +131,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets list indicator test.
+     *
+     * @param context the context
      */
     @Test
     public void getListIndicatorTest(TestContext context) {
@@ -160,6 +170,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets list indicator with wrong http method test.
+     *
+     * @param context the context
      */
     @Test
     public void getListIndicatorWithWrongHttpMethodTest(TestContext context) {
@@ -176,6 +188,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets list indicator with missing parameter test.
+     *
+     * @param context the context
      */
     @Test
     public void getListIndicatorWithMissingParameterTest(TestContext context) {
@@ -217,6 +231,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets indicator by code test.
+     *
+     * @param context the context
      */
     @Test
     public void getIndicatorByCodeTest(TestContext context) {
@@ -255,6 +271,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets indicator by code with wrong http method test.
+     *
+     * @param context the context
      */
     @Test
     public void getIndicatorByCodeWithWrongHttpMethodTest(TestContext context) {
@@ -271,6 +289,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets indicator by code with wrong parameter test.
+     *
+     * @param context the context
      */
     @Test
     public void getIndicatorByCodeWithWrongParameterTest(TestContext context) {
@@ -314,6 +334,8 @@ public class IndicatorTest extends VertxJunitSupport {
 
     /**
      * Gets indicator by code with missing parameter test.
+     *
+     * @param context the context
      */
     @Test
     public void getIndicatorByCodeWithMissingParameterTest(TestContext context) {

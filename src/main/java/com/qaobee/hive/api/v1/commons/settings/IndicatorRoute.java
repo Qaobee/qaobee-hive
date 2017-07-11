@@ -29,6 +29,9 @@ import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 
+/**
+ * The type Indicator route.
+ */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/indicator")
 public class IndicatorRoute extends AbstractRoute {
  /*   public static final String GET = Module.VERSION + ".commons.settings.indicator.get";
