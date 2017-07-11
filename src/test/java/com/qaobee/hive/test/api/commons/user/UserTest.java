@@ -928,7 +928,7 @@ public class UserTest extends VertxJunitSupport {
         generateLoggedUser().then(user -> {
             String avatarId = given()
                     .header(TOKEN, user.getAccount().getToken())
-                    .multiPart(new File("src/testBodyParams/resources/avatar.jpg")).
+                    .multiPart(new File("src/test/resources/avatar.jpg")).
                             pathParam("uid", user.get_id()).
                             when().
                             post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
@@ -944,7 +944,7 @@ public class UserTest extends VertxJunitSupport {
                     .extract().asByteArray();
 
             Assert.assertEquals("Files must have same size",
-                    new File("src/testBodyParams/resources/avatar.jpg").length(), byteArray.length);
+                    new File("src/test/resources/avatar.jpg").length(), byteArray.length);
             async.complete();
         }).fail(e -> Assert.fail(e.getMessage()));
         async.await(TIMEOUT);
@@ -958,7 +958,7 @@ public class UserTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(user -> {
             given().header(TOKEN, user.getAccount().getToken())
-                    .multiPart(new File("src/testBodyParams/resources/avatar.jpg")).
+                    .multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", "blabla").
                     when().
                     post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
@@ -975,7 +975,7 @@ public class UserTest extends VertxJunitSupport {
     public void uploadAvatarWithNotLoggedUser(TestContext context) {
         Async async = context.async();
         generateUser().then(user -> {
-            given().multiPart(new File("src/testBodyParams/resources/avatar.jpg"))
+            given().multiPart(new File("src/test/resources/avatar.jpg"))
                     .pathParam("uid", user.get_id())
                     .when()
                     .post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
@@ -992,7 +992,7 @@ public class UserTest extends VertxJunitSupport {
     public void uploadAvatarWithWrongToken(TestContext context) {
         Async async = context.async();
         generateLoggedUser().then(user -> {
-            given().multiPart(new File("src/testBodyParams/resources/avatar.jpg")).
+            given().multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", user.get_id())
                     .header(TOKEN, "11111")
                     .when()

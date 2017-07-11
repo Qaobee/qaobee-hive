@@ -61,7 +61,7 @@ public class ShippingTest extends VertxJunitSupport {
     public void initMockServer() {
         Stripe.overrideApiBase("http://localhost:1080");
         try {
-            mockData = new JsonObject(FileUtils.readFileToString(new File("src/testBodyParams/resources/mocks.json"), "UTF-8"));
+            mockData = new JsonObject(FileUtils.readFileToString(new File("src/test/resources/mocks.json"), "UTF-8"));
         } catch (IOException e) {
             Assert.fail(e.getMessage());
             e.printStackTrace();

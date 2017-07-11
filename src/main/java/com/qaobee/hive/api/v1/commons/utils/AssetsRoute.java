@@ -38,7 +38,7 @@ public class AssetsRoute extends AbstractRoute {
 
         router.post("/:collection/:field/:uid").handler(authHandler);
         router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequesParams(c, COLLECTION, "field", "uid"));
-        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequesHeaders(c, COLLECTION, "field", "uid"));
+        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequesHeaders(c, "Accept-Language"));
         router.post("/:collection/:field/:uid").handler(this::assetUploadHandler);
         return router;
     }
