@@ -35,18 +35,11 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 
 /**
- * The type Notifications verticle.
+ * The type Notifications route.
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/communication/notifications")
 public class NotificationsRoute extends AbstractRoute {
     private static final Logger LOG = LoggerFactory.getLogger(NotificationsRoute.class);
-
-    /*public static final String LIST = Module.VERSION + ".commons.communication.notifications";
-    public static final String DEL = Module.VERSION + ".commons.communication.notifications.del";
-    public static final String READ = Module.VERSION + ".commons.communication.notifications.read";
-    public static final String ADD_TO_USER = Module.VERSION + ".commons.communication.notifications.user.add";
-    public static final String ADD_TO_SANDBOX = Module.VERSION + ".commons.communication.notifications.sandbox.add";*/
-
     /**
      * The constant PARAM_LIMIT.
      */

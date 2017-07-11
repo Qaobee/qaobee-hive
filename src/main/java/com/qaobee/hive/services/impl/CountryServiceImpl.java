@@ -68,7 +68,7 @@ public class CountryServiceImpl implements CountryService {
                         resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "no data found")));
                     }
                 })
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
     }
 
     @Override
@@ -81,7 +81,7 @@ public class CountryServiceImpl implements CountryService {
         }
         mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.COUNTRY)
                 .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
     }
 
     @Override
@@ -92,7 +92,7 @@ public class CountryServiceImpl implements CountryService {
             } else {
                 resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "no data found")));
             }
-        }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+        }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
     }
 
     private Promise<JsonObject, QaobeeException, Integer> getCountries() {

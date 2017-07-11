@@ -19,42 +19,24 @@
 package com.qaobee.hive.api.v1.commons.referencial;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.dao.ChampionshipDAO;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import io.vertx.core.Future;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
+import com.qaobee.hive.services.ChampionshipService;
+import com.qaobee.hive.technical.annotations.VertxRoute;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
+import com.qaobee.hive.technical.tools.Messages;
+import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 
 /**
- * The type Championship verticle.
- *
- * @author jro
+ * The type Championship route.
  */
-@DeployableVerticle
-public class ChampionshipVerticle extends AbstractGuiceVerticle {
-    /**
-     * The constant GET_LIST.
-     */
-    public static final String GET_LIST = Module.VERSION + ".commons.referencial.championship.list";
-    /**
-     * The constant ADD_CHAMPIONSHIP.
-     */
-    public static final String ADD_CHAMPIONSHIP = Module.VERSION + ".commons.referencial.championship.add";
-    /**
-     * Handler to get a particular championship from its ID.
-     */
-    public static final String GET = Module.VERSION + ".commons.referencial.championship.get";
-    /**
-     * Handler to update a event.
-     */
-    public static final String UPDATE = Module.VERSION + ".commons.referencial.championship.update";
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/referencial/championship")
+public class ChampionshipRoute extends AbstractRoute {
     /**
      * Championship ID
      */
@@ -104,16 +86,23 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_LIST_PARTICIPANTS = "participants";
     @Inject
-    private ChampionshipDAO championshipDAO;
+    private ChampionshipService championshipService;
 
     @Override
-    public void start(Future<Void> startFuture) {
-        inject(this)
-                .add(GET_LIST, this::getListChampionships)
-                .add(GET, this::getChampionship)
-                .add(ADD_CHAMPIONSHIP, this::addChampionship)
-                .add(UPDATE, this::updateChampionship)
-                .register(startFuture);
+    public Router init() {
+        Router router = Router.router(vertx);
+        router.post("/list").handler(authHandler);
+        router.post("/list").handler(this::getListChampionships);
+
+        router.get("/get").handler(authHandler);
+        router.get("/get").handler(this::getChampionship);
+
+        router.post("/add").handler(authHandler);
+        router.post("/add").handler(this::addChampionship);
+
+        router.post("/update").handler(authHandler);
+        router.post("/update").handler(this::updateChampionship);
+        return router;
     }
 
     /**
@@ -135,14 +124,27 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiParam {Array(Participant)} participants : list of participants (at least one)
      * @apiParam {Array(Journey)} journeys (optional) : list of journeys
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
-     * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = UPDATE, method = Constants.POST, logged = true, admin = true,
-            mandatoryParams = {"_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
-    private void updateChampionship(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyString(message, championshipDAO.updateChampionship(new JsonObject(req.getBody())));
+    private void updateChampionship(RoutingContext context) {
+        context.user().isAuthorised("admin_qaobee", res -> {
+            if (res.succeeded() && res.result()) {
+                try {
+                    utils.testMandatoryParams(context, "_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME,
+                            PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
+                    championshipService.updateChampionship(context.getBodyAsJson(), ar -> {
+                        if (ar.succeeded()) {
+                            handleResponse(context, new JsonObject().put("_id", ar.result()));
+                        } else {
+                            handleError(context, (QaobeeSvcException) ar.cause());
+                        }
+                    });
+                } catch (QaobeeException e) {
+                    handleError(context, e);
+                }
+            } else {
+                handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", context.request().getHeader("Accept-Language"))));
+            }
+        });
     }
 
 
@@ -164,14 +166,21 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiParam {Array(Participant)} participants : list of participants (at least one)
      * @apiParam {Array(Journey)} journeys (optional) : list of journeys
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
-     * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = ADD_CHAMPIONSHIP, method = Constants.POST, logged = true, admin = true,
-            mandatoryParams = {PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE,
-                    PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS}, scope = Rule.Param.BODY)
-    private void addChampionship(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, championshipDAO.addChampionship(new JsonObject(req.getBody())));
+    private void addChampionship(RoutingContext context) {
+        context.user().isAuthorised("admin_qaobee", ar -> {
+            if (ar.succeeded() && ar.result()) {
+                try {
+                    utils.testMandatoryParams(context, PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL,
+                            PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
+                    championshipService.addChampionship(context.getBodyAsJson(), handleResponse(context));
+                } catch (QaobeeException e) {
+                    handleError(context, e);
+                }
+            } else {
+                handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", context.request().getHeader("Accept-Language"))));
+            }
+        });
     }
 
     /**
@@ -182,12 +191,14 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiPermission TBD
      * @apiParam {String} id
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
-     * @apiError DATA_ERROR Error on DB request
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
-    private void getChampionship(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, championshipDAO.getChampionship(req.getParams().get(PARAM_ID).get(0)));
+    private void getChampionship(RoutingContext context) {
+        try {
+            utils.testMandatoryParams(context.request().params(), PARAM_ID);
+            championshipService.getChampionship(context.request().getParam(PARAM_ID), handleResponse(context));
+        } catch (QaobeeException e) {
+            handleError(context, e);
+        }
     }
 
     /**
@@ -202,10 +213,12 @@ public class ChampionshipVerticle extends AbstractGuiceVerticle {
      * @apiParam {Participant} participant : participant (optionnal)
      * @apiSuccess {Array} list of championships
      */
-    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE}, scope = Rule.Param.BODY)
-    private void getListChampionships(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, championshipDAO.getListChampionships(new JsonObject(req.getBody())));
+    private void getListChampionships(RoutingContext context) {
+        try {
+            utils.testMandatoryParams(context, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE);
+            championshipService.getListChampionships(context.getBodyAsJson(), handleResponseArray(context));
+        } catch (QaobeeException e) {
+            handleError(context, e);
+        }
     }
 }

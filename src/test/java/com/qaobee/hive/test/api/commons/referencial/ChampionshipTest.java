@@ -17,8 +17,7 @@
  */
 package com.qaobee.hive.test.api.commons.referencial;
 
-import com.qaobee.hive.api.Main;
-import com.qaobee.hive.api.v1.commons.referencial.ChampionshipVerticle;
+import com.qaobee.hive.api.v1.commons.referencial.ChampionshipRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
@@ -32,6 +31,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.qaobee.hive.api.v1.commons.referencial.ChampionshipRoute.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -40,13 +40,13 @@ import static org.hamcrest.Matchers.*;
  *
  * @author jerome
  */
-@Ignore
+@Ignore // missing data_championship_Hand.js
 public class ChampionshipTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/commons/referencial/championship");
 
     /**
      * Gets list championships.
      */
-    @Ignore
     @Test
     public void getListChampionships(TestContext context) {// NOSONAR
         Async async = context.async();
@@ -55,28 +55,28 @@ public class ChampionshipTest extends VertxJunitSupport {
         // User connected
         generateLoggedUser().then(u -> {
             final JsonObject params = new JsonObject();
-            params.put(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND")
-                    .put(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen")
-                    .put(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
+            params.put(PARAM_ACTIVITY, "ACT-HAND")
+                    .put(PARAM_CATEGORY_AGE, "sen")
+                    .put(PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
 
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                    .when().post(BASE_URL  + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
-                    .body("[0].activityId", is(params.getString(ChampionshipVerticle.PARAM_ACTIVITY)));
+                    .body("[0].activityId", is(params.getString(PARAM_ACTIVITY)));
 
-            params.put(ChampionshipVerticle.PARAM_PARTICIPANT, new JsonObject()
+            params.put(ChampionshipRoute.PARAM_PARTICIPANT, new JsonObject()
                     .put("name", "CHAMBERY SAVOIE HB")
                     .put("id", "ID-TEAM-CHAMBERY")
                     .put("structureId", "CHAMBERYSAVOIEHB")
                     .put("type", "team"));
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                    .when().post(BASE_URL  + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
-                    .body("[0].activityId", is(params.getString(ChampionshipVerticle.PARAM_ACTIVITY)));
+                    .body("[0].activityId", is(params.getString(PARAM_ACTIVITY)));
 
             async.complete();
         }).fail(e -> Assert.fail(e.getMessage()));
@@ -88,7 +88,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void getListChampionshipsWithNonLoggedUser(TestContext context) {
-        given().when().post(getURL(ChampionshipVerticle.GET_LIST))
+        given().when().post(BASE_URL  + "/list")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -98,7 +98,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void getListChampionshipsWithWrongHttpMethod(TestContext context) {
-        given().when().get(getURL(ChampionshipVerticle.GET_LIST))
+        given().when().get(BASE_URL  + "/list")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -114,15 +114,15 @@ public class ChampionshipTest extends VertxJunitSupport {
         // User connected
         generateLoggedUser().then(u -> {
             final JsonObject params = new JsonObject();
-            params.put(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
-            params.put(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(ChampionshipVerticle.GET_LIST).mandatoryParams());
+            params.put(PARAM_CATEGORY_AGE, "sen");
+            params.put(PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
+            List<String> mandatoryParams = Arrays.asList(PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
                 given().header(TOKEN, u.getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                        .when().post(BASE_URL  + "/list")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -142,30 +142,30 @@ public class ChampionshipTest extends VertxJunitSupport {
         // User connected
         generateLoggedUser().then(u -> {
             final JsonObject params = new JsonObject()
-                    .put(ChampionshipVerticle.PARAM_ACTIVITY, "blabla")
-                    .put(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen")
-                    .put(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
+                    .put(PARAM_ACTIVITY, "blabla")
+                    .put(PARAM_CATEGORY_AGE, "sen")
+                    .put(PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
 
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                    .when().post(BASE_URL  + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
 
 
-            params.put(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
-            params.put(ChampionshipVerticle.PARAM_STRUCTURE, "12345");
+            params.put(PARAM_ACTIVITY, "ACT-HAND");
+            params.put(PARAM_STRUCTURE, "12345");
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                    .when().post(BASE_URL  + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
 
-            params.put(ChampionshipVerticle.PARAM_CATEGORY_AGE, "blabla");
-            params.put(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e");
+            params.put(PARAM_CATEGORY_AGE, "blabla");
+            params.put(PARAM_STRUCTURE, "541168295971d35c1f2d1b5e");
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                    .when().post(BASE_URL  + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
             async.complete();
@@ -177,7 +177,6 @@ public class ChampionshipTest extends VertxJunitSupport {
     /**
      * Gets list championships with infra.
      */
-    @Ignore
     @Test
     public void getListChampionshipsWithInfra(TestContext context) {// NOSONAR
         Async async = context.async();
@@ -186,17 +185,17 @@ public class ChampionshipTest extends VertxJunitSupport {
         // User connected
         generateLoggedUser().then(u -> {
             final JsonObject params = new JsonObject();
-            params.put(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
-            params.put(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
-            params.put(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
+            params.put(PARAM_ACTIVITY, "ACT-HAND");
+            params.put(PARAM_CATEGORY_AGE, "sen");
+            params.put(PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
             JsonObject paramParticipant = new JsonObject();
             paramParticipant.put("id", "ID-PHARE-CHAMBERY");
             paramParticipant.put("type", "infrastructure");
-            params.put(ChampionshipVerticle.PARAM_PARTICIPANT, paramParticipant);
+            params.put(ChampionshipRoute.PARAM_PARTICIPANT, paramParticipant);
 
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                    .when().post(BASE_URL  + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("[0].participants.id", hasItem(paramParticipant.getString("id")));
@@ -216,17 +215,17 @@ public class ChampionshipTest extends VertxJunitSupport {
         // User connected
         generateLoggedUser().then(u -> {
             final JsonObject params = new JsonObject();
-            params.put(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND");
-            params.put(ChampionshipVerticle.PARAM_CATEGORY_AGE, "sen");
-            params.put(ChampionshipVerticle.PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
+            params.put(PARAM_ACTIVITY, "ACT-HAND");
+            params.put(PARAM_CATEGORY_AGE, "sen");
+            params.put(PARAM_STRUCTURE, "541168295971d35c1f2d1b5e"); // Structure : CESSON
             JsonObject paramParticipant = new JsonObject();
             paramParticipant.put("id", "ID-Anywhere-But-Not-There");
             paramParticipant.put("type", "infrastructure");
-            params.put(ChampionshipVerticle.PARAM_PARTICIPANT, paramParticipant);
+            params.put(ChampionshipRoute.PARAM_PARTICIPANT, paramParticipant);
 
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.GET_LIST))
+                    .when().post(BASE_URL  + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
             async.complete();
@@ -237,15 +236,14 @@ public class ChampionshipTest extends VertxJunitSupport {
     /**
      * Gets championship.
      */
-    @Ignore
     @Test
     public void getChampionship(TestContext context) {// NOSONAR
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_CHAMPIONSHIP_HAND);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(ChampionshipVerticle.PARAM_ID, "559ebfb499f07aa6f04dec76")
-                    .when().get(getURL(ChampionshipVerticle.GET))
+                    .queryParam(ChampionshipRoute.PARAM_ID, "559ebfb499f07aa6f04dec76")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
                     .body("label", notNullValue())
                     .body("label", is("Championnat du bout du monde"));
@@ -259,7 +257,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void getChampionshipWithNonLoggedUser(TestContext context) {
-        given().when().get(getURL(ChampionshipVerticle.GET))
+        given().when().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -269,7 +267,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void getChampionshipWithWrongHttpMethod(TestContext context) {
-        given().when().post(getURL(ChampionshipVerticle.GET))
+        given().when().post(BASE_URL + "/get")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -285,7 +283,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         // User connected
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(ChampionshipVerticle.GET))
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -304,8 +302,8 @@ public class ChampionshipTest extends VertxJunitSupport {
         // User connected
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(ChampionshipVerticle.PARAM_ID, "12345")
-                    .when().get(getURL(ChampionshipVerticle.GET))
+                    .queryParam(ChampionshipRoute.PARAM_ID, "12345")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
@@ -325,15 +323,15 @@ public class ChampionshipTest extends VertxJunitSupport {
 
             String id = given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
+                    .when().post(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("label", is(params.getString("label")))
                     .extract().path("_id");
 
             given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(ChampionshipVerticle.PARAM_ID, id)
-                    .when().get(getURL(ChampionshipVerticle.GET))
+                    .queryParam(ChampionshipRoute.PARAM_ID, id)
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
                     .body("label", notNullValue())
                     .body("label", is(params.getString("label")));
@@ -347,7 +345,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void addChampionshipWithNonLoggedUser(TestContext context) {
-        given().when().post(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
+        given().when().post(BASE_URL + "/add")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -360,7 +358,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().post(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
+                    .when().post(BASE_URL + "/add")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
                     .body(CODE, is(ExceptionCodes.NOT_ADMIN.toString()));
             async.complete();
@@ -374,7 +372,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void addChampionshipWithWrongHttpMethod(TestContext context) {
-        given().when().get(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
+        given().when().get(BASE_URL + "/add")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -391,7 +389,7 @@ public class ChampionshipTest extends VertxJunitSupport {
             params.remove("label");
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.ADD_CHAMPIONSHIP))
+                    .when().post(BASE_URL + "/add")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -403,7 +401,6 @@ public class ChampionshipTest extends VertxJunitSupport {
     /**
      * Update championship.
      */
-    @Ignore
     @Test
     public void updateChampionship(TestContext context) {// NOSONAR
         Async async = context.async();
@@ -411,8 +408,8 @@ public class ChampionshipTest extends VertxJunitSupport {
         generateLoggedAdminUser().then(u -> {
 
             final JsonObject shampionship = new JsonObject(given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(ChampionshipVerticle.PARAM_ID, "559ebfb499f07aa6f04dec76")
-                    .when().get(getURL(ChampionshipVerticle.GET))
+                    .queryParam(ChampionshipRoute.PARAM_ID, "559ebfb499f07aa6f04dec76")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
                     .body("label", notNullValue())
                     .extract().asString());
@@ -420,14 +417,14 @@ public class ChampionshipTest extends VertxJunitSupport {
             shampionship.put("label", "blabla");
             given().header(TOKEN, u.getAccount().getToken())
                     .body(shampionship.encode())
-                    .when().post(getURL(ChampionshipVerticle.UPDATE))
+                    .when().post(BASE_URL + "/update")
                     .then().assertThat().statusCode(200)
                     .body("label", notNullValue())
                     .body("label", is(shampionship.getString("label")));
 
             given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(ChampionshipVerticle.PARAM_ID, "559ebfb499f07aa6f04dec76")
-                    .when().get(getURL(ChampionshipVerticle.GET))
+                    .queryParam(ChampionshipRoute.PARAM_ID, "559ebfb499f07aa6f04dec76")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
                     .body("label", notNullValue())
                     .body("label", is(shampionship.getString("label")));
@@ -441,7 +438,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void updateChampionshipWithNonLoggedUser(TestContext context) {
-        given().when().post(getURL(ChampionshipVerticle.UPDATE))
+        given().when().post(BASE_URL + "/update")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -454,7 +451,7 @@ public class ChampionshipTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().post(getURL(ChampionshipVerticle.UPDATE))
+                    .when().post(BASE_URL + "/update")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
                     .body(CODE, is(ExceptionCodes.NOT_ADMIN.toString()));
             async.complete();
@@ -468,7 +465,7 @@ public class ChampionshipTest extends VertxJunitSupport {
      */
     @Test
     public void updateChampionshipWithWrongHttpMethod(TestContext context) {
-        given().when().get(getURL(ChampionshipVerticle.UPDATE))
+        given().when().get(BASE_URL + "/update")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -485,7 +482,7 @@ public class ChampionshipTest extends VertxJunitSupport {
             params.remove("label");
             given().header(TOKEN, u.getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(ChampionshipVerticle.UPDATE))
+                    .when().post(BASE_URL + "/update")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -495,22 +492,22 @@ public class ChampionshipTest extends VertxJunitSupport {
 
     private JsonObject getShampionship() {
         return new JsonObject()
-                .put(ChampionshipVerticle.PARAM_LABEL, "Mon championnat")
-                .put(ChampionshipVerticle.PARAM_LEVEL_GAME, new JsonObject()
+                .put(ChampionshipRoute.PARAM_LABEL, "Mon championnat")
+                .put(ChampionshipRoute.PARAM_LEVEL_GAME, new JsonObject()
                         .put(CODE, "R")
                         .put("label", "regional"))
-                .put(ChampionshipVerticle.PARAM_SUB_LEVEL_GAME, "Honneur regional")
-                .put(ChampionshipVerticle.PARAM_POOL, "Cocotte")
-                .put(ChampionshipVerticle.PARAM_INSTANCE, "Ligue du Boukhistan")
-                .put(ChampionshipVerticle.PARAM_ACTIVITY, "ACT-HAND")
-                .put(ChampionshipVerticle.PARAM_CATEGORY_AGE, new JsonObject()
+                .put(ChampionshipRoute.PARAM_SUB_LEVEL_GAME, "Honneur regional")
+                .put(ChampionshipRoute.PARAM_POOL, "Cocotte")
+                .put(ChampionshipRoute.PARAM_INSTANCE, "Ligue du Boukhistan")
+                .put(PARAM_ACTIVITY, "ACT-HAND")
+                .put(PARAM_CATEGORY_AGE, new JsonObject()
                         .put(CODE, "sen")
                         .put("label", "senior")
                         .put("ageMax", 34)
                         .put("ageMin", 20)
                         .put("genre", "gender.male"))
-                .put(ChampionshipVerticle.PARAM_SEASON_CODE, "SAI-2014")
-                .put(ChampionshipVerticle.PARAM_LIST_PARTICIPANTS, new JsonArray().add(new JsonObject()
+                .put(ChampionshipRoute.PARAM_SEASON_CODE, "SAI-2014")
+                .put(ChampionshipRoute.PARAM_LIST_PARTICIPANTS, new JsonArray().add(new JsonObject()
                         .put("id", "mon-id")
                         .put("name", "participantName")
                         .put("structureId", "participantStructureId")

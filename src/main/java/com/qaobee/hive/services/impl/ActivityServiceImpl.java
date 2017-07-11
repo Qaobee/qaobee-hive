@@ -22,7 +22,6 @@ package com.qaobee.hive.services.impl;
 import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import io.vertx.core.AsyncResult;
@@ -63,20 +62,20 @@ public class ActivityServiceImpl implements ActivityService {
         criterias.put("enable", true);
         mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.ACTIVITY)
                 .done(res-> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR,e))));
+                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
     }
 
     @Override
     public void getActivityList(Handler<AsyncResult<JsonArray>> resultHandler) {
         mongo.findByCriterias(null, null, null, -1, -1, DBCollections.ACTIVITY)
                 .done(res-> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR,e))));
+                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
     }
 
     @Override
     public void getActivity(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
         mongo.getById(id, DBCollections.ACTIVITY)
                 .done(res-> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR,e))));
+                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
     }
 }
