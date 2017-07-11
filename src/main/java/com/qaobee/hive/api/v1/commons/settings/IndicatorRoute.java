@@ -21,7 +21,6 @@ package com.qaobee.hive.api.v1.commons.settings;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.Indicator;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -61,11 +60,17 @@ public class IndicatorRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
+
         router.get("/get").handler(authHandler);
+        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
         router.get("/get").handler(this::getIndicator);
+
         router.post("/getList").handler(authHandler);
+        router.post("/getList").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN));
         router.post("/getList").handler(this::getIndicatorsList);
+
         router.post("/getByCode").handler(authHandler);
+        router.post("/getByCode").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE));
         router.post("/getByCode").handler(this::getIndicatorByCode);
         return router;
     }
@@ -84,13 +89,8 @@ public class IndicatorRoute extends AbstractRoute {
      * @apiSuccess {Array} indicators The list of indicators found.
      */
     private void getIndicatorByCode(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE);
-            JsonObject body = context.getBodyAsJson();
-            indicator.getIndicatorByCode(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_INDICATOR_CODE), handleResponseArray(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        JsonObject body = context.getBodyAsJson();
+        indicator.getIndicatorByCode(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_INDICATOR_CODE), handleResponseArray(context));
     }
 
     /**
@@ -107,13 +107,8 @@ public class IndicatorRoute extends AbstractRoute {
      * @apiSuccess {Array} indicators The list of indicators found.
      */
     private void getIndicatorsList(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN);
-            JsonObject body = context.getBodyAsJson();
-            indicator.getIndicatorsList(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_SCREEN), handleResponseArray(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        JsonObject body = context.getBodyAsJson();
+        indicator.getIndicatorsList(body.getString(PARAM_ACTIVITY_ID), body.getString(PARAM_COUNTRY_ID), body.getJsonArray(PARAM_SCREEN), handleResponseArray(context));
     }
 
     /**
@@ -128,11 +123,6 @@ public class IndicatorRoute extends AbstractRoute {
      * @apiSuccess {Indicator} indicator The Indicator found.
      */
     private void getIndicator(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_ID);
-            indicator.getIndicator(context.request().getParam(PARAM_ID), handleResponse(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        indicator.getIndicator(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 }

@@ -39,7 +39,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Sb share test.
+ * The type Sb share testBodyParams.
  */
 public class SB_ShareTest extends VertxJunitSupport {
 

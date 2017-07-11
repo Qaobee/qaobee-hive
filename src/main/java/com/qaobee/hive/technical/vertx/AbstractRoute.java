@@ -2,7 +2,6 @@ package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.utils.Utils;
 import io.vertx.core.AsyncResult;
@@ -40,39 +39,9 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      */
     @Inject
     protected AuthHandler authHandler;
+    @Inject
+    protected MandatoryHandler mandatoryHandler;
 
-    /**
-     * Handle error.
-     *
-     * @param context the context
-     * @param e       the e
-     */
-    protected void handleError(RoutingContext context, QaobeeSvcException e) {
-        LOG.error(e.getMessage(), e);
-        context.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
-                .setStatusCode(e.getCode().getCode())
-                .end(new JsonObject()
-                        .put(Constants.STATUS, false)
-                        .put("message", e.getMessage())
-                        .put("code", e.getCode().name()).encode()
-                );
-    }
-
-    /**
-     * Handle error.
-     *
-     * @param context the context
-     * @param e       the e
-     */
-    protected void handleError(RoutingContext context, QaobeeException e) {
-        context.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
-                .setStatusCode(e.getCode().getCode())
-                .end(new JsonObject()
-                        .put(Constants.STATUS, false)
-                        .put("message", e.getMessage())
-                        .put("code", e.getCode().name()).encode()
-                );
-    }
 
     /**
      * Handle response handler.
@@ -85,7 +54,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
             if (event.succeeded()) {
                 handleResponse(context, event.result());
             } else {
-                handleError(context, (QaobeeSvcException) event.cause());
+                utils.handleError(context, (QaobeeSvcException) event.cause());
             }
         };
     }
@@ -101,7 +70,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
             if (event.succeeded()) {
                 handleResponse(context, event.result());
             } else {
-                handleError(context, (QaobeeSvcException) event.cause());
+                utils.handleError(context, (QaobeeSvcException) event.cause());
             }
         };
     }

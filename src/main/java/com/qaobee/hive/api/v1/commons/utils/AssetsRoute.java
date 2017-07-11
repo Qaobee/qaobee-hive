@@ -23,7 +23,7 @@ import java.io.File;
  * The type Param route.
  */
 @VertxRoute(rootPath = "/file")
-public class AssetsRoute extends AbstractRoute  {
+public class AssetsRoute extends AbstractRoute {
     private static final Logger LOG = LoggerFactory.getLogger(AssetsRoute.class);
 
     private static final String COLLECTION = "collection";
@@ -33,9 +33,12 @@ public class AssetsRoute extends AbstractRoute  {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
+        router.get("/:collection/:id").handler(c -> mandatoryHandler.testRequesParams(c, COLLECTION, "id"));
         router.get("/:collection/:id").handler(this::getAssetHandler);
 
         router.post("/:collection/:field/:uid").handler(authHandler);
+        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequesParams(c, COLLECTION, "field", "uid"));
+        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequesHeaders(c, COLLECTION, "field", "uid"));
         router.post("/:collection/:field/:uid").handler(this::assetUploadHandler);
         return router;
     }
@@ -52,23 +55,17 @@ public class AssetsRoute extends AbstractRoute  {
      * @apiparam {String} uid document id
      */
     private void assetUploadHandler(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), COLLECTION, "field", "uid");
-            utils.testMandatoryParams(context.request().headers(), "Accept-Language");
-            // We first pause the request so we don't receive any data between now and when the file is opened
-            String datadir = System.getProperty("user.home");
-            if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_DATA_DIR"))) {
-                datadir = System.getenv("OPENSHIFT_DATA_DIR");
-            }
-            final File dir = new File(datadir + "/upload");
-            if (!dir.exists()) {
-                boolean res = dir.mkdirs();
-                LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
-            }
-            context.fileUploads().forEach(upload -> handleUpload(upload, dir, context));
-        } catch (final QaobeeException e) {
-            handleError(context, e);
+        // We first pause the request so we don't receive any data between now and when the file is opened
+        String datadir = System.getProperty("user.home");
+        if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_DATA_DIR"))) {
+            datadir = System.getenv("OPENSHIFT_DATA_DIR");
         }
+        final File dir = new File(datadir + "/upload");
+        if (!dir.exists()) {
+            boolean res = dir.mkdirs();
+            LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
+        }
+        context.fileUploads().forEach(upload -> handleUpload(upload, dir, context));
     }
 
 
@@ -83,20 +80,15 @@ public class AssetsRoute extends AbstractRoute  {
      * @apiParam {String} id Mandatory The Asset-ID.
      */
     private void getAssetHandler(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), COLLECTION, "id");
-            assets.getAsset(context.request().getParam(COLLECTION), context.request().getParam("id"), event -> {
-                if (event.succeeded()) {
-                    context.response().putHeader(HTTP.CONTENT_LEN, event.result().getString(HTTP.CONTENT_LEN))
-                            .putHeader(HTTP.CONTENT_TYPE, "application/image")
-                            .end(Buffer.buffer(event.result().getBinary("asset")));
-                } else {
-                    handleError(context, (QaobeeSvcException) event.cause());
-                }
-            });
-        } catch (final QaobeeException e) {
-            handleError(context, e);
-        }
+        assets.getAsset(context.request().getParam(COLLECTION), context.request().getParam("id"), event -> {
+            if (event.succeeded()) {
+                context.response().putHeader(HTTP.CONTENT_LEN, event.result().getString(HTTP.CONTENT_LEN))
+                        .putHeader(HTTP.CONTENT_TYPE, "application/image")
+                        .end(Buffer.buffer(event.result().getBinary("asset")));
+            } else {
+                utils.handleError(context, (QaobeeSvcException) event.cause());
+            }
+        });
     }
 
 
@@ -117,7 +109,7 @@ public class AssetsRoute extends AbstractRoute  {
                             if (message.succeeded()) {
                                 handleResponse(context, message.result());
                             } else {
-                                handleError(context, new QaobeeException(ExceptionCodes.DATA_ERROR, message.cause().getMessage()));
+                                utils.handleError(context, new QaobeeException(ExceptionCodes.DATA_ERROR, message.cause().getMessage()));
                             }
                         })
         );

@@ -36,7 +36,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Sb Collect test.
+ * The type Sb Collect testBodyParams.
  *
  * @author cke
  */

@@ -31,7 +31,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Structure test.
+ * The type Structure testBodyParams.
  *
  * @author cke
  */
@@ -58,7 +58,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets structure by id with non logged user test.
+     * Gets structure by id with non logged user testBodyParams.
      */
     @Test
     public void getStructureByIdWithNonLoggedUserTest(TestContext context) {
@@ -68,7 +68,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets structure by id with wrong http method test.
+     * Gets structure by id with wrong http method testBodyParams.
      */
     @Test
     public void getStructureByIdWithWrongHttpMethodTest(TestContext context) {
@@ -84,7 +84,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets structure by id with missing parameter test.
+     * Gets structure by id with missing parameter testBodyParams.
      */
     @Test
     public void getStructureByIdWithMissingParameterTest(TestContext context) {
@@ -126,7 +126,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets structures list with non logged user test.
+     * Gets structures list with non logged user testBodyParams.
      */
     @Test
     public void getStructuresListWithNonLoggedUserTest(TestContext context) {
@@ -136,7 +136,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets structures list with wrong http method test.
+     * Gets structures list with wrong http method testBodyParams.
      */
     @Test
     public void getStructuresListWithWrongHttpMethodTest(TestContext context) {
@@ -152,7 +152,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets structures list with missing parameter test.
+     * Gets structures list with missing parameter testBodyParams.
      */
     @Test
     public void getStructuresListWithMissingParameterTest(TestContext context) {
@@ -248,7 +248,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Update structure with non logged user test.
+     * Update structure with non logged user testBodyParams.
      */
     @Test
     public void updateStructureWithNonLoggedUserTest(TestContext context) {
@@ -258,7 +258,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Update structure with wrong http method test.
+     * Update structure with wrong http method testBodyParams.
      */
     @Test
     public void updateStructureWithWrongHttpMethodTest(TestContext context) {
@@ -274,7 +274,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Update structure with missing parameter test.
+     * Update structure with missing parameter testBodyParams.
      */
     @Test
     public void updateStructureWithMissingParameterTest(TestContext context) {
@@ -325,7 +325,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Add structure with non logged user test.
+     * Add structure with non logged user testBodyParams.
      */
     @Test
     public void addStructureWithNonLoggedUserTest(TestContext context) {
@@ -335,7 +335,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Add structure with wrong http method test.
+     * Add structure with wrong http method testBodyParams.
      */
     @Test
     public void addStructureWithWrongHttpMethodTest(TestContext context) {
@@ -351,7 +351,7 @@ public class StructureTest extends VertxJunitSupport {
     }
 
     /**
-     * Add structure with missing parameter test.
+     * Add structure with missing parameter testBodyParams.
      */
     @Test
     public void addStructureWithMissingParameterTest(TestContext context) {

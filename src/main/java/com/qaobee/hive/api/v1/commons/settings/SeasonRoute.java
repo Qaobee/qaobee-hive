@@ -19,37 +19,19 @@
 package com.qaobee.hive.api.v1.commons.settings;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.dao.SeasonDAO;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import io.vertx.core.Future;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
+import com.qaobee.hive.services.Season;
+import com.qaobee.hive.technical.annotations.VertxRoute;
+import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 
-/**
- * The type Season verticle.
- *
- * @author cke
- */
-@DeployableVerticle
-public class SeasonVerticle extends AbstractGuiceVerticle {
-    /**
-     * The Constant GET.
-     */
-    public static final String GET = Module.VERSION + ".commons.settings.season.get";
-    /**
-     * The Constant GET_LIST_BY_ACTIVITY.
-     */
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/season")
+public class SeasonRoute extends AbstractRoute {
+  /*  public static final String GET = Module.VERSION + ".commons.settings.season.get";
     public static final String GET_LIST_BY_ACTIVITY = Module.VERSION + ".commons.settings.season.getListByActivity";
-    /**
-     * The constant GET_CURRENT.
-     */
-    public static final String GET_CURRENT = Module.VERSION + ".commons.settings.season.current";
+    public static final String GET_CURRENT = Module.VERSION + ".commons.settings.season.current";*/
     /**
      * Id of the season
      */
@@ -63,15 +45,22 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      */
     public static final String PARAM_COUNTRY_ID = "countryId";
     @Inject
-    private SeasonDAO seasonDAO;
+    private Season season;
 
     @Override
-    public void start(Future<Void> startFuture) {
-        inject(this)
-                .add(GET, this::getSeason)
-                .add(GET_LIST_BY_ACTIVITY, this::getListByActivity)
-                .add(GET_CURRENT, this::getCurrentSeason)
-                .register(startFuture);
+    public Router init() {
+        Router router = Router.router(vertx);
+        router.get("/*").handler(authHandler);
+
+        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
+        router.get("/get").handler(this::getSeason);
+
+        router.get("/getListByActivity").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID));
+        router.get("/getListByActivity").handler(this::getListByActivity);
+
+        router.get("/current").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID));
+        router.get("/current").handler(this::getCurrentSeason);
+        return router;
     }
 
     /**
@@ -85,12 +74,8 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiSuccess {Object} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
-    @Rule(address = GET_CURRENT, method = Constants.GET, logged = true,
-            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
-            scope = Rule.Param.REQUEST)
-    private void getCurrentSeason(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, seasonDAO.getCurrentSeason(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getParams().get(PARAM_COUNTRY_ID).get(0)));
+    private void getCurrentSeason(RoutingContext context) {
+        season.getCurrentSeason(context.request().getParam(PARAM_ACTIVITY_ID), context.request().getParam(PARAM_COUNTRY_ID), handleResponse(context));
     }
 
     /**
@@ -104,12 +89,8 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      * @apiSuccess {Array} seasons com.qaobee.hive.business.model.commons.settings.Season
      */
-    @Rule(address = GET_LIST_BY_ACTIVITY, method = Constants.GET, logged = true,
-            mandatoryParams = {PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID},
-            scope = Rule.Param.REQUEST)
-    private void getListByActivity(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, seasonDAO.getListByActivity(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getParams().get(PARAM_COUNTRY_ID).get(0)));
+    private void getListByActivity(RoutingContext context) {
+        season.getListByActivity(context.request().getParam(PARAM_ACTIVITY_ID), context.request().getParam(PARAM_COUNTRY_ID), handleResponseArray(context));
     }
 
     /**
@@ -122,10 +103,7 @@ public class SeasonVerticle extends AbstractGuiceVerticle {
      * @apiParam {String} _id Mandatory The season Id.
      * @apiSuccess {Object} the object found
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
-            scope = Rule.Param.REQUEST)
-    private void getSeason(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, seasonDAO.getSeason(req.getParams().get(PARAM_ID).get(0)));
+    private void getSeason(RoutingContext context) {
+        season.getSeason(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 }

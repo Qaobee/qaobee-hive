@@ -420,7 +420,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
     }
 
     /**
-     * Populates the test base.
+     * Populates the testBodyParams base.
      *
      * @param populateType (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL
      * @param mongoFiles   (String[]) : array of filenames
@@ -430,7 +430,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
     }
 
     /**
-     * Populates the test base. It is not needed to indicate the subdirectory name, the function will search in all directories
+     * Populates the testBodyParams base. It is not needed to indicate the subdirectory name, the function will search in all directories
      * of "scripts/mongo".
      *
      * @param populateType      (String) : POPULATE_ONLY, POPULATE_WITHOUT, POPULATE_ALL

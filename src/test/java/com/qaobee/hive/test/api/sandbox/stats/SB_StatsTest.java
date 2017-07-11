@@ -36,7 +36,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Sb stats test.
+ * The type Sb stats testBodyParams.
  */
 public class SB_StatsTest extends VertxJunitSupport {
     /**

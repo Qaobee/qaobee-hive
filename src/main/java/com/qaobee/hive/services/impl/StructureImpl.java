@@ -34,6 +34,9 @@ import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
+/**
+ * The type Structure.
+ */
 @ProxyService(address = Structure.ADDRESS, iface = Structure.class)
 public class StructureImpl implements Structure {
     private static final String COUNTRY_ALPHA_2_FIELD = "countryAlpha2";
@@ -43,6 +46,11 @@ public class StructureImpl implements Structure {
     private Country country;
     private Vertx vertx;
 
+    /**
+     * Instantiates a new Structure.
+     *
+     * @param vertx the vertx
+     */
     public StructureImpl(Vertx vertx) {
         super();
         this.vertx = vertx;

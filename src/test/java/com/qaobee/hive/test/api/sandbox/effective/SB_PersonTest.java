@@ -40,7 +40,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Person test.
+ * The type Person testBodyParams.
  */
 public class SB_PersonTest extends VertxJunitSupport {
     /**
@@ -199,7 +199,7 @@ public class SB_PersonTest extends VertxJunitSupport {
     @Test
     public void uploadAvatar(TestContext context) {
         Async async = context.async();
-        File avatar = new File("src/test/resources/avatar.jpg");
+        File avatar = new File("src/testBodyParams/resources/avatar.jpg");
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
 
@@ -240,7 +240,7 @@ public class SB_PersonTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .multiPart(new File("src/test/resources/avatar.jpg")).
+                    .multiPart(new File("src/testBodyParams/resources/avatar.jpg")).
                     pathParam("uid", "blabla").
                     when().
                     post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
@@ -257,7 +257,7 @@ public class SB_PersonTest extends VertxJunitSupport {
     public void uploadAvatarWithNotLoggedUser(TestContext context) {
         Async async = context.async();
         generateUser().then(u -> {
-            given().multiPart(new File("src/test/resources/avatar.jpg"))
+            given().multiPart(new File("src/testBodyParams/resources/avatar.jpg"))
                     .pathParam("uid", u.get_id())
                     .when()
                     .post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
@@ -274,7 +274,7 @@ public class SB_PersonTest extends VertxJunitSupport {
     public void uploadAvatarWithWrongToken(TestContext context) {
         Async async = context.async();
         generateUser().then(u -> {
-            given().multiPart(new File("src/test/resources/avatar.jpg")).
+            given().multiPart(new File("src/testBodyParams/resources/avatar.jpg")).
                     pathParam("uid", u.get_id())
                     .header(TOKEN, "11111")
                     .when()

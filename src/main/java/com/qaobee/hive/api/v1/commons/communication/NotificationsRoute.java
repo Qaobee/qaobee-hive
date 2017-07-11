@@ -65,13 +65,21 @@ public class NotificationsRoute extends AbstractRoute {
         Router router = Router.router(vertx);
         router.get("/").handler(authHandler);
         router.get("/").handler(this::notificationList);
+
         router.delete("/del").handler(authHandler);
+        router.delete("/del").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_NOTIF_ID));
         router.delete("/del").handler(this::delete);
+
         router.post("/read").handler(authHandler);
+        router.post("/read").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_NOTIF_ID));
         router.post("/read").handler(this::markAsRead);
+
         router.post("/user/add").handler(authHandler);
+        router.post("/user/add").handler(c -> mandatoryHandler.testBodyParams(c, TARGET_ID, "content", SENDER_ID, "title"));
         router.post("/user/add").handler(this::addNotificationToUser);
+
         router.post("/sandbox/add").handler(authHandler);
+        router.post("/sandbox/add").handler(c -> mandatoryHandler.testBodyParams(c, TARGET_ID, "content", SENDER_ID, "title"));
         router.post("/sandbox/add").handler(this::addNotificationToSandBox);
         return router;
     }
@@ -92,15 +100,15 @@ public class NotificationsRoute extends AbstractRoute {
      * </pre></p>
      */
     private void addNotificationToSandBox(RoutingContext context) {
+        JsonObject notification = context.getBodyAsJson();
         try {
-            utils.testMandatoryParams(context, TARGET_ID, "content", SENDER_ID, "title");
-            JsonObject notification = context.getBodyAsJson();
             notifyPeople(new JsonObject()
                     .put("id", notification.getString(TARGET_ID))
                     .put(TARGET, DBCollections.SANDBOX)
                     .put(NOTIFICATION, notification), context);
         } catch (QaobeeException e) {
-            handleError(context, e);
+            LOG.warn(e.getMessage(), e);
+            utils.handleError(context, e);
         }
     }
 
@@ -119,35 +127,30 @@ public class NotificationsRoute extends AbstractRoute {
      * </pre></p>
      */
     private void addNotificationToUser(RoutingContext context) {
+        JsonObject notification = context.getBodyAsJson();
         try {
-            utils.testMandatoryParams(context, TARGET_ID, "content", SENDER_ID, "title");
-            JsonObject notification = context.getBodyAsJson();
             notifyPeople(new JsonObject()
                     .put("id", notification.getString(TARGET_ID))
                     .put(TARGET, DBCollections.USER)
                     .put(NOTIFICATION, notification), context);
         } catch (QaobeeException e) {
-            handleError(context, e);
+            LOG.warn(e.getMessage(), e);
+            utils.handleError(context, e);
         }
     }
 
-    private void notifyPeople(JsonObject obj, RoutingContext context) {
-        try {
-            utils.testMandatoryParams(obj, "id", TARGET, NOTIFICATION);
-            notifications.sendNotification(obj.getString("id"),
-                    obj.getString(TARGET), obj.getJsonObject(NOTIFICATION),
-                    obj.getJsonObject(NOTIFICATION).getJsonArray("exclude"), ar -> {
-                        if (ar.succeeded()) {
-                            handleStatus(ar.result(), context);
-                        } else {
-                            handleStatus(false, context);
-                        }
+    private void notifyPeople(JsonObject obj, RoutingContext context) throws QaobeeException {
+        utils.testMandatoryParams(obj, "id", TARGET, NOTIFICATION);
+        notifications.sendNotification(obj.getString("id"),
+                obj.getString(TARGET), obj.getJsonObject(NOTIFICATION),
+                obj.getJsonObject(NOTIFICATION).getJsonArray("exclude"), ar -> {
+                    if (ar.succeeded()) {
+                        handleStatus(ar.result(), context);
+                    } else {
+                        handleStatus(false, context);
                     }
-            );
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-            handleStatus(false, context);
-        }
+                }
+        );
     }
 
     /**
@@ -160,18 +163,13 @@ public class NotificationsRoute extends AbstractRoute {
      * @apiHeader {String} token
      */
     private void markAsRead(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_NOTIF_ID);
-            notifications.markAsRead(context.request().getParam(PARAM_NOTIF_ID), ar -> {
-                if(ar.succeeded()) {
-                    handleStatus(ar.succeeded(), context);
-                } else {
-                    handleError(context, (QaobeeSvcException) ar.cause());
-                }
-            });
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        notifications.markAsRead(context.request().getParam(PARAM_NOTIF_ID), ar -> {
+            if (ar.succeeded()) {
+                handleStatus(ar.succeeded(), context);
+            } else {
+                utils.handleError(context, (QaobeeSvcException) ar.cause());
+            }
+        });
     }
 
     /**
@@ -184,18 +182,13 @@ public class NotificationsRoute extends AbstractRoute {
      * @apiSuccess {Object} status
      */
     private void delete(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_NOTIF_ID);
-            notifications.delete(context.request().getParam(PARAM_NOTIF_ID), ar -> {
-                if (ar.succeeded()) {
-                    handleStatus(ar.succeeded(), context);
-                } else {
-                    handleError(context, (QaobeeSvcException) ar.cause());
-                }
-            });
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        notifications.delete(context.request().getParam(PARAM_NOTIF_ID), ar -> {
+            if (ar.succeeded()) {
+                handleStatus(ar.succeeded(), context);
+            } else {
+                utils.handleError(context, (QaobeeSvcException) ar.cause());
+            }
+        });
     }
 
     /**

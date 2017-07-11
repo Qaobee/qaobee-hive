@@ -31,7 +31,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Effective test.
+ * The type Effective testBodyParams.
  *
  * @author cke
  */
@@ -296,7 +296,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
                     .body("members", hasSize(16)).extract().asString());
 
             effective.getJsonArray("members").add(new JsonObject()
-                    .put("_id", "test")
+                    .put("_id", "testBodyParams")
                     .put("role", new JsonObject()
                             .put("code", "player")
                             .put("label", "Joueur"))
@@ -365,7 +365,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         JsonArray members = new JsonArray();
         for (int i = 0; i < 10; i++) {
             members.add(new JsonObject()
-                    .put("_id", i + "-test")
+                    .put("_id", i + "-testBodyParams")
                     .put("role", new JsonObject()
                             .put("code", "player")
                             .put("label", "Joueur"))

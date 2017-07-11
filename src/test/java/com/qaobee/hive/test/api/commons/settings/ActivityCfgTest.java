@@ -31,7 +31,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Activity cfg test.
+ * The type Activity cfg testBodyParams.
  */
 public class ActivityCfgTest extends VertxJunitSupport {
 
@@ -60,7 +60,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets activity cfg with non logged user test.
+     * Gets activity cfg with non logged user testBodyParams.
      */
     @Test
     public void getActivityCfgWithNonLoggedUserTest() {
@@ -70,7 +70,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets activity cfg with wrong http method test.
+     * Gets activity cfg with wrong http method testBodyParams.
      */
     @Test
     public void getActivityCfgWithWrongHttpMethodTest(TestContext context) {
@@ -86,7 +86,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets activity cfg with missing parameter test.
+     * Gets activity cfg with missing parameter testBodyParams.
      */
     @Test
     public void getActivityCfgWithMissingParameterTest(TestContext context) {
@@ -116,7 +116,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets activity cfg with wrong activity id test.
+     * Gets activity cfg with wrong activity id testBodyParams.
      */
     @Test
     public void getActivityCfgWithWrongActivityIdTest(TestContext context) {
@@ -157,7 +157,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets params fields with non logged user test.
+     * Gets params fields with non logged user testBodyParams.
      */
     @Test
     public void getParamsFieldsWithNonLoggedUserTest() {
@@ -167,7 +167,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets params fields with wrong http method test.
+     * Gets params fields with wrong http method testBodyParams.
      */
     @Test
     public void getParamsFieldsWithWrongHttpMethodTest(TestContext context) {
@@ -183,7 +183,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets params fields with missing parameter test.
+     * Gets params fields with missing parameter testBodyParams.
      */
     @Test
     public void getParamsFieldsWithMissingParameterTest(TestContext context) {
@@ -223,7 +223,7 @@ public class ActivityCfgTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets params fields with wrong activity id test.
+     * Gets params fields with wrong activity id testBodyParams.
      */
     @Test
     public void getParamsFieldsWithWrongActivityIdTest(TestContext context) {

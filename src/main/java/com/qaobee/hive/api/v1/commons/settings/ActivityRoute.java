@@ -21,7 +21,6 @@ package com.qaobee.hive.api.v1.commons.settings;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.Activity;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -51,8 +50,12 @@ public class ActivityRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
+
+        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
         router.get("/get").handler(this::get);
+
         router.get("/list").handler(this::getList);
+
         router.get("/listEnable").handler(this::getEnabled);
         return router;
     }
@@ -94,11 +97,6 @@ public class ActivityRoute extends AbstractRoute {
      * @apiSuccess {Object} activity The Activity found.
      */
     private void get(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_ID);
-            activity.getActivity(context.request().getParam(PARAM_ID), handleResponse(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        activity.getActivity(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 }

@@ -24,9 +24,11 @@ import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.services.Activity;
+import com.qaobee.hive.services.Season;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
@@ -67,7 +69,7 @@ public class UserDAOImpl implements UserDAO {
     @Inject
     private SandBoxDAO sandBoxDAO;
     @Inject
-    private SeasonDAO seasonDAO;
+    private Season season;
     @Inject
     private TeamDAO teamDAO;
     @Inject
@@ -252,20 +254,24 @@ public class UserDAOImpl implements UserDAO {
     public Promise<JsonObject, QaobeeException, Integer> getMeta(String sandboxId) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
         sandBoxDAO.getSandboxById(sandboxId)
-                .done(meta -> seasonDAO.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id")).done(season -> {
-                    meta.put("season", season);
-                    teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null).done(teams -> {
-                        meta.put("teams", teams);
-                        activity.getActivity(meta.getString("activityId"), activity -> {
-                            if (activity.succeeded()) {
-                                meta.put("activity", activity.result());
-                                deferred.resolve(meta);
-                            } else {
-                                deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, activity.cause()));
-                            }
-                        });
-                    }).fail(deferred::reject);
-                }).fail(deferred::reject)).fail(deferred::reject);
+                .done(meta -> season.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id"),season -> {
+                    if(season.succeeded()) {
+                        meta.put("season", season.result());
+                        teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null).done(teams -> {
+                            meta.put("teams", teams);
+                            activity.getActivity(meta.getString("activityId"), activity -> {
+                                if (activity.succeeded()) {
+                                    meta.put("activity", activity.result());
+                                    deferred.resolve(meta);
+                                } else {
+                                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, activity.cause()));
+                                }
+                            });
+                        }).fail(deferred::reject);
+                    } else {
+                        deferred.reject(new QaobeeException((QaobeeSvcException) season.cause()));
+                    }
+                })).fail(deferred::reject);
         return deferred.promise();
     }
 }

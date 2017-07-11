@@ -21,7 +21,6 @@ package com.qaobee.hive.api.v1.commons.settings;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.Country;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -57,8 +56,14 @@ public class CountryRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
+
+        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
         router.get("/get").handler(this::get);
+
+        router.get("/getAlpha2").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ALPHA2));
         router.get("/getAlpha2").handler(this::getAlpha2);
+
+        router.get("/getList").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_LOCAL));
         router.get("/getList").handler(this::getList);
         return router;
     }
@@ -74,16 +79,11 @@ public class CountryRoute extends AbstractRoute {
      * @apiSuccess {Array} countries The list of countries found.
      */
     private void getList(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_LOCAL);
-            String label = null;
-            if (context.request().params().contains(CountryRoute.PARAM_LABEL) && StringUtils.isNotBlank(context.request().getParam(PARAM_LABEL))) {
-                label = context.request().getParam(PARAM_LABEL);
-            }
-            country.getCountryList(context.request().getParam(PARAM_LOCAL), label, handleResponseArray(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
+        String label = null;
+        if (context.request().params().contains(CountryRoute.PARAM_LABEL) && StringUtils.isNotBlank(context.request().getParam(PARAM_LABEL))) {
+            label = context.request().getParam(PARAM_LABEL);
         }
+        country.getCountryList(context.request().getParam(PARAM_LOCAL), label, handleResponseArray(context));
     }
 
     /**
@@ -97,12 +97,7 @@ public class CountryRoute extends AbstractRoute {
      * @apiSuccess {Object} country The Country found.
      */
     private void getAlpha2(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_ALPHA2);
-            country.getCountryFromAlpha2(context.request().getParam(PARAM_ALPHA2), handleResponse(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        country.getCountryFromAlpha2(context.request().getParam(PARAM_ALPHA2), handleResponse(context));
     }
 
     /**
@@ -114,14 +109,8 @@ public class CountryRoute extends AbstractRoute {
      * @apiDescription get a country to the collection country in settings module
      * @apiParam {String} id Mandatory The Country-ID.
      * @apiSuccess {Country} country The Country found.
-     * @apiError DATA_ERROR Error on DB request
      */
     private void get(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_ID);
-            country.getCountry(context.request().getParam(PARAM_ID), handleResponse(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        country.getCountry(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 }

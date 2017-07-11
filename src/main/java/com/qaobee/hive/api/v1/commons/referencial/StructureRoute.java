@@ -21,7 +21,6 @@ package com.qaobee.hive.api.v1.commons.referencial;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.Structure;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -67,15 +66,19 @@ public class StructureRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
         router.post("/add").handler(authHandler);
+        router.post("/add").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY));
         router.post("/add").handler(this::addStructure);
 
         router.get("/get").handler(authHandler);
+        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
         router.get("/get").handler(this::getStructure);
 
         router.post("/getList").handler(authHandler);
+        router.post("/getList").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY, PARAM_ADDRESS));
         router.post("/getList").handler(this::getListOfStructures);
 
         router.post("/update").handler(authHandler);
+        router.post("/update").handler(c -> mandatoryHandler.testBodyParams(c, "_id", PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY));
         router.post("/update").handler(this::updateStructure);
         return router;
     }
@@ -98,12 +101,7 @@ public class StructureRoute extends AbstractRoute {
      * @apiSuccess {Structure}   structure  The Structure updated.
      */
     private void updateStructure(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context, "_id", PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY);
-            structure.update(context.getBodyAsJson(), handleResponse(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        structure.update(context.getBodyAsJson(), handleResponse(context));
     }
 
     /**
@@ -118,13 +116,8 @@ public class StructureRoute extends AbstractRoute {
      * @apiSuccess {Structure}   structure            The Structure found.
      */
     private void getListOfStructures(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context, PARAM_ACTIVITY, PARAM_ADDRESS);
-            JsonObject body = context.getBodyAsJson();
-            structure.getListOfStructures(body.getString(PARAM_ACTIVITY), body.getJsonObject(PARAM_ADDRESS), handleResponseArray(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        JsonObject body = context.getBodyAsJson();
+        structure.getListOfStructures(body.getString(PARAM_ACTIVITY), body.getJsonObject(PARAM_ADDRESS), handleResponseArray(context));
     }
 
     /**
@@ -138,12 +131,7 @@ public class StructureRoute extends AbstractRoute {
      * @apiSuccess {Structure}   structure            The Structure found.
      */
     private void getStructure(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_ID);
-            structure.getStructure(context.request().getParam(PARAM_ID), handleResponse(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        structure.getStructure(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 
     /**
@@ -163,11 +151,6 @@ public class StructureRoute extends AbstractRoute {
      * @apiSuccess {Structure}   structure            The Structure added with the id.
      */
     private void addStructure(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY);
-            structure.addStructure(context.getBodyAsJson(), handleResponse(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        structure.addStructure(context.getBodyAsJson(), handleResponse(context));
     }
 }

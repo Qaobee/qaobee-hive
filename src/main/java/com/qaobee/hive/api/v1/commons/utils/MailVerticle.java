@@ -37,7 +37,7 @@ public class MailVerticle extends AbstractGuiceVerticle {
     }
 
     private void sendMail(Message<JsonObject> message) {
-        if (!conf.getBoolean("test", false)) {
+        if (!conf.getBoolean("testBodyParams", false)) {
             MailMessage mailMessage = new MailMessage();
             mailMessage.setFrom(message.body().getString("from"));
             mailMessage.setTo(message.body().getString("to"));

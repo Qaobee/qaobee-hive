@@ -32,7 +32,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 
 /**
- * The type Guice test module.
+ * The type Guice testBodyParams module.
  */
 class GuiceTestModule extends AbstractModule {
 
@@ -40,7 +40,7 @@ class GuiceTestModule extends AbstractModule {
     private JsonObject config;
 
     /**
-     * Instantiates a new Guice test module.
+     * Instantiates a new Guice testBodyParams module.
      *
      * @param config the config
      */

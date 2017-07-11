@@ -33,7 +33,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Indicator test.
+ * The type Indicator testBodyParams.
  *
  * @author cke
  */
@@ -41,7 +41,7 @@ public class IndicatorTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/settings/indicator");
 
     /**
-     * Gets indicator test.
+     * Gets indicator testBodyParams.
      *
      * @param context the context
      */
@@ -62,7 +62,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets indicator with non logged user test.
+     * Gets indicator with non logged user testBodyParams.
      */
     @Test
     public void getIndicatorWithNonLoggedUserTest() {
@@ -72,7 +72,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets indicator with wrong http method test.
+     * Gets indicator with wrong http method testBodyParams.
      *
      * @param context the context
      */
@@ -90,7 +90,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets indicator with wrong parameter test.
+     * Gets indicator with wrong parameter testBodyParams.
      *
      * @param context the context
      */
@@ -110,7 +110,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets indicator with missing parameter test.
+     * Gets indicator with missing parameter testBodyParams.
      *
      * @param context the context
      */
@@ -130,7 +130,7 @@ public class IndicatorTest extends VertxJunitSupport {
 
 
     /**
-     * Gets list indicator test.
+     * Gets list indicator testBodyParams.
      *
      * @param context the context
      */
@@ -159,7 +159,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list indicator with non logged user test.
+     * Gets list indicator with non logged user testBodyParams.
      */
     @Test
     public void getListIndicatorWithNonLoggedUserTest() {
@@ -169,7 +169,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list indicator with wrong http method test.
+     * Gets list indicator with wrong http method testBodyParams.
      *
      * @param context the context
      */
@@ -187,7 +187,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list indicator with missing parameter test.
+     * Gets list indicator with missing parameter testBodyParams.
      *
      * @param context the context
      */
@@ -230,7 +230,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets indicator by code test.
+     * Gets indicator by code testBodyParams.
      *
      * @param context the context
      */
@@ -260,7 +260,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets indicator by code with non logged user test.
+     * Gets indicator by code with non logged user testBodyParams.
      */
     @Test
     public void getIndicatorByCodeWithNonLoggedUserTest() {
@@ -270,7 +270,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets indicator by code with wrong http method test.
+     * Gets indicator by code with wrong http method testBodyParams.
      *
      * @param context the context
      */
@@ -288,7 +288,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets indicator by code with wrong parameter test.
+     * Gets indicator by code with wrong parameter testBodyParams.
      *
      * @param context the context
      */
@@ -333,7 +333,7 @@ public class IndicatorTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets indicator by code with missing parameter test.
+     * Gets indicator by code with missing parameter testBodyParams.
      *
      * @param context the context
      */

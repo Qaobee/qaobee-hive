@@ -34,6 +34,7 @@ import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.impl.HabilitUtilsImpl;
 import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
 import com.qaobee.hive.technical.utils.impl.UtilsImpl;
+import com.qaobee.hive.technical.vertx.MandatoryHandler;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
@@ -96,6 +97,7 @@ public class GuiceModule extends AbstractModule {
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
+        bind(MandatoryHandler.class).toInstance(new MandatoryHandler());
 
         //
         Configuration cfgMails = new Configuration(new Version("2.3.23"));
@@ -112,7 +114,6 @@ public class GuiceModule extends AbstractModule {
         bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
         bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
-        bind(SeasonDAO.class).to(SeasonDAOImpl.class).in(Singleton.class);
         bind(UserDAO.class).to(UserDAOImpl.class).in(Singleton.class);
         bind(ShippingDAO.class).to(ShippingDAOImpl.class).in(Singleton.class);
         bind(SignupDAO.class).to(SignupDAOImpl.class).in(Singleton.class);
@@ -137,5 +138,6 @@ public class GuiceModule extends AbstractModule {
         bind(Championship.class).toInstance(Championship.createProxy(vertx, Championship.ADDRESS));
         bind(Structure.class).toInstance(Structure.createProxy(vertx, Structure.ADDRESS));
         bind(Indicator.class).toInstance(Indicator.createProxy(vertx, Indicator.ADDRESS));
+        bind(Season.class).toInstance(Season.createProxy(vertx, Season.ADDRESS));
     }
 }

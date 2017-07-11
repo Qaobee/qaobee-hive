@@ -25,7 +25,7 @@ import org.junit.Test;
 import static io.restassured.RestAssured.*;
 
 /**
- * The type Common test.
+ * The type Common testBodyParams.
  */
 public class CommonTest extends VertxJunitSupport {
     /**

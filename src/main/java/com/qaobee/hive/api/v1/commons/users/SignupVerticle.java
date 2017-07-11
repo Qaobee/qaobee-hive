@@ -44,7 +44,7 @@ import javax.inject.Named;
 /**
  * The Class SignupVerticle.
  *
- * @author Xavier MARIN <ul>     <li>resthandler.register : Register a new accunt</li>     <li>resthandler.logintest : Login unicity test for rest request</li>     <li>loginExists : Login unicity test for internal use</li>     <li>resthandler.accountcheck : email validation number check</li> </ul>
+ * @author Xavier MARIN <ul>     <li>resthandler.register : Register a new accunt</li>     <li>resthandler.logintest : Login unicity testBodyParams for rest request</li>     <li>loginExists : Login unicity testBodyParams for internal use</li>     <li>resthandler.accountcheck : email validation number check</li> </ul>
  */
 @DeployableVerticle
 public class SignupVerticle extends AbstractGuiceVerticle {
@@ -244,8 +244,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     }
 
     /**
-     * @apiDescription Login unicity test for rest request
-     * @api {get} /api/1/commons/users/signup/loginExists Login unicity test
+     * @apiDescription Login unicity testBodyParams for rest request
+     * @api {get} /api/1/commons/users/signup/loginExists Login unicity testBodyParams
      * @apiVersion 0.1.0
      * @apiName loginTest
      * @apiGroup Signup API

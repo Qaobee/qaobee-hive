@@ -19,7 +19,7 @@ package com.qaobee.hive.test.api.commons.settings;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityRoute;
 import com.qaobee.hive.api.v1.commons.settings.CountryRoute;
-import com.qaobee.hive.api.v1.commons.settings.SeasonVerticle;
+import com.qaobee.hive.api.v1.commons.settings.SeasonRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.ext.unit.Async;
@@ -33,13 +33,14 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Season test.
+ * The type Season testBodyParams.
  *
  * @author cke
  */
 public class SeasonTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/commons/settings/season");
     /**
-     * Gets season test.
+     * Gets season testBodyParams.
      */
     @Test
     public void getSeasonTest(TestContext context) {
@@ -47,8 +48,8 @@ public class SeasonTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_SEASONS);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(SeasonVerticle.PARAM_ID, "559a9294889089a442f3d499")
-                    .when().get(getURL(SeasonVerticle.GET))
+                    .queryParam(SeasonRoute.PARAM_ID, "559a9294889089a442f3d499")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
                     .body("label", notNullValue())
                     .body("label", is("SAISON 2014-2015"));
@@ -58,24 +59,24 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets season with non logged user test.
+     * Gets season with non logged user testBodyParams.
      */
     @Test
     public void getSeasonWithNonLoggedUserTest() {
-        given().when().get(getURL(SeasonVerticle.GET))
+        given().when().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets season with wrong http method test.
+     * Gets season with wrong http method testBodyParams.
      */
     @Test
     public void getSeasonWithWrongHttpMethodTest(TestContext context) {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().post(getURL(SeasonVerticle.GET))
+                    .when().post(BASE_URL + "/get")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
@@ -84,7 +85,7 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets season with wrong parameter test.
+     * Gets season with wrong parameter testBodyParams.
      */
     @Test
     public void getSeasonWithWrongParameterTest(TestContext context) {
@@ -92,8 +93,8 @@ public class SeasonTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_SEASONS);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(SeasonVerticle.PARAM_ID, "blabla")
-                    .when().get(getURL(SeasonVerticle.GET))
+                    .queryParam(SeasonRoute.PARAM_ID, "blabla")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
@@ -102,7 +103,7 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets season with missing parameter test.
+     * Gets season with missing parameter testBodyParams.
      */
     @Test
     public void getSeasonWithMissingParameterTest(TestContext context) {
@@ -110,7 +111,7 @@ public class SeasonTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_SEASONS);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(SeasonVerticle.GET))
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -119,7 +120,7 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets season list test.
+     * Gets season list testBodyParams.
      */
     @Test
     public void getSeasonListTest(TestContext context) {
@@ -129,9 +130,9 @@ public class SeasonTest extends VertxJunitSupport {
             getCountry("CNTR-250-FR-FRA").then(country -> {
                 getActivity("ACT-HAND", u).then(activity -> {
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, (String) country.getString(CountryRoute.PARAM_ID))
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, (String) activity.getString(ActivityRoute.PARAM_ID))
-                            .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, (String) country.getString(CountryRoute.PARAM_ID))
+                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, (String) activity.getString(ActivityRoute.PARAM_ID))
+                            .when().get(BASE_URL + "/getListByActivity")
                             .then().assertThat().statusCode(200)
                             .body("", hasSize(5));
                     async.complete();
@@ -142,24 +143,24 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets season list with non logged user test.
+     * Gets season list with non logged user testBodyParams.
      */
     @Test
     public void getSeasonListWithNonLoggedUserTest() {
-        given().when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+        given().when().get(BASE_URL + "/getListByActivity")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets season list with wrong http method test.
+     * Gets season list with wrong http method testBodyParams.
      */
     @Test
     public void getSeasonListWithWrongHttpMethodTest(TestContext context) {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().post(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                    .when().post(BASE_URL + "/getListByActivity")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
@@ -168,7 +169,7 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets season list with wrong parameter test.
+     * Gets season list with wrong parameter testBodyParams.
      */
     @Test
     public void getSeasonListWithWrongParameterTest(TestContext context) {
@@ -178,16 +179,16 @@ public class SeasonTest extends VertxJunitSupport {
             getCountry("CNTR-250-FR-FRA").then(country -> {
                 getActivity("ACT-HAND", u).then(activity -> {
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                            .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, "1322")
+                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
+                            .when().get(BASE_URL + "/getListByActivity")
                             .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                             .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
-                            .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
+                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                            .when().get(BASE_URL + "/getListByActivity")
                             .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                             .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
                     async.complete();
@@ -198,7 +199,7 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets season list with missing parameter test.
+     * Gets season list with missing parameter testBodyParams.
      */
     @Test
     public void getSeasonListWithMissingParameterTest(TestContext context) {
@@ -206,7 +207,7 @@ public class SeasonTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(SeasonVerticle.GET_LIST_BY_ACTIVITY))
+                    .when().get(BASE_URL + "/getListByActivity")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -228,9 +229,9 @@ public class SeasonTest extends VertxJunitSupport {
                     GregorianCalendar today = new GregorianCalendar();
                     int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                            .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
+                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
+                            .when().get(BASE_URL + "/current")
                             .then().assertThat().statusCode(200)
                             .body("label", notNullValue())
                             .body("label", is("SAISON 2017-2018"))
@@ -243,24 +244,24 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets current season with non logged user test.
+     * Gets current season with non logged user testBodyParams.
      */
     @Test
     public void getCurrentSeasonWithNonLoggedUserTest() {
-        given().when().get(getURL(SeasonVerticle.GET_CURRENT))
+        given().when().get(BASE_URL + "/current")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets current season with wrong http method test.
+     * Gets current season with wrong http method testBodyParams.
      */
     @Test
     public void getCurrentSeasonWithWrongHttpMethodTest(TestContext context) {
         Async async = context.async();
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().post(getURL(SeasonVerticle.GET_CURRENT))
+                    .when().post(BASE_URL + "/current")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
@@ -269,7 +270,7 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets current season with wrong parameter test.
+     * Gets current season with wrong parameter testBodyParams.
      */
     @Test
     public void getCurrentSeasonWithWrongParameterTest(TestContext context) {
@@ -279,16 +280,16 @@ public class SeasonTest extends VertxJunitSupport {
             getCountry("CNTR-250-FR-FRA").then(country -> {
                 getActivity("ACT-HAND", u).then(activity -> {
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, "1322")
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                            .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, "1322")
+                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
+                            .when().get(BASE_URL + "/current")
                             .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                             .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
                     given().header(TOKEN, u.getAccount().getToken())
-                            .queryParam(SeasonVerticle.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
-                            .queryParam(SeasonVerticle.PARAM_ACTIVITY_ID, "ACT-BIDON")
-                            .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
+                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                            .when().get(BASE_URL + "/current")
                             .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                             .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
                     async.complete();
@@ -299,7 +300,7 @@ public class SeasonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets current season with missing parameter test.
+     * Gets current season with missing parameter testBodyParams.
      */
     @Test
     public void getCurrentSeasonWithMissingParameterTest(TestContext context) {
@@ -307,7 +308,7 @@ public class SeasonTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
         generateLoggedUser().then(u -> {
             given().header(TOKEN, u.getAccount().getToken())
-                    .when().get(getURL(SeasonVerticle.GET_CURRENT))
+                    .when().get(BASE_URL + "/current")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();

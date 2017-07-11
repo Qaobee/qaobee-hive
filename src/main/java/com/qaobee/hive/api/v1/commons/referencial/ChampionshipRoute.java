@@ -29,6 +29,8 @@ import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -37,6 +39,7 @@ import javax.inject.Inject;
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/referencial/championship")
 public class ChampionshipRoute extends AbstractRoute {
+    private static final Logger LOG = LoggerFactory.getLogger(ChampionshipRoute.class);
     /**
      * Championship ID
      */
@@ -92,9 +95,11 @@ public class ChampionshipRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
         router.post("/list").handler(authHandler);
+        router.post("/list").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE));
         router.post("/list").handler(this::getListChampionships);
 
         router.get("/get").handler(authHandler);
+        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
         router.get("/get").handler(this::getChampionship);
 
         router.post("/add").handler(authHandler);
@@ -131,18 +136,20 @@ public class ChampionshipRoute extends AbstractRoute {
                 try {
                     utils.testMandatoryParams(context, "_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME,
                             PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
+
                     championship.updateChampionship(context.getBodyAsJson(), ar -> {
                         if (ar.succeeded()) {
                             handleResponse(context, new JsonObject().put("_id", ar.result()));
                         } else {
-                            handleError(context, (QaobeeSvcException) ar.cause());
+                            utils.handleError(context, (QaobeeSvcException) ar.cause());
                         }
                     });
                 } catch (QaobeeException e) {
-                    handleError(context, e);
+                    LOG.warn(e.getMessage(), e);
+                    utils.handleError(context, e);
                 }
             } else {
-                handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", context.request().getHeader("Accept-Language"))));
+                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", context.request().getHeader("Accept-Language"))));
             }
         });
     }
@@ -175,10 +182,11 @@ public class ChampionshipRoute extends AbstractRoute {
                             PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
                     championship.addChampionship(context.getBodyAsJson(), handleResponse(context));
                 } catch (QaobeeException e) {
-                    handleError(context, e);
+                    LOG.warn(e.getMessage(), e);
+                    utils.handleError(context, e);
                 }
             } else {
-                handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", context.request().getHeader("Accept-Language"))));
+                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", context.request().getHeader("Accept-Language"))));
             }
         });
     }
@@ -193,12 +201,7 @@ public class ChampionshipRoute extends AbstractRoute {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      */
     private void getChampionship(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_ID);
-            championship.getChampionship(context.request().getParam(PARAM_ID), handleResponse(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        championship.getChampionship(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 
     /**
@@ -214,11 +217,6 @@ public class ChampionshipRoute extends AbstractRoute {
      * @apiSuccess {Array} list of championships
      */
     private void getListChampionships(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE);
-            championship.getListChampionships(context.getBodyAsJson(), handleResponseArray(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        championship.getListChampionships(context.getBodyAsJson(), handleResponseArray(context));
     }
 }

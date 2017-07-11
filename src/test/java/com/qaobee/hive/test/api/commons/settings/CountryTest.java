@@ -27,7 +27,7 @@ import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Country test.
+ * The type Country testBodyParams.
  *
  * @author cke
  */
@@ -48,7 +48,7 @@ public class CountryTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets country with wrong http method test.
+     * Gets country with wrong http method testBodyParams.
      */
     @Test
     public void getCountryWithWrongHttpMethodTest() {
@@ -58,7 +58,7 @@ public class CountryTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets country with missing parameter test.
+     * Gets country with missing parameter testBodyParams.
      */
     @Test
     public void getCountryWithMissingParameterTest() {
@@ -72,7 +72,7 @@ public class CountryTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets country with wrong activity id test.
+     * Gets country with wrong activity id testBodyParams.
      */
     @Test
     public void getCountryWithWrongActivityIdTest() {
@@ -104,7 +104,7 @@ public class CountryTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list of countries with wrong http method test.
+     * Gets list of countries with wrong http method testBodyParams.
      */
     @Test
     public void getListOfCountriesWithWrongHttpMethodTest() {
@@ -114,7 +114,7 @@ public class CountryTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list of countries with missing parameter test.
+     * Gets list of countries with missing parameter testBodyParams.
      */
     @Test
     public void getListOfCountriesWithMissingParameterTest() {
@@ -128,7 +128,7 @@ public class CountryTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list of countries with wrong param local test.
+     * Gets list of countries with wrong param local testBodyParams.
      */
     @Test
     public void getListOfCountriesWithWrongParamLocalTest() {
@@ -158,7 +158,7 @@ public class CountryTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets country alpha 2 with wrong http method test.
+     * Gets country alpha 2 with wrong http method testBodyParams.
      */
     @Test
     public void getCountryAlpha2WithWrongHttpMethodTest() {
@@ -168,7 +168,7 @@ public class CountryTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets country alpha 2 with missing parameter test.
+     * Gets country alpha 2 with missing parameter testBodyParams.
      */
     @Test
     public void getCountryAlpha2WithMissingParameterTest() {
@@ -182,7 +182,7 @@ public class CountryTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets country alpha 2 with wrong activity id test.
+     * Gets country alpha 2 with wrong activity id testBodyParams.
      */
     @Test
     public void getCountryAlpha2WithWrongActivityIdTest() {

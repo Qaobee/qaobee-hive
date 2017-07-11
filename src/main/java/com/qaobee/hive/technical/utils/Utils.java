@@ -22,6 +22,7 @@ package com.qaobee.hive.technical.utils;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.Message;
@@ -153,7 +154,7 @@ public interface Utils {
      * Test mandatory params.
      *
      * @param map    request's parameters
-     * @param fields array of fields to test
+     * @param fields array of fields to testBodyParams
      * @throws QaobeeException explain missing fields
      */
     void testMandatoryParams(Map<String, List<String>> map, String... fields) throws QaobeeException;
@@ -162,7 +163,7 @@ public interface Utils {
      * Test mandatory params.
      *
      * @param json   request's json body
-     * @param fields array of fields to test
+     * @param fields array of fields to testBodyParams
      * @throws QaobeeException explain missing fields
      */
     void testMandatoryParams(JsonObject json, String... fields) throws QaobeeException;
@@ -194,10 +195,33 @@ public interface Utils {
 
     /**
      * Test mandatory params.
-     *
+     *  @param context the context
+     * @param fields  the fields*/
+    void testMandatoryParams(RoutingContext context, String... fields) throws QaobeeException;
+
+    /**
+     * Test mandatory params.
+     * @param params  the params
      * @param context the context
      * @param fields  the fields
-     * @throws QaobeeException the qaobee exception
      */
-    void testMandatoryParams(RoutingContext context, String... fields) throws QaobeeException;
+    void testMandatoryParams(MultiMap params, RoutingContext context, String... fields) throws QaobeeException;
+
+    /**
+     * Handle error.
+     *
+     * @param context the context
+     * @param e       the e
+     */
+    void handleError(RoutingContext context, QaobeeException e);
+
+    /**
+     * Handle error.
+     *
+     * @param context the context
+     * @param e       the e
+     */
+    void handleError(RoutingContext context, QaobeeSvcException e);
+
+    void testMandatoryParams(JsonObject obj, RoutingContext context, String... fields);
 }

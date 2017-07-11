@@ -32,7 +32,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Sand box test.
+ * The type Sand box testBodyParams.
  *
  * @author cke
  */

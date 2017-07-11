@@ -37,7 +37,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Sb team test.
+ * The type Sb team testBodyParams.
  *
  * @author cke
  */

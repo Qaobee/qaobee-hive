@@ -17,37 +17,49 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.dao.SeasonDAO;
+import com.qaobee.hive.services.Season;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The type Season dao.
+ * The type Season.
  */
-public class SeasonDAOImpl implements SeasonDAO {
+@ProxyService(address = Season.ADDRESS, iface = Season.class)
+public class SeasonImpl implements Season {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
     private static final String END_DATE_FIELD = "endDate";
+    private final Vertx vertx;
     @Inject
     private MongoDB mongo;
 
+    /**
+     * Instantiates a new Season.
+     *
+     * @param vertx the vertx
+     */
+    public SeasonImpl(Vertx vertx) {
+        super();
+        this.vertx = vertx;
+    }
+
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getCurrentSeason(String activityId, String countryId) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        // Creation of the request
+    public void getCurrentSeason(String activityId, String countryId, Handler<AsyncResult<JsonObject>> resultHandler) {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(PARAM_ACTIVITY_ID, activityId);
         criterias.put(PARAM_COUNTRY_ID, countryId);
@@ -55,7 +67,7 @@ public class SeasonDAOImpl implements SeasonDAO {
                 .done(resultJson -> {
                     long currentDate = System.currentTimeMillis();
                     if (resultJson.size() == 0) {
-                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")"));
+                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
                     } else {
                         JsonObject season = null;
                         for (int i = 0; i < resultJson.size(); i++) {
@@ -65,36 +77,33 @@ public class SeasonDAOImpl implements SeasonDAO {
                             }
                         }
                         if (season != null) {
-                            deferred.resolve(season);
+                            resultHandler.handle(Future.succeededFuture(season));
                         } else {
-                            deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")"));
+                            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
                         }
                     }
-                }).fail(deferred::reject);
-        return deferred.promise();
+                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getListByActivity(String activityId, String countryId) {
-        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
-        // Creation of the request
+    public void getListByActivity(String activityId, String countryId, Handler<AsyncResult<JsonArray>> resultHandler) {
         Map<String, Object> criterias = new HashMap<>();
         criterias.put(PARAM_ACTIVITY_ID, activityId);
         criterias.put(PARAM_COUNTRY_ID, countryId);
         mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, DBCollections.SEASON)
                 .done(resultJson -> {
                     if (resultJson.size() == 0) {
-                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")"));
+                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
                     } else {
-                        deferred.resolve(resultJson);
+                        resultHandler.handle(Future.succeededFuture(resultJson));
                     }
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getSeason(String id) {
-        return mongo.getById(id, DBCollections.SEASON);
+    public void getSeason(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.getById(id, DBCollections.SEASON)
+                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
+                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
     }
 }

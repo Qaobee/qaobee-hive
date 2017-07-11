@@ -27,7 +27,7 @@ import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Activity test.
+ * The type Activity testBodyParams.
  *
  * @author cke
  */
@@ -47,7 +47,7 @@ public class ActivityTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets activity with wrong http method test.
+     * Gets activity with wrong http method testBodyParams.
      */
     @Test
     public void getActivityWithWrongHttpMethodTest() {
@@ -57,7 +57,7 @@ public class ActivityTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets activity with missing parameter test.
+     * Gets activity with missing parameter testBodyParams.
      */
     @Test
     public void getActivityWithMissingParameterTest() {
@@ -71,7 +71,7 @@ public class ActivityTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets activity with wrong activity id test.
+     * Gets activity with wrong activity id testBodyParams.
      */
     @Test
     public void getActivityWithWrongActivityIdTest() {
@@ -95,7 +95,7 @@ public class ActivityTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list with wrong http method test.
+     * Gets list with wrong http method testBodyParams.
      */
     @Test
     public void getListWithWrongHttpMethodTest() {
@@ -117,7 +117,7 @@ public class ActivityTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets list enable with wrong http method test.
+     * Gets list enable with wrong http method testBodyParams.
      */
     @Test
     public void getListEnableWithWrongHttpMethodTest() {

@@ -23,6 +23,7 @@ import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.HabilitUtils;
@@ -38,6 +39,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.protocol.HTTP;
 import org.imgscalr.Scalr;
 import org.jdeferred.Deferred;
 import org.jdeferred.Promise;
@@ -52,6 +54,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.*;
+
+import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 /**
  * Classe utilitaire foure-tout.
@@ -299,9 +303,46 @@ public class UtilsImpl implements Utils {
     public void testMandatoryParams(RoutingContext context, String... fields) throws QaobeeException {
         try {
             testMandatoryParams(context.getBodyAsJson(), fields);
-        } catch (DecodeException e){
+        } catch (DecodeException e) {
             LOG.warn(e.getMessage(), e);
             testMandatoryParams(new JsonObject(), fields);
+        }
+    }
+
+    @Override
+    public void testMandatoryParams(MultiMap params, RoutingContext context, String... fields) throws QaobeeException {
+        testMandatoryParams(toMap(params), fields);
+    }
+
+    @Override
+    public void handleError(RoutingContext context, QaobeeException e) {
+        context.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+                .setStatusCode(e.getCode().getCode())
+                .end(new JsonObject()
+                        .put(Constants.STATUS, false)
+                        .put("message", e.getMessage())
+                        .put("code", e.getCode().name()).encode()
+                );
+    }
+
+    @Override
+    public void handleError(RoutingContext context, QaobeeSvcException e) {
+        context.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+                .setStatusCode(e.getCode().getCode())
+                .end(new JsonObject()
+                        .put(Constants.STATUS, false)
+                        .put("message", e.getMessage())
+                        .put("code", e.getCode().name()).encode()
+                );
+    }
+
+    @Override
+    public void testMandatoryParams(JsonObject obj, RoutingContext context, String... fields) {
+        try {
+            testMandatoryParams(obj, fields);
+        } catch (QaobeeException e) {
+            LOG.warn(e.getMessage(), e);
+            handleError(context, e);
         }
     }
 }
