@@ -69,14 +69,18 @@ public class QaobeeAuthHandler implements AuthHandler {
             jsonUser.getJsonObject(ACCOUNT_FIELD).put("tokenRenewDate", connectionTime);
             user.getAccount().setTokenRenewDate(connectionTime);
         }
-        mongo.upsert(jsonUser, DBCollections.USER).done(id -> {
-            if (user.getAccount().getTokenRenewDate() == 0) {
-                handle401(context, Messages.getString(SESSION_EXPIRED, request.getLocale()));
+        mongo.upsert(jsonUser, DBCollections.USER, upsertRes -> {
+            if(upsertRes.succeeded()) {
+                if (user.getAccount().getTokenRenewDate() == 0) {
+                    handle401(context, Messages.getString(SESSION_EXPIRED, request.getLocale()));
+                } else {
+                    context.setUser(new QaobeeUser(jsonUser));
+                    context.next();
+                }
             } else {
-                context.setUser(new QaobeeUser(jsonUser));
-                context.next();
+                handle401(context, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
             }
-        }).fail(e->handle401(context, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
+        });
     }
 
     private static void handle401(RoutingContext context, String message) {

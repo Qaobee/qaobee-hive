@@ -19,19 +19,19 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 
 /**
  * The interface Feedback dao.
  */
-@FunctionalInterface
 public interface FeedbackDAO {
     /**
      * Send feedback.
      *
-     * @param data the data
-     * @throws QaobeeException the qaobee exception
+     * @param data          the data
+     * @param resultHandler the result handler
      */
-    void sendFeedback(JsonObject data) throws QaobeeException;
+    void sendFeedback(JsonObject data, Handler<AsyncResult<Void>> resultHandler) ;
 }

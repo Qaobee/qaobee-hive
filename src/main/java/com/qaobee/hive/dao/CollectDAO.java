@@ -19,48 +19,48 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
  * The interface Collect dao.
  */
 public interface CollectDAO {
     /**
-     * Get json object.
+     * Get.
      *
-     * @param id the id
-     * @return the json object
+     * @param id            the id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> get(String id);
+    void get(String id, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Update json object.
+     * Update.
      *
      * @param collect       the collect
      * @param currentUserId the current user id
      * @param locale        the locale
-     * @return the json object
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> update(JsonObject collect, String currentUserId, String locale);
+    void update(JsonObject collect, String currentUserId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Add json object.
+     * Add.
      *
      * @param collect       the collect
      * @param currentUserId the current user id
      * @param locale        the locale
-     * @return the json object
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> add(JsonObject collect, String currentUserId, String locale);
+    void add(JsonObject collect, String currentUserId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets list.
      *
-     * @param params the params
-     * @return the list
+     * @param params        the params
+     * @param resultHandler the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getList(JsonObject params);
+    void getList(JsonObject params, Handler<AsyncResult<JsonArray>> resultHandler);
 }

@@ -104,7 +104,7 @@ public class AssetsRoute extends AbstractRoute {
                         context.request().getParam(COLLECTION),
                         context.request().getParam("field"),
                         upload.contentType(),
-                        context.request().getHeader("Accept-Language"),
+                        getLocale(context),
                         message -> {
                             if (message.succeeded()) {
                                 handleResponse(context, message.result());

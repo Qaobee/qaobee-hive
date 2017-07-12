@@ -25,13 +25,12 @@ import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.MediaReplacedElementFactory;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -59,8 +58,7 @@ public class PdfDAOImpl implements PdfDAO {
     private JsonObject pdfConfig;
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> generatePDF(JsonObject data, String template, String filename) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+    public void generatePDF(JsonObject data, String template, String filename, Handler<AsyncResult<JsonObject>> resultHandler) {
         vertx.executeBlocking(bl -> {
             OutputStream os = null;
             try {// NOSONAR
@@ -98,13 +96,6 @@ public class PdfDAOImpl implements PdfDAO {
                     IOUtils.closeQuietly(os);
                 }
             }
-        }, ar -> {
-            if (ar.succeeded()) {
-                deferred.resolve((JsonObject) ar.result());
-            } else {
-                deferred.reject((QaobeeException) ar.cause());
-            }
-        });
-        return deferred.promise();
+        }, resultHandler);
     }
 }

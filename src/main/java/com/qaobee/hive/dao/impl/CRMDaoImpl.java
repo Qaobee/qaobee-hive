@@ -31,7 +31,7 @@ public class CRMDaoImpl implements CRMDao {
     public void registerUser(JsonObject user, boolean firstLogin) {
         JsonArray members = new JsonArray();
         String env = "DEV";
-        if(StringUtils.isNotBlank(System.getenv("ENV"))) {
+        if (StringUtils.isNotBlank(System.getenv("ENV"))) {
             env = System.getenv("ENV");
         }
         members.add(new JsonObject()
@@ -51,8 +51,7 @@ public class CRMDaoImpl implements CRMDao {
         if (mailchimp.getInteger("port") == 443) {
             req.ssl(true);
         }
-        req
-                .putHeader("Authorization", "Basic " + Base64.encodeBase64String((mailchimp.getString("user") + ":" + mailchimp.getString("key")).getBytes()))
+        req.putHeader("Authorization", "Basic " + Base64.encodeBase64String((mailchimp.getString("user") + ":" + mailchimp.getString("key")).getBytes()))
                 .putHeader(HTTP.CONTENT_TYPE, "application/json")
                 //    .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody..length()))
                 .sendJsonObject(requestBody, res -> {

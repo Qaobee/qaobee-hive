@@ -24,13 +24,13 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import org.jdeferred.Promise;
 
 import java.io.File;
 import java.io.IOException;
@@ -174,7 +174,7 @@ public interface Utils {
      * @param request the request
      * @return the User
      */
-    Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request);
+    Future<User> isUserLogged(RequestWrapper request);
 
     /**
      * Is admin.
@@ -182,7 +182,7 @@ public interface Utils {
      * @param request the request
      * @return the boolean
      */
-    Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request);
+    Future<User> isLoggedAndAdmin(RequestWrapper request);
 
     /**
      * Test mandatory params.

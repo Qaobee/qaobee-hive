@@ -22,6 +22,7 @@ package com.qaobee.hive.dao.impl;
 import com.qaobee.hive.dao.StatisticsDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import io.vertx.core.json.JsonArray;
@@ -159,10 +160,14 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         if (!stat.containsKey(TIMER_FIELD) || Integer.valueOf(0).equals(stat.getInteger(TIMER_FIELD))) {
             stat.put(TIMER_FIELD, System.currentTimeMillis());
         }
-        mongo.upsert(stat, DBCollections.STATS).done(id -> {
-            stat.put("_id", id);
-            deferred.resolve(stat);
-        }).fail(deferred::reject);
+        mongo.upsert(stat, DBCollections.STATS, upsertRes -> {
+            if(upsertRes.succeeded()) {
+                stat.put("_id", upsertRes.result());
+                deferred.resolve(stat);
+            } else {
+                deferred.reject(new QaobeeException(((QaobeeSvcException) upsertRes.cause()).getCode(), upsertRes.cause()));
+            }
+        });
         return deferred.promise();
     }
 

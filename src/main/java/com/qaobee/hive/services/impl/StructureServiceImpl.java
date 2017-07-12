@@ -58,9 +58,13 @@ public class StructureServiceImpl implements StructureService {
 
     @Override
     public void update(JsonObject structure, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.upsert(structure, DBCollections.STRUCTURE)
-                .done(res -> getStructure(res, resultHandler))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.upsert(structure, DBCollections.STRUCTURE, res -> {
+            if(res.succeeded()) {
+                getStructure(res.result(), resultHandler);
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
     }
 
     @Override
@@ -95,9 +99,13 @@ public class StructureServiceImpl implements StructureService {
 
     @Override
     public void addStructure(JsonObject structure, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.upsert(structure, DBCollections.STRUCTURE).done(id -> {
-            structure.put("_id", id);
-            resultHandler.handle(Future.succeededFuture(structure));
-        }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.upsert(structure, DBCollections.STRUCTURE, id -> {
+            if(id.succeeded()) {
+                structure.put("_id", id.result());
+                resultHandler.handle(Future.succeededFuture(structure));
+            } else {
+                resultHandler.handle(Future.failedFuture(id.cause()));
+            }
+        });
     }
 }

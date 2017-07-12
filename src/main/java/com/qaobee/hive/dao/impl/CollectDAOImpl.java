@@ -24,14 +24,13 @@ import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
 import com.qaobee.hive.dao.CollectDAO;
 import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 
@@ -47,49 +46,51 @@ public class CollectDAOImpl implements CollectDAO {
     private NotificationsService notificationsService;
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> get(String id) {
-        return mongo.getById(id, DBCollections.COLLECT);
+    public void get(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.getById(id, DBCollections.COLLECT, resultHandler);
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> update(JsonObject collect, String currentUserId, String locale) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(collect, DBCollections.COLLECT)
-                .done(id -> {
-                    collect.put("_id", id);
-                    JsonObject notification = new JsonObject()
-                            .put("content", Messages.getString("notification.collect.update.content", locale,
-                                    collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
-                            .put("title", Messages.getString("notification.collect.update.title", locale))
-                            .put("senderId", currentUserId);
-                    notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
-                            DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar->{});
-                    deferred.resolve(collect);
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+    public void update(JsonObject collect, String currentUserId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(collect, DBCollections.COLLECT, upsertRes -> {
+            if (upsertRes.succeeded()) {
+                collect.put("_id", upsertRes.result());
+                JsonObject notification = new JsonObject()
+                        .put("content", Messages.getString("notification.collect.update.content", locale,
+                                collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
+                        .put("title", Messages.getString("notification.collect.update.title", locale))
+                        .put("senderId", currentUserId);
+                notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                        DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar -> {
+                        });
+                resultHandler.handle(Future.succeededFuture(collect));
+            } else {
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
+            }
+        });
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> add(JsonObject collect, String currentUserId, String locale) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(collect, DBCollections.COLLECT)
-                .done(id -> {
-                    collect.put("_id", id);
-                    JsonObject notification = new JsonObject()
-                            .put("content", Messages.getString("notification.collect.start.content", locale, collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
-                            .put("title", Messages.getString("notification.collect.start.title", locale))
-                            .put("senderId", currentUserId);
-                    notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
-                            DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar->{});
-                    deferred.resolve(collect);
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+    public void add(JsonObject collect, String currentUserId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(collect, DBCollections.COLLECT, upsertRes -> {
+            if (upsertRes.succeeded()) {
+                collect.put("_id", upsertRes.result());
+                JsonObject notification = new JsonObject()
+                        .put("content", Messages.getString("notification.collect.start.content", locale, collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
+                        .put("title", Messages.getString("notification.collect.start.title", locale))
+                        .put("senderId", currentUserId);
+                notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                        DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar -> {
+                        });
+                resultHandler.handle(Future.succeededFuture(collect));
+            } else {
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
+            }
+        });
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getList(JsonObject params) {
+    public void getList(JsonObject params, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject dbObjectParent = new JsonObject();
         // Collecte sandboxId
         dbObjectParent.put("eventRef.owner.sandboxId", params.getString(SB_CollectVerticle.PARAM_SANDBOX_ID));
@@ -108,6 +109,6 @@ public class CollectDAOImpl implements CollectDAO {
         dbObjectParent.put("startDate", o);
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match);
-        return mongo.aggregate(pipelineAggregation, DBCollections.COLLECT);
+        mongo.aggregate(pipelineAggregation, DBCollections.COLLECT, resultHandler);
     }
 }

@@ -149,7 +149,7 @@ public class ChampionshipRoute extends AbstractRoute {
                     utils.handleError(context, e);
                 }
             } else {
-                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", context.request().getHeader("Accept-Language"))));
+                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", getLocale(context))));
             }
         });
     }
@@ -186,7 +186,7 @@ public class ChampionshipRoute extends AbstractRoute {
                     utils.handleError(context, e);
                 }
             } else {
-                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", context.request().getHeader("Accept-Language"))));
+                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", getLocale(context))));
             }
         });
     }

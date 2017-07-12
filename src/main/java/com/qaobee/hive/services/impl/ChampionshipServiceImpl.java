@@ -57,19 +57,25 @@ public class ChampionshipServiceImpl implements ChampionshipService {
 
     @Override
     public void updateChampionship(JsonObject championship, Handler<AsyncResult<String>> resultHandler) {
-        mongo.upsert(championship, DBCollections.CHAMPIONSHIP)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.upsert(championship, DBCollections.CHAMPIONSHIP, res -> {
+            if (res.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(res.result()));
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
     }
 
     @Override
     public void addChampionship(JsonObject championship, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.upsert(championship, DBCollections.CHAMPIONSHIP)
-                .done(res -> {
-                    championship.put("_id", res);
-                    resultHandler.handle(Future.succeededFuture(championship));
-                })
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.upsert(championship, DBCollections.CHAMPIONSHIP, res -> {
+            if (res.succeeded()) {
+                championship.put("_id", res);
+                resultHandler.handle(Future.succeededFuture(championship));
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
     }
 
     @Override
@@ -92,7 +98,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
         dbObjectParent.put("participants.structureId", params.getString(ChampionshipRoute.PARAM_STRUCTURE));
         // Participant
         if (params.containsKey(ChampionshipRoute.PARAM_PARTICIPANT)) {
-            JsonObject  mapParticipant = params.getJsonObject(ChampionshipRoute.PARAM_PARTICIPANT);
+            JsonObject mapParticipant = params.getJsonObject(ChampionshipRoute.PARAM_PARTICIPANT);
             JsonObject dbObjectChild = new JsonObject();
             if (mapParticipant.containsKey("id")) {
                 dbObjectChild.put("participants.id", mapParticipant.getString("id"));

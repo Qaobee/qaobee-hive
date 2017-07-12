@@ -165,9 +165,13 @@ public class UserServiceImpl implements UserService {
                         } else {
                             u.put(ACCOUNT_FIELD, p.getJsonObject(ACCOUNT_FIELD));
                         }
-                        mongo.upsert(u, DBCollections.USER)
-                                .done(res -> resultHandler.handle(Future.succeededFuture(u)))
-                                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+                        mongo.upsert(u, DBCollections.USER, res -> {
+                            if(res.succeeded()) {
+                                resultHandler.handle(Future.succeededFuture(u));
+                            } else {
+                                resultHandler.handle(Future.failedFuture(res.cause()));
+                            }
+                        });
                     } catch (QaobeeException e) {
                         LOG.error(e.getMessage(), e);
                         resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e)));
@@ -237,7 +241,7 @@ public class UserServiceImpl implements UserService {
                 user.getAccount().setPasswd(null);
             }
             if (StringUtils.isBlank(user.getAccount().getActivationCode())) {
-                final String activationcode = UUID.randomUUID().toString().replaceAll("-", "");
+                final String activationcode = UUID.randomUUID().toString();
                 user.getAccount().setActivationCode(activationcode);
                 user.getAccount().setActive(false);
                 user.getAccount().setFirstConnexion(true);

@@ -26,7 +26,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -46,21 +45,21 @@ public class SB_StatsTest extends VertxJunitSupport {
     public void getListDetailValues(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
                     .put(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000L)
                     .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
                     .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(10))
                     .body("code", hasItem("originShootAtt"));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -91,7 +90,7 @@ public class SB_StatsTest extends VertxJunitSupport {
     public void getListDetailValuesWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
                     .put(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000L)
@@ -101,14 +100,14 @@ public class SB_StatsTest extends VertxJunitSupport {
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
-                given().header(TOKEN, user.getAccount().getToken())
+                given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
                         .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -119,7 +118,7 @@ public class SB_StatsTest extends VertxJunitSupport {
     public void getStatGroupBy(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put("aggregat", "COUNT")
                     .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
@@ -127,14 +126,14 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
                     .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_StatisticsVerticle.GET_STAT_GROUPBY))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("value", hasItem(10));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -165,7 +164,7 @@ public class SB_StatsTest extends VertxJunitSupport {
     public void getStatGroupByWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put("aggregat", "COUNT")
                     .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
@@ -176,14 +175,14 @@ public class SB_StatsTest extends VertxJunitSupport {
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
-                given().header(TOKEN, user.getAccount().getToken())
+                given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
                         .when().post(getURL(SB_StatisticsVerticle.GET_STAT_GROUPBY))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -193,29 +192,29 @@ public class SB_StatsTest extends VertxJunitSupport {
     @Test
     public void addStat(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
-            JsonObject s = generateStat(user, "fake", 1);
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            JsonObject s = generateStat(user.result(), "fake", 1);
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(s.encode())
                     .when().put(getURL(SB_StatisticsVerticle.ADD_STAT))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("owner", is(user.get_id()));
+                    .body("owner", is(user.result().get_id()));
 
             final JsonObject params = new JsonObject()
                     .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
                     .put(SB_StatisticsVerticle.PARAM_END_DATE, System.currentTimeMillis() + 100)
                     .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("fake"))
-                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add(user.get_id()));
+                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add(user.result().get_id()));
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("code", hasItem("fake"));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -246,20 +245,20 @@ public class SB_StatsTest extends VertxJunitSupport {
     public void addStatWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_StatisticsVerticle.ADD_STAT).mandatoryParams());
-            JsonObject s = generateStat(user, "fake", 1);
+            JsonObject s = generateStat(user.result(), "fake", 1);
             s.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(s.encode());
                 params2.remove(k);
-                given().header(TOKEN, user.getAccount().getToken())
+                given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
                         .when().put(getURL(SB_StatisticsVerticle.ADD_STAT))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -270,13 +269,13 @@ public class SB_StatsTest extends VertxJunitSupport {
     public void addStatBulkWithDuplicates(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             JsonArray stats = new JsonArray();
             for (int i = 0; i < 5; i++) {
-                stats.add(generateStat(user, "fake", i));
+                stats.add(generateStat(user.result(), "fake", i));
             }
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(stats.encode())
                     .when().put(getURL(SB_StatisticsVerticle.ADD_STAT_BULK))
                     .then().assertThat().statusCode(200)
@@ -284,9 +283,9 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .body("count", is(5));
 
             for (int i = 0; i < 5; i++) {
-                stats.add(generateStat(user, "fake", i));
+                stats.add(generateStat(user.result(), "fake", i));
             }
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(stats.encode())
                     .when().put(getURL(SB_StatisticsVerticle.ADD_STAT_BULK))
                     .then().assertThat().statusCode(200)
@@ -297,16 +296,16 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
                     .put(SB_StatisticsVerticle.PARAM_END_DATE, System.currentTimeMillis() + 100)
                     .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("fake"))
-                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add(user.get_id()));
+                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add(user.result().get_id()));
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(10))
                     .body("code", hasItem("fake"));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 

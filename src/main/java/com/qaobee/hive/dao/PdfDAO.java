@@ -19,22 +19,21 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
  * The interface Pdf dao.
  */
-@FunctionalInterface
 public interface PdfDAO {
     /**
-     * Generate pdf json object.
+     * Generate pdf.
      *
-     * @param data     the data
-     * @param template the template
-     * @param filename the filename
-     * @return the json object
+     * @param data          the data
+     * @param template      the template
+     * @param filename      the filename
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> generatePDF(JsonObject data, String template, String filename);
+    void generatePDF(JsonObject data, String template, String filename, Handler<AsyncResult<JsonObject>> resultHandler);
 }

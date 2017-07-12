@@ -19,10 +19,10 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
  * The interface Person dao.
@@ -31,45 +31,45 @@ public interface PersonDAO {
     /**
      * Gets person list by sandbox.
      *
-     * @param sandboxId the sandbox id
-     * @return the person list by sandbox
+     * @param sandboxId     the sandbox id
+     * @param resultHandler the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getPersonListBySandbox(String sandboxId);
+    void getPersonListBySandbox(String sandboxId, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Gets person list.
      *
-     * @param listId    the list id
-     * @param listfield the listfield
-     * @return the person list
+     * @param listId        the list id
+     * @param listfield     the listfield
+     * @param resultHandler the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getPersonList(JsonArray listId, JsonArray listfield);
+    void getPersonList(JsonArray listId, JsonArray listfield, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
-     * Update person json object.
+     * Update person.
      *
-     * @param person the person
-     * @param userId the user id
-     * @param locale the locale
-     * @return the json object
+     * @param person        the person
+     * @param userId        the user id
+     * @param locale        the locale
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> updatePerson(JsonObject person, String userId, String locale);
+    void updatePerson(JsonObject person, String userId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets person.
      *
-     * @param id the id
-     * @return the person
+     * @param id            the id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getPerson(String id);
+    void getPerson(String id, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Add person json object.
+     * Add person.
      *
-     * @param person the person
-     * @param userId the user id
-     * @param locale the locale
-     * @return the json object
+     * @param person        the person
+     * @param userId        the user id
+     * @param locale        the locale
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> addPerson(JsonObject person, String userId, String locale);
+    void addPerson(JsonObject person, String userId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 }

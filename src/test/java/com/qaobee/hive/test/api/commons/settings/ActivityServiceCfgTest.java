@@ -24,7 +24,6 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -44,9 +43,8 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
     public void getActivityCfg(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .queryParam(ActivityCfgRoute.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .queryParam(ActivityCfgRoute.PARAM_DATE, "1391209200000")
@@ -55,7 +53,7 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
                     .body("activityId", notNullValue())
                     .body("activityId", is("ACT-HAND"));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -75,13 +73,13 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
     @Test
     public void getActivityCfgWithWrongHttpMethodTest(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .post(BASE_URL + "/get")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -91,27 +89,27 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
     @Test
     public void getActivityCfgWithMissingParameterTest(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .queryParam(ActivityCfgRoute.PARAM_DATE, "1391209200000")
                     .get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            given().header(TOKEN, u.getAccount().getToken())
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .queryParam(ActivityCfgRoute.PARAM_DATE, "1391209200000")
                     .get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            given().header(TOKEN, u.getAccount().getToken())
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .queryParam(ActivityCfgRoute.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -122,8 +120,8 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
     public void getActivityCfgWithWrongActivityIdTest(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_ACTIVITY_ID, "ACT-BIDON")
                     .queryParam(ActivityCfgRoute.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .queryParam(ActivityCfgRoute.PARAM_DATE, "1391209200000")
@@ -131,7 +129,7 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -142,8 +140,8 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
     public void getParamsFields(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .queryParam(ActivityCfgRoute.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .queryParam(ActivityCfgRoute.PARAM_DATE, "1391209200000")
@@ -152,7 +150,7 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(7));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -172,13 +170,13 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
     @Test
     public void getParamsFieldsWithWrongHttpMethodTest(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .post(BASE_URL + "/params")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -188,29 +186,29 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
     @Test
     public void getParamsFieldsWithMissingParameterTest(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .queryParam(ActivityCfgRoute.PARAM_DATE, "1391209200000")
                     .queryParam(ActivityCfgRoute.PARAM_FIELD_LIST, "listPositionType")
                     .get(BASE_URL + "/params")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            given().header(TOKEN, u.getAccount().getToken())
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .queryParam(ActivityCfgRoute.PARAM_DATE, "1391209200000")
                     .queryParam(ActivityCfgRoute.PARAM_FIELD_LIST, "listPositionType")
                     .get(BASE_URL + "/params")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            given().header(TOKEN, u.getAccount().getToken())
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .queryParam(ActivityCfgRoute.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .queryParam(ActivityCfgRoute.PARAM_FIELD_LIST, "listPositionType")
                     .get(BASE_URL + "/params")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-            given().header(TOKEN, u.getAccount().getToken())
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .queryParam(ActivityCfgRoute.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .queryParam(ActivityCfgRoute.PARAM_DATE, "1391209200000")
@@ -218,7 +216,7 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -229,8 +227,8 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
     public void getParamsFieldsWithWrongActivityIdTest(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(ActivityCfgRoute.PARAM_ACTIVITY_ID, "ACT-BIDON")
                     .queryParam(ActivityCfgRoute.PARAM_COUNTRY_ID, "CNTR-250-FR-FRA")
                     .queryParam(ActivityCfgRoute.PARAM_DATE, "1391209200000")
@@ -239,7 +237,7 @@ public class ActivityServiceCfgTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 }

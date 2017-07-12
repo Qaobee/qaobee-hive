@@ -22,6 +22,9 @@ package com.qaobee.hive.dao.impl;
 import com.qaobee.hive.dao.FeedbackDAO;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import net.rcarz.jiraclient.*;
 import org.apache.commons.codec.binary.Base64;
@@ -47,7 +50,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
     private JsonObject config;
 
     @Override
-    public void sendFeedback(JsonObject data) throws QaobeeException {
+    public void sendFeedback(JsonObject data, Handler<AsyncResult<Void>> resultHandler) {
         BasicCredentials creds = new BasicCredentials(config.getString("user"), config.getString("passwd"));
         JiraClient jira = new JiraClient(config.getString("url"), creds);
         try {
@@ -77,9 +80,10 @@ public class FeedbackDAOImpl implements FeedbackDAO {
                 newIssue.addAttachment(temp);
                 FileUtils.deleteQuietly(temp);
             }
+            resultHandler.handle(Future.succeededFuture());
         } catch (JiraException | IOException e) {
             LOG.error(e.getMessage(), e);
-            throw new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage());
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage())));
         }
     }
 }

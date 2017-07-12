@@ -23,14 +23,13 @@ import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
 import com.qaobee.hive.dao.EventDAO;
 import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 
@@ -45,49 +44,55 @@ public class EventDAOImpl implements EventDAO {
     private NotificationsService notificationsService;
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getEvent(String id) {
-        return mongo.getById(id, DBCollections.EVENT);
+    public void getEvent(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.getById(id, DBCollections.EVENT, resultHandler);
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> updateEvent(JsonObject event, String currentUserId, String locale) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(event, DBCollections.EVENT)
-                .done(id -> {
-                    event.put("_id", id);
-                    deferred.resolve(event);
-                    mongo.getById(event.getJsonObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX)
-                            .done(sandbox ->
-                                    notificationsService.sendNotification(sandbox.getString("_id"), DBCollections.SANDBOX, new JsonObject()
-                                            .put("content", Messages.getString("notification.event.update.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
-                                            .put("title", Messages.getString("notification.event.update.title", locale))
-                                            .put("senderId", currentUserId), new JsonArray().add(currentUserId), ar->{}));
-
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+    public void updateEvent(JsonObject event, String currentUserId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(event, DBCollections.EVENT, upsertRes -> {
+            if (upsertRes.succeeded()) {
+                event.put("_id", upsertRes.result());
+                mongo.getById(event.getJsonObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX, sandbox -> {
+                    if (sandbox.succeeded()) {
+                        notificationsService.sendNotification(sandbox.result().getString("_id"), DBCollections.SANDBOX, new JsonObject()
+                                .put("content", Messages.getString("notification.event.update.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
+                                .put("title", Messages.getString("notification.event.update.title", locale))
+                                .put("senderId", currentUserId), new JsonArray().add(currentUserId), ar -> {
+                        });
+                    }
+                });
+                resultHandler.handle(Future.succeededFuture(event));
+            } else {
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
+            }
+        });
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> addEvent(JsonObject event, String currentUserId, String locale) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(event, DBCollections.EVENT)
-                .done(id -> {
-                    event.put("_id", id);
-                    deferred.resolve(event);
-                    mongo.getById(event.getJsonObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX)
-                            .done(sandbox ->
-                                    notificationsService.sendNotification(sandbox.getString("_id"), DBCollections.SANDBOX, new JsonObject()
-                                            .put("content", Messages.getString("notification.event.add.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
-                                            .put("title", Messages.getString("notification.event.add.title", locale))
-                                            .put("senderId", currentUserId), new JsonArray().add(currentUserId), ar->{}));
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+    public void addEvent(JsonObject event, String currentUserId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(event, DBCollections.EVENT, upsertRes -> {
+            if (upsertRes.succeeded()) {
+                event.put("_id", upsertRes.result());
+                mongo.getById(event.getJsonObject("owner").getString(FIELD_SANDBOX_ID), DBCollections.SANDBOX, sandbox -> {
+                    if (sandbox.succeeded()) {
+                        notificationsService.sendNotification(sandbox.result().getString("_id"), DBCollections.SANDBOX, new JsonObject()
+                                .put("content", Messages.getString("notification.event.add.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
+                                .put("title", Messages.getString("notification.event.add.title", locale))
+                                .put("senderId", currentUserId), new JsonArray().add(currentUserId), ar -> {
+                        });
+                    }
+                });
+
+                resultHandler.handle(Future.succeededFuture(event));
+            } else {
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
+            }
+        });
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getEventList(JsonObject params) {
+    public void getEventList(JsonObject params, Handler<AsyncResult<JsonArray>> resultHandler) {
         // Aggregate section
         // $MACTH section
         JsonObject dbObjectChild = new JsonObject();
@@ -130,6 +135,6 @@ public class EventDAOImpl implements EventDAO {
             JsonObject limit = new JsonObject().put("$limit", limitNumber);
             pipelineAggregation.add(limit);
         }
-        return mongo.aggregate(pipelineAggregation, DBCollections.EVENT);
+        mongo.aggregate(pipelineAggregation, DBCollections.EVENT, resultHandler);
     }
 }

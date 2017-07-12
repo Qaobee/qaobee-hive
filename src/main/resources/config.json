@@ -47,9 +47,8 @@
     "mongo.db": {
       "host": "localhost",
       "port": 27017,
-      "pool_size": 2,
-      "db_name": "hive",
-      "read_preference": "nearest"
+      "maxPoolSize": 2,
+      "keepAlive": true
     },
     "mailchimp": {
       "env": "DEV",
@@ -129,9 +128,9 @@
     },
     "mongo.db": {
       "address": "mongo.db",
-      "pool_size": 10,
       "db_name": "hive",
-      "read_preference": "nearest"
+      "maxPoolSize": 20,
+      "keepAlive": true
     },
     "stripe": {
       "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp",
@@ -215,9 +214,9 @@
     },
     "mongo.db": {
       "address": "mongo.db",
-      "pool_size": 10,
       "db_name": "hive",
-      "read_preference": "nearest"
+      "maxPoolSize": 20,
+      "keepAlive": true
     },
     "stripe": {
       "api_secret": "sk_live_231nVDKVdKgHfAHBMyF9b1h9",

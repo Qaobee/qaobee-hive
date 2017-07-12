@@ -27,7 +27,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -48,7 +47,7 @@ public class SB_EventTest extends VertxJunitSupport {
     public void addEvent(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser().done(user -> {
+        generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put(SB_EventVerticle.PARAM_LABEL, "labelValue")
                     .put(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
@@ -62,7 +61,7 @@ public class SB_EventTest extends VertxJunitSupport {
                             .put("effectiveId", "550b31f925da07681592db23")
                     );
 
-            String id = given().header(TOKEN, user.getAccount().getToken())
+            String id = given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_EventVerticle.ADD_EVENT))
                     .then().assertThat().statusCode(200)
@@ -70,14 +69,14 @@ public class SB_EventTest extends VertxJunitSupport {
                     .body(SB_EventVerticle.PARAM_LABEL, is(params.getString(SB_EventVerticle.PARAM_LABEL)))
                     .extract().path("_id");
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .queryParam(SB_EventVerticle.PARAM_ID, id)
                     .when().get(getURL(SB_EventVerticle.GET))
                     .then().assertThat().statusCode(200)
                     .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
                     .body(SB_EventVerticle.PARAM_LABEL, is(params.getString(SB_EventVerticle.PARAM_LABEL)));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -107,7 +106,7 @@ public class SB_EventTest extends VertxJunitSupport {
     @Test
     public void addEventWithMissingParams(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().done(u -> {
+        generateLoggedUser().setHandler(u -> {
             final JsonObject params = new JsonObject()
                     .put(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .put(SB_EventVerticle.PARAM_LABEL, "labelValue")
@@ -124,14 +123,14 @@ public class SB_EventTest extends VertxJunitSupport {
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
-                given().header(TOKEN, u.getAccount().getToken())
+                given().header(TOKEN, u.result().getAccount().getToken())
                         .body(params2.encode())
                         .when().post(getURL(SB_EventVerticle.ADD_EVENT))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -142,7 +141,7 @@ public class SB_EventTest extends VertxJunitSupport {
     public void getListEvent(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().done(user -> {
+        generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject();
             params.put(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .put(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray().add("championship"))
@@ -152,7 +151,7 @@ public class SB_EventTest extends VertxJunitSupport {
                     .put(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23")
                     .put(SB_EventVerticle.PARAM_OWNER_TEAMID, "552d5e08644a77b3a20afdfe");
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_EventVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
@@ -163,27 +162,27 @@ public class SB_EventTest extends VertxJunitSupport {
                             .put("fieldName", SB_EventVerticle.PARAM_LABEL)
                             .put("sortOrder", -1)
                     ));
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_EventVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(2));
 
             params.put(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "");
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_EventVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(2));
 
             params.put(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "TOTO");
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_EventVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -214,7 +213,7 @@ public class SB_EventTest extends VertxJunitSupport {
     public void getListEventWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().done(user -> {
+        generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
                     .put(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray().add("championship"))
@@ -227,14 +226,14 @@ public class SB_EventTest extends VertxJunitSupport {
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
-                given().header(TOKEN, user.getAccount().getToken())
+                given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
                         .when().post(getURL(SB_EventVerticle.GET_LIST))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -245,15 +244,15 @@ public class SB_EventTest extends VertxJunitSupport {
     public void getEventById(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().done(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
                     .when().get(getURL(SB_EventVerticle.GET))
                     .then().assertThat().statusCode(200)
                     .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
                     .body(SB_EventVerticle.PARAM_LABEL, is("Amical"));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -284,13 +283,13 @@ public class SB_EventTest extends VertxJunitSupport {
     public void getEventByIdWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().done(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .when().get(getURL(SB_EventVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -301,14 +300,14 @@ public class SB_EventTest extends VertxJunitSupport {
     public void getEventByIdWithWrongParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().done(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .queryParam(SB_EventVerticle.PARAM_ID, "bla")
                     .when().get(getURL(SB_EventVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -319,15 +318,15 @@ public class SB_EventTest extends VertxJunitSupport {
     public void updateEvent(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND, DATA_SANDBOXES_HAND);
-        generateLoggedUser().done(user -> {
-            JsonObject event = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            JsonObject event = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
                     .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
                     .when().get(getURL(SB_EventVerticle.GET))
                     .then().assertThat().statusCode(200)
                     .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
                     .body(SB_EventVerticle.PARAM_LABEL, is("Amical")).extract().asString());
             event.put(SB_EventVerticle.PARAM_LABEL, "toto");
-            String id = given().header(TOKEN, user.getAccount().getToken())
+            String id = given().header(TOKEN, user.result().getAccount().getToken())
                     .body(event.encode())
                     .when().post(getURL(SB_EventVerticle.UPDATE))
                     .then().assertThat().statusCode(200)
@@ -335,14 +334,14 @@ public class SB_EventTest extends VertxJunitSupport {
                     .body(SB_EventVerticle.PARAM_LABEL, is(event.getString(SB_EventVerticle.PARAM_LABEL)))
                     .extract().path("_id");
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .queryParam(SB_EventVerticle.PARAM_ID, id)
                     .when().get(getURL(SB_EventVerticle.GET))
                     .then().assertThat().statusCode(200)
                     .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
                     .body(SB_EventVerticle.PARAM_LABEL, is(event.getString(SB_EventVerticle.PARAM_LABEL)));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -373,8 +372,8 @@ public class SB_EventTest extends VertxJunitSupport {
     public void updateEventWithMissingParams(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
-        generateLoggedUser().done(user -> {
-            JsonObject event = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            JsonObject event = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
                     .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
                     .when().get(getURL(SB_EventVerticle.GET))
                     .then().assertThat().statusCode(200)
@@ -385,14 +384,14 @@ public class SB_EventTest extends VertxJunitSupport {
             event.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(event.encode());
                 params2.remove(k);
-                given().header(TOKEN, user.getAccount().getToken())
+                given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
                         .when().post(getURL(SB_EventVerticle.UPDATE))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 }

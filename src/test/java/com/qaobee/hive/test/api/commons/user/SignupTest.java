@@ -44,8 +44,8 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void existingLogin(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
-            JsonObject param = new JsonObject().put(SignupVerticle.PARAM_LOGIN, u.getAccount().getLogin());
+        generateUser().setHandler(u -> {
+            JsonObject param = new JsonObject().put(SignupVerticle.PARAM_LOGIN, u.result().getAccount().getLogin());
             sendOnBus(SignupVerticle.LOGIN_EXISTS, param).done(res -> {
                 Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
                 given().body(param.encode())
@@ -55,7 +55,7 @@ public class SignupTest extends VertxJunitSupport {
                         .body("status", is(true));
                 async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -65,8 +65,8 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void existingLoginCaseInsensitive(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
-            JsonObject param = new JsonObject().put(SignupVerticle.PARAM_LOGIN, u.getAccount().getLogin().toUpperCase());
+        generateUser().setHandler(u -> {
+            JsonObject param = new JsonObject().put(SignupVerticle.PARAM_LOGIN, u.result().getAccount().getLogin().toUpperCase());
             sendOnBus(SignupVerticle.LOGIN_EXISTS, param).then(res -> {
                 Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
 
@@ -77,7 +77,7 @@ public class SignupTest extends VertxJunitSupport {
                         .body("status", is(true));
                 async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -87,7 +87,7 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void notExistingLogin(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             JsonObject param = new JsonObject().put(SignupVerticle.PARAM_LOGIN, "blabla");
             sendOnBus(SignupVerticle.LOGIN_EXISTS, param).then(res -> {
                 Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
@@ -99,7 +99,7 @@ public class SignupTest extends VertxJunitSupport {
                         .body("status", is(false));
                 async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -152,15 +152,15 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void registerWithExistingLogin(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             JsonObject params = generateNewUser();
-            params.getJsonObject("account").put("login", u.getAccount().getLogin());
+            params.getJsonObject("account").put("login", u.result().getAccount().getLogin());
             given().body(params.encode())
                     .when().put(getURL(SignupVerticle.REGISTER_NEW_USER))
                     .then().assertThat().statusCode(ExceptionCodes.NON_UNIQUE_LOGIN.getCode())
                     .body(CODE, is(ExceptionCodes.NON_UNIQUE_LOGIN.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -423,20 +423,20 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void accountCheckWrongOrMissingId(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             given().param("id", "haha")
-                    .param(CODE, u.getAccount().getActivationCode())
+                    .param(CODE, u.result().getAccount().getActivationCode())
                     .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(false));
 
-            given().param(CODE, u.getAccount().getActivationCode())
+            given().param(CODE, u.result().getAccount().getActivationCode())
                     .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -447,20 +447,20 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void accountCheckWrongOrMissingActivationCode(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
-            given().param("id", u.get_id())
+        generateUser().setHandler(u -> {
+            given().param("id", u.result().get_id())
                     .param(CODE, "haha")
                     .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(false));
 
-            given().param("id", u.get_id())
+            given().param("id", u.result().get_id())
                     .when().get(getURL(SignupVerticle.ACCOUNT_CHECK))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -548,14 +548,14 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void firstConnectionCheckWrongUserId(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             given().param(SignupVerticle.PARAM_ID, "blabla")
-                    .param(SignupVerticle.PARAM_CODE, u.getAccount().getActivationCode())
+                    .param(SignupVerticle.PARAM_CODE, u.result().getAccount().getActivationCode())
                     .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body(CODE, is(ExceptionCodes.BAD_LOGIN.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -565,14 +565,14 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void firstConnectionCheckWrongActivationCode(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
-            given().param(SignupVerticle.PARAM_ID, u.get_id())
+        generateUser().setHandler(u -> {
+            given().param(SignupVerticle.PARAM_ID, u.result().get_id())
                     .param(SignupVerticle.PARAM_CODE, "blabla")
                     .when().get(getURL(SignupVerticle.FIRST_CONNECTION_CHECK))
                     .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -658,13 +658,13 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void finalizeSignupWithWrongHttpMethod(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .when().get(getURL(SignupVerticle.FINALIZE_SIGNUP))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 

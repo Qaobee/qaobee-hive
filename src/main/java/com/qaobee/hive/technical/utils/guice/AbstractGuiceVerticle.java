@@ -24,17 +24,13 @@ import com.google.inject.Injector;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang.StringUtils;
-import org.jdeferred.Deferred;
-import org.jdeferred.DeferredManager;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DefaultDeferredManager;
-import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +49,9 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      */
     @Inject
     protected Utils utils;
-    private List<Promise<Boolean, Throwable, Integer>> promises = new ArrayList<>();
+    private List<Future> promises = new ArrayList<>();
     protected Injector injector;
+
     /**
      * Inject abstract guice verticle.
      *
@@ -82,12 +79,12 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      * @return the abstract guice verticle
      */
     public <T> AbstractGuiceVerticle add(String address, Handler<Message<T>> handler) {
-        Deferred<Boolean, Throwable, Integer> deferred = new DeferredObject<>();
+        Future<Boolean> deferred = Future.future();
         vertx.eventBus().consumer(address, handler).completionHandler(ar -> {
             if (ar.succeeded()) {
-                deferred.resolve(true);
+                deferred.complete(true);
             } else {
-                deferred.reject(ar.cause());
+                deferred.fail(ar.cause());
             }
         });
         promises.add(deferred);
@@ -95,10 +92,13 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
     }
 
     public void register(Future<Void> startFuture) {
-        DeferredManager dm = new DefaultDeferredManager();
-        dm.when(promises.toArray(new Promise[promises.size()]))
-                .done(rs -> startFuture.complete())
-                .fail(ex -> startFuture.fail((Throwable) ex.getReject()));
+        CompositeFuture.all(promises).setHandler(rs -> {
+            if (rs.succeeded()) {
+                startFuture.complete();
+            } else {
+                startFuture.fail(rs.cause());
+            }
+        });
     }
 
 
@@ -108,8 +108,14 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      * @param message the message
      * @param promise the promise
      */
-    protected void replyJsonObject(Message<String> message, Promise<JsonObject, QaobeeException, Integer> promise) {
-        promise.done(json -> message.reply(json.encode())).fail(e -> utils.sendError(message, e));
+    protected void replyJsonObject(Message<String> message, Future<JsonObject> promise) {
+        promise.setHandler(res -> {
+            if (res.succeeded()) {
+                message.reply(res.result());
+            } else {
+                utils.sendError(message, (QaobeeException) res.cause());
+            }
+        });
     }
 
     /**
@@ -118,18 +124,14 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      * @param message the message
      * @param promise the promise
      */
-    protected void replyJsonObjectJ(Message<JsonObject> message, Promise<JsonObject, QaobeeException, Integer> promise) {
-        promise.done(message::reply).fail(e -> utils.sendErrorJ(message, e));
-    }
-
-    /**
-     * Reply string.
-     *
-     * @param message the message
-     * @param promise the promise
-     */
-    protected void replyString(Message<String> message, Promise<String, QaobeeException, Integer> promise) {
-        promise.done(message::reply).fail(e -> utils.sendError(message, e));
+    protected void replyJsonObjectJ(Message<JsonObject> message, Future<JsonObject> promise) {
+        promise.setHandler(res -> {
+            if (res.succeeded()) {
+                message.reply(res.result().encode());
+            } else {
+                utils.sendErrorJ(message, (QaobeeException) res.cause());
+            }
+        });
     }
 
     /**
@@ -138,8 +140,14 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      * @param message the message
      * @param promise the promise
      */
-    protected void replyJsonArray(Message<String> message, Promise<JsonArray, QaobeeException, Integer> promise) {
-        promise.done(json -> message.reply(json.encode())).fail(e -> utils.sendError(message, e));
+    protected void replyJsonArray(Message<String> message, Future<JsonArray> promise) {
+        promise.setHandler(res -> {
+            if (res.succeeded()) {
+                message.reply(res.result().encode());
+            } else {
+                utils.sendError(message, (QaobeeException) res.cause());
+            }
+        });
     }
 
     /**
@@ -148,18 +156,13 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      * @param message the message
      * @param promise the promise
      */
-    protected void replyBoolean(Message<String> message, Promise<Boolean, QaobeeException, Integer> promise) {
-        promise.done(r -> utils.sendStatus(r, message)).fail(e -> utils.sendStatus(false, message));
+    protected void replyBoolean(Message<String> message, Future<Boolean> promise) {
+        promise.setHandler(res -> {
+            if (res.succeeded()) {
+                utils.sendStatus(res.result(), message);
+            } else {
+                utils.sendStatus(false, message);
+            }
+        });
     }
-
-    /**
-     * Reply boolean j.
-     *
-     * @param message the message
-     * @param promise the promise
-     */
-    protected void replyBooleanJ(Message<JsonObject> message, Promise<Boolean, QaobeeException, Integer> promise) {
-        promise.done(r -> utils.sendStatusJson(r, message)).fail(e -> utils.sendStatusJson(false, message));
-    }
-
 }

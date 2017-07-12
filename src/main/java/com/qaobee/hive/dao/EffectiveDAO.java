@@ -19,45 +19,45 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
  * The interface Effective dao.
  */
 public interface EffectiveDAO {
     /**
-     * Add json object.
+     * Add.
      *
-     * @param effective the effective
-     * @return the json object
+     * @param effective     the effective
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> add(JsonObject effective);
+    void add(JsonObject effective, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Update json object.
+     * Update.
      *
-     * @param effective the effective
-     * @return the json object
+     * @param effective     the effective
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> update(JsonObject effective);
+    void update(JsonObject effective, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets effective list.
      *
      * @param sandboxId       the sandbox id
      * @param categoryAgeCode the category age code
-     * @return the effective list
+     * @param resultHandler   the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getEffectiveList(String sandboxId, String categoryAgeCode);
+    void getEffectiveList(String sandboxId, String categoryAgeCode, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Gets effective.
      *
-     * @param id the id
-     * @return the effective
+     * @param id            the id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getEffective(String id);
+    void getEffective(String id, Handler<AsyncResult<JsonObject>> resultHandler);
 }

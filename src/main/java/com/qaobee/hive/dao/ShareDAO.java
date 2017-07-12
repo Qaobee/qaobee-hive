@@ -20,10 +20,10 @@
 package com.qaobee.hive.dao;
 
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
  * The interface Share dao.
@@ -31,82 +31,81 @@ import org.jdeferred.Promise;
 public interface ShareDAO {
 
     /**
-     * Desactivate user from sandbox.
+     * Desactivate member to sandbox.
      *
-     * @param sandboxId the sandbox id
-     * @param userId    the user id
-     * @return the json object
+     * @param sandboxId     the sandbox id
+     * @param userId        the user id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> desactivateMemberToSandbox(String sandboxId, String userId);
+    void desactivateMemberToSandbox(String sandboxId, String userId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Activate user from sandbox.
+     * Activate member to sandbox.
      *
-     * @param sandboxId the sandbox id
-     * @param userId    the user id
-     * @return the json object
+     * @param sandboxId     the sandbox id
+     * @param userId        the user id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> activateMemberToSandbox(String sandboxId, String userId);
+    void activateMemberToSandbox(String sandboxId, String userId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Invite user to sandbox json object.
+     * Invite member to sandbox.
      *
-     * @param sandboxId the sandbox id
-     * @param userEmail the user email
-     * @param roleCode  the role code
-     * @return the json object
+     * @param sandboxId     the sandbox id
+     * @param userEmail     the user email
+     * @param roleCode      the role code
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> inviteMemberToSandbox(String sandboxId, String userEmail, String roleCode);
+    void inviteMemberToSandbox(String sandboxId, String userEmail, String roleCode, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Remove revive an invitation to an person to join sandbox json object.
+     * Revive invitation to user.
      *
-     * @param invitationId the invitation id
-     * @return the json object
+     * @param invitationId  the invitation id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> reviveInvitationToUser(String invitationId);
+    void reviveInvitationToUser(String invitationId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Remove invitation json object.
+     * Remove invitation to sandbox.
      *
-     * @param invitationId the invitation id
-     * @return the json object
+     * @param invitationId  the invitation id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> removeInvitationToSandbox(String invitationId);
+    void removeInvitationToSandbox(String invitationId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Get invitation json object.
+     * Gets invitation to sandbox.
      *
-     * @param invitationId the invitation id
-     * @return the json object
+     * @param invitationId  the invitation id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getInvitationToSandbox(String invitationId);
+    void getInvitationToSandbox(String invitationId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Confirm invitation to joint the sandbox.
+     * Confirm invitation to sandbox.
      *
-     * @param invitationId the invitation id
-     * @param userId       the user id
-     * @param answer       the answer (accepted or refused)
-     * @return the json object
+     * @param invitationId  the invitation id
+     * @param userId        the user id
+     * @param answer        the answer
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> confirmInvitationToSandbox(String invitationId, String userId, String answer);
-
+    void confirmInvitationToSandbox(String invitationId, String userId, String answer, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets list of shared sandboxes.
      *
-     * @param userId the user id
-     * @return the list of shared sandboxes owners and members
+     * @param userId        the user id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getListOfSharedSandboxes(String userId);
+    void getListOfSharedSandboxes(String userId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Gets list of invitation sandboxes.
+     * Gets list of invitations to sandbox.
      *
-     * @param sandboxId the sandbox id
-     * @param status    the status of invitation
-     * @return the list of invitation to the sandbox
+     * @param sandboxId     the sandbox id
+     * @param status        the status
+     * @param resultHandler the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getListOfInvitationsToSandbox(String sandboxId, String status);
+    void getListOfInvitationsToSandbox(String sandboxId, String status, Handler<AsyncResult<JsonArray>> resultHandler);
 }

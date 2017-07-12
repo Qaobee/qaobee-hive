@@ -19,10 +19,10 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 import java.util.List;
 
@@ -33,43 +33,43 @@ public interface SandBoxDAO {
     /**
      * Gets sandbox by id.
      *
-     * @param sandboxId the sandbox id
-     * @return the sandbox sharing
+     * @param sandboxId     the sandbox id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getSandboxById(String sandboxId);
+    void getSandboxById(String sandboxId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets enriched sandbox.
      *
-     * @param sandbox the sandbox
-     * @return the enriched sandbox
+     * @param sandbox       the sandbox
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getEnrichedSandbox(JsonObject sandbox);
+    void getEnrichedSandbox(JsonObject sandbox, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Update json object.
+     * Update sandbox.
      *
-     * @param sandbox the sandbox
-     * @return the json object
+     * @param sandbox       the sandbox
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> updateSandbox(JsonObject sandbox);
+    void updateSandbox(JsonObject sandbox, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets list by owner.
      *
-     * @param usersIds     the users ids
-     * @param loggedUserId the logged user id
-     * @return the list by owner
+     * @param usersIds      the users ids
+     * @param loggedUserId  the logged user id
+     * @param resultHandler the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getListByOwner(List<String> usersIds, String loggedUserId);
+    void getListByOwner(List<String> usersIds, String loggedUserId, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Gets by owner.
      *
-     * @param activityId the activity id
-     * @param userId     the user id
-     * @return the by owner
+     * @param activityId    the activity id
+     * @param userId        the user id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getByOwner(String activityId, String userId);
+    void getByOwner(String activityId, String userId, Handler<AsyncResult<JsonObject>> resultHandler);
 
 }

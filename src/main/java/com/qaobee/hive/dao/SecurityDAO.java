@@ -19,74 +19,72 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
- * Created by b3605 on 18/07/16.
- *
- * @author Xavier MARIN (b3605)
+ * The interface Security dao.
  */
 public interface SecurityDAO {
     /**
-     * Login by token json object.
+     * Login by token.
      *
-     * @param login       the login
-     * @param mobileToken the mobile token
-     * @param locale      the locale
-     * @return the json object
+     * @param login         the login
+     * @param mobileToken   the mobile token
+     * @param locale        the locale
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> loginByToken(String login, String mobileToken, String locale);
+    void loginByToken(String login, String mobileToken, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Password reset boolean.
+     * Password reset.
      *
      * @param reCaptchaChallenge   the re captcha challenge
      * @param id                   the id
      * @param code                 the code
      * @param passwd               the passwd
      * @param byPassActivationCode the by pass activation code
-     * @return the boolean
+     * @param resultHandler        the result handler
      */
-    Promise<Boolean, QaobeeException, Integer> passwordReset(String reCaptchaChallenge, String id, String code, String passwd, boolean byPassActivationCode);
+    void passwordReset(String reCaptchaChallenge, String id, String code, String passwd, boolean byPassActivationCode, Handler<AsyncResult<Boolean>> resultHandler);
 
     /**
-     * Password renew check json object.
+     * Password renew check.
      *
-     * @param id   the id
-     * @param code the code
-     * @return the json object
+     * @param id            the id
+     * @param code          the code
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> passwordRenewCheck(String id, String code);
+    void passwordRenewCheck(String id, String code, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Password renew boolean.
+     * Password renew.
      *
-     * @param login  the login
-     * @param locale the locale
-     * @return the boolean
+     * @param login         the login
+     * @param locale        the locale
+     * @param resultHandler the result handler
      */
-    Promise<Boolean, QaobeeException, Integer> passwordRenew(String login, String locale);
+    void passwordRenew(String login, String locale, Handler<AsyncResult<Boolean>> resultHandler);
 
     /**
-     * Logout boolean.
+     * Logout.
      *
-     * @param token the token
-     * @return the boolean
+     * @param token         the token
+     * @param resultHandler the result handler
      */
-    Promise<Boolean, QaobeeException, Integer> logout(String token);
+    void logout(String token, Handler<AsyncResult<Boolean>> resultHandler);
 
     /**
-     * Login json object.
+     * Login.
      *
-     * @param login       the login
-     * @param password    the password
-     * @param mobileToken the mobile token
-     * @param pushId      the push id
-     * @param deviceOS    the device os
-     * @param locale      the locale
-     * @return the json object
+     * @param login         the login
+     * @param password      the password
+     * @param mobileToken   the mobile token
+     * @param pushId        the push id
+     * @param deviceOS      the device os
+     * @param locale        the locale
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> login(String login, String password, String mobileToken, String pushId, String deviceOS, String locale);
+    void login(String login, String password, String mobileToken, String pushId, String deviceOS, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 }

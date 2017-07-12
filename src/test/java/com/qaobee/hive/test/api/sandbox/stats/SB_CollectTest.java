@@ -26,7 +26,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -48,9 +47,9 @@ public class SB_CollectTest extends VertxJunitSupport {
     public void addCollect(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND, DATA_EVENT_HAND);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             JsonObject event = new JsonObject(
-                    given().header(TOKEN, user.getAccount().getToken())
+                    given().header(TOKEN, user.result().getAccount().getToken())
                             .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
                             .when().get(getURL(SB_EventVerticle.GET))
                             .then().assertThat().statusCode(200)
@@ -60,14 +59,14 @@ public class SB_CollectTest extends VertxJunitSupport {
 
             final JsonObject Collect = generateCollect(event);
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(Collect.encode())
                     .when().post(getURL(SB_CollectVerticle.ADD_COLLECT))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("eventRef.address.city", is("Brest"));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -99,10 +98,10 @@ public class SB_CollectTest extends VertxJunitSupport {
     public void addCollectWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_USER_QAOBEE);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
 
             JsonObject event = new JsonObject(
-                    given().header(TOKEN, user.getAccount().getToken())
+                    given().header(TOKEN, user.result().getAccount().getToken())
                             .queryParam(SB_EventVerticle.PARAM_ID, "5660c53ac630d9b391c0c4ec")
                             .when().get(getURL(SB_EventVerticle.GET))
                             .then().assertThat().statusCode(200)
@@ -116,14 +115,14 @@ public class SB_CollectTest extends VertxJunitSupport {
             Collect.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(Collect.encode());
                 params2.remove(k);
-                given().header(TOKEN, user.getAccount().getToken())
+                given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
                         .when().post(getURL(SB_CollectVerticle.ADD_COLLECT))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -134,9 +133,9 @@ public class SB_CollectTest extends VertxJunitSupport {
     public void updateCollect(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND, DATA_EVENT_HAND);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             JsonObject event = new JsonObject(
-                    given().header(TOKEN, user.getAccount().getToken())
+                    given().header(TOKEN, user.result().getAccount().getToken())
                             .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
                             .when().get(getURL(SB_EventVerticle.GET))
                             .then().assertThat().statusCode(200)
@@ -145,7 +144,7 @@ public class SB_CollectTest extends VertxJunitSupport {
                             .extract().asString());
 
             JsonObject collect = new JsonObject(
-                    given().header(TOKEN, user.getAccount().getToken())
+                    given().header(TOKEN, user.result().getAccount().getToken())
                             .body(generateCollect(event).encode())
                             .when().post(getURL(SB_CollectVerticle.ADD_COLLECT))
                             .then().assertThat().statusCode(200)
@@ -155,14 +154,14 @@ public class SB_CollectTest extends VertxJunitSupport {
 
             long endDate = System.currentTimeMillis();
             collect.put("endDate", endDate);
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(collect.encode())
                     .when().post(getURL(SB_CollectVerticle.UPDATE))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("endDate", is(endDate));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -193,9 +192,9 @@ public class SB_CollectTest extends VertxJunitSupport {
     public void updateCollectWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_USER_QAOBEE, DATA_SANDBOXES_HAND, DATA_EVENT_HAND);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             JsonObject event = new JsonObject(
-                    given().header(TOKEN, user.getAccount().getToken())
+                    given().header(TOKEN, user.result().getAccount().getToken())
                             .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
                             .when().get(getURL(SB_EventVerticle.GET))
                             .then().assertThat().statusCode(200)
@@ -204,7 +203,7 @@ public class SB_CollectTest extends VertxJunitSupport {
                             .extract().asString());
 
             JsonObject collect = new JsonObject(
-                    given().header(TOKEN, user.getAccount().getToken())
+                    given().header(TOKEN, user.result().getAccount().getToken())
                             .body(generateCollect(event).encode())
                             .when().post(getURL(SB_CollectVerticle.ADD_COLLECT))
                             .then().assertThat().statusCode(200)
@@ -219,14 +218,14 @@ public class SB_CollectTest extends VertxJunitSupport {
             collect.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(collect.encode());
                 params2.remove(k);
-                given().header(TOKEN, user.getAccount().getToken())
+                given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
                         .when().post(getURL(SB_CollectVerticle.UPDATE))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -237,7 +236,7 @@ public class SB_CollectTest extends VertxJunitSupport {
     public void getListCollect(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_USER_QAOBEE);
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put(SB_CollectVerticle.PARAM_START_DATE, 1448491800000L)
                     .put(SB_CollectVerticle.PARAM_END_DATE, 1448492500000L)
@@ -246,7 +245,7 @@ public class SB_CollectTest extends VertxJunitSupport {
                     .put(SB_CollectVerticle.PARAM_EVENT_ID, "35d65151-2fe5-48e1-a219-8534412b6bca")
                     .put(SB_CollectVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_CollectVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
@@ -255,13 +254,13 @@ public class SB_CollectTest extends VertxJunitSupport {
 
             params.put(SB_CollectVerticle.PARAM_SANDBOX_ID, "TOTO");
 
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(getURL(SB_CollectVerticle.GET_LIST))
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -291,7 +290,7 @@ public class SB_CollectTest extends VertxJunitSupport {
     @Test
     public void getListCollectWithMissingParameters(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put(SB_CollectVerticle.PARAM_START_DATE, 1448491800000L)
                     .put(SB_CollectVerticle.PARAM_END_DATE, 1448492500000L)
@@ -302,14 +301,14 @@ public class SB_CollectTest extends VertxJunitSupport {
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
-                given().header(TOKEN, user.getAccount().getToken())
+                given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
                         .when().post(getURL(SB_CollectVerticle.GET_LIST))
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -320,15 +319,15 @@ public class SB_CollectTest extends VertxJunitSupport {
     public void getCollectById(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_USER_QAOBEE);
-        generateLoggedUser().then(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .queryParam(SB_CollectVerticle.PARAM_ID, "565e0f0dbcda594d193e24db")
                     .when().get(getURL(SB_CollectVerticle.GET))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("status", is("done"));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -359,13 +358,13 @@ public class SB_CollectTest extends VertxJunitSupport {
     @Test
     public void getCollectByIdWithMissingParameters(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .when().get(getURL(SB_CollectVerticle.GET))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 

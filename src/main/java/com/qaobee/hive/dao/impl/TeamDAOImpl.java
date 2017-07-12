@@ -24,6 +24,7 @@ import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.dao.TeamDAO;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
@@ -83,34 +84,44 @@ public class TeamDAOImpl implements TeamDAO {
     @Override
     public Promise<JsonObject, QaobeeException, Integer> updateTeam(JsonObject team, String userId, String locale) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(team, DBCollections.TEAM).done(id -> {
-            team.put("_id", id);
-            JsonObject notification = new JsonObject()
-                    .put("content", Messages.getString("notification.team.update.content", locale,
-                            team.getString("label"),
-                            "/#/private/updateTeam/" + team.getString("_id") + "/" + team.getBoolean(PARAM_ADVERSARY)))
-                    .put("title", Messages.getString("notification.team.update.title", locale))
-                    .put("senderId", userId);
-            notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
-            deferred.resolve(team);
-        }).fail(deferred::reject);
+        mongo.upsert(team, DBCollections.TEAM,upsertRes -> {
+            if(upsertRes.succeeded()) {
+                team.put("_id", upsertRes.result());
+                JsonObject notification = new JsonObject()
+                        .put("content", Messages.getString("notification.team.update.content", locale,
+                                team.getString("label"),
+                                "/#/private/updateTeam/" + team.getString("_id") + "/" + team.getBoolean(PARAM_ADVERSARY)))
+                        .put("title", Messages.getString("notification.team.update.title", locale))
+                        .put("senderId", userId);
+                notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar -> {
+                });
+                deferred.resolve(team);
+            } else {
+                deferred.reject(new QaobeeException(((QaobeeSvcException) upsertRes.cause()).getCode(), upsertRes.cause()));
+            }
+        });
         return deferred.promise();
     }
 
     @Override
     public Promise<JsonObject, QaobeeException, Integer> addTeam(JsonObject team, String userId, String locale) {
         Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(team, DBCollections.TEAM).done(id -> {
-            team.put("_id", id);
-            JsonObject notification = new JsonObject()
-                    .put("content", Messages.getString("notification.team.add.content", locale,
-                            team.getString("label"),
-                            "/#/private/updateTeam/" + team.getString("_id") + "/" + team.getBoolean(PARAM_ADVERSARY)))
-                    .put("title", Messages.getString("notification.team.add.title", locale))
-                    .put("senderId", userId);
-            notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar->{});
-            deferred.resolve(team);
-        }).fail(deferred::reject);
+        mongo.upsert(team, DBCollections.TEAM, upsertRes -> {
+            if(upsertRes.succeeded()) {
+                team.put("_id", upsertRes.result());
+                JsonObject notification = new JsonObject()
+                        .put("content", Messages.getString("notification.team.add.content", locale,
+                                team.getString("label"),
+                                "/#/private/updateTeam/" + team.getString("_id") + "/" + team.getBoolean(PARAM_ADVERSARY)))
+                        .put("title", Messages.getString("notification.team.add.title", locale))
+                        .put("senderId", userId);
+                notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar -> {
+                });
+                deferred.resolve(team);
+            } else {
+                deferred.reject(new QaobeeException(((QaobeeSvcException) upsertRes.cause()).getCode(), upsertRes.cause()));
+            }
+        });
         return deferred.promise();
     }
 }

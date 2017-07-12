@@ -47,16 +47,16 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void updateProfileWithCommonData(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            u.setGender("androgyn");
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            u.result().setGender("androgyn");
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .body(Json.encode(u))
                     .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()))
+                    .body("name", is(u.result().getName()))
                     .body("gender", is("androgyn"));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -66,22 +66,22 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void updateProfileWithPasswordChange(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            u.getAccount().setPasswd("toto");
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            u.result().getAccount().setPasswd("toto");
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .body(Json.encode(u))
                     .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
             final JsonObject params = new JsonObject();
-            params.put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin());
+            params.put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin());
             params.put(UserVerticle.PARAM_PWD, "toto");
             given().body(params.encode())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -111,18 +111,18 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void updateProfileWithMissingId(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            u.setGender("androgyn");
+        generateLoggedUser().setHandler(u -> {
+            u.result().setGender("androgyn");
             JsonObject user = new JsonObject(Json.encode(u));
             user.remove("_id");
 
-            given().header(TOKEN, u.getAccount().getToken())
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .body(user.encode())
                     .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -132,18 +132,18 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void updateProfileWithWrongId(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            u.setGender("androgyn");
+        generateLoggedUser().setHandler(u -> {
+            u.result().setGender("androgyn");
             JsonObject user = new JsonObject(Json.encode(u));
             user.put("_id", "bla");
 
-            given().header(TOKEN, u.getAccount().getToken())
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .body(user.encode())
                     .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -153,14 +153,14 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateProfilePDF(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            byte[] byteArray = given().header(TOKEN, u.result().getAccount().getToken())
                     .get(BASE_URL + "/pdf")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
             Assert.assertTrue(byteArray.length > 0);
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -171,14 +171,14 @@ public class ProfileTest extends VertxJunitSupport {
     public void generateProfilePDFWithAnotherTempDir(TestContext context) {
         Async async = context.async();
         System.setProperty("OPENSHIFT_DATA_DIR", System.getProperty("java.io.tmpdir") + "/bla");
-        generateLoggedUser().then(u -> {
-            byte[] byteArray = given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            byte[] byteArray = given().header(TOKEN, u.result().getAccount().getToken())
                     .get(BASE_URL + "/pdf")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
             Assert.assertTrue(byteArray.length > 0);
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -188,16 +188,20 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateProfilePDFWithWrongDatas(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            u.setName("<&#\"\\-+}]à@");
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).then(id -> {
-                given().header(TOKEN, u.getAccount().getToken())
-                        .get(BASE_URL + "/pdf")
-                        .then().assertThat().statusCode(ExceptionCodes.INTERNAL_ERROR.getCode())
-                        .body(CODE, is(ExceptionCodes.INTERNAL_ERROR.toString()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        generateLoggedUser().setHandler(u -> {
+            u.result().setName("<&#\"\\-+}]à@");
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+                if (id.succeeded()) {
+                    given().header(TOKEN, u.result().getAccount().getToken())
+                            .get(BASE_URL + "/pdf")
+                            .then().assertThat().statusCode(ExceptionCodes.INTERNAL_ERROR.getCode())
+                            .body(CODE, is(ExceptionCodes.INTERNAL_ERROR.toString()));
+                    async.complete();
+                } else {
+                    Assert.fail(id.cause().getMessage());
+                }
+            });
+        });
         async.await(TIMEOUT);
     }
 
@@ -207,13 +211,13 @@ public class ProfileTest extends VertxJunitSupport {
     @Test
     public void generateProfileWithWrongHttpMethod(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .post(BASE_URL + "/pdf")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 

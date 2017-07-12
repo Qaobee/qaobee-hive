@@ -120,7 +120,7 @@ public class NotificationsServiceImpl implements NotificationsService {
                     } else {
                         switch (collection) {
                             case DBCollections.USER:
-                                addNotificationToUser(id, notification,res -> resultHandler.handle(Future.succeededFuture(res.result())));
+                                addNotificationToUser(id, notification, res -> resultHandler.handle(Future.succeededFuture(res.result())));
                                 break;
                             case DBCollections.SANDBOX:
                                 addNotificationToSandbox(target, notification, exclude)
@@ -141,27 +141,32 @@ public class NotificationsServiceImpl implements NotificationsService {
                 .put("timestamp", System.currentTimeMillis())
                 .put("read", false)
                 .put(DELETED, false);
-        mongo.upsert(notification, DBCollections.NOTIFICATION).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
-        mongo.getById(id, DBCollections.USER)
-                .done(u -> {
-                    if (u != null && u.containsKey(ACCOUNT) && u.getJsonObject(ACCOUNT).containsKey(FIELD_DEVICES)) {
-                        // Send firebase notification
-                        u.getJsonObject(ACCOUNT).getJsonArray(FIELD_DEVICES).forEach(d -> {
-                            switch (((JsonObject) d).getString(FIELD_DEVICE_OS, "unknown")) {
-                                case "android":
-                                    notifyAndroid(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
-                                    break;
-                                case "ios":
-                                    notifyIOS(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
-                                    break;
-                                default:
-                                    break;
+        mongo.upsert(notification, DBCollections.NOTIFICATION, updtRes -> {
+            if (updtRes.succeeded()) {
+                mongo.getById(id, DBCollections.USER)
+                        .done(u -> {
+                            if (u != null && u.containsKey(ACCOUNT) && u.getJsonObject(ACCOUNT).containsKey(FIELD_DEVICES)) {
+                                // Send firebase notification
+                                u.getJsonObject(ACCOUNT).getJsonArray(FIELD_DEVICES).forEach(d -> {
+                                    switch (((JsonObject) d).getString(FIELD_DEVICE_OS, "unknown")) {
+                                        case "android":
+                                            notifyAndroid(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
+                                            break;
+                                        case "ios":
+                                            notifyIOS(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                });
                             }
-                        });
-                    }
-                    vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
-                    resultHandler.handle(Future.succeededFuture(true));
-                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                            vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
+                            resultHandler.handle(Future.succeededFuture(true));
+                        }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+            } else {
+                resultHandler.handle(Future.failedFuture(updtRes.cause()));
+            }
+        });
     }
 
     @Override
@@ -169,11 +174,14 @@ public class NotificationsServiceImpl implements NotificationsService {
         mongo.getById(id, DBCollections.NOTIFICATION)
                 .done(n -> {
                     n.put("read", !n.getBoolean("read"));
-                    mongo.upsert(n, DBCollections.NOTIFICATION)
-                            .done(updtRes -> {
-                                vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
-                                resultHandler.handle(Future.succeededFuture(n));
-                            }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                    mongo.upsert(n, DBCollections.NOTIFICATION, updtRes -> {
+                        if (updtRes.succeeded()) {
+                            vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
+                            resultHandler.handle(Future.succeededFuture(n));
+                        } else {
+                            resultHandler.handle(Future.failedFuture(updtRes.cause()));
+                        }
+                    });
                 }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
     }
 
@@ -182,11 +190,14 @@ public class NotificationsServiceImpl implements NotificationsService {
         mongo.getById(id, DBCollections.NOTIFICATION)
                 .done(n -> {
                     n.put(DELETED, true);
-                    mongo.upsert(n, DBCollections.NOTIFICATION)
-                            .done(updtRes -> {
-                                vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
-                                resultHandler.handle(Future.succeededFuture(n));
-                            }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                    mongo.upsert(n, DBCollections.NOTIFICATION, updtRes -> {
+                        if (updtRes.succeeded()) {
+                            vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
+                            resultHandler.handle(Future.succeededFuture(n));
+                        } else {
+                            resultHandler.handle(Future.failedFuture(updtRes.cause()));
+                        }
+                    });
                 }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
     }
 

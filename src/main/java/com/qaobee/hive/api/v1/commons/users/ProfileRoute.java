@@ -73,7 +73,7 @@ public class ProfileRoute extends AbstractRoute {
      * @apiHeader {String} token
      */
     private void generateProfilePDF(RoutingContext context) {
-        userService.generateProfilePDF(context.user().principal(), context.request().getHeader("Accept-Language"), ar -> {
+        userService.generateProfilePDF(context.user().principal(), getLocale(context), ar -> {
             if (ar.succeeded()) {
                 vertx.eventBus().send(PDFVerticle.GENERATE_PDF, ar.result(), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), getPdfHandler(context));
             } else {

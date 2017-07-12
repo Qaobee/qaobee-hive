@@ -50,17 +50,17 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginOk(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd());
 
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -70,17 +70,17 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginOkWithUppercaseLogin(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin().toUpperCase())
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin().toUpperCase())
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd());
 
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -100,29 +100,29 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginOkWithMobileToken(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
 
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
                     .put(UserVerticle.MOBILE_TOKEN, UUID.randomUUID().toString());
 
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
     @Test
     public void loginOkWithMobileTokenAndPushId(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
                     .put(UserVerticle.MOBILE_TOKEN, UUID.randomUUID().toString())
                     .put(UserVerticle.PARAM_PUSH_ID, UUID.randomUUID().toString())
                     .put(UserVerticle.PARAM_OS, "android");
@@ -130,9 +130,9 @@ public class UserServiceTest extends VertxJunitSupport {
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -142,18 +142,18 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginKo(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
 
             JsonObject params = new JsonObject()
                     .put(UserVerticle.PARAM_LOGIN, "badlogin")
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd());
 
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -184,9 +184,9 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginPasswordKo(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
                     .put(UserVerticle.PARAM_PWD, "tutu");
 
             given().body(params.encodePrettily())
@@ -194,7 +194,7 @@ public class UserServiceTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -204,20 +204,24 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginUserInactive(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
-            u.getAccount().setActive(false);
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
-                JsonObject params = new JsonObject()
-                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                        .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd());
+        generateUser().setHandler(u -> {
+            u.result().getAccount().setActive(false);
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+                if (id.succeeded()) {
+                    JsonObject params = new JsonObject()
+                            .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                            .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd());
 
-                given().body(params.encodePrettily())
-                        .when().post(getURL(UserVerticle.LOGIN))
-                        .then().assertThat().statusCode(ExceptionCodes.NON_ACTIVE.getCode())
-                        .body("code", is(ExceptionCodes.NON_ACTIVE.toString()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+                    given().body(params.encodePrettily())
+                            .when().post(getURL(UserVerticle.LOGIN))
+                            .then().assertThat().statusCode(ExceptionCodes.NON_ACTIVE.getCode())
+                            .body("code", is(ExceptionCodes.NON_ACTIVE.toString()));
+                    async.complete();
+                } else {
+                    Assert.fail(id.cause().getMessage());
+                }
+            });
+        });
         async.await(TIMEOUT);
     }
 
@@ -227,29 +231,29 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginByMobileToken(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             String token = UUID.randomUUID().toString();
 
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
                     .put(UserVerticle.MOBILE_TOKEN, token);
 
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
 
             JsonObject params2 = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
                     .put(UserVerticle.MOBILE_TOKEN, token);
 
             given().body(params2.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -259,32 +263,36 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginByMobileTokenTrialPeriod(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
-            u.getAccount().getListPlan().get(0).setStatus("open");
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
-                String token = UUID.randomUUID().toString();
+        generateUser().setHandler(u -> {
+            u.result().getAccount().getListPlan().get(0).setStatus("open");
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+                if (id.succeeded()) {
+                    String token = UUID.randomUUID().toString();
 
-                JsonObject params = new JsonObject()
-                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                        .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                        .put(UserVerticle.MOBILE_TOKEN, token);
+                    JsonObject params = new JsonObject()
+                            .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                            .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
+                            .put(UserVerticle.MOBILE_TOKEN, token);
 
-                given().body(params.encodePrettily())
-                        .when().post(getURL(UserVerticle.LOGIN))
-                        .then().assertThat().statusCode(200)
-                        .body("name", is(u.getName()));
+                    given().body(params.encodePrettily())
+                            .when().post(getURL(UserVerticle.LOGIN))
+                            .then().assertThat().statusCode(200)
+                            .body("name", is(u.result().getName()));
 
-                JsonObject params2 = new JsonObject()
-                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                        .put(UserVerticle.MOBILE_TOKEN, token);
+                    JsonObject params2 = new JsonObject()
+                            .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                            .put(UserVerticle.MOBILE_TOKEN, token);
 
-                given().body(params2.encodePrettily())
-                        .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                        .then().assertThat().statusCode(200)
-                        .body("name", is(u.getName()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+                    given().body(params2.encodePrettily())
+                            .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                            .then().assertThat().statusCode(200)
+                            .body("name", is(u.result().getName()));
+                    async.complete();
+                } else {
+                    Assert.fail(id.cause().getMessage());
+                }
+            });
+        });
         async.await(TIMEOUT);
     }
 
@@ -294,24 +302,24 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginByMobileTokenWrongHTTPMethod(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             String token = UUID.randomUUID().toString();
 
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
                     .put(UserVerticle.MOBILE_TOKEN, token);
 
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
 
             given().when().get(getURL(UserVerticle.LOGIN_BY_TOKEN))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -321,18 +329,18 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginByMobileTokenWrongLogin(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             String token = UUID.randomUUID().toString();
 
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
                     .put(UserVerticle.MOBILE_TOKEN, token);
 
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
 
             JsonObject params2 = new JsonObject()
                     .put(UserVerticle.PARAM_LOGIN, "badLogin")
@@ -343,7 +351,7 @@ public class UserServiceTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -353,31 +361,35 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginByMobileTokenNotPaid(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
-            u.getAccount().getListPlan().get(0).setStatus("notpaid");
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
-                String token = UUID.randomUUID().toString();
-                JsonObject params = new JsonObject()
-                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                        .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                        .put(UserVerticle.MOBILE_TOKEN, token);
+        generateUser().setHandler(u -> {
+            u.result().getAccount().getListPlan().get(0).setStatus("notpaid");
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+                if (id.succeeded()) {
+                    String token = UUID.randomUUID().toString();
+                    JsonObject params = new JsonObject()
+                            .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                            .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
+                            .put(UserVerticle.MOBILE_TOKEN, token);
 
-                given().body(params.encodePrettily())
-                        .when().post(getURL(UserVerticle.LOGIN))
-                        .then().assertThat().statusCode(200)
-                        .body("name", is(u.getName()));
+                    given().body(params.encodePrettily())
+                            .when().post(getURL(UserVerticle.LOGIN))
+                            .then().assertThat().statusCode(200)
+                            .body("name", is(u.result().getName()));
 
-                JsonObject params2 = new JsonObject()
-                        .put(UserVerticle.PARAM_LOGIN, "badLogin")
-                        .put(UserVerticle.MOBILE_TOKEN, token);
+                    JsonObject params2 = new JsonObject()
+                            .put(UserVerticle.PARAM_LOGIN, "badLogin")
+                            .put(UserVerticle.MOBILE_TOKEN, token);
 
-                given().body(params2.encodePrettily())
-                        .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                        .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                        .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+                    given().body(params2.encodePrettily())
+                            .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                            .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                            .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+                    async.complete();
+                } else {
+                    Assert.fail(id.cause().getMessage());
+                }
+            });
+        });
         async.await(TIMEOUT);
     }
 
@@ -387,32 +399,36 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginByMobileTokenTrialPeriodEnded(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
-            u.getAccount().getListPlan().get(0).setStatus("open");
-            u.getAccount().getListPlan().get(0).setEndPeriodDate(0);
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER).done(id -> {
-                String token = UUID.randomUUID().toString();
-                JsonObject params = new JsonObject()
-                        .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                        .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
-                        .put(UserVerticle.MOBILE_TOKEN, token);
+        generateUser().setHandler(u -> {
+            u.result().getAccount().getListPlan().get(0).setStatus("open");
+            u.result().getAccount().getListPlan().get(0).setEndPeriodDate(0);
+            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+                if (id.succeeded()) {
+                    String token = UUID.randomUUID().toString();
+                    JsonObject params = new JsonObject()
+                            .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                            .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
+                            .put(UserVerticle.MOBILE_TOKEN, token);
 
-                given().body(params.encodePrettily())
-                        .when().post(getURL(UserVerticle.LOGIN))
-                        .then().assertThat().statusCode(200)
-                        .body("name", is(u.getName()));
+                    given().body(params.encodePrettily())
+                            .when().post(getURL(UserVerticle.LOGIN))
+                            .then().assertThat().statusCode(200)
+                            .body("name", is(u.result().getName()));
 
-                JsonObject params2 = new JsonObject()
-                        .put(UserVerticle.PARAM_LOGIN, "badLogin")
-                        .put(UserVerticle.MOBILE_TOKEN, token);
+                    JsonObject params2 = new JsonObject()
+                            .put(UserVerticle.PARAM_LOGIN, "badLogin")
+                            .put(UserVerticle.MOBILE_TOKEN, token);
 
-                given().body(params2.encodePrettily())
-                        .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
-                        .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                        .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+                    given().body(params2.encodePrettily())
+                            .when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
+                            .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
+                            .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
+                    async.complete();
+                } else {
+                    Assert.fail(id.cause().getMessage());
+                }
+            });
+        });
         async.await(TIMEOUT);
     }
 
@@ -422,21 +438,21 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginByMobileTokenWrongToken(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             String token = UUID.randomUUID().toString();
 
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
                     .put(UserVerticle.MOBILE_TOKEN, token);
 
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
 
             JsonObject params2 = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
                     .put(UserVerticle.MOBILE_TOKEN, "123456");
 
             given().body(params2.encodePrettily())
@@ -444,7 +460,7 @@ public class UserServiceTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body("code", is(ExceptionCodes.BAD_LOGIN.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -454,24 +470,24 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void loginByMobileTokenNoData(TestContext context) {
         Async async = context.async();
-        generateUser().then(u -> {
+        generateUser().setHandler(u -> {
             String token = UUID.randomUUID().toString();
 
             JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
-                    .put(UserVerticle.PARAM_PWD, u.getAccount().getPasswd())
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, u.result().getAccount().getPasswd())
                     .put(UserVerticle.MOBILE_TOKEN, token);
 
             given().body(params.encodePrettily())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
 
             given().when().post(getURL(UserVerticle.LOGIN_BY_TOKEN))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -482,17 +498,21 @@ public class UserServiceTest extends VertxJunitSupport {
     public void getMetas(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
-            user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(id -> {
-                given().header(TOKEN, user.getAccount().getToken())
-                        .when().get(getURL(UserVerticle.META))
-                        .then().assertThat().statusCode(200)
-                        .body("activityId", notNullValue())
-                        .body("structure", notNullValue());
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
+            user.result().getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
+                if (id.succeeded()) {
+                    given().header(TOKEN, user.result().getAccount().getToken())
+                            .when().get(getURL(UserVerticle.META))
+                            .then().assertThat().statusCode(200)
+                            .body("activityId", notNullValue())
+                            .body("structure", notNullValue());
+                    async.complete();
+                } else {
+                    Assert.fail(id.cause().getMessage());
+                }
+            });
+        });
         async.await(TIMEOUT);
     }
 
@@ -500,18 +520,22 @@ public class UserServiceTest extends VertxJunitSupport {
     public void getMetasWithSandboxId(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
-            user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(id -> {
-                given().header(TOKEN, user.getAccount().getToken())
-                        .param("sandboxId", "558b0efebd2e39cdab651e1f")
-                        .when().get(getURL(UserVerticle.META))
-                        .then().assertThat().statusCode(200)
-                        .body("activityId", notNullValue())
-                        .body("structure", notNullValue());
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
+            user.result().getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
+                if (id.succeeded()) {
+                    given().header(TOKEN, user.result().getAccount().getToken())
+                            .param("sandboxId", "558b0efebd2e39cdab651e1f")
+                            .when().get(getURL(UserVerticle.META))
+                            .then().assertThat().statusCode(200)
+                            .body("activityId", notNullValue())
+                            .body("structure", notNullValue());
+                    async.complete();
+                } else {
+                    Assert.fail(id.cause().getMessage());
+                }
+            });
+        });
         async.await(TIMEOUT);
     }
 
@@ -522,15 +546,20 @@ public class UserServiceTest extends VertxJunitSupport {
     public void getMetasWithWrongHTTPMethod(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
-            user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(id ->
-                    given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
+            user.result().getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
+                if (id.succeeded()) {
+                    given().header(TOKEN, user.result().getAccount().getToken())
                             .when().post(getURL(UserVerticle.META))
                             .then().assertThat().statusCode(404)
-                            .body(STATUS, is(false))).fail(e -> Assert.fail(e.getMessage()));
+                            .body(STATUS, is(false));
+                } else {
+                    Assert.fail(id.cause().getMessage());
+                }
+            });
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -541,16 +570,20 @@ public class UserServiceTest extends VertxJunitSupport {
     public void getMetasWithWrongUser(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
-        generateLoggedUser().then(user -> {
-            user.getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
-            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(id -> {
-                given().header(TOKEN, user.getAccount().getToken())
-                        .when().get(getURL(UserVerticle.META))
-                        .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                        .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        generateLoggedUser().setHandler(user -> {
+            user.result().getAccount().getListPlan().get(0).getActivity().set_id("ACT-HAND");
+            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
+                if (id.succeeded()) {
+                    given().header(TOKEN, user.result().getAccount().getToken())
+                            .when().get(getURL(UserVerticle.META))
+                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                            .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
+                    async.complete();
+                } else {
+                    Assert.fail(id.cause().getMessage());
+                }
+            });
+        });
         async.await(TIMEOUT);
     }
 
@@ -580,15 +613,15 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void getUserById(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
-                    .param("id", user.get_id())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .param("id", user.result().get_id())
                     .when().get(getURL(UserVerticle.USER_INFO))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("_id", is(user.get_id()));
+                    .body("_id", is(user.result().get_id()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -608,13 +641,13 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void getUserByIdWrongHTTPMethod(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .when().post(getURL(UserVerticle.META))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -624,14 +657,14 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void getCurrentUser(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .when().get(getURL(UserVerticle.CURRENT))
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body("_id", is(user.get_id()));
+                    .body("_id", is(user.result().get_id()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -651,13 +684,13 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void getCurrentUserWrongHTTPMethod(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .when().post(getURL(UserVerticle.CURRENT))
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -667,14 +700,14 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void logout(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .when().get(getURL(UserVerticle.LOGOUT))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -683,8 +716,8 @@ public class UserServiceTest extends VertxJunitSupport {
      */
     @Test
     public void logoutBadHTTPMethod() {
-        generateLoggedUser().then(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .when().post(getURL(UserVerticle.LOGOUT));
         });
     }
@@ -705,15 +738,15 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void passwordRenew(TestContext context) {
         Async async = context.async();
-        generateUser().then(user -> {
-            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+        generateUser().setHandler(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.result().getAccount().getLogin());
             given().body(query.encodePrettily())
                     .when().post(getURL(UserVerticle.PASSWD_RENEW))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -755,24 +788,24 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void passwordRenewActivationCodeCheck(TestContext context) {
         Async async = context.async();
-        generateUser().then(user -> {
-            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+        generateUser().setHandler(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.result().getAccount().getLogin());
             given().body(query.encodePrettily())
                     .when().post(getURL(UserVerticle.PASSWD_RENEW))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            mongo.getById(user.get_id(), DBCollections.USER).done(jsonuser -> {
+            mongo.getById(user.result().get_id(), DBCollections.USER).done(jsonuser -> {
                 String code = jsonuser.getJsonObject("account").getString("activationPasswd");
-                given().param("id", user.get_id()).param("code", code)
+                given().param("id", user.result().get_id()).param("code", code)
                         .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
                         .then().assertThat().statusCode(200)
                         .body("status", notNullValue())
                         .body("status", is(true));
                 async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -782,21 +815,21 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void passwordRenewWrongActivationCodeCheck(TestContext context) {
         Async async = context.async();
-        generateUser().then(user -> {
-            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+        generateUser().setHandler(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.result().getAccount().getLogin());
             given().body(query.encodePrettily())
                     .when().post(getURL(UserVerticle.PASSWD_RENEW))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            given().param("id", user.get_id()).param("code", "12345")
+            given().param("id", user.result().get_id()).param("code", "12345")
                     .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(false));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -807,8 +840,8 @@ public class UserServiceTest extends VertxJunitSupport {
     public void passwordRenewActivationCodeCheckBadHTTPMethod(TestContext context) {
         Async async = context.async();
         // First step ask for a new code
-        generateUser().then(user -> {
-            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+        generateUser().setHandler(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.result().getAccount().getLogin());
             given().body(query.encodePrettily())
                     .when().post(getURL(UserVerticle.PASSWD_RENEW))
                     .then().assertThat().statusCode(200)
@@ -819,7 +852,7 @@ public class UserServiceTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -830,24 +863,24 @@ public class UserServiceTest extends VertxJunitSupport {
     public void passwordReset(TestContext context) {
         Async async = context.async();
         // First step ask for a new code
-        generateUser().then(user -> {
-            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+        generateUser().setHandler(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.result().getAccount().getLogin());
             given().body(query.encodePrettily())
                     .when().post(getURL(UserVerticle.PASSWD_RENEW))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            mongo.getById(user.get_id(), DBCollections.USER).done(jsonuser -> {
+            mongo.getById(user.result().get_id(), DBCollections.USER).done(jsonuser -> {
                 String code = jsonuser.getJsonObject("account").getString("activationPasswd");
-                given().param("id", user.get_id()).param("code", code)
+                given().param("id", user.result().get_id()).param("code", code)
                         .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
                         .then().assertThat().statusCode(200)
                         .body("status", notNullValue())
                         .body("status", is(true));
 
                 JsonObject query2 = new JsonObject()
-                        .put("id", user.get_id())
+                        .put("id", user.result().get_id())
                         .put("code", code)
                         .put("passwd", "newPassword");
 
@@ -858,16 +891,16 @@ public class UserServiceTest extends VertxJunitSupport {
                         .body("status", is(true));
                 // Finaly testBodyParams login
                 JsonObject params = new JsonObject()
-                        .put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin())
+                        .put(UserVerticle.PARAM_LOGIN, user.result().getAccount().getLogin())
                         .put(UserVerticle.PARAM_PWD, "newPassword");
                 given().body(params.encodePrettily())
                         .when().post(getURL(UserVerticle.LOGIN))
                         .then().assertThat().statusCode(200)
                         .body("name", notNullValue())
-                        .body("name", is(user.getName()));
+                        .body("name", is(user.result().getName()));
                 async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -878,24 +911,24 @@ public class UserServiceTest extends VertxJunitSupport {
     public void passwordResetWrongCode(TestContext context) {
         Async async = context.async();
         // First step ask for a new code
-        generateUser().then(user -> {
-            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.getAccount().getLogin());
+        generateUser().setHandler(user -> {
+            JsonObject query = new JsonObject().put(UserVerticle.PARAM_LOGIN, user.result().getAccount().getLogin());
             given().body(query.encodePrettily())
                     .when().post(getURL(UserVerticle.PASSWD_RENEW))
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            mongo.getById(user.get_id(), DBCollections.USER).done(jsonuser -> {
+            mongo.getById(user.result().get_id(), DBCollections.USER).done(jsonuser -> {
                 String code = jsonuser.getJsonObject("account").getString("activationPasswd");
-                given().param("id", user.get_id()).param("code", code)
+                given().param("id", user.result().get_id()).param("code", code)
                         .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
                         .then().assertThat().statusCode(200)
                         .body("status", notNullValue())
                         .body("status", is(true));
 
                 JsonObject query2 = new JsonObject()
-                        .put("id", user.get_id())
+                        .put("id", user.result().get_id())
                         .put("code", "123456")
                         .put("passwd", "newPassword");
 
@@ -906,7 +939,7 @@ public class UserServiceTest extends VertxJunitSupport {
                         .body("status", is(false));
                 async.complete();
             }).fail(e -> Assert.fail(e.getMessage()));
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -926,11 +959,11 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void uploadAvatar(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             String avatarId = given()
-                    .header(TOKEN, user.getAccount().getToken())
+                    .header(TOKEN, user.result().getAccount().getToken())
                     .multiPart(new File("src/test/resources/avatar.jpg")).
-                            pathParam("uid", user.get_id()).
+                            pathParam("uid", user.result().get_id()).
                             when().
                             post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(200)
@@ -947,7 +980,7 @@ public class UserServiceTest extends VertxJunitSupport {
             Assert.assertEquals("Files must have same size",
                     new File("src/test/resources/avatar.jpg").length(), byteArray.length);
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -957,15 +990,15 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void uploadAvatarWithWrongUserId(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", "blabla").
                     when().
                     post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -975,14 +1008,14 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void uploadAvatarWithNotLoggedUser(TestContext context) {
         Async async = context.async();
-        generateUser().then(user -> {
+        generateUser().setHandler(user -> {
             given().multiPart(new File("src/test/resources/avatar.jpg"))
-                    .pathParam("uid", user.get_id())
+                    .pathParam("uid", user.result().get_id())
                     .when()
                     .post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -992,15 +1025,15 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void uploadAvatarWithWrongToken(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
+        generateLoggedUser().setHandler(user -> {
             given().multiPart(new File("src/test/resources/avatar.jpg")).
-                    pathParam("uid", user.get_id())
+                    pathParam("uid", user.result().get_id())
                     .header(TOKEN, "11111")
                     .when()
                     .post(BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -1032,15 +1065,15 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void getUserByLogin(TestContext context) {
         Async async = context.async();
-        generateLoggedAdminUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
-                    .queryParam(UserVerticle.PARAM_LOGIN, u.getAccount().getLogin())
+        generateLoggedAdminUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
                     .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                     .then().assertThat().statusCode(200)
                     .body("name", notNullValue())
-                    .body("name", is(u.getName()));
+                    .body("name", is(u.result().getName()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -1050,11 +1083,11 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void getUserByLoginBadHTTPMethod(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .when().post(getURL(UserVerticle.USER_BY_LOGIN));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -1074,13 +1107,13 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void getUserByLoginWinthNotAdminUser(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                     .then().assertThat().statusCode(ExceptionCodes.NOT_ADMIN.getCode())
                     .body("code", is(ExceptionCodes.NOT_ADMIN.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -1090,19 +1123,19 @@ public class UserServiceTest extends VertxJunitSupport {
     @Test
     public void getUserByLoginWithWrongData(TestContext context) {
         Async async = context.async();
-        generateLoggedAdminUser().then(u -> {
-            given().header(TOKEN, u.getAccount().getToken())
+        generateLoggedAdminUser().setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .queryParam(UserVerticle.PARAM_LOGIN, "blabla")
                     .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body("code", is(ExceptionCodes.DATA_ERROR.toString()));
 
-            given().header(TOKEN, u.getAccount().getToken())
+            given().header(TOKEN, u.result().getAccount().getToken())
                     .when().get(getURL(UserVerticle.USER_BY_LOGIN))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body("code", is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 }

@@ -18,12 +18,14 @@
  */
 package com.qaobee.hive.technical.exceptions;
 
+import io.vertx.serviceproxy.ServiceException;
+
 /**
  * The Class QaobeeException.
  *
  * @author xavier
  */
-public class QaobeeException extends Exception {
+public class QaobeeException extends ServiceException {
 
     private static final long serialVersionUID = 3702929307917485614L;
     private final ExceptionCodes code; // NOSONAR
@@ -40,7 +42,7 @@ public class QaobeeException extends Exception {
      * @param message     the message
      */
     public QaobeeException(final boolean report, final String jsonContext, final ExceptionCodes code, final String message) {
-        super(message);
+        super(code.getCode(), message);
         this.jsonContext = jsonContext;
         this.code = code;
         this.report = report;
@@ -53,7 +55,7 @@ public class QaobeeException extends Exception {
      * @param message the message
      */
     public QaobeeException(final ExceptionCodes code, final String message) {
-        super(message);
+        super(code.getCode(), message);
         this.code = code;
     }
 
@@ -65,7 +67,7 @@ public class QaobeeException extends Exception {
      * @param message     the message
      */
     public QaobeeException(final String jsonContext, final ExceptionCodes code, final String message) {
-        super(message);
+        super(code.getCode(), message);
         this.jsonContext = jsonContext;
         this.code = code;
     }
@@ -78,7 +80,7 @@ public class QaobeeException extends Exception {
      * @param e       the e
      */
     public QaobeeException(ExceptionCodes code, String message, Exception e) {
-        super(message + " : " + e.getMessage());
+        super(code.getCode(), message + " : " + e.getMessage());
         this.code = code;
     }
 
@@ -89,20 +91,8 @@ public class QaobeeException extends Exception {
      * @param e    the e
      */
     public QaobeeException(ExceptionCodes code, Throwable e) {
-        super(e.getMessage());
+        super(code.getCode(), e.getMessage());
         this.code = code;
-    }
-
-    /**
-     * Instantiates a new Qaobee exception.
-     *
-     * @param e the e
-     */
-    public QaobeeException(QaobeeSvcException e) {
-        super(e.getMessage());
-        this.jsonContext = e.getJsonContext();
-        this.code = e.getCode();
-        this.report = e.isReport();
     }
 
     /**

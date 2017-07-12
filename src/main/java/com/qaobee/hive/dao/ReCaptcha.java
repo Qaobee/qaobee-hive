@@ -19,19 +19,18 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import org.jdeferred.Promise;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 
 /**
  * The interface Re captcha.
  */
-@FunctionalInterface
 public interface ReCaptcha {
     /**
-     * Verify boolean.
+     * Verify.
      *
-     * @param challenge the chalenge
-     * @return the boolean
+     * @param challenge     the challenge
+     * @param resultHandler the result handler
      */
-    Promise<Boolean, QaobeeException, Integer> verify(String challenge);
+    void verify(String challenge, Handler<AsyncResult<Void>> resultHandler);
 }

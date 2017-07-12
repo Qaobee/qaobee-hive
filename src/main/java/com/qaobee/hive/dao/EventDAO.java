@@ -19,10 +19,10 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
  * The interface Event dao.
@@ -32,36 +32,36 @@ public interface EventDAO {
     /**
      * Gets event.
      *
-     * @param id the id
-     * @return the event
+     * @param id            the id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getEvent(String id);
+    void getEvent(String id, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Update event json object.
+     * Update event.
      *
      * @param event         the event
      * @param currentUserId the current user id
      * @param locale        the locale
-     * @return the json object
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> updateEvent(JsonObject event, String currentUserId, String locale);
+    void updateEvent(JsonObject event, String currentUserId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Add event json object.
+     * Add event.
      *
      * @param event         the event
      * @param currentUserId the current user id
      * @param locale        the locale
-     * @return the json object
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> addEvent(JsonObject event, String currentUserId, String locale);
+    void addEvent(JsonObject event, String currentUserId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets event list.
      *
-     * @param params the params
-     * @return the event list
+     * @param params        the params
+     * @param resultHandler the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getEventList(JsonObject params);
+    void getEventList(JsonObject params, Handler<AsyncResult<JsonArray>> resultHandler);
 }

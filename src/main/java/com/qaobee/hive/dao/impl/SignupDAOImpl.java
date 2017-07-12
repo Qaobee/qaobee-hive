@@ -32,7 +32,9 @@ import com.qaobee.hive.business.model.transversal.Contact;
 import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
-import com.qaobee.hive.dao.*;
+import com.qaobee.hive.dao.ReCaptcha;
+import com.qaobee.hive.dao.SignupDAO;
+import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.services.StructureService;
@@ -50,6 +52,7 @@ import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.VertxContextPRNG;
 import org.jdeferred.Deferred;
 import org.jdeferred.DeferredManager;
 import org.jdeferred.Promise;
@@ -159,80 +162,102 @@ public class SignupDAOImpl implements SignupDAO {
                         sbSandBox.setActivityId(activityId);
                         sbSandBox.setOwner(user.get_id());
                         sbSandBox.setStructure(structureObj);
-                        mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX).done(sbSandBoxId -> {
-                            sbSandBox.set_id(sbSandBoxId);
-                            // $MATCH section
-                            JsonObject dbObjectParent = new JsonObject()
-                                    .put("activityId", activityId)
-                                    .put("countryId", countryId);
-                            JsonObject match = new JsonObject().put("$match", dbObjectParent);
-                            // $PROJECT section
-                            dbObjectParent = new JsonObject()
-                                    .put("_id", 0)
-                                    .put(PARAMERTER_FIELD, 1);
-                            JsonObject project = new JsonObject().put("$project", dbObjectParent);
-                            JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
-                            mongo.aggregate(pipelineAggregation, DBCollections.ACTIVITY_CFG).done(tabParametersSignup -> {
-                                // Création SB_Person
-                                List<String> listPersonsId = new ArrayList<>();
-                                List<Promise> promisesPlayers = new ArrayList<>();
-                                if (tabParametersSignup.size() > 0) {
-                                    JsonObject parametersSignup = tabParametersSignup.getJsonObject(0);
-                                    if (parametersSignup.containsKey(PARAMERTER_FIELD) && parametersSignup.getJsonObject(PARAMERTER_FIELD).containsKey("players")) {
-                                        JsonArray tabPlayers = parametersSignup.getJsonObject(PARAMERTER_FIELD).getJsonArray("players");
-                                        for (int i = 0; i < tabPlayers.size(); i++) {
-                                            promisesPlayers.add(addPlayer(tabPlayers.getJsonObject(i), structureObj, categoryAgeObj, sbSandBox, listPersonsId));
+                        mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbSandBoxId -> {
+                            if (sbSandBoxId.succeeded()) {
+                                sbSandBox.set_id(sbSandBoxId.result());
+                                // $MATCH section
+                                JsonObject dbObjectParent = new JsonObject()
+                                        .put("activityId", activityId)
+                                        .put("countryId", countryId);
+                                JsonObject match = new JsonObject().put("$match", dbObjectParent);
+                                // $PROJECT section
+                                dbObjectParent = new JsonObject()
+                                        .put("_id", 0)
+                                        .put(PARAMERTER_FIELD, 1);
+                                JsonObject project = new JsonObject().put("$project", dbObjectParent);
+                                JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
+                                mongo.aggregate(pipelineAggregation, DBCollections.ACTIVITY_CFG).done(tabParametersSignup -> {
+                                    // Création SB_Person
+                                    List<String> listPersonsId = new ArrayList<>();
+                                    List<Promise> promisesPlayers = new ArrayList<>();
+                                    if (tabParametersSignup.size() > 0) {
+                                        JsonObject parametersSignup = tabParametersSignup.getJsonObject(0);
+                                        if (parametersSignup.containsKey(PARAMERTER_FIELD) && parametersSignup.getJsonObject(PARAMERTER_FIELD).containsKey("players")) {
+                                            JsonArray tabPlayers = parametersSignup.getJsonObject(PARAMERTER_FIELD).getJsonArray("players");
+                                            for (int i = 0; i < tabPlayers.size(); i++) {
+                                                promisesPlayers.add(addPlayer(tabPlayers.getJsonObject(i), structureObj, categoryAgeObj, sbSandBox, listPersonsId));
+                                            }
                                         }
-                                    }
 
-                                    dm.when(promisesPlayers.toArray(new Promise[promisesPlayers.size()])).done(rs2 -> {
-                                        // Création Effective
-                                        SB_Effective sbEffective = new SB_Effective();
-                                        sbEffective.setSandboxId(sbSandBox.get_id());
-                                        sbEffective.setLabel("Défaut");
-                                        sbEffective.setCategoryAge(categoryAgeObj);
-                                        // SB_Effective -> members
-                                        for (String playerId : listPersonsId) {
-                                            Member member = new Member();
-                                            member.setRole(new Role("player", "Joueur"));
-                                            member.setPersonId(playerId);
-                                            sbEffective.addMember(member);
-                                        }
-                                        mongo.upsert(new JsonObject(Json.encode(sbEffective)), DBCollections.EFFECTIVE).done(sbEffectiveId -> {
-                                            sbEffective.set_id(sbEffectiveId);
-                                            sbSandBox.setEffectiveDefault(sbEffective.get_id());
-                                            //Add owner in member's list of sandbox
-                                            Member member = new Member();
-                                            member.setRole(new Role("admin", "Admin"));
-                                            member.setPersonId(user.get_id());
-                                            member.setStatus("activated");
-                                            List<Member> members = new ArrayList<>();
-                                            members.add(member);
-                                            sbSandBox.setMembers(members);
-                                            mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX).done(sbId -> {
-                                                user.setSandboxDefault(sbId);
-                                                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(userId -> {
-                                                    // Création SB_Teams
-                                                    // My team
-                                                    SB_Team team = new SB_Team();
-                                                    team.setEffectiveId(sbEffective.get_id());
-                                                    team.setSandboxId(sbSandBox.get_id());
-                                                    team.setLabel("Mon équipe");
-                                                    team.setEnable(true);
-                                                    team.setAdversary(false);
-                                                    mongo.upsert(new JsonObject(Json.encode(team)), DBCollections.TEAM).done(teamId -> deferred.resolve(new JsonObject(Json.encode(user)))).fail(deferred::reject);
-                                                }).fail(deferred::reject);
-                                            }).fail(deferred::reject);
-                                        }).fail(deferred::reject);
-                                    }).fail(e -> {
-                                        LOG.error(((Throwable) e.getReject()).getMessage());
-                                        deferred.reject((QaobeeException) e.getReject());
-                                    });
-                                } else {
-                                    deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "tabParametersSignup is empty"));
-                                }
-                            }).fail(deferred::reject);
-                        }).fail(deferred::reject);
+                                        dm.when(promisesPlayers.toArray(new Promise[promisesPlayers.size()])).done(rs2 -> {
+                                            // Création Effective
+                                            SB_Effective sbEffective = new SB_Effective();
+                                            sbEffective.setSandboxId(sbSandBox.get_id());
+                                            sbEffective.setLabel("Défaut");
+                                            sbEffective.setCategoryAge(categoryAgeObj);
+                                            // SB_Effective -> members
+                                            for (String playerId : listPersonsId) {
+                                                Member member = new Member();
+                                                member.setRole(new Role("player", "Joueur"));
+                                                member.setPersonId(playerId);
+                                                sbEffective.addMember(member);
+                                            }
+                                            mongo.upsert(new JsonObject(Json.encode(sbEffective)), DBCollections.EFFECTIVE, sbEffectiveId -> {
+                                                if (sbEffectiveId.succeeded()) {
+                                                    sbEffective.set_id(sbEffectiveId.result());
+                                                    sbSandBox.setEffectiveDefault(sbEffective.get_id());
+                                                    //Add owner in member's list of sandbox
+                                                    Member member = new Member();
+                                                    member.setRole(new Role("admin", "Admin"));
+                                                    member.setPersonId(user.get_id());
+                                                    member.setStatus("activated");
+                                                    List<Member> members = new ArrayList<>();
+                                                    members.add(member);
+                                                    sbSandBox.setMembers(members);
+                                                    mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbId -> {
+                                                        if (sbId.succeeded()) {
+                                                            user.setSandboxDefault(sbId.result());
+                                                            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
+                                                                if (userId.succeeded()) {
+                                                                    // Création SB_Teams
+                                                                    // My team
+                                                                    SB_Team team = new SB_Team();
+                                                                    team.setEffectiveId(sbEffective.get_id());
+                                                                    team.setSandboxId(sbSandBox.get_id());
+                                                                    team.setLabel("Mon équipe");
+                                                                    team.setEnable(true);
+                                                                    team.setAdversary(false);
+                                                                    mongo.upsert(new JsonObject(Json.encode(team)), DBCollections.TEAM, teamId -> {
+                                                                        if (teamId.succeeded()) {
+                                                                            deferred.resolve(new JsonObject(Json.encode(user)));
+                                                                        } else {
+                                                                            deferred.reject(new QaobeeException(((QaobeeSvcException) teamId.cause()).getCode(), teamId.cause()));
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                    deferred.reject(new QaobeeException(((QaobeeSvcException) userId.cause()).getCode(), userId.cause()));
+                                                                }
+                                                            });
+                                                        } else {
+                                                            deferred.reject(new QaobeeException(((QaobeeSvcException) sbId.cause()).getCode(), sbId.cause()));
+                                                        }
+                                                    });
+                                                } else {
+                                                    deferred.reject(new QaobeeException(((QaobeeSvcException) sbEffectiveId.cause()).getCode(), sbEffectiveId.cause()));
+                                                }
+                                            });
+                                        }).fail(e -> {
+                                            LOG.error(((Throwable) e.getReject()).getMessage());
+                                            deferred.reject((QaobeeException) e.getReject());
+                                        });
+                                    } else {
+                                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "tabParametersSignup is empty"));
+                                    }
+                                }).fail(deferred::reject);
+                            } else {
+                                deferred.reject(new QaobeeException(((QaobeeSvcException) sbSandBoxId.cause()).getCode(), sbSandBoxId.cause()));
+                            }
+                        });
                     }).fail(e -> {
                         LOG.error(((Throwable) e.getReject()).getMessage());
                         deferred.reject((QaobeeException) e.getReject());
@@ -284,15 +309,19 @@ public class SignupDAOImpl implements SignupDAO {
         getUser(id, locale).done(user -> {
             try {
                 testAccount(user, activationCode, locale);
-                user.getAccount().setToken(UUID.randomUUID().toString());
+                user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
                 user.getAccount().setTokenRenewDate(System.currentTimeMillis());
                 // MaJ User
                 user.getAccount().setActive(true);
                 user.getAccount().setFirstConnexion(false);
-                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(userId -> {
-                    vertx.eventBus().send(CRMVerticle.UPDATE, new JsonObject(Json.encode(user)));
-                    deferred.resolve(new JsonObject(Json.encode(user)));
-                }).fail(deferred::reject);
+                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
+                    if(userId.succeeded()) {
+                        vertx.eventBus().send(CRMVerticle.UPDATE, new JsonObject(Json.encode(user)));
+                        deferred.resolve(new JsonObject(Json.encode(user)));
+                    } else {
+                        deferred.reject(new QaobeeException(((QaobeeSvcException) userId.cause()).getCode(), userId.cause()));
+                    }
+                });
             } catch (QaobeeException e) {
                 LOG.error(e.getMessage(), e);
                 deferred.reject(e);
@@ -308,7 +337,13 @@ public class SignupDAOImpl implements SignupDAO {
             final com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(u.encode(), com.qaobee.hive.business.model.commons.users.User.class);
             if (user.getAccount().getActivationCode().equals(activationCode)) {
                 user.getAccount().setActive(true);
-                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER).done(userId -> deferred.resolve(true)).fail(deferred::reject);
+                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
+                    if(userId.succeeded()) {
+                        deferred.resolve(true);
+                    } else {
+                        deferred.reject(new QaobeeException(((QaobeeSvcException) userId.cause()).getCode(), userId.cause()));
+                    }
+                });
             } else {
                 deferred.resolve(false);
             }
@@ -344,7 +379,7 @@ public class SignupDAOImpl implements SignupDAO {
                     if (ar2.succeeded()) {
                         userService.existingLogin(user.getAccount().getLogin(), r -> {
                             if (r.succeeded() && !r.result()) {
-                                user.getAccount().setToken(UUID.randomUUID().toString());
+                                user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
                                 user.getAccount().setTokenRenewDate(System.currentTimeMillis());
                                 user.getAccount().setActive(false);
                                 user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
@@ -372,15 +407,19 @@ public class SignupDAOImpl implements SignupDAO {
                                     user.getAccount().getListPlan().add(plan);
                                     this.userService.prepareUpsert(new JsonObject(Json.encode(user)), ar3 -> {
                                         if (ar3.succeeded()) {
-                                            mongo.upsert(ar3.result(), DBCollections.USER).done(userId -> {
-                                                user.set_id(userId);
-                                                vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
-                                                mongo.getById(userId, DBCollections.USER).done(u ->
-                                                        deferred.resolve(new JsonObject()
-                                                                .put("person", u)
-                                                                .put("planId", plan.getPaymentId()))
-                                                ).fail(deferred::reject);
-                                            }).fail(deferred::reject);
+                                            mongo.upsert(ar3.result(), DBCollections.USER, userId -> {
+                                                if(userId.succeeded()) {
+                                                    user.set_id(userId.result());
+                                                    vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
+                                                    mongo.getById(userId.result(), DBCollections.USER).done(u ->
+                                                            deferred.resolve(new JsonObject()
+                                                                    .put("person", u)
+                                                                    .put("planId", plan.getPaymentId()))
+                                                    ).fail(deferred::reject);
+                                                } else {
+                                                    deferred.reject(new QaobeeException(((QaobeeSvcException) userId.cause()).getCode(), userId.cause()));
+                                                }
+                                            });
                                         }
                                     });
                                 }).fail(deferred::reject);
@@ -404,7 +443,7 @@ public class SignupDAOImpl implements SignupDAO {
     public Promise<Boolean, QaobeeException, Integer> resendMail(String login, String locale) {
         Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
         userService.getUserByLogin(login, locale, ar -> {
-            if(ar.succeeded()) {
+            if (ar.succeeded()) {
                 try {
                     sendRegisterMail(ar.result(), locale);
                     deferred.resolve(true);
@@ -474,7 +513,13 @@ public class SignupDAOImpl implements SignupDAO {
             sbPerson.setStatus(status);
             sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
             sbPerson.getStatus().setPositionType(player.getString("positionType"));
-            promises.add(mongo.upsert(new JsonObject(Json.encode(sbPerson)), DBCollections.PERSON));
+            Deferred<String, QaobeeException, Integer> d = new DeferredObject<>();
+            mongo.upsert(new JsonObject(Json.encode(sbPerson)), DBCollections.PERSON, ar->{
+                if(ar.succeeded()) {
+                   d.resolve(ar.result());
+                }
+            });
+            promises.add(d);
         }
         DeferredManager dm = new DefaultDeferredManager();
         dm.when(promises.toArray(new Promise[promises.size()]))
@@ -492,7 +537,7 @@ public class SignupDAOImpl implements SignupDAO {
     private Promise<com.qaobee.hive.business.model.commons.users.User, QaobeeException, Integer> getUser(String id, String locale) {
         Deferred<com.qaobee.hive.business.model.commons.users.User, QaobeeException, Integer> deferred = new DeferredObject<>();
         userService.getUser(id, ar -> {
-            if(ar.succeeded()) {
+            if (ar.succeeded()) {
                 deferred.resolve(Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class));
             } else {
                 deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", locale)));

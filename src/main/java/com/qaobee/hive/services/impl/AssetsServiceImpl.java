@@ -74,9 +74,13 @@ public class AssetsServiceImpl implements AssetsService {
                     if (DBCollections.PERSON.equals(collection) || DBCollections.USER.equals(collection)) {
                         mongo.getById(userId, collection).done(p -> {
                             p.put(field, result.toHexString());
-                            mongo.upsert(p, collection)
-                                    .done(r -> resultHandler.handle(Future.succeededFuture(p)))
-                                    .fail(ex -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ex))));
+                            mongo.upsert(p, collection, r -> {
+                                if(r.succeeded()) {
+                                resultHandler.handle(Future.succeededFuture(p));
+                                } else {
+                                    resultHandler.handle(Future.failedFuture(r.cause()));
+                                }
+                            });
                         }).fail(ex -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ex))));
                     } else {
                         resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));

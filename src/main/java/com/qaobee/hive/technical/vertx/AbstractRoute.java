@@ -12,8 +12,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.AuthHandler;
 import org.apache.http.protocol.HTTP;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -23,7 +21,6 @@ import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
  * The type Abstract route.
  */
 public abstract class AbstractRoute implements VertxRoute.Route {
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractRoute.class);
     /**
      * The Vertx.
      */
@@ -39,6 +36,9 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      */
     @Inject
     protected AuthHandler authHandler;
+    /**
+     * The Mandatory handler.
+     */
     @Inject
     protected MandatoryHandler mandatoryHandler;
 
@@ -112,4 +112,13 @@ public abstract class AbstractRoute implements VertxRoute.Route {
         handleResponse(context, new JsonObject().put(Constants.STATUS, b));
     }
 
+    /**
+     * Gets locale.
+     *
+     * @param context the context
+     * @return the locale
+     */
+    protected String getLocale(RoutingContext context) {
+        return context.request().getHeader("Accept-Language");
+    }
 }

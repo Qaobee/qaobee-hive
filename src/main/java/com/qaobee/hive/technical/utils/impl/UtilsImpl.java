@@ -30,6 +30,7 @@ import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.eventbus.ReplyException;
@@ -41,9 +42,6 @@ import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.protocol.HTTP;
 import org.imgscalr.Scalr;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -229,28 +227,28 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public Promise<User, QaobeeException, Integer> isUserLogged(RequestWrapper request) {
-        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+    public Future<User> isUserLogged(RequestWrapper request) {
+        Future<User> deferred = Future.future();
         if (request.getUser() != null) {
-            deferred.resolve(request.getUser());
+            deferred.complete(request.getUser());
         } else {
             String token = getToken(request);
             if (StringUtils.isBlank(token)) {
-                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
+                deferred.fail(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
             } else {
                 mongoClient.findOne(DBCollections.USER, new JsonObject().put("account.token", token), new JsonObject(), result -> {
                     if (result.succeeded() && result.result() != null) {
                         testSession(result.result(), request, deferred);
                     } else {
-                        deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
+                        deferred.fail(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(NOT_LOGGED_KEY, request.getLocale())));
                     }
                 });
             }
         }
-        return deferred.promise();
+        return deferred;
     }
 
-    private void testSession(JsonObject jsonUser, RequestWrapper request, Deferred<User, QaobeeException, Integer> deferred) {
+    private void testSession(JsonObject jsonUser, RequestWrapper request, Future<User> deferred) {
         // we take the first one (should be only one)
         final User user = Json.decodeValue(jsonUser.encode(), User.class);
         if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
@@ -263,13 +261,17 @@ public class UtilsImpl implements Utils {
             jsonUser.getJsonObject(ACCOUNT_FIELD).put("tokenRenewDate", connectionTime);
             user.getAccount().setTokenRenewDate(connectionTime);
         }
-        mongo.upsert(jsonUser, DBCollections.USER).done(id -> {
-            if (user.getAccount().getTokenRenewDate() == 0) {
-                deferred.reject(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
+        mongo.upsert(jsonUser, DBCollections.USER, upsertRes -> {
+            if(upsertRes.succeeded()) {
+                if (user.getAccount().getTokenRenewDate() == 0) {
+                    deferred.fail(new QaobeeException(ExceptionCodes.NOT_LOGGED, Messages.getString(SESSION_EXPIRED, request.getLocale())));
+                }
+                request.setUser(user);
+                deferred.complete(user);
+            } else {
+                deferred.fail(new QaobeeException(((QaobeeSvcException) upsertRes.cause()).getCode(), upsertRes.cause().getMessage()));
             }
-            request.setUser(user);
-            deferred.resolve(user);
-        }).fail(deferred::reject);
+        });
     }
 
     private static String getToken(RequestWrapper request) {
@@ -283,15 +285,19 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public Promise<User, QaobeeException, Integer> isLoggedAndAdmin(RequestWrapper request) {
-        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
-        isUserLogged(request).done(user -> {
-            if (!habilitUtils.hasHabilitation(user, Constants.ADMIN_HABILIT)) { // are we admin ?
-                deferred.reject(new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", request.getLocale())));
+    public Future<User> isLoggedAndAdmin(RequestWrapper request) {
+        Future<User> deferred = Future.future();
+        isUserLogged(request).setHandler(user -> {
+            if(user.succeeded()) {
+                if (!habilitUtils.hasHabilitation(user.result(), Constants.ADMIN_HABILIT)) { // are we admin ?
+                    deferred.fail(new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", request.getLocale())));
+                }
+                deferred.complete(user.result());
+            } else {
+                deferred.fail(user.cause());
             }
-            deferred.resolve(user);
-        }).fail(deferred::reject);
-        return deferred.promise();
+        });
+        return deferred;
     }
 
     @Override

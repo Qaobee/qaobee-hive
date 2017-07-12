@@ -92,7 +92,6 @@ dependencies {
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'ch.qos.logback:logback-core:1.2.3'
     compile 'com.stripe:stripe-java:5.5.0'
-    compile 'org.jdeferred:jdeferred-core:1.2.6'
     compile 'org.imgscalr:imgscalr-lib:4.2'
 
 

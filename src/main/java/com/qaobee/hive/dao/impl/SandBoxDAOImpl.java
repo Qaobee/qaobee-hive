@@ -25,14 +25,13 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
 import com.qaobee.hive.technical.mongo.MongoDB;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.jdeferred.Deferred;
-import org.jdeferred.DeferredManager;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DefaultDeferredManager;
-import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -57,95 +56,97 @@ public class SandBoxDAOImpl implements SandBoxDAO {
     @Inject
     private MongoDB mongo;
 
-    @Override
-    public Promise<JsonObject, QaobeeException, Integer> getSandboxById(String sandboxId) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(sandboxId, DBCollections.SANDBOX)
-                .done(result -> getEnrichedSandbox(result)
-                        .done(deferred::resolve)
-                        .fail(deferred::reject))
-                .fail(deferred::reject);
-        return deferred.promise();
+    private Future<JsonObject> getPerson(JsonObject m) {
+        Future<JsonObject> deferred = Future.future();
+        mongo.getById(m.getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY), u -> {
+            if (u.succeeded()) {
+                m.put("person", u.result());
+                deferred.complete(m);
+            } else {
+                deferred.fail(u.cause());
+            }
+        });
+        return deferred;
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getEnrichedSandbox(JsonObject sandbox) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+    public void getSandboxById(String sandboxId, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.getById(sandboxId, DBCollections.SANDBOX, result -> {
+            if (result.succeeded()) {
+                getEnrichedSandbox(result.result(), resultHandler);
+            } else {
+                resultHandler.handle(Future.failedFuture(result.cause()));
+            }
+        });
+    }
+
+    @Override
+    public void getEnrichedSandbox(JsonObject sandbox, Handler<AsyncResult<JsonObject>> resultHandler) {
         JsonArray members = sandbox.getJsonArray(FIELD_MEMBERS);
-        List<Promise> promises = new ArrayList<>();
+        List<Future> promises = new ArrayList<>();
         members.forEach(m -> promises.add(getPerson((JsonObject) m)));
-        DeferredManager dm = new DefaultDeferredManager();
-        dm.when(promises.toArray(new Promise[promises.size()]))
-                .done(rs -> {
-                    JsonArray enrichedMembers = new JsonArray();
-                    rs.forEach(r-> enrichedMembers.add(r.getResult()));
-                    sandbox.put(FIELD_MEMBERS, enrichedMembers);
-                    deferred.resolve(sandbox);
-                })
-                .fail(e -> deferred.reject((QaobeeException) e.getReject()));
-        return deferred.promise();
-    }
-
-    private Promise getPerson(JsonObject m) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(m.getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY))
-                .done(u -> {
-                    m.put("person", u);
-                    deferred.resolve(m);
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+        CompositeFuture.all(promises).setHandler(rs -> {
+            if (rs.succeeded()) {
+                JsonArray enrichedMembers = new JsonArray();
+                rs.result().list().forEach(enrichedMembers::add);
+                sandbox.put(FIELD_MEMBERS, enrichedMembers);
+                resultHandler.handle(Future.succeededFuture(sandbox));
+            } else {
+                resultHandler.handle(Future.failedFuture(rs.cause()));
+            }
+        });
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> updateSandbox(JsonObject sandbox) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(sandbox, DBCollections.SANDBOX)
-                .done(res -> {
-                    sandbox.put("_id", res);
-                    deferred.resolve(sandbox);
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+    public void updateSandbox(JsonObject sandbox, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(sandbox, DBCollections.SANDBOX, upsertRes -> {
+            if (upsertRes.succeeded()) {
+                sandbox.put("_id", upsertRes.result());
+                resultHandler.handle(Future.succeededFuture(sandbox));
+            } else {
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
+            }
+        });
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getListByOwner(List<String> usersIds, String loggedUserId) {
-        Deferred<JsonArray, QaobeeException, Integer> deferred = new DeferredObject<>();
+    public void getListByOwner(List<String> usersIds, String loggedUserId, Handler<AsyncResult<JsonArray>> resultHandler) {
         CriteriaBuilder cb = new CriteriaBuilder();
         if (usersIds != null && StringUtils.isNoneBlank(usersIds.get(0))) {
             cb.add(PARAM_OWNER_ID, usersIds.get(0));
         } else {
             cb.add(PARAM_OWNER_ID, loggedUserId);
         }
-        mongo.findByCriterias(cb.get(), null, null, -1, -1, DBCollections.SANDBOX)
-                .done(resultJson -> {
-                    if (resultJson.size() == 0) {
-                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + loggedUserId));
-                    } else {
-                        deferred.resolve(resultJson);
-                    }
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+        mongo.findByCriterias(cb.get(), null, null, -1, -1, DBCollections.SANDBOX, resultJson -> {
+            if (resultJson.succeeded()) {
+                if (resultJson.result().size() == 0) {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR,
+                            "No SandBox found for user id :" + loggedUserId)));
+                } else {
+                    resultHandler.handle(Future.succeededFuture(resultJson.result()));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(resultJson.cause()));
+            }
+        });
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getByOwner(String activityId, String userId) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+    public void getByOwner(String activityId, String userId, Handler<AsyncResult<JsonObject>> resultHandler) {
         CriteriaBuilder cb = new CriteriaBuilder()
                 .add(PARAM_OWNER_ID, userId)
                 .add("structure." + PARAM_ACTIVITY_ID + "._id", activityId);
-        mongo.findByCriterias(cb.get(), null, null, -1, -1, DBCollections.SANDBOX)
-                .done(resultJson -> {
-                    if (resultJson.size() == 0) {
-                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "No SandBox found for user id :" + userId
-                                + " ,and activityId : " + activityId));
-                    } else {
-                        deferred.resolve(resultJson.getJsonObject(0));
-                    }
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+        mongo.findByCriterias(cb.get(), null, null, -1, -1, DBCollections.SANDBOX, resultJson -> {
+            if (resultJson.succeeded()) {
+                if (resultJson.result().size() == 0) {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR,
+                            "No SandBox found for user id :" + userId + " ,and activityId : " + activityId)));
+                } else {
+                    resultHandler.handle(Future.succeededFuture(resultJson.result().getJsonObject(0)));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(resultJson.cause()));
+            }
+        });
     }
 }
