@@ -21,7 +21,10 @@ package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.api.v1.commons.utils.CRMVerticle;
 import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
+import com.qaobee.hive.business.model.commons.referencial.Structure;
+import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.business.model.sandbox.effective.Availability;
@@ -43,21 +46,15 @@ import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.VertxContextPRNG;
-import org.jdeferred.Deferred;
-import org.jdeferred.DeferredManager;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DefaultDeferredManager;
-import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,169 +114,14 @@ public class SignupDAOImpl implements SignupDAO {
         this.vertx = vertx;
     }
 
-    @Override
-    public Promise<JsonObject, QaobeeException, Integer> finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject struct, JsonObject categoryAge, String countryId, String locale) {
-
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        // Converts jSon to Bean (extra parameters are ignored)
-        com.qaobee.hive.business.model.commons.users.User userUpdate = Json.decodeValue(jsonUser.encode(), com.qaobee.hive.business.model.commons.users.User.class);
-        userUpdate.set_id(jsonUser.getString("_id"));
-        updateStructure(struct, activityId).done(structure -> {
-            com.qaobee.hive.business.model.commons.referencial.Structure structureObj = Json.decodeValue(structure.encode(), com.qaobee.hive.business.model.commons.referencial.Structure.class);
-            CategoryAge categoryAgeObj = Json.decodeValue(categoryAge.encode(), CategoryAge.class);
-            getUser(userUpdate.get_id(), locale).done(user -> {
-                try {
-                    testAccount(user, activationCode, locale);
-                    // MaJ User
-                    user.getAccount().setActive(false);
-                    user.getAccount().setFirstConnexion(true);
-                    user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
-                    // récupération des activities des plans
-                    List<Promise> promises = new ArrayList<>();
-                    user.getAccount().getListPlan().stream().filter(plan -> plan.getActivity() != null).forEachOrdered(plan -> {
-                        Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
-                        activityService.getActivity(plan.getActivity().get_id(), a -> {
-                            if (a.succeeded()) {
-                                com.qaobee.hive.business.model.commons.settings.Activity activity = Json.decodeValue(a.result().encode(), com.qaobee.hive.business.model.commons.settings.Activity.class);
-                                plan.setActivity(activity);
-                                d.resolve(true);
-                            }
-                        });
-                        promises.add(d.promise());
-                    });
-                    DeferredManager dm = new DefaultDeferredManager();
-                    dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
-                        user.setBirthdate(userUpdate.getBirthdate());
-                        user.setContact(userUpdate.getContact());
-                        user.setCountry(structureObj.getCountry());
-                        user.setNationality(structureObj.getCountry());
-                        user.setFirstname(userUpdate.getFirstname());
-                        user.setGender(userUpdate.getGender());
-                        user.setName(userUpdate.getName());
-                        user.setAddress(userUpdate.getAddress());
-                        // Création Sandbox
-                        SB_SandBox sbSandBox = new SB_SandBox();
-                        sbSandBox.setActivityId(activityId);
-                        sbSandBox.setOwner(user.get_id());
-                        sbSandBox.setStructure(structureObj);
-                        mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbSandBoxId -> {
-                            if (sbSandBoxId.succeeded()) {
-                                sbSandBox.set_id(sbSandBoxId.result());
-                                // $MATCH section
-                                JsonObject dbObjectParent = new JsonObject()
-                                        .put("activityId", activityId)
-                                        .put("countryId", countryId);
-                                JsonObject match = new JsonObject().put("$match", dbObjectParent);
-                                // $PROJECT section
-                                dbObjectParent = new JsonObject()
-                                        .put("_id", 0)
-                                        .put(PARAMERTER_FIELD, 1);
-                                JsonObject project = new JsonObject().put("$project", dbObjectParent);
-                                JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
-                                mongo.aggregate(pipelineAggregation, DBCollections.ACTIVITY_CFG).done(tabParametersSignup -> {
-                                    // Création SB_Person
-                                    List<String> listPersonsId = new ArrayList<>();
-                                    List<Promise> promisesPlayers = new ArrayList<>();
-                                    if (tabParametersSignup.size() > 0) {
-                                        JsonObject parametersSignup = tabParametersSignup.getJsonObject(0);
-                                        if (parametersSignup.containsKey(PARAMERTER_FIELD) && parametersSignup.getJsonObject(PARAMERTER_FIELD).containsKey("players")) {
-                                            JsonArray tabPlayers = parametersSignup.getJsonObject(PARAMERTER_FIELD).getJsonArray("players");
-                                            for (int i = 0; i < tabPlayers.size(); i++) {
-                                                promisesPlayers.add(addPlayer(tabPlayers.getJsonObject(i), structureObj, categoryAgeObj, sbSandBox, listPersonsId));
-                                            }
-                                        }
-
-                                        dm.when(promisesPlayers.toArray(new Promise[promisesPlayers.size()])).done(rs2 -> {
-                                            // Création Effective
-                                            SB_Effective sbEffective = new SB_Effective();
-                                            sbEffective.setSandboxId(sbSandBox.get_id());
-                                            sbEffective.setLabel("Défaut");
-                                            sbEffective.setCategoryAge(categoryAgeObj);
-                                            // SB_Effective -> members
-                                            for (String playerId : listPersonsId) {
-                                                Member member = new Member();
-                                                member.setRole(new Role("player", "Joueur"));
-                                                member.setPersonId(playerId);
-                                                sbEffective.addMember(member);
-                                            }
-                                            mongo.upsert(new JsonObject(Json.encode(sbEffective)), DBCollections.EFFECTIVE, sbEffectiveId -> {
-                                                if (sbEffectiveId.succeeded()) {
-                                                    sbEffective.set_id(sbEffectiveId.result());
-                                                    sbSandBox.setEffectiveDefault(sbEffective.get_id());
-                                                    //Add owner in member's list of sandbox
-                                                    Member member = new Member();
-                                                    member.setRole(new Role("admin", "Admin"));
-                                                    member.setPersonId(user.get_id());
-                                                    member.setStatus("activated");
-                                                    List<Member> members = new ArrayList<>();
-                                                    members.add(member);
-                                                    sbSandBox.setMembers(members);
-                                                    mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbId -> {
-                                                        if (sbId.succeeded()) {
-                                                            user.setSandboxDefault(sbId.result());
-                                                            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
-                                                                if (userId.succeeded()) {
-                                                                    // Création SB_Teams
-                                                                    // My team
-                                                                    SB_Team team = new SB_Team();
-                                                                    team.setEffectiveId(sbEffective.get_id());
-                                                                    team.setSandboxId(sbSandBox.get_id());
-                                                                    team.setLabel("Mon équipe");
-                                                                    team.setEnable(true);
-                                                                    team.setAdversary(false);
-                                                                    mongo.upsert(new JsonObject(Json.encode(team)), DBCollections.TEAM, teamId -> {
-                                                                        if (teamId.succeeded()) {
-                                                                            deferred.resolve(new JsonObject(Json.encode(user)));
-                                                                        } else {
-                                                                            deferred.reject(new QaobeeException(((QaobeeSvcException) teamId.cause()).getCode(), teamId.cause()));
-                                                                        }
-                                                                    });
-                                                                } else {
-                                                                    deferred.reject(new QaobeeException(((QaobeeSvcException) userId.cause()).getCode(), userId.cause()));
-                                                                }
-                                                            });
-                                                        } else {
-                                                            deferred.reject(new QaobeeException(((QaobeeSvcException) sbId.cause()).getCode(), sbId.cause()));
-                                                        }
-                                                    });
-                                                } else {
-                                                    deferred.reject(new QaobeeException(((QaobeeSvcException) sbEffectiveId.cause()).getCode(), sbEffectiveId.cause()));
-                                                }
-                                            });
-                                        }).fail(e -> {
-                                            LOG.error(((Throwable) e.getReject()).getMessage());
-                                            deferred.reject((QaobeeException) e.getReject());
-                                        });
-                                    } else {
-                                        deferred.reject(new QaobeeException(ExceptionCodes.DATA_ERROR, "tabParametersSignup is empty"));
-                                    }
-                                }).fail(deferred::reject);
-                            } else {
-                                deferred.reject(new QaobeeException(((QaobeeSvcException) sbSandBoxId.cause()).getCode(), sbSandBoxId.cause()));
-                            }
-                        });
-                    }).fail(e -> {
-                        LOG.error(((Throwable) e.getReject()).getMessage());
-                        deferred.reject((QaobeeException) e.getReject());
-                    });
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    deferred.reject(e);
-                }
-            }).fail(deferred::reject);
-        }).fail(deferred::reject);
-        return deferred.promise();
-    }
-
-    private Promise<JsonObject, QaobeeException, Integer> updateStructure(JsonObject structure, String activityId) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+    private void updateStructure(JsonObject structure, String activityId, Handler<AsyncResult<JsonObject>> resultHandler) {
         if (structure.containsKey("_id")) {
             this.structureService.getStructure(structure.getString("_id"), s -> {
                 if (s.succeeded()) {
                     structure.mergeIn(s.result());
-                    deferred.resolve(structure);
+                    resultHandler.handle(Future.succeededFuture(structure));
                 } else {
-                    deferred.reject(new QaobeeException(((QaobeeSvcException) s.cause()).getCode(), s.cause()));
+                    resultHandler.handle(Future.failedFuture(s.cause()));
                 }
             });
         } else {
@@ -290,86 +132,19 @@ public class SignupDAOImpl implements SignupDAO {
                     activityService.getActivity(activityId, activity -> {
                         if (activity.succeeded()) {
                             structure.put("activity", activity.result());
-                            deferred.resolve(structure);
+                            resultHandler.handle(Future.succeededFuture(structure));
                         } else {
-                            deferred.reject(new QaobeeException(((QaobeeSvcException) activity.cause()).getCode(), activity.cause()));
+                            resultHandler.handle(Future.failedFuture(activity.cause()));
                         }
                     });
                 } else {
-                    deferred.reject(new QaobeeException(((QaobeeSvcException) country.cause()).getCode(), country.cause()));
+                    resultHandler.handle(Future.failedFuture(country.cause()));
                 }
             });
         }
-        return deferred.promise();
     }
 
-    @Override
-    public Promise<JsonObject, QaobeeException, Integer> firstConnectionCheck(String id, String activationCode, String locale) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        getUser(id, locale).done(user -> {
-            try {
-                testAccount(user, activationCode, locale);
-                user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
-                user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                // MaJ User
-                user.getAccount().setActive(true);
-                user.getAccount().setFirstConnexion(false);
-                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
-                    if(userId.succeeded()) {
-                        vertx.eventBus().send(CRMVerticle.UPDATE, new JsonObject(Json.encode(user)));
-                        deferred.resolve(new JsonObject(Json.encode(user)));
-                    } else {
-                        deferred.reject(new QaobeeException(((QaobeeSvcException) userId.cause()).getCode(), userId.cause()));
-                    }
-                });
-            } catch (QaobeeException e) {
-                LOG.error(e.getMessage(), e);
-                deferred.reject(e);
-            }
-        }).fail(deferred::reject);
-        return deferred.promise();
-    }
-
-    @Override
-    public Promise<Boolean, QaobeeException, Integer> accountCheck(String id, String activationCode) {
-        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(id, DBCollections.USER).done(u -> {
-            final com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(u.encode(), com.qaobee.hive.business.model.commons.users.User.class);
-            if (user.getAccount().getActivationCode().equals(activationCode)) {
-                user.getAccount().setActive(true);
-                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
-                    if(userId.succeeded()) {
-                        deferred.resolve(true);
-                    } else {
-                        deferred.reject(new QaobeeException(((QaobeeSvcException) userId.cause()).getCode(), userId.cause()));
-                    }
-                });
-            } else {
-                deferred.resolve(false);
-            }
-        }).fail(deferred::reject);
-        return deferred.promise();
-    }
-
-    @Override
-    public Promise<JsonObject, QaobeeException, Integer> register(String reCaptchaChallenge, JsonObject userJson, String locale) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        if (runtime.getBoolean("recaptcha") && !"mobile".equals(userJson.getJsonObject("account").getString("origin", "web"))) {
-            reCaptcha.verify(reCaptchaChallenge).done(res -> {
-                if (!res) {
-                    deferred.reject(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha"));
-                } else {
-                    proceedRegister(userJson, locale).done(deferred::resolve).fail(deferred::reject);
-                }
-            }).fail(e -> deferred.reject(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha")));
-        } else {
-            proceedRegister(userJson, locale).done(deferred::resolve).fail(deferred::reject);
-        }
-        return deferred.promise();
-    }
-
-    private Promise<JsonObject, QaobeeException, Integer> proceedRegister(JsonObject userJson, String locale) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+    private void proceedRegister(JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         final com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(userJson.encode(), com.qaobee.hive.business.model.commons.users.User.class);
         // Check user informations
         userService.checkUserInformations(userJson, locale, ar -> {
@@ -394,90 +169,60 @@ public class SignupDAOImpl implements SignupDAO {
                                 gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
                                 plan.setEndPeriodDate(gc.getTimeInMillis());
                                 // Si on vient du mobile, on connait le plan, mais pas par le web
-                                Deferred<Boolean, QaobeeException, Integer> d = new DeferredObject<>();
+                                Future<Void> d = Future.future();
                                 if (plan.getActivity() != null) {
-                                    mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY).done(activity -> {
-                                        plan.setActivity(Json.decodeValue(activity.encode(), com.qaobee.hive.business.model.commons.settings.Activity.class));
-                                        d.resolve(true);
-                                    }).fail(deferred::reject);
-                                } else {
-                                    d.resolve(true);
-                                }
-                                d.promise().done(res -> {
-                                    user.getAccount().getListPlan().add(plan);
-                                    this.userService.prepareUpsert(new JsonObject(Json.encode(user)), ar3 -> {
-                                        if (ar3.succeeded()) {
-                                            mongo.upsert(ar3.result(), DBCollections.USER, userId -> {
-                                                if(userId.succeeded()) {
-                                                    user.set_id(userId.result());
-                                                    vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
-                                                    mongo.getById(userId.result(), DBCollections.USER).done(u ->
-                                                            deferred.resolve(new JsonObject()
-                                                                    .put("person", u)
-                                                                    .put("planId", plan.getPaymentId()))
-                                                    ).fail(deferred::reject);
-                                                } else {
-                                                    deferred.reject(new QaobeeException(((QaobeeSvcException) userId.cause()).getCode(), userId.cause()));
-                                                }
-                                            });
+                                    mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY, activity -> {
+                                        if (activity.succeeded()) {
+                                            plan.setActivity(Json.decodeValue(activity.result().encode(), Activity.class));
+                                            d.complete();
+                                        } else {
+                                            resultHandler.handle(Future.failedFuture(activity.cause()));
                                         }
                                     });
-                                }).fail(deferred::reject);
+                                } else {
+                                    d.complete();
+                                }
+                                d.setHandler(res -> {
+                                    if (res.succeeded()) {
+                                        user.getAccount().getListPlan().add(plan);
+                                        this.userService.prepareUpsert(new JsonObject(Json.encode(user)), ar3 -> {
+                                            if (ar3.succeeded()) {
+                                                mongo.upsert(ar3.result(), DBCollections.USER, userId -> {
+                                                    if (userId.succeeded()) {
+                                                        user.set_id(userId.result());
+                                                        vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
+                                                        mongo.getById(userId.result(), DBCollections.USER, u -> {
+                                                                    if (u.succeeded()) {
+                                                                        resultHandler.handle(Future.succeededFuture(new JsonObject()
+                                                                                .put("person", u.result())
+                                                                                .put("planId", plan.getPaymentId())));
+                                                                    } else {
+                                                                        resultHandler.handle(Future.failedFuture(u.cause()));
+                                                                    }
+                                                                }
+                                                        );
+                                                    } else {
+                                                        resultHandler.handle(Future.failedFuture(userId.cause()));
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        resultHandler.handle(Future.failedFuture(res.cause()));
+                                    }
+                                });
                             } else {
-                                deferred.reject(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale)));
+                                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale))));
                             }
                         });
                     } else {
-                        deferred.reject(new QaobeeException(((QaobeeSvcException) ar2.cause()).getCode(), ar2.cause().getMessage()));
+                        resultHandler.handle(Future.failedFuture(ar2.cause()));
                     }
                 });
             } else {
-                deferred.reject(new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
+                resultHandler.handle(Future.failedFuture(ar.cause()));
             }
         });
-
-        return deferred.promise();
-    }
-
-    @Override
-    public Promise<Boolean, QaobeeException, Integer> resendMail(String login, String locale) {
-        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userService.getUserByLogin(login, locale, ar -> {
-            if (ar.succeeded()) {
-                try {
-                    sendRegisterMail(ar.result(), locale);
-                    deferred.resolve(true);
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    deferred.reject(e);
-                }
-            } else {
-                deferred.reject(new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
-            }
-        });
-        return deferred.promise();
-    }
-
-    @Override
-    public Promise<Boolean, QaobeeException, Integer> sendRegisterMail(JsonObject user, String locale) throws QaobeeException {
-        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        final JsonObject tplReq = new JsonObject()
-                .put(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
-                .put(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(user.encode(), com.qaobee.hive.business.model.commons.users.User.class), locale));
-        final JsonObject emailReq = new JsonObject()
-                .put("from", runtime.getString("mail.from"))
-                .put("to", user.getJsonObject("contact").getString("email"))
-                .put("subject", Messages.getString("mail.account.validation.subject", locale))
-                .put("content_type", "text/html")
-                .put("body", templatesDAO.generateMail(tplReq).getString("result"));
-        vertx.eventBus().send(MailVerticle.INTERNAL_MAIL, emailReq, new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), ar -> {
-            if (ar.succeeded()) {
-                deferred.resolve(true);
-            } else {
-                deferred.reject(new QaobeeException(ExceptionCodes.MAIL_EXCEPTION, Messages.getString("email.invalid", locale)));
-            }
-        });
-        return deferred.promise();
     }
 
     private static void testAccount(com.qaobee.hive.business.model.commons.users.User user, String activationCode, String locale) throws QaobeeException {
@@ -490,9 +235,9 @@ public class SignupDAOImpl implements SignupDAO {
         }
     }
 
-    private Promise<Boolean, QaobeeException, Integer> addPlayer(JsonObject player, com.qaobee.hive.business.model.commons.referencial.Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, List<String> listPersonsId) {
-        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
-        List<Promise> promises = new ArrayList<>();
+    private Future<Void> addPlayer(JsonObject player, com.qaobee.hive.business.model.commons.referencial.Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, List<String> listPersonsId) {
+        Future<Void> deferred = Future.future();
+        List<Future> promises = new ArrayList<>();
         for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
             SB_Person sbPerson = new SB_Person();
             sbPerson.setFirstname("Numero " + (listPersonsId.size() + 1));
@@ -513,37 +258,35 @@ public class SignupDAOImpl implements SignupDAO {
             sbPerson.setStatus(status);
             sbPerson.getStatus().setSquadnumber(listPersonsId.size() + 1);
             sbPerson.getStatus().setPositionType(player.getString("positionType"));
-            Deferred<String, QaobeeException, Integer> d = new DeferredObject<>();
-            mongo.upsert(new JsonObject(Json.encode(sbPerson)), DBCollections.PERSON, ar->{
-                if(ar.succeeded()) {
-                   d.resolve(ar.result());
+            Future<String> d = Future.future();
+            mongo.upsert(new JsonObject(Json.encode(sbPerson)), DBCollections.PERSON, ar -> {
+                if (ar.succeeded()) {
+                    d.complete(ar.result());
+                } else {
+                    d.fail(ar.cause());
                 }
             });
             promises.add(d);
         }
-        DeferredManager dm = new DefaultDeferredManager();
-        dm.when(promises.toArray(new Promise[promises.size()]))
-                .done(rs -> {
-                    rs.forEach(r -> listPersonsId.add((String) r.getResult()));
-                    deferred.resolve(true);
-                })
-                .fail(e -> {
-                    LOG.error(((Throwable) e.getReject()).getMessage());
-                    deferred.reject(((QaobeeException) e.getReject()));
-                });
-        return deferred.promise();
-    }
-
-    private Promise<com.qaobee.hive.business.model.commons.users.User, QaobeeException, Integer> getUser(String id, String locale) {
-        Deferred<com.qaobee.hive.business.model.commons.users.User, QaobeeException, Integer> deferred = new DeferredObject<>();
-        userService.getUser(id, ar -> {
-            if (ar.succeeded()) {
-                deferred.resolve(Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class));
+        CompositeFuture.all(promises).setHandler(rs -> {
+            if (rs.succeeded()) {
+                rs.result().list().forEach(r -> listPersonsId.add((String) r));
+                deferred.complete();
             } else {
-                deferred.reject(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", locale)));
+                deferred.fail(rs.cause());
             }
         });
-        return deferred.promise();
+        return deferred;
+    }
+
+    private void getUser(String id, String locale, Handler<AsyncResult<com.qaobee.hive.business.model.commons.users.User>> resultHandler) {
+        userService.getUser(id, ar -> {
+            if (ar.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class)));
+            } else {
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", locale))));
+            }
+        });
     }
 
     private static long randomDate(int yearOldMin, int yearOldMax) {
@@ -556,5 +299,303 @@ public class SignupDAOImpl implements SignupDAO {
         }
         calendar.set(GregorianCalendar.DAY_OF_YEAR, RANDOM.nextInt(365));
         return calendar.getTimeInMillis();
+    }
+
+    @Override
+    public void finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject struct, JsonObject categoryAge, String countryId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        com.qaobee.hive.business.model.commons.users.User userUpdate = Json.decodeValue(jsonUser.encode(), com.qaobee.hive.business.model.commons.users.User.class);
+        userUpdate.set_id(jsonUser.getString("_id"));
+        updateStructure(struct, activityId, structure -> {
+            if (structure.succeeded()) {
+                com.qaobee.hive.business.model.commons.referencial.Structure structureObj = Json.decodeValue(structure.result().encode(), com.qaobee.hive.business.model.commons.referencial.Structure.class);
+
+                CategoryAge categoryAgeObj = Json.decodeValue(categoryAge.encode(), CategoryAge.class);
+                getUser(userUpdate.get_id(), locale, userRes -> {
+                    if (userRes.succeeded()) {
+                        try {
+                            com.qaobee.hive.business.model.commons.users.User user = userRes.result();
+                            testAccount(user, activationCode, locale);
+                            updateUser(userUpdate, activityId, countryId, structureObj, categoryAgeObj, user, resultHandler);
+                        } catch (QaobeeException e) {
+                            LOG.error(e.getMessage(), e);
+                            resultHandler.handle(Future.failedFuture(e));
+                        }
+                    } else {
+                        resultHandler.handle(Future.failedFuture(userRes.cause()));
+                    }
+                });
+            } else {
+                resultHandler.handle(Future.failedFuture(structure.cause()));
+            }
+        });
+    }
+
+
+    @Override
+    public void firstConnectionCheck(String id, String activationCode, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        getUser(id, locale, userRes -> {
+            if (userRes.succeeded()) {
+                try {
+                    testAccount(userRes.result(), activationCode, locale);
+                    User user = userRes.result();
+                    user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
+                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                    // MaJ User
+                    user.getAccount().setActive(true);
+                    user.getAccount().setFirstConnexion(false);
+                    mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
+                        if (userId.succeeded()) {
+                            vertx.eventBus().send(CRMVerticle.UPDATE, new JsonObject(Json.encode(user)));
+                            resultHandler.handle(Future.succeededFuture(new JsonObject(Json.encode(user))));
+                        } else {
+                            resultHandler.handle(Future.failedFuture(userId.cause()));
+                        }
+                    });
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    resultHandler.handle(Future.failedFuture(e));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(userRes.cause()));
+            }
+        });
+    }
+
+    @Override
+    public void accountCheck(String id, String activationCode, Handler<AsyncResult<Boolean>> resultHandler) {
+        mongo.getById(id, DBCollections.USER, userRes -> {
+            if (userRes.succeeded()) {
+                final User user = Json.decodeValue(userRes.result().encode(), User.class);
+                if (user.getAccount().getActivationCode().equals(activationCode)) {
+                    user.getAccount().setActive(true);
+                    mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
+                        if (userId.succeeded()) {
+                            resultHandler.handle(Future.succeededFuture(true));
+                        } else {
+                            resultHandler.handle(Future.failedFuture(userId.cause()));
+                        }
+                    });
+                } else {
+                    resultHandler.handle(Future.succeededFuture(false));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(userRes.cause()));
+            }
+        });
+    }
+
+    @Override
+    public void register(String reCaptchaChallenge, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        if (runtime.getBoolean("recaptcha") && !"mobile".equals(userJson.getJsonObject("account").getString("origin", "web"))) {
+            reCaptcha.verify(reCaptchaChallenge, res -> {
+                if (res.succeeded()) {
+                    proceedRegister(userJson, locale, resultHandler);
+                } else {
+                    resultHandler.handle(Future.failedFuture(res.cause()));
+                }
+            });
+        } else {
+            proceedRegister(userJson, locale, resultHandler);
+        }
+    }
+
+    @Override
+    public void resendMail(String login, String locale, Handler<AsyncResult<Void>> resultHandler) {
+        userService.getUserByLogin(login, locale, ar -> {
+            if (ar.succeeded()) {
+                try {
+                    sendRegisterMail(ar.result(), locale, resultHandler);
+                    resultHandler.handle(Future.succeededFuture());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    resultHandler.handle(Future.failedFuture(e));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(ar.cause()));
+            }
+        });
+    }
+
+    @Override
+    public void sendRegisterMail(JsonObject user, String locale, Handler<AsyncResult<Void>> resultHandler) {
+        final JsonObject tplReq = new JsonObject()
+                .put(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
+                .put(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(user.encode(), com.qaobee.hive.business.model.commons.users.User.class), locale));
+        final JsonObject emailReq = new JsonObject()
+                .put("from", runtime.getString("mail.from"))
+                .put("to", user.getJsonObject("contact").getString("email"))
+                .put("subject", Messages.getString("mail.account.validation.subject", locale))
+                .put("content_type", "text/html")
+                .put("body", templatesDAO.generateMail(tplReq).getString("result"));
+        vertx.eventBus().send(MailVerticle.INTERNAL_MAIL, emailReq, new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), ar -> {
+            if (ar.succeeded()) {
+                resultHandler.handle(Future.succeededFuture());
+            } else {
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.MAIL_EXCEPTION, Messages.getString("email.invalid", locale))));
+            }
+        });
+    }
+
+    private void updateUser(User userUpdate, String activityId, String countryId, Structure structureObj, CategoryAge categoryAgeObj, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+        // MaJ User
+        user.getAccount().setActive(false);
+        user.getAccount().setFirstConnexion(true);
+        user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
+        // récupération des activities des plans
+        List<Future> promises = new ArrayList<>();
+        user.getAccount().getListPlan().stream().filter(plan -> plan.getActivity() != null).forEachOrdered(plan -> {
+            Future<Void> d = Future.future();
+            activityService.getActivity(plan.getActivity().get_id(), a -> {
+                if (a.succeeded()) {
+                    com.qaobee.hive.business.model.commons.settings.Activity activity = Json.decodeValue(a.result().encode(), com.qaobee.hive.business.model.commons.settings.Activity.class);
+                    plan.setActivity(activity);
+                    d.complete();
+                } else {
+                    d.fail(a.cause());
+                }
+            });
+            promises.add(d);
+        });
+        CompositeFuture.all(promises).setHandler(rs -> {
+            if (rs.succeeded()) {
+                user.setBirthdate(userUpdate.getBirthdate());
+                user.setContact(userUpdate.getContact());
+                user.setCountry(structureObj.getCountry());
+                user.setNationality(structureObj.getCountry());
+                user.setFirstname(userUpdate.getFirstname());
+                user.setGender(userUpdate.getGender());
+                user.setName(userUpdate.getName());
+                user.setAddress(userUpdate.getAddress());
+                // Création Sandbox
+                SB_SandBox sbSandBox = new SB_SandBox();
+                sbSandBox.setActivityId(activityId);
+                sbSandBox.setOwner(user.get_id());
+                sbSandBox.setStructure(structureObj);
+                createSandBox(activityId, countryId, sbSandBox, structureObj, categoryAgeObj, user, resultHandler);
+            } else {
+                resultHandler.handle(Future.failedFuture(rs.cause()));
+            }
+        });
+    }
+
+    private void createPlayers(JsonArray tabParametersSignup, Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+
+        List<String> listPersonsId = new ArrayList<>();
+        List<Future> promisesPlayers = new ArrayList<>();
+        JsonObject parametersSignup = tabParametersSignup.getJsonObject(0);
+        if (parametersSignup.containsKey(PARAMERTER_FIELD) && parametersSignup.getJsonObject(PARAMERTER_FIELD).containsKey("players")) {
+            JsonArray tabPlayers = parametersSignup.getJsonObject(PARAMERTER_FIELD).getJsonArray("players");
+            for (int i = 0; i < tabPlayers.size(); i++) {
+                promisesPlayers.add(addPlayer(tabPlayers.getJsonObject(i), structureObj, categoryAgeObj, sbSandBox, listPersonsId));
+            }
+        }
+
+        CompositeFuture.all(promisesPlayers).setHandler(rs2 -> {
+            if (rs2.succeeded()) {
+                // Création Effective
+                SB_Effective sbEffective = new SB_Effective();
+                sbEffective.setSandboxId(sbSandBox.get_id());
+                sbEffective.setLabel("Défaut");
+                sbEffective.setCategoryAge(categoryAgeObj);
+                // SB_Effective -> members
+                for (String playerId : listPersonsId) {
+                    Member member = new Member();
+                    member.setRole(new Role("player", "Joueur"));
+                    member.setPersonId(playerId);
+                    sbEffective.addMember(member);
+                }
+                createEffective(sbEffective, sbSandBox, user, resultHandler);
+            } else {
+                resultHandler.handle(Future.failedFuture(rs2.cause()));
+            }
+        });
+    }
+
+    private void createEffective(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(new JsonObject(Json.encode(sbEffective)), DBCollections.EFFECTIVE, sbEffectiveId -> {
+            if (sbEffectiveId.succeeded()) {
+                sbEffective.set_id(sbEffectiveId.result());
+                sbSandBox.setEffectiveDefault(sbEffective.get_id());
+                //Add owner in member's list of sandbox
+                Member member = new Member();
+                member.setRole(new Role("admin", "Admin"));
+                member.setPersonId(user.get_id());
+                member.setStatus("activated");
+                List<Member> members = new ArrayList<>();
+                members.add(member);
+                sbSandBox.setMembers(members);
+                updateSandbox(sbEffective, sbSandBox, user, resultHandler);
+            } else {
+                resultHandler.handle(Future.failedFuture(sbEffectiveId.cause()));
+            }
+        });
+    }
+
+    private void updateSandbox(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbId -> {
+            if (sbId.succeeded()) {
+                user.setSandboxDefault(sbId.result());
+                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
+                    if (userId.succeeded()) {
+                        // Création SB_Teams
+                        // My team
+                        SB_Team team = new SB_Team();
+                        team.setEffectiveId(sbEffective.get_id());
+                        team.setSandboxId(sbSandBox.get_id());
+                        team.setLabel("Mon équipe");
+                        team.setEnable(true);
+                        team.setAdversary(false);
+                        createNewTeam(team, user, resultHandler);
+                    } else {
+                        resultHandler.handle(Future.failedFuture(userId.cause()));
+                    }
+                });
+            } else {
+                resultHandler.handle(Future.failedFuture(sbId.cause()));
+            }
+        });
+    }
+
+    private void createSandBox(String activityId, String countryId, SB_SandBox sbSandBox, Structure structureObj, CategoryAge categoryAgeObj, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbSandBoxId -> {
+            if (sbSandBoxId.succeeded()) {
+                sbSandBox.set_id(sbSandBoxId.result());
+                // $MATCH section
+                JsonObject dbObjectParent = new JsonObject()
+                        .put("activityId", activityId)
+                        .put("countryId", countryId);
+                JsonObject match = new JsonObject().put("$match", dbObjectParent);
+                // $PROJECT section
+                dbObjectParent = new JsonObject()
+                        .put("_id", 0)
+                        .put(PARAMERTER_FIELD, 1);
+                JsonObject project = new JsonObject().put("$project", dbObjectParent);
+                JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
+                mongo.aggregate(pipelineAggregation, DBCollections.ACTIVITY_CFG, tabParametersSignup -> {
+                    if (tabParametersSignup.succeeded()) {
+                        // Création SB_Person
+                        if (tabParametersSignup.result().size() > 0) {
+                            createPlayers(tabParametersSignup.result(), structureObj, categoryAgeObj, sbSandBox, user, resultHandler);
+                        } else {
+                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "tabParametersSignup is empty")));
+                        }
+                    } else {
+                        resultHandler.handle(Future.failedFuture(tabParametersSignup.cause()));
+                    }
+                });
+            } else {
+                resultHandler.handle(Future.failedFuture(sbSandBoxId.cause()));
+            }
+        });
+    }
+
+    private void createNewTeam(SB_Team team, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(new JsonObject(Json.encode(team)), DBCollections.TEAM, teamId -> {
+            if (teamId.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(new JsonObject(Json.encode(user))));
+            } else {
+                resultHandler.handle(Future.failedFuture(teamId.cause()));
+            }
+        });
     }
 }

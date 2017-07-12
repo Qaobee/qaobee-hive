@@ -19,16 +19,16 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
  * The interface Signup dao.
  */
 public interface SignupDAO {
     /**
-     * Finalize signup json object.
+     * Finalize signup.
      *
      * @param jsonUser       the json user
      * @param activationCode the activation code
@@ -37,54 +37,54 @@ public interface SignupDAO {
      * @param categoryAge    the category age
      * @param countryId      the country id
      * @param locale         the locale
-     * @return the json object
+     * @param resultHandler  the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject structure, JsonObject categoryAge, String countryId, String locale);
+    void finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject structure, JsonObject categoryAge, String countryId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * First connection check json object.
+     * First connection check.
      *
      * @param id             the id
      * @param activationCode the activation code
      * @param locale         the locale
-     * @return the json object
+     * @param resultHandler  the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> firstConnectionCheck(String id, String activationCode, String locale);
+    void firstConnectionCheck(String id, String activationCode, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Account check boolean.
+     * Account check.
      *
      * @param id             the id
      * @param activationCode the activation code
-     * @return the boolean
+     * @param resultHandler  the result handler
      */
-    Promise<Boolean, QaobeeException, Integer> accountCheck(String id, String activationCode);
+    void accountCheck(String id, String activationCode, Handler<AsyncResult<Boolean>> resultHandler);
 
     /**
-     * Register json object.
+     * Register.
      *
-     * @param reCaptchaChallenge the re captcha
+     * @param reCaptchaChallenge the re captcha challenge
      * @param user               the user
      * @param locale             the locale
-     * @return the json object
+     * @param resultHandler      the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> register(String reCaptchaChallenge, JsonObject user, String locale);
+    void register(String reCaptchaChallenge, JsonObject user, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Resend mail.
      *
-     * @param login  the login
-     * @param locale the locale
-     * @return the status
+     * @param login         the login
+     * @param locale        the locale
+     * @param resultHandler the result handler
      */
-    Promise<Boolean, QaobeeException, Integer> resendMail(String login, String locale);
+    void resendMail(String login, String locale, Handler<AsyncResult<Void>> resultHandler);
 
     /**
      * Send register mail.
      *
-     * @param user   the user
-     * @param locale the locale
-     * @throws QaobeeException the qaobee exception
+     * @param user          the user
+     * @param locale        the locale
+     * @param resultHandler the result handler
      */
-    Promise<Boolean, QaobeeException, Integer> sendRegisterMail(JsonObject user, String locale) throws QaobeeException;
+    void sendRegisterMail(JsonObject user, String locale, Handler<AsyncResult<Void>> resultHandler);
 }
