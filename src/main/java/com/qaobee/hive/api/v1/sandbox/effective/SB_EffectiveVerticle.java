@@ -95,7 +95,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = ADD_EFFECTIVE, method = Constants.POST, logged = true)
     private void addEffective(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, effectiveDAO.add(new JsonObject(req.getBody())));
+        effectiveDAO.add(new JsonObject(req.getBody()), handleJson(message));
     }
 
     /**
@@ -112,7 +112,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
             scope = Rule.Param.BODY)
     private void updateEffective(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, effectiveDAO.update(new JsonObject(req.getBody())));
+        effectiveDAO.update(new JsonObject(req.getBody()), handleJson(message));
     }
 
     /**
@@ -135,7 +135,7 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
         if (params.get(PARAM_CATEGORY_AGE_CODE) != null && !StringUtils.isBlank(params.get(PARAM_CATEGORY_AGE_CODE).get(0))) {
             categoryAgeCode = params.get(PARAM_CATEGORY_AGE_CODE).get(0);
         }
-        replyJsonArray(message, effectiveDAO.getEffectiveList(params.get(PARAM_SANDBOX_ID).get(0), categoryAgeCode));
+        effectiveDAO.getEffectiveList(params.get(PARAM_SANDBOX_ID).get(0), categoryAgeCode, handleJsonArray(message));
     }
 
     /**
@@ -152,6 +152,6 @@ public class SB_EffectiveVerticle extends AbstractGuiceVerticle {// NOSONAR
             scope = Rule.Param.REQUEST)
     private void getEffective(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, effectiveDAO.getEffective(req.getParams().get(PARAM_ID).get(0)));
+        effectiveDAO.getEffective(req.getParams().get(PARAM_ID).get(0), handleJson(message));
     }
 }

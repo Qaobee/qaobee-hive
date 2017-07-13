@@ -27,6 +27,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.DeploymentOptions;
@@ -56,7 +57,6 @@ import javax.inject.Named;
 import java.io.File;
 import java.util.*;
 
-import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 /**
  * The Class Main.
@@ -104,13 +104,13 @@ public class Main extends AbstractGuiceVerticle {
                     .putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(f.length()));
             routingContext.response().sendFile(f.getAbsolutePath());
         } else {
-            routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+            routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON);
             routingContext.response().end(response);
         }
     }
 
     private static void handleJsonArray(RoutingContext routingContext, String response) {
-        routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).end(response);
+        routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON).end(response);
     }
 
     private static void manage404Error(RoutingContext routingContext) {
@@ -118,7 +118,7 @@ public class Main extends AbstractGuiceVerticle {
                 .put(Constants.STATUS, false)
                 .put(MESSAGE, "Nothing here")
                 .put(HTTP_CODE, 404);
-        routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
+        routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
     }
 
     /**
@@ -262,7 +262,7 @@ public class Main extends AbstractGuiceVerticle {
                                     .put(MESSAGE, e.getMessage())
                                     .put("code", e.getCode().name());
                             context.response()
-                                    .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                                    .putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                                     .setStatusCode(e.getCode().getCode())
                                     .end(jsonResp.encode());
                         }
@@ -271,7 +271,7 @@ public class Main extends AbstractGuiceVerticle {
                         int code = r.getInteger(HTTP_CODE);
                         r.remove(HTTP_CODE);
                         context.response()
-                                .putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                                .putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                                 .setStatusCode(code)
                                 .end(r.encode());
                     }
@@ -296,7 +296,7 @@ public class Main extends AbstractGuiceVerticle {
     }
 
     private static void handleException(ReplyException ex, RoutingContext context) {
-        context.response().putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON);
+        context.response().putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON);
         context.response().setStatusCode(500);
         if (ex.getMessage() != null) {
             String exStr = ex.getMessage();

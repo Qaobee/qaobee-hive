@@ -22,10 +22,8 @@ package com.qaobee.hive.services.impl;
 import com.qaobee.hive.services.IndicatorService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.services.MongoDB;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
@@ -62,9 +60,7 @@ public class IndicatorServiceImpl implements IndicatorService {
                 .put("code", new JsonObject().put("$in", listIndicators));
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match);
-        mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG, resultHandler);
     }
 
     @Override
@@ -85,15 +81,11 @@ public class IndicatorServiceImpl implements IndicatorService {
                 .put("listValues", 1);
         JsonObject project = new JsonObject().put("$project", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match).add(project);
-        mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.aggregate(pipelineAggregation, DBCollections.INDICATOR_CFG, resultHandler);
     }
 
     @Override
     public void getIndicator(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.getById(id, DBCollections.INDICATOR_CFG)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.getById(id, DBCollections.INDICATOR_CFG, resultHandler);
     }
 }

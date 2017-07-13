@@ -24,7 +24,6 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.GregorianCalendar;
@@ -39,6 +38,7 @@ import static org.hamcrest.Matchers.*;
  */
 public class SeasonServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/settings/season");
+
     /**
      * Gets season testBodyParams.
      */
@@ -126,19 +126,15 @@ public class SeasonServiceTest extends VertxJunitSupport {
     public void getSeasonListTest(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        generateLoggedUser().setHandler(u -> {
-            getCountry("CNTR-250-FR-FRA").then(country -> {
-                getActivity("ACT-HAND", u.result()).then(activity -> {
-                    given().header(TOKEN, u.result().getAccount().getToken())
-                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, (String) country.getString(CountryRoute.PARAM_ID))
-                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, (String) activity.getString(ActivityRoute.PARAM_ID))
-                            .when().get(BASE_URL + "/getListByActivity")
-                            .then().assertThat().statusCode(200)
-                            .body("", hasSize(5));
-                    async.complete();
-                }).fail(e -> Assert.fail(e.getMessage()));
-            }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        generateLoggedUser().setHandler(u -> getCountry("CNTR-250-FR-FRA").setHandler(country -> getActivity("ACT-HAND").setHandler(activity -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(SeasonRoute.PARAM_COUNTRY_ID, (String) country.result().getString(CountryRoute.PARAM_ID))
+                    .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, (String) activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(BASE_URL + "/getListByActivity")
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(5));
+            async.complete();
+        })));
         async.await(TIMEOUT);
     }
 
@@ -175,26 +171,22 @@ public class SeasonServiceTest extends VertxJunitSupport {
     public void getSeasonListWithWrongParameterTest(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        generateLoggedUser().setHandler(u -> {
-            getCountry("CNTR-250-FR-FRA").then(country -> {
-                getActivity("ACT-HAND", u.result()).then(activity -> {
-                    given().header(TOKEN, u.result().getAccount().getToken())
-                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, "1322")
-                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                            .when().get(BASE_URL + "/getListByActivity")
-                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                            .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().setHandler(u -> getCountry("CNTR-250-FR-FRA").setHandler(country -> getActivity("ACT-HAND").setHandler(activity -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(SeasonRoute.PARAM_COUNTRY_ID, "1322")
+                    .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(BASE_URL + "/getListByActivity")
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
-                    given().header(TOKEN, u.result().getAccount().getToken())
-                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
-                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, "ACT-BIDON")
-                            .when().get(BASE_URL + "/getListByActivity")
-                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                            .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-                    async.complete();
-                }).fail(e -> Assert.fail(e.getMessage()));
-            }).fail(e -> Assert.fail(e.getMessage()));
-        });
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.result().getString(CountryRoute.PARAM_ID))
+                    .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                    .when().get(BASE_URL + "/getListByActivity")
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        })));
         async.await(TIMEOUT);
     }
 
@@ -223,23 +215,19 @@ public class SeasonServiceTest extends VertxJunitSupport {
     public void getCurrentSeasonTest(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        generateLoggedUser().setHandler(u -> {
-            getCountry("CNTR-250-FR-FRA").then(country -> {
-                getActivity("ACT-HAND", u.result()).then(activity -> {
-                    GregorianCalendar today = new GregorianCalendar();
-                    int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
-                    given().header(TOKEN, u.result().getAccount().getToken())
-                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
-                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                            .when().get(BASE_URL + "/current")
-                            .then().assertThat().statusCode(200)
-                            .body("label", notNullValue())
-                            .body("label", is("SAISON 2017-2018"))
-                            .body("code", is("SAI-" + year));
-                    async.complete();
-                }).fail(e -> Assert.fail(e.getMessage()));
-            }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        generateLoggedUser().setHandler(u -> getCountry("CNTR-250-FR-FRA").setHandler(country -> getActivity("ACT-HAND").setHandler(activity -> {
+            GregorianCalendar today = new GregorianCalendar();
+            int year = today.get(GregorianCalendar.MONTH) <= 5 ? today.get(GregorianCalendar.YEAR) - 1 : today.get(GregorianCalendar.YEAR);
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.result().getString(CountryRoute.PARAM_ID))
+                    .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(BASE_URL + "/current")
+                    .then().assertThat().statusCode(200)
+                    .body("label", notNullValue())
+                    .body("label", is("SAISON 2017-2018"))
+                    .body("code", is("SAI-" + year));
+            async.complete();
+        })));
         async.await(TIMEOUT);
     }
 
@@ -276,26 +264,22 @@ public class SeasonServiceTest extends VertxJunitSupport {
     public void getCurrentSeasonWithWrongParameterTest(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_SEASONS, SETTINGS_COUNTRY);
-        generateLoggedUser().setHandler(u -> {
-            getCountry("CNTR-250-FR-FRA").then(country -> {
-                getActivity("ACT-HAND", u.result()).then(activity -> {
-                    given().header(TOKEN, u.result().getAccount().getToken())
-                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, "1322")
-                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                            .when().get(BASE_URL + "/current")
-                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                            .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+        generateLoggedUser().setHandler(u -> getCountry("CNTR-250-FR-FRA").setHandler(country -> getActivity("ACT-HAND").setHandler(activity -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(SeasonRoute.PARAM_COUNTRY_ID, "1322")
+                    .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(BASE_URL + "/current")
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
-                    given().header(TOKEN, u.result().getAccount().getToken())
-                            .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.getString(CountryRoute.PARAM_ID))
-                            .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, "ACT-BIDON")
-                            .when().get(BASE_URL + "/current")
-                            .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                            .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-                    async.complete();
-                }).fail(e -> Assert.fail(e.getMessage()));
-            }).fail(e -> Assert.fail(e.getMessage()));
-        });
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(SeasonRoute.PARAM_COUNTRY_ID, country.result().getString(CountryRoute.PARAM_ID))
+                    .queryParam(SeasonRoute.PARAM_ACTIVITY_ID, "ACT-BIDON")
+                    .when().get(BASE_URL + "/current")
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        })));
         async.await(TIMEOUT);
     }
 

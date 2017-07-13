@@ -16,50 +16,57 @@
  *  is strictly forbidden unless prior written permission is obtained
  *  from Qaobee.
  */
-package com.qaobee.hive.technical.mongo.impl;
+package com.qaobee.hive.services.impl;
 
+import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.json.Json;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
+import io.vertx.ext.mongo.WriteOption;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The type Mongo db.
  */
+@ProxyService(address = MongoDB.ADDRESS, iface = MongoDB.class)
 public class MongoDBImpl implements MongoDB {
     @Inject
     private MongoClientCustom mongoClient;
+    @Inject
+    private Utils utils;
 
-    @Override
-    public void upsert(final Object o, Handler<AsyncResult<String>> resultHandler) {
-         upsert(new JsonObject(Json.encode(o)), o.getClass().getSimpleName(), resultHandler);
+    private Vertx vertx;
+
+    /**
+     * Instantiates a new Mongo db.
+     *
+     * @param vertx the vertx
+     */
+    public MongoDBImpl(Vertx vertx) {
+        this.vertx = vertx;
     }
 
     @Override
     public void upsert(JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler) {
-        upsert(new JsonObject().put("_id", document.getString("_id")), document, collection, resultHandler);
+        upsertWithQuery(new JsonObject().put("_id", document.getString("_id")), document, collection, resultHandler);
     }
 
     @Override
-    public void upsert(JsonObject query, JsonObject document, Class<?> collection, Handler<AsyncResult<String>> resultHandler) {
-        upsert(query, document, collection.getClass().getSimpleName(), resultHandler);
-    }
-
-    @Override
-    public void upsert(JsonObject query, JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler) {
+    public void upsertWithQuery(JsonObject query, JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler) {
         if (document.containsKey("_id") && document.getString("_id") != null) {
-            mongoClient.save(collection, document, res -> {
+            mongoClient.saveWithOptions(collection, document, WriteOption.ACKNOWLEDGED, res -> {
                 if (res.succeeded()) {
                     resultHandler.handle(Future.succeededFuture(document.getString("_id")));
                 } else {
@@ -80,60 +87,51 @@ public class MongoDBImpl implements MongoDB {
 
     @Override
     public void getById(String id, String collection, Handler<AsyncResult<JsonObject>> resultHandler) {
-        getById(id, collection, null, resultHandler);
+        getByIdMinimal(id, collection, null, resultHandler);
     }
 
     @Override
-    public void getById(String id, String collection, List<String> minimal, Handler<AsyncResult<JsonObject>> resultHandler) {
+    public void getByIdMinimal(String id, String collection, List<String> minimal, Handler<AsyncResult<JsonObject>> resultHandler) {
         JsonObject query = new JsonObject().put("_id", id);
         JsonObject mini = null;
         if (minimal != null) {
-            mini = getMinimal(minimal);
+            mini = utils.getMinimal(minimal);
         }
         mongoClient.findOne(collection, query, mini, res -> {
-            if (res.succeeded() ) {
-                if(res.result() != null) {
+            if (res.succeeded()) {
+                if (res.result() != null) {
                     resultHandler.handle(Future.succeededFuture(res.result()));
                 } else {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found")));
                 }
             } else {
-               resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage())));
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause().getMessage())));
             }
         });
     }
 
     @Override
-    public JsonObject getMinimal(final List<String> minimal) {
-        final JsonObject map = new JsonObject();
-        for (final String key : minimal) {
-            map.put(key, Boolean.TRUE);
-        }
-        return map;
-    }
-
-    @Override
-    public void findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
+    public void findByCriterias(JsonObject criteria, List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject query = new JsonObject();
-        if (criteria != null) {
+        if (criteria.size() > 0) {
             final JsonArray and = new JsonArray();
-            criteria.keySet().forEach(k -> {
-                if (criteria.get(k) instanceof String && ((String) criteria.get(k)).startsWith("//")) {
-                    and.add(new JsonObject().put(k, new JsonObject().put("$regex", ((String)criteria.get(k)).substring(2)).put("$options", "i")));
+            criteria.fieldNames().forEach(K -> {
+                if (criteria.getValue(K) instanceof String && ((String) criteria.getValue(K)).startsWith("//")) {
+                    and.add(new JsonObject().put(K, new JsonObject().put("$regex", ((String) criteria.getValue(K)).substring(2)).put("$options", "i")));
                 } else {
-                    and.add(new JsonObject().put(k, criteria.get(k)));
+                    and.add(new JsonObject().put(K, criteria.getValue(K)));
                 }
             });
             query = new JsonObject().put("$and", and);
         }
         FindOptions options = new FindOptions();
-        if (fields != null) {
-            options.setFields(getMinimal(fields));
+        if (!fields.isEmpty()) {
+            options.setFields(utils.getMinimal(fields));
         }
         if (limit > 0) {
             options.setLimit(limit);
         }
-        if (sort != null) {
+        if (StringUtils.isNotBlank(sort)) {
             options.setSort(new JsonObject().put(sort, order));
         }
         mongoClient.findWithOptions(collection, query, options, res -> {
@@ -149,7 +147,7 @@ public class MongoDBImpl implements MongoDB {
 
     @Override
     public void findAll(List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
-        findByCriterias(null, fields, sort, order, limit, collection, resultHandler);
+        findByCriterias(new JsonObject(), fields, sort, order, limit, collection, resultHandler);
     }
 
     @Override

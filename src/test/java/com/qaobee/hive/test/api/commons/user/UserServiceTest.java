@@ -716,10 +716,8 @@ public class UserServiceTest extends VertxJunitSupport {
      */
     @Test
     public void logoutBadHTTPMethod() {
-        generateLoggedUser().setHandler(user -> {
-            given().header(TOKEN, user.result().getAccount().getToken())
-                    .when().post(getURL(UserVerticle.LOGOUT));
-        });
+        generateLoggedUser().setHandler(user -> given().header(TOKEN, user.result().getAccount().getToken())
+                .when().post(getURL(UserVerticle.LOGOUT)));
     }
 
     /**
@@ -796,15 +794,19 @@ public class UserServiceTest extends VertxJunitSupport {
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            mongo.getById(user.result().get_id(), DBCollections.USER).done(jsonuser -> {
-                String code = jsonuser.getJsonObject("account").getString("activationPasswd");
-                given().param("id", user.result().get_id()).param("code", code)
-                        .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
-                        .then().assertThat().statusCode(200)
-                        .body("status", notNullValue())
-                        .body("status", is(true));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
+            mongo.getById(user.result().get_id(), DBCollections.USER, jsonuser -> {
+                if (jsonuser.succeeded()) {
+                    String code = jsonuser.result().getJsonObject("account").getString("activationPasswd");
+                    given().param("id", user.result().get_id()).param("code", code)
+                            .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(true));
+                    async.complete();
+                } else {
+                    Assert.fail(jsonuser.cause().getMessage());
+                }
+            });
         });
         async.await(TIMEOUT);
     }
@@ -871,35 +873,39 @@ public class UserServiceTest extends VertxJunitSupport {
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            mongo.getById(user.result().get_id(), DBCollections.USER).done(jsonuser -> {
-                String code = jsonuser.getJsonObject("account").getString("activationPasswd");
-                given().param("id", user.result().get_id()).param("code", code)
-                        .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
-                        .then().assertThat().statusCode(200)
-                        .body("status", notNullValue())
-                        .body("status", is(true));
+            mongo.getById(user.result().get_id(), DBCollections.USER, jsonuser -> {
+                if (jsonuser.succeeded()) {
+                    String code = jsonuser.result().getJsonObject("account").getString("activationPasswd");
+                    given().param("id", user.result().get_id()).param("code", code)
+                            .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(true));
 
-                JsonObject query2 = new JsonObject()
-                        .put("id", user.result().get_id())
-                        .put("code", code)
-                        .put("passwd", "newPassword");
+                    JsonObject query2 = new JsonObject()
+                            .put("id", user.result().get_id())
+                            .put("code", code)
+                            .put("passwd", "newPassword");
 
-                given().body(query2.encodePrettily())
-                        .when().post(getURL(UserVerticle.PASSWD_RESET))
-                        .then().assertThat().statusCode(200)
-                        .body("status", notNullValue())
-                        .body("status", is(true));
-                // Finaly testBodyParams login
-                JsonObject params = new JsonObject()
-                        .put(UserVerticle.PARAM_LOGIN, user.result().getAccount().getLogin())
-                        .put(UserVerticle.PARAM_PWD, "newPassword");
-                given().body(params.encodePrettily())
-                        .when().post(getURL(UserVerticle.LOGIN))
-                        .then().assertThat().statusCode(200)
-                        .body("name", notNullValue())
-                        .body("name", is(user.result().getName()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
+                    given().body(query2.encodePrettily())
+                            .when().post(getURL(UserVerticle.PASSWD_RESET))
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(true));
+                    // Finaly testBodyParams login
+                    JsonObject params = new JsonObject()
+                            .put(UserVerticle.PARAM_LOGIN, user.result().getAccount().getLogin())
+                            .put(UserVerticle.PARAM_PWD, "newPassword");
+                    given().body(params.encodePrettily())
+                            .when().post(getURL(UserVerticle.LOGIN))
+                            .then().assertThat().statusCode(200)
+                            .body("name", notNullValue())
+                            .body("name", is(user.result().getName()));
+                    async.complete();
+                } else {
+                    Assert.fail(jsonuser.cause().getMessage());
+                }
+            });
         });
         async.await(TIMEOUT);
     }
@@ -919,26 +925,30 @@ public class UserServiceTest extends VertxJunitSupport {
                     .body("status", notNullValue())
                     .body("status", is(true));
             // fetch the code
-            mongo.getById(user.result().get_id(), DBCollections.USER).done(jsonuser -> {
-                String code = jsonuser.getJsonObject("account").getString("activationPasswd");
-                given().param("id", user.result().get_id()).param("code", code)
-                        .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
-                        .then().assertThat().statusCode(200)
-                        .body("status", notNullValue())
-                        .body("status", is(true));
+            mongo.getById(user.result().get_id(), DBCollections.USER, jsonuser -> {
+                if (jsonuser.succeeded()) {
+                    String code = jsonuser.result().getJsonObject("account").getString("activationPasswd");
+                    given().param("id", user.result().get_id()).param("code", code)
+                            .when().get(getURL(UserVerticle.PASSWD_RENEW_CHK))
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(true));
 
-                JsonObject query2 = new JsonObject()
-                        .put("id", user.result().get_id())
-                        .put("code", "123456")
-                        .put("passwd", "newPassword");
+                    JsonObject query2 = new JsonObject()
+                            .put("id", user.result().get_id())
+                            .put("code", "123456")
+                            .put("passwd", "newPassword");
 
-                given().body(query2.encodePrettily())
-                        .when().post(getURL(UserVerticle.PASSWD_RESET))
-                        .then().assertThat().statusCode(200)
-                        .body("status", notNullValue())
-                        .body("status", is(false));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
+                    given().body(query2.encodePrettily())
+                            .when().post(getURL(UserVerticle.PASSWD_RESET))
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(false));
+                    async.complete();
+                } else {
+                    Assert.fail(jsonuser.cause().getMessage());
+                }
+            });
         });
         async.await(TIMEOUT);
     }

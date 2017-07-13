@@ -113,7 +113,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = ADD_STAT_BULK, method = Constants.PUT, logged = true)
     private void addBulk(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, statisticsDAO.addBulk(new JsonArray(req.getBody())));
+        statisticsDAO.addBulk(new JsonArray(req.getBody()), handleJson(message));
     }
 
     /**
@@ -129,7 +129,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_STATS, method = Constants.GET, logged = true)
     private void getListForEvent(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, statisticsDAO.getListForEvent(req.getParams().get("eventId").get(0)));
+        statisticsDAO.getListForEvent(req.getParams().get("eventId").get(0), handleJson(message));
     }
 
     /**
@@ -142,11 +142,12 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {Object} stats Mandatory The stats object to add.
      * @apiSuccess {Object}   stats    The stats added.
      */
-    @Rule(address = ADD_STAT, method = Constants.PUT, logged = true, mandatoryParams = {CODE_FIELD, TIMER_FIELD, OWNER_FIELD},
-            scope = Rule.Param.BODY)
+    @Rule(address = ADD_STAT, method = Constants.PUT, logged = true,
+          mandatoryParams = {CODE_FIELD, TIMER_FIELD, OWNER_FIELD},
+          scope = Rule.Param.BODY)
     private void addStat(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, statisticsDAO.addStat(new JsonObject(req.getBody())));
+        statisticsDAO.addStat(new JsonObject(req.getBody()), handleJson(message));
     }
 
     /**
@@ -165,18 +166,18 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {Array}   Stats    The detail value statistics found.
      */
     @Rule(address = GET_LISTDETAIL_VALUES, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
-            scope = Rule.Param.BODY)
+          mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
+          scope = Rule.Param.BODY)
     private void getListDetailValue(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject params = new JsonObject(req.getBody());
-        replyJsonArray(message, statisticsDAO.getListDetailValue(params.getJsonArray(PARAM_INDICATOR_CODE),
+        statisticsDAO.getListDetailValue(params.getJsonArray(PARAM_INDICATOR_CODE),
                 params.getJsonArray(PARAM_LIST_OWNERS),
                 params.getLong(PARAM_START_DATE),
                 params.getLong(PARAM_END_DATE),
                 params.getJsonArray(PARAM_VALUES),
-                params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0
-        ));
+                params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0,
+                handleJsonArray(message));
     }
 
     /**
@@ -198,12 +199,12 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiSuccess {Array}   Stats    The statistics found.
      */
     @Rule(address = GET_STAT_GROUPBY, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
-            scope = Rule.Param.BODY)
+          mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
+          scope = Rule.Param.BODY)
     private void getStatsGroupedBy(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject params = new JsonObject(req.getBody());
-        replyJsonArray(message, statisticsDAO.getStatsGroupedBy(params.getJsonArray(PARAM_INDICATOR_CODE),
+        statisticsDAO.getStatsGroupedBy(params.getJsonArray(PARAM_INDICATOR_CODE),
                 params.getJsonArray(PARAM_LIST_OWNERS),
                 params.getLong(PARAM_START_DATE),
                 params.getLong(PARAM_END_DATE),
@@ -212,7 +213,8 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
                 params.getJsonArray(PARAM_LIST_SHOOTSEQID),
                 params.getJsonArray(PARAM_LIST_GROUPBY),
                 params.getJsonArray(PARAM_LIST_SORTBY),
-                params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0
-        ));
+                params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0,
+                handleJsonArray(message)
+        );
     }
 }

@@ -20,20 +20,17 @@
 package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.services.ActivityService;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * The type Activity service.
@@ -58,24 +55,17 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void getEnabled(Handler<AsyncResult<JsonArray>> resultHandler) {
-        Map<String, Object> criterias = new HashMap<>();
-        criterias.put("enable", true);
-        mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.ACTIVITY)
-                .done(res-> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        JsonObject criterias = new JsonObject().put("enable", true);
+        mongo.findByCriterias(criterias,  new ArrayList<>(), "", -1, -1, DBCollections.ACTIVITY, resultHandler);
     }
 
     @Override
     public void getActivityList(Handler<AsyncResult<JsonArray>> resultHandler) {
-        mongo.findByCriterias(null, null, null, -1, -1, DBCollections.ACTIVITY)
-                .done(res-> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.findByCriterias(new JsonObject(),  new ArrayList<>(), "", -1, -1, DBCollections.ACTIVITY, resultHandler);
     }
 
     @Override
     public void getActivity(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.getById(id, DBCollections.ACTIVITY)
-                .done(res-> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e-> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.getById(id, DBCollections.ACTIVITY, resultHandler);
     }
 }

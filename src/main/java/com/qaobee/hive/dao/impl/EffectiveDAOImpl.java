@@ -20,10 +20,10 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.EffectiveDAO;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -31,8 +31,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * The type Effective dao.
@@ -71,12 +70,11 @@ public class EffectiveDAOImpl implements EffectiveDAO {
 
     @Override
     public void getEffectiveList(String sandboxId, String categoryAgeCode, Handler<AsyncResult<JsonArray>> resultHandler) {
-        Map<String, Object> criterias = new HashMap<>();
-        criterias.put(PARAM_SANDBOX_ID, sandboxId);
+        JsonObject criterias = new JsonObject().put(PARAM_SANDBOX_ID, sandboxId);
         if (categoryAgeCode != null) {
             criterias.put(PARAM_CATEGORY_AGE_CODE, categoryAgeCode);
         }
-        mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.EFFECTIVE, resultJson -> {
+        mongo.findByCriterias(criterias, new ArrayList<>(), "", -1, -1, DBCollections.EFFECTIVE, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR,

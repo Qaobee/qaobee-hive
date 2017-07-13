@@ -21,12 +21,11 @@ package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.api.v1.commons.settings.CountryRoute;
 import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -34,13 +33,9 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * The type Country dao.
@@ -60,53 +55,57 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public void getCountryFromAlpha2(String alpha2, Handler<AsyncResult<JsonObject>> resultHandler) {
-        getCountries()
-                .done(map -> {
-                    if(map.containsKey(alpha2.toUpperCase())) {
-                        resultHandler.handle(Future.succeededFuture(map.getJsonObject(alpha2.toUpperCase())));
-                    } else {
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "no data found")));
-                    }
-                })
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        getCountries(map -> {
+            if (map.succeeded()) {
+                if (map.result().containsKey(alpha2.toUpperCase())) {
+                    resultHandler.handle(Future.succeededFuture(map.result().getJsonObject(alpha2.toUpperCase())));
+                } else {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found")));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(map.cause()));
+            }
+        });
     }
 
     @Override
     public void getCountryList(String locale, String label, Handler<AsyncResult<JsonArray>> resultHandler) {
-        Map<String, Object> criterias = new HashMap<>();
-        criterias.put(CountryRoute.PARAM_LOCAL, locale);
+        JsonObject criterias = new JsonObject().put(CountryRoute.PARAM_LOCAL, locale);
         // label
         if (StringUtils.isNotBlank(label)) {
             criterias.put(CountryRoute.PARAM_LABEL, label);
         }
-        mongo.findByCriterias(criterias, null, null, -1, -1, DBCollections.COUNTRY)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.findByCriterias(criterias,  new ArrayList<>(), "", -1, -1, DBCollections.COUNTRY, resultHandler);
     }
 
     @Override
     public void getCountry(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.getById(id, DBCollections.COUNTRY).done(res -> {
-            if (res.size() > 0) {
-                resultHandler.handle(Future.succeededFuture(res));
+        mongo.getById(id, DBCollections.COUNTRY, res -> {
+            if (res.succeeded()) {
+                if (res.result().size() > 0) {
+                    resultHandler.handle(Future.succeededFuture(res.result()));
+                } else {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found")));
+                }
             } else {
-                resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "no data found")));
+                resultHandler.handle(Future.failedFuture(res.cause()));
             }
-        }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        });
     }
 
-    private Promise<JsonObject, QaobeeException, Integer> getCountries() {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+    private void getCountries(Handler<AsyncResult<JsonObject>> resultHandler) {
         if (mapCountry.fieldNames().isEmpty()) {
-            mongo.findAll(null, null, -1, 0, DBCollections.COUNTRY)
-                    .done(resultJson -> {
-                        resultJson.forEach(c -> mapCountry.put(((JsonObject) c).getString("_id").split("-")[2], (JsonObject) c));
-                        deferred.resolve(mapCountry);
-                    })
-                    .fail(deferred::reject);
+            mongo.findAll( new ArrayList<>(), "", -1, 0, DBCollections.COUNTRY, resultJson -> {
+                if (resultJson.succeeded()) {
+                    resultJson.result().forEach(c -> mapCountry.put(((JsonObject) c).getString("_id").split("-")[2], (JsonObject) c));
+                    resultHandler.handle(Future.succeededFuture(mapCountry));
+                } else {
+                    resultHandler.handle(Future.failedFuture(resultJson.cause()));
+                }
+            });
         } else {
-            deferred.resolve(mapCountry);
+            resultHandler.handle(Future.succeededFuture(mapCountry));
         }
-        return deferred.promise();
+        ;
     }
 }

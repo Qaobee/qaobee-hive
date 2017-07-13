@@ -32,9 +32,8 @@ import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import io.vertx.core.AsyncResult;
@@ -49,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -127,25 +127,25 @@ public class UserServiceImpl implements UserService {
     public void generateProfilePDF(JsonObject u, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         final JsonObject juser = new JsonObject().put("firstname", u.getString("firstname"))
                 .put("name", u.getString("name"))
-                .put("username", u.getJsonObject("account").getString("login"))
+                .put("username", u.getJsonObject(ACCOUNT_FIELD).getString("login"))
                 .put("phoneNumber", u.getJsonObject("contact").getString("home"))
                 .put("email", u.getJsonObject("contact").getString("email"))
                 .put("birthdate", utils.formatDate(u.getLong("birthdate"), DateFormat.MEDIUM, DateFormat.MEDIUM, locale));
-        if (StringUtils.isNotBlank(u.getString("avatar", ""))) {
-            juser.put(AVATAR_FIELD, new String(Base64.decode(u.getString("avatar"))));
+        if (StringUtils.isNotBlank(u.getString(AVATAR_FIELD, ""))) {
+            juser.put(AVATAR_FIELD, new String(Base64.decode(u.getString(AVATAR_FIELD))));
         }
-        if (u.getJsonObject("address") != null) {
-            if (StringUtils.isNotBlank(u.getJsonObject("address").getString("formatedAddress", ""))) {
-                juser.put(ADDRESS_FIELD, u.getJsonObject("address").getString("formatedAddress"));
+        if (u.getJsonObject(ADDRESS_FIELD) != null) {
+            if (StringUtils.isNotBlank(u.getJsonObject(ADDRESS_FIELD).getString("formatedAddress", ""))) {
+                juser.put(ADDRESS_FIELD, u.getJsonObject(ADDRESS_FIELD).getString("formatedAddress"));
             } else {
-                juser.put(ADDRESS_FIELD, u.getJsonObject("address").getString("place")
-                        + " " + u.getJsonObject("address").getString("zipcode")
-                        + " " + u.getJsonObject("address").getString("city")
-                        + " " + u.getJsonObject("address").getString("country"));
+                juser.put(ADDRESS_FIELD, u.getJsonObject(ADDRESS_FIELD).getString("place")
+                        + " " + u.getJsonObject(ADDRESS_FIELD).getString("zipcode")
+                        + " " + u.getJsonObject(ADDRESS_FIELD).getString("city")
+                        + " " + u.getJsonObject(ADDRESS_FIELD).getString("country"));
             }
         }
         resultHandler.handle(Future.succeededFuture(new JsonObject()
-                .put(PDFVerticle.FILE_NAME, u.getJsonObject("account").getString("login"))
+                .put(PDFVerticle.FILE_NAME, u.getJsonObject(ACCOUNT_FIELD).getString("login"))
                 .put(PDFVerticle.TEMPLATE, "profile.ftl")
                 .put(PDFVerticle.DATA, juser)));
     }
@@ -153,30 +153,33 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(JsonObject u, Handler<AsyncResult<JsonObject>> resultHandler) {
         final User user = Json.decodeValue(u.encode(), User.class);
-        mongo.getById(user.get_id(), DBCollections.USER)
-                .done(p -> {
-                    try {
-                        if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
-                            final byte[] salt = passwordEncryptionService.generateSalt();
-                            user.getAccount().setSalt(salt);
-                            user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
-                            user.getAccount().setPasswd(null);
-                            u.put(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
-                        } else {
-                            u.put(ACCOUNT_FIELD, p.getJsonObject(ACCOUNT_FIELD));
-                        }
-                        mongo.upsert(u, DBCollections.USER, res -> {
-                            if(res.succeeded()) {
-                                resultHandler.handle(Future.succeededFuture(u));
-                            } else {
-                                resultHandler.handle(Future.failedFuture(res.cause()));
-                            }
-                        });
-                    } catch (QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e)));
+        mongo.getById(user.get_id(), DBCollections.USER, p -> {
+            if (p.succeeded()) {
+                try {
+                    if (StringUtils.isNotBlank(user.getAccount().getPasswd())) {
+                        final byte[] salt = passwordEncryptionService.generateSalt();
+                        user.getAccount().setSalt(salt);
+                        user.getAccount().setPassword(passwordEncryptionService.getEncryptedPassword(user.getAccount().getPasswd(), salt));
+                        user.getAccount().setPasswd(null);
+                        u.put(ACCOUNT_FIELD, new JsonObject(Json.encode(user.getAccount())));
+                    } else {
+                        u.put(ACCOUNT_FIELD, p.result().getJsonObject(ACCOUNT_FIELD));
                     }
-                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+                    mongo.upsert(u, DBCollections.USER, res -> {
+                        if (res.succeeded()) {
+                            resultHandler.handle(Future.succeededFuture(u));
+                        } else {
+                            resultHandler.handle(Future.failedFuture(res.cause()));
+                        }
+                    });
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    resultHandler.handle(Future.failedFuture(e));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(p.cause()));
+            }
+        });
     }
 
     @Override
@@ -184,7 +187,7 @@ public class UserServiceImpl implements UserService {
         final User user = Json.decodeValue(u.encode(), User.class);
         try {
             if (user == null || user.getAccount() == null || user.getContact() == null) {
-                resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.required", locale))));
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.required", locale))));
             } else {
                 checkUserName(user.getName(), locale);
                 checkUserFirstname(user.getFirstname(), locale);
@@ -193,9 +196,9 @@ public class UserServiceImpl implements UserService {
                     if (ar.succeeded()) {
                         // Password
                         if (StringUtils.isBlank(user.getAccount().getPasswd())) {
-                            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.password.required", locale))));
+                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("user.password.required", locale))));
                         } else if (user.getAccount().getPasswd().length() < 6) {
-                            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.password.short", locale))));
+                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("user.password.short", locale))));
                         } else {
                             resultHandler.handle(Future.succeededFuture(true));
                         }
@@ -206,23 +209,27 @@ public class UserServiceImpl implements UserService {
             }
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
-            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e)));
+            resultHandler.handle(Future.failedFuture(e));
         }
     }
 
     @Override
     public void existingLogin(String login, Handler<AsyncResult<Boolean>> resultHandler) {
-        mongo.findByCriterias(new CriteriaBuilder().add("account.login", login).get(), null, null, 0, 0, DBCollections.USER)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res.size() > 0)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.findByCriterias(new JsonObject().put("account.login", login),  new ArrayList<>(), "", 0, 0, DBCollections.USER, res -> {
+            if (res.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(res.result().size() > 0));
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
     }
 
     @Override
     public void testEmail(String email, String locale, Handler<AsyncResult<Boolean>> resultHandler) {
         if (!VALID_EMAIL_ADDRESS_REGEX.matcher(email.replaceAll("\\[at\\]", "@")).find()) {
-            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.BAD_FORMAT, Messages.getString("email.bad.format", locale))));
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BAD_FORMAT, Messages.getString("email.bad.format", locale))));
         } else if (StringUtils.isBlank(email)) {
-            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("email.required", locale))));
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.MANDATORY_FIELD, Messages.getString("email.required", locale))));
         } else {
             resultHandler.handle(Future.succeededFuture(true));
         }
@@ -251,15 +258,13 @@ public class UserServiceImpl implements UserService {
             resultHandler.handle(Future.succeededFuture(new JsonObject(Json.encode(user))));
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
-            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e)));
+            resultHandler.handle(Future.failedFuture(e));
         }
     }
 
     @Override
     public void getUser(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.getById(id, DBCollections.USER)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.getById(id, DBCollections.USER, resultHandler);
     }
 
     @Override
@@ -267,16 +272,19 @@ public class UserServiceImpl implements UserService {
         // Creation of request
         CriteriaBuilder criterias = new CriteriaBuilder();
         criterias.add("account.login", login.toLowerCase());
-        mongo.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.USER)
-                .done(jsonArray -> {
-                    if (jsonArray.size() == 0) {
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, Messages.getString("login.wronglogin", locale))));
-                    } else if (jsonArray.size() > 1) {
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné")));
-                    } else {
-                        resultHandler.handle(Future.succeededFuture(jsonArray.getJsonObject(0)));
-                    }
-                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.USER, jsonArray -> {
+            if (jsonArray.succeeded()) {
+                if (jsonArray.result().size() == 0) {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, Messages.getString("login.wronglogin", locale))));
+                } else if (jsonArray.result().size() > 1) {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BUSINESS_ERROR, "Plus d'un résultat retourné")));
+                } else {
+                    resultHandler.handle(Future.succeededFuture(jsonArray.result().getJsonObject(0)));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(jsonArray.cause()));
+            }
+        });
     }
 
     @Override
@@ -296,24 +304,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void getMeta(String sandboxId, Handler<AsyncResult<JsonObject>> resultHandler) {
-        sandBoxDAO.getSandboxById(sandboxId)
-                .done(meta -> seasonService.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id"), season -> {
+        sandBoxDAO.getSandboxById(sandboxId, sbRes -> {
+            if (sbRes.succeeded()) {
+                JsonObject meta = sbRes.result();
+                seasonService.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id"), season -> {
                     if (season.succeeded()) {
                         meta.put("season", season.result());
-                        teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null).done(teams -> {
-                            meta.put("teams", teams);
-                            activityService.getActivity(meta.getString("activityId"), activity -> {
-                                if (activity.succeeded()) {
-                                    meta.put("activity", activity.result());
-                                    resultHandler.handle(Future.succeededFuture(meta));
-                                } else {
-                                    resultHandler.handle(Future.failedFuture(activity.cause()));
-                                }
-                            });
-                        }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+                        teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null, teams -> {
+                            if (teams.succeeded()) {
+                                meta.put("teams", teams.result());
+                                activityService.getActivity(meta.getString("activityId"), activity -> {
+                                    if (activity.succeeded()) {
+                                        meta.put("activity", activity.result());
+                                        resultHandler.handle(Future.succeededFuture(meta));
+                                    } else {
+                                        resultHandler.handle(Future.failedFuture(activity.cause()));
+                                    }
+                                });
+                            } else {
+                                resultHandler.handle(Future.failedFuture(teams.cause()));
+                            }
+                        });
                     } else {
                         resultHandler.handle(Future.failedFuture(season.cause()));
                     }
-                })).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+                });
+            } else {
+                resultHandler.handle(Future.failedFuture(sbRes.cause()));
+            }
+        });
     }
 }

@@ -250,7 +250,7 @@ public class ShippingTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             u.result().getAccount().getListPlan().get(0).setCardId(null);
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+            mongo.upsert(new JsonObject(Json.encode(u.result())), DBCollections.USER, id -> {
                 if (id.succeeded()) {
                     initMockStripe(u.result());
                     JsonObject request = new JsonObject()
@@ -295,7 +295,7 @@ public class ShippingTest extends VertxJunitSupport {
             u.result().getAccount().getListPlan().get(0).setCardId(null);
             u.result().getAccount().getListPlan().get(0).setPaymentId(null);
 
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+            mongo.upsert(new JsonObject(Json.encode(u.result())), DBCollections.USER, id -> {
                 if (id.succeeded()) {
                     initMockStripe(u.result());
                     JsonObject request = new JsonObject()
@@ -338,7 +338,7 @@ public class ShippingTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             u.result().getAccount().getListPlan().get(0).setPaymentId("sub_AkHS7YtIEi1Oy9");
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+            mongo.upsert(new JsonObject(Json.encode(u.result())), DBCollections.USER, id -> {
                 if (id.succeeded()) {
                     initMockStripe(u.result());
                     JsonObject request = new JsonObject()
@@ -369,7 +369,7 @@ public class ShippingTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             u.result().getAccount().getListPlan().get(0).setPaymentId("canceled");
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+            mongo.upsert(new JsonObject(Json.encode(u.result())), DBCollections.USER, id -> {
                 if (id.succeeded()) {
                     initMockStripe(u.result());
 
@@ -413,7 +413,7 @@ public class ShippingTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             u.result().getAccount().getListPlan().get(0).setPaymentId(null);
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+            mongo.upsert(new JsonObject(Json.encode(u.result())), DBCollections.USER, id -> {
                 if (id.succeeded()) {
                     initMockStripe(u.result());
                     JsonObject request = new JsonObject()
@@ -457,7 +457,7 @@ public class ShippingTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(u -> {
             u.result().getAccount().getListPlan().get(0).setPaymentId("12345");
             initMockStripe(u.result());
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+            mongo.upsert(new JsonObject(Json.encode(u.result())), DBCollections.USER, id -> {
                 if (id.succeeded()) {
                     JsonObject request = new JsonObject()
                             .put("data", new JsonObject()
@@ -505,7 +505,7 @@ public class ShippingTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(u -> {
             initMockStripe(u.result());
             given().header(TOKEN, u.result().getAccount().getToken())
-                    .when().post(BASE_URL + "/pay")
+                    .when().get(BASE_URL + "/pay")
                     .then().assertThat().statusCode(404)
                     .body(STATUS, is(false));
             async.complete();

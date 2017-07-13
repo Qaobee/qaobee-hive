@@ -46,15 +46,19 @@ public class SignupTest extends VertxJunitSupport {
         Async async = context.async();
         generateUser().setHandler(u -> {
             JsonObject param = new JsonObject().put(SignupVerticle.PARAM_LOGIN, u.result().getAccount().getLogin());
-            sendOnBus(SignupVerticle.LOGIN_EXISTS, param).done(res -> {
-                Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
-                given().body(param.encode())
-                        .when().post(getURL(SignupVerticle.LOGIN_TEST))
-                        .then().assertThat().statusCode(200)
-                        .body("status", notNullValue())
-                        .body("status", is(true));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
+            sendOnBus(SignupVerticle.LOGIN_EXISTS, param).setHandler(res -> {
+                if (res.succeeded()) {
+                    Assert.assertTrue(res.result().encodePrettily(), res.result().getBoolean("status"));
+                    given().body(param.encode())
+                            .when().post(getURL(SignupVerticle.LOGIN_TEST))
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(true));
+                    async.complete();
+                } else {
+                    Assert.fail(res.cause().getMessage());
+                }
+            });
         });
         async.await(TIMEOUT);
     }
@@ -67,16 +71,20 @@ public class SignupTest extends VertxJunitSupport {
         Async async = context.async();
         generateUser().setHandler(u -> {
             JsonObject param = new JsonObject().put(SignupVerticle.PARAM_LOGIN, u.result().getAccount().getLogin().toUpperCase());
-            sendOnBus(SignupVerticle.LOGIN_EXISTS, param).then(res -> {
-                Assert.assertTrue(res.encodePrettily(), res.getBoolean("status"));
+            sendOnBus(SignupVerticle.LOGIN_EXISTS, param).setHandler(res -> {
+                if (res.succeeded()) {
+                    Assert.assertTrue(res.result().encodePrettily(), res.result().getBoolean("status"));
 
-                given().body(param.encode())
-                        .when().post(getURL(SignupVerticle.LOGIN_TEST))
-                        .then().assertThat().statusCode(200)
-                        .body("status", notNullValue())
-                        .body("status", is(true));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
+                    given().body(param.encode())
+                            .when().post(getURL(SignupVerticle.LOGIN_TEST))
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(true));
+                    async.complete();
+                } else {
+                    Assert.fail(res.cause().getMessage());
+                }
+            });
         });
         async.await(TIMEOUT);
     }
@@ -89,16 +97,20 @@ public class SignupTest extends VertxJunitSupport {
         Async async = context.async();
         generateUser().setHandler(u -> {
             JsonObject param = new JsonObject().put(SignupVerticle.PARAM_LOGIN, "blabla");
-            sendOnBus(SignupVerticle.LOGIN_EXISTS, param).then(res -> {
-                Assert.assertFalse(res.encodePrettily(), res.getBoolean("status"));
+            sendOnBus(SignupVerticle.LOGIN_EXISTS, param).setHandler(res -> {
+                if (res.succeeded()) {
+                    Assert.assertFalse(res.result().encodePrettily(), res.result().getBoolean("status"));
 
-                given().body(param.encode())
-                        .when().post(getURL(SignupVerticle.LOGIN_TEST))
-                        .then().assertThat().statusCode(200)
-                        .body("status", notNullValue())
-                        .body("status", is(false));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
+                    given().body(param.encode())
+                            .when().post(getURL(SignupVerticle.LOGIN_TEST))
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(false));
+                    async.complete();
+                } else {
+                    Assert.fail(res.cause().getMessage());
+                }
+            });
         });
         async.await(TIMEOUT);
     }

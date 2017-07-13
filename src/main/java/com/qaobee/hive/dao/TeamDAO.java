@@ -19,10 +19,10 @@
 
 package com.qaobee.hive.dao;
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
  * The interface Team dao.
@@ -31,40 +31,40 @@ public interface TeamDAO {
     /**
      * Gets team list.
      *
-     * @param sandboxId   the sandbox id
-     * @param effectiveId the effective id
-     * @param adversary   the adversary
-     * @param enabled     the enabled
-     * @param link        the link
-     * @return the team list
+     * @param sandboxId     the sandbox id
+     * @param effectiveId   the effective id
+     * @param adversary     the adversary
+     * @param enabled       the enabled
+     * @param link          the link
+     * @param resultHandler the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getTeamList(String sandboxId, String effectiveId, String adversary, String enabled, String link);
+    void getTeamList(String sandboxId, String effectiveId, String adversary, String enabled, String link, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Gets team.
      *
-     * @param teamId the team id
-     * @return the team
+     * @param teamId        the team id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getTeam(String teamId);
+    void getTeam(String teamId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Update team json object.
+     * Update team.
      *
-     * @param team   the team
-     * @param userId the user id
-     * @param locale the locale
-     * @return the json object
+     * @param team          the team
+     * @param userId        the user id
+     * @param locale        the locale
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> updateTeam(JsonObject team, String userId, String locale);
+    void updateTeam(JsonObject team, String userId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Add team json object.
+     * Add team.
      *
-     * @param team   the team
-     * @param userId the user id
-     * @param locale the locale
-     * @return the json object
+     * @param team          the team
+     * @param userId        the user id
+     * @param locale        the locale
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> addTeam(JsonObject team, String userId, String locale);
+    void addTeam(JsonObject team, String userId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 }

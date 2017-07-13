@@ -67,8 +67,8 @@ public class CriteriaBuilder {
      *
      * @return a criteria map
      */
-    public Map<String, Object> get() {
-        return map;
+    public JsonObject get() {
+        return new JsonObject(map);
     }
 
     /**

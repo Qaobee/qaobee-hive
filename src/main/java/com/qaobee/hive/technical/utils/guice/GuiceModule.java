@@ -25,8 +25,6 @@ import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.services.*;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.MailUtils;
 import com.qaobee.hive.technical.utils.QaobeeAuthHandler;
@@ -76,7 +74,6 @@ public class GuiceModule extends AbstractModule {
         config.getMap().keySet().forEach(k -> bind(JsonObject.class).annotatedWith(Names.named(k)).toInstance(config.getJsonObject(k)));
         bind(Vertx.class).toInstance(vertx);
         // TECHNICAL MODULES
-        bind(MongoDB.class).to(MongoDBImpl.class).in(Singleton.class);
         bind(WebClient.class).toInstance(WebClient.create(vertx));
         bind(AuthHandler.class).toInstance(new QaobeeAuthHandler());
         MailConfig mailConfig = new MailConfig();
@@ -128,6 +125,7 @@ public class GuiceModule extends AbstractModule {
         bind(CRMDao.class).to(CRMDaoImpl.class).in(Singleton.class);
 
         // Services
+        bind(MongoDB.class).toInstance(MongoDB.createProxy(vertx, MongoDB.ADDRESS));
         bind(AssetsService.class).toInstance(AssetsService.createProxy(vertx, AssetsService.ADDRESS));
         bind(ActivityCfgService.class).toInstance(ActivityCfgService.createProxy(vertx, ActivityCfgService.ADDRESS));
         bind(ActivityService.class).toInstance(ActivityService.createProxy(vertx, ActivityService.ADDRESS));

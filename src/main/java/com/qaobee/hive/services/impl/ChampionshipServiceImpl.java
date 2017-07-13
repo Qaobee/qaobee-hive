@@ -23,8 +23,7 @@ import com.qaobee.hive.api.v1.commons.referencial.ChampionshipRoute;
 import com.qaobee.hive.services.ChampionshipService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.services.MongoDB;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -80,9 +79,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
 
     @Override
     public void getChampionship(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.getById(id, DBCollections.CHAMPIONSHIP)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.getById(id, DBCollections.CHAMPIONSHIP, resultHandler);
     }
 
     @Override
@@ -116,8 +113,6 @@ public class ChampionshipServiceImpl implements ChampionshipService {
         }
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match);
-        mongo.aggregate(pipelineAggregation, DBCollections.CHAMPIONSHIP)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.aggregate(pipelineAggregation, DBCollections.CHAMPIONSHIP, resultHandler);
     }
 }

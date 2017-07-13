@@ -130,7 +130,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
             scope = Rule.Param.REQUEST)
     private void getEvent(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, eventDAO.getEvent(req.getParams().get(PARAM_ID).get(0)));
+        eventDAO.getEvent(req.getParams().get(PARAM_ID).get(0), handleJson(message));
     }
 
     /**
@@ -150,7 +150,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
             scope = Rule.Param.BODY)
     private void updateEvent(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, eventDAO.updateEvent(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
+        eventDAO.updateEvent(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale(), handleJson(message));
     }
 
     /**
@@ -170,7 +170,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
             scope = Rule.Param.BODY)
     private void addEvent(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, eventDAO.addEvent(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
+        eventDAO.addEvent(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale(), handleJson(message));
     }
 
     /**
@@ -191,6 +191,6 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
             scope = Rule.Param.BODY)
     private void getEventList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, eventDAO.getEventList(new JsonObject(req.getBody())));
+        eventDAO.getEventList(new JsonObject(req.getBody()), handleJsonArray(message));
     }
 }

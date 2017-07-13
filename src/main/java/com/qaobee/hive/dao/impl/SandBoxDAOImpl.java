@@ -20,11 +20,10 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.SandBoxDAO;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -58,7 +57,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
 
     private Future<JsonObject> getPerson(JsonObject m) {
         Future<JsonObject> deferred = Future.future();
-        mongo.getById(m.getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY), u -> {
+        mongo.getByIdMinimal(m.getString(FIELD_PERSON_ID), DBCollections.USER, Arrays.asList(FIELD_ID, FIELD_NAME, FIELD_AVATAR, FIELD_FIRSTNAME, FIELD_CONTACT, FIELD_COUNTRY), u -> {
             if (u.succeeded()) {
                 m.put("person", u.result());
                 deferred.complete(m);
@@ -111,13 +110,13 @@ public class SandBoxDAOImpl implements SandBoxDAO {
 
     @Override
     public void getListByOwner(List<String> usersIds, String loggedUserId, Handler<AsyncResult<JsonArray>> resultHandler) {
-        CriteriaBuilder cb = new CriteriaBuilder();
+        JsonObject cb = new JsonObject();
         if (usersIds != null && StringUtils.isNoneBlank(usersIds.get(0))) {
-            cb.add(PARAM_OWNER_ID, usersIds.get(0));
+            cb.put(PARAM_OWNER_ID, usersIds.get(0));
         } else {
-            cb.add(PARAM_OWNER_ID, loggedUserId);
+            cb.put(PARAM_OWNER_ID, loggedUserId);
         }
-        mongo.findByCriterias(cb.get(), null, null, -1, -1, DBCollections.SANDBOX, resultJson -> {
+        mongo.findByCriterias(cb, new ArrayList<>(), "", -1, -1, DBCollections.SANDBOX, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR,
@@ -133,10 +132,10 @@ public class SandBoxDAOImpl implements SandBoxDAO {
 
     @Override
     public void getByOwner(String activityId, String userId, Handler<AsyncResult<JsonObject>> resultHandler) {
-        CriteriaBuilder cb = new CriteriaBuilder()
-                .add(PARAM_OWNER_ID, userId)
-                .add("structure." + PARAM_ACTIVITY_ID + "._id", activityId);
-        mongo.findByCriterias(cb.get(), null, null, -1, -1, DBCollections.SANDBOX, resultJson -> {
+        JsonObject cb = new JsonObject()
+                .put(PARAM_OWNER_ID, userId)
+                .put("structure." + PARAM_ACTIVITY_ID + "._id", activityId);
+        mongo.findByCriterias(cb, new ArrayList<>(), "", -1, -1, DBCollections.SANDBOX, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR,

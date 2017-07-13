@@ -23,13 +23,13 @@ import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.eventbus.Message;
@@ -53,7 +53,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.*;
 
-import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 /**
  * Classe utilitaire foure-tout.
@@ -269,7 +268,7 @@ public class UtilsImpl implements Utils {
                 request.setUser(user);
                 deferred.complete(user);
             } else {
-                deferred.fail(new QaobeeException(((QaobeeSvcException) upsertRes.cause()).getCode(), upsertRes.cause().getMessage()));
+                deferred.fail(upsertRes.cause());
             }
         });
     }
@@ -301,12 +300,12 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void testMandatoryParams(MultiMap params, String... fields) throws QaobeeException {
+    public void testMandatoryParams(MultiMap params, String... fields) {
         testMandatoryParams(toMap(params), fields);
     }
 
     @Override
-    public void testMandatoryParams(RoutingContext context, String... fields) throws QaobeeException {
+    public void testMandatoryParams(RoutingContext context, String... fields) {
         try {
             testMandatoryParams(context.getBodyAsJson(), fields);
         } catch (DecodeException e) {
@@ -316,24 +315,14 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void testMandatoryParams(MultiMap params, RoutingContext context, String... fields) throws QaobeeException {
+    public void testMandatoryParams(MultiMap params, RoutingContext context, String... fields) {
         testMandatoryParams(toMap(params), fields);
     }
 
     @Override
     public void handleError(RoutingContext context, QaobeeException e) {
-        context.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
-                .setStatusCode(e.getCode().getCode())
-                .end(new JsonObject()
-                        .put(Constants.STATUS, false)
-                        .put("message", e.getMessage())
-                        .put("code", e.getCode().name()).encode()
-                );
-    }
-
-    @Override
-    public void handleError(RoutingContext context, QaobeeSvcException e) {
-        context.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+        e.printStackTrace();
+        context.response().putHeader(HTTP.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                 .setStatusCode(e.getCode().getCode())
                 .end(new JsonObject()
                         .put(Constants.STATUS, false)
@@ -350,5 +339,14 @@ public class UtilsImpl implements Utils {
             LOG.warn(e.getMessage(), e);
             handleError(context, e);
         }
+    }
+
+    @Override
+    public JsonObject getMinimal(final List<String> minimal) {
+        final JsonObject map = new JsonObject();
+        for (final String key : minimal) {
+            map.put(key, Boolean.TRUE);
+        }
+        return map;
     }
 }

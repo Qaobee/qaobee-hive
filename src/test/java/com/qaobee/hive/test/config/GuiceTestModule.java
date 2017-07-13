@@ -20,12 +20,10 @@
 package com.qaobee.hive.test.config;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.CountryService;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.utils.guice.MongoClientProvider;
 import io.vertx.core.Vertx;
@@ -53,9 +51,9 @@ class GuiceTestModule extends AbstractModule {
     protected void configure() {
         bind(Vertx.class).toInstance(vertx);
         bind(JsonObject.class).annotatedWith(Names.named("mongo.db")).toInstance(config.getJsonObject("mongo.db"));
-        bind(MongoDB.class).to(MongoDBImpl.class).in(Singleton.class);
         bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();
 
+        bind(MongoDB.class).toInstance(MongoDB.createProxy(vertx, MongoDB.ADDRESS));
         bind(ActivityService.class).toInstance(ActivityService.createProxy(vertx, ActivityService.ADDRESS));
         bind(CountryService.class).toInstance(CountryService.createProxy(vertx, CountryService.ADDRESS));
     }

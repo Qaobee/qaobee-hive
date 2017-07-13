@@ -22,7 +22,7 @@ package com.qaobee.hive.api.v1.commons.settings;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -87,7 +87,7 @@ public class ActivityCfgRoute extends AbstractRoute {
                         handleResponse(context, ar.result().getJsonObject(0).getJsonArray(context.request().getParam(PARAM_FIELD_LIST)));
                     } else {
                         LOG.error(ar.cause().getMessage(), ar.cause());
-                        utils.handleError(context, (QaobeeSvcException) ar.cause());
+                        utils.handleError(context, (QaobeeException) ar.cause());
                     }
                 });
     }

@@ -4,7 +4,6 @@ import com.qaobee.hive.services.AssetsService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.FileUpload;
@@ -86,7 +85,7 @@ public class AssetsRoute extends AbstractRoute {
                         .putHeader(HTTP.CONTENT_TYPE, "application/image")
                         .end(Buffer.buffer(event.result().getBinary("asset")));
             } else {
-                utils.handleError(context, (QaobeeSvcException) event.cause());
+                utils.handleError(context, (QaobeeException) event.cause());
             }
         });
     }

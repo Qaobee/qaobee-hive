@@ -27,16 +27,13 @@ import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.parsing.Parser;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Future;
-import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
+import io.vertx.core.*;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.file.FileSystem;
@@ -45,9 +42,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
+import org.apache.http.HttpHeaders;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
@@ -65,7 +60,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
 
 /**
  * The Class VertxJunitSupport.
@@ -105,7 +99,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
     /**
      * The constant TIMEOUT.
      */
-    protected static final long TIMEOUT = 500000L;
+    protected static final long TIMEOUT = 1000000L;
     private static JsonObject config;
     private static final String POPULATE_WITHOUT = "without";
     private static final String POPULATE_ALL = "all";
@@ -141,7 +135,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
     public static void init() {
         RestAssured.defaultParser = Parser.JSON;
         RestAssured.requestSpecification = new RequestSpecBuilder()
-                .addHeader(ACCEPT_LANGUAGE, LOCALE)
+                .addHeader(HttpHeaders.ACCEPT_LANGUAGE, LOCALE)
                 .log(LogDetail.ALL)
                 .addHeader("X-qaobee-stack", "true")
                 .build();
@@ -160,6 +154,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Gets url.
      *
      * @param busAddress the bus address
+     *
      * @return the url
      */
     protected String getURL(String busAddress) {
@@ -170,6 +165,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Gets base url.
      *
      * @param s the s
+     *
      * @return the base url
      */
     protected static String getBaseURL(String s) {
@@ -244,7 +240,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
         final User user = Json.decodeValue(config.getJsonObject("junit").getJsonObject("user").copy().encode(), User.class);
         user.getAccount().setActive(true);
         user.set_id(UUID.randomUUID().toString());
-        mongo.upsert(user, id -> {
+        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
             if (id.succeeded()) {
                 user.set_id(id.result());
                 deferred.complete(user);
@@ -267,7 +263,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
         user.getAccount().setToken(UUID.randomUUID().toString());
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
         user.getAccount().setActive(true);
-        mongo.upsert(user, id -> {
+        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
             if (id.succeeded()) {
                 user.set_id(id.result());
                 deferred.complete(user);
@@ -282,24 +278,29 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Future<User> generateLoggedUser(String userId) {
         Future<User> deferred = Future.future();
-        mongo.getById(userId, DBCollections.USER).done(u -> {
-            User user = Json.decodeValue(u.encode(), User.class);
-            user.getAccount().setToken(UUID.randomUUID().toString());
-            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-            user.getAccount().setActive(true);
-            mongo.upsert(user, id -> {
-                if (id.succeeded()) {
-                    user.set_id(userId);
-                    deferred.complete(user);
-                } else {
-                    Assert.fail(id.cause().getMessage());
-                }
-            });
-        }).fail(e -> Assert.fail(e.getMessage()));
+        mongo.getById(userId, DBCollections.USER, u -> {
+            if (u.succeeded()) {
+                User user = Json.decodeValue(u.result().encode(), User.class);
+                user.getAccount().setToken(UUID.randomUUID().toString());
+                user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                user.getAccount().setActive(true);
+                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
+                    if (id.succeeded()) {
+                        user.set_id(userId);
+                        deferred.complete(user);
+                    } else {
+                        Assert.fail(id.cause().getMessage());
+                    }
+                });
+            } else {
+                Assert.fail(u.cause().getMessage());
+            }
+        });
         return deferred;
     }
 
@@ -319,6 +320,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged admin user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Future<User> generateLoggedAdminUser(String userId) {
@@ -330,7 +332,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
             habilitation.setKey(Constants.ADMIN_HABILIT);
             user.result().getAccount().setHabilitations(new ArrayList<>());
             user.result().getAccount().getHabilitations().add(habilitation);
-            mongo.upsert(user, u -> {
+            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, u -> {
                 if (u.succeeded()) {
                     deferred.complete(user.result());
                 } else {
@@ -346,27 +348,28 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param address the address
      * @param query   the query
+     *
      * @return the json object
      */
-    protected Promise<JsonObject, Throwable, Integer> sendOnBus(String address, JsonObject query) {
-        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
+    protected Future<JsonObject> sendOnBus(String address, JsonObject query) {
+        Future<JsonObject> deferred = Future.future();
         vertx.eventBus().send(address, query, new DeliveryOptions().setSendTimeout(TIMEOUT), ar -> {
             if (ar.succeeded()) {
                 if (ar.result().body() instanceof ReplyException) {
                     if (((ReplyException) ar.result().body()).getMessage().startsWith("{")) {
-                        deferred.resolve(new JsonObject(((ReplyException) ar.result().body()).getMessage()));
+                        deferred.complete(new JsonObject(((ReplyException) ar.result().body()).getMessage()));
                     }
                     Assert.fail(((ReplyException) ar.result().body()).getMessage());
                 } else if (ar.result().body() instanceof JsonObject) {
-                    deferred.resolve(((JsonObject) ar.result().body()));
+                    deferred.complete(((JsonObject) ar.result().body()));
                 } else {
                     Assert.fail("unparsable data : " + ar.result().body().toString());
                 }
             } else {
-                deferred.reject(ar.cause());
+                deferred.fail(ar.cause());
             }
         });
-        return deferred.promise();
+        return deferred;
     }
 
     /**
@@ -442,37 +445,38 @@ public class VertxJunitSupport implements JSDataMongoTest {
     /**
      * Commons function for return a country JsonObject
      *
-     * @param id   the id
-     * @param user the user
-     * @return activity activity
+     * @param id the id
+     *
+     * @return the activity
      */
-    protected Promise<JsonObject, Throwable, Integer> getActivity(String id, User user) {
-        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        activityService.getActivity(id, res -> {
-            if (res.succeeded()) {
-                deferred.resolve(res.result());
+    protected Future<JsonObject> getActivity(String id) {
+        Future<JsonObject> d = Future.future();
+        activityService.getActivity(id, ar -> {
+            if (ar.succeeded()) {
+                d.complete(ar.result());
             } else {
-                deferred.reject(res.cause());
+                Assert.fail(ar.cause().getMessage());
             }
         });
-        return deferred.promise();
+        return d;
     }
 
     /**
      * Commons function for return a country JsonObject
      *
      * @param id the id
-     * @return country country
+     *
+     * @return the country
      */
-    protected Promise<JsonObject, Throwable, Integer> getCountry(String id) {
-        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        countryService.getCountry(id, res -> {
-            if (res.succeeded()) {
-                deferred.resolve(res.result());
+    protected Future<JsonObject> getCountry(String id) {
+        Future<JsonObject> d = Future.future();
+        countryService.getCountry(id, ar -> {
+            if (ar.succeeded()) {
+                d.complete(ar.result());
             } else {
-                deferred.reject(res.cause());
+                Assert.fail(ar.cause().getMessage());
             }
         });
-        return deferred.promise();
+        return d;
     }
 }

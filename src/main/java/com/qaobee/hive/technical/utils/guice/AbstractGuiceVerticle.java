@@ -23,10 +23,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.CompositeFuture;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
+import io.vertx.core.*;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -50,12 +47,16 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
     @Inject
     protected Utils utils;
     private List<Future> promises = new ArrayList<>();
+    /**
+     * The Injector.
+     */
     protected Injector injector;
 
     /**
      * Inject abstract guice verticle.
      *
      * @param clazz the clazz
+     *
      * @return the abstract guice verticle
      */
     public AbstractGuiceVerticle inject(AbstractGuiceVerticle clazz) {
@@ -72,10 +73,80 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
     }
 
     /**
+     * Handle json handler.
+     *
+     * @param message the message
+     *
+     * @return the handler
+     */
+    protected Handler<AsyncResult<JsonObject>> handleJson(Message<String> message) {
+        return res -> {
+            if(res.succeeded()) {
+                message.reply(res.result().encode());
+            } else {
+                utils.sendError(message, (QaobeeException) res.cause());
+            }
+        };
+    }
+
+    /**
+     * Handle json j handler.
+     *
+     * @param message the message
+     *
+     * @return the handler
+     */
+    protected Handler<AsyncResult<JsonObject>> handleJsonJ(Message<JsonObject> message) {
+        return res -> {
+            if(res.succeeded()) {
+                message.reply(res.result());
+            } else {
+                utils.sendErrorJ(message, (QaobeeException) res.cause());
+            }
+        };
+    }
+
+    /**
+     * Handle json array handler.
+     *
+     * @param message the message
+     *
+     * @return the handler
+     */
+    protected Handler<AsyncResult<JsonArray>> handleJsonArray(Message<String> message) {
+        return res -> {
+            if(res.succeeded()) {
+                message.reply(res.result().encode());
+            } else {
+                utils.sendError(message, (QaobeeException) res.cause());
+            }
+        };
+    }
+
+    /**
+     * Handle boolean handler.
+     *
+     * @param message the message
+     *
+     * @return the handler
+     */
+    protected Handler<AsyncResult<Boolean>> handleBoolean(Message<String> message) {
+        return res -> {
+            if (res.succeeded()) {
+                utils.sendStatus(res.result(), message);
+            } else {
+                utils.sendStatus(false, message);
+            }
+        };
+    }
+
+    /**
      * Add abstract guice verticle.
      *
+     * @param <T>     the type parameter
      * @param address the address
      * @param handler the handler
+     *
      * @return the abstract guice verticle
      */
     public <T> AbstractGuiceVerticle add(String address, Handler<Message<T>> handler) {
@@ -91,6 +162,11 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
         return this;
     }
 
+    /**
+     * Register.
+     *
+     * @param startFuture the start future
+     */
     public void register(Future<Void> startFuture) {
         CompositeFuture.all(promises).setHandler(rs -> {
             if (rs.succeeded()) {

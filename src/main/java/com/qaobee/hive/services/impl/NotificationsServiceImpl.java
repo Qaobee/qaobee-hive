@@ -19,26 +19,15 @@
 
 package com.qaobee.hive.services.impl;
 
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import org.apache.http.protocol.HTTP;
-import org.jdeferred.Deferred;
-import org.jdeferred.DeferredManager;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DefaultDeferredManager;
-import org.jdeferred.impl.DeferredObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,54 +73,62 @@ public class NotificationsServiceImpl implements NotificationsService {
     }
 
 
-    private Promise<Boolean, QaobeeException, Integer> addNotificationToSandbox(JsonObject target, JsonObject notification, JsonArray exclude) {
-        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
+    private void addNotificationToSandbox(JsonObject target, JsonObject notification, JsonArray exclude, Handler<AsyncResult<Boolean>> resultHandler) {
         final List<Object> excludeList = new ArrayList<>();
         final boolean[] res = {true};
         if (exclude != null) {
             exclude.forEach(excludeList::add);
         }
-
+        List<Future> promises = new ArrayList<>();
         if (target.getJsonArray(FIELD_MEMBERS) != null && target.getJsonArray(FIELD_MEMBERS).size() > 0) {
             for (int i = 0; i < target.getJsonArray(FIELD_MEMBERS).size(); i++) {
                 if (!excludeList.contains((target.getJsonArray(FIELD_MEMBERS).getJsonObject(i)).getString(FIELD_PERSON_ID))
                         && "activated".equals((target.getJsonArray(FIELD_MEMBERS).getJsonObject(i)).getString(FIELD_MEMBER_STATUS))) {
                     LOG.info(target.getJsonArray(FIELD_MEMBERS).getJsonObject(i).getString(FIELD_PERSON_ID));
+                    Future<Boolean> f = Future.future();
 
                     addNotificationToUser(target.getJsonArray(FIELD_MEMBERS).getJsonObject(i).getString(FIELD_PERSON_ID),
                             notification, addRes -> {
                                 if (addRes.succeeded()) {
-                                    res[0] = res[0] && addRes.result();
+                                    f.complete(addRes.result());
                                 }
                             });
+                    promises.add(f);
                 }
             }
         }
-        deferred.resolve(res[0]);
-        return deferred.promise();
+        CompositeFuture.all(promises).setHandler(rs -> {
+            if (rs.succeeded()) {
+                rs.result().list().forEach(r -> res[0] = res[0] && (boolean) r);
+                resultHandler.handle(Future.succeededFuture(res[0]));
+            } else {
+                resultHandler.handle(Future.failedFuture(rs.cause()));
+            }
+        });
     }
 
     @Override
     public void sendNotification(String id, String collection, JsonObject notification, JsonArray exclude, Handler<AsyncResult<Boolean>> resultHandler) {
-        mongo.getById(id, collection)
-                .done(target -> {
-                    if (target == null) {
-                        resultHandler.handle(Future.succeededFuture(false));
-                    } else {
-                        switch (collection) {
-                            case DBCollections.USER:
-                                addNotificationToUser(id, notification, res -> resultHandler.handle(Future.succeededFuture(res.result())));
-                                break;
-                            case DBCollections.SANDBOX:
-                                addNotificationToSandbox(target, notification, exclude)
-                                        .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                                        .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
-                                break;
-                            default:
-                                resultHandler.handle(Future.succeededFuture(false));
-                        }
+        mongo.getById(id, collection, target -> {
+            if (target.succeeded()) {
+                if (target.result() == null) {
+                    resultHandler.handle(Future.succeededFuture(false));
+                } else {
+                    switch (collection) {
+                        case DBCollections.USER:
+                            addNotificationToUser(id, notification, resultHandler);
+                            break;
+                        case DBCollections.SANDBOX:
+                            addNotificationToSandbox(target.result(), notification, exclude, resultHandler);
+                            break;
+                        default:
+                            resultHandler.handle(Future.succeededFuture(false));
                     }
-                }).fail(e -> resultHandler.handle(Future.succeededFuture(false)));
+                }
+            } else {
+                resultHandler.handle(Future.succeededFuture(false));
+            }
+        });
     }
 
     @Override
@@ -143,26 +140,29 @@ public class NotificationsServiceImpl implements NotificationsService {
                 .put(DELETED, false);
         mongo.upsert(notification, DBCollections.NOTIFICATION, updtRes -> {
             if (updtRes.succeeded()) {
-                mongo.getById(id, DBCollections.USER)
-                        .done(u -> {
-                            if (u != null && u.containsKey(ACCOUNT) && u.getJsonObject(ACCOUNT).containsKey(FIELD_DEVICES)) {
-                                // Send firebase notification
-                                u.getJsonObject(ACCOUNT).getJsonArray(FIELD_DEVICES).forEach(d -> {
-                                    switch (((JsonObject) d).getString(FIELD_DEVICE_OS, "unknown")) {
-                                        case "android":
-                                            notifyAndroid(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
-                                            break;
-                                        case "ios":
-                                            notifyIOS(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                });
-                            }
-                            vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
-                            resultHandler.handle(Future.succeededFuture(true));
-                        }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                mongo.getById(id, DBCollections.USER, u -> {
+                    if (u.succeeded()) {
+                        if (u.result() != null && u.result().containsKey(ACCOUNT) && u.result().getJsonObject(ACCOUNT).containsKey(FIELD_DEVICES)) {
+                            // Send firebase notification
+                            u.result().getJsonObject(ACCOUNT).getJsonArray(FIELD_DEVICES).forEach(d -> {
+                                switch (((JsonObject) d).getString(FIELD_DEVICE_OS, "unknown")) {
+                                    case "android":
+                                        notifyAndroid(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
+                                        break;
+                                    case "ios":
+                                        notifyIOS(notification, ((JsonObject) d).getString(FIELD_PUSH_ID));
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            });
+                        }
+                        vertx.eventBus().send(WS_NOTIFICATION_PREFIX + id, notification);
+                        resultHandler.handle(Future.succeededFuture(true));
+                    } else {
+                        resultHandler.handle(Future.failedFuture(u.cause()));
+                    }
+                });
             } else {
                 resultHandler.handle(Future.failedFuture(updtRes.cause()));
             }
@@ -171,82 +171,91 @@ public class NotificationsServiceImpl implements NotificationsService {
 
     @Override
     public void markAsRead(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.getById(id, DBCollections.NOTIFICATION)
-                .done(n -> {
-                    n.put("read", !n.getBoolean("read"));
-                    mongo.upsert(n, DBCollections.NOTIFICATION, updtRes -> {
-                        if (updtRes.succeeded()) {
-                            vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
-                            resultHandler.handle(Future.succeededFuture(n));
-                        } else {
-                            resultHandler.handle(Future.failedFuture(updtRes.cause()));
-                        }
-                    });
-                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+        mongo.getById(id, DBCollections.NOTIFICATION, res -> {
+            if (res.succeeded()) {
+                JsonObject n = res.result();
+                n.put("read", !n.getBoolean("read"));
+                updateNotification(n, resultHandler);
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
     }
 
     @Override
     public void delete(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.getById(id, DBCollections.NOTIFICATION)
-                .done(n -> {
-                    n.put(DELETED, true);
-                    mongo.upsert(n, DBCollections.NOTIFICATION, updtRes -> {
-                        if (updtRes.succeeded()) {
-                            vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
-                            resultHandler.handle(Future.succeededFuture(n));
-                        } else {
-                            resultHandler.handle(Future.failedFuture(updtRes.cause()));
-                        }
-                    });
-                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+        mongo.getById(id, DBCollections.NOTIFICATION, res -> {
+            if (res.succeeded()) {
+                JsonObject n = res.result();
+                n.put(DELETED, true);
+                updateNotification(n, resultHandler);
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
+    }
+
+    private void updateNotification(JsonObject n, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(n, DBCollections.NOTIFICATION, updtRes -> {
+            if (updtRes.succeeded()) {
+                vertx.eventBus().send(WS_NOTIFICATION_PREFIX + n.getString(TARGET_ID), new JsonObject());
+                resultHandler.handle(Future.succeededFuture(n));
+            } else {
+                resultHandler.handle(Future.failedFuture(updtRes.cause()));
+            }
+        });
     }
 
     @Override
     public void getList(String id, int start, int limit, Handler<AsyncResult<JsonArray>> resultHandler) {
-        CriteriaBuilder cb = new CriteriaBuilder()
-                .add(TARGET_ID, id)
-                .add(DELETED, false);
-        mongo.findByCriterias(cb.get(), null, "timestamp", -1, -1, DBCollections.NOTIFICATION)
-                .done(notifications -> {
-                    JsonArray jnotif = new JsonArray();
-                    if (notifications.size() == 0) {
-                        resultHandler.handle(Future.succeededFuture(jnotif));
-                    } else {
-                        int myLimit = limit;
-                        if (myLimit == -1) {
-                            myLimit = notifications.size();
-                        }
-                        List<Promise> promises = new ArrayList<>();
-                        for (int i = start; i < start + myLimit; i++) {
-                            promises.add(getUser(i, notifications.getJsonObject(i).getString(SENDER_ID)));
-                        }
-                        DeferredManager dm = new DefaultDeferredManager();
-                        dm.when(promises.toArray(new Promise[promises.size()]))
-                                .done(rs -> {
-                                    rs.forEach(u -> {
-                                        JsonObject tuple = (JsonObject) u.getResult();
-                                        notifications.getJsonObject(tuple.getInteger(FIELD_INDEX)).put(SENDER_ID, tuple.getJsonObject("user"));
-                                        jnotif.add(notifications.getJsonObject(tuple.getInteger(FIELD_INDEX)));
-                                    });
-                                    resultHandler.handle(Future.succeededFuture(jnotif));
-                                })
-                                .fail(e -> LOG.error(((Throwable) e.getReject()).getMessage()));
+        JsonObject criterias = new JsonObject().put(TARGET_ID, id).put(DELETED, false);
+        mongo.findByCriterias(criterias, new ArrayList<>(), "timestamp", -1, -1, DBCollections.NOTIFICATION, res -> {
+            if (res.succeeded()) {
+                JsonArray notifications = res.result();
+                JsonArray jnotif = new JsonArray();
+                if (notifications.size() == 0) {
+                    resultHandler.handle(Future.succeededFuture(jnotif));
+                } else {
+                    int myLimit = limit;
+                    if (myLimit == -1) {
+                        myLimit = notifications.size();
                     }
-                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e.getCode(), e))));
+                    List<Future> promises = new ArrayList<>();
+                    for (int i = start; i < start + myLimit; i++) {
+                        promises.add(getUser(i, notifications.getJsonObject(i).getString(SENDER_ID)));
+                    }
+                    CompositeFuture.all(promises).setHandler(rs -> {
+                        if (rs.succeeded()) {
+                            rs.result().list().forEach(u -> {
+                                notifications.getJsonObject(((JsonObject) u).getInteger(FIELD_INDEX)).put(SENDER_ID, ((JsonObject) u).getJsonObject("user"));
+                                jnotif.add(notifications.getJsonObject(((JsonObject) u).getInteger(FIELD_INDEX)));
+                            });
+                            resultHandler.handle(Future.succeededFuture(jnotif));
+                        } else {
+                            resultHandler.handle(Future.failedFuture(rs.cause()));
+                        }
+                    });
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
     }
 
-    private Promise<JsonObject, QaobeeException, Integer> getUser(int i, String id) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(id, DBCollections.USER)
-                .done(u -> {
-                    JsonObject cu = new JsonObject();
-                    u.fieldNames().stream()
-                            .filter(Arrays.asList("_id", "name", "firstname", "avatar")::contains)
-                            .forEachOrdered(f -> cu.put(f, u.getValue(f)));
-                    deferred.resolve(new JsonObject().put(FIELD_INDEX, i).put("user", cu));
-                })
-                .fail(deferred::reject);
-        return deferred.promise();
+    private Future<JsonObject> getUser(int i, String id) {
+        Future<JsonObject> deferred = Future.future();
+        mongo.getById(id, DBCollections.USER, u -> {
+            if (u.succeeded()) {
+                JsonObject cu = new JsonObject();
+                u.result().fieldNames().stream()
+                        .filter(Arrays.asList("_id", "name", "firstname", "avatar")::contains)
+                        .forEachOrdered(f -> cu.put(f, u.result().getValue(f)));
+                deferred.complete(new JsonObject().put(FIELD_INDEX, i).put("user", cu));
+            } else {
+                deferred.fail(u.cause());
+            }
+        });
+        return deferred;
     }
 
     private static void notifyIOS(JsonObject notification, String pushId) {

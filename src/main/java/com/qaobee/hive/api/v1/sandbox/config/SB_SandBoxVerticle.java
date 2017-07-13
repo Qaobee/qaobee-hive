@@ -93,7 +93,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_BY_ID, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void getSandboxById(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, sandBoxDAO.getSandboxById(req.getParams().get(PARAM_ID).get(0)));
+        sandBoxDAO.getSandboxById(req.getParams().get(PARAM_ID).get(0), handleJson(message));
     }
 
     /**
@@ -108,7 +108,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_LIST_BY_OWNER, method = Constants.GET, logged = true)
     private void getListByOwner(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, sandBoxDAO.getListByOwner(req.getParams().get(PARAM_OWNER_ID), req.getUser().get_id()));
+        sandBoxDAO.getListByOwner(req.getParams().get(PARAM_OWNER_ID), req.getUser().get_id(), handleJsonArray(message));
     }
 
     /**
@@ -124,7 +124,7 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
             scope = Rule.Param.REQUEST)
     private void getByOwner(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, sandBoxDAO.getByOwner(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getUser().get_id()));
+        sandBoxDAO.getByOwner(req.getParams().get(PARAM_ACTIVITY_ID).get(0), req.getUser().get_id(), handleJson(message));
     }
 
     /**
@@ -142,6 +142,6 @@ public class SB_SandBoxVerticle extends AbstractGuiceVerticle {// NOSONAR
             scope = Rule.Param.BODY)
     private void update(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, sandBoxDAO.updateSandbox(new JsonObject(req.getBody())));
+        sandBoxDAO.updateSandbox(new JsonObject(req.getBody()), handleJson(message));
     }
 }

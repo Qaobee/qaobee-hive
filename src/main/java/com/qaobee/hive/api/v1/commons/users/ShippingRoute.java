@@ -22,6 +22,7 @@ package com.qaobee.hive.api.v1.commons.users;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.ShippingService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -73,6 +74,12 @@ public class ShippingRoute extends AbstractRoute {
      * @apiSuccess {object} status Status
      */
     private void webHook(RoutingContext context) {
-        shippingService.webHook(context.getBodyAsJson(), r -> handleStatus(r.succeeded() && r.result(), context));
+        shippingService.webHook(context.getBodyAsJson(), r -> {
+            if (r.succeeded()) {
+                handleStatus(r.result(), context);
+            } else {
+                utils.handleError(context, (QaobeeException) r.cause());
+            }
+        });
     }
 }

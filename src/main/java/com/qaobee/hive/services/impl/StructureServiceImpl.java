@@ -23,8 +23,7 @@ import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.services.StructureService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.services.MongoDB;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -81,9 +80,7 @@ public class StructureServiceImpl implements StructureService {
                 JsonObject match = new JsonObject().put("$match", dbObjectParent);
                 // Pipeline
                 JsonArray pipelineAggregation = new JsonArray().add(match);
-                mongo.aggregate(pipelineAggregation, DBCollections.STRUCTURE)
-                        .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                        .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+                mongo.aggregate(pipelineAggregation, DBCollections.STRUCTURE, resultHandler);
             } else {
                 resultHandler.handle(Future.failedFuture(country.cause()));
             }
@@ -92,9 +89,7 @@ public class StructureServiceImpl implements StructureService {
 
     @Override
     public void getStructure(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.getById(id, DBCollections.STRUCTURE)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.getById(id, DBCollections.STRUCTURE, resultHandler);
     }
 
     @Override

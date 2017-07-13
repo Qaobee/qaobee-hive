@@ -24,7 +24,6 @@ import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -61,7 +60,7 @@ public class StructureServiceTest extends VertxJunitSupport {
      * Gets structure by id with non logged user testBodyParams.
      */
     @Test
-    public void getStructureByIdWithNonLoggedUserTest(TestContext context) {
+    public void getStructureByIdWithNonLoggedUserTest() {
         given().when().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -129,7 +128,7 @@ public class StructureServiceTest extends VertxJunitSupport {
      * Gets structures list with non logged user testBodyParams.
      */
     @Test
-    public void getStructuresListWithNonLoggedUserTest(TestContext context) {
+    public void getStructuresListWithNonLoggedUserTest() {
         given().when().post(BASE_URL + "/getList")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -251,7 +250,7 @@ public class StructureServiceTest extends VertxJunitSupport {
      * Update structure with non logged user testBodyParams.
      */
     @Test
-    public void updateStructureWithNonLoggedUserTest(TestContext context) {
+    public void updateStructureWithNonLoggedUserTest() {
         given().when().post(BASE_URL + "/update")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -306,19 +305,21 @@ public class StructureServiceTest extends VertxJunitSupport {
     public void addStructure(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
-        generateLoggedUser().setHandler(u -> getCountry("CNTR-250-FR-FRA").done(country -> getActivity("ACT-HAND", u.result()).done(activity -> {
-            final JsonObject params = new JsonObject();
-            params.put("label", "labelValue");
-            params.put("acronym", "acronymValue");
-            params.put(StructureRoute.PARAM_COUNTRY, country);
-            params.put(StructureRoute.PARAM_ACTIVITY, activity);
-            given().header(TOKEN, u.result().getAccount().getToken())
-                    .body(params.encode())
-                    .when().post(BASE_URL + "/add")
-                    .then().assertThat().statusCode(200)
-                    .body("_id", notNullValue());
-            async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()))).fail(e -> Assert.fail(e.getMessage())));
+        generateLoggedUser().setHandler(u -> getCountry("CNTR-250-FR-FRA")
+                .setHandler(country -> getActivity("ACT-HAND")
+                        .setHandler(activity -> {
+                            final JsonObject params = new JsonObject()
+                                    .put("label", "labelValue")
+                                    .put("acronym", "acronymValue")
+                                    .put(StructureRoute.PARAM_COUNTRY, country.result())
+                                    .put(StructureRoute.PARAM_ACTIVITY, activity.result());
+                            given().header(TOKEN, u.result().getAccount().getToken())
+                                    .body(params.encode())
+                                    .when().post(BASE_URL + "/add")
+                                    .then().assertThat().statusCode(200)
+                                    .body("_id", notNullValue());
+                            async.complete();
+                        })));
         async.await(TIMEOUT);
     }
 
@@ -326,7 +327,7 @@ public class StructureServiceTest extends VertxJunitSupport {
      * Add structure with non logged user testBodyParams.
      */
     @Test
-    public void addStructureWithNonLoggedUserTest(TestContext context) {
+    public void addStructureWithNonLoggedUserTest() {
         given().when().post(BASE_URL + "/add")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -355,18 +356,18 @@ public class StructureServiceTest extends VertxJunitSupport {
     public void addStructureWithMissingParameterTest(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
-        generateLoggedUser().setHandler(u -> getCountry("CNTR-250-FR-FRA").done(country -> {
+        generateLoggedUser().setHandler(u -> getCountry("CNTR-250-FR-FRA").setHandler(country -> {
             final JsonObject params = new JsonObject();
             params.put("label", "labelValue");
             params.put("acronym", "acronymValue");
-            params.put(StructureRoute.PARAM_COUNTRY, country);
+            params.put(StructureRoute.PARAM_COUNTRY, country.result());
             given().header(TOKEN, u.result().getAccount().getToken())
                     .body(params.encode())
                     .when().post(BASE_URL + "/add")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage())));
+        }));
         async.await(TIMEOUT);
     }
 }

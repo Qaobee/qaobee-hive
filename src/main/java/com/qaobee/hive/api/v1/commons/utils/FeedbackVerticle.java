@@ -25,7 +25,6 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.Future;
@@ -64,11 +63,11 @@ public class FeedbackVerticle extends AbstractGuiceVerticle {
     }
 
     private void internalFeeback(Message<JsonObject> message) {
-        try {
-            feedbackDAO.sendFeedback(message.body());
-        } catch (final QaobeeException e) {
-            LOG.error(e.getMessage(), e);
-        }
+        feedbackDAO.sendFeedback(message.body(), ar -> {
+            if (ar.failed()) {
+                LOG.error(ar.cause().getMessage(), ar.cause());
+            }
+        });
     }
 
     /**

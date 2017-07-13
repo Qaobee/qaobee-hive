@@ -35,10 +35,6 @@ import javax.inject.Inject;
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/referencial/structure")
 public class StructureRoute extends AbstractRoute {
-/*    public static final String ADD_STRUCTURE = Module.VERSION + ".commons.referencial.structure.add";
-    public static final String GET = Module.VERSION + ".commons.referencial.structure.get";
-    public static final String GET_LIST = Module.VERSION + ".commons.referencial.structure.getList";
-    public static final String UPDATE = Module.VERSION + ".commons.referencial.structure.update";*/
     /**
      * Id of the structure
      */

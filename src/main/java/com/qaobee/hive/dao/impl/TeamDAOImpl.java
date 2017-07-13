@@ -20,21 +20,19 @@
 package com.qaobee.hive.dao.impl;
 
 
-import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.dao.TeamDAO;
+import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 
 /**
  * The type Team dao.
@@ -52,7 +50,7 @@ public class TeamDAOImpl implements TeamDAO {
     /**
      * Instantiates a new Team dao.
      *
-     * @param mongo            the mongo
+     * @param mongo                the mongo
      * @param notificationsService the notifications dao
      */
     @Inject
@@ -62,30 +60,29 @@ public class TeamDAOImpl implements TeamDAO {
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getTeamList(String sandboxId, String effectiveId, String adversary, String enabled, String link) {
-        CriteriaBuilder criteria = new CriteriaBuilder()
-                .add(PARAM_SANDBOX_ID, sandboxId)
-                .add(PARAM_EFFECTIVE_ID, effectiveId)
-                .add(PARAM_ADVERSARY, "true".equals(adversary));
+    public void getTeamList(String sandboxId, String effectiveId, String adversary, String enabled, String link, Handler<AsyncResult<JsonArray>> resultHandler) {
+        JsonObject criteria = new JsonObject()
+                .put(PARAM_SANDBOX_ID, sandboxId)
+                .put(PARAM_EFFECTIVE_ID, effectiveId)
+                .put(PARAM_ADVERSARY, "true".equals(adversary));
         if (!"all".equals(enabled)) {
-            criteria.add(PARAM_ENABLE, "true".equals(enabled));
+            criteria.put(PARAM_ENABLE, "true".equals(enabled));
         }
         if (link != null) {
-            criteria.add(PARAM_LINK_TEAM_ID, link);
+            criteria.put(PARAM_LINK_TEAM_ID, link);
         }
-        return mongo.findByCriterias(criteria.get(), null, null, -1, -1, DBCollections.TEAM);
+        mongo.findByCriterias(criteria, new ArrayList<>(), "", -1, -1, DBCollections.TEAM, resultHandler);
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getTeam(String teamId) {
-        return mongo.getById(teamId, DBCollections.TEAM);
+    public void getTeam(String teamId, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.getById(teamId, DBCollections.TEAM, resultHandler);
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> updateTeam(JsonObject team, String userId, String locale) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.upsert(team, DBCollections.TEAM,upsertRes -> {
-            if(upsertRes.succeeded()) {
+    public void updateTeam(JsonObject team, String userId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.upsert(team, DBCollections.TEAM, upsertRes -> {
+            if (upsertRes.succeeded()) {
                 team.put("_id", upsertRes.result());
                 JsonObject notification = new JsonObject()
                         .put("content", Messages.getString("notification.team.update.content", locale,
@@ -95,19 +92,17 @@ public class TeamDAOImpl implements TeamDAO {
                         .put("senderId", userId);
                 notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar -> {
                 });
-                deferred.resolve(team);
+                resultHandler.handle(Future.succeededFuture(team));
             } else {
-                deferred.reject(new QaobeeException(((QaobeeSvcException) upsertRes.cause()).getCode(), upsertRes.cause()));
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
             }
         });
-        return deferred.promise();
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> addTeam(JsonObject team, String userId, String locale) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+    public void addTeam(JsonObject team, String userId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         mongo.upsert(team, DBCollections.TEAM, upsertRes -> {
-            if(upsertRes.succeeded()) {
+            if (upsertRes.succeeded()) {
                 team.put("_id", upsertRes.result());
                 JsonObject notification = new JsonObject()
                         .put("content", Messages.getString("notification.team.add.content", locale,
@@ -117,11 +112,10 @@ public class TeamDAOImpl implements TeamDAO {
                         .put("senderId", userId);
                 notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar -> {
                 });
-                deferred.resolve(team);
+                resultHandler.handle(Future.succeededFuture(team));
             } else {
-                deferred.reject(new QaobeeException(((QaobeeSvcException) upsertRes.cause()).getCode(), upsertRes.cause()));
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
             }
         });
-        return deferred.promise();
     }
 }

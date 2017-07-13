@@ -117,7 +117,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
     private void get(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, collectDAO.get(req.getParams().get(PARAM_ID).get(0)));
+        collectDAO.get(req.getParams().get(PARAM_ID).get(0), handleJson(message));
     }
 
     /**
@@ -131,7 +131,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
     private void update(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, collectDAO.update(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
+        collectDAO.update(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale(), handleJson(message));
     }
 
     /**
@@ -145,7 +145,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = ADD_COLLECT, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
     private void addStat(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, collectDAO.add(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
+        collectDAO.add(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale(), handleJson(message));
     }
 
     /**
@@ -163,6 +163,6 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
             mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID}, scope = Rule.Param.BODY)
     private void getList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, collectDAO.getList(new JsonObject(req.getBody())));
+        collectDAO.getList(new JsonObject(req.getBody()), handleJsonArray(message));
     }
 }

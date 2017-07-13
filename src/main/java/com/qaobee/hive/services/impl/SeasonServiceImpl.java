@@ -19,12 +19,12 @@
 
 package com.qaobee.hive.services.impl;
 
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.SeasonService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -33,8 +33,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * The type Season.
@@ -60,50 +59,54 @@ public class SeasonServiceImpl implements SeasonService {
 
     @Override
     public void getCurrentSeason(String activityId, String countryId, Handler<AsyncResult<JsonObject>> resultHandler) {
-        Map<String, Object> criterias = new HashMap<>();
-        criterias.put(PARAM_ACTIVITY_ID, activityId);
-        criterias.put(PARAM_COUNTRY_ID, countryId);
-        mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, DBCollections.SEASON)
-                .done(resultJson -> {
-                    long currentDate = System.currentTimeMillis();
-                    if (resultJson.size() == 0) {
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
-                    } else {
-                        JsonObject season = null;
-                        for (int i = 0; i < resultJson.size(); i++) {
-                            JsonObject s = resultJson.getJsonObject(i);
-                            if (s.getLong(END_DATE_FIELD, 0L) > currentDate && s.getLong("startDate") < currentDate) {
-                                season = s;
-                            }
-                        }
-                        if (season != null) {
-                            resultHandler.handle(Future.succeededFuture(season));
-                        } else {
-                            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
+        JsonObject criterias = new JsonObject()
+                .put(PARAM_ACTIVITY_ID, activityId)
+                .put(PARAM_COUNTRY_ID, countryId);
+        mongo.findByCriterias(criterias, new ArrayList<>(), END_DATE_FIELD, -1, -1, DBCollections.SEASON, resultJson -> {
+            if (resultJson.succeeded()) {
+                long currentDate = System.currentTimeMillis();
+                if (resultJson.result().size() == 0) {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
+                } else {
+                    JsonObject season = null;
+                    for (int i = 0; i < resultJson.result().size(); i++) {
+                        JsonObject s = resultJson.result().getJsonObject(i);
+                        if (s.getLong(END_DATE_FIELD, 0L) > currentDate && s.getLong("startDate") < currentDate) {
+                            season = s;
                         }
                     }
-                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+                    if (season != null) {
+                        resultHandler.handle(Future.succeededFuture(season));
+                    } else {
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
+                    }
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(resultJson.cause()));
+            }
+        });
     }
 
     @Override
     public void getListByActivity(String activityId, String countryId, Handler<AsyncResult<JsonArray>> resultHandler) {
-        Map<String, Object> criterias = new HashMap<>();
-        criterias.put(PARAM_ACTIVITY_ID, activityId);
-        criterias.put(PARAM_COUNTRY_ID, countryId);
-        mongo.findByCriterias(criterias, null, END_DATE_FIELD, -1, -1, DBCollections.SEASON)
-                .done(resultJson -> {
-                    if (resultJson.size() == 0) {
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
-                    } else {
-                        resultHandler.handle(Future.succeededFuture(resultJson));
-                    }
-                }).fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        JsonObject criterias = new JsonObject()
+                .put(PARAM_ACTIVITY_ID, activityId)
+                .put(PARAM_COUNTRY_ID, countryId);
+        mongo.findByCriterias(criterias, new ArrayList<>(), END_DATE_FIELD, -1, -1, DBCollections.SEASON, resultJson -> {
+            if (resultJson.succeeded()) {
+                if (resultJson.result().size() == 0) {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
+                } else {
+                    resultHandler.handle(Future.succeededFuture(resultJson.result()));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(resultJson.cause()));
+            }
+        });
     }
 
     @Override
     public void getSeason(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.getById(id, DBCollections.SEASON)
-                .done(res -> resultHandler.handle(Future.succeededFuture(res)))
-                .fail(e -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(e))));
+        mongo.getById(id, DBCollections.SEASON, resultHandler);
     }
 }

@@ -25,7 +25,6 @@ import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -45,17 +44,15 @@ public class SandBoxTest extends VertxJunitSupport {
     public void getSandBoxByOwner(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(u -> {
-            getActivity("ACT-HAND", u.result()).then(activity -> {
-                given().header(TOKEN, u.result().getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                        .then().assertThat().statusCode(200)
-                        .body("owner", notNullValue())
-                        .body("owner", is(u.result().get_id()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(u -> getActivity("ACT-HAND").setHandler(activity -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .then().assertThat().statusCode(200)
+                    .body("owner", notNullValue())
+                    .body("owner", is(u.result().get_id()));
+            async.complete();
+        }));
         async.await(TIMEOUT);
     }
 
@@ -120,16 +117,14 @@ public class SandBoxTest extends VertxJunitSupport {
     public void getSandBoxByOwnerWithWrongUser(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        generateLoggedUser().setHandler(user -> {
-            getActivity("ACT-HAND", user.result()).then(activity -> {
-                given().header(TOKEN, user.result().getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                        .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                        .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        generateLoggedUser().setHandler(user -> getActivity("ACT-HAND").setHandler(activity -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }));
         async.await(TIMEOUT);
     }
 
@@ -140,16 +135,14 @@ public class SandBoxTest extends VertxJunitSupport {
     public void getSandBoxByOwnerWithWrongActivity(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
-            getActivity("ACT-FOOT", user.result()).then(activity -> {
-                given().header(TOKEN, user.result().getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                        .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
-                        .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        });
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> getActivity("ACT-FOOT").setHandler(activity -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        }));
         async.await(TIMEOUT);
     }
 
@@ -237,27 +230,25 @@ public class SandBoxTest extends VertxJunitSupport {
     public void updateSandBox(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
-            getActivity("ACT-HAND", user.result()).then(activity -> {
-                JsonObject sb = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.getString(ActivityRoute.PARAM_ID))
-                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
-                        .then().assertThat().statusCode(200)
-                        .body("_id", notNullValue())
-                        .body("owner", notNullValue())
-                        .body("owner", is(user.result().get_id()))
-                        .extract().asString());
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> getActivity("ACT-HAND").setHandler(activity -> {
+            JsonObject sb = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("owner", notNullValue())
+                    .body("owner", is(user.result().get_id()))
+                    .extract().asString());
 
-                sb.put("effectiveDefault", "123456");
-                given().header(TOKEN, user.result().getAccount().getToken())
-                        .body(sb.encode())
-                        .when().post(getURL(SB_SandBoxVerticle.UPDATE))
-                        .then().assertThat().statusCode(200)
-                        .body("_id", notNullValue())
-                        .body("effectiveDefault", is("123456"));
-                async.complete();
-            }).fail(e -> Assert.fail(e.getMessage()));
-        });
+            sb.put("effectiveDefault", "123456");
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(sb.encode())
+                    .when().post(getURL(SB_SandBoxVerticle.UPDATE))
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("effectiveDefault", is("123456"));
+            async.complete();
+        }));
         async.await(TIMEOUT);
     }
 

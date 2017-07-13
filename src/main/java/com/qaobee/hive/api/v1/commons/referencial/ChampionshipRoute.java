@@ -23,7 +23,6 @@ import com.qaobee.hive.services.ChampionshipService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
@@ -141,7 +140,7 @@ public class ChampionshipRoute extends AbstractRoute {
                         if (ar.succeeded()) {
                             handleResponse(context, new JsonObject().put("_id", ar.result()));
                         } else {
-                            utils.handleError(context, (QaobeeSvcException) ar.cause());
+                            utils.handleError(context, (QaobeeException) ar.cause());
                         }
                     });
                 } catch (QaobeeException e) {

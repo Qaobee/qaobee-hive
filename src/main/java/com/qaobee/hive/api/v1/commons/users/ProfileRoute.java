@@ -26,7 +26,7 @@ import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -35,12 +35,11 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-
-import static io.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 
 /**
  * The type Profile route.
@@ -77,7 +76,7 @@ public class ProfileRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 vertx.eventBus().send(PDFVerticle.GENERATE_PDF, ar.result(), new DeliveryOptions().setSendTimeout(Constants.TIMEOUT), getPdfHandler(context));
             } else {
-                utils.handleError(context, (QaobeeSvcException) ar.cause());
+                utils.handleError(context, (QaobeeException) ar.cause());
             }
         });
 
@@ -103,12 +102,12 @@ public class ProfileRoute extends AbstractRoute {
                     throw pdfResp.cause();
                 } else {
                     handleResponse(context, new JsonObject()
-                            .put(CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
+                            .put(HTTP.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
                             .put(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF)));
                 }
             } catch (Throwable e) { // NOSONAR
                 LOG.error(e.getMessage(), e);
-                utils.handleError(context, new QaobeeSvcException(ExceptionCodes.INTERNAL_ERROR, e));
+                utils.handleError(context, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e));
             }
         };
     }

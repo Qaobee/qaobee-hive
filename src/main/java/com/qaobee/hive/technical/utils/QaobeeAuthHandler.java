@@ -3,11 +3,12 @@ package com.qaobee.hive.technical.utils;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.QaobeeUser;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
@@ -18,8 +19,6 @@ import org.apache.http.protocol.HTTP;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
-
-import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 public class QaobeeAuthHandler implements AuthHandler {
     @Inject
@@ -84,7 +83,7 @@ public class QaobeeAuthHandler implements AuthHandler {
     }
 
     private static void handle401(RoutingContext context, String message) {
-        context.response().putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+        context.response().putHeader(HTTP.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                 .setStatusCode(401)
                 .end(new JsonObject()
                         .put(Constants.STATUS, false)

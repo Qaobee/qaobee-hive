@@ -22,9 +22,8 @@ package com.qaobee.hive.dao.impl;
 import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.services.ActivityCfgService;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.CompositeFuture;
@@ -74,7 +73,7 @@ public class ShareDAOImpl implements ShareDAO {
                 .put(FIELD_SANDBOX_ID, sandbox.getString("_id"))
                 .put(FIELD_STATUS, "waiting")
                 .put("invitationDate", System.currentTimeMillis());
-        mongo.findByCriterias(new CriteriaBuilder().add("contact.email", userEmail).get(), null, null, -1, 0, DBCollections.USER, invitedRes -> {
+        mongo.findByCriterias(new JsonObject().put("contact.email", userEmail), new ArrayList<>(), "", -1, 0, DBCollections.USER, invitedRes -> {
             if (invitedRes.succeeded()) {
                 if (invitedRes.result().size() > 0) {
                     invitation.put("userId", invitedRes.result().getJsonObject(0).getString("_id"));
@@ -289,7 +288,7 @@ public class ShareDAOImpl implements ShareDAO {
                 .put(FIELD_MEMBERS, new JsonArray())
                 .put(FIELD_OWNER, new JsonArray());
 
-        mongo.findByCriterias(new CriteriaBuilder().add(FIELD_OWNER, userId).get(), null, null, -1, 0, DBCollections.SANDBOX, sandboxesRes -> {
+        mongo.findByCriterias(new JsonObject().put(FIELD_OWNER, userId), new ArrayList<>(), "", -1, 0, DBCollections.SANDBOX, sandboxesRes -> {
             if (sandboxesRes.succeeded()) {
                 JsonArray sandboxes = sandboxesRes.result();
                 JsonObject elemMatch = new JsonObject().put(FIELD_PERSON_ID, userId);
@@ -349,10 +348,10 @@ public class ShareDAOImpl implements ShareDAO {
 
     @Override
     public void getListOfInvitationsToSandbox(String sandboxId, String status, Handler<AsyncResult<JsonArray>> resultHandler) {
-        CriteriaBuilder criterias = new CriteriaBuilder().add(FIELD_SANDBOX_ID, sandboxId);
+        JsonObject criterias = new JsonObject().put(FIELD_SANDBOX_ID, sandboxId);
         if (!"ALL".equals(status)) {
-            criterias.add(FIELD_STATUS, status);
+            criterias.put(FIELD_STATUS, status);
         }
-        mongo.findByCriterias(criterias.get(), null, null, -1, 0, DBCollections.INVITATION, resultHandler);
+        mongo.findByCriterias(criterias, new ArrayList<>(), "", -1, 0, DBCollections.INVITATION, resultHandler);
     }
 }

@@ -20,38 +20,38 @@
 package com.qaobee.hive.dao;
 
 
-import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Promise;
 
 /**
  * The interface Statistics dao.
  */
 public interface StatisticsDAO {
     /**
-     * Add bulk json object.
+     * Add bulk.
      *
-     * @param stats the stats
-     * @return the json object
+     * @param stats         the stats
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> addBulk(JsonArray stats);
+    void addBulk(JsonArray stats, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets list for event.
      *
-     * @param eventId the event id
-     * @return the list for event
+     * @param eventId       the event id
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> getListForEvent(String eventId);
+    void getListForEvent(String eventId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
-     * Add stat json object.
+     * Add stat.
      *
-     * @param stat the stat
-     * @return the json object
+     * @param stat          the stat
+     * @param resultHandler the result handler
      */
-    Promise<JsonObject, QaobeeException, Integer> addStat(JsonObject stat);
+    void addStat(JsonObject stat, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets list detail value.
@@ -62,9 +62,9 @@ public interface StatisticsDAO {
      * @param endDate        the end date
      * @param values         the values
      * @param limit          the limit
-     * @return the list detail value
+     * @param resultHandler  the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit);
+    void getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Gets stats grouped by.
@@ -79,9 +79,9 @@ public interface StatisticsDAO {
      * @param groupBy        the group by
      * @param sortedBy       the sorted by
      * @param limit          the limit
-     * @return the stats grouped by
+     * @param resultHandler  the result handler
      */
-    Promise<JsonArray, QaobeeException, Integer> getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, // NOSONAR
+    void getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, // NOSONAR
                                                                    Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId,
-                                                                   JsonArray groupBy, JsonArray sortedBy, Integer limit);
+                                                                   JsonArray groupBy, JsonArray sortedBy, Integer limit, Handler<AsyncResult<JsonArray>> resultHandler);
 }

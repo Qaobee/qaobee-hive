@@ -20,20 +20,14 @@
 package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.dao.StatisticsDAO;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.CompositeFuture;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Deferred;
-import org.jdeferred.DeferredManager;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DefaultDeferredManager;
-import org.jdeferred.impl.DeferredObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -44,7 +38,6 @@ import java.util.List;
  * The type Statistics dao.
  */
 public class StatisticsDAOImpl implements StatisticsDAO {
-    private static final Logger LOG = LoggerFactory.getLogger(StatisticsDAOImpl.class);
     private static final String TIMER_FIELD = "timer";
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
@@ -52,7 +45,6 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private static final String EVENT_ID_FIELD = "eventId";
     private static final String STAT_FIELD = "stats";
     private final MongoDB mongo;
-    private final DeferredManager dm = new DefaultDeferredManager();
 
     /**
      * Instantiates a new Statistics dao.
@@ -64,40 +56,10 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         this.mongo = mongo;
     }
 
-    @Override
-    public Promise<JsonObject, QaobeeException, Integer> addBulk(JsonArray stats) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        final long[] count = {0};
-        List<Promise> promises = new ArrayList<>();
-        List<Promise> promises2 = new ArrayList<>();
-        for (String evtId : collectUniqueIds(stats)) {
-            promises.add(getListForEvent(evtId));
-        }
-        dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
-            rs.forEach(eventStats -> {
-                if (((JsonObject) eventStats.getResult()).getJsonArray(STAT_FIELD).size() == 0) {
-                    promises2.add(pushAllStats(stats, ((JsonObject) eventStats.getResult()).getString(EVENT_ID_FIELD)));
-                } else {
-                    promises2.add(pushNonDuplicateStats(stats, ((JsonObject) eventStats.getResult()).getJsonArray(STAT_FIELD)));
-                }
-            });
-            dm.when(promises2.toArray(new Promise[promises2.size()])).done(counts -> {
-                counts.forEach(c -> {
-                    int res = (Integer) c.getResult();
-                    count[0] += res;
-                });
-                deferred.resolve(new JsonObject().put("count", count[0]));
-            });
-        }).fail(e -> {
-            LOG.error(((Throwable) e.getReject()).getMessage());
-            deferred.reject((QaobeeException) e.getReject());
-        });
-        return deferred.promise();
-    }
 
-    private Promise<Integer, QaobeeException, Integer> pushNonDuplicateStats(JsonArray stats, JsonArray eventStats) {
-        Deferred<Integer, QaobeeException, Integer> deferred = new DeferredObject<>();
-        List<Promise> promises = new ArrayList<>();
+    private Future<Integer> pushNonDuplicateStats(JsonArray stats, JsonArray eventStats) {
+        Future<Integer> deferred = Future.future();
+        List<Future> promises = new ArrayList<>();
         stats.forEach(s -> {
             boolean found = false;
             for (int j = 0; j < eventStats.size(); j++) {
@@ -107,34 +69,51 @@ public class StatisticsDAOImpl implements StatisticsDAO {
                 }
             }
             if (!found) {
-                promises.add(addStat((JsonObject) s));
+                Future<JsonObject> f = Future.future();
+                addStat((JsonObject) s, ar -> {
+                    if (ar.succeeded()) {
+                        f.complete(ar.result());
+                    } else {
+                        f.fail(ar.cause());
+                    }
+                });
+                promises.add(f);
             }
         });
         count(promises, deferred);
-        return deferred.promise();
+        return deferred;
     }
 
-    private void count(List<Promise> promises, Deferred<Integer, QaobeeException, Integer> deferred) {
-        dm.when(promises.toArray(new Promise[promises.size()])).done(rs -> {
-            final int[] count = {0};
-            rs.forEach(r -> count[0]++);
-            deferred.resolve(count[0]);
-        }).fail(e -> {
-            LOG.error(((Throwable) e.getReject()).getMessage());
-            deferred.reject((QaobeeException) e.getReject());
+    private void count(List<Future> promises, Future<Integer> deferred) {
+        CompositeFuture.all(promises).setHandler(rs -> {
+            if (rs.succeeded()) {
+                final int[] count = {0};
+                rs.result().list().forEach(r -> count[0]++);
+                deferred.complete(count[0]);
+            } else {
+                deferred.fail(rs.cause());
+            }
         });
     }
 
-    private Promise<Integer, QaobeeException, Integer> pushAllStats(JsonArray stats, String evtId) {
-        Deferred<Integer, QaobeeException, Integer> deferred = new DeferredObject<>();
-        List<Promise> promises = new ArrayList<>();
+    private Future<Integer> pushAllStats(JsonArray stats, String evtId) {
+        Future<Integer> deferred = Future.future();
+        List<Future> promises = new ArrayList<>();
         stats.forEach(s -> {
             if (evtId.equals(((JsonObject) s).getString(EVENT_ID_FIELD))) {
-                promises.add(addStat((JsonObject) s));
+                Future<JsonObject> f = Future.future();
+                addStat((JsonObject) s, ar -> {
+                    if (ar.succeeded()) {
+                        f.complete(ar.result());
+                    } else {
+                        f.fail(ar.cause());
+                    }
+                });
+                promises.add(f);
             }
         });
         count(promises, deferred);
-        return deferred.promise();
+        return deferred;
     }
 
     private static HashSet<String> collectUniqueIds(JsonArray stats) {
@@ -146,34 +125,69 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> getListForEvent(String eventId) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.findByCriterias(new CriteriaBuilder().add(EVENT_ID_FIELD, eventId).get(), null, null, -1, -1, DBCollections.STATS).done(res ->
-                deferred.resolve(new JsonObject().put(EVENT_ID_FIELD, eventId).put(STAT_FIELD, res))
-        ).fail(deferred::reject);
-        return deferred.promise();
+    public void addBulk(JsonArray stats, Handler<AsyncResult<JsonObject>> resultHandler) {
+        final long[] count = {0};
+        List<Future> promises = new ArrayList<>();
+        List<Future> promises2 = new ArrayList<>();
+        for (String evtId : collectUniqueIds(stats)) {
+            Future<JsonObject> f = Future.future();
+            promises.add(f);
+            getListForEvent(evtId, ar -> {
+                if (ar.succeeded()) {
+                    f.complete(ar.result());
+                } else {
+                    f.fail(ar.cause());
+                }
+            });
+        }
+        CompositeFuture.all(promises).setHandler(rs -> {
+            if (rs.succeeded()) {
+                rs.result().list().forEach(eventStats -> {
+                    if (((JsonObject) eventStats).getJsonArray(STAT_FIELD).size() == 0) {
+                        promises2.add(pushAllStats(stats, ((JsonObject) eventStats).getString(EVENT_ID_FIELD)));
+                    } else {
+                        promises2.add(pushNonDuplicateStats(stats, ((JsonObject) eventStats).getJsonArray(STAT_FIELD)));
+                    }
+                });
+                CompositeFuture.all(promises2).setHandler(counts -> {
+                    counts.result().list().forEach(c -> count[0] += (int) c);
+                    resultHandler.handle(Future.succeededFuture(new JsonObject().put("count", count[0])));
+                });
+            } else {
+                resultHandler.handle(Future.failedFuture(rs.cause()));
+            }
+        });
     }
 
     @Override
-    public Promise<JsonObject, QaobeeException, Integer> addStat(JsonObject stat) {
-        Deferred<JsonObject, QaobeeException, Integer> deferred = new DeferredObject<>();
+    public void getListForEvent(String eventId, Handler<AsyncResult<JsonObject>> resultHandler) {
+        mongo.findByCriterias(new JsonObject().put(EVENT_ID_FIELD, eventId), new ArrayList<>(), "", -1, -1, DBCollections.STATS, res -> {
+            if (res.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(new JsonObject().put(EVENT_ID_FIELD, eventId).put(STAT_FIELD, res.result())));
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
+    }
+
+    @Override
+    public void addStat(JsonObject stat, Handler<AsyncResult<JsonObject>> resultHandler) {
         if (!stat.containsKey(TIMER_FIELD) || Integer.valueOf(0).equals(stat.getInteger(TIMER_FIELD))) {
             stat.put(TIMER_FIELD, System.currentTimeMillis());
         }
         mongo.upsert(stat, DBCollections.STATS, upsertRes -> {
-            if(upsertRes.succeeded()) {
+            if (upsertRes.succeeded()) {
                 stat.put("_id", upsertRes.result());
-                deferred.resolve(stat);
+                resultHandler.handle(Future.succeededFuture(stat));
             } else {
-                deferred.reject(new QaobeeException(((QaobeeSvcException) upsertRes.cause()).getCode(), upsertRes.cause()));
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
             }
         });
-        return deferred.promise();
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit) {
-        // $MATCH section
+    public void getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit, Handler<AsyncResult<JsonArray>> resultHandler) {
+// $MATCH section
         JsonObject dbObjectParent = new JsonObject()
                 .put(CODE_FIELD, new JsonObject().put("$in", listIndicators))
                 .put(OWNER_FIELD, new JsonObject().put("$in", listOwners));
@@ -191,12 +205,12 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         if (limit > 0) {
             pipelineAggregation.add(new JsonObject().put("$limit", limit));
         }
-        return mongo.aggregate(pipelineAggregation, DBCollections.STATS);
+        mongo.aggregate(pipelineAggregation, DBCollections.STATS, resultHandler);
     }
 
     @Override
-    public Promise<JsonArray, QaobeeException, Integer> getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId, JsonArray groupBy, JsonArray sortedBy, Integer limit) {
-        // Aggregate section
+    public void getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId, JsonArray groupBy, JsonArray sortedBy, Integer limit, Handler<AsyncResult<JsonArray>> resultHandler) {
+// Aggregate section
         // $MACTH section
         JsonObject dbObjectParent = new JsonObject()
                 .put(CODE_FIELD, new JsonObject().put("$in", listIndicators))
@@ -251,6 +265,6 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         if (limit > 0) {
             pipelineAggregation.add(new JsonObject().put("$limit", limit));
         }
-        return mongo.aggregate(pipelineAggregation, DBCollections.STATS);
+        mongo.aggregate(pipelineAggregation, DBCollections.STATS, resultHandler);
     }
 }

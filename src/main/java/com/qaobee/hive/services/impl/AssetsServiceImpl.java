@@ -10,8 +10,8 @@ import com.qaobee.hive.services.AssetsService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
-import com.qaobee.hive.technical.mongo.MongoDB;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -64,26 +64,31 @@ public class AssetsServiceImpl implements AssetsService {
                 streamToUploadFrom.close((closeRes, er) -> {
                     if (er != null) {
                         LOG.error(er.getMessage(), er);
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INTERNAL_ERROR, er.getMessage())));
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, er.getMessage())));
                     }
                 });
                 if (e != null) {
                     LOG.error(e.getMessage(), e);
-                    resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INTERNAL_ERROR, e.getMessage())));
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage())));
                 } else {
                     if (DBCollections.PERSON.equals(collection) || DBCollections.USER.equals(collection)) {
-                        mongo.getById(userId, collection).done(p -> {
-                            p.put(field, result.toHexString());
-                            mongo.upsert(p, collection, r -> {
-                                if(r.succeeded()) {
-                                resultHandler.handle(Future.succeededFuture(p));
-                                } else {
-                                    resultHandler.handle(Future.failedFuture(r.cause()));
-                                }
-                            });
-                        }).fail(ex -> resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ex))));
+                        mongo.getById(userId, collection, res -> {
+                            if(res.succeeded()) {
+                                JsonObject p = res.result();
+                                p.put(field, result.toHexString());
+                                mongo.upsert(p, collection, r -> {
+                                    if (r.succeeded()) {
+                                        resultHandler.handle(Future.succeededFuture(p));
+                                    } else {
+                                        resultHandler.handle(Future.failedFuture(r.cause()));
+                                    }
+                                });
+                            } else {
+                                resultHandler.handle(Future.failedFuture(res.cause()));
+                            }
+                        });
                     } else {
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
                     }
                     if (vertx.fileSystem().existsBlocking(filename)) {
                         vertx.fileSystem().deleteBlocking(filename);
@@ -92,7 +97,7 @@ public class AssetsServiceImpl implements AssetsService {
             });
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
-            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INTERNAL_ERROR, e.getMessage())));
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage())));
         }
     }
 
@@ -106,7 +111,7 @@ public class AssetsServiceImpl implements AssetsService {
                 downloadStream.read(dstByteBuffer, (result, e) -> {
                     if (e != null) {
                         LOG.error(e.getMessage(), e);
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
                     } else {
                         dstByteBuffer.flip();
                         byte[] bytes = new byte[result];
@@ -114,7 +119,7 @@ public class AssetsServiceImpl implements AssetsService {
                         downloadStream.close((result1, er) -> {
                             if (er != null) {
                                 LOG.error(er.getMessage(), er);
-                                resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
+                                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
                             }
                         });
                         resultHandler.handle(Future.succeededFuture(new JsonObject()
@@ -124,10 +129,10 @@ public class AssetsServiceImpl implements AssetsService {
                 });
             } catch (IllegalArgumentException e) {
                 LOG.error(e.getMessage(), e);
-                resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
             }
         } else {
-            resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
         }
     }
 }

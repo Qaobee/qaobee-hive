@@ -17,28 +17,53 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.technical.mongo;
+package com.qaobee.hive.services;
 
+import com.qaobee.hive.services.impl.MongoDBImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * The interface Mongo db.
  */
+@ProxyGen
+@VertxGen
 public interface MongoDB {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.MongoDB.service";
 
     /**
-     * Upsert.
+     * Create mongo db.
      *
-     * @param o             the o
-     * @param resultHandler the result handler
+     * @param vertx the vertx
+     *
+     * @return the mongo db
      */
-    void upsert(Object o, Handler<AsyncResult<String>> resultHandler);
+    static MongoDB create(Vertx vertx) {
+        return new MongoDBImpl(vertx);
+    }
+
+    /**
+     * Create proxy mongo db.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     *
+     * @return the mongo db
+     */
+    static MongoDB createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(MongoDB.class, vertx, address);
+    }
 
     /**
      * Upsert.
@@ -57,17 +82,7 @@ public interface MongoDB {
      * @param collection    the collection
      * @param resultHandler the result handler
      */
-    void upsert(JsonObject query, JsonObject document, Class<?> collection, Handler<AsyncResult<String>> resultHandler);
-
-    /**
-     * Upsert.
-     *
-     * @param query         the query
-     * @param document      the document
-     * @param collection    the collection
-     * @param resultHandler the result handler
-     */
-    void upsert(JsonObject query, JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler);
+    void upsertWithQuery(JsonObject query, JsonObject document, String collection, Handler<AsyncResult<String>> resultHandler);
 
     /**
      * Gets by id.
@@ -86,15 +101,7 @@ public interface MongoDB {
      * @param minimal       the minimal
      * @param resultHandler the result handler
      */
-    void getById(String id, String collection, List<String> minimal, Handler<AsyncResult<JsonObject>> resultHandler);
-
-    /**
-     * Gets minimal.
-     *
-     * @param minimal the minimal
-     * @return the minimal
-     */
-    JsonObject getMinimal(List<String> minimal);
+    void getByIdMinimal(String id, String collection, List<String> minimal, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Find by criterias.
@@ -107,7 +114,7 @@ public interface MongoDB {
      * @param collection    the collection
      * @param resultHandler the result handler
      */
-    void findByCriterias(Map<String, Object> criteria, List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler);
+    void findByCriterias(JsonObject criteria, List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Find all.

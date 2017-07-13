@@ -100,7 +100,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET_LIST_SANDBOX, method = Constants.GET, logged = true, mandatoryParams = PARAM_SANDBOX_ID, scope = Rule.Param.REQUEST)
     private void getPersonListBySandbox(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonArray(message, personDAO.getPersonListBySandbox(req.getParams().get(PARAM_SANDBOX_ID).get(0)));
+        personDAO.getPersonListBySandbox(req.getParams().get(PARAM_SANDBOX_ID).get(0), handleJsonArray(message));
     }
 
     /**
@@ -116,7 +116,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     private void getPersonList(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject params = new JsonObject(req.getBody());
-        replyJsonArray(message, personDAO.getPersonList(params.getJsonArray(PARAM_LIST_ID), params.getJsonArray(PARAM_LIST_FIELD)));
+        personDAO.getPersonList(params.getJsonArray(PARAM_LIST_ID), params.getJsonArray(PARAM_LIST_FIELD), handleJsonArray(message));
     }
 
     /**
@@ -132,7 +132,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = UPDATE, method = Constants.PUT, logged = true, mandatoryParams = PARAM_PERSON_ID, scope = Rule.Param.BODY)
     private void updatePerson(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, personDAO.updatePerson(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale()));
+        personDAO.updatePerson(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale(), handleJson(message));
     }
 
     /**
@@ -148,7 +148,7 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_PERSON_ID, scope = Rule.Param.REQUEST)
     private void getPerson(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, personDAO.getPerson(req.getParams().get(PARAM_PERSON_ID).get(0)));
+        personDAO.getPerson(req.getParams().get(PARAM_PERSON_ID).get(0), handleJson(message));
     }
 
     /**
@@ -164,6 +164,6 @@ public class SB_PersonVerticle extends AbstractGuiceVerticle {// NOSONAR
     private void addPerson(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject body = new JsonObject(req.getBody());
-        replyJsonObject(message, personDAO.addPerson(body.getJsonObject("person"), req.getUser().get_id(), req.getLocale()));
+        personDAO.addPerson(body.getJsonObject("person"), req.getUser().get_id(), req.getLocale(), handleJson(message));
     }
 }

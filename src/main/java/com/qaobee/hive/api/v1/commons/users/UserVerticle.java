@@ -26,7 +26,6 @@ import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -135,11 +134,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiGroup User API
      */
     @Rule(address = LOGIN_BY_TOKEN, method = Constants.POST, mandatoryParams = {MOBILE_TOKEN, PARAM_LOGIN},
-            scope = Rule.Param.BODY)
+          scope = Rule.Param.BODY)
     private void loginByToken(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
-        replyJsonObject(message, securityDAO.loginByToken(body.getString(PARAM_LOGIN), body.getString(MOBILE_TOKEN), req.getLocale()));
+        securityDAO.loginByToken(body.getString(PARAM_LOGIN), body.getString(MOBILE_TOKEN), req.getLocale(), handleJson(message));
     }
 
     /**
@@ -152,16 +151,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      */
     @Rule(address = USER_BY_LOGIN, method = Constants.GET, logged = true, admin = true, mandatoryParams = PARAM_LOGIN,
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void userByLogin(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        userService.getUserByLogin(req.getParams().get("login").get(0), req.getLocale(), ar -> {
-            if (ar.succeeded()) {
-                message.reply(ar.result().encode());
-            } else {
-                utils.sendError(message, new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
-            }
-        });
+        userService.getUserByLogin(req.getParams().get("login").get(0), req.getLocale(), handleJson(message));
     }
 
     /**
@@ -174,16 +167,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      */
     @Rule(address = USER_INFO, method = Constants.GET, logged = true, mandatoryParams = "id",
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void userInfo(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        userService.getUserInfo(req.getParams().get("id").get(0), ar -> {
-            if (ar.succeeded()) {
-                message.reply(ar.result().encode());
-            } else {
-                utils.sendError(message, new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
-            }
-        });
+        userService.getUserInfo(req.getParams().get("id").get(0), handleJson(message));
     }
 
     /**
@@ -202,13 +189,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
         if (req.getParams().containsKey(SANDBOX_ID_FIELD) && !req.getParams().get(SANDBOX_ID_FIELD).isEmpty()) {
             sandBoxId = req.getParams().get(SANDBOX_ID_FIELD).get(0);
         }
-        userService.getMeta(sandBoxId, ar -> {
-            if (ar.succeeded()) {
-                message.reply(ar.result().encode());
-            } else {
-                utils.sendError(message, new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
-            }
-        });
+        userService.getMeta(sandBoxId, handleJson(message));
     }
 
     /**
@@ -224,13 +205,7 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = CURRENT, method = Constants.GET, logged = true)
     private void currentUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        userService.getUserInfo(req.getUser().get_id(), ar-> {
-            if(ar.succeeded()) {
-                message.reply(ar.result().encode());
-            } else {
-                utils.sendError(message, new QaobeeException(((QaobeeSvcException) ar.cause()).getCode(), ar.cause().getMessage()));
-            }
-        });
+        userService.getUserInfo(req.getUser().get_id(), handleJson(message));
     }
 
     /**
@@ -244,18 +219,18 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiError HTTP_ERROR wrong request method
      */
     @Rule(address = PASSWD_RESET, method = Constants.POST, mandatoryParams = {"id", "code", PASSWD_FIELD},
-            scope = Rule.Param.BODY)
+          scope = Rule.Param.BODY)
     private void passwordReset(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
-        replyBoolean(message, securityDAO.passwordReset(
+        securityDAO.passwordReset(
                 body.getString("captcha"),
                 body.getString("id"),
                 body.getString("code"),
                 body.getString(PASSWD_FIELD),
-                body.getBoolean("byPassActivationCode", false)
-        ));
+                body.getBoolean("byPassActivationCode", false), handleBoolean(message));
     }
+
 
     /**
      * @apiDescription Check activation code supplied in the renew password email
@@ -268,17 +243,20 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status" : true|false, "user" : Object(user)}
      */
     @Rule(address = PASSWD_RENEW_CHK, method = Constants.GET, mandatoryParams = {"id", "code"},
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void passwordRenewCheck(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        securityDAO.passwordRenewCheck(req.getParams().get("id").get(0), req.getParams().get("code").get(0))
-                .done(jsonUser -> {
-                    if (jsonUser == null) {
-                        utils.sendStatus(false, message);
-                    } else {
-                        message.reply(jsonUser.encode());
-                    }
-                }).fail(e -> utils.sendStatus(false, message));
+        securityDAO.passwordRenewCheck(req.getParams().get("id").get(0), req.getParams().get("code").get(0), jsonUser -> {
+            if (jsonUser.succeeded()) {
+                if (jsonUser.result() == null) {
+                    utils.sendStatus(false, message);
+                } else {
+                    message.reply(jsonUser.result().encode());
+                }
+            } else {
+                utils.sendStatus(false, message);
+            }
+        });
     }
 
     /**
@@ -293,9 +271,13 @@ public class UserVerticle extends AbstractGuiceVerticle {
     @Rule(address = PASSWD_RENEW, method = Constants.POST, mandatoryParams = PARAM_LOGIN, scope = Rule.Param.BODY)
     private void passwordRenew(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        securityDAO.passwordRenew(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale())
-                .done(r -> utils.sendStatus(r, message))
-                .fail(e -> utils.sendError(message, new QaobeeException(ExceptionCodes.UNKNOWN_LOGIN, Messages.getString("login.wronglogin", req.getLocale()))));
+        securityDAO.passwordRenew(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale(), r -> {
+            if (r.succeeded()) {
+                utils.sendStatus(r.result(), message);
+            } else {
+                utils.sendError(message, new QaobeeException(ExceptionCodes.UNKNOWN_LOGIN, Messages.getString("login.wronglogin", req.getLocale())));
+            }
+        });
     }
 
     /**
@@ -308,10 +290,10 @@ public class UserVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      */
     @Rule(address = LOGOUT, method = Constants.GET, logged = true, mandatoryParams = Constants.TOKEN,
-            scope = Rule.Param.HEADER)
+          scope = Rule.Param.HEADER)
     private void logout(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyBoolean(message, securityDAO.logout(req.getHeaders().get("token").get(0)));
+        securityDAO.logout(req.getHeaders().get("token").get(0), handleBoolean(message));
     }
 
     /**
@@ -333,11 +315,11 @@ public class UserVerticle extends AbstractGuiceVerticle {
     private void login(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
-        replyJsonObject(message, securityDAO.login(body.getString(PARAM_LOGIN),
+        securityDAO.login(body.getString(PARAM_LOGIN),
                 body.getString(PARAM_PWD),
                 body.getString(MOBILE_TOKEN),
                 body.getString(PARAM_PUSH_ID),
                 body.getString(PARAM_OS),
-                req.getLocale()));
+                req.getLocale(), handleJson(message));
     }
 }

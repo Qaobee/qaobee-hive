@@ -2,8 +2,9 @@ package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.Utils;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -14,8 +15,6 @@ import io.vertx.ext.web.handler.AuthHandler;
 import org.apache.http.protocol.HTTP;
 
 import javax.inject.Inject;
-
-import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 /**
  * The type Abstract route.
@@ -54,7 +53,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
             if (event.succeeded()) {
                 handleResponse(context, event.result());
             } else {
-                utils.handleError(context, (QaobeeSvcException) event.cause());
+                utils.handleError(context, (QaobeeException) event.cause());
             }
         };
     }
@@ -70,7 +69,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
             if (event.succeeded()) {
                 handleResponse(context, event.result());
             } else {
-                utils.handleError(context, (QaobeeSvcException) event.cause());
+                utils.handleError(context, (QaobeeException) event.cause());
             }
         };
     }
@@ -84,7 +83,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      */
     protected void handleResponse(RoutingContext context, JsonObject result) {
         context.response()
-                .putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+                .putHeader(HTTP.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                 .setStatusCode(200)
                 .end(result.encode());
     }
@@ -97,7 +96,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      */
     protected void handleResponse(RoutingContext context, JsonArray result) {
         context.response()
-                .putHeader(HTTP.CONTENT_TYPE, APPLICATION_JSON)
+                .putHeader(HTTP.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                 .setStatusCode(200)
                 .end(result.encode());
     }

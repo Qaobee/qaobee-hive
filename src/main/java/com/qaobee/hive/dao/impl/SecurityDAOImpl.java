@@ -26,12 +26,11 @@ import com.qaobee.hive.dao.PasswordEncryptionService;
 import com.qaobee.hive.dao.ReCaptcha;
 import com.qaobee.hive.dao.SecurityDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
 import io.vertx.core.AsyncResult;
@@ -47,6 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
 
 /**
  * The type Security dao.
@@ -163,10 +163,10 @@ public class SecurityDAOImpl implements SecurityDAO {
 
     @Override
     public void loginByToken(String login, String mobileToken, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
-        CriteriaBuilder cb = new CriteriaBuilder()
-                .add("account.mobileToken", mobileToken)
-                .add(ACCOUNT_LOGIN_FIELD, login.toLowerCase());
-        mongo.findByCriterias(cb.get(), null, null, 0, 0, DBCollections.USER, res -> {
+        JsonObject cb = new JsonObject()
+                .put("account.mobileToken", mobileToken)
+                .put(ACCOUNT_LOGIN_FIELD, login.toLowerCase());
+        mongo.findByCriterias(cb, new ArrayList<>(), "", 0, 0, DBCollections.USER, res -> {
             if (res.succeeded()) {
                 if (res.result().size() != 1) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale))));
@@ -259,7 +259,7 @@ public class SecurityDAOImpl implements SecurityDAO {
 
     @Override
     public void logout(String token, Handler<AsyncResult<Boolean>> resultHandler) {
-        mongo.findByCriterias(new CriteriaBuilder().add("account.token", token).get(), null, null, 0, 0, DBCollections.USER, res -> {
+        mongo.findByCriterias(new JsonObject().put("account.token", token),  new ArrayList<>(), "", 0, 0, DBCollections.USER, res -> {
             if (res.succeeded()) {
                 if (res.result().size() != 1) {
                     resultHandler.handle(Future.succeededFuture(false));

@@ -24,7 +24,6 @@ import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -167,7 +166,7 @@ public class NotificationsRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
-                utils.handleError(context, (QaobeeSvcException) ar.cause());
+                utils.handleError(context, (QaobeeException) ar.cause());
             }
         });
     }
@@ -186,7 +185,7 @@ public class NotificationsRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
-                utils.handleError(context, (QaobeeSvcException) ar.cause());
+                utils.handleError(context, (QaobeeException) ar.cause());
             }
         });
     }

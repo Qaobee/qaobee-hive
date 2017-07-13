@@ -22,7 +22,6 @@ package com.qaobee.hive.technical.utils;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
@@ -45,6 +44,7 @@ public interface Utils {
      * Wrap request request wrapper.
      *
      * @param routingContext the routing context
+     *
      * @return the request wrapper
      */
     RequestWrapper wrapRequest(RoutingContext routingContext);
@@ -63,6 +63,7 @@ public interface Utils {
      *
      * @param allowed méthode accèptée
      * @param tested  méthode testée
+     *
      * @throws NoSuchMethodException si les deux ne correspondent pas
      */
     void testHTTPMetod(String allowed, String tested) throws NoSuchMethodException;
@@ -99,6 +100,7 @@ public interface Utils {
      * @param width    largeur
      * @param height   hauteur
      * @param isSquare carrée
+     *
      * @throws IOException une erreur d'IO
      */
     void saveAndResizeImage(File source, String dest, int width, int height, boolean isSquare) throws IOException;
@@ -110,6 +112,7 @@ public interface Utils {
      * @param dateStyle the date style
      * @param timeStyle the time style
      * @param locale    the locale
+     *
      * @return formated date
      */
     String formatDate(long timestamp, int dateStyle, int timeStyle, String locale);
@@ -120,6 +123,7 @@ public interface Utils {
      * @param key   clef de recherche
      * @param value valeur recherchée
      * @param res   JsonArray à parcourir
+     *
      * @return l 'objet trouvé, null sinon
      */
     JsonObject find(String key, String value, JsonArray res);
@@ -155,6 +159,7 @@ public interface Utils {
      *
      * @param map    request's parameters
      * @param fields array of fields to testBodyParams
+     *
      * @throws QaobeeException explain missing fields
      */
     void testMandatoryParams(Map<String, List<String>> map, String... fields) throws QaobeeException;
@@ -164,6 +169,7 @@ public interface Utils {
      *
      * @param json   request's json body
      * @param fields array of fields to testBodyParams
+     *
      * @throws QaobeeException explain missing fields
      */
     void testMandatoryParams(JsonObject json, String... fields) throws QaobeeException;
@@ -172,6 +178,7 @@ public interface Utils {
      * Is user logged.
      *
      * @param request the request
+     *
      * @return the User
      */
     Future<User> isUserLogged(RequestWrapper request);
@@ -180,6 +187,7 @@ public interface Utils {
      * Is admin.
      *
      * @param request the request
+     *
      * @return the boolean
      */
     Future<User> isLoggedAndAdmin(RequestWrapper request);
@@ -189,21 +197,29 @@ public interface Utils {
      *
      * @param params the params
      * @param fields the fields
+     *
      * @throws QaobeeException the qaobee exception
      */
     void testMandatoryParams(MultiMap params, String... fields) throws QaobeeException;
 
     /**
      * Test mandatory params.
-     *  @param context the context
-     * @param fields  the fields*/
+     *
+     * @param context the context
+     * @param fields  the fields
+     *
+     * @throws QaobeeException the qaobee exception
+     */
     void testMandatoryParams(RoutingContext context, String... fields) throws QaobeeException;
 
     /**
      * Test mandatory params.
+     *
      * @param params  the params
      * @param context the context
      * @param fields  the fields
+     *
+     * @throws QaobeeException the qaobee exception
      */
     void testMandatoryParams(MultiMap params, RoutingContext context, String... fields) throws QaobeeException;
 
@@ -216,12 +232,20 @@ public interface Utils {
     void handleError(RoutingContext context, QaobeeException e);
 
     /**
-     * Handle error.
+     * Test mandatory params.
      *
+     * @param obj     the obj
      * @param context the context
-     * @param e       the e
+     * @param fields  the fields
      */
-    void handleError(RoutingContext context, QaobeeSvcException e);
-
     void testMandatoryParams(JsonObject obj, RoutingContext context, String... fields);
+
+    /**
+     * Gets minimal.
+     *
+     * @param minimal the minimal
+     *
+     * @return the minimal
+     */
+    JsonObject getMinimal(List<String> minimal);
 }

@@ -20,8 +20,8 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.dao.SignupDAO;
-import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -139,12 +139,16 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiGroup Object Status
      */
     @Rule(address = RESEND_MAIL, method = Constants.POST, mandatoryParams = {PARAM_LOGIN},
-            scope = Rule.Param.BODY)
+          scope = Rule.Param.BODY)
     private void resendMail(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        signupDAO.resendMail(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale())
-                .done(r -> utils.sendStatus(r, message))
-                .fail(e -> utils.sendError(message, e));
+        signupDAO.resendMail(new JsonObject(req.getBody()).getString(PARAM_LOGIN), req.getLocale(), ar ->{
+            if(ar.succeeded()) {
+                utils.sendStatus(ar.succeeded(), message);
+            } else {
+                utils.sendError(message, (QaobeeException) ar.cause());
+            }
+        });
     }
 
     /**
@@ -161,8 +165,8 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiHeader {String} token
      */
     @Rule(address = FINALIZE_SIGNUP, method = Constants.POST,
-            mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
-            scope = Rule.Param.BODY)
+          mandatoryParams = {PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE},
+          scope = Rule.Param.BODY)
     private void finalizeSignup(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         final JsonObject body = new JsonObject(req.getBody());
@@ -172,24 +176,32 @@ public class SignupVerticle extends AbstractGuiceVerticle {
                 body.getJsonObject(PARAM_STRUCTURE),
                 body.getJsonObject(PARAM_CATEGORY_AGE),
                 body.getString(COUNTRY_FIELD, "CNTR-250-FR-FRA"),
-                req.getLocale())
-                .done(u -> {
-                    try {
-                        signupDAO.sendRegisterMail(u, req.getLocale()).done(r -> {
-                            JsonObject notification = new JsonObject()
-                                    .put("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), req.getLocale()))
-                                    .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
-                                    .put("senderId", runtime.getString("admin.id")
-                                    );
-                            notificationsService.sendNotification(u.getString("_id"), DBCollections.USER, notification, new JsonArray(), ar -> {
+                req.getLocale(), u -> {
+                    if (u.succeeded()) {
+                        try {
+                            signupDAO.sendRegisterMail(u.result(), req.getLocale(), r -> {
+                                if (r.succeeded()) {
+                                    JsonObject notification = new JsonObject()
+                                            .put("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), req.getLocale()))
+                                            .put("title", Messages.getString("notification.first.connection.title", req.getLocale()))
+                                            .put("senderId", runtime.getString("admin.id")
+                                            );
+                                    notificationsService.sendNotification(u.result().getString("_id"), DBCollections.USER, notification, new JsonArray(), ar -> {
+                                        //empty
+                                    });
+                                    message.reply(u.result().encode());
+                                } else {
+                                    utils.sendError(message, (QaobeeException) r.cause());
+                                }
                             });
-                            message.reply(u.encode());
-                        }).fail(e -> utils.sendError(message, e));
-                    } catch (final QaobeeException e) {
-                        LOG.error(e.getMessage(), e);
-                        utils.sendError(message, e);
+                        } catch (final QaobeeException e) {
+                            LOG.error(e.getMessage(), e);
+                            utils.sendError(message, e);
+                        }
+                    } else {
+                        utils.sendError(message, (QaobeeException) u.cause());
                     }
-                }).fail(e -> utils.sendError(message, e));
+                });
     }
 
     /**
@@ -203,10 +215,10 @@ public class SignupVerticle extends AbstractGuiceVerticle {
      * @apiSuccess {Object} status {"status", true|false}
      */
     @Rule(address = FIRST_CONNECTION_CHECK, method = Constants.GET, mandatoryParams = {PARAM_ID, PARAM_CODE},
-            scope = Rule.Param.REQUEST)
+          scope = Rule.Param.REQUEST)
     private void firstConnectionCheck(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyJsonObject(message, signupDAO.firstConnectionCheck(req.getParams().get(PARAM_ID).get(0), req.getParams().get(PARAM_CODE).get(0), req.getLocale()));
+        signupDAO.firstConnectionCheck(req.getParams().get(PARAM_ID).get(0), req.getParams().get(PARAM_CODE).get(0), req.getLocale(), handleJson(message));
     }
 
     /**
@@ -222,7 +234,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     @Rule(address = ACCOUNT_CHECK, method = Constants.GET, mandatoryParams = {"id", "code"}, scope = Rule.Param.REQUEST)
     private void accountCheck(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        replyBoolean(message, signupDAO.accountCheck(req.getParams().get("id").get(0), req.getParams().get("code").get(0)));
+        signupDAO.accountCheck(req.getParams().get("id").get(0), req.getParams().get("code").get(0), handleBoolean(message));
     }
 
     /**
@@ -241,7 +253,7 @@ public class SignupVerticle extends AbstractGuiceVerticle {
     private void registerUser(Message<String> message) {
         final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
         JsonObject body = new JsonObject(req.getBody());
-        replyJsonObject(message, signupDAO.register(body.getString(PARAM_CAPTCHA), body, req.getLocale()));
+        signupDAO.register(body.getString(PARAM_CAPTCHA), body, req.getLocale(), handleJson(message));
     }
 
     /**
