@@ -29,37 +29,40 @@ public class CRMDaoImpl implements CRMDao {
 
     @Override
     public void registerUser(JsonObject user, boolean firstLogin) {
-        JsonArray members = new JsonArray();
-        String env = "DEV";
-        if (StringUtils.isNotBlank(System.getenv("ENV"))) {
-            env = System.getenv("ENV");
+
+        if (!mailchimp.getBoolean("test", false)) {
+            JsonArray members = new JsonArray();
+            String env = "DEV";
+            if (StringUtils.isNotBlank(System.getenv("ENV"))) {
+                env = System.getenv("ENV");
+            }
+            members.add(new JsonObject()
+                    .put("merge_fields", new JsonObject()
+                            .put("NAME", user.getString("name"))
+                            .put("FIRSTNAME", user.getString("firstname"))
+                            .put("NEVERCONNE", String.valueOf(firstLogin))
+                            .put("ENV", env)
+                    )
+                    .put("status", "subscribed")
+                    .put("email_address", user.getJsonObject("contact").getString("email"))
+            );
+            JsonObject requestBody = new JsonObject()
+                    .put("members", members)
+                    .put("update_existing", true);
+            HttpRequest<Buffer> req = webClient.post(mailchimp.getInteger("port"), mailchimp.getString("host"), mailchimp.getString("path"));
+            if (mailchimp.getInteger("port") == 443) {
+                req.ssl(true);
+            }
+            req.putHeader("Authorization", "Basic " + Base64.encodeBase64String((mailchimp.getString("user") + ":" + mailchimp.getString("key")).getBytes()))
+                    .putHeader(HTTP.CONTENT_TYPE, "application/json")
+                    //    .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody..length()))
+                    .sendJsonObject(requestBody, res -> {
+                        if (res.succeeded()) {
+                            LOG.info(requestBody.encode() + " : ok");
+                        } else {
+                            LOG.error(res.cause().getMessage(), res.cause());
+                        }
+                    });
         }
-        members.add(new JsonObject()
-                .put("merge_fields", new JsonObject()
-                        .put("NAME", user.getString("name"))
-                        .put("FIRSTNAME", user.getString("firstname"))
-                        .put("NEVERCONNE", String.valueOf(firstLogin))
-                        .put("ENV", env)
-                )
-                .put("status", "subscribed")
-                .put("email_address", user.getJsonObject("contact").getString("email"))
-        );
-        JsonObject requestBody = new JsonObject()
-                .put("members", members)
-                .put("update_existing", true);
-        HttpRequest<Buffer> req = webClient.post(mailchimp.getInteger("port"), mailchimp.getString("host"), mailchimp.getString("path"));
-        if (mailchimp.getInteger("port") == 443) {
-            req.ssl(true);
-        }
-        req.putHeader("Authorization", "Basic " + Base64.encodeBase64String((mailchimp.getString("user") + ":" + mailchimp.getString("key")).getBytes()))
-                .putHeader(HTTP.CONTENT_TYPE, "application/json")
-                //    .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody..length()))
-                .sendJsonObject(requestBody, res -> {
-                    if (res.succeeded()) {
-                        LOG.info(requestBody.encode() + " : ok");
-                    } else {
-                        LOG.error(res.cause().getMessage(), res.cause());
-                    }
-                });
     }
 }

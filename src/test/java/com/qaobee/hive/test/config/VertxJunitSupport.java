@@ -25,15 +25,18 @@ import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
 import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.parsing.Parser;
-import io.vertx.core.*;
+import io.vertx.core.DeploymentOptions;
+import io.vertx.core.Future;
+import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.file.FileSystem;
@@ -132,7 +135,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Start mongo server.
      */
     @BeforeClass
-    public static void init() {
+    public static void init(TestContext context) {
         RestAssured.defaultParser = Parser.JSON;
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .addHeader(HttpHeaders.ACCEPT_LANGUAGE, LOCALE)
@@ -203,6 +206,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
             e.printStackTrace();
         }
         async.await(TIMEOUT);
+
     }
 
     /**
@@ -218,13 +222,15 @@ public class VertxJunitSupport implements JSDataMongoTest {
                 if (t != null) {
                     LOG.error(t.getMessage(), t);
                 }
-                vertx.close();
-                JunitMongoSingleton.getInstance().getProcess().stop();
-                async.complete();
+                vertx.close(event -> {
+                    JunitMongoSingleton.getInstance().getProcess().stop();
+                    async.complete();
+                });
             });
         } else {
-            vertx.close();
-            async.complete();
+            vertx.close(event -> {
+                async.complete();
+            });
         }
         async.await(TIMEOUT * 10);
     }

@@ -303,17 +303,16 @@ public class SignupDAOImpl implements SignupDAO {
 
     @Override
     public void finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject struct, JsonObject categoryAge, String countryId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
-        com.qaobee.hive.business.model.commons.users.User userUpdate = Json.decodeValue(jsonUser.encode(), com.qaobee.hive.business.model.commons.users.User.class);
+        User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
         userUpdate.set_id(jsonUser.getString("_id"));
         updateStructure(struct, activityId, structure -> {
             if (structure.succeeded()) {
-                com.qaobee.hive.business.model.commons.referencial.Structure structureObj = Json.decodeValue(structure.result().encode(), com.qaobee.hive.business.model.commons.referencial.Structure.class);
-
+                Structure structureObj = Json.decodeValue(structure.result().encode(),Structure.class);
                 CategoryAge categoryAgeObj = Json.decodeValue(categoryAge.encode(), CategoryAge.class);
                 getUser(userUpdate.get_id(), locale, userRes -> {
                     if (userRes.succeeded()) {
                         try {
-                            com.qaobee.hive.business.model.commons.users.User user = userRes.result();
+                            User user = userRes.result();
                             testAccount(user, activationCode, locale);
                             updateUser(userUpdate, activityId, countryId, structureObj, categoryAgeObj, user, resultHandler);
                         } catch (QaobeeException e) {

@@ -55,7 +55,8 @@
       "user": "qaobee",
       "host": "us13.api.mailchimp.com",
       "port": 443,
-      "path": "/3.0/lists/883987d33d"
+      "path": "/3.0/lists/883987d33d",
+      "test" : true
     },
     "mailer.mod": {
       "test": true,
