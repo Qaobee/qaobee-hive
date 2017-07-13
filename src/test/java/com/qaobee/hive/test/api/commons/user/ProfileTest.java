@@ -50,7 +50,7 @@ public class ProfileTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(u -> {
             u.result().setGender("androgyn");
             given().header(TOKEN, u.result().getAccount().getToken())
-                    .body(Json.encode(u))
+                    .body(Json.encode(u.result()))
                     .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.result().getName()))
@@ -69,7 +69,7 @@ public class ProfileTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(u -> {
             u.result().getAccount().setPasswd("toto");
             given().header(TOKEN, u.result().getAccount().getToken())
-                    .body(Json.encode(u))
+                    .body(Json.encode(u.result()))
                     .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.result().getName()));
@@ -113,7 +113,7 @@ public class ProfileTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             u.result().setGender("androgyn");
-            JsonObject user = new JsonObject(Json.encode(u));
+            JsonObject user = new JsonObject(Json.encode(u.result()));
             user.remove("_id");
 
             given().header(TOKEN, u.result().getAccount().getToken())
@@ -134,7 +134,7 @@ public class ProfileTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             u.result().setGender("androgyn");
-            JsonObject user = new JsonObject(Json.encode(u));
+            JsonObject user = new JsonObject(Json.encode(u.result()));
             user.put("_id", "bla");
 
             given().header(TOKEN, u.result().getAccount().getToken())
@@ -190,7 +190,7 @@ public class ProfileTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             u.result().setName("<&#\"\\-+}]à@");
-            mongo.upsert(new JsonObject(Json.encode(u)), DBCollections.USER, id -> {
+            mongo.upsert(new JsonObject(Json.encode(u.result())), DBCollections.USER, id -> {
                 if (id.succeeded()) {
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .get(BASE_URL + "/pdf")
