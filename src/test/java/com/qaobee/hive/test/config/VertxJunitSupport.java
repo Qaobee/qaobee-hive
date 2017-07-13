@@ -99,7 +99,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
     /**
      * The constant TIMEOUT.
      */
-    protected static final long TIMEOUT = 1000000L;
+    protected static final long TIMEOUT = 5000L;
     private static JsonObject config;
     private static final String POPULATE_WITHOUT = "without";
     private static final String POPULATE_ALL = "all";
