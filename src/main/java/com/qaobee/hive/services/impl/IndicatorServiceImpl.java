@@ -40,7 +40,6 @@ public class IndicatorServiceImpl implements IndicatorService {
     private static final String PARAM_COUNTRY_ID = "countryId";
     @Inject
     private MongoDB mongo;
-    private Vertx vertx;
 
     /**
      * Instantiates a new Indicator.
@@ -49,7 +48,6 @@ public class IndicatorServiceImpl implements IndicatorService {
      */
     public IndicatorServiceImpl(Vertx vertx) {
         super();
-        this.vertx = vertx;
     }
 
     @Override
