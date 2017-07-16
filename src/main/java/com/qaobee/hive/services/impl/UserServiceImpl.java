@@ -26,14 +26,14 @@ import com.qaobee.hive.dao.PasswordEncryptionService;
 import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.dao.TeamDAO;
 import com.qaobee.hive.services.ActivityService;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.SeasonService;
 import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.Utils;
 import io.vertx.core.AsyncResult;
@@ -48,7 +48,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -80,7 +79,6 @@ public class UserServiceImpl implements UserService {
     private TeamDAO teamDAO;
     @Inject
     private ActivityService activityService;
-    private Vertx vertx;
 
     /**
      * Instantiates a new User service.
@@ -89,7 +87,6 @@ public class UserServiceImpl implements UserService {
      */
     public UserServiceImpl(Vertx vertx) {
         super();
-        this.vertx = vertx;
     }
 
     private static void checkUserLogin(String login, String locale) throws QaobeeException {
@@ -215,7 +212,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void existingLogin(String login, Handler<AsyncResult<Boolean>> resultHandler) {
-        mongo.findByCriterias(new JsonObject().put("account.login", login),  new ArrayList<>(), "", 0, 0, DBCollections.USER, res -> {
+        mongo.findByCriterias(new JsonObject().put("account.login", login), new CriteriaOption(), DBCollections.USER, res -> {
             if (res.succeeded()) {
                 resultHandler.handle(Future.succeededFuture(res.result().size() > 0));
             } else {
@@ -270,9 +267,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void getUserByLogin(String login, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         // Creation of request
-        CriteriaBuilder criterias = new CriteriaBuilder();
-        criterias.add("account.login", login.toLowerCase());
-        mongo.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.USER, jsonArray -> {
+        JsonObject criterias = new JsonObject().put("account.login", login.toLowerCase());
+        mongo.findByCriterias(criterias, new CriteriaOption(), DBCollections.USER, jsonArray -> {
             if (jsonArray.succeeded()) {
                 if (jsonArray.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, Messages.getString("login.wronglogin", locale))));

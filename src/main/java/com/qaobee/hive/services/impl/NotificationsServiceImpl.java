@@ -23,6 +23,7 @@ import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.core.*;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -209,7 +210,7 @@ public class NotificationsServiceImpl implements NotificationsService {
     @Override
     public void getList(String id, int start, int limit, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject criterias = new JsonObject().put(TARGET_ID, id).put(DELETED, false);
-        mongo.findByCriterias(criterias, new ArrayList<>(), "timestamp", -1, -1, DBCollections.NOTIFICATION, res -> {
+        mongo.findByCriterias(criterias, new CriteriaOption().withSort("timestamp").withOrder(-1), DBCollections.NOTIFICATION, res -> {
             if (res.succeeded()) {
                 JsonArray notifications = res.result();
                 JsonArray jnotif = new JsonArray();

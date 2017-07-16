@@ -24,6 +24,7 @@ import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -116,7 +117,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         } else {
             cb.put(PARAM_OWNER_ID, loggedUserId);
         }
-        mongo.findByCriterias(cb, new ArrayList<>(), "", -1, -1, DBCollections.SANDBOX, resultJson -> {
+        mongo.findByCriterias(cb, new CriteriaOption(), DBCollections.SANDBOX, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR,
@@ -135,7 +136,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
         JsonObject cb = new JsonObject()
                 .put(PARAM_OWNER_ID, userId)
                 .put("structure." + PARAM_ACTIVITY_ID + "._id", activityId);
-        mongo.findByCriterias(cb, new ArrayList<>(), "", -1, -1, DBCollections.SANDBOX, resultJson -> {
+        mongo.findByCriterias(cb, new CriteriaOption(), DBCollections.SANDBOX, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR,

@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.test.api.sandbox.share;
 
-import com.qaobee.hive.api.Main;
+import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
 import com.qaobee.hive.api.v1.sandbox.share.SB_ShareVerticle;
 import com.qaobee.hive.technical.constantes.DBCollections;
@@ -216,7 +216,7 @@ public class SB_ShareTest extends VertxJunitSupport {
                     .put(SB_ShareVerticle.PARAM_USERID, "12345")
                     .put(SB_ShareVerticle.PARAM_ANSWER_INVITATION, "accepted");
 
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
@@ -263,7 +263,7 @@ public class SB_ShareTest extends VertxJunitSupport {
                     .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
                     .put(SB_ShareVerticle.PARAM_USER_EMAIL, "bla@bla.com")
                     .put(SB_ShareVerticle.PARAM_ROLE_CODE, "acoach");
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
@@ -376,7 +376,7 @@ public class SB_ShareTest extends VertxJunitSupport {
             final JsonObject params = new JsonObject()
                     .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
                     .put(SB_ShareVerticle.PARAM_USERID, "12345");
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);

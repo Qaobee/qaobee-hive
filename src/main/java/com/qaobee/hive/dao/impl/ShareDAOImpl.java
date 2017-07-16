@@ -24,6 +24,7 @@ import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.CompositeFuture;
@@ -31,8 +32,6 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ import java.util.List;
  * The type Share dao.
  */
 public class ShareDAOImpl implements ShareDAO {
-    private static final Logger LOG = LoggerFactory.getLogger(ShareDAOImpl.class);
     private static final String FIELD_ID = "_id";
     private static final String FIELD_OWNER = "owner";
     private static final String FIELD_MEMBERS = "members";
@@ -73,7 +71,7 @@ public class ShareDAOImpl implements ShareDAO {
                 .put(FIELD_SANDBOX_ID, sandbox.getString("_id"))
                 .put(FIELD_STATUS, "waiting")
                 .put("invitationDate", System.currentTimeMillis());
-        mongo.findByCriterias(new JsonObject().put("contact.email", userEmail), new ArrayList<>(), "", -1, 0, DBCollections.USER, invitedRes -> {
+        mongo.findByCriterias(new JsonObject().put("contact.email", userEmail), new CriteriaOption(), DBCollections.USER, invitedRes -> {
             if (invitedRes.succeeded()) {
                 if (invitedRes.result().size() > 0) {
                     invitation.put("userId", invitedRes.result().getJsonObject(0).getString("_id"));
@@ -288,7 +286,7 @@ public class ShareDAOImpl implements ShareDAO {
                 .put(FIELD_MEMBERS, new JsonArray())
                 .put(FIELD_OWNER, new JsonArray());
 
-        mongo.findByCriterias(new JsonObject().put(FIELD_OWNER, userId), new ArrayList<>(), "", -1, 0, DBCollections.SANDBOX, sandboxesRes -> {
+        mongo.findByCriterias(new JsonObject().put(FIELD_OWNER, userId), new CriteriaOption(), DBCollections.SANDBOX, sandboxesRes -> {
             if (sandboxesRes.succeeded()) {
                 JsonArray sandboxes = sandboxesRes.result();
                 JsonObject elemMatch = new JsonObject().put(FIELD_PERSON_ID, userId);
@@ -352,6 +350,6 @@ public class ShareDAOImpl implements ShareDAO {
         if (!"ALL".equals(status)) {
             criterias.put(FIELD_STATUS, status);
         }
-        mongo.findByCriterias(criterias, new ArrayList<>(), "", -1, 0, DBCollections.INVITATION, resultHandler);
+        mongo.findByCriterias(criterias, new CriteriaOption(), DBCollections.INVITATION, resultHandler);
     }
 }

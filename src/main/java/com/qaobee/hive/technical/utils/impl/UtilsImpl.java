@@ -321,13 +321,14 @@ public class UtilsImpl implements Utils {
 
     @Override
     public void handleError(RoutingContext context, QaobeeException e) {
-        e.printStackTrace();
+        LOG.error(String.format("[ %s : %d ] %s", e.getCode().name(), e.getCode().getCode(), e.getMessage()), e);
         context.response().putHeader(HTTP.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                 .setStatusCode(e.getCode().getCode())
                 .end(new JsonObject()
                         .put(Constants.STATUS, false)
                         .put("message", e.getMessage())
-                        .put("code", e.getCode().name()).encode()
+                        .put("code", e.getCode().name())
+                        .encode()
                 );
     }
 

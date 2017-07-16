@@ -24,6 +24,7 @@ import com.qaobee.hive.dao.TeamDAO;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.tools.Messages;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -32,7 +33,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
  * The type Team dao.
@@ -71,7 +71,7 @@ public class TeamDAOImpl implements TeamDAO {
         if (link != null) {
             criteria.put(PARAM_LINK_TEAM_ID, link);
         }
-        mongo.findByCriterias(criteria, new ArrayList<>(), "", -1, -1, DBCollections.TEAM, resultHandler);
+        mongo.findByCriterias(criteria, new CriteriaOption(), DBCollections.TEAM, resultHandler);
     }
 
     @Override

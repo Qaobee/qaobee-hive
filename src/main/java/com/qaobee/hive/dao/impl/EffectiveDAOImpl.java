@@ -24,6 +24,7 @@ import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -31,7 +32,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
  * The type Effective dao.
@@ -74,7 +74,7 @@ public class EffectiveDAOImpl implements EffectiveDAO {
         if (categoryAgeCode != null) {
             criterias.put(PARAM_CATEGORY_AGE_CODE, categoryAgeCode);
         }
-        mongo.findByCriterias(criterias, new ArrayList<>(), "", -1, -1, DBCollections.EFFECTIVE, resultJson -> {
+        mongo.findByCriterias(criterias, new CriteriaOption(), DBCollections.EFFECTIVE, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR,

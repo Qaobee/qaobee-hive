@@ -25,6 +25,7 @@ import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -33,7 +34,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
  * The type Season.
@@ -43,7 +43,6 @@ public class SeasonServiceImpl implements SeasonService {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
     private static final String END_DATE_FIELD = "endDate";
-    private final Vertx vertx;
     @Inject
     private MongoDB mongo;
 
@@ -54,7 +53,6 @@ public class SeasonServiceImpl implements SeasonService {
      */
     public SeasonServiceImpl(Vertx vertx) {
         super();
-        this.vertx = vertx;
     }
 
     @Override
@@ -62,7 +60,7 @@ public class SeasonServiceImpl implements SeasonService {
         JsonObject criterias = new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
                 .put(PARAM_COUNTRY_ID, countryId);
-        mongo.findByCriterias(criterias, new ArrayList<>(), END_DATE_FIELD, -1, -1, DBCollections.SEASON, resultJson -> {
+        mongo.findByCriterias(criterias, new CriteriaOption().withSort(END_DATE_FIELD).withOrder(-1), DBCollections.SEASON, resultJson -> {
             if (resultJson.succeeded()) {
                 long currentDate = System.currentTimeMillis();
                 if (resultJson.result().size() == 0) {
@@ -92,7 +90,7 @@ public class SeasonServiceImpl implements SeasonService {
         JsonObject criterias = new JsonObject()
                 .put(PARAM_ACTIVITY_ID, activityId)
                 .put(PARAM_COUNTRY_ID, countryId);
-        mongo.findByCriterias(criterias, new ArrayList<>(), END_DATE_FIELD, -1, -1, DBCollections.SEASON, resultJson -> {
+        mongo.findByCriterias(criterias, new CriteriaOption().withSort(END_DATE_FIELD).withOrder(-1), DBCollections.SEASON, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));

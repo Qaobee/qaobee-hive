@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.api.v1.commons.users;
 
-import com.qaobee.hive.api.Main;
+import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
 import com.qaobee.hive.services.UserService;
@@ -103,7 +103,7 @@ public class ProfileRoute extends AbstractRoute {
                 } else {
                     handleResponse(context, new JsonObject()
                             .put(HTTP.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
-                            .put(Main.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF)));
+                            .put(MainAPI.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF)));
                 }
             } catch (Throwable e) { // NOSONAR
                 LOG.error(e.getMessage(), e);

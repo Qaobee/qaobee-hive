@@ -25,6 +25,7 @@ import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.tools.Messages;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -33,7 +34,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
  * The type Person dao.
@@ -50,7 +50,7 @@ public class PersonDAOImpl implements PersonDAO {
     @Override
     public void getPersonListBySandbox(String sandboxId, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject criteria = new JsonObject().put(PARAM_SANDBOX_ID, sandboxId);
-        mongo.findByCriterias(criteria,  new ArrayList<>(), "", -1, -1, DBCollections.PERSON, resultJson -> {
+        mongo.findByCriterias(criteria, new CriteriaOption(), DBCollections.PERSON, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No person found for sandboxId (" + sandboxId + ")")));

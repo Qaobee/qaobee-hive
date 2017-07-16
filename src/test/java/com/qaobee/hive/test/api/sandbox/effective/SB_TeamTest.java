@@ -17,7 +17,7 @@
  */
 package com.qaobee.hive.test.api.sandbox.effective;
 
-import com.qaobee.hive.api.Main;
+import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_TeamVerticle;
 import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -93,7 +93,7 @@ public class SB_TeamTest extends VertxJunitSupport {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_TeamVerticle.GET_LIST).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_TeamVerticle.GET_LIST).mandatoryParams());
             final Map<String, String> params = new HashMap<>();
             params.put(SB_TeamVerticle.PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f");
             params.put(SB_TeamVerticle.PARAM_EFFECTIVE_ID, "550b31f925da07681592db23");

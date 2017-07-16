@@ -52,6 +52,12 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      */
     protected Injector injector;
 
+    // Optional - called when verticle is undeployed
+    public void stop() {
+        LOG.info(this.getClass().getName() + " stoped");
+    }
+
+
     /**
      * Inject abstract guice verticle.
      *

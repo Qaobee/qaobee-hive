@@ -73,9 +73,9 @@ public class ProfileTest extends VertxJunitSupport {
                     .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.result().getName()));
-            final JsonObject params = new JsonObject();
-            params.put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin());
-            params.put(UserVerticle.PARAM_PWD, "toto");
+            final JsonObject params = new JsonObject()
+                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserVerticle.PARAM_PWD, "toto");
             given().body(params.encode())
                     .when().post(getURL(UserVerticle.LOGIN))
                     .then().assertThat().statusCode(200)

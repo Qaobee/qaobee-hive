@@ -26,6 +26,7 @@ import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -35,7 +36,6 @@ import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
  * The type Country dao.
@@ -46,11 +46,8 @@ public class CountryServiceImpl implements CountryService {
     @Inject
     private MongoDB mongo;
 
-    private Vertx vertx;
-
     public CountryServiceImpl(Vertx vertx) {
         super();
-        this.vertx = vertx;
     }
 
     @Override
@@ -75,7 +72,7 @@ public class CountryServiceImpl implements CountryService {
         if (StringUtils.isNotBlank(label)) {
             criterias.put(CountryRoute.PARAM_LABEL, label);
         }
-        mongo.findByCriterias(criterias,  new ArrayList<>(), "", -1, -1, DBCollections.COUNTRY, resultHandler);
+        mongo.findByCriterias(criterias, new CriteriaOption(), DBCollections.COUNTRY, resultHandler);
     }
 
     @Override
@@ -95,7 +92,7 @@ public class CountryServiceImpl implements CountryService {
 
     private void getCountries(Handler<AsyncResult<JsonObject>> resultHandler) {
         if (mapCountry.fieldNames().isEmpty()) {
-            mongo.findAll( new ArrayList<>(), "", -1, 0, DBCollections.COUNTRY, resultJson -> {
+            mongo.findAll(new CriteriaOption(), DBCollections.COUNTRY, resultJson -> {
                 if (resultJson.succeeded()) {
                     resultJson.result().forEach(c -> mapCountry.put(((JsonObject) c).getString("_id").split("-")[2], (JsonObject) c));
                     resultHandler.handle(Future.succeededFuture(mapCountry));
@@ -106,6 +103,5 @@ public class CountryServiceImpl implements CountryService {
         } else {
             resultHandler.handle(Future.succeededFuture(mapCountry));
         }
-        ;
     }
 }

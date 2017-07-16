@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.test.api.sandbox.agenda;
 
-import com.qaobee.hive.api.Main;
+import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -119,7 +119,7 @@ public class SB_EventTest extends VertxJunitSupport {
                             .put(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
                     );
 
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.ADD_EVENT).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_EventVerticle.ADD_EVENT).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
@@ -222,7 +222,7 @@ public class SB_EventTest extends VertxJunitSupport {
                     .put(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
                     .put(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
 
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.GET_LIST).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_EventVerticle.GET_LIST).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
@@ -380,7 +380,7 @@ public class SB_EventTest extends VertxJunitSupport {
                     .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
                     .body(SB_EventVerticle.PARAM_LABEL, is("Amical")).extract().asString());
             event.put(SB_EventVerticle.PARAM_LABEL, "toto");
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_EventVerticle.UPDATE).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_EventVerticle.UPDATE).mandatoryParams());
             event.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(event.encode());
                 params2.remove(k);

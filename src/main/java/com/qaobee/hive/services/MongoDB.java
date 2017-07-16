@@ -20,6 +20,7 @@
 package com.qaobee.hive.services;
 
 import com.qaobee.hive.services.impl.MongoDBImpl;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
@@ -46,7 +47,6 @@ public interface MongoDB {
      * Create mongo db.
      *
      * @param vertx the vertx
-     *
      * @return the mongo db
      */
     static MongoDB create(Vertx vertx) {
@@ -58,7 +58,6 @@ public interface MongoDB {
      *
      * @param vertx   the vertx
      * @param address the address
-     *
      * @return the mongo db
      */
     static MongoDB createProxy(Vertx vertx, String address) {
@@ -91,7 +90,7 @@ public interface MongoDB {
      * @param collection    the collection
      * @param resultHandler the result handler
      */
-    void  getById(String id, String collection, Handler<AsyncResult<JsonObject>> resultHandler);
+    void getById(String id, String collection, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
      * Gets by id.
@@ -106,27 +105,21 @@ public interface MongoDB {
     /**
      * Find by criterias.
      *
-     * @param criteria      the criteria
-     * @param fields        the fields
-     * @param sort          the sort
-     * @param order         the order
-     * @param limit         the limit
-     * @param collection    the collection
-     * @param resultHandler the result handler
+     * @param criteria       the criteria
+     * @param criteriaOption the criteria option
+     * @param collection     the collection
+     * @param resultHandler  the result handler
      */
-    void findByCriterias(JsonObject criteria, List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler);
+    void findByCriterias(JsonObject criteria, CriteriaOption criteriaOption, String collection, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Find all.
      *
-     * @param fields        the fields
-     * @param sort          the sort
-     * @param order         the order
-     * @param limit         the limit
-     * @param collection    the collection
-     * @param resultHandler the result handler
+     * @param criteriaOption the criteria option
+     * @param collection     the collection
+     * @param resultHandler  the result handler
      */
-    void findAll(List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler);
+    void findAll(CriteriaOption criteriaOption, String collection, Handler<AsyncResult<JsonArray>> resultHandler);
 
     /**
      * Aggregate.

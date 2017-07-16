@@ -63,12 +63,12 @@ import java.util.*;
  *
  * @author Xavier.Marin
  */
-public class Main extends AbstractGuiceVerticle {
+public class MainAPI extends AbstractGuiceVerticle {
     /**
      * The constant FILE_SERVE.
      */
     public static final String FILE_SERVE = "fileserve";
-    private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MainAPI.class);
     private static final String MESSAGE = "message";
     private static final Map<String, Rule> rules = new HashMap<>();
     private static final String HTTP_CODE = "httpCode";
@@ -104,7 +104,7 @@ public class Main extends AbstractGuiceVerticle {
                     .putHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(f.length()));
             routingContext.response().sendFile(f.getAbsolutePath());
         } else {
-            routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON);
+            routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE.toString(), HttpHeaderValues.APPLICATION_JSON);
             routingContext.response().end(response);
         }
     }
@@ -153,7 +153,7 @@ public class Main extends AbstractGuiceVerticle {
                     .allowedHeader("uid")
             );
         }
-        router.route().path("/*").produces("application/json").handler(Main::jsonHandler);
+        router.route().path("/*").produces("application/json").handler(MainAPI::jsonHandler);
         router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
         VertxRoute.Loader.getRoutesInPackage("com.qaobee.hive.api")
                 .entrySet().stream().sorted(Comparator.comparingInt(e -> e.getKey().order()))
@@ -169,6 +169,7 @@ public class Main extends AbstractGuiceVerticle {
                 );
         // API Rest
         router.routeWithRegex("^/api/.*").handler(this::handleAPIRequest);
+        router.route().last().handler(MainAPI::manage404Error);
         // Load Verticles
         runWebServer(loadVerticles(), router).setHandler(r -> {
             if (r.succeeded()) {
@@ -285,6 +286,7 @@ public class Main extends AbstractGuiceVerticle {
     private void handleResponse(AsyncResult<Message<Object>> message, RoutingContext context) {
         if (message.succeeded()) {
             final String response = (String) message.result().body();
+            System.out.println(response);
             if (response.startsWith("[") || !response.startsWith("{")) {
                 handleJsonArray(context, response);
             } else {

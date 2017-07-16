@@ -23,6 +23,7 @@ import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
@@ -30,7 +31,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 /**
  * The type Activity service.
@@ -41,8 +41,6 @@ public class ActivityServiceImpl implements ActivityService {
     @Inject
     private MongoDB mongo;
 
-    private Vertx vertx;
-
     /**
      * Instantiates a new Activity service.
      *
@@ -50,18 +48,17 @@ public class ActivityServiceImpl implements ActivityService {
      */
     public ActivityServiceImpl(Vertx vertx) {
         super();
-        this.vertx = vertx;
     }
 
     @Override
     public void getEnabled(Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject criterias = new JsonObject().put("enable", true);
-        mongo.findByCriterias(criterias,  new ArrayList<>(), "", -1, -1, DBCollections.ACTIVITY, resultHandler);
+        mongo.findByCriterias(criterias, new CriteriaOption(), DBCollections.ACTIVITY, resultHandler);
     }
 
     @Override
     public void getActivityList(Handler<AsyncResult<JsonArray>> resultHandler) {
-        mongo.findByCriterias(new JsonObject(),  new ArrayList<>(), "", -1, -1, DBCollections.ACTIVITY, resultHandler);
+        mongo.findByCriterias(new JsonObject(), new CriteriaOption(), DBCollections.ACTIVITY, resultHandler);
     }
 
     @Override

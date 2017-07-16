@@ -21,12 +21,13 @@ package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgRoute;
 import com.qaobee.hive.services.ActivityCfgService;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
@@ -36,7 +37,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 
 
 @ProxyService(address = ActivityCfgService.ADDRESS, iface = ActivityCfgService.class)
@@ -47,11 +47,8 @@ public class ActivityCfgServiceImpl implements ActivityCfgService {
     @Inject
     private MongoDB mongoDB;
 
-    private Vertx vertx;
-
     public ActivityCfgServiceImpl(Vertx vertx) {
         super();
-        this.vertx = vertx;
     }
 
     /**
@@ -109,7 +106,7 @@ public class ActivityCfgServiceImpl implements ActivityCfgService {
                 .add(ActivityCfgRoute.PARAM_COUNTRY_ID, countryId)
                 .between("startDate", "endDate", dateRef);
         // Call to mongo
-        mongoDB.findByCriterias(criterias.get(),  new ArrayList<>(), "", -1, -1, DBCollections.ACTIVITY_CFG, res -> {
+        mongoDB.findByCriterias(criterias.get(), new CriteriaOption(), DBCollections.ACTIVITY_CFG, res -> {
             if (res.succeeded()) {
                 if (res.result().size() > 0) {
                     resultHandler.handle(Future.succeededFuture(res.result().getJsonObject(0)));

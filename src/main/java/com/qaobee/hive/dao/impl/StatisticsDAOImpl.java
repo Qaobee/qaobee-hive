@@ -22,6 +22,7 @@ package com.qaobee.hive.dao.impl;
 import com.qaobee.hive.dao.StatisticsDAO;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -161,7 +162,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
 
     @Override
     public void getListForEvent(String eventId, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.findByCriterias(new JsonObject().put(EVENT_ID_FIELD, eventId), new ArrayList<>(), "", -1, -1, DBCollections.STATS, res -> {
+        mongo.findByCriterias(new JsonObject().put(EVENT_ID_FIELD, eventId), new CriteriaOption(), DBCollections.STATS, res -> {
             if (res.succeeded()) {
                 resultHandler.handle(Future.succeededFuture(new JsonObject().put(EVENT_ID_FIELD, eventId).put(STAT_FIELD, res.result())));
             } else {

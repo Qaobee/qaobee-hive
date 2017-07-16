@@ -17,16 +17,49 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao;
+package com.qaobee.hive.services;
 
+import com.qaobee.hive.services.impl.SignupServiceImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Signup dao.
  */
-public interface SignupDAO {
+@ProxyGen
+@VertxGen
+public interface SignupService {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.Signup.service";
+
+    /**
+     * Create structure.
+     *
+     * @param vertx the vertx
+     * @return the structure
+     */
+    static SignupService create(Vertx vertx) {
+        return new SignupServiceImpl(vertx);
+    }
+
+    /**
+     * Create proxy signup service.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     * @return the signup service
+     */
+    static SignupService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(SignupService.class, vertx, address);
+    }
+
     /**
      * Finalize signup.
      *

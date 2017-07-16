@@ -22,6 +22,7 @@ import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.utils.Utils;
 import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import io.vertx.core.AsyncResult;
@@ -32,7 +33,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.FindOptions;
 import io.vertx.ext.mongo.WriteOption;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -47,15 +47,13 @@ public class MongoDBImpl implements MongoDB {
     @Inject
     private Utils utils;
 
-    private Vertx vertx;
-
     /**
      * Instantiates a new Mongo db.
      *
      * @param vertx the vertx
      */
     public MongoDBImpl(Vertx vertx) {
-        this.vertx = vertx;
+        super();
     }
 
     @Override
@@ -111,7 +109,7 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
-    public void findByCriterias(JsonObject criteria, List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
+    public void findByCriterias(JsonObject criteria, CriteriaOption criteriaOption, String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject query = new JsonObject();
         if (criteria.size() > 0) {
             final JsonArray and = new JsonArray();
@@ -125,14 +123,18 @@ public class MongoDBImpl implements MongoDB {
             query = new JsonObject().put("$and", and);
         }
         FindOptions options = new FindOptions();
-        if (!fields.isEmpty()) {
-            options.setFields(utils.getMinimal(fields));
+        if (criteriaOption.toJson().containsKey("fields")) {
+            final JsonObject map = new JsonObject();
+            for (Object key : criteriaOption.toJson().getJsonArray("fields")) {
+                map.put((String) key, Boolean.TRUE);
+            }
+            options.setFields(map);
         }
-        if (limit > 0) {
-            options.setLimit(limit);
+        if (criteriaOption.toJson().containsKey("limit")) {
+            options.setLimit(criteriaOption.toJson().getInteger("limit"));
         }
-        if (StringUtils.isNotBlank(sort)) {
-            options.setSort(new JsonObject().put(sort, order));
+        if (criteriaOption.toJson().containsKey("sort")) {
+            options.setSort(new JsonObject().put(criteriaOption.toJson().getString("sort"), criteriaOption.toJson().getInteger("order", -1)));
         }
         mongoClient.findWithOptions(collection, query, options, res -> {
             if (res.succeeded()) {
@@ -146,8 +148,8 @@ public class MongoDBImpl implements MongoDB {
     }
 
     @Override
-    public void findAll(List<String> fields, String sort, int order, int limit, String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
-        findByCriterias(new JsonObject(), fields, sort, order, limit, collection, resultHandler);
+    public void findAll(CriteriaOption criteriaOption, String collection, Handler<AsyncResult<JsonArray>> resultHandler) {
+        findByCriterias(new JsonObject(), criteriaOption, collection, resultHandler);
     }
 
     @Override

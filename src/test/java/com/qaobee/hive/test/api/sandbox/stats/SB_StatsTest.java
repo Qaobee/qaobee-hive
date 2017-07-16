@@ -17,7 +17,7 @@
  **/
 package com.qaobee.hive.test.api.sandbox.stats;
 
-import com.qaobee.hive.api.Main;
+import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.sandbox.stats.SB_StatisticsVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -96,7 +96,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .put(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000L)
                     .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
                     .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
@@ -171,7 +171,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .put(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000L)
                     .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
                     .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_StatisticsVerticle.GET_STAT_GROUPBY).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_StatisticsVerticle.GET_STAT_GROUPBY).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
@@ -246,7 +246,7 @@ public class SB_StatsTest extends VertxJunitSupport {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_StatisticsVerticle.ADD_STAT).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_StatisticsVerticle.ADD_STAT).mandatoryParams());
             JsonObject s = generateStat(user.result(), "fake", 1);
             s.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(s.encode());

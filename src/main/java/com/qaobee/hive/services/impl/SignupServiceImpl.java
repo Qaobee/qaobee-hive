@@ -17,7 +17,7 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.api.v1.commons.utils.CRMVerticle;
 import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
@@ -36,12 +36,14 @@ import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.dao.ReCaptcha;
-import com.qaobee.hive.dao.SignupDAO;
+import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
+import com.qaobee.hive.services.SignupService;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.services.StructureService;
 import com.qaobee.hive.services.UserService;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -65,52 +67,42 @@ import java.util.*;
 /**
  * The type Signup dao.
  */
-public class SignupDAOImpl implements SignupDAO {
-    private static final Logger LOG = LoggerFactory.getLogger(SignupDAOImpl.class);
+@ProxyService(address = SignupService.ADDRESS, iface = SignupService.class)
+public class SignupServiceImpl implements SignupService {
+    private static final Logger LOG = LoggerFactory.getLogger(SignupServiceImpl.class);
     private static final String COUNTRY_FIELD = "country";
     private static final String PARAMERTER_FIELD = "parametersSignup";
     private static final String PARAM_PLAN = "plan";
     private final static Random RANDOM = new Random();
+    private Vertx vertx;
 
-    private final ActivityService activityService;
-    private final MongoDB mongo;
-    private final CountryService countryService;
-    private final UserService userService;
-    private final StructureService structureService;
-    private final ReCaptcha reCaptcha;
-    private final JsonObject runtime;
-    private final Vertx vertx;
-    private final MailUtils mailUtils;
-    private final TemplatesDAO templatesDAO;
-
+    @Inject
+    private ActivityService activityService;
+    @Inject
+    private MongoDB mongo;
+    @Inject
+    private CountryService countryService;
+    @Inject
+    private UserService userService;
+    @Inject
+    private StructureService structureService;
+    @Inject
+    private ReCaptcha reCaptcha;
+    @Inject
+    @Named("runtime")
+    private JsonObject runtime;
+    @Inject
+    private MailUtils mailUtils;
+    @Inject
+    private TemplatesDAO templatesDAO;
 
     /**
-     * Instantiates a new Signup dao.
+     * Instantiates a new Signup service.
      *
-     * @param activityService  the activity dao
-     * @param mongo            the mongo
-     * @param countryService   the country dao
-     * @param userService      the user dao
-     * @param structureService the structure dao
-     * @param reCaptcha        the re captcha
-     * @param runtime          the runtime
-     * @param mailUtils        the mail utils
-     * @param templatesDAO     the templates dao
-     * @param vertx            the vertx
+     * @param vertx the vertx
      */
-    @Inject
-    public SignupDAOImpl(ActivityService activityService, MongoDB mongo, CountryService countryService, UserService userService, // NOSONAR
-                         StructureService structureService, ReCaptcha reCaptcha, @Named("runtime") JsonObject runtime,
-                         MailUtils mailUtils, TemplatesDAO templatesDAO, Vertx vertx) {
-        this.activityService = activityService;
-        this.mongo = mongo;
-        this.countryService = countryService;
-        this.userService = userService;
-        this.structureService = structureService;
-        this.reCaptcha = reCaptcha;
-        this.mailUtils = mailUtils;
-        this.templatesDAO = templatesDAO;
-        this.runtime = runtime;
+    public SignupServiceImpl(Vertx vertx) {
+        super();
         this.vertx = vertx;
     }
 
@@ -145,7 +137,7 @@ public class SignupDAOImpl implements SignupDAO {
     }
 
     private void proceedRegister(JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
-        final com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(userJson.encode(), com.qaobee.hive.business.model.commons.users.User.class);
+        final User user = Json.decodeValue(userJson.encode(), User.class);
         // Check user informations
         userService.checkUserInformations(userJson, locale, ar -> {
             if (ar.succeeded()) {
@@ -225,17 +217,18 @@ public class SignupDAOImpl implements SignupDAO {
         });
     }
 
-    private static void testAccount(com.qaobee.hive.business.model.commons.users.User user, String activationCode, String locale) throws QaobeeException {
+    private static void testAccount(User user, String activationCode, String locale, Handler<AsyncResult<Void>> resultHandler) {
         if (user.getAccount().isActive()) {
-            throw new QaobeeException(ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", locale));
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.already.active", locale))));
         } else if (!user.getAccount().isFirstConnexion()) {
-            throw new QaobeeException(ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", locale));
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.first.done", locale))));
         } else if (!user.getAccount().getActivationCode().equals(activationCode)) {
-            throw new QaobeeException(ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", locale));
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BUSINESS_ERROR, Messages.getString("user.activationcode.wrong", locale))));
         }
+        resultHandler.handle(Future.succeededFuture());
     }
 
-    private Future<Void> addPlayer(JsonObject player, com.qaobee.hive.business.model.commons.referencial.Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, List<String> listPersonsId) {
+    private Future<Void> addPlayer(JsonObject player, Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, List<String> listPersonsId) {
         Future<Void> deferred = Future.future();
         List<Future> promises = new ArrayList<>();
         for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
@@ -279,10 +272,10 @@ public class SignupDAOImpl implements SignupDAO {
         return deferred;
     }
 
-    private void getUser(String id, String locale, Handler<AsyncResult<com.qaobee.hive.business.model.commons.users.User>> resultHandler) {
+    private void getUser(String id, String locale, Handler<AsyncResult<User>> resultHandler) {
         userService.getUser(id, ar -> {
             if (ar.succeeded()) {
-                resultHandler.handle(Future.succeededFuture(Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class)));
+                resultHandler.handle(Future.succeededFuture(Json.decodeValue(ar.result().encode(), User.class)));
             } else {
                 resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString("login.wronglogin", locale))));
             }
@@ -307,18 +300,18 @@ public class SignupDAOImpl implements SignupDAO {
         userUpdate.set_id(jsonUser.getString("_id"));
         updateStructure(struct, activityId, structure -> {
             if (structure.succeeded()) {
-                Structure structureObj = Json.decodeValue(structure.result().encode(),Structure.class);
+                Structure structureObj = Json.decodeValue(structure.result().encode(), Structure.class);
                 CategoryAge categoryAgeObj = Json.decodeValue(categoryAge.encode(), CategoryAge.class);
                 getUser(userUpdate.get_id(), locale, userRes -> {
                     if (userRes.succeeded()) {
-                        try {
-                            User user = userRes.result();
-                            testAccount(user, activationCode, locale);
-                            updateUser(userUpdate, activityId, countryId, structureObj, categoryAgeObj, user, resultHandler);
-                        } catch (QaobeeException e) {
-                            LOG.error(e.getMessage(), e);
-                            resultHandler.handle(Future.failedFuture(e));
-                        }
+                        User user = userRes.result();
+                        testAccount(user, activationCode, locale, ar -> {
+                            if (ar.succeeded()) {
+                                updateUser(userUpdate, activityId, countryId, structureObj, categoryAgeObj, user, resultHandler);
+                            } else {
+                                resultHandler.handle(Future.failedFuture(ar.cause()));
+                            }
+                        });
                     } else {
                         resultHandler.handle(Future.failedFuture(userRes.cause()));
                     }
@@ -334,26 +327,26 @@ public class SignupDAOImpl implements SignupDAO {
     public void firstConnectionCheck(String id, String activationCode, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         getUser(id, locale, userRes -> {
             if (userRes.succeeded()) {
-                try {
-                    testAccount(userRes.result(), activationCode, locale);
-                    User user = userRes.result();
-                    user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
-                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                    // MaJ User
-                    user.getAccount().setActive(true);
-                    user.getAccount().setFirstConnexion(false);
-                    mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
-                        if (userId.succeeded()) {
-                            vertx.eventBus().send(CRMVerticle.UPDATE, new JsonObject(Json.encode(user)));
-                            resultHandler.handle(Future.succeededFuture(new JsonObject(Json.encode(user))));
-                        } else {
-                            resultHandler.handle(Future.failedFuture(userId.cause()));
-                        }
-                    });
-                } catch (QaobeeException e) {
-                    LOG.error(e.getMessage(), e);
-                    resultHandler.handle(Future.failedFuture(e));
-                }
+                testAccount(userRes.result(), activationCode, locale, ar -> {
+                    if (ar.succeeded()) {
+                        User user = userRes.result();
+                        user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
+                        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                        // MaJ User
+                        user.getAccount().setActive(true);
+                        user.getAccount().setFirstConnexion(false);
+                        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
+                            if (userId.succeeded()) {
+                                vertx.eventBus().send(CRMVerticle.UPDATE, new JsonObject(Json.encode(user)));
+                                resultHandler.handle(Future.succeededFuture(new JsonObject(Json.encode(user))));
+                            } else {
+                                resultHandler.handle(Future.failedFuture(userId.cause()));
+                            }
+                        });
+                    } else {
+                        resultHandler.handle(Future.failedFuture(ar.cause()));
+                    }
+                });
             } else {
                 resultHandler.handle(Future.failedFuture(userRes.cause()));
             }
@@ -478,7 +471,6 @@ public class SignupDAOImpl implements SignupDAO {
     }
 
     private void createPlayers(JsonArray tabParametersSignup, Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
-
         List<String> listPersonsId = new ArrayList<>();
         List<Future> promisesPlayers = new ArrayList<>();
         JsonObject parametersSignup = tabParametersSignup.getJsonObject(0);

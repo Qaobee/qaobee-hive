@@ -20,6 +20,7 @@ package com.qaobee.hive.test.config;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
@@ -44,6 +45,7 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.Timeout;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import org.apache.http.HttpHeaders;
 import org.junit.*;
@@ -115,6 +117,8 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     @Rule
     public TestName name = new TestName();
+    @Rule
+    public Timeout globalTimeout = Timeout.millis(TIMEOUT);
 
     /**
      * The Mongo.
@@ -130,6 +134,26 @@ public class VertxJunitSupport implements JSDataMongoTest {
     private ActivityService activityService;
     @Inject
     private CountryService countryService;
+
+    /**
+     * Gets url.
+     *
+     * @param busAddress the bus address
+     * @return the url
+     */
+    protected String getURL(String busAddress) {
+        return BASE_URL + "/api/v" + busAddress.replaceAll("\\.", "/");
+    }
+
+    /**
+     * Gets base url.
+     *
+     * @param s the s
+     * @return the base url
+     */
+    protected static String getBaseURL(String s) {
+        return BASE_URL + "/api/" + Module.VERSION + s;
+    }
 
     /**
      * Start mongo server.
@@ -154,28 +178,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
     }
 
     /**
-     * Gets url.
-     *
-     * @param busAddress the bus address
-     *
-     * @return the url
-     */
-    protected String getURL(String busAddress) {
-        return BASE_URL + "/api/v" + busAddress.replaceAll("\\.", "/");
-    }
-
-    /**
-     * Gets base url.
-     *
-     * @param s the s
-     *
-     * @return the base url
-     */
-    protected static String getBaseURL(String s) {
-        return BASE_URL + "/api/" + Module.VERSION + s;
-    }
-
-    /**
      * Prints the info.
      *
      * @param context the context
@@ -191,22 +193,28 @@ public class VertxJunitSupport implements JSDataMongoTest {
             JunitMongoSingleton.getInstance().startServer(config);
             LOG.info("Embeded MongoDB started");
 
-            vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config).setWorker(false), ar -> {
+            vertx.deployVerticle(MainAPI.class.getName(), new DeploymentOptions().setConfig(config).setWorker(false), ar -> {
                 if (ar.failed()) {
                     ar.cause().printStackTrace();
                 }
                 vertx.exceptionHandler(context.exceptionHandler());
                 Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
                 injector.injectMembers(this);
-                LOG.info("About to execute : " + name.getMethodName());
-                async.complete();
+                if (mongoClientCustom != null && mongoClientCustom.getDB() != null && mongoClientCustom.getDB().getDatabase("hive") != null) {
+                    mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
+                        if (t != null) {
+                            LOG.error(t.getMessage(), t);
+                        }
+                        LOG.info("About to execute : " + name.getMethodName());
+                        async.complete();
+                    });
+                }
             });
         } catch (IOException e) {
             Assert.fail(e.getMessage());
             e.printStackTrace();
         }
         async.await(TIMEOUT);
-
     }
 
     /**
@@ -216,23 +224,9 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     @After
     public void cleanDatas(TestContext context) {
-        Async async = context.async();
-        if (mongoClientCustom != null && mongoClientCustom.getDB() != null && mongoClientCustom.getDB().getDatabase("hive") != null) {
-            mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
-                if (t != null) {
-                    LOG.error(t.getMessage(), t);
-                }
-                vertx.close(event -> {
-                    JunitMongoSingleton.getInstance().getProcess().stop();
-                    async.complete();
-                });
-            });
-        } else {
-            vertx.close(event -> {
-                async.complete();
-            });
-        }
-        async.await(TIMEOUT * 10);
+        LOG.info("Closing VertX");
+        vertx.close();
+        JunitMongoSingleton.getInstance().getProcess().stop();
     }
 
 
@@ -284,7 +278,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged user.
      *
      * @param userId the user id
-     *
      * @return the user
      */
     protected Future<User> generateLoggedUser(String userId) {
@@ -326,7 +319,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged admin user.
      *
      * @param userId the user id
-     *
      * @return the user
      */
     protected Future<User> generateLoggedAdminUser(String userId) {
@@ -354,7 +346,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @param address the address
      * @param query   the query
-     *
      * @return the json object
      */
     protected Future<JsonObject> sendOnBus(String address, JsonObject query) {
@@ -452,7 +443,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
-     *
      * @return the activity
      */
     protected Future<JsonObject> getActivity(String id) {
@@ -471,7 +461,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
-     *
      * @return the country
      */
     protected Future<JsonObject> getCountry(String id) {

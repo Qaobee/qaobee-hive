@@ -17,7 +17,7 @@
  */
 package com.qaobee.hive.test.api.sandbox.stats;
 
-import com.qaobee.hive.api.Main;
+import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
 import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -111,7 +111,7 @@ public class SB_CollectTest extends VertxJunitSupport {
 
             final JsonObject Collect = generateCollect(event);
 
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollectVerticle.ADD_COLLECT).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_CollectVerticle.ADD_COLLECT).mandatoryParams());
             Collect.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(Collect.encode());
                 params2.remove(k);
@@ -214,7 +214,7 @@ public class SB_CollectTest extends VertxJunitSupport {
             long endDate = System.currentTimeMillis();
             collect.put("endDate", endDate);
 
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollectVerticle.UPDATE).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_CollectVerticle.UPDATE).mandatoryParams());
             collect.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(collect.encode());
                 params2.remove(k);
@@ -297,7 +297,7 @@ public class SB_CollectTest extends VertxJunitSupport {
                     .put(SB_CollectVerticle.PARAM_SANDBOX_ID, "561ec20b409937a6b439d4e9")
                     .put(SB_CollectVerticle.PARAM_EFFECTIVE_ID, "561ec4d0409937a6b439d4ea");
 
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_CollectVerticle.GET_LIST).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_CollectVerticle.GET_LIST).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);

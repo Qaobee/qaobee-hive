@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.test.api.sandbox.effective;
 
-import com.qaobee.hive.api.Main;
+import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_EffectiveVerticle;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_PersonVerticle;
 import com.qaobee.hive.technical.constantes.DBCollections;
@@ -104,7 +104,7 @@ public class SB_PersonTest extends VertxJunitSupport {
                     new String[]{"550a05dadb8f8b6e2f51f4db", "550a05e3db8f8b6e2f51f4dc", "550a05e9db8f8b6e2f51f4dd", "550a05f7db8f8b6e2f51f4de", "550a0600db8f8b6e2f51f4df", "550a0606db8f8b6e2f51f4e0",
                             "550a060ddb8f8b6e2f51f4e1", "550a0614db8f8b6e2f51f4e2", "550a061bdb8f8b6e2f51f4e3", "550a0620db8f8b6e2f51f4e4", "550a0620db8f8b6e2f51f4e5"})));
             params.put(SB_PersonVerticle.PARAM_LIST_FIELD, new JsonArray(Arrays.asList(new String[]{"_id", "name", "firstname", "avatar", "status"})));
-            List<String> mandatoryParams = Arrays.asList(Main.getRules().get(SB_PersonVerticle.GET_LIST).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_PersonVerticle.GET_LIST).mandatoryParams());
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
