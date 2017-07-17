@@ -20,7 +20,7 @@ package com.qaobee.hive.test.config;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.qaobee.hive.api.MainAPI;
+import com.qaobee.hive.verticles.CoordinatorVerticle;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
@@ -191,7 +191,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
             JunitMongoSingleton.getInstance().startServer(config);
             LOG.info("Embeded MongoDB started");
 
-            vertx.deployVerticle(MainAPI.class.getName(), new DeploymentOptions().setConfig(config).setWorker(false), ar -> {
+            vertx.deployVerticle(CoordinatorVerticle.class.getName(), new DeploymentOptions().setConfig(config).setWorker(false), ar -> {
                 if (ar.failed()) {
                     ar.cause().printStackTrace();
                 }

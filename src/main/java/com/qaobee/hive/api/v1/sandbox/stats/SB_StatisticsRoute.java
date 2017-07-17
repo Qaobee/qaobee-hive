@@ -19,47 +19,29 @@
 package com.qaobee.hive.api.v1.sandbox.stats;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.dao.StatisticsDAO;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import io.vertx.core.Future;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonArray;
+import com.qaobee.hive.services.StatisticsService;
+import com.qaobee.hive.technical.annotations.VertxRoute;
+import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 
 /**
- * The type Sb statistics verticle.
+ * The type Sb statistics Route.
  *
  * @author cke
  */
-@DeployableVerticle
-public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
-    /**
-     * Handler for average rate for one or many indicator and for one or many person, group by PARAM_LIST_GROUPBY
-     */
-    public static final String GET_STAT_GROUPBY = Module.VERSION + ".sandbox.stats.statistics.getStatGroupBy";
-    /**
-     * Handler for individual list of values for a stat
-     */
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/stats/statistics")
+public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
+/*    public static final String GET_STAT_GROUPBY = Module.VERSION + ".sandbox.stats.statistics.getStatGroupBy";
     public static final String GET_LISTDETAIL_VALUES = Module.VERSION + ".sandbox.stats.statistics.getListDetailValue";
-    /**
-     * Handler for adding a new stat
-     */
     public static final String ADD_STAT = Module.VERSION + ".sandbox.stats.statistics.add";
-    /**
-     * Handler for adding a set of stat
-     */
     public static final String ADD_STAT_BULK = Module.VERSION + ".sandbox.stats.statistics.addBulk";
-    /**
-     * The constant GET_STATS.
-     */
-    public static final String GET_STATS = Module.VERSION + ".sandbox.stats.statistics";
+    public static final String GET_STATS = Module.VERSION + ".sandbox.stats.statistics";*/
+
     /**
      * List of Indicator code
      */
@@ -76,28 +58,48 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * End date
      */
     public static final String PARAM_END_DATE = "endDate";
+    public static final String PARAM_AGGREGAT = "aggregat";
     private static final String PARAM_VALUES = "values";
     private static final String PARAM_LIST_SHOOTSEQID = "listShootSeqId";
-    private static final String PARAM_AGGREGAT = "aggregat";
     private static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
     private static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
     private static final String PARAM_LIMIT_RESULT = "limitResult";
-    private static final String OWNER_FIELD = "owner";
-    private static final String CODE_FIELD = "code";
-    private static final String TIMER_FIELD = "timer";
+    public static final String OWNER_FIELD = "owner";
+    public static final String CODE_FIELD = "code";
+    public static final String TIMER_FIELD = "timer";
 
     @Inject
-    private StatisticsDAO statisticsDAO;
+    private StatisticsService statisticsService;
 
     @Override
-    public void start(Future<Void> startFuture) {
-        inject(this)
-                .add(GET_STAT_GROUPBY, this::getStatsGroupedBy)
-                .add(GET_LISTDETAIL_VALUES, this::getListDetailValue)
-                .add(ADD_STAT, this::addStat)
-                .add(GET_STATS, this::getListForEvent)
-                .add(ADD_STAT_BULK, this::addBulk)
-                .register(startFuture);
+    public Router init() {
+        Router router = Router.router(vertx);
+
+        addRoute(router, "/getStatGroupBy", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE),
+                this::getStatsGroupedBy);
+
+        addRoute(router, "/getListDetailValue", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_INDICATOR_CODE, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE),
+                this::getListDetailValue);
+
+        addRoute(router, "/add", HttpMethod.PUT,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, CODE_FIELD, TIMER_FIELD, OWNER_FIELD),
+                this::addStat);
+
+        addRoute(router, "/", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, "eventId"),
+                this::getListForEvent);
+
+        addRoute(router, "/addBulk", HttpMethod.PUT,
+                authHandler,
+                this::addBulk);
+
+        return router;
     }
 
     /**
@@ -110,10 +112,8 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {Array} stats Mandatory The stats object to add.
      * @apiSuccess {Object}   stats    The stats added.
      */
-    @Rule(address = ADD_STAT_BULK, method = Constants.PUT, logged = true)
-    private void addBulk(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        statisticsDAO.addBulk(new JsonArray(req.getBody()), handleJson(message));
+    private void addBulk(RoutingContext context) {
+        statisticsService.addBulk(context.getBodyAsJsonArray(), handleResponse(context));
     }
 
     /**
@@ -126,10 +126,8 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {Array} stats Mandatory The stats object to add.
      * @apiSuccess {Object}   stats    The stats added.
      */
-    @Rule(address = GET_STATS, method = Constants.GET, logged = true)
-    private void getListForEvent(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        statisticsDAO.getListForEvent(req.getParams().get("eventId").get(0), handleJson(message));
+    private void getListForEvent(RoutingContext context) {
+        statisticsService.getListForEvent(context.request().getParam("eventId"), handleResponse(context));
     }
 
     /**
@@ -142,12 +140,8 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {Object} stats Mandatory The stats object to add.
      * @apiSuccess {Object}   stats    The stats added.
      */
-    @Rule(address = ADD_STAT, method = Constants.PUT, logged = true,
-          mandatoryParams = {CODE_FIELD, TIMER_FIELD, OWNER_FIELD},
-          scope = Rule.Param.BODY)
-    private void addStat(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        statisticsDAO.addStat(new JsonObject(req.getBody()), handleJson(message));
+    private void addStat(RoutingContext context) {
+        statisticsService.addStat(context.getBodyAsJson(), handleResponse(context));
     }
 
     /**
@@ -165,19 +159,15 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {Array} limitResult Optional the max number element to return
      * @apiSuccess {Array}   Stats    The detail value statistics found.
      */
-    @Rule(address = GET_LISTDETAIL_VALUES, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
-          scope = Rule.Param.BODY)
-    private void getListDetailValue(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject params = new JsonObject(req.getBody());
-        statisticsDAO.getListDetailValue(params.getJsonArray(PARAM_INDICATOR_CODE),
+    private void getListDetailValue(RoutingContext context) {
+        JsonObject params = context.getBodyAsJson();
+        statisticsService.getListDetailValue(params.getJsonArray(PARAM_INDICATOR_CODE),
                 params.getJsonArray(PARAM_LIST_OWNERS),
                 params.getLong(PARAM_START_DATE),
                 params.getLong(PARAM_END_DATE),
                 params.getJsonArray(PARAM_VALUES),
                 params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0,
-                handleJsonArray(message));
+                handleResponseArray(context));
     }
 
     /**
@@ -198,13 +188,9 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiParam {Array} limitResult Optional the max number element to return
      * @apiSuccess {Array}   Stats    The statistics found.
      */
-    @Rule(address = GET_STAT_GROUPBY, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE},
-          scope = Rule.Param.BODY)
-    private void getStatsGroupedBy(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject params = new JsonObject(req.getBody());
-        statisticsDAO.getStatsGroupedBy(params.getJsonArray(PARAM_INDICATOR_CODE),
+    private void getStatsGroupedBy(RoutingContext context) {
+        JsonObject params = context.getBodyAsJson();
+        statisticsService.getStatsGroupedBy(params.getJsonArray(PARAM_INDICATOR_CODE),
                 params.getJsonArray(PARAM_LIST_OWNERS),
                 params.getLong(PARAM_START_DATE),
                 params.getLong(PARAM_END_DATE),
@@ -214,7 +200,7 @@ public class SB_StatisticsVerticle extends AbstractGuiceVerticle {// NOSONAR
                 params.getJsonArray(PARAM_LIST_GROUPBY),
                 params.getJsonArray(PARAM_LIST_SORTBY),
                 params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0,
-                handleJsonArray(message)
+                handleResponseArray(context)
         );
     }
 }

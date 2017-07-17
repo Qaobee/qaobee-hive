@@ -16,12 +16,12 @@
  *  is strictly forbidden unless prior written permission is obtained
  *  from Qaobee.
  */
-package com.qaobee.hive.technical.utils.impl;
+package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.utils.MailUtils;
+import com.qaobee.hive.dao.MailUtils;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;

@@ -23,7 +23,7 @@ import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaOption;
-import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.technical.utils.MongoClientCustom;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;

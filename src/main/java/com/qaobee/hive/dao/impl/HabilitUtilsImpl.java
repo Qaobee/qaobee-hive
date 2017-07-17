@@ -16,11 +16,11 @@
  *    is strictly forbidden unless prior written permission is obtained
  *    from Qaobee.
  */
-package com.qaobee.hive.technical.utils.impl;
+package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
-import com.qaobee.hive.technical.utils.HabilitUtils;
+import com.qaobee.hive.dao.HabilitUtils;
 
 /**
  * The Class HabilitUtils.

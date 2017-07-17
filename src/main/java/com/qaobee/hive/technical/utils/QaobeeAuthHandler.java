@@ -1,5 +1,6 @@
 package com.qaobee.hive.technical.utils;
 
+import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;

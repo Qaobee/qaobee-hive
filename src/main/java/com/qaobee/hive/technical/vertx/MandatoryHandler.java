@@ -1,7 +1,7 @@
 package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.dao.Utils;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

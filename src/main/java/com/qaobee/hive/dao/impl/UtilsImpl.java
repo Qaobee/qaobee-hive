@@ -16,7 +16,7 @@
  *  is strictly forbidden unless prior written permission is obtained
  *  from Qaobee.
  */
-package com.qaobee.hive.technical.utils.impl;
+package com.qaobee.hive.dao.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.Constants;
@@ -25,8 +25,8 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.utils.HabilitUtils;
-import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.dao.HabilitUtils;
+import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.technical.utils.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.netty.handler.codec.http.HttpHeaderValues;

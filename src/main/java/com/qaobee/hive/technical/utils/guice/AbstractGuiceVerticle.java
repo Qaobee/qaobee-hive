@@ -22,7 +22,7 @@ package com.qaobee.hive.technical.utils.guice;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.dao.Utils;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;

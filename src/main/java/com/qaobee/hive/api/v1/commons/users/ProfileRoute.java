@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.api.v1.commons.users;
 
-import com.qaobee.hive.api.MainAPI;
+import com.qaobee.hive.verticles.CoordinatorVerticle;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.verticles.PDFVerticle;
 import com.qaobee.hive.services.UserService;
@@ -60,7 +60,7 @@ public class ProfileRoute extends AbstractRoute {
                 c -> mandatoryHandler.testBodyParams(c, "_id"),
                 this::updateUser);
 
-        addRoute(router, "/pdf", HttpMethod.POST,
+        addRoute(router, "/pdf", HttpMethod.GET,
                 authHandler,
                 this::generateProfilePDF);
 
@@ -107,7 +107,7 @@ public class ProfileRoute extends AbstractRoute {
                 } else {
                     handleResponse(context, new JsonObject()
                             .put(HTTP.CONTENT_TYPE, PDFVerticle.CONTENT_TYPE)
-                            .put(MainAPI.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF)));
+                            .put(CoordinatorVerticle.FILE_SERVE, pdfResp.result().body().getString(PDFVerticle.PDF)));
                 }
             } catch (Throwable e) { // NOSONAR
                 LOG.error(e.getMessage(), e);

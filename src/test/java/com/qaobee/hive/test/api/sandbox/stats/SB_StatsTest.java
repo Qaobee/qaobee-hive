@@ -17,8 +17,6 @@
  **/
 package com.qaobee.hive.test.api.sandbox.stats;
 
-import com.qaobee.hive.api.MainAPI;
-import com.qaobee.hive.api.v1.sandbox.stats.SB_StatisticsVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -31,6 +29,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.qaobee.hive.api.v1.sandbox.stats.SB_StatisticsRoute.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -38,6 +37,7 @@ import static org.hamcrest.Matchers.*;
  * The type Sb stats testBodyParams.
  */
 public class SB_StatsTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/sandbox/stats/statistics");
     /**
      * Gets list detail values.
      */
@@ -47,14 +47,14 @@ public class SB_StatsTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);
         generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
-                    .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
-                    .put(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000L)
-                    .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
-                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
+                    .put(PARAM_START_DATE, 1443650400000L)
+                    .put(PARAM_END_DATE, 1451516400000L)
+                    .put(PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
+                    .put(PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
 
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
+                    .when().post(BASE_URL + "/getListDetailValue")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(10))
                     .body("code", hasItem("originShootAtt"));
@@ -68,7 +68,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void getListDetailValuesWithNonLoggedUser() {
-        given().when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
+        given().when().post(BASE_URL + "/getListDetailValue")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -78,7 +78,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void getListDetailValuesWithWrongHttpMethod() {
-        given().when().get(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
+        given().when().get(BASE_URL + "/getListDetailValue")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -92,17 +92,17 @@ public class SB_StatsTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
-                    .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
-                    .put(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000L)
-                    .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
-                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
-            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES).mandatoryParams());
+                    .put(PARAM_START_DATE, 1443650400000L)
+                    .put(PARAM_END_DATE, 1451516400000L)
+                    .put(PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
+                    .put(PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
+            List<String> mandatoryParams = Arrays.asList(PARAM_INDICATOR_CODE, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
                 given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
+                        .when().post(BASE_URL + "/getListDetailValue")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -121,14 +121,14 @@ public class SB_StatsTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put("aggregat", "COUNT")
-                    .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
-                    .put(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000L)
-                    .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
-                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
+                    .put(PARAM_START_DATE, 1443650400000L)
+                    .put(PARAM_END_DATE, 1451516400000L)
+                    .put(PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
+                    .put(PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
 
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_StatisticsVerticle.GET_STAT_GROUPBY))
+                    .when().post(BASE_URL + "/getStatGroupBy")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("value", hasItem(10));
@@ -142,7 +142,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void getStatGroupByWithNonLoggedUser() {
-        given().when().post(getURL(SB_StatisticsVerticle.GET_STAT_GROUPBY))
+        given().when().post(BASE_URL + "/getStatGroupBy")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -152,7 +152,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void getStatGroupByWithWrongHttpMethod() {
-        given().when().get(getURL(SB_StatisticsVerticle.GET_STAT_GROUPBY))
+        given().when().get(BASE_URL + "/getStatGroupBy")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -167,17 +167,17 @@ public class SB_StatsTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
                     .put("aggregat", "COUNT")
-                    .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
-                    .put(SB_StatisticsVerticle.PARAM_END_DATE, 1451516400000L)
-                    .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
-                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
-            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_StatisticsVerticle.GET_STAT_GROUPBY).mandatoryParams());
+                    .put(PARAM_START_DATE, 1443650400000L)
+                    .put(PARAM_END_DATE, 1451516400000L)
+                    .put(PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
+                    .put(PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
+            List<String> mandatoryParams = Arrays.asList(PARAM_INDICATOR_CODE, PARAM_AGGREGAT, PARAM_LIST_OWNERS, PARAM_START_DATE, PARAM_END_DATE);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
                 given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_StatisticsVerticle.GET_STAT_GROUPBY))
+                        .when().post(BASE_URL + "/getStatGroupBy")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -196,20 +196,20 @@ public class SB_StatsTest extends VertxJunitSupport {
             JsonObject s = generateStat(user.result(), "fake", 1);
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(s.encode())
-                    .when().put(getURL(SB_StatisticsVerticle.ADD_STAT))
+                    .when().put(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("owner", is(user.result().get_id()));
 
             final JsonObject params = new JsonObject()
-                    .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
-                    .put(SB_StatisticsVerticle.PARAM_END_DATE, System.currentTimeMillis() + 100)
-                    .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("fake"))
-                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add(user.result().get_id()));
+                    .put(PARAM_START_DATE, 1443650400000L)
+                    .put(PARAM_END_DATE, System.currentTimeMillis() + 100)
+                    .put(PARAM_INDICATOR_CODE, new JsonArray().add("fake"))
+                    .put(PARAM_LIST_OWNERS, new JsonArray().add(user.result().get_id()));
 
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
+                    .when().post(BASE_URL + "/getListDetailValue")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("code", hasItem("fake"));
@@ -223,7 +223,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void addStatWithNonLoggedUser() {
-        given().when().put(getURL(SB_StatisticsVerticle.ADD_STAT))
+        given().when().put(BASE_URL + "/add")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -233,7 +233,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void addStatWithWrongHttpMethod() {
-        given().when().get(getURL(SB_StatisticsVerticle.ADD_STAT))
+        given().when().get(BASE_URL + "/add")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -246,14 +246,14 @@ public class SB_StatsTest extends VertxJunitSupport {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
-            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_StatisticsVerticle.ADD_STAT).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(CODE_FIELD, TIMER_FIELD, OWNER_FIELD);
             JsonObject s = generateStat(user.result(), "fake", 1);
             s.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(s.encode());
                 params2.remove(k);
                 given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().put(getURL(SB_StatisticsVerticle.ADD_STAT))
+                        .when().put(BASE_URL + "/add")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -277,7 +277,7 @@ public class SB_StatsTest extends VertxJunitSupport {
 
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(stats.encode())
-                    .when().put(getURL(SB_StatisticsVerticle.ADD_STAT_BULK))
+                    .when().put(BASE_URL + "/addBulk")
                     .then().assertThat().statusCode(200)
                     .body("count", notNullValue())
                     .body("count", is(5));
@@ -287,20 +287,20 @@ public class SB_StatsTest extends VertxJunitSupport {
             }
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(stats.encode())
-                    .when().put(getURL(SB_StatisticsVerticle.ADD_STAT_BULK))
+                    .when().put(BASE_URL + "/addBulk")
                     .then().assertThat().statusCode(200)
                     .body("count", notNullValue())
                     .body("count", is(5));
 
             final JsonObject params = new JsonObject()
-                    .put(SB_StatisticsVerticle.PARAM_START_DATE, 1443650400000L)
-                    .put(SB_StatisticsVerticle.PARAM_END_DATE, System.currentTimeMillis() + 100)
-                    .put(SB_StatisticsVerticle.PARAM_INDICATOR_CODE, new JsonArray().add("fake"))
-                    .put(SB_StatisticsVerticle.PARAM_LIST_OWNERS, new JsonArray().add(user.result().get_id()));
+                    .put(PARAM_START_DATE, 1443650400000L)
+                    .put(PARAM_END_DATE, System.currentTimeMillis() + 100)
+                    .put(PARAM_INDICATOR_CODE, new JsonArray().add("fake"))
+                    .put(PARAM_LIST_OWNERS, new JsonArray().add(user.result().get_id()));
 
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_StatisticsVerticle.GET_LISTDETAIL_VALUES))
+                    .when().post(BASE_URL + "/getListDetailValue")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(10))
                     .body("code", hasItem("fake"));
@@ -314,7 +314,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void addStatBulkWithNonLoggedUser() {
-        given().when().put(getURL(SB_StatisticsVerticle.ADD_STAT_BULK))
+        given().when().put(BASE_URL + "/addBulk")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -324,7 +324,7 @@ public class SB_StatsTest extends VertxJunitSupport {
      */
     @Test
     public void addStatBulkWithWrongHttpMethod() {
-        given().when().get(getURL(SB_StatisticsVerticle.ADD_STAT_BULK))
+        given().when().get(BASE_URL + "/addBulk")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }

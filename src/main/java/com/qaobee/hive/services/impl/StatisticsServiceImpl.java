@@ -17,16 +17,14 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.dao.StatisticsDAO;
 import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.services.StatisticsService;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.mongo.CriteriaOption;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.CompositeFuture;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
@@ -36,27 +34,27 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * The type Statistics dao.
+ * The type Statistics service.
  */
-public class StatisticsDAOImpl implements StatisticsDAO {
+@ProxyService(address = StatisticsService.ADDRESS, iface = StatisticsService.class)
+public class StatisticsServiceImpl implements StatisticsService {
     private static final String TIMER_FIELD = "timer";
     private static final String OWNER_FIELD = "owner";
     private static final String CODE_FIELD = "code";
     private static final String VALUE_FIELD = "value";
     private static final String EVENT_ID_FIELD = "eventId";
     private static final String STAT_FIELD = "stats";
-    private final MongoDB mongo;
+    @Inject
+    private MongoDB mongo;
 
     /**
-     * Instantiates a new Statistics dao.
+     * Instantiates a new Statistics service.
      *
-     * @param mongo the mongo
+     * @param vertx the vertx
      */
-    @Inject
-    public StatisticsDAOImpl(MongoDB mongo) {
-        this.mongo = mongo;
+    public StatisticsServiceImpl(Vertx vertx) {
+        super();
     }
-
 
     private Future<Integer> pushNonDuplicateStats(JsonArray stats, JsonArray eventStats) {
         Future<Integer> deferred = Future.future();

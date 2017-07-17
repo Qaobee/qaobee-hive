@@ -50,7 +50,7 @@ public class ShippingRoute extends AbstractRoute {
 
         addRoute(router, "/webHook", HttpMethod.POST,
                 c -> mandatoryHandler.testBodyParams(c, "id", "created"),
-                this::pay);
+                this::webHook);
 
         return router;
     }

@@ -17,7 +17,7 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.technical.utils;
+package com.qaobee.hive.dao;
 
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;

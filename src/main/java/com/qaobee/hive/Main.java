@@ -1,6 +1,6 @@
 package com.qaobee.hive;
 
-import com.qaobee.hive.api.MainAPI;
+import com.qaobee.hive.verticles.CoordinatorVerticle;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
@@ -42,6 +42,6 @@ public class Main {
         }
         LOG.info("Running with env : {}", env);
         JsonObject config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes())).getJsonObject(env);
-        vertx.deployVerticle(MainAPI.class.getName(), new DeploymentOptions().setConfig(config));
+        vertx.deployVerticle(CoordinatorVerticle.class.getName(), new DeploymentOptions().setConfig(config));
     }
 }

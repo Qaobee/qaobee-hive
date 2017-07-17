@@ -103,7 +103,7 @@ public class SignupRoute extends AbstractRoute {
                 c -> mandatoryHandler.testRequestParams(c, PARAM_ID, PARAM_CODE),
                 this::firstConnectionCheck);
 
-        addRoute(router, "/finalizeSignup", HttpMethod.POST,
+        addRoute(router, "/finalize", HttpMethod.POST,
                 c -> mandatoryHandler.testBodyParams(c, PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE),
                 this::finalizeSignup);
 

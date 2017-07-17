@@ -29,7 +29,7 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.utils.MailUtils;
+import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import com.qaobee.hive.verticles.MailVerticle;
 import io.vertx.core.http.HttpMethod;

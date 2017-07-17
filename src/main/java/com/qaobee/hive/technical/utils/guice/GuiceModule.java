@@ -25,10 +25,8 @@ import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.technical.annotations.ProxyService;
-import com.qaobee.hive.technical.utils.*;
-import com.qaobee.hive.technical.utils.impl.HabilitUtilsImpl;
-import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
-import com.qaobee.hive.technical.utils.impl.UtilsImpl;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
+import com.qaobee.hive.technical.utils.QaobeeAuthHandler;
 import com.qaobee.hive.technical.vertx.MandatoryHandler;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
@@ -92,7 +90,6 @@ public class GuiceModule extends AbstractModule {
 
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
-        bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
         bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
         bind(MailClient.class).toInstance(MailClient.createShared(vertx, mailConfig, "qaobeeMail"));
         bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();

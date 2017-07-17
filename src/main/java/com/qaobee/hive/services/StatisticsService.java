@@ -17,18 +17,53 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao;
+package com.qaobee.hive.services;
 
 
+import com.qaobee.hive.services.impl.StatisticsServiceImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Statistics dao.
+ * The interface Statistics service.
  */
-public interface StatisticsDAO {
+@ProxyGen
+@VertxGen
+public interface StatisticsService {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.Statistics.service";
+
+    /**
+     * Create statistics service.
+     *
+     * @param vertx the vertx
+     *
+     * @return the statistics service
+     */
+    static StatisticsService create(Vertx vertx) {
+        return new StatisticsServiceImpl(vertx);
+    }
+
+    /**
+     * Create proxy statistics service.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     *
+     * @return the statistics service
+     */
+    static StatisticsService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(StatisticsService.class, vertx, address);
+    }
+
     /**
      * Add bulk.
      *
