@@ -192,7 +192,7 @@ public class SignupServiceImpl implements SignupService {
         d.setHandler(res -> {
             if (res.succeeded()) {
                 user.getAccount().getListPlan().add(plan);
-                upsertNewUser(user, plan, resultHandler)
+                upsertNewUser(user, plan, resultHandler);
             } else {
                 resultHandler.handle(Future.failedFuture(res.cause()));
             }
