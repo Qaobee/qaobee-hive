@@ -20,42 +20,22 @@
 package com.qaobee.hive.api.v1.sandbox.event;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.dao.EventDAO;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import io.vertx.core.Future;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonObject;
+import com.qaobee.hive.services.EventService;
+import com.qaobee.hive.technical.annotations.VertxRoute;
+import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 
 /**
- * The type Event verticle.
+ * The type Event Route.
  *
  * @author cke
  */
-@DeployableVerticle
-public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
-    /**
-     * The constant GET_LIST.
-     */
-    public static final String GET_LIST = Module.VERSION + ".sandbox.event.event.list";
-    /**
-     * The constant ADD_CHAMPIONSHIP.
-     */
-    public static final String ADD_EVENT = Module.VERSION + ".sandbox.event.event.add";
-    /**
-     * The constant GET.
-     */
-    public static final String GET = Module.VERSION + ".sandbox.event.event.get";
-    /**
-     * The constant UPDATE.
-     */
-    public static final String UPDATE = Module.VERSION + ".sandbox.event.event.update";
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/event/event")
+public class SB_EventRoute extends AbstractRoute { // NOSONAR
     /**
      * Event ID
      */
@@ -105,16 +85,33 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String PARAM_LIMIT_RESULT = "limitResult";
     @Inject
-    private EventDAO eventDAO;
+    private EventService eventService;
 
     @Override
-    public void start(Future<Void> startFuture) {
-        inject(this)
-                .add(GET_LIST, this::getEventList)
-                .add(ADD_EVENT, this::addEvent)
-                .add(UPDATE, this::updateEvent)
-                .add(GET, this::getEvent)
-                .register(startFuture);
+    public Router init() {
+        Router router = Router.router(vertx);
+
+        addRoute(router, "/add", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE),
+                this::addEvent);
+
+        addRoute(router, "/list", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID),
+                this::getEventList);
+
+        addRoute(router, "/update", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE),
+                this::updateEvent);
+
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::getEvent);
+
+        return router;
     }
 
     /**
@@ -126,11 +123,8 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiParam {String} id
      * @apiSuccess {Object} event event;
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID,
-            scope = Rule.Param.REQUEST)
-    private void getEvent(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        eventDAO.getEvent(req.getParams().get(PARAM_ID).get(0), handleJson(message));
+    private void getEvent(RoutingContext context) {
+        eventService.getEvent(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 
     /**
@@ -145,12 +139,8 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup SB_Event API
      * @apiSuccess {Object} event updated event
      */
-    @Rule(address = UPDATE, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
-            scope = Rule.Param.BODY)
-    private void updateEvent(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        eventDAO.updateEvent(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale(), handleJson(message));
+    private void updateEvent(RoutingContext context) {
+        eventService.updateEvent(context.getBodyAsJson(), context.user().principal().getString("_id"), getLocale(context), handleResponse(context));
     }
 
     /**
@@ -165,12 +155,8 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup SB_Event API
      * @apiSuccess {Object} event created event
      */
-    @Rule(address = ADD_EVENT, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE},
-            scope = Rule.Param.BODY)
-    private void addEvent(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        eventDAO.addEvent(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale(), handleJson(message));
+    private void addEvent(RoutingContext context) {
+        eventService.addEvent(context.getBodyAsJson(), context.user().principal().getString("_id"), getLocale(context), handleResponse(context));
     }
 
     /**
@@ -186,11 +172,7 @@ public class SB_EventVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Array} list of events
      */
-    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID},
-            scope = Rule.Param.BODY)
-    private void getEventList(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        eventDAO.getEventList(new JsonObject(req.getBody()), handleJsonArray(message));
+    private void getEventList(RoutingContext context) {
+        eventService.getEventList(context.getBodyAsJson(), handleResponseArray(context));
     }
 }

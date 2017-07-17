@@ -19,9 +19,8 @@
 
 package com.qaobee.hive.test.api.sandbox.share;
 
-import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxRoute;
-import com.qaobee.hive.api.v1.sandbox.share.SB_ShareVerticle;
+import com.qaobee.hive.api.v1.sandbox.share.SB_ShareRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -35,6 +34,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.qaobee.hive.api.v1.sandbox.share.SB_ShareRoute.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -43,6 +43,7 @@ import static org.hamcrest.Matchers.*;
  */
 public class SB_ShareTest extends VertxJunitSupport {
     private static final String SB_BASE_URL = getBaseURL("/sandbox/config/sandbox");
+    private static final String BASE_URL = getBaseURL("/sandbox/share");
 
     /**
      * invite a member to a sandbox.
@@ -54,21 +55,21 @@ public class SB_ShareTest extends VertxJunitSupport {
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             generateLoggedUser().setHandler(user2 -> {
                 final JsonObject params = new JsonObject()
-                        .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
-                        .put(SB_ShareVerticle.PARAM_USER_EMAIL, user2.result().getContact().getEmail())
-                        .put(SB_ShareVerticle.PARAM_ROLE_CODE, "member");
+                        .put(SB_ShareRoute.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                        .put(SB_ShareRoute.PARAM_USER_EMAIL, user2.result().getContact().getEmail())
+                        .put(PARAM_ROLE_CODE, "member");
 
                 given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params.encode())
-                        .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
+                        .when().post(BASE_URL + "/inviteMember")
                         .then().assertThat().statusCode(200)
                         .body("_id", notNullValue())
                         .extract().path("_id");
 
                 given().header(TOKEN, user.result().getAccount().getToken())
-                        .queryParam(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
-                        .queryParam(SB_ShareVerticle.PARAM_INVITATION_STATUS, "ALL")
-                        .when().get(getURL(SB_ShareVerticle.GET_LIST_INVITATION_TO_SANDBOX))
+                        .queryParam(SB_ShareRoute.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                        .queryParam(SB_ShareRoute.PARAM_INVITATION_STATUS, "ALL")
+                        .when().get(BASE_URL + "/listInvitation")
                         .then().assertThat().statusCode(200)
                         .body("", hasSize(1))
                         .body("_id", notNullValue())
@@ -88,13 +89,13 @@ public class SB_ShareTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             final JsonObject params = new JsonObject()
-                    .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
-                    .put(SB_ShareVerticle.PARAM_USER_EMAIL, "bla")
-                    .put(SB_ShareVerticle.PARAM_ROLE_CODE, "member");
+                    .put(SB_ShareRoute.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                    .put(SB_ShareRoute.PARAM_USER_EMAIL, "bla")
+                    .put(PARAM_ROLE_CODE, "member");
 
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
+                    .when().post(BASE_URL + "/inviteMember")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("userId", nullValue())
@@ -114,25 +115,25 @@ public class SB_ShareTest extends VertxJunitSupport {
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             generateLoggedUser().setHandler(user2 -> {
                 final JsonObject params = new JsonObject()
-                        .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
-                        .put(SB_ShareVerticle.PARAM_USER_EMAIL, user2.result().getContact().getEmail())
-                        .put(SB_ShareVerticle.PARAM_ROLE_CODE, "member");
+                        .put(SB_ShareRoute.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                        .put(SB_ShareRoute.PARAM_USER_EMAIL, user2.result().getContact().getEmail())
+                        .put(PARAM_ROLE_CODE, "member");
 
                 String invitationId = given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params.encode())
-                        .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
+                        .when().post(BASE_URL + "/inviteMember")
                         .then().assertThat().statusCode(200)
                         .body("_id", notNullValue())
                         .extract().path("_id");
 
                 final JsonObject params2 = new JsonObject()
-                        .put(SB_ShareVerticle.PARAM_INVITATION_ID, invitationId)
-                        .put(SB_ShareVerticle.PARAM_USERID, "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4")
-                        .put(SB_ShareVerticle.PARAM_ANSWER_INVITATION, "accepted");
+                        .put(PARAM_INVITATION_ID, invitationId)
+                        .put(PARAM_USERID, "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4")
+                        .put(PARAM_ANSWER_INVITATION, "accepted");
 
                 given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX))
+                        .when().post(BASE_URL + "/confirm")
                         .then().assertThat().statusCode(200)
                         .body("_id", notNullValue())
                         .body("status", is("accepted"));
@@ -157,25 +158,25 @@ public class SB_ShareTest extends VertxJunitSupport {
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             generateLoggedUser().setHandler(user2 -> {
                 final JsonObject params = new JsonObject()
-                        .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
-                        .put(SB_ShareVerticle.PARAM_USER_EMAIL, user2.result().getContact().getEmail())
-                        .put(SB_ShareVerticle.PARAM_ROLE_CODE, "member");
+                        .put(SB_ShareRoute.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                        .put(SB_ShareRoute.PARAM_USER_EMAIL, user2.result().getContact().getEmail())
+                        .put(PARAM_ROLE_CODE, "member");
 
                 String invitationId = given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params.encode())
-                        .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
+                        .when().post(BASE_URL + "/inviteMember")
                         .then().assertThat().statusCode(200)
                         .body("_id", notNullValue())
                         .extract().path("_id");
 
                 final JsonObject params2 = new JsonObject()
-                        .put(SB_ShareVerticle.PARAM_INVITATION_ID, invitationId)
-                        .put(SB_ShareVerticle.PARAM_USERID, user2.result().get_id())
-                        .put(SB_ShareVerticle.PARAM_ANSWER_INVITATION, "refused");
+                        .put(PARAM_INVITATION_ID, invitationId)
+                        .put(PARAM_USERID, user2.result().get_id())
+                        .put(PARAM_ANSWER_INVITATION, "refused");
 
                 given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX))
+                        .when().post(BASE_URL + "/confirm")
                         .then().assertThat().statusCode(200)
                         .body("_id", notNullValue())
                         .body("status", is("refused"));
@@ -198,7 +199,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void acceptationInvitationToSandboxWithWrongHTTPMethod() {
-        given().when().get(getURL(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX))
+        given().when().get(BASE_URL + "/confirm")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -213,17 +214,17 @@ public class SB_ShareTest extends VertxJunitSupport {
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
 
             final JsonObject params = new JsonObject()
-                    .put(SB_ShareVerticle.PARAM_INVITATION_ID, "12345")
-                    .put(SB_ShareVerticle.PARAM_USERID, "12345")
-                    .put(SB_ShareVerticle.PARAM_ANSWER_INVITATION, "accepted");
+                    .put(PARAM_INVITATION_ID, "12345")
+                    .put(PARAM_USERID, "12345")
+                    .put(PARAM_ANSWER_INVITATION, "accepted");
 
-            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(PARAM_INVITATION_ID, PARAM_USERID, PARAM_ANSWER_INVITATION);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
                 given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX))
+                        .when().post(BASE_URL + "/confirm")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -238,7 +239,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void inviteMemberToSandboxWithNonLoggedUser() {
-        given().when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
+        given().when().post(BASE_URL + "/inviteMember")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -248,7 +249,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void inviteMemberToSandboxWithWrongHttpMethod() {
-        given().when().get(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
+        given().when().get(BASE_URL + "/inviteMember")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -261,16 +262,16 @@ public class SB_ShareTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             final JsonObject params = new JsonObject()
-                    .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
-                    .put(SB_ShareVerticle.PARAM_USER_EMAIL, "bla@bla.com")
-                    .put(SB_ShareVerticle.PARAM_ROLE_CODE, "acoach");
-            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX).mandatoryParams());
+                    .put(SB_ShareRoute.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                    .put(SB_ShareRoute.PARAM_USER_EMAIL, "bla@bla.com")
+                    .put(PARAM_ROLE_CODE, "acoach");
+            List<String> mandatoryParams = Arrays.asList(PARAM_SANBOXID, PARAM_USER_EMAIL, PARAM_ROLE_CODE);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
                 given().header(TOKEN, u.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
+                        .when().post(BASE_URL + "/inviteMember")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -295,26 +296,26 @@ public class SB_ShareTest extends VertxJunitSupport {
                         String sandboxId = "558b0efebd2e39cdab651e1f";
 
                         final JsonObject params = new JsonObject()
-                                .put(SB_ShareVerticle.PARAM_SANBOXID, sandboxId)
-                                .put(SB_ShareVerticle.PARAM_USER_EMAIL, user2.result().getContact().getEmail())
-                                .put(SB_ShareVerticle.PARAM_ROLE_CODE, "acoach");
+                                .put(SB_ShareRoute.PARAM_SANBOXID, sandboxId)
+                                .put(SB_ShareRoute.PARAM_USER_EMAIL, user2.result().getContact().getEmail())
+                                .put(PARAM_ROLE_CODE, "acoach");
 
                         String invitationId = given().header(TOKEN, user.result().getAccount().getToken())
                                 .body(params.encode())
-                                .when().post(getURL(SB_ShareVerticle.INVITE_MEMBER_TO_SANDBOX))
+                                .when().post(BASE_URL + "/inviteMember")
                                 .then().assertThat().statusCode(200)
                                 .body("_id", notNullValue())
                                 .body("sandboxId", is(sandboxId))
                                 .extract().path("_id");
 
                         final JsonObject params2 = new JsonObject()
-                                .put(SB_ShareVerticle.PARAM_INVITATION_ID, invitationId)
-                                .put(SB_ShareVerticle.PARAM_USERID, user2.result().get_id())
-                                .put(SB_ShareVerticle.PARAM_ANSWER_INVITATION, "accepted");
+                                .put(PARAM_INVITATION_ID, invitationId)
+                                .put(PARAM_USERID, user2.result().get_id())
+                                .put(PARAM_ANSWER_INVITATION, "accepted");
 
                         given().header(TOKEN, user.result().getAccount().getToken())
                                 .body(params2.encode())
-                                .when().post(getURL(SB_ShareVerticle.CONFIRM_INVITATION_TO_SANDBOX))
+                                .when().post(BASE_URL + "/confirm")
                                 .then().assertThat().statusCode(200)
                                 .body("_id", notNullValue())
                                 .body("status", is("accepted"));
@@ -327,12 +328,12 @@ public class SB_ShareTest extends VertxJunitSupport {
                                 .body("members", hasSize(3));
 
                         final JsonObject params3 = new JsonObject()
-                                .put(SB_ShareVerticle.PARAM_USERID, user2.result().get_id())
-                                .put(SB_ShareVerticle.PARAM_SANBOXID, sandboxId);
+                                .put(PARAM_USERID, user2.result().get_id())
+                                .put(SB_ShareRoute.PARAM_SANBOXID, sandboxId);
 
                         given().header(TOKEN, user.result().getAccount().getToken())
                                 .body(params3.encode())
-                                .when().post(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
+                                .when().post(BASE_URL + "/desactivateMember")
                                 .then().assertThat().statusCode(200)
                                 .body("_id", notNullValue())
                                 .body("members", hasSize(3))
@@ -352,7 +353,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void desactivateMemberToSandboxWithNonLoggedUser() {
-        given().when().post(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
+        given().when().post(BASE_URL + "/desactivateMember")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -362,7 +363,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void desactivateMemberToSandboxWithWrongHttpMethod() {
-        given().when().get(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
+        given().when().get(BASE_URL + "/desactivateMember")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -375,15 +376,15 @@ public class SB_ShareTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             final JsonObject params = new JsonObject()
-                    .put(SB_ShareVerticle.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
-                    .put(SB_ShareVerticle.PARAM_USERID, "12345");
-            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX).mandatoryParams());
+                    .put(SB_ShareRoute.PARAM_SANBOXID, "558b0efebd2e39cdab651e1f")
+                    .put(PARAM_USERID, "12345");
+            List<String> mandatoryParams = Arrays.asList(PARAM_SANBOXID, PARAM_USERID);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
                 given().header(TOKEN, u.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_ShareVerticle.DESACTIVATE_MEMBER_TO_SANDBOX))
+                        .when().post(BASE_URL + "/desactivateMember")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -397,7 +398,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void getSharedSandboxesWithNonLoggedUser() {
-        given().when().get(getURL(SB_ShareVerticle.GET_SANDBOX_SHARING_LIST))
+        given().when().get(BASE_URL + "/list")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -407,7 +408,7 @@ public class SB_ShareTest extends VertxJunitSupport {
      */
     @Test
     public void getSharedSandboxesWithWrongHttpMethod() {
-        given().when().post(getURL(SB_ShareVerticle.GET_SANDBOX_SHARING_LIST))
+        given().when().post(BASE_URL + "/list")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }

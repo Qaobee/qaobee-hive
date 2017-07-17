@@ -25,6 +25,7 @@ import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -62,24 +63,31 @@ public class NotificationsRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
-        router.get("/").handler(authHandler);
-        router.get("/").handler(this::notificationList);
 
-        router.delete("/del").handler(authHandler);
-        router.delete("/del").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_NOTIF_ID));
-        router.delete("/del").handler(this::delete);
+        addRoute(router, "/", HttpMethod.GET,
+                authHandler,
+                this::notificationList);
 
-        router.post("/read").handler(authHandler);
-        router.post("/read").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_NOTIF_ID));
-        router.post("/read").handler(this::markAsRead);
+        addRoute(router, "/del", HttpMethod.DELETE,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_NOTIF_ID),
+                this::delete);
 
-        router.post("/user/add").handler(authHandler);
-        router.post("/user/add").handler(c -> mandatoryHandler.testBodyParams(c, TARGET_ID, "content", SENDER_ID, "title"));
-        router.post("/user/add").handler(this::addNotificationToUser);
+        addRoute(router, "/read", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_NOTIF_ID),
+                this::markAsRead);
 
-        router.post("/sandbox/add").handler(authHandler);
-        router.post("/sandbox/add").handler(c -> mandatoryHandler.testBodyParams(c, TARGET_ID, "content", SENDER_ID, "title"));
-        router.post("/sandbox/add").handler(this::addNotificationToSandBox);
+        addRoute(router, "/user/add", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, TARGET_ID, "content", SENDER_ID, "title"),
+                this::addNotificationToUser);
+
+        addRoute(router, "/sandbox/add", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, TARGET_ID, "content", SENDER_ID, "title"),
+                this::addNotificationToSandBox);
+
         return router;
     }
 

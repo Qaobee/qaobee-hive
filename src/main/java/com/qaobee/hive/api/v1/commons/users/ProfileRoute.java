@@ -32,6 +32,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -54,12 +55,15 @@ public class ProfileRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.post("/").handler(authHandler);
-        router.post("/").handler(c -> mandatoryHandler.testBodyParams(c, "_id"));
-        router.post("/").handler(this::updateUser);
+        addRoute(router, "/", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, "_id"),
+                this::updateUser);
 
-        router.get("/pdf").handler(authHandler);
-        router.get("/pdf").handler(this::generateProfilePDF);
+        addRoute(router, "/pdf", HttpMethod.POST,
+                authHandler,
+                this::generateProfilePDF);
+
         return router;
     }
 

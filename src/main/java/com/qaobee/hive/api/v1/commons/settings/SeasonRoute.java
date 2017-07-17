@@ -22,6 +22,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.SeasonService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -47,16 +48,22 @@ public class SeasonRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
-        router.get("/*").handler(authHandler);
 
-        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
-        router.get("/get").handler(this::getSeason);
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::getSeason);
 
-        router.get("/getListByActivity").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID));
-        router.get("/getListByActivity").handler(this::getListByActivity);
+        addRoute(router, "/getListByActivity", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID),
+                this::getListByActivity);
 
-        router.get("/current").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID));
-        router.get("/current").handler(this::getCurrentSeason);
+        addRoute(router, "/current", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID),
+                this::getCurrentSeason);
+
         return router;
     }
 

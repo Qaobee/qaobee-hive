@@ -20,81 +20,49 @@
 package com.qaobee.hive.api.v1.sandbox.share;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.verticles.MailVerticle;
-import com.qaobee.hive.dao.ShareDAO;
+import com.qaobee.hive.services.ShareService;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.services.NotificationsService;
-import com.qaobee.hive.services.UserService;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
-import com.qaobee.hive.technical.annotations.Rule;
-import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import io.vertx.core.Future;
-import io.vertx.core.eventbus.Message;
+import com.qaobee.hive.technical.vertx.AbstractRoute;
+import com.qaobee.hive.verticles.MailVerticle;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import static com.qaobee.hive.technical.constantes.Constants.ADMIN_HABILIT;
+
 /**
- * The type Sb share verticle.
+ * The type Sb share Route.
  */
-@DeployableVerticle
-public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
-    private static final Logger LOG = LoggerFactory.getLogger(SB_ShareVerticle.class);
-    /**
-     * The constant GET_SANDBOX_SHARING_LIST.
-     */
-    public static final String GET_SANDBOX_SHARING_LIST = Module.VERSION + ".sandbox.share.list";
-    /**
-     * The constant GET_SANDBOX_ADMIN_SHARING_LIST for admin request.
-     */
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/share")
+public class SB_ShareRoute extends AbstractRoute { // NOSONAR
+    private static final Logger LOG = LoggerFactory.getLogger(SB_ShareRoute.class);
+
+/*    public static final String GET_SANDBOX_SHARING_LIST = Module.VERSION + ".sandbox.share.list";
     public static final String GET_ADMIN_SANDBOX_SHARING_LIST = Module.VERSION + ".sandbox.share.listAdmin";
-    /**
-     * The constant CONFIRM_INVITATION_TO_SANDBOX.
-     */
     public static final String CONFIRM_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.confirm";
-    /**
-     * The constant INVITE_MEMBER_TO_SANDBOX.
-     */
     public static final String INVITE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.inviteMember";
-    /**
-     * The constant GET_LIST_INVITATION_TO_SANDBOX.
-     */
     public static final String GET_LIST_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.listInvitation";
-    /**
-     * The constant DESACTIVATE_MEMBER_TO_SANDBOX.
-     */
     public static final String DESACTIVATE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.desactivateMember";
-    /**
-     * The constant ACTIVATE_MEMBER_TO_SANDBOX.
-     */
     public static final String ACTIVATE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.activateMember";
-
-    /**
-     * The constant REVIVE_INVITATION_TO_SANDBOX.
-     */
     public static final String REVIVE_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.reviveInvitation";
-
-    /**
-     * The constant REMOVE_INVITATION_TO_SANDBOX.
-     */
     public static final String REMOVE_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.removeInvitation";
-
-    /**
-     * The constant GET_INVITATION_TO_SANDBOX.
-     */
-    public static final String GET_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.getInvitation";
+    public static final String GET_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.getInvitation";*/
 
     /**
      * The constant PARAM_SANBOXID.
@@ -130,7 +98,6 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      */
     public static final String PARAM_USER_EMAIL = "email";
 
-    private static final String INTERNAL_SHARE_NOTIFICATION = "internal.sandbox.share";
     private static final String FIELD_LOCALE = "locale";
     private static final String FIELD_ROOT = "root";
     private static final String FIELD_UID = "uid";
@@ -144,36 +111,74 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
     @Inject
     private MailUtils mailUtils;
     @Inject
-    private ShareDAO shareDAO;
-    @Inject
-    private UserService userService;
+    private ShareService shareService;
     @Inject
     private TemplatesDAO templatesDAO;
     @Inject
     private NotificationsService notificationsService;
 
     @Override
-    public void start(Future<Void> startFuture) {
-        inject(this)
-                .add(GET_SANDBOX_SHARING_LIST, this::getListOfSharedSandboxes)
-                .add(GET_ADMIN_SANDBOX_SHARING_LIST, this::getAdminListOfSharedSandboxes)
-                .add(GET_LIST_INVITATION_TO_SANDBOX, this::getListInvitationOfSandbox)
-                .add(INVITE_MEMBER_TO_SANDBOX, this::inviteMemberToSandbox)
-                .add(CONFIRM_INVITATION_TO_SANDBOX, this::confirmInvitationToSandbox)
-                .add(ACTIVATE_MEMBER_TO_SANDBOX, this::activateMemberToSandbox)
-                .add(DESACTIVATE_MEMBER_TO_SANDBOX, this::desactivateMemberToSandbox)
-                .add(INTERNAL_SHARE_NOTIFICATION, this::internalShareNotification)
-                .add(REVIVE_INVITATION_TO_SANDBOX, this::reviveInvitationToSandbox)
-                .add(REMOVE_INVITATION_TO_SANDBOX, this::removeInvitationToSandbox)
-                .add(GET_INVITATION_TO_SANDBOX, this::getInvitationToSandbox)
-                .register(startFuture);
+    public Router init() {
+        Router router = Router.router(vertx);
+
+        addRoute(router, "/list", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID),
+                this::getListOfSharedSandboxes);
+
+        addRoute(router, "/listAdmin", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_USERID),
+                this::getAdminListOfSharedSandboxes);
+
+        addRoute(router, "/listInvitation", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_SANBOXID, PARAM_INVITATION_STATUS),
+                this::getListInvitationOfSandbox);
+
+        addRoute(router, "/inviteMember", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_SANBOXID, PARAM_USER_EMAIL, PARAM_ROLE_CODE),
+                this::inviteMemberToSandbox);
+
+        addRoute(router, "/confirm", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_INVITATION_ID, PARAM_USERID, PARAM_ANSWER_INVITATION),
+                this::confirmInvitationToSandbox);
+
+        addRoute(router, "/activateMember", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_SANBOXID, PARAM_USERID),
+                this::activateMemberToSandbox);
+
+        addRoute(router, "/desactivateMember", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_SANBOXID, PARAM_USERID),
+                this::desactivateMemberToSandbox);
+
+        addRoute(router, "/reviveInvitation", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_INVITATION_ID),
+                this::reviveInvitationToSandbox);
+
+        addRoute(router, "/removeInvitation", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_INVITATION_ID),
+                this::removeInvitationToSandbox);
+
+        addRoute(router, "/getInvitation", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_INVITATION_ID),
+                this::getInvitationToSandbox);
+
+        return router;
     }
 
-    private void internalShareNotification(Message<JsonObject> message) {
-        notificationsService.sendNotification(message.body().getString(PARAM_USERID), DBCollections.USER, new JsonObject()
-                .put(CONTENT_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".content", message.body().getString(FIELD_LOCALE)))
-                .put(TITLE_FIELD, Messages.getString(message.body().getString(FIELD_ROOT) + ".title", message.body().getString(FIELD_LOCALE)))
-                .put(SENDER_ID_FIELD, message.body().getString(FIELD_UID)), new JsonArray(), ar -> {
+    private void internalShareNotification(JsonObject message) {
+        notificationsService.sendNotification(message.getString(PARAM_USERID), DBCollections.USER, new JsonObject()
+                .put(CONTENT_FIELD, Messages.getString(message.getString(FIELD_ROOT) + ".content", message.getString(FIELD_LOCALE)))
+                .put(TITLE_FIELD, Messages.getString(message.getString(FIELD_ROOT) + ".title", message.getString(FIELD_LOCALE)))
+                .put(SENDER_ID_FIELD, message.getString(FIELD_UID)), new JsonArray(), ar -> {
             // empty
         });
     }
@@ -188,22 +193,19 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = DESACTIVATE_MEMBER_TO_SANDBOX, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_SANBOXID, PARAM_USERID}, scope = Rule.Param.BODY)
-    private void desactivateMemberToSandbox(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject request = new JsonObject(req.getBody());
-        shareDAO.desactivateMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID), sandbox -> {
+    private void desactivateMemberToSandbox(RoutingContext context) {
+        JsonObject request = context.getBodyAsJson();
+        shareService.desactivateMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID), sandbox -> {
             if (sandbox.succeeded()) {
-                vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
+                internalShareNotification(new JsonObject()
                         .put(PARAM_USERID, request.getString(PARAM_USERID))
                         .put(FIELD_ROOT, "notification.sandbox.desactivateMember")
-                        .put(FIELD_LOCALE, req.getLocale())
-                        .put(FIELD_UID, req.getUser().get_id())
+                        .put(FIELD_LOCALE, getLocale(context))
+                        .put(FIELD_UID, context.user().principal().getString("_id"))
                 );
-                message.reply(sandbox.result().encode());
+                handleResponse(context, sandbox.result());
             } else {
-                utils.sendError(message, (QaobeeException) sandbox.cause());
+                utils.handleError(context, (QaobeeException) sandbox.cause());
             }
         });
     }
@@ -218,22 +220,19 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = ACTIVATE_MEMBER_TO_SANDBOX, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_SANBOXID, PARAM_USERID}, scope = Rule.Param.BODY)
-    private void activateMemberToSandbox(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject request = new JsonObject(req.getBody());
-        shareDAO.activateMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID), sandbox -> {
+    private void activateMemberToSandbox(RoutingContext context) {
+        JsonObject request = context.getBodyAsJson();
+        shareService.activateMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USERID), sandbox -> {
             if (sandbox.succeeded()) {
-                vertx.eventBus().send(INTERNAL_SHARE_NOTIFICATION, new JsonObject()
+                internalShareNotification(new JsonObject()
                         .put(PARAM_USERID, request.getString(PARAM_USERID))
                         .put(FIELD_ROOT, "notification.sandbox.activateMember")
-                        .put(FIELD_LOCALE, req.getLocale())
-                        .put(FIELD_UID, req.getUser().get_id())
+                        .put(FIELD_LOCALE, getLocale(context))
+                        .put(FIELD_UID, context.user().principal().getString("_id"))
                 );
-                message.reply(sandbox.result().encode());
+                handleResponse(context, sandbox.result());
             } else {
-                utils.sendError(message, (QaobeeException) sandbox.cause());
+                utils.handleError(context, (QaobeeException) sandbox.cause());
             }
         });
     }
@@ -249,28 +248,19 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = INVITE_MEMBER_TO_SANDBOX, method = Constants.POST, logged = true,
-          mandatoryParams = {PARAM_SANBOXID, PARAM_USER_EMAIL, PARAM_ROLE_CODE}, scope = Rule.Param.BODY)
-    private void inviteMemberToSandbox(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject request = new JsonObject(req.getBody());
-        userService.getUserInfo(req.getUser().get_id(), u -> {
-            if (u.succeeded()) {
-                shareDAO.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USER_EMAIL), request.getString(PARAM_ROLE_CODE), invitation -> {
-                    if (invitation.succeeded()) {
-                        try {
-                            sendNotification(invitation.result(), u.result(), request.getString(PARAM_USER_EMAIL), req.getLocale());
-                            message.reply(invitation.result().encode());
-                        } catch (QaobeeException e) {
-                            LOG.error(e.getMessage(), e);
-                            utils.sendError(message, e);
-                        }
-                    } else {
-                        utils.sendError(message, (QaobeeException) invitation.cause());
-                    }
-                });
+    private void inviteMemberToSandbox(RoutingContext context) {
+        JsonObject request = context.getBodyAsJson();
+        shareService.inviteMemberToSandbox(request.getString(PARAM_SANBOXID), request.getString(PARAM_USER_EMAIL), request.getString(PARAM_ROLE_CODE), invitation -> {
+            if (invitation.succeeded()) {
+                try {
+                    sendNotification(invitation.result(), context.user().principal(), request.getString(PARAM_USER_EMAIL), getLocale(context));
+                    handleResponse(context, invitation.result());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.handleError(context, e);
+                }
             } else {
-                utils.sendError(message, (QaobeeException) u.cause());
+                utils.handleError(context, (QaobeeException) invitation.cause());
             }
         });
     }
@@ -310,27 +300,18 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} invitation;
      */
-    @Rule(address = REVIVE_INVITATION_TO_SANDBOX, method = Constants.GET, logged = true,
-          mandatoryParams = {PARAM_INVITATION_ID}, scope = Rule.Param.REQUEST)
-    private void reviveInvitationToSandbox(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shareDAO.reviveInvitationToUser(req.getParams().get(PARAM_INVITATION_ID).get(0), invitation -> {
+    private void reviveInvitationToSandbox(RoutingContext context) {
+        shareService.reviveInvitationToUser(context.request().getParam(PARAM_INVITATION_ID), invitation -> {
             if (invitation.succeeded()) {
-                userService.getUserInfo(req.getUser().get_id(), u -> {
-                    if (u.succeeded()) {
-                        try {
-                            sendNotification(invitation.result(), u.result(), invitation.result().getString(USER_EMAIL_FIELD), req.getLocale());
-                            message.reply(invitation.result().encode());
-                        } catch (QaobeeException e) {
-                            LOG.error(e.getMessage(), e);
-                            utils.sendError(message, e);
-                        }
-                    } else {
-                        utils.sendError(message, (QaobeeException) u.cause());
-                    }
-                });
+                try {
+                    sendNotification(invitation.result(), context.user().principal(), invitation.result().getString(USER_EMAIL_FIELD), getLocale(context));
+                    handleResponse(context, invitation.result());
+                } catch (QaobeeException e) {
+                    LOG.error(e.getMessage(), e);
+                    utils.handleError(context, e);
+                }
             } else {
-                utils.sendError(message, (QaobeeException) invitation.cause());
+                utils.handleError(context, (QaobeeException) invitation.cause());
             }
         });
     }
@@ -344,11 +325,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} invitation;
      */
-    @Rule(address = REMOVE_INVITATION_TO_SANDBOX, method = Constants.GET, logged = true,
-          mandatoryParams = {PARAM_INVITATION_ID}, scope = Rule.Param.REQUEST)
-    private void removeInvitationToSandbox(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shareDAO.removeInvitationToSandbox(req.getParams().get(PARAM_INVITATION_ID).get(0), handleJson(message));
+    private void removeInvitationToSandbox(RoutingContext context) {
+        shareService.removeInvitationToSandbox(context.request().getParam(PARAM_INVITATION_ID), handleResponse(context));
     }
 
     /**
@@ -360,11 +338,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} invitation;
      */
-    @Rule(address = GET_INVITATION_TO_SANDBOX, method = Constants.GET, mandatoryParams = {PARAM_INVITATION_ID},
-          scope = Rule.Param.REQUEST)
-    private void getInvitationToSandbox(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shareDAO.getInvitationToSandbox(req.getParams().get(PARAM_INVITATION_ID).get(0), handleJson(message));
+    private void getInvitationToSandbox(RoutingContext context) {
+        shareService.getInvitationToSandbox(context.request().getParam(PARAM_INVITATION_ID), handleResponse(context));
     }
 
     /**
@@ -377,31 +352,28 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandbox Enriched sandbox;
      */
-    @Rule(address = CONFIRM_INVITATION_TO_SANDBOX, method = Constants.POST,
-          mandatoryParams = {PARAM_INVITATION_ID, PARAM_USERID, PARAM_ANSWER_INVITATION}, scope = Rule.Param.BODY)
-    private void confirmInvitationToSandbox(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        JsonObject request = new JsonObject(req.getBody());
-        shareDAO.confirmInvitationToSandbox(request.getString(PARAM_INVITATION_ID), request.getString(PARAM_USERID), request.getString(PARAM_ANSWER_INVITATION), invitation -> {
+    private void confirmInvitationToSandbox(RoutingContext context) {
+        JsonObject request = context.getBodyAsJson();
+        shareService.confirmInvitationToSandbox(request.getString(PARAM_INVITATION_ID), request.getString(PARAM_USERID), request.getString(PARAM_ANSWER_INVITATION), invitation -> {
             if (invitation.succeeded()) {
                 JsonObject notification = new JsonObject();
                 if ("accepted".equals(request.getString(PARAM_ANSWER_INVITATION))) {
-                    notification.put(CONTENT_FIELD, Messages.getString("notification.sandbox.accept.content", req.getLocale(), invitation.result().getString(USER_EMAIL_FIELD)))
-                            .put(TITLE_FIELD, Messages.getString("notification.sandbox.accept.title", req.getLocale()))
+                    notification.put(CONTENT_FIELD, Messages.getString("notification.sandbox.accept.content", getLocale(context), invitation.result().getString(USER_EMAIL_FIELD)))
+                            .put(TITLE_FIELD, Messages.getString("notification.sandbox.accept.title", getLocale(context)))
                             .put(SENDER_ID_FIELD, request.getString(PARAM_USERID)
                             );
                 } else {
-                    notification.put(CONTENT_FIELD, Messages.getString("notification.sandbox.refuse.content", req.getLocale(), invitation.result().getString(USER_EMAIL_FIELD)))
-                            .put(TITLE_FIELD, Messages.getString("notification.sandbox.refuse.title", req.getLocale()))
+                    notification.put(CONTENT_FIELD, Messages.getString("notification.sandbox.refuse.content", getLocale(context), invitation.result().getString(USER_EMAIL_FIELD)))
+                            .put(TITLE_FIELD, Messages.getString("notification.sandbox.refuse.title", getLocale(context)))
                             .put(SENDER_ID_FIELD, request.getString(PARAM_USERID)
                             );
                 }
                 notificationsService.sendNotification(invitation.result().getString(SENDER_ID_FIELD), DBCollections.USER, notification, new JsonArray(), ar -> {
                     // empty
                 });
-                message.reply(invitation.result().encode());
+                handleResponse(context, invitation.result());
             } else {
-                utils.sendError(message, (QaobeeException) invitation.cause());
+                utils.handleError(context, (QaobeeException) invitation.cause());
             }
         });
     }
@@ -415,11 +387,8 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiSuccess {Object} sandboxes list of enriched sandboxes owned and as member;
      */
     //TODO utilité du ACTIVITY_ID ????
-    @Rule(address = GET_SANDBOX_SHARING_LIST, method = Constants.GET, logged = true,
-          mandatoryParams = PARAM_ACTIVITY_ID, scope = Rule.Param.REQUEST)
-    private void getListOfSharedSandboxes(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shareDAO.getListOfSharedSandboxes(req.getUser().get_id(), handleJson(message));
+    private void getListOfSharedSandboxes(RoutingContext context) {
+        shareService.getListOfSharedSandboxes(context.user().principal().getString("_id"), handleResponse(context));
     }
 
     /**
@@ -430,11 +399,14 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {Object} sandboxes list of enriched sandboxes owned and as member;
      */
-    @Rule(address = GET_ADMIN_SANDBOX_SHARING_LIST, method = Constants.GET, logged = true, admin = true,
-          mandatoryParams = PARAM_USERID, scope = Rule.Param.REQUEST)
-    private void getAdminListOfSharedSandboxes(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shareDAO.getListOfSharedSandboxes(req.getParams().get(PARAM_USERID).get(0), handleJson(message));
+    private void getAdminListOfSharedSandboxes(RoutingContext context) {
+        context.user().isAuthorised(ADMIN_HABILIT, res -> {
+            if (res.succeeded() && res.result()) {
+                shareService.getListOfSharedSandboxes(context.request().getParam(PARAM_USERID), handleResponse(context));
+            } else {
+                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", getLocale(context))));
+            }
+        });
     }
 
     /**
@@ -447,10 +419,7 @@ public class SB_ShareVerticle extends AbstractGuiceVerticle { // NOSONAR
      * @apiGroup Share API
      * @apiSuccess {JsonArray} invitations list of invitation of sandbox
      */
-    @Rule(address = GET_LIST_INVITATION_TO_SANDBOX, method = Constants.GET, logged = true,
-          mandatoryParams = {PARAM_SANBOXID, PARAM_INVITATION_STATUS}, scope = Rule.Param.REQUEST)
-    private void getListInvitationOfSandbox(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        shareDAO.getListOfInvitationsToSandbox(req.getParams().get(PARAM_SANBOXID).get(0), req.getParams().get(PARAM_INVITATION_STATUS).get(0), handleJsonArray(message));
+    private void getListInvitationOfSandbox(RoutingContext context) {
+        shareService.getListOfInvitationsToSandbox(context.request().getParam(PARAM_SANBOXID), context.request().getParam(PARAM_INVITATION_STATUS), handleResponseArray(context));
     }
 }

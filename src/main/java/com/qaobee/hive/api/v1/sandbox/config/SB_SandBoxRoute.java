@@ -23,6 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.SandBoxService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -53,20 +54,24 @@ public class SB_SandBoxRoute extends AbstractRoute {// NOSONAR
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.get("/getByOwner").handler(authHandler);
-        router.get("/getByOwner").handler(c->mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID));
-        router.get("/getByOwner").handler(this::getByOwner);
+        addRoute(router, "/getByOwner", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID),
+                this::getByOwner);
 
-        router.get("/getListByOwner").handler(authHandler);
-        router.get("/getListByOwner").handler(this::getListByOwner);
+        addRoute(router, "/getListByOwner", HttpMethod.GET,
+                authHandler,
+                this::getListByOwner);
 
-        router.get("/").handler(authHandler);
-        router.get("/").handler(c->mandatoryHandler.testRequestParams(c, PARAM_ID));
-        router.get("/").handler(this::getSandboxById);
+        addRoute(router, "/", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::getSandboxById);
 
-        router.post("/update").handler(authHandler);
-        router.post("/update").handler(c->mandatoryHandler.testBodyParams(c, PARAM_ID));
-        router.post("/update").handler(this::update);
+        addRoute(router, "/update", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_ID),
+                this::update);
 
         return router;
     }

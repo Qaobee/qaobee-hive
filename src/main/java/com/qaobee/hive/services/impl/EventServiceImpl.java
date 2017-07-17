@@ -17,32 +17,43 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
-import com.qaobee.hive.dao.EventDAO;
-import com.qaobee.hive.services.NotificationsService;
-import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.api.v1.sandbox.event.SB_EventRoute;
+import com.qaobee.hive.services.EventService;
 import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.technical.annotations.ProxyService;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.tools.Messages;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
 /**
- * The type Event dao.
+ * The type Event service.
  */
-public class EventDAOImpl implements EventDAO {
+@ProxyService(address = EventService.ADDRESS, iface = EventService.class)
+public class EventServiceImpl implements EventService {
     private static final String FIELD_SANDBOX_ID = "sandboxId";
     @Inject
     private MongoDB mongo;
     @Inject
     private NotificationsService notificationsService;
 
+    /**
+     * Instantiates a new Event service.
+     *
+     * @param vertx the vertx
+     */
+    public EventServiceImpl(Vertx vertx) {
+        super();
+    }
     @Override
     public void getEvent(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
         mongo.getById(id, DBCollections.EVENT, resultHandler);
@@ -98,29 +109,29 @@ public class EventDAOImpl implements EventDAO {
         JsonObject dbObjectChild = new JsonObject();
         JsonObject dbObjectParent = new JsonObject();
         // Event Activity
-        dbObjectParent.put(SB_EventVerticle.PARAM_ACTIVITY_ID, params.getString(SB_EventVerticle.PARAM_ACTIVITY_ID));
+        dbObjectParent.put(SB_EventRoute.PARAM_ACTIVITY_ID, params.getString(SB_EventRoute.PARAM_ACTIVITY_ID));
         // Event sandboxId
-        dbObjectParent.put("owner.sandboxId", params.getString(SB_EventVerticle.PARAM_OWNER_SANBOXID));
-        if (params.getString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID) != null && !"".equals(params.getString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID).trim())) {
-            dbObjectParent.put("owner.effectiveId", params.getString(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID));
+        dbObjectParent.put("owner.sandboxId", params.getString(SB_EventRoute.PARAM_OWNER_SANBOXID));
+        if (params.getString(SB_EventRoute.PARAM_OWNER_EFFECTIVEID) != null && !"".equals(params.getString(SB_EventRoute.PARAM_OWNER_EFFECTIVEID).trim())) {
+            dbObjectParent.put("owner.effectiveId", params.getString(SB_EventRoute.PARAM_OWNER_EFFECTIVEID));
         }
-        if (params.getString(SB_EventVerticle.PARAM_OWNER_TEAMID) != null && !"".equals(params.getString(SB_EventVerticle.PARAM_OWNER_TEAMID).trim())) {
-            dbObjectParent.put("owner.teamId", params.getString(SB_EventVerticle.PARAM_OWNER_TEAMID));
+        if (params.getString(SB_EventRoute.PARAM_OWNER_TEAMID) != null && !"".equals(params.getString(SB_EventRoute.PARAM_OWNER_TEAMID).trim())) {
+            dbObjectParent.put("owner.teamId", params.getString(SB_EventRoute.PARAM_OWNER_TEAMID));
         }
         JsonObject o = new JsonObject()
-                .put("$gte", params.getLong(SB_EventVerticle.PARAM_START_DATE))
-                .put("$lt", params.getLong(SB_EventVerticle.PARAM_END_DATE));
+                .put("$gte", params.getLong(SB_EventRoute.PARAM_START_DATE))
+                .put("$lt", params.getLong(SB_EventRoute.PARAM_END_DATE));
         dbObjectParent.put("startDate", o);
         // Link.type
-        if (params.containsKey(SB_EventVerticle.PARAM_LINK_TYPE)) {
-            dbObjectChild.put("$in", params.getJsonArray(SB_EventVerticle.PARAM_LINK_TYPE));
+        if (params.containsKey(SB_EventRoute.PARAM_LINK_TYPE)) {
+            dbObjectChild.put("$in", params.getJsonArray(SB_EventRoute.PARAM_LINK_TYPE));
             dbObjectParent.put("link.type", dbObjectChild);
         }
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         JsonObject sortVal = new JsonObject();
         // $SORT section
-        if (params.containsKey(SB_EventVerticle.PARAM_LIST_SORTBY)) {
-            for (Object item : params.getJsonArray(SB_EventVerticle.PARAM_LIST_SORTBY)) {
+        if (params.containsKey(SB_EventRoute.PARAM_LIST_SORTBY)) {
+            for (Object item : params.getJsonArray(SB_EventRoute.PARAM_LIST_SORTBY)) {
                 JsonObject field = (JsonObject) item;
                 sortVal.put(field.getString("fieldName"), field.getInteger("sortOrder"));
             }
@@ -130,8 +141,8 @@ public class EventDAOImpl implements EventDAO {
         JsonObject sort = new JsonObject().put("$sort", sortVal);
         JsonArray pipelineAggregation = new JsonArray().add(match).add(sort);
         // $limit section
-        if (params.containsKey(SB_EventVerticle.PARAM_LIMIT_RESULT)) {
-            int limitNumber = params.getInteger(SB_EventVerticle.PARAM_LIMIT_RESULT);
+        if (params.containsKey(SB_EventRoute.PARAM_LIMIT_RESULT)) {
+            int limitNumber = params.getInteger(SB_EventRoute.PARAM_LIMIT_RESULT);
             JsonObject limit = new JsonObject().put("$limit", limitNumber);
             pipelineAggregation.add(limit);
         }

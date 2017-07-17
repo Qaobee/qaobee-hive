@@ -26,6 +26,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -72,37 +73,47 @@ public class UserRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.post("/sso").handler(c -> mandatoryHandler.testBodyParams(c, MOBILE_TOKEN, PARAM_LOGIN));
-        router.post("/sso").handler(this::loginByToken);
+        addRoute(router, "/sso", HttpMethod.POST,
+                c -> mandatoryHandler.testBodyParams(c, MOBILE_TOKEN, PARAM_LOGIN),
+                this::loginByToken);
 
-        router.post("/resetPasswd").handler(c -> mandatoryHandler.testBodyParams(c, "id", "code", PASSWD_FIELD));
-        router.post("/resetPasswd").handler(this::passwordReset);
+        addRoute(router, "/resetPasswd", HttpMethod.POST,
+                c -> mandatoryHandler.testBodyParams(c, "id", "code", PASSWD_FIELD),
+                this::passwordReset);
 
-        router.get("/userByLogin").handler(authHandler);
-        router.get("/userByLogin").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_LOGIN));
-        router.get("/userByLogin").handler(this::userByLogin);
+        addRoute(router, "/userByLogin", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_LOGIN),
+                this::userByLogin);
 
-        router.get("/logout").handler(authHandler);
-        router.get("/logout").handler(c -> mandatoryHandler.testRequestHeaders(c, TOKEN));
-        router.get("/logout").handler(this::logout);
+        addRoute(router, "/logout", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestHeaders(c, TOKEN),
+                this::logout);
+
+        addRoute(router, "/", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, "id"),
+                this::userInfo);
+
+        addRoute(router, "/passwdcheck", HttpMethod.GET,
+                c -> mandatoryHandler.testRequestParams(c, "id", "code"),
+                this::passwordRenewCheck);
+
+        addRoute(router, "/newpasswd", HttpMethod.POST,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_LOGIN),
+                this::passwordRenew);
+
+        addRoute(router, "/meta", HttpMethod.GET,
+                authHandler,
+                this::getMeta);
+
+        addRoute(router, "/current", HttpMethod.GET,
+                authHandler,
+                this::currentUser);
 
         router.post("/login").handler(this::login);
 
-        router.get("/").handler(authHandler);
-        router.get("/").handler(c -> mandatoryHandler.testRequestParams(c, "id"));
-        router.get("/").handler(this::userInfo);
-
-        router.get("/passwdcheck").handler(c -> mandatoryHandler.testRequestParams(c, "id", "code"));
-        router.get("/passwdcheck").handler(this::passwordRenewCheck);
-
-        router.post("/newpasswd").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_LOGIN));
-        router.post("/newpasswd").handler(this::passwordRenew);
-
-        router.get("/meta").handler(authHandler);
-        router.get("/meta").handler(this::getMeta);
-
-        router.get("/current").handler(authHandler);
-        router.get("/current").handler(this::currentUser);
         return router;
     }
 

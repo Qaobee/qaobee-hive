@@ -23,6 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.PersonService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -57,25 +58,30 @@ public class SB_PersonRoute extends AbstractRoute {// NOSONAR
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.put("/add").handler(authHandler);
-        router.put("/add").handler(c -> mandatoryHandler.testBodyParams(c, "person"));
-        router.put("/add").handler(this::addPerson);
+        addRoute(router, "/add", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, "person"),
+                this::addPerson);
 
-        router.put("/update").handler(authHandler);
-        router.put("/update").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_PERSON_ID));
-        router.put("/update").handler(this::updatePerson);
+        addRoute(router, "/update", HttpMethod.PUT,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_PERSON_ID),
+                this::updatePerson);
 
-        router.post("/list").handler(authHandler);
-        router.post("/list").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_LIST_ID, PARAM_LIST_FIELD));
-        router.post("/list").handler(this::getPersonList);
+        addRoute(router, "/list", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_LIST_ID, PARAM_LIST_FIELD),
+                this::getPersonList);
 
-        router.get("/get").handler(authHandler);
-        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_PERSON_ID));
-        router.get("/get").handler(this::getPerson);
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_PERSON_ID),
+                this::getPerson);
 
-        router.get("/listSandbox").handler(authHandler);
-        router.get("/listSandbox").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_SANDBOX_ID));
-        router.get("/listSandbox").handler(this::getPersonListBySandbox);
+        addRoute(router, "/listSandbox", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_SANDBOX_ID),
+                this::getPersonListBySandbox);
 
         return router;
     }

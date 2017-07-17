@@ -23,15 +23,18 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.TeamService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 
+/**
+ * The type Sb team route.
+ */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/effective/team")
 public class SB_TeamRoute extends AbstractRoute {// NOSONAR
-
     /**
      * team ID param
      */
@@ -63,19 +66,24 @@ public class SB_TeamRoute extends AbstractRoute {// NOSONAR
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.post("/add").handler(authHandler);
-        router.post("/add").handler(this::addTeam);
+        addRoute(router, "/add", HttpMethod.POST,
+                authHandler,
+                this::addTeam);
 
-        router.put("/update").handler(authHandler);
-        router.put("/update").handler(this::updateTeam);
+        addRoute(router, "/update", HttpMethod.PUT,
+                authHandler,
+                this::updateTeam);
 
-        router.get("/list").handler(authHandler);
-        router.get("/list").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_SANDBOX_ID, PARAM_EFFECTIVE_ID, PARAM_ENABLE, PARAM_ADVERSARY));
-        router.get("/list").handler(this::getTeamList);
 
-        router.get("/get").handler(authHandler);
-        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
-        router.get("/get").handler(this::getTeam);
+        addRoute(router, "/list", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_SANDBOX_ID, PARAM_EFFECTIVE_ID, PARAM_ENABLE, PARAM_ADVERSARY),
+                this::getTeamList);
+
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::getTeam);
 
         return router;
     }

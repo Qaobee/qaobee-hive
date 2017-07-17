@@ -51,7 +51,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /**
- * The type Security dao.
+ * The type Security service.
  */
 @ProxyService(address = SecurityService.ADDRESS, iface = SecurityService.class)
 public class SecurityServiceImpl implements SecurityService {
@@ -76,6 +76,11 @@ public class SecurityServiceImpl implements SecurityService {
     private JsonObject runtime;
     private final Vertx vertx;
 
+    /**
+     * Instantiates a new Security service.
+     *
+     * @param vertx the vertx
+     */
     public SecurityServiceImpl(Vertx vertx) {
         super();
         this.vertx = vertx;

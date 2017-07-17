@@ -24,6 +24,7 @@ import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
@@ -53,13 +54,16 @@ public class ActivityCfgRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
-        router.get("/*").handler(authHandler);
 
-        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE));
-        router.get("/get").handler(this::getActivityCfgHandler);
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE),
+                this::getActivityCfgHandler);
 
-        router.get("/params").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST));
-        router.get("/params").handler(this::getActivityCfgParamsHandler);
+        addRoute(router, "/params", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST),
+                this::getActivityCfgParamsHandler);
 
         return router;
     }

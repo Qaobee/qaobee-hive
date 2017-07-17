@@ -20,8 +20,8 @@ package com.qaobee.hive.api.v1.sandbox.stats;
 
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.dao.CollectDAO;
-import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
@@ -33,11 +33,11 @@ import io.vertx.core.json.JsonObject;
 import javax.inject.Inject;
 
 /**
- * The type Sb collect verticle.
+ * The type Sb collect Route.
  *
  * @author cke
  */
-@DeployableVerticle
+@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/stats/collect")
 public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     /**
      * Handler for get a list of collecte document

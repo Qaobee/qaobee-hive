@@ -6,6 +6,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -32,13 +33,17 @@ public class AssetsRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
-        router.get("/:collection/:id").handler(c -> mandatoryHandler.testRequestParams(c, COLLECTION, "id"));
-        router.get("/:collection/:id").handler(this::getAssetHandler);
 
-        router.post("/:collection/:field/:uid").handler(authHandler);
-        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequestParams(c, COLLECTION, "field", "uid"));
-        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequestHeaders(c, "Accept-Language"));
-        router.post("/:collection/:field/:uid").handler(this::assetUploadHandler);
+        addRoute(router, "/:collection/:id", HttpMethod.GET,
+                c -> mandatoryHandler.testRequestParams(c, COLLECTION, "id"),
+                this::getAssetHandler);
+
+        addRoute(router, "/:collection/:field/:uid", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, COLLECTION, "field", "uid"),
+                c -> mandatoryHandler.testRequestHeaders(c, "Accept-Language"),
+                this::assetUploadHandler);
+
         return router;
     }
 

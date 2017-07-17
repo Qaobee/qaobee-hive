@@ -42,7 +42,7 @@ import static org.hamcrest.Matchers.notNullValue;
  *
  * @author cke
  */
-public class UserServiceTest extends VertxJunitSupport {
+public class UserTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/users/user");
 
     /**

@@ -22,6 +22,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
@@ -57,14 +58,18 @@ public class CountryRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
-        router.get("/get").handler(this::get);
+        addRoute(router, "/get", HttpMethod.GET,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::get);
 
-        router.get("/getAlpha2").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ALPHA2));
-        router.get("/getAlpha2").handler(this::getAlpha2);
+        addRoute(router, "/getAlpha2", HttpMethod.GET,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ALPHA2),
+                this::getAlpha2);
 
-        router.get("/getList").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_LOCAL));
-        router.get("/getList").handler(this::getList);
+        addRoute(router, "/getList", HttpMethod.GET,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_LOCAL),
+                this::getList);
+
         return router;
     }
 

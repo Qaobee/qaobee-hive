@@ -25,6 +25,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -95,19 +96,25 @@ public class ChampionshipRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
-        router.post("/list").handler(authHandler);
-        router.post("/list").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE));
-        router.post("/list").handler(this::getListChampionships);
 
-        router.get("/get").handler(authHandler);
-        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
-        router.get("/get").handler(this::getChampionship);
+        addRoute(router, "/list", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE),
+                this::getListChampionships);
 
-        router.post("/add").handler(authHandler);
-        router.post("/add").handler(this::addChampionship);
+        addRoute(router, "/list", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::getChampionship);
 
-        router.post("/update").handler(authHandler);
-        router.post("/update").handler(this::updateChampionship);
+        addRoute(router, "/add", HttpMethod.POST,
+                authHandler,
+                this::addChampionship);
+
+        addRoute(router, "/update", HttpMethod.POST,
+                authHandler,
+                this::updateChampionship);
+
         return router;
     }
 

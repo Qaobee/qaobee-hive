@@ -22,6 +22,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.IndicatorService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -61,17 +62,21 @@ public class IndicatorRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.get("/get").handler(authHandler);
-        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
-        router.get("/get").handler(this::getIndicator);
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::getIndicator);
 
-        router.post("/getList").handler(authHandler);
-        router.post("/getList").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN));
-        router.post("/getList").handler(this::getIndicatorsList);
+        addRoute(router, "/getList", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_SCREEN),
+                this::getIndicatorsList);
 
-        router.post("/getByCode").handler(authHandler);
-        router.post("/getByCode").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE));
-        router.post("/getByCode").handler(this::getIndicatorByCode);
+        addRoute(router, "/getByCode", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_INDICATOR_CODE),
+                this::getIndicatorByCode);
+
         return router;
     }
 

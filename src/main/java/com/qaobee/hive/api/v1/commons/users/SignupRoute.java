@@ -27,6 +27,7 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -86,23 +87,30 @@ public class SignupRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.post("/logintest").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_LOGIN));
-        router.post("/logintest").handler(this::loginTest);
+        addRoute(router, "/logintest", HttpMethod.POST,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_LOGIN),
+                this::loginTest);
 
-        router.put("/register").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA));
-        router.put("/register").handler(this::registerUser);
+        addRoute(router, "/register", HttpMethod.PUT,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA),
+                this::registerUser);
 
-        router.get("/accountcheck").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID, PARAM_CODE));
-        router.get("/accountcheck").handler(this::accountCheck);
+        addRoute(router, "/accountcheck", HttpMethod.GET,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID, PARAM_CODE),
+                this::accountCheck);
 
-        router.get("/firstconnectioncheck").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID, PARAM_CODE));
-        router.get("/firstconnectioncheck").handler(this::firstConnectionCheck);
+        addRoute(router, "/firstconnectioncheck", HttpMethod.GET,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID, PARAM_CODE),
+                this::firstConnectionCheck);
 
-        router.post("/finalize").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE));
-        router.post("/finalize").handler(this::finalizeSignup);
+        addRoute(router, "/finalizeSignup", HttpMethod.POST,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE),
+                this::finalizeSignup);
 
-        router.post("/mailResend").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_LOGIN));
-        router.post("/mailResend").handler(this::resendMail);
+        addRoute(router, "/mailResend", HttpMethod.POST,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_LOGIN),
+                this::resendMail);
+
         return router;
     }
 

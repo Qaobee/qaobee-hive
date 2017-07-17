@@ -18,7 +18,7 @@
 package com.qaobee.hive.test.api.sandbox.effective;
 
 import com.qaobee.hive.api.v1.sandbox.effective.SB_TeamRoute;
-import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
+import com.qaobee.hive.api.v1.sandbox.event.SB_EventRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
@@ -212,7 +212,7 @@ public class SB_TeamTest extends VertxJunitSupport {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         final JsonObject params = new JsonObject()
-                .put(SB_EventVerticle.PARAM_LABEL, "TheNewTeam")
+                .put(SB_EventRoute.PARAM_LABEL, "TheNewTeam")
                 .put(PARAM_SANDBOX_ID, "558b0efebd2e39cdab651e1f")
                 .put(PARAM_EFFECTIVE_ID, "550b31f925da07681592db23")
                 .put(PARAM_ENABLE, true)

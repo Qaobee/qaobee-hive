@@ -24,6 +24,7 @@ import com.qaobee.hive.services.ShippingService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -42,12 +43,15 @@ public class ShippingRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.post("/pay").handler(authHandler);
-        router.post("/pay").handler(c -> mandatoryHandler.testBodyParams(c, "data"));
-        router.post("/pay").handler(this::pay);
+        addRoute(router, "/pay", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, "data"),
+                this::pay);
 
-        router.post("/webHook").handler(c -> mandatoryHandler.testBodyParams(c, "id", "created"));
-        router.post("/webHook").handler(this::webHook);
+        addRoute(router, "/webHook", HttpMethod.POST,
+                c -> mandatoryHandler.testBodyParams(c, "id", "created"),
+                this::pay);
+
         return router;
     }
 

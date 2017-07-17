@@ -18,7 +18,7 @@
 package com.qaobee.hive.test.api.sandbox.stats;
 
 import com.qaobee.hive.api.MainAPI;
-import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
+import com.qaobee.hive.api.v1.sandbox.event.SB_EventRoute;
 import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -40,6 +40,7 @@ import static org.hamcrest.Matchers.*;
  * @author cke
  */
 public class SB_CollectTest extends VertxJunitSupport {
+    private static final String EVENT_BASE_URL = getBaseURL("/sandbox/event/event");
     /**
      * Add collect.
      */
@@ -50,10 +51,10 @@ public class SB_CollectTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(user -> {
             JsonObject event = new JsonObject(
                     given().header(TOKEN, user.result().getAccount().getToken())
-                            .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
-                            .when().get(getURL(SB_EventVerticle.GET))
+                            .queryParam(SB_EventRoute.PARAM_ID, "55847ed0d040353767a48e68")
+                            .when().get(EVENT_BASE_URL + "/get")
                             .then().assertThat().statusCode(200)
-                            .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                            .body(SB_EventRoute.PARAM_LABEL, notNullValue())
                             .body("activityId", is("ACT-HAND"))
                             .extract().asString());
 
@@ -102,10 +103,10 @@ public class SB_CollectTest extends VertxJunitSupport {
 
             JsonObject event = new JsonObject(
                     given().header(TOKEN, user.result().getAccount().getToken())
-                            .queryParam(SB_EventVerticle.PARAM_ID, "5660c53ac630d9b391c0c4ec")
-                            .when().get(getURL(SB_EventVerticle.GET))
+                            .queryParam(SB_EventRoute.PARAM_ID, "5660c53ac630d9b391c0c4ec")
+                            .when().get(EVENT_BASE_URL + "/get")
                             .then().assertThat().statusCode(200)
-                            .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                            .body(SB_EventRoute.PARAM_LABEL, notNullValue())
                             .body("activityId", is("ACT-HAND"))
                             .extract().asString());
 
@@ -136,10 +137,10 @@ public class SB_CollectTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(user -> {
             JsonObject event = new JsonObject(
                     given().header(TOKEN, user.result().getAccount().getToken())
-                            .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
-                            .when().get(getURL(SB_EventVerticle.GET))
+                            .queryParam(SB_EventRoute.PARAM_ID, "55847ed0d040353767a48e68")
+                            .when().get(EVENT_BASE_URL + "/get")
                             .then().assertThat().statusCode(200)
-                            .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                            .body(SB_EventRoute.PARAM_LABEL, notNullValue())
                             .body("activityId", is("ACT-HAND"))
                             .extract().asString());
 
@@ -195,10 +196,10 @@ public class SB_CollectTest extends VertxJunitSupport {
         generateLoggedUser().setHandler(user -> {
             JsonObject event = new JsonObject(
                     given().header(TOKEN, user.result().getAccount().getToken())
-                            .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
-                            .when().get(getURL(SB_EventVerticle.GET))
+                            .queryParam(SB_EventRoute.PARAM_ID, "55847ed0d040353767a48e68")
+                            .when().get(EVENT_BASE_URL + "/get")
                             .then().assertThat().statusCode(200)
-                            .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
+                            .body(SB_EventRoute.PARAM_LABEL, notNullValue())
                             .body("activityId", is("ACT-HAND"))
                             .extract().asString());
 

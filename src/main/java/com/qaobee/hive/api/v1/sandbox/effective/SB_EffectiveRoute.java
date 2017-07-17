@@ -23,6 +23,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.EffectiveService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
@@ -53,20 +54,24 @@ public class SB_EffectiveRoute extends AbstractRoute {// NOSONAR
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.get("/get").handler(authHandler);
-        router.get("/get").handler(c->mandatoryHandler.testRequestParams(c, PARAM_ID));
-        router.get("/get").handler(this::getEffective);
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::getEffective);
 
-        router.get("/getList").handler(authHandler);
-        router.get("/getList").handler(c->mandatoryHandler.testRequestParams(c, PARAM_SANDBOX_ID));
-        router.get("/getList").handler(this::getEffectiveList);
+        addRoute(router, "/getList", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_SANDBOX_ID),
+                this::getEffectiveList);
 
-        router.put("/update").handler(authHandler);
-        router.put("/update").handler(c->mandatoryHandler.testBodyParams(c, PARAM_ID));
-        router.put("/update").handler(this::updateEffective);
+        addRoute(router, "/update", HttpMethod.PUT,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_ID),
+                this::updateEffective);
 
-        router.post("/add").handler(authHandler);
-        router.post("/add").handler(this::addEffective);
+        addRoute(router, "/add", HttpMethod.POST,
+                authHandler,
+                this::addEffective);
 
         return router;
     }

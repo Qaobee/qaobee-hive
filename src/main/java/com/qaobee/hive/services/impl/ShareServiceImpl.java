@@ -17,19 +17,14 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.services.SandBoxService;
-import com.qaobee.hive.dao.ShareDAO;
-import com.qaobee.hive.services.ActivityCfgService;
-import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.services.*;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.utils.MongoClientCustom;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.CompositeFuture;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
@@ -38,9 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Share dao.
+ * The type Share service.
  */
-public class ShareDAOImpl implements ShareDAO {
+@ProxyService(address = ShareService.ADDRESS, iface = ShareService.class)
+public class ShareServiceImpl implements ShareService {
     private static final String FIELD_ID = "_id";
     private static final String FIELD_OWNER = "owner";
     private static final String FIELD_MEMBERS = "members";
@@ -57,6 +53,15 @@ public class ShareDAOImpl implements ShareDAO {
     private ActivityCfgService activityCfgService;
     @Inject
     private SandBoxService sandBoxService;
+
+    /**
+     * Instantiates a new Share service.
+     *
+     * @param vertx the vertx
+     */
+    public ShareServiceImpl(Vertx vertx) {
+        super();
+    }
 
     private void sendInvitation(JsonArray activityCfg, String roleCode, JsonObject[] role, JsonObject owner, String userEmail, JsonObject sandbox, Handler<AsyncResult<JsonObject>> resultHandler) {
         activityCfg.getJsonObject(0).getJsonArray("listRoleSandbox").forEach(n -> {

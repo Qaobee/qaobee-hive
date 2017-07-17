@@ -8,8 +8,10 @@ import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.AuthHandler;
 import org.apache.http.protocol.HTTP;
@@ -46,6 +48,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      * Handle response handler.
      *
      * @param context the context
+     *
      * @return the handler
      */
     protected Handler<AsyncResult<JsonObject>> handleResponse(RoutingContext context) {
@@ -62,6 +65,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      * Handle response array handler.
      *
      * @param context the context
+     *
      * @return the handler
      */
     protected Handler<AsyncResult<JsonArray>> handleResponseArray(RoutingContext context) {
@@ -115,9 +119,25 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      * Gets locale.
      *
      * @param context the context
+     *
      * @return the locale
      */
     protected String getLocale(RoutingContext context) {
         return context.request().getHeader("Accept-Language");
+    }
+
+    /**
+     * Add route.
+     *
+     * @param router   the router
+     * @param path     the path
+     * @param method   the method
+     * @param handlers the handlers
+     */
+    @SafeVarargs
+    protected final void addRoute(Router router, String path, HttpMethod method, Handler<RoutingContext>... handlers) {
+        for(Handler<RoutingContext> h : handlers) {
+            router.route(method, path).handler(h);
+        }
     }
 }

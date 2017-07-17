@@ -22,6 +22,7 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.StructureService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -61,21 +62,27 @@ public class StructureRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
-        router.post("/add").handler(authHandler);
-        router.post("/add").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY));
-        router.post("/add").handler(this::addStructure);
 
-        router.get("/get").handler(authHandler);
-        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
-        router.get("/get").handler(this::getStructure);
+        addRoute(router, "/add", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY),
+                this::addStructure);
 
-        router.post("/getList").handler(authHandler);
-        router.post("/getList").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY, PARAM_ADDRESS));
-        router.post("/getList").handler(this::getListOfStructures);
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::getStructure);
 
-        router.post("/update").handler(authHandler);
-        router.post("/update").handler(c -> mandatoryHandler.testBodyParams(c, "_id", PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY));
-        router.post("/update").handler(this::updateStructure);
+        addRoute(router, "/getList", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY, PARAM_ADDRESS),
+                this::getListOfStructures);
+
+        addRoute(router, "/update", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, "_id", PARAM_ID, PARAM_LABEL, PARAM_ACTIVITY, PARAM_COUNTRY),
+                this::updateStructure);
+
         return router;
     }
 

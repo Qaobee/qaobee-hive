@@ -19,8 +19,7 @@
 
 package com.qaobee.hive.test.api.sandbox.agenda;
 
-import com.qaobee.hive.api.MainAPI;
-import com.qaobee.hive.api.v1.sandbox.event.SB_EventVerticle;
+import com.qaobee.hive.api.v1.sandbox.event.SB_EventRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
@@ -32,6 +31,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.qaobee.hive.api.v1.sandbox.event.SB_EventRoute.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -39,6 +39,7 @@ import static org.hamcrest.Matchers.*;
  * The type Event.
  */
 public class SB_EventTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/sandbox/event/event");
 
     /**
      * Add event.
@@ -49,32 +50,32 @@ public class SB_EventTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
-                    .put(SB_EventVerticle.PARAM_LABEL, "labelValue")
-                    .put(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .put(PARAM_LABEL, "labelValue")
+                    .put(PARAM_ACTIVITY_ID, "ACT-HAND")
                     .put("link", new JsonObject()
-                            .put(SB_EventVerticle.PARAM_LINK_TYPE, "championship")
+                            .put(SB_EventRoute.PARAM_LINK_TYPE, "championship")
                     )
-                    .put(SB_EventVerticle.PARAM_START_DATE, 1435701600000L)
-                    .put(SB_EventVerticle.PARAM_END_DATE, 1435701600100L)
-                    .put(SB_EventVerticle.PARAM_OWNER, new JsonObject()
+                    .put(PARAM_START_DATE, 1435701600000L)
+                    .put(SB_EventRoute.PARAM_END_DATE, 1435701600100L)
+                    .put(PARAM_OWNER, new JsonObject()
                             .put("sandboxId", "558b0efebd2e39cdab651e1f")
                             .put("effectiveId", "550b31f925da07681592db23")
                     );
 
             String id = given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_EventVerticle.ADD_EVENT))
+                    .when().post(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body(SB_EventVerticle.PARAM_LABEL, is(params.getString(SB_EventVerticle.PARAM_LABEL)))
+                    .body(PARAM_LABEL, is(params.getString(PARAM_LABEL)))
                     .extract().path("_id");
 
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_EventVerticle.PARAM_ID, id)
-                    .when().get(getURL(SB_EventVerticle.GET))
+                    .queryParam(SB_EventRoute.PARAM_ID, id)
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
-                    .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
-                    .body(SB_EventVerticle.PARAM_LABEL, is(params.getString(SB_EventVerticle.PARAM_LABEL)));
+                    .body(PARAM_LABEL, notNullValue())
+                    .body(PARAM_LABEL, is(params.getString(PARAM_LABEL)));
             async.complete();
         });
         async.await(TIMEOUT);
@@ -85,7 +86,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void addEventWithNonLoggedUser() {
-        given().when().post(getURL(SB_EventVerticle.ADD_EVENT))
+        given().when().post(BASE_URL + "/add")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -95,7 +96,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void addEventWithWrongHttpMethod() {
-        given().when().get(getURL(SB_EventVerticle.ADD_EVENT))
+        given().when().get(BASE_URL + "/add")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -108,24 +109,24 @@ public class SB_EventTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             final JsonObject params = new JsonObject()
-                    .put(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                    .put(SB_EventVerticle.PARAM_LABEL, "labelValue")
+                    .put(PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .put(PARAM_LABEL, "labelValue")
                     .put("link", new JsonObject()
-                            .put(SB_EventVerticle.PARAM_LINK_TYPE, "championship")
+                            .put(SB_EventRoute.PARAM_LINK_TYPE, "championship")
                     )
-                    .put(SB_EventVerticle.PARAM_START_DATE, 1435701600000L)
-                    .put(SB_EventVerticle.PARAM_END_DATE, 1435701600100L)
-                    .put(SB_EventVerticle.PARAM_OWNER, new JsonObject()
-                            .put(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
+                    .put(PARAM_START_DATE, 1435701600000L)
+                    .put(SB_EventRoute.PARAM_END_DATE, 1435701600100L)
+                    .put(PARAM_OWNER, new JsonObject()
+                            .put(SB_EventRoute.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
                     );
 
-            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_EventVerticle.ADD_EVENT).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
                 given().header(TOKEN, u.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_EventVerticle.ADD_EVENT))
+                        .when().post(BASE_URL + "/add")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -143,42 +144,42 @@ public class SB_EventTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject();
-            params.put(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                    .put(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray().add("championship"))
-                    .put(SB_EventVerticle.PARAM_START_DATE, 1435701600000L)
-                    .put(SB_EventVerticle.PARAM_END_DATE, 1467237600000L)
-                    .put(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
-                    .put(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23")
-                    .put(SB_EventVerticle.PARAM_OWNER_TEAMID, "552d5e08644a77b3a20afdfe");
+            params.put(PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .put(SB_EventRoute.PARAM_LINK_TYPE, new JsonArray().add("championship"))
+                    .put(PARAM_START_DATE, 1435701600000L)
+                    .put(SB_EventRoute.PARAM_END_DATE, 1467237600000L)
+                    .put(SB_EventRoute.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
+                    .put(SB_EventRoute.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23")
+                    .put(SB_EventRoute.PARAM_OWNER_TEAMID, "552d5e08644a77b3a20afdfe");
 
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_EventVerticle.GET_LIST))
+                    .when().post(BASE_URL + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(4));
 
-            params.put(SB_EventVerticle.PARAM_LIMIT_RESULT, 2)
-                    .put(SB_EventVerticle.PARAM_LIST_SORTBY, new JsonArray().add(new JsonObject()
-                            .put("fieldName", SB_EventVerticle.PARAM_LABEL)
+            params.put(SB_EventRoute.PARAM_LIMIT_RESULT, 2)
+                    .put(SB_EventRoute.PARAM_LIST_SORTBY, new JsonArray().add(new JsonObject()
+                            .put("fieldName", PARAM_LABEL)
                             .put("sortOrder", -1)
                     ));
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_EventVerticle.GET_LIST))
+                    .when().post(BASE_URL + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(2));
 
-            params.put(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "");
+            params.put(SB_EventRoute.PARAM_OWNER_EFFECTIVEID, "");
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_EventVerticle.GET_LIST))
+                    .when().post(BASE_URL + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(2));
 
-            params.put(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "TOTO");
+            params.put(SB_EventRoute.PARAM_OWNER_EFFECTIVEID, "TOTO");
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(params.encode())
-                    .when().post(getURL(SB_EventVerticle.GET_LIST))
+                    .when().post(BASE_URL + "/list")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(0));
             async.complete();
@@ -191,7 +192,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getListEventWithNonLoggedUser() {
-        given().when().post(getURL(SB_EventVerticle.GET_LIST))
+        given().when().post(BASE_URL + "/list")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -201,7 +202,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getListEventWithWrongHttpMethod() {
-        given().when().get(getURL(SB_EventVerticle.GET_LIST))
+        given().when().get(BASE_URL + "/list")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -215,20 +216,20 @@ public class SB_EventTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
             final JsonObject params = new JsonObject()
-                    .put(SB_EventVerticle.PARAM_ACTIVITY_ID, "ACT-HAND")
-                    .put(SB_EventVerticle.PARAM_LINK_TYPE, new JsonArray().add("championship"))
-                    .put(SB_EventVerticle.PARAM_START_DATE, 1435701600000L)
-                    .put(SB_EventVerticle.PARAM_END_DATE, 1467237600000L)
-                    .put(SB_EventVerticle.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
-                    .put(SB_EventVerticle.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
+                    .put(PARAM_ACTIVITY_ID, "ACT-HAND")
+                    .put(SB_EventRoute.PARAM_LINK_TYPE, new JsonArray().add("championship"))
+                    .put(PARAM_START_DATE, 1435701600000L)
+                    .put(SB_EventRoute.PARAM_END_DATE, 1467237600000L)
+                    .put(SB_EventRoute.PARAM_OWNER_SANBOXID, "558b0efebd2e39cdab651e1f")
+                    .put(SB_EventRoute.PARAM_OWNER_EFFECTIVEID, "550b31f925da07681592db23");
 
-            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_EventVerticle.GET_LIST).mandatoryParams());
+            List<String> mandatoryParams = Arrays.asList(PARAM_START_DATE, PARAM_END_DATE, PARAM_ACTIVITY_ID, PARAM_OWNER_SANBOXID);
             params.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(params.encode());
                 params2.remove(k);
                 given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_EventVerticle.GET_LIST))
+                        .when().post(BASE_URL + "/list")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });
@@ -246,11 +247,11 @@ public class SB_EventTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
-                    .when().get(getURL(SB_EventVerticle.GET))
+                    .queryParam(SB_EventRoute.PARAM_ID, "55847ed0d040353767a48e68")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
-                    .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
-                    .body(SB_EventVerticle.PARAM_LABEL, is("Amical"));
+                    .body(PARAM_LABEL, notNullValue())
+                    .body(PARAM_LABEL, is("Amical"));
             async.complete();
         });
         async.await(TIMEOUT);
@@ -261,7 +262,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getEventByIdWithNonLoggedUser() {
-        given().when().get(getURL(SB_EventVerticle.GET))
+        given().when().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -271,7 +272,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void getEventByIdWithWrongHttpMethod() {
-        given().when().post(getURL(SB_EventVerticle.GET))
+        given().when().post(BASE_URL + "/get")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -285,7 +286,7 @@ public class SB_EventTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .when().get(getURL(SB_EventVerticle.GET))
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -302,8 +303,8 @@ public class SB_EventTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_EventVerticle.PARAM_ID, "bla")
-                    .when().get(getURL(SB_EventVerticle.GET))
+                    .queryParam(SB_EventRoute.PARAM_ID, "bla")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
@@ -320,26 +321,26 @@ public class SB_EventTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EVENT_HAND, DATA_SANDBOXES_HAND);
         generateLoggedUser().setHandler(user -> {
             JsonObject event = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
-                    .when().get(getURL(SB_EventVerticle.GET))
+                    .queryParam(SB_EventRoute.PARAM_ID, "55847ed0d040353767a48e68")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
-                    .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
-                    .body(SB_EventVerticle.PARAM_LABEL, is("Amical")).extract().asString());
-            event.put(SB_EventVerticle.PARAM_LABEL, "toto");
+                    .body(PARAM_LABEL, notNullValue())
+                    .body(PARAM_LABEL, is("Amical")).extract().asString());
+            event.put(PARAM_LABEL, "toto");
             String id = given().header(TOKEN, user.result().getAccount().getToken())
                     .body(event.encode())
-                    .when().post(getURL(SB_EventVerticle.UPDATE))
+                    .when().post(BASE_URL + "/update")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
-                    .body(SB_EventVerticle.PARAM_LABEL, is(event.getString(SB_EventVerticle.PARAM_LABEL)))
+                    .body(PARAM_LABEL, is(event.getString(PARAM_LABEL)))
                     .extract().path("_id");
 
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_EventVerticle.PARAM_ID, id)
-                    .when().get(getURL(SB_EventVerticle.GET))
+                    .queryParam(SB_EventRoute.PARAM_ID, id)
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
-                    .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
-                    .body(SB_EventVerticle.PARAM_LABEL, is(event.getString(SB_EventVerticle.PARAM_LABEL)));
+                    .body(PARAM_LABEL, notNullValue())
+                    .body(PARAM_LABEL, is(event.getString(PARAM_LABEL)));
             async.complete();
         });
         async.await(TIMEOUT);
@@ -350,7 +351,7 @@ public class SB_EventTest extends VertxJunitSupport {
      */
     @Test
     public void updateEventWithNonLoggedUser() {
-        given().when().post(getURL(SB_EventVerticle.UPDATE))
+        given().when().post(BASE_URL + "/update")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -359,8 +360,8 @@ public class SB_EventTest extends VertxJunitSupport {
      * Update event with wrong http method.
      */
     @Test
-    public void updateEventWithWrongHttpMethod(TestContext context) {
-        given().when().get(getURL(SB_EventVerticle.UPDATE))
+    public void updateEventWithWrongHttpMethod() {
+        given().when().get(BASE_URL + "/update")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -374,19 +375,19 @@ public class SB_EventTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
             JsonObject event = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_EventVerticle.PARAM_ID, "55847ed0d040353767a48e68")
-                    .when().get(getURL(SB_EventVerticle.GET))
+                    .queryParam(SB_EventRoute.PARAM_ID, "55847ed0d040353767a48e68")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
-                    .body(SB_EventVerticle.PARAM_LABEL, notNullValue())
-                    .body(SB_EventVerticle.PARAM_LABEL, is("Amical")).extract().asString());
-            event.put(SB_EventVerticle.PARAM_LABEL, "toto");
-            List<String> mandatoryParams = Arrays.asList(MainAPI.getRules().get(SB_EventVerticle.UPDATE).mandatoryParams());
+                    .body(PARAM_LABEL, notNullValue())
+                    .body(PARAM_LABEL, is("Amical")).extract().asString());
+            event.put(PARAM_LABEL, "toto");
+            List<String> mandatoryParams = Arrays.asList(PARAM_LABEL, PARAM_ACTIVITY_ID, PARAM_OWNER, PARAM_START_DATE);
             event.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(event.encode());
                 params2.remove(k);
                 given().header(TOKEN, user.result().getAccount().getToken())
                         .body(params2.encode())
-                        .when().post(getURL(SB_EventVerticle.UPDATE))
+                        .when().post(BASE_URL + "/update")
                         .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                         .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             });

@@ -17,17 +17,52 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao;
+package com.qaobee.hive.services;
 
+import com.qaobee.hive.services.impl.EffectiveServiceImpl;
+import com.qaobee.hive.services.impl.EventServiceImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Event dao.
+ * The interface Event service.
  */
-public interface EventDAO {
+@ProxyGen
+@VertxGen
+public interface EventService {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.Event.service";
+
+    /**
+     * Create event service.
+     *
+     * @param vertx the vertx
+     *
+     * @return the event service
+     */
+    static EventService create(Vertx vertx) {
+        return new EventServiceImpl(vertx);
+    }
+
+    /**
+     * Create proxy event service.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     *
+     * @return the event service
+     */
+    static EventService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(EventService.class, vertx, address);
+    }
 
     /**
      * Gets event.
