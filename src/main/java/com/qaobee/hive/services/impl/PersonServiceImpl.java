@@ -17,11 +17,12 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.dao.PersonDAO;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.PersonService;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -30,15 +31,17 @@ import com.qaobee.hive.technical.tools.Messages;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
 /**
- * The type Person dao.
+ * The type Person service.
  */
-public class PersonDAOImpl implements PersonDAO {
+@ProxyService(address = PersonService.ADDRESS, iface = PersonService.class)
+public class PersonServiceImpl implements PersonService {
 
     private static final String PARAM_SANDBOX_ID = "sandboxId";
 
@@ -47,6 +50,15 @@ public class PersonDAOImpl implements PersonDAO {
     @Inject
     private NotificationsService notificationsService;
 
+    /**
+     * Instantiates a new Person service.
+     *
+     * @param vertx the vertx
+     */
+    public PersonServiceImpl(Vertx vertx) {
+        super();
+    }
+    
     @Override
     public void getPersonListBySandbox(String sandboxId, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject criteria = new JsonObject().put(PARAM_SANDBOX_ID, sandboxId);

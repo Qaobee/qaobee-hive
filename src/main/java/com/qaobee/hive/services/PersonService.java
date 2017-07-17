@@ -17,17 +17,52 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao;
+package com.qaobee.hive.services;
 
+import com.qaobee.hive.services.impl.PersonServiceImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Person dao.
+ * The interface Person service.
  */
-public interface PersonDAO {
+@ProxyGen
+@VertxGen
+public interface PersonService {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.Person.service";
+
+    /**
+     * Create person service.
+     *
+     * @param vertx the vertx
+     *
+     * @return the person service
+     */
+    static PersonService create(Vertx vertx) {
+        return new PersonServiceImpl(vertx);
+    }
+
+    /**
+     * Create proxy person service.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     *
+     * @return the person service
+     */
+    static PersonService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(PersonService.class, vertx, address);
+    }
+
     /**
      * Gets person list by sandbox.
      *

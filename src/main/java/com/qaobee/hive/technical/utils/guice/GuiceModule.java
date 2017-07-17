@@ -111,7 +111,6 @@ public class GuiceModule extends AbstractModule {
         bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
         bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
-        bind(PersonDAO.class).to(PersonDAOImpl.class).in(Singleton.class);
         bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
         bind(TeamDAO.class).to(TeamDAOImpl.class).in(Singleton.class);
         bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
@@ -136,5 +135,6 @@ public class GuiceModule extends AbstractModule {
         bind(CRMService.class).toInstance(CRMService.createProxy(vertx, CRMService.ADDRESS));
         bind(SandBoxService.class).toInstance(SandBoxService.createProxy(vertx, SandBoxService.ADDRESS));
         bind(EffectiveService.class).toInstance(EffectiveService.createProxy(vertx, EffectiveService.ADDRESS));
+        bind(PersonService.class).toInstance(PersonService.createProxy(vertx, PersonService.ADDRESS));
     }
 }
