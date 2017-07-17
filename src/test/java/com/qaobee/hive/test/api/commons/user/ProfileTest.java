@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.test.api.commons.user;
 
-import com.qaobee.hive.api.v1.commons.users.UserVerticle;
+import com.qaobee.hive.api.v1.commons.users.UserRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
@@ -40,6 +40,7 @@ import static org.hamcrest.Matchers.is;
  */
 public class ProfileTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/users/profile");
+    private static final String USER_BASE_URL = getBaseURL("/commons/users/user");
 
     /**
      * Update profile with common data.
@@ -74,10 +75,10 @@ public class ProfileTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.result().getName()));
             final JsonObject params = new JsonObject()
-                    .put(UserVerticle.PARAM_LOGIN, u.result().getAccount().getLogin())
-                    .put(UserVerticle.PARAM_PWD, "toto");
+                    .put(UserRoute.PARAM_LOGIN, u.result().getAccount().getLogin())
+                    .put(UserRoute.PARAM_PWD, "toto");
             given().body(params.encode())
-                    .when().post(getURL(UserVerticle.LOGIN))
+                    .when().post(USER_BASE_URL + "/login")
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.result().getName()));
             async.complete();

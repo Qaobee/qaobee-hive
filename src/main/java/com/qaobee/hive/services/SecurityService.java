@@ -17,16 +17,51 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao;
+package com.qaobee.hive.services;
 
+import com.qaobee.hive.services.impl.SecurityServiceImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 /**
  * The interface Security dao.
  */
-public interface SecurityDAO {
+@ProxyGen
+@VertxGen
+public interface SecurityService {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.Security.service";
+
+    /**
+     * Create security service.
+     *
+     * @param vertx the vertx
+     *
+     * @return the security service
+     */
+    static SecurityService create(Vertx vertx) {
+        return new SecurityServiceImpl(vertx);
+    }
+
+    /**
+     * Create proxy security service.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     *
+     * @return the security service
+     */
+    static SecurityService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(SecurityService.class, vertx, address);
+    }
+
     /**
      * Login by token.
      *

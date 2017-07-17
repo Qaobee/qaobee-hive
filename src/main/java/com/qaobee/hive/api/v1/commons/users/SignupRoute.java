@@ -19,8 +19,8 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.SignupService;
 import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.SignupService;
 import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
@@ -31,8 +31,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -44,7 +42,6 @@ import javax.inject.Named;
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/users/signup")
 public class SignupRoute extends AbstractRoute {
-    private static final Logger LOG = LoggerFactory.getLogger(SignupRoute.class);
     /**
      * Parameter ID
      */

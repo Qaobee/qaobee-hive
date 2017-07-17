@@ -20,10 +20,10 @@
 package com.qaobee.hive.services.impl;
 
 import com.lowagie.text.pdf.codec.Base64;
-import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
+import com.qaobee.hive.verticles.PDFVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.PasswordEncryptionService;
-import com.qaobee.hive.dao.SandBoxDAO;
+import com.qaobee.hive.services.SandBoxService;
 import com.qaobee.hive.dao.TeamDAO;
 import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.MongoDB;
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
     @Inject
-    private SandBoxDAO sandBoxDAO;
+    private SandBoxService sandBoxService;
     @Inject
     private SeasonService seasonService;
     @Inject
@@ -300,7 +300,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void getMeta(String sandboxId, Handler<AsyncResult<JsonObject>> resultHandler) {
-        sandBoxDAO.getSandboxById(sandboxId, sbRes -> {
+        sandBoxService.getSandboxById(sandboxId, sbRes -> {
             if (sbRes.succeeded()) {
                 JsonObject meta = sbRes.result();
                 seasonService.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id"), season -> {

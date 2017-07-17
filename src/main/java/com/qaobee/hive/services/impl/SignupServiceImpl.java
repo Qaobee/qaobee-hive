@@ -19,8 +19,8 @@
 
 package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.api.v1.commons.utils.CRMVerticle;
-import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
+import com.qaobee.hive.verticles.CRMVerticle;
+import com.qaobee.hive.verticles.MailVerticle;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.CategoryAge;

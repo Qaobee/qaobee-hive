@@ -19,7 +19,6 @@
 
 package com.qaobee.hive.test.api.commons.user;
 
-import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -53,6 +52,7 @@ import static org.mockserver.integration.ClientAndServer.startClientAndServer;
  */
 public class ShippingTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/users/shipping");
+    private static final String USER_BASE_URL = getBaseURL("/commons/users/user");
     private ClientAndServer mockServer;
     private JsonObject mockData;
 
@@ -205,7 +205,7 @@ public class ShippingTest extends VertxJunitSupport {
 
             given().header(TOKEN, u.result().getAccount().getToken())
                     .param("id", u.result().get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .when().get(USER_BASE_URL + "/")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("_id", is(u.result().get_id()))
@@ -268,7 +268,7 @@ public class ShippingTest extends VertxJunitSupport {
 
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .param("id", u.result().get_id())
-                            .when().get(getURL(UserVerticle.USER_INFO))
+                            .when().get(USER_BASE_URL + "/")
                             .then().assertThat().statusCode(200)
                             .body("_id", notNullValue())
                             .body("_id", is(u.result().get_id()))
@@ -313,7 +313,7 @@ public class ShippingTest extends VertxJunitSupport {
 
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .param("id", u.result().get_id())
-                            .when().get(getURL(UserVerticle.USER_INFO))
+                            .when().get(USER_BASE_URL + "/")
                             .then().assertThat().statusCode(200)
                             .body("_id", notNullValue())
                             .body("_id", is(u.result().get_id()))
@@ -388,7 +388,7 @@ public class ShippingTest extends VertxJunitSupport {
 
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .param("id", u.result().get_id())
-                            .when().get(getURL(UserVerticle.USER_INFO))
+                            .when().get(USER_BASE_URL + "/")
                             .then().assertThat().statusCode(200)
                             .body("_id", notNullValue())
                             .body("_id", is(u.result().get_id()))
@@ -431,7 +431,7 @@ public class ShippingTest extends VertxJunitSupport {
 
                     given().header(TOKEN, u.result().getAccount().getToken())
                             .param("id", u.result().get_id())
-                            .when().get(getURL(UserVerticle.USER_INFO))
+                            .when().get(USER_BASE_URL + "/")
                             .then().assertThat().statusCode(200)
                             .body("_id", notNullValue())
                             .body("_id", is(u.result().get_id()))
@@ -586,7 +586,7 @@ public class ShippingTest extends VertxJunitSupport {
 
             String customer = given().header(TOKEN, u.result().getAccount().getToken())
                     .param("id", u.result().get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .when().get(USER_BASE_URL + "/")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("_id", is(u.result().get_id()))
@@ -606,7 +606,7 @@ public class ShippingTest extends VertxJunitSupport {
             // Let's verify user's info
             given().header(TOKEN, u.result().getAccount().getToken())
                     .param("id", u.result().get_id())
-                    .when().get(getURL(UserVerticle.USER_INFO))
+                    .when().get(USER_BASE_URL + "/")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("_id", is(u.result().get_id()))

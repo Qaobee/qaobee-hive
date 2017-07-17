@@ -37,9 +37,6 @@ import io.restassured.parsing.Parser;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
-import io.vertx.core.eventbus.DeliveryOptions;
-import io.vertx.core.eventbus.ReplyException;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
@@ -139,6 +136,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Gets url.
      *
      * @param busAddress the bus address
+     *
      * @return the url
      */
     protected String getURL(String busAddress) {
@@ -149,6 +147,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Gets base url.
      *
      * @param s the s
+     *
      * @return the base url
      */
     protected static String getBaseURL(String s) {
@@ -159,7 +158,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Start mongo server.
      */
     @BeforeClass
-    public static void init(TestContext context) {
+    public static void init() {
         RestAssured.defaultParser = Parser.JSON;
         RestAssured.requestSpecification = new RequestSpecBuilder()
                 .addHeader(HttpHeaders.ACCEPT_LANGUAGE, LOCALE)
@@ -185,8 +184,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
     @Before
     public void printInfo(TestContext context) {
         Async async = context.async();
-        vertx = Vertx.vertx(new VertxOptions().setWorkerPoolSize(40));
-        vertx.exceptionHandler(context.exceptionHandler());
+        vertx = Vertx.vertx();
         FileSystem fs = vertx.fileSystem();
         config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes())).getJsonObject("TEST");
         try {
@@ -197,7 +195,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
                 if (ar.failed()) {
                     ar.cause().printStackTrace();
                 }
-                vertx.exceptionHandler(context.exceptionHandler());
                 Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
                 injector.injectMembers(this);
                 if (mongoClientCustom != null && mongoClientCustom.getDB() != null && mongoClientCustom.getDB().getDatabase("hive") != null) {
@@ -224,9 +221,14 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     @After
     public void cleanDatas(TestContext context) {
+        JunitMongoSingleton.getInstance().getProcess().stop();
         LOG.info("Closing VertX");
         vertx.close();
-        JunitMongoSingleton.getInstance().getProcess().stop();
+        try {
+            Thread.sleep(500L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -278,6 +280,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Future<User> generateLoggedUser(String userId) {
@@ -319,6 +322,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged admin user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Future<User> generateLoggedAdminUser(String userId) {
@@ -330,41 +334,13 @@ public class VertxJunitSupport implements JSDataMongoTest {
             habilitation.setKey(Constants.ADMIN_HABILIT);
             user.result().getAccount().setHabilitations(new ArrayList<>());
             user.result().getAccount().getHabilitations().add(habilitation);
-            mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, u -> {
+            mongo.upsert(new JsonObject(Json.encode(user.result())), DBCollections.USER, u -> {
                 if (u.succeeded()) {
                     deferred.complete(user.result());
                 } else {
                     Assert.fail(u.cause().getMessage());
                 }
             });
-        });
-        return deferred;
-    }
-
-    /**
-     * Send on bus json object.
-     *
-     * @param address the address
-     * @param query   the query
-     * @return the json object
-     */
-    protected Future<JsonObject> sendOnBus(String address, JsonObject query) {
-        Future<JsonObject> deferred = Future.future();
-        vertx.eventBus().send(address, query, new DeliveryOptions().setSendTimeout(TIMEOUT), ar -> {
-            if (ar.succeeded()) {
-                if (ar.result().body() instanceof ReplyException) {
-                    if (((ReplyException) ar.result().body()).getMessage().startsWith("{")) {
-                        deferred.complete(new JsonObject(((ReplyException) ar.result().body()).getMessage()));
-                    }
-                    Assert.fail(((ReplyException) ar.result().body()).getMessage());
-                } else if (ar.result().body() instanceof JsonObject) {
-                    deferred.complete(((JsonObject) ar.result().body()));
-                } else {
-                    Assert.fail("unparsable data : " + ar.result().body().toString());
-                }
-            } else {
-                deferred.fail(ar.cause());
-            }
         });
         return deferred;
     }
@@ -443,6 +419,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
+     *
      * @return the activity
      */
     protected Future<JsonObject> getActivity(String id) {
@@ -461,6 +438,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
+     *
      * @return the country
      */
     protected Future<JsonObject> getCountry(String id) {

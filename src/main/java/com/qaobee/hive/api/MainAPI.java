@@ -155,7 +155,7 @@ public class MainAPI extends AbstractGuiceVerticle {
         }
         router.route().path("/*").produces("application/json").handler(MainAPI::jsonHandler);
         router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
-        VertxRoute.Loader.getRoutesInPackage("com.qaobee.hive.api")
+        VertxRoute.Loader.getRoutesInPackage(getClass().getPackage().getName())
                 .entrySet().stream().sorted(Comparator.comparingInt(e -> e.getKey().order()))
                 .forEachOrdered(item -> {
                             LOG.info("Injecting " + item.getKey());
@@ -222,6 +222,7 @@ public class MainAPI extends AbstractGuiceVerticle {
         List<Future> promises = new ArrayList<>();
         // Loading Verticles
         final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage(getClass().getPackage().getName());
+        restModules.addAll(DeployableVerticle.VerticleLoader.scanPackage("com.qaobee.hive.verticles"));
         restModules.forEach(restMod -> {
             Future<String> deferred = Future.future();
             promises.add(deferred);
@@ -321,6 +322,7 @@ public class MainAPI extends AbstractGuiceVerticle {
     /**
      * @param busAddress address
      * @param wrapper    request wrapper
+     *
      * @return success
      */
     private Future<JsonObject> testRequest(String busAddress, RequestWrapper wrapper) {

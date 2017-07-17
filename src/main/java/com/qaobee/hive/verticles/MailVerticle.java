@@ -1,4 +1,4 @@
-package com.qaobee.hive.api.v1.commons.utils;
+package com.qaobee.hive.verticles;
 
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;

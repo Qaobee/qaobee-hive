@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.qaobee.hive.dao.SandBoxDAO;
+import com.qaobee.hive.services.SandBoxService;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.services.MongoDB;
@@ -56,7 +56,7 @@ public class ShareDAOImpl implements ShareDAO {
     @Inject
     private ActivityCfgService activityCfgService;
     @Inject
-    private SandBoxDAO sandBoxDAO;
+    private SandBoxService sandBoxService;
 
     private void sendInvitation(JsonArray activityCfg, String roleCode, JsonObject[] role, JsonObject owner, String userEmail, JsonObject sandbox, Handler<AsyncResult<JsonObject>> resultHandler) {
         activityCfg.getJsonObject(0).getJsonArray("listRoleSandbox").forEach(n -> {
@@ -104,7 +104,7 @@ public class ShareDAOImpl implements ShareDAO {
                 mongo.upsert(sandbox, DBCollections.SANDBOX, upsertRes -> {
                     if (upsertRes.succeeded()) {
                         sandbox.put("_id", upsertRes.result());
-                        sandBoxDAO.getEnrichedSandbox(sandbox, resultHandler);
+                        sandBoxService.getEnrichedSandbox(sandbox, resultHandler);
                     } else {
                         resultHandler.handle(Future.failedFuture(upsertRes.cause()));
                     }
@@ -128,7 +128,7 @@ public class ShareDAOImpl implements ShareDAO {
                 mongo.upsert(sandbox.result(), DBCollections.SANDBOX, upsertRes -> {
                     if (upsertRes.succeeded()) {
                         sb.put("_id", upsertRes.result());
-                        sandBoxDAO.getEnrichedSandbox(sb, resultHandler);
+                        sandBoxService.getEnrichedSandbox(sb, resultHandler);
                     } else {
                         resultHandler.handle(Future.failedFuture(upsertRes.cause()));
                     }
@@ -152,7 +152,7 @@ public class ShareDAOImpl implements ShareDAO {
                 mongo.upsert(sb, DBCollections.SANDBOX, upsertRes -> {
                     if (upsertRes.succeeded()) {
                         sb.put("_id", upsertRes.result());
-                        sandBoxDAO.getEnrichedSandbox(sb, resultHandler);
+                        sandBoxService.getEnrichedSandbox(sb, resultHandler);
                     } else {
                         resultHandler.handle(Future.failedFuture(upsertRes.cause()));
                     }
@@ -297,7 +297,7 @@ public class ShareDAOImpl implements ShareDAO {
                 sandboxes.forEach(s -> {
                     Future<JsonObject> f = Future.future();
                     promises.add(f);
-                    sandBoxDAO.getEnrichedSandbox((JsonObject) s, ar -> {
+                    sandBoxService.getEnrichedSandbox((JsonObject) s, ar -> {
                         if (ar.succeeded()) {
                             f.complete(ar.result());
                         } else {
@@ -314,7 +314,7 @@ public class ShareDAOImpl implements ShareDAO {
                                 res.result().forEach(s -> {
                                     Future<JsonObject> f = Future.future();
                                     promises2.add(f);
-                                    sandBoxDAO.getEnrichedSandbox(s, ar -> {
+                                    sandBoxService.getEnrichedSandbox(s, ar -> {
                                         if (ar.succeeded()) {
                                             f.complete(ar.result());
                                         } else {

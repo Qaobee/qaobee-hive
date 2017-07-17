@@ -17,10 +17,11 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.dao.EffectiveDAO;
+import com.qaobee.hive.services.EffectiveService;
 import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -28,27 +29,29 @@ import com.qaobee.hive.technical.mongo.CriteriaOption;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
 /**
- * The type Effective dao.
+ * The type Effective service.
  */
-public class EffectiveDAOImpl implements EffectiveDAO {
+@ProxyService(address = EffectiveService.ADDRESS, iface = EffectiveService.class)
+public class EffectiveServiceImpl implements EffectiveService {
     private static final String PARAM_SANDBOX_ID = "sandboxId";
     private static final String PARAM_CATEGORY_AGE_CODE = "categoryAge.code";
-    private final MongoDB mongo;
+    @Inject
+    private MongoDB mongo;
 
     /**
-     * Instantiates a new Effective dao.
+     * Instantiates a new Effective service.
      *
-     * @param mongo the mongo
+     * @param vertx the vertx
      */
-    @Inject
-    public EffectiveDAOImpl(MongoDB mongo) {
-        this.mongo = mongo;
+    public EffectiveServiceImpl(Vertx vertx) {
+        super();
     }
 
     @Override

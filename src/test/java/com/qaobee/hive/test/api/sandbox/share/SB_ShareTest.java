@@ -20,7 +20,7 @@
 package com.qaobee.hive.test.api.sandbox.share;
 
 import com.qaobee.hive.api.MainAPI;
-import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
+import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxRoute;
 import com.qaobee.hive.api.v1.sandbox.share.SB_ShareVerticle;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -42,6 +42,7 @@ import static org.hamcrest.Matchers.*;
  * The type Sb share testBodyParams.
  */
 public class SB_ShareTest extends VertxJunitSupport {
+    private static final String SB_BASE_URL = getBaseURL("/sandbox/config/sandbox");
 
     /**
      * invite a member to a sandbox.
@@ -137,8 +138,8 @@ public class SB_ShareTest extends VertxJunitSupport {
                         .body("status", is("accepted"));
 
                 given().header(TOKEN, user.result().getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ID, "558b0efebd2e39cdab651e1f")
-                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
+                        .queryParam(SB_SandBoxRoute.PARAM_ID, "558b0efebd2e39cdab651e1f")
+                        .when().get(SB_BASE_URL + "/")
                         .then().assertThat().statusCode(200)
                         .body("_id", notNullValue())
                         .body("members", hasSize(3))
@@ -180,8 +181,8 @@ public class SB_ShareTest extends VertxJunitSupport {
                         .body("status", is("refused"));
 
                 given().header(TOKEN, user.result().getAccount().getToken())
-                        .queryParam(SB_SandBoxVerticle.PARAM_ID, "558b0efebd2e39cdab651e1f")
-                        .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
+                        .queryParam(SB_SandBoxRoute.PARAM_ID, "558b0efebd2e39cdab651e1f")
+                        .when().get(SB_BASE_URL + "/")
                         .then().assertThat().statusCode(200)
                         .body("_id", notNullValue())
                         .body("members", hasSize(2))
@@ -319,8 +320,8 @@ public class SB_ShareTest extends VertxJunitSupport {
                                 .body("status", is("accepted"));
 
                         given().header(TOKEN, user.result().getAccount().getToken())
-                                .queryParam(SB_SandBoxVerticle.PARAM_ID, sandboxId)
-                                .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
+                                .queryParam(SB_SandBoxRoute.PARAM_ID, sandboxId)
+                                .when().get(SB_BASE_URL + "/")
                                 .then().assertThat().statusCode(200)
                                 .body("_id", notNullValue())
                                 .body("members", hasSize(3));

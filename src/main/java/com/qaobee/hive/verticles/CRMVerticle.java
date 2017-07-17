@@ -1,6 +1,6 @@
-package com.qaobee.hive.api.v1.commons.utils;
+package com.qaobee.hive.verticles;
 
-import com.qaobee.hive.dao.CRMDao;
+import com.qaobee.hive.services.CRMService;
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import io.vertx.core.Future;
@@ -12,7 +12,7 @@ import javax.inject.Inject;
 /**
  * The type Crm verticle.
  */
-@DeployableVerticle(isWorker = false)
+@DeployableVerticle
 public class CRMVerticle extends AbstractGuiceVerticle {
     /**
      * The constant CRMVERTICLE_REGISTER.
@@ -23,7 +23,7 @@ public class CRMVerticle extends AbstractGuiceVerticle {
      */
     public static final String UPDATE = "CRMVerticle.update";
     @Inject
-    private CRMDao crmDao;
+    private CRMService crmService;
 
     @Override
     public void start(Future<Void> startFuture) {
@@ -34,11 +34,11 @@ public class CRMVerticle extends AbstractGuiceVerticle {
     }
 
     private void update(Message<JsonObject> message) {
-        crmDao.registerUser(message.body(), false);
+        crmService.registerUser(message.body(), false);
     }
 
 
     private void registerMail(Message<JsonObject> message) {
-        crmDao.registerUser(message.body(), true);
+        crmService.registerUser(message.body(), true);
     }
 }

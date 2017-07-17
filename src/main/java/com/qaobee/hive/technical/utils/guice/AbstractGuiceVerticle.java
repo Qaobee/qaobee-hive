@@ -53,8 +53,9 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
     protected Injector injector;
 
     // Optional - called when verticle is undeployed
-    public void stop() {
+    public void stop(Future<Void> startFuture) {
         LOG.info(this.getClass().getName() + " stoped");
+        startFuture.complete();
     }
 
 
@@ -87,7 +88,7 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      */
     protected Handler<AsyncResult<JsonObject>> handleJson(Message<String> message) {
         return res -> {
-            if(res.succeeded()) {
+            if (res.succeeded()) {
                 message.reply(res.result().encode());
             } else {
                 utils.sendError(message, (QaobeeException) res.cause());
@@ -104,7 +105,7 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      */
     protected Handler<AsyncResult<JsonObject>> handleJsonJ(Message<JsonObject> message) {
         return res -> {
-            if(res.succeeded()) {
+            if (res.succeeded()) {
                 message.reply(res.result());
             } else {
                 utils.sendErrorJ(message, (QaobeeException) res.cause());
@@ -121,7 +122,7 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      */
     protected Handler<AsyncResult<JsonArray>> handleJsonArray(Message<String> message) {
         return res -> {
-            if(res.succeeded()) {
+            if (res.succeeded()) {
                 message.reply(res.result().encode());
             } else {
                 utils.sendError(message, (QaobeeException) res.cause());

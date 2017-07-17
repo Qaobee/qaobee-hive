@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
+import com.qaobee.hive.verticles.MailVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;

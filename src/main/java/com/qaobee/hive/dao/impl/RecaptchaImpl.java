@@ -19,7 +19,7 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.qaobee.hive.api.v1.commons.utils.CaptchaVerticle;
+import com.qaobee.hive.verticles.CaptchaVerticle;
 import com.qaobee.hive.dao.ReCaptcha;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;

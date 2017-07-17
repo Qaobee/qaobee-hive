@@ -33,6 +33,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import static com.qaobee.hive.technical.constantes.Constants.ADMIN_HABILIT;
+
 /**
  * The type Championship route.
  */
@@ -130,7 +132,7 @@ public class ChampionshipRoute extends AbstractRoute {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      */
     private void updateChampionship(RoutingContext context) {
-        context.user().isAuthorised("admin_qaobee", res -> {
+        context.user().isAuthorised(ADMIN_HABILIT, res -> {
             if (res.succeeded() && res.result()) {
                 try {
                     utils.testMandatoryParams(context, "_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME,
@@ -174,7 +176,7 @@ public class ChampionshipRoute extends AbstractRoute {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      */
     private void addChampionship(RoutingContext context) {
-        context.user().isAuthorised("admin_qaobee", ar -> {
+        context.user().isAuthorised(ADMIN_HABILIT, ar -> {
             if (ar.succeeded() && ar.result()) {
                 try {
                     utils.testMandatoryParams(context, PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL,

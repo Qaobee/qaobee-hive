@@ -111,17 +111,11 @@ public class GuiceModule extends AbstractModule {
         bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
         bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
-        bind(SandBoxDAO.class).to(SandBoxDAOImpl.class).in(Singleton.class);
-        bind(SecurityDAO.class).to(SecurityDAOImpl.class).in(Singleton.class);
-        bind(FeedbackDAO.class).to(FeedbackDAOImpl.class).in(Singleton.class);
-        bind(FeedbackDAO.class).to(FeedbackDAOImpl.class).in(Singleton.class);
-        bind(EffectiveDAO.class).to(EffectiveDAOImpl.class).in(Singleton.class);
         bind(PersonDAO.class).to(PersonDAOImpl.class).in(Singleton.class);
         bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
         bind(TeamDAO.class).to(TeamDAOImpl.class).in(Singleton.class);
         bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
         bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
-        bind(CRMDao.class).to(CRMDaoImpl.class).in(Singleton.class);
 
         // Services
         bind(MongoDB.class).toInstance(MongoDB.createProxy(vertx, MongoDB.ADDRESS));
@@ -137,5 +131,10 @@ public class GuiceModule extends AbstractModule {
         bind(UserService.class).toInstance(UserService.createProxy(vertx, UserService.ADDRESS));
         bind(ShippingService.class).toInstance(ShippingService.createProxy(vertx, ShippingService.ADDRESS));
         bind(SignupService.class).toInstance(SignupService.createProxy(vertx, SignupService.ADDRESS));
+        bind(SecurityService.class).toInstance(SecurityService.createProxy(vertx, SecurityService.ADDRESS));
+        bind(FeedbackService.class).toInstance(FeedbackService.createProxy(vertx, FeedbackService.ADDRESS));
+        bind(CRMService.class).toInstance(CRMService.createProxy(vertx, CRMService.ADDRESS));
+        bind(SandBoxService.class).toInstance(SandBoxService.createProxy(vertx, SandBoxService.ADDRESS));
+        bind(EffectiveService.class).toInstance(EffectiveService.createProxy(vertx, EffectiveService.ADDRESS));
     }
 }

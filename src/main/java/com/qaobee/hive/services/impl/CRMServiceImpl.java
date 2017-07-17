@@ -1,6 +1,8 @@
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.dao.CRMDao;
+import com.qaobee.hive.services.CRMService;
+import com.qaobee.hive.technical.annotations.ProxyService;
+import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -18,14 +20,23 @@ import javax.inject.Named;
 /**
  * The type Crm dao.
  */
-public class CRMDaoImpl implements CRMDao {
-    private static final Logger LOG = LoggerFactory.getLogger(CRMDaoImpl.class);
+@ProxyService(address = CRMService.ADDRESS, iface = CRMService.class)
+public class CRMServiceImpl implements CRMService {
+    private static final Logger LOG = LoggerFactory.getLogger(CRMServiceImpl.class);
     @Inject
     @Named("mailchimp")
     private JsonObject mailchimp;
     @Inject
     private WebClient webClient;
 
+    /**
+     * Instantiates a new Crm service.
+     *
+     * @param vertx the vertx
+     */
+    public CRMServiceImpl(Vertx vertx) {
+        super();
+    }
 
     @Override
     public void registerUser(JsonObject user, boolean firstLogin) {
@@ -55,7 +66,6 @@ public class CRMDaoImpl implements CRMDao {
             }
             req.putHeader("Authorization", "Basic " + Base64.encodeBase64String((mailchimp.getString("user") + ":" + mailchimp.getString("key")).getBytes()))
                     .putHeader(HTTP.CONTENT_TYPE, "application/json")
-                    //    .putHeader(HTTP.CONTENT_LEN, String.valueOf(requestBody..length()))
                     .sendJsonObject(requestBody, res -> {
                         if (res.succeeded()) {
                             LOG.info(requestBody.encode() + " : ok");

@@ -18,7 +18,6 @@
 package com.qaobee.hive.test.api.commons.user;
 
 import com.qaobee.hive.api.v1.commons.users.SignupRoute;
-import com.qaobee.hive.api.v1.commons.users.UserVerticle;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
@@ -37,6 +36,7 @@ import static org.hamcrest.Matchers.notNullValue;
  */
 public class SignupTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/users/signup");
+    private static final String USER_BASE_URL = getBaseURL("/commons/users/user");
 
     /**
      * Existing login.
@@ -121,6 +121,7 @@ public class SignupTest extends VertxJunitSupport {
     public void registerOk() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
+        params.put("captcha", "fake");
         given().body(params.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(200)
@@ -143,6 +144,7 @@ public class SignupTest extends VertxJunitSupport {
         Async async = context.async();
         generateUser().setHandler(u -> {
             JsonObject params = generateNewUser();
+            params.put("captcha", "fake");
             params.getJsonObject("account").put("login", u.result().getAccount().getLogin());
             given().body(params.encode())
                     .when().put(BASE_URL + "/register")
@@ -175,6 +177,7 @@ public class SignupTest extends VertxJunitSupport {
         for (int i = 0; i < 3; i++) {
             l += "a";
             params.getJsonObject("account").put("login", l);
+            params.put("captcha", "fake");
 
             given().body(params.encode())
                     .when().put(BASE_URL + "/register")
@@ -257,6 +260,7 @@ public class SignupTest extends VertxJunitSupport {
     public void registerWithBadNameFormat() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser()
+                .put("captcha", "fake")
                 .put("name", "");
         String l = "";
         for (int i = 0; i < 1; i++) {
@@ -304,7 +308,7 @@ public class SignupTest extends VertxJunitSupport {
     public void registerWithBadFirstnameFormat() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
-        params.put("firstname", "");
+        params.put("firstname", "").put("captcha", "fake");
         String l = "";
         for (int i = 0; i < 1; i++) {
             l += "a";
@@ -334,6 +338,7 @@ public class SignupTest extends VertxJunitSupport {
         JsonObject params = generateNewUser();
 
         params.getJsonObject("contact").put("email", "");
+        params.put("captcha", "fake");
         given().body(params.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(ExceptionCodes.BAD_FORMAT.getCode())
@@ -389,6 +394,7 @@ public class SignupTest extends VertxJunitSupport {
     public void accountCheck() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
+        params.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(params.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(200)
@@ -471,6 +477,7 @@ public class SignupTest extends VertxJunitSupport {
     public void firstConnectionCheck() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
+        params.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(params.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(200)
@@ -486,7 +493,7 @@ public class SignupTest extends VertxJunitSupport {
                 .body("account", notNullValue())
                 .body("account.token", notNullValue()).extract().path("account.token");
         given().header(TOKEN, token)
-                .when().get(getURL(UserVerticle.CURRENT))
+                .when().get(USER_BASE_URL + "/current")
                 .then().assertThat().statusCode(200)
                 .body("_id", notNullValue())
                 .body("_id", is(p.getJsonObject("person").getString("_id")));
@@ -500,6 +507,7 @@ public class SignupTest extends VertxJunitSupport {
     public void firstConnectionCheckAlreadyActiveUser() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
+        params.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(params.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(200)
@@ -583,6 +591,7 @@ public class SignupTest extends VertxJunitSupport {
     public void finalizeSignup() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
+        u.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(u.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(200)
@@ -614,6 +623,7 @@ public class SignupTest extends VertxJunitSupport {
     public void finalizeSignupWithUnknownStructure() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
+        u.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(u.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(200)
@@ -664,6 +674,7 @@ public class SignupTest extends VertxJunitSupport {
     public void finalizeSignupWithBlankOrNullParams() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
+        u.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(u.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(200)
@@ -695,7 +706,7 @@ public class SignupTest extends VertxJunitSupport {
      * Finalize signup with wrong params.
      */
     @Test
-    public void finalizeSignupWithWrongParams(TestContext context) {
+    public void finalizeSignupWithWrongParams() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
         u.put("captcha", "dummy");
@@ -745,6 +756,7 @@ public class SignupTest extends VertxJunitSupport {
     public void resendRegisterMail() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
+        u.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(u.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(200)

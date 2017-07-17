@@ -20,7 +20,6 @@
 package com.qaobee.hive.test.api.sandbox.effective;
 
 import com.qaobee.hive.api.MainAPI;
-import com.qaobee.hive.api.v1.sandbox.effective.SB_EffectiveVerticle;
 import com.qaobee.hive.api.v1.sandbox.effective.SB_PersonVerticle;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
@@ -43,6 +42,7 @@ import static org.hamcrest.Matchers.*;
  * The type Person testBodyParams.
  */
 public class SB_PersonTest extends VertxJunitSupport {
+    private static final String EFFECTIVE_BASE_URL = getBaseURL("/sandbox/effective/effective");
     /**
      * Gets by id.
      */
@@ -215,14 +215,14 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .multiPart(avatar).
                             pathParam("uid", id).
                             when().
-                            post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                            post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(200)
                     .body("avatar", notNullValue())
                     .extract().path("avatar");
 
             byte[] byteArray = given()
                     .pathParam("avatar", avatarId)
-                    .get(BASE_URL + "/file/" + DBCollections.PERSON + "/{avatar}")
+                    .get(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/{avatar}")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
 
@@ -243,7 +243,7 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", "blabla").
                     when().
-                    post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                    post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
             async.complete();
         });
@@ -260,7 +260,7 @@ public class SB_PersonTest extends VertxJunitSupport {
             given().multiPart(new File("src/test/resources/avatar.jpg"))
                     .pathParam("uid", u.result().get_id())
                     .when()
-                    .post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                    .post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
         });
@@ -278,7 +278,7 @@ public class SB_PersonTest extends VertxJunitSupport {
                     pathParam("uid", u.result().get_id())
                     .header(TOKEN, "11111")
                     .when()
-                    .post(BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                    .post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
         });
@@ -292,7 +292,7 @@ public class SB_PersonTest extends VertxJunitSupport {
     public void getAvatarWithWrongAvatarId() {
         given()
                 .pathParam("avatar", "blabla")
-                .get(BASE_URL + "/file/" + DBCollections.PERSON + "/{avatar}")
+                .get(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/{avatar}")
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
     }
 
@@ -321,7 +321,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void addPersonWithNonLoggedUser() {
-        given().when().post(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
+        given().when().post(getURL(SB_PersonVerticle.ADD_PERSON))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -331,7 +331,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void addPersonWithWrongHttpMethod() {
-        given().when().get(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
+        given().when().get(getURL(SB_PersonVerticle.ADD_PERSON))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -386,7 +386,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void updatePersonWithNonLoggedUser() {
-        given().when().put(getURL(SB_EffectiveVerticle.UPDATE))
+        given().when().put(getURL(SB_PersonVerticle.UPDATE))
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -396,7 +396,7 @@ public class SB_PersonTest extends VertxJunitSupport {
      */
     @Test
     public void updatePersonWithWrongHttpMethod() {
-        given().when().get(getURL(SB_EffectiveVerticle.UPDATE))
+        given().when().get(getURL(SB_PersonVerticle.UPDATE))
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -410,7 +410,7 @@ public class SB_PersonTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_EFFECTIVE_HAND);
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                    .when().put(getURL(SB_PersonVerticle.UPDATE))
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();

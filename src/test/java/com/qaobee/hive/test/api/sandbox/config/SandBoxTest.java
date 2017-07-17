@@ -19,7 +19,7 @@
 package com.qaobee.hive.test.api.sandbox.config;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityRoute;
-import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxVerticle;
+import com.qaobee.hive.api.v1.sandbox.config.SB_SandBoxRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonObject;
@@ -36,6 +36,7 @@ import static org.hamcrest.Matchers.*;
  * @author cke
  */
 public class SandBoxTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/sandbox/config/sandbox");
 
     /**
      * Retrieve sand box by his owner.
@@ -46,8 +47,8 @@ public class SandBoxTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(u -> getActivity("ACT-HAND").setHandler(activity -> {
             given().header(TOKEN, u.result().getAccount().getToken())
-                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
-                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .queryParam(SB_SandBoxRoute.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(BASE_URL + "/getByOwner")
                     .then().assertThat().statusCode(200)
                     .body("owner", notNullValue())
                     .body("owner", is(u.result().get_id()));
@@ -61,7 +62,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxByOwnerWithNonLoggedUser() {
-        given().when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+        given().when().get(BASE_URL + "/getByOwner")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -71,7 +72,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxByOwnerWithWrongHttpMethod() {
-        given().when().post(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+        given().when().post(BASE_URL + "/getByOwner")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -84,7 +85,7 @@ public class SandBoxTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .when().get(BASE_URL + "/getByOwner")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -101,8 +102,8 @@ public class SandBoxTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, "bla")
-                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .queryParam(SB_SandBoxRoute.PARAM_ACTIVITY_ID, "bla")
+                    .when().get(BASE_URL + "/getByOwner")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
@@ -119,8 +120,8 @@ public class SandBoxTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         generateLoggedUser().setHandler(user -> getActivity("ACT-HAND").setHandler(activity -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
-                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .queryParam(SB_SandBoxRoute.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(BASE_URL + "/getByOwner")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
@@ -137,8 +138,8 @@ public class SandBoxTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> getActivity("ACT-FOOT").setHandler(activity -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
-                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .queryParam(SB_SandBoxRoute.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(BASE_URL + "/getByOwner")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
@@ -156,27 +157,27 @@ public class SandBoxTest extends VertxJunitSupport {
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
 
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, user.result().get_id())
-                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .queryParam(SB_SandBoxRoute.PARAM_OWNER_ID, user.result().get_id())
+                    .when().get(BASE_URL + "/getListByOwner")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("owner", hasItem(user.result().get_id()));
 
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, "")
-                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .queryParam(SB_SandBoxRoute.PARAM_OWNER_ID, "")
+                    .when().get(BASE_URL + "/getListByOwner")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("owner", hasItem(user.result().get_id()));
 
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, "bla")
-                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .queryParam(SB_SandBoxRoute.PARAM_OWNER_ID, "bla")
+                    .when().get(BASE_URL + "/getListByOwner")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
 
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .when().get(BASE_URL + "/getListByOwner")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("owner", hasItem(user.result().get_id()));
@@ -190,7 +191,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxListByOwnerWithNonLoggedUser() {
-        given().when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+        given().when().get(BASE_URL + "/getByOwner")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -200,7 +201,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandBoxListByOwnerWithWrongHttpMethod() {
-        given().when().post(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+        given().when().post(BASE_URL + "/getByOwner")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -214,8 +215,8 @@ public class SandBoxTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_SandBoxVerticle.PARAM_OWNER_ID, user.result().get_id())
-                    .when().get(getURL(SB_SandBoxVerticle.GET_LIST_BY_OWNER))
+                    .queryParam(SB_SandBoxRoute.PARAM_OWNER_ID, user.result().get_id())
+                    .when().get(BASE_URL + "/getListByOwner")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
@@ -232,8 +233,8 @@ public class SandBoxTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND, SETTINGS_ACTIVITY);
         generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> getActivity("ACT-HAND").setHandler(activity -> {
             JsonObject sb = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
-                    .queryParam(SB_SandBoxVerticle.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
-                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_OWNER))
+                    .queryParam(SB_SandBoxRoute.PARAM_ACTIVITY_ID, activity.result().getString(ActivityRoute.PARAM_ID))
+                    .when().get(BASE_URL + "/getByOwner")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("owner", notNullValue())
@@ -243,7 +244,7 @@ public class SandBoxTest extends VertxJunitSupport {
             sb.put("effectiveDefault", "123456");
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(sb.encode())
-                    .when().post(getURL(SB_SandBoxVerticle.UPDATE))
+                    .when().post(BASE_URL + "/update")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("effectiveDefault", is("123456"));
@@ -257,7 +258,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void updateSandBoxWithNonLoggedUser() {
-        given().when().post(getURL(SB_SandBoxVerticle.UPDATE))
+        given().when().post(BASE_URL + "/update")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -267,7 +268,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void updateSandBoxWithWrongHttpMethod() {
-        given().when().get(getURL(SB_SandBoxVerticle.UPDATE))
+        given().when().get(BASE_URL + "/update")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -280,7 +281,7 @@ public class SandBoxTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .when().post(getURL(SB_SandBoxVerticle.UPDATE))
+                    .when().post(BASE_URL + "/update")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
@@ -293,7 +294,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandboxByIdWithNonLoggedUser() {
-        given().when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
+        given().when().get(BASE_URL + "/")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -303,7 +304,7 @@ public class SandBoxTest extends VertxJunitSupport {
      */
     @Test
     public void getSandboxByIWithWrongHttpMethod() {
-        given().when().post(getURL(SB_SandBoxVerticle.GET_BY_ID))
+        given().when().post(BASE_URL + "/")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -316,7 +317,7 @@ public class SandBoxTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(user -> {
             given().header(TOKEN, user.result().getAccount().getToken())
-                    .when().get(getURL(SB_SandBoxVerticle.GET_BY_ID))
+                    .when().get(BASE_URL + "/")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();

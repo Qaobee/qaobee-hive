@@ -17,17 +17,19 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
 import com.lowagie.text.pdf.codec.Base64;
-import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
+import com.qaobee.hive.verticles.MailVerticle;
 import com.qaobee.hive.business.model.commons.users.account.Device;
 import com.qaobee.hive.dao.PasswordEncryptionService;
 import com.qaobee.hive.dao.ReCaptcha;
-import com.qaobee.hive.dao.SecurityDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
+import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.services.SecurityService;
 import com.qaobee.hive.services.UserService;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
@@ -51,8 +53,9 @@ import javax.inject.Named;
 /**
  * The type Security dao.
  */
-public class SecurityDAOImpl implements SecurityDAO {
-    private static final Logger LOG = LoggerFactory.getLogger(SecurityDAOImpl.class);
+@ProxyService(address = SecurityService.ADDRESS, iface = SecurityService.class)
+public class SecurityServiceImpl implements SecurityService {
+    private static final Logger LOG = LoggerFactory.getLogger(SecurityServiceImpl.class);
     private static final String ACCOUNT_LOGIN_FIELD = "account.login";
     private static final String BAD_LOGIN_MESS = "bad.login";
 
@@ -67,12 +70,16 @@ public class SecurityDAOImpl implements SecurityDAO {
     @Inject
     private PasswordEncryptionService passwordEncryptionService;
     @Inject
-    private Vertx vertx;
-    @Inject
     private ReCaptcha reCaptcha;
     @Inject
     @Named("runtime")
     private JsonObject runtime;
+    private final Vertx vertx;
+
+    public SecurityServiceImpl(Vertx vertx) {
+        super();
+        this.vertx = vertx;
+    }
 
     private void proceedPasswordReset(String id, String code, String passwd, boolean byPassActivationCode, Handler<AsyncResult<Boolean>> resultHandler) {
         userService.getUser(id, ar -> {

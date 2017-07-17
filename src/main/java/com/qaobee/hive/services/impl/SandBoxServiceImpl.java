@@ -17,18 +17,16 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.dao.SandBoxDAO;
 import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.services.SandBoxService;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaOption;
-import io.vertx.core.AsyncResult;
-import io.vertx.core.CompositeFuture;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
@@ -39,9 +37,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The type Sand box dao.
+ * The type Sand box service.
  */
-public class SandBoxDAOImpl implements SandBoxDAO {
+@ProxyService(address = SandBoxService.ADDRESS, iface = SandBoxService.class)
+public class SandBoxServiceImpl implements SandBoxService {
     private static final String PARAM_OWNER_ID = "owner";
     private static final String PARAM_ACTIVITY_ID = "activity";
     private static final String FIELD_FIRSTNAME = "firstname";
@@ -55,6 +54,10 @@ public class SandBoxDAOImpl implements SandBoxDAO {
 
     @Inject
     private MongoDB mongo;
+
+    public SandBoxServiceImpl(Vertx vertx) {
+        super();
+    }
 
     private Future<JsonObject> getPerson(JsonObject m) {
         Future<JsonObject> deferred = Future.future();
@@ -112,7 +115,7 @@ public class SandBoxDAOImpl implements SandBoxDAO {
     @Override
     public void getListByOwner(List<String> usersIds, String loggedUserId, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject cb = new JsonObject();
-        if (usersIds != null && StringUtils.isNoneBlank(usersIds.get(0))) {
+        if (usersIds != null && !usersIds.isEmpty() && StringUtils.isNoneBlank(usersIds.get(0))) {
             cb.put(PARAM_OWNER_ID, usersIds.get(0));
         } else {
             cb.put(PARAM_OWNER_ID, loggedUserId);

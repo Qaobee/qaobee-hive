@@ -20,7 +20,7 @@
 package com.qaobee.hive.api.v1.sandbox.share;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.utils.MailVerticle;
+import com.qaobee.hive.verticles.MailVerticle;
 import com.qaobee.hive.dao.ShareDAO;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;

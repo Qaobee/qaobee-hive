@@ -17,19 +17,54 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao;
+package com.qaobee.hive.services;
 
+import com.qaobee.hive.services.impl.SandBoxServiceImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 import java.util.List;
 
 /**
- * The interface Sand box dao.
+ * The interface Sand box service.
  */
-public interface SandBoxDAO {
+@ProxyGen
+@VertxGen
+public interface SandBoxService {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.SandBox.service";
+
+    /**
+     * Create sand box service.
+     *
+     * @param vertx the vertx
+     *
+     * @return the sand box service
+     */
+    static SandBoxService create(Vertx vertx) {
+        return new SandBoxServiceImpl(vertx);
+    }
+
+    /**
+     * Create proxy sand box service.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     *
+     * @return the sand box service
+     */
+    static SandBoxService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(SandBoxService.class, vertx, address);
+    }
+
     /**
      * Gets sandbox by id.
      *

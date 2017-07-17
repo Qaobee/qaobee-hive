@@ -36,7 +36,7 @@ import io.vertx.core.json.JsonObject;
 import javax.inject.Inject;
 
 /**
- * The type Season.
+ * The type Season service.
  */
 @ProxyService(address = SeasonService.ADDRESS, iface = SeasonService.class)
 public class SeasonServiceImpl implements SeasonService {

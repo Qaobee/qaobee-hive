@@ -17,17 +17,52 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao;
+package com.qaobee.hive.services;
 
+import com.qaobee.hive.services.impl.EffectiveServiceImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Effective dao.
+ * The interface Effective service.
  */
-public interface EffectiveDAO {
+@ProxyGen
+@VertxGen
+public interface EffectiveService {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.Effective.service";
+
+    /**
+     * Create effective service.
+     *
+     * @param vertx the vertx
+     *
+     * @return the effective service
+     */
+    static EffectiveService create(Vertx vertx) {
+        return new EffectiveServiceImpl(vertx);
+    }
+
+    /**
+     * Create proxy effective service.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     *
+     * @return the effective service
+     */
+    static EffectiveService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(EffectiveService.class, vertx, address);
+    }
+
     /**
      * Add.
      *

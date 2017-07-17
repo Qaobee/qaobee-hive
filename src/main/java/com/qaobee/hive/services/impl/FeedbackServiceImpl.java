@@ -17,14 +17,16 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.dao.FeedbackDAO;
+import com.qaobee.hive.services.FeedbackService;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import net.rcarz.jiraclient.*;
 import org.apache.commons.codec.binary.Base64;
@@ -42,12 +44,17 @@ import java.util.List;
 /**
  * The type Feedback dao.
  */
-public class FeedbackDAOImpl implements FeedbackDAO {
-    private static final Logger LOG = LoggerFactory.getLogger(FeedbackDAOImpl.class);
+@ProxyService(address = FeedbackService.ADDRESS, iface = FeedbackService.class)
+public class FeedbackServiceImpl implements FeedbackService {
+    private static final Logger LOG = LoggerFactory.getLogger(FeedbackServiceImpl.class);
     private static final String PROJECT_FIELD = "project";
     @Inject
     @Named("jira")
     private JsonObject config;
+
+    public FeedbackServiceImpl(Vertx vertx) {
+        super();
+    }
 
     @Override
     public void sendFeedback(JsonObject data, Handler<AsyncResult<Void>> resultHandler) {

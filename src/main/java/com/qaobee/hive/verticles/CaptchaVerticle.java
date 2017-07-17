@@ -1,4 +1,4 @@
-package com.qaobee.hive.api.v1.commons.utils;
+package com.qaobee.hive.verticles;
 
 import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
@@ -16,7 +16,7 @@ import javax.inject.Named;
 /**
  * The type Captcha verticle.
  */
-@DeployableVerticle(isWorker = false)
+@DeployableVerticle
 public class CaptchaVerticle extends AbstractGuiceVerticle {
     /**
      * The constant VERIFY.

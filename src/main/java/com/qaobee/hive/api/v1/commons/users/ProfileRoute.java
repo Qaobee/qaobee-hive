@@ -21,7 +21,7 @@ package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.MainAPI;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.utils.PDFVerticle;
+import com.qaobee.hive.verticles.PDFVerticle;
 import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
