@@ -66,11 +66,11 @@ public class NotificationsRoute extends AbstractRoute {
         router.get("/").handler(this::notificationList);
 
         router.delete("/del").handler(authHandler);
-        router.delete("/del").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_NOTIF_ID));
+        router.delete("/del").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_NOTIF_ID));
         router.delete("/del").handler(this::delete);
 
         router.post("/read").handler(authHandler);
-        router.post("/read").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_NOTIF_ID));
+        router.post("/read").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_NOTIF_ID));
         router.post("/read").handler(this::markAsRead);
 
         router.post("/user/add").handler(authHandler);

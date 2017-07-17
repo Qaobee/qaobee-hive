@@ -24,7 +24,7 @@ import com.google.inject.name.Names;
 import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.services.MongoDB;
-import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
 import com.qaobee.hive.technical.utils.guice.MongoClientProvider;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;

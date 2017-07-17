@@ -54,11 +54,11 @@ public class SB_EffectiveRoute extends AbstractRoute {// NOSONAR
         Router router = Router.router(vertx);
 
         router.get("/get").handler(authHandler);
-        router.get("/get").handler(c->mandatoryHandler.testRequesParams(c, PARAM_ID));
+        router.get("/get").handler(c->mandatoryHandler.testRequestParams(c, PARAM_ID));
         router.get("/get").handler(this::getEffective);
 
         router.get("/getList").handler(authHandler);
-        router.get("/getList").handler(c->mandatoryHandler.testRequesParams(c, PARAM_SANDBOX_ID));
+        router.get("/getList").handler(c->mandatoryHandler.testRequestParams(c, PARAM_SANDBOX_ID));
         router.get("/getList").handler(this::getEffectiveList);
 
         router.put("/update").handler(authHandler);

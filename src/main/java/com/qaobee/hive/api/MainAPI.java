@@ -68,6 +68,7 @@ public class MainAPI extends AbstractGuiceVerticle {
      * The constant FILE_SERVE.
      */
     public static final String FILE_SERVE = "fileserve";
+
     private static final Logger LOG = LoggerFactory.getLogger(MainAPI.class);
     private static final String MESSAGE = "message";
     private static final Map<String, Rule> rules = new HashMap<>();
@@ -86,7 +87,7 @@ public class MainAPI extends AbstractGuiceVerticle {
             Rule r = m.getAnnotation(Rule.class);
             if (!rules.containsKey(r.address())) {
                 rules.put(r.address(), r);
-                LOG.info("Registring : " + r.address());
+                LOG.debug("Registring : " + r.address());
             }
         });
     }
@@ -158,7 +159,7 @@ public class MainAPI extends AbstractGuiceVerticle {
         VertxRoute.Loader.getRoutesInPackage(getClass().getPackage().getName())
                 .entrySet().stream().sorted(Comparator.comparingInt(e -> e.getKey().order()))
                 .forEachOrdered(item -> {
-                            LOG.info("Injecting " + item.getKey());
+                            LOG.debug("Injecting " + item.getKey());
                             injector.injectMembers(item.getValue());
                             try {
                                 router.mountSubRouter(item.getKey().rootPath(), item.getValue().init());
@@ -205,7 +206,6 @@ public class MainAPI extends AbstractGuiceVerticle {
                 router.route("/eventbus/*").handler(sockJSHandler);
                 server.listen(port, ip);
                 LOG.info("The http server is started on : {} : {}", ip, port);
-                LOG.info("Server started");
                 deferred.complete(true);
             } else {
                 LOG.error(rs.cause().getMessage(), rs.cause());
@@ -287,7 +287,6 @@ public class MainAPI extends AbstractGuiceVerticle {
     private void handleResponse(AsyncResult<Message<Object>> message, RoutingContext context) {
         if (message.succeeded()) {
             final String response = (String) message.result().body();
-            System.out.println(response);
             if (response.startsWith("[") || !response.startsWith("{")) {
                 handleJsonArray(context, response);
             } else {

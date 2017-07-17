@@ -55,10 +55,10 @@ public class ActivityCfgRoute extends AbstractRoute {
         Router router = Router.router(vertx);
         router.get("/*").handler(authHandler);
 
-        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE));
+        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE));
         router.get("/get").handler(this::getActivityCfgHandler);
 
-        router.get("/params").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST));
+        router.get("/params").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST));
         router.get("/params").handler(this::getActivityCfgParamsHandler);
 
         return router;

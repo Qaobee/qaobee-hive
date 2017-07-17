@@ -29,7 +29,7 @@ import com.qaobee.hive.services.CountryService;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;

@@ -79,20 +79,20 @@ public class UserRoute extends AbstractRoute {
         router.post("/resetPasswd").handler(this::passwordReset);
 
         router.get("/userByLogin").handler(authHandler);
-        router.get("/userByLogin").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_LOGIN));
+        router.get("/userByLogin").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_LOGIN));
         router.get("/userByLogin").handler(this::userByLogin);
 
         router.get("/logout").handler(authHandler);
-        router.get("/logout").handler(c -> mandatoryHandler.testRequesHeaders(c, TOKEN));
+        router.get("/logout").handler(c -> mandatoryHandler.testRequestHeaders(c, TOKEN));
         router.get("/logout").handler(this::logout);
 
         router.post("/login").handler(this::login);
 
         router.get("/").handler(authHandler);
-        router.get("/").handler(c -> mandatoryHandler.testRequesParams(c, "id"));
+        router.get("/").handler(c -> mandatoryHandler.testRequestParams(c, "id"));
         router.get("/").handler(this::userInfo);
 
-        router.get("/passwdcheck").handler(c -> mandatoryHandler.testRequesParams(c, "id", "code"));
+        router.get("/passwdcheck").handler(c -> mandatoryHandler.testRequestParams(c, "id", "code"));
         router.get("/passwdcheck").handler(this::passwordRenewCheck);
 
         router.post("/newpasswd").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_LOGIN));

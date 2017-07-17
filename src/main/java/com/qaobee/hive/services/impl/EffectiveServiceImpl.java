@@ -32,6 +32,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 
@@ -74,7 +75,7 @@ public class EffectiveServiceImpl implements EffectiveService {
     @Override
     public void getEffectiveList(String sandboxId, String categoryAgeCode, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject criterias = new JsonObject().put(PARAM_SANDBOX_ID, sandboxId);
-        if (categoryAgeCode != null) {
+        if (StringUtils.isNotBlank(categoryAgeCode)) {
             criterias.put(PARAM_CATEGORY_AGE_CODE, categoryAgeCode);
         }
         mongo.findByCriterias(criterias, new CriteriaOption(), DBCollections.EFFECTIVE, resultJson -> {

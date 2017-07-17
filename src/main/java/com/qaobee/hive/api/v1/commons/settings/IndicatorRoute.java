@@ -62,7 +62,7 @@ public class IndicatorRoute extends AbstractRoute {
         Router router = Router.router(vertx);
 
         router.get("/get").handler(authHandler);
-        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
+        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
         router.get("/get").handler(this::getIndicator);
 
         router.post("/getList").handler(authHandler);

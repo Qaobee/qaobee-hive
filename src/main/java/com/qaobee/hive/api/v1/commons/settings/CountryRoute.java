@@ -57,13 +57,13 @@ public class CountryRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
+        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
         router.get("/get").handler(this::get);
 
-        router.get("/getAlpha2").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ALPHA2));
+        router.get("/getAlpha2").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ALPHA2));
         router.get("/getAlpha2").handler(this::getAlpha2);
 
-        router.get("/getList").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_LOCAL));
+        router.get("/getList").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_LOCAL));
         router.get("/getList").handler(this::getList);
         return router;
     }

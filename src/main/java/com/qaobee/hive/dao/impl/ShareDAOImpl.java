@@ -25,7 +25,7 @@ import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.mongo.CriteriaOption;
-import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;

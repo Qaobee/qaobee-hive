@@ -1,11 +1,9 @@
-package com.qaobee.hive.technical.utils.guice;
+package com.qaobee.hive.technical.utils;
 
 import io.vertx.ext.mongo.MongoClient;
 
 /**
- * Created by b3605 on 14/06/17.
- *
- * @author Xavier MARIN (b3605)
+ * The interface Mongo client custom.
  */
 public interface MongoClientCustom extends MongoClient {
     /**

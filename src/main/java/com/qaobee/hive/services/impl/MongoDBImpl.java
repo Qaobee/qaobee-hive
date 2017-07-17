@@ -24,7 +24,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;

@@ -29,7 +29,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface User dao.
+ * The interface User service.
  */
 @ProxyGen
 @VertxGen
@@ -43,6 +43,7 @@ public interface UserService {
      * Create user service.
      *
      * @param vertx the vertx
+     *
      * @return the user service
      */
     static UserService create(Vertx vertx) {
@@ -54,6 +55,7 @@ public interface UserService {
      *
      * @param vertx   the vertx
      * @param address the address
+     *
      * @return the user service
      */
     static UserService createProxy(Vertx vertx, String address) {

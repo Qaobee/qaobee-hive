@@ -24,11 +24,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
-import com.qaobee.hive.services.*;
-import com.qaobee.hive.technical.utils.HabilitUtils;
-import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.QaobeeAuthHandler;
-import com.qaobee.hive.technical.utils.Utils;
+import com.qaobee.hive.technical.annotations.ProxyService;
+import com.qaobee.hive.technical.utils.*;
 import com.qaobee.hive.technical.utils.impl.HabilitUtilsImpl;
 import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
 import com.qaobee.hive.technical.utils.impl.UtilsImpl;
@@ -44,13 +41,18 @@ import io.vertx.ext.mail.MailConfig;
 import io.vertx.ext.mail.StartTLSOptions;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.handler.AuthHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Locale;
 
 /**
  * The type Guice module.
  */
 public class GuiceModule extends AbstractModule {
+    private static final Logger LOG = LoggerFactory.getLogger(GuiceModule.class);
     private static final String MAIL_CONF_KEY = "mailer.mod";
     private final JsonObject config;
     private final Vertx vertx;
@@ -112,29 +114,18 @@ public class GuiceModule extends AbstractModule {
         bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
         bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
         bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
-        bind(TeamDAO.class).to(TeamDAOImpl.class).in(Singleton.class);
         bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
         bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
 
-        // Services
-        bind(MongoDB.class).toInstance(MongoDB.createProxy(vertx, MongoDB.ADDRESS));
-        bind(AssetsService.class).toInstance(AssetsService.createProxy(vertx, AssetsService.ADDRESS));
-        bind(ActivityCfgService.class).toInstance(ActivityCfgService.createProxy(vertx, ActivityCfgService.ADDRESS));
-        bind(ActivityService.class).toInstance(ActivityService.createProxy(vertx, ActivityService.ADDRESS));
-        bind(CountryService.class).toInstance(CountryService.createProxy(vertx, CountryService.ADDRESS));
-        bind(NotificationsService.class).toInstance(NotificationsService.createProxy(vertx, NotificationsService.ADDRESS));
-        bind(ChampionshipService.class).toInstance(ChampionshipService.createProxy(vertx, ChampionshipService.ADDRESS));
-        bind(StructureService.class).toInstance(StructureService.createProxy(vertx, StructureService.ADDRESS));
-        bind(IndicatorService.class).toInstance(IndicatorService.createProxy(vertx, IndicatorService.ADDRESS));
-        bind(SeasonService.class).toInstance(SeasonService.createProxy(vertx, SeasonService.ADDRESS));
-        bind(UserService.class).toInstance(UserService.createProxy(vertx, UserService.ADDRESS));
-        bind(ShippingService.class).toInstance(ShippingService.createProxy(vertx, ShippingService.ADDRESS));
-        bind(SignupService.class).toInstance(SignupService.createProxy(vertx, SignupService.ADDRESS));
-        bind(SecurityService.class).toInstance(SecurityService.createProxy(vertx, SecurityService.ADDRESS));
-        bind(FeedbackService.class).toInstance(FeedbackService.createProxy(vertx, FeedbackService.ADDRESS));
-        bind(CRMService.class).toInstance(CRMService.createProxy(vertx, CRMService.ADDRESS));
-        bind(SandBoxService.class).toInstance(SandBoxService.createProxy(vertx, SandBoxService.ADDRESS));
-        bind(EffectiveService.class).toInstance(EffectiveService.createProxy(vertx, EffectiveService.ADDRESS));
-        bind(PersonService.class).toInstance(PersonService.createProxy(vertx, PersonService.ADDRESS));
+        ProxyService.Loader.scan("com.qaobee.hive.services").forEach(c -> {
+            LOG.debug(String.format("Binding %s with address %s", c.getCanonicalName(), c.getAnnotation(ProxyService.class).address()));
+            Class iface = c.getAnnotation(ProxyService.class).iface();
+            try {
+                Method method = iface.getMethod("createProxy", new Class<?>[]{Vertx.class, String.class});
+                bind(iface).toInstance(method.invoke(null, new Object[]{vertx, c.getAnnotation(ProxyService.class).address()}));
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

@@ -17,46 +17,49 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
 
-import com.qaobee.hive.dao.TeamDAO;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.TeamService;
+import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.tools.Messages;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 
 /**
- * The type Team dao.
+ * The type Team service.
  */
-public class TeamDAOImpl implements TeamDAO {
+@ProxyService(address = TeamService.ADDRESS, iface = TeamService.class)
+public class TeamServiceImpl implements TeamService {
     private static final String PARAM_ADVERSARY = "adversary";
     private static final String PARAM_EFFECTIVE_ID = "effectiveId";
     private static final String PARAM_SANDBOX_ID = "sandboxId";
     private static final String PARAM_ENABLE = "enable";
     private static final String PARAM_LINK_TEAM_ID = "linkTeamId";
 
-    private final MongoDB mongo;
-    private final NotificationsService notificationsService;
+    @Inject
+    private MongoDB mongo;
+    @Inject
+    private NotificationsService notificationsService;
 
     /**
-     * Instantiates a new Team dao.
+     * Instantiates a new Team service.
      *
-     * @param mongo                the mongo
-     * @param notificationsService the notifications dao
+     * @param vertx the vertx
      */
-    @Inject
-    public TeamDAOImpl(MongoDB mongo, NotificationsService notificationsService) {
-        this.mongo = mongo;
-        this.notificationsService = notificationsService;
+    public TeamServiceImpl(Vertx vertx) {
+        super();
     }
 
     @Override
@@ -68,7 +71,7 @@ public class TeamDAOImpl implements TeamDAO {
         if (!"all".equals(enabled)) {
             criteria.put(PARAM_ENABLE, "true".equals(enabled));
         }
-        if (link != null) {
+        if (StringUtils.isNotBlank(link)) {
             criteria.put(PARAM_LINK_TEAM_ID, link);
         }
         mongo.findByCriterias(criteria, new CriteriaOption(), DBCollections.TEAM, resultHandler);

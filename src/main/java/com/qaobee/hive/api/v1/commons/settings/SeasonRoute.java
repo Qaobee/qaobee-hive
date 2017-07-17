@@ -49,13 +49,13 @@ public class SeasonRoute extends AbstractRoute {
         Router router = Router.router(vertx);
         router.get("/*").handler(authHandler);
 
-        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
+        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
         router.get("/get").handler(this::getSeason);
 
-        router.get("/getListByActivity").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID));
+        router.get("/getListByActivity").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID));
         router.get("/getListByActivity").handler(this::getListByActivity);
 
-        router.get("/current").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID));
+        router.get("/current").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID));
         router.get("/current").handler(this::getCurrentSeason);
         return router;
     }

@@ -24,7 +24,7 @@ import com.qaobee.hive.verticles.PDFVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.PasswordEncryptionService;
 import com.qaobee.hive.services.SandBoxService;
-import com.qaobee.hive.dao.TeamDAO;
+import com.qaobee.hive.services.TeamService;
 import com.qaobee.hive.services.ActivityService;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.SeasonService;
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
     @Inject
     private SeasonService seasonService;
     @Inject
-    private TeamDAO teamDAO;
+    private TeamService teamService;
     @Inject
     private ActivityService activityService;
 
@@ -306,7 +306,7 @@ public class UserServiceImpl implements UserService {
                 seasonService.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id"), season -> {
                     if (season.succeeded()) {
                         meta.put("season", season.result());
-                        teamDAO.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null, teams -> {
+                        teamService.getTeamList(meta.getString("_id"), meta.getString("effectiveDefault"), "false", "true", null, teams -> {
                             if (teams.succeeded()) {
                                 meta.put("teams", teams.result());
                                 activityService.getActivity(meta.getString("activityId"), activity -> {

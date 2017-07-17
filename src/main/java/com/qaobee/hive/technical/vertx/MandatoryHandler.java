@@ -37,7 +37,7 @@ public class MandatoryHandler {
      * @param context the context
      * @param fields  the fields
      */
-    public void testRequesParams(RoutingContext context, String... fields) {
+    public void testRequestParams(RoutingContext context, String... fields) {
         try {
             utils.testMandatoryParams(context.request().params(), context, fields);
             context.next();
@@ -53,7 +53,7 @@ public class MandatoryHandler {
      * @param context the context
      * @param fields  the fields
      */
-    public void testRequesHeaders(RoutingContext context, String... fields) {
+    public void testRequestHeaders(RoutingContext context, String... fields) {
         try {
             utils.testMandatoryParams(context.request().headers(), context, fields);
             context.next();

@@ -30,7 +30,7 @@ import io.vertx.ext.web.RoutingContext;
 import javax.inject.Inject;
 
 /**
- * The type Person verticle.
+ * The type Sb person route.
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/effective/person")
 public class SB_PersonRoute extends AbstractRoute {// NOSONAR
@@ -70,11 +70,11 @@ public class SB_PersonRoute extends AbstractRoute {// NOSONAR
         router.post("/list").handler(this::getPersonList);
 
         router.get("/get").handler(authHandler);
-        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_PERSON_ID));
+        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_PERSON_ID));
         router.get("/get").handler(this::getPerson);
 
         router.get("/listSandbox").handler(authHandler);
-        router.get("/listSandbox").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_SANDBOX_ID));
+        router.get("/listSandbox").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_SANDBOX_ID));
         router.get("/listSandbox").handler(this::getPersonListBySandbox);
 
         return router;

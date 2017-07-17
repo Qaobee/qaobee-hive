@@ -100,7 +100,7 @@ public class ChampionshipRoute extends AbstractRoute {
         router.post("/list").handler(this::getListChampionships);
 
         router.get("/get").handler(authHandler);
-        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
+        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
         router.get("/get").handler(this::getChampionship);
 
         router.post("/add").handler(authHandler);

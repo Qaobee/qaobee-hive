@@ -49,9 +49,7 @@ public @interface ProxyService {
          * @param vertx       the vertx
          */
         public static void load(String packageName, Injector injector, Vertx vertx) {
-            Reflections reflections = new Reflections(packageName);
-            Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(ProxyService.class);
-            for (Class<?> rit : annotated) {
+            for (Class<?> rit : scan(packageName)) {
                 try {
                     Object r = rit.getConstructor(Vertx.class).newInstance(vertx);
                     LOG.info("Getting service : " + rit.getCanonicalName() + " -> " + r.getClass().getAnnotation(ProxyService.class).address());
@@ -62,6 +60,11 @@ public @interface ProxyService {
                     LOG.error(e.getMessage(), e);
                 }
             }
+        }
+
+        public static Set<Class<?>> scan(String packageName) {
+            Reflections reflections = new Reflections(packageName);
+            return reflections.getTypesAnnotatedWith(ProxyService.class);
         }
 
     }

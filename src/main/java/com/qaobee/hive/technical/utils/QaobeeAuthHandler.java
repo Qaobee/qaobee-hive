@@ -5,7 +5,6 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.QaobeeUser;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.netty.handler.codec.http.HttpHeaderValues;

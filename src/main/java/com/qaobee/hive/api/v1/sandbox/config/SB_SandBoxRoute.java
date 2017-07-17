@@ -54,14 +54,14 @@ public class SB_SandBoxRoute extends AbstractRoute {// NOSONAR
         Router router = Router.router(vertx);
 
         router.get("/getByOwner").handler(authHandler);
-        router.get("/getByOwner").handler(c->mandatoryHandler.testRequesParams(c, PARAM_ACTIVITY_ID));
+        router.get("/getByOwner").handler(c->mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID));
         router.get("/getByOwner").handler(this::getByOwner);
 
         router.get("/getListByOwner").handler(authHandler);
         router.get("/getListByOwner").handler(this::getListByOwner);
 
         router.get("/").handler(authHandler);
-        router.get("/").handler(c->mandatoryHandler.testRequesParams(c, PARAM_ID));
+        router.get("/").handler(c->mandatoryHandler.testRequestParams(c, PARAM_ID));
         router.get("/").handler(this::getSandboxById);
 
         router.post("/update").handler(authHandler);

@@ -32,12 +32,12 @@ public class AssetsRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
-        router.get("/:collection/:id").handler(c -> mandatoryHandler.testRequesParams(c, COLLECTION, "id"));
+        router.get("/:collection/:id").handler(c -> mandatoryHandler.testRequestParams(c, COLLECTION, "id"));
         router.get("/:collection/:id").handler(this::getAssetHandler);
 
         router.post("/:collection/:field/:uid").handler(authHandler);
-        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequesParams(c, COLLECTION, "field", "uid"));
-        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequesHeaders(c, "Accept-Language"));
+        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequestParams(c, COLLECTION, "field", "uid"));
+        router.post("/:collection/:field/:uid").handler(c -> mandatoryHandler.testRequestHeaders(c, "Accept-Language"));
         router.post("/:collection/:field/:uid").handler(this::assetUploadHandler);
         return router;
     }

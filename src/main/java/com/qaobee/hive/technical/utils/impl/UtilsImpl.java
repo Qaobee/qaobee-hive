@@ -27,7 +27,7 @@ import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.utils.HabilitUtils;
 import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
 import com.qaobee.hive.technical.vertx.RequestWrapper;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.Future;

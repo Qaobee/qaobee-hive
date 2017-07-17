@@ -51,7 +51,7 @@ public class ActivityRoute extends AbstractRoute {
     public Router init() {
         Router router = Router.router(vertx);
 
-        router.get("/get").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID));
+        router.get("/get").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID));
         router.get("/get").handler(this::get);
 
         router.get("/list").handler(this::getList);

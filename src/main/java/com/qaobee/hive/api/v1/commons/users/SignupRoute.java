@@ -92,10 +92,10 @@ public class SignupRoute extends AbstractRoute {
         router.put("/register").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA));
         router.put("/register").handler(this::registerUser);
 
-        router.get("/accountcheck").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID, PARAM_CODE));
+        router.get("/accountcheck").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID, PARAM_CODE));
         router.get("/accountcheck").handler(this::accountCheck);
 
-        router.get("/firstconnectioncheck").handler(c -> mandatoryHandler.testRequesParams(c, PARAM_ID, PARAM_CODE));
+        router.get("/firstconnectioncheck").handler(c -> mandatoryHandler.testRequestParams(c, PARAM_ID, PARAM_CODE));
         router.get("/firstconnectioncheck").handler(this::firstConnectionCheck);
 
         router.post("/finalize").handler(c -> mandatoryHandler.testBodyParams(c, PARAM_USER, PARAM_CODE, PARAM_ACTIVITY, PARAM_STRUCTURE, PARAM_CATEGORY_AGE));

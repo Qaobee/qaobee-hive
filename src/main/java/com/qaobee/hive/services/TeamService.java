@@ -17,17 +17,52 @@
  *    from Qaobee.
  */
 
-package com.qaobee.hive.dao;
+package com.qaobee.hive.services;
 
+import com.qaobee.hive.services.impl.TeamServiceImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Team dao.
+ * The interface Team service.
  */
-public interface TeamDAO {
+@ProxyGen
+@VertxGen
+public interface TeamService {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.Team.service";
+
+    /**
+     * Create team service.
+     *
+     * @param vertx the vertx
+     *
+     * @return the team service
+     */
+    static TeamService create(Vertx vertx) {
+        return new TeamServiceImpl(vertx);
+    }
+
+    /**
+     * Create proxy team service.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     *
+     * @return the team service
+     */
+    static TeamService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(TeamService.class, vertx, address);
+    }
+
     /**
      * Gets team list.
      *
