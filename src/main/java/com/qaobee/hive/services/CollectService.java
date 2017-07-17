@@ -36,11 +36,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @VertxGen
 public interface CollectService {
     /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Collect.service";
-
-    /**
      * Create collect service.
      *
      * @param vertx the vertx

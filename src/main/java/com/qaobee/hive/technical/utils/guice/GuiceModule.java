@@ -117,7 +117,7 @@ public class GuiceModule extends AbstractModule {
                 Method method = iface.getMethod("createProxy", new Class<?>[]{Vertx.class, String.class});
                 bind(iface).toInstance(method.invoke(null, new Object[]{vertx, c.getAnnotation(ProxyService.class).address()}));
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                LOG.error(e.getMessage(), e);
             }
         });
     }

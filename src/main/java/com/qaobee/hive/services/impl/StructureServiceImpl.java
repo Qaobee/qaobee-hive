@@ -36,7 +36,7 @@ import javax.inject.Inject;
 /**
  * The type Structure.
  */
-@ProxyService(address = StructureService.ADDRESS, iface = StructureService.class)
+@ProxyService(address = "vertx.Structure.service", iface = StructureService.class)
 public class StructureServiceImpl implements StructureService {
     private static final String COUNTRY_ALPHA_2_FIELD = "countryAlpha2";
     @Inject

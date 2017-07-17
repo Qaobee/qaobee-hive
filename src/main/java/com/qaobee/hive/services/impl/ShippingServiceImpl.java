@@ -56,7 +56,7 @@ import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
 
-@ProxyService(address = ShippingService.ADDRESS, iface = ShippingService.class)
+@ProxyService(address = "vertx.Shipping.service", iface = ShippingService.class)
 public class ShippingServiceImpl implements ShippingService {
     private static final Logger LOG = LoggerFactory.getLogger(ShippingService.class);
     private static final String MONTHLY = "monthly";
@@ -89,6 +89,7 @@ public class ShippingServiceImpl implements ShippingService {
     public ShippingServiceImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
+        Stripe.apiKey = stripe.getString("api_secret");
     }
 
     private void doPay(User user, JsonObject paymentData, String locale, int planId, Plan plan, int amount, Handler<AsyncResult<JsonObject>> resultHandler) {
@@ -100,18 +101,7 @@ public class ShippingServiceImpl implements ShippingService {
                     getSubscriptionInfo(user.getAccount().getListPlan().get(planId).getPaymentId(), subscription -> {
                         if (subscription.succeeded()) {
                             if (subscription.result() != null) {
-                                user.getAccount().getListPlan().get(planId).setStatus(subscription.result().getStatus());
-                                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, upsertRes -> {
-                                    if (upsertRes.succeeded()) {
-                                        if ("canceled".equals(subscription.result().getStatus()) || "unpaid".equals(subscription.result().getStatus())) {
-                                            registerSubscription(user, paymentData, locale, customer.result(), plan, planId, amount, resultHandler);
-                                        } else {
-                                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale))));
-                                        }
-                                    } else {
-                                        resultHandler.handle(Future.failedFuture(upsertRes.cause()));
-                                    }
-                                });
+                                proceedExistingSubscription(user, planId, subscription.result(), paymentData, customer.result(), plan, amount, locale, resultHandler);
                             } else {
                                 registerSubscription(user, paymentData, locale, customer.result(), plan, planId, amount, resultHandler);
                             }
@@ -128,7 +118,25 @@ public class ShippingServiceImpl implements ShippingService {
         });
     }
 
-    private void registerSubscription(User user, JsonObject paymentData, String locale, Customer customer, Plan plan,
+    private void proceedExistingSubscription(User user, int planId, Subscription subscription, JsonObject paymentData,// NOSONAR
+                                             Customer customer, Plan plan, int amount, String locale,
+                                             Handler<AsyncResult<JsonObject>> resultHandler) {
+        user.getAccount().getListPlan().get(planId).setStatus(subscription.getStatus());
+        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, upsertRes -> {
+            if (upsertRes.succeeded()) {
+                if ("canceled".equals(subscription.getStatus()) || "unpaid".equals(subscription.getStatus())) {
+                    registerSubscription(user, paymentData, locale, customer, plan, planId, amount, resultHandler);
+                } else {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, Messages.getString("subscription.exists", locale))));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
+            }
+        });
+
+    }
+
+    private void registerSubscription(User user, JsonObject paymentData, String locale, Customer customer, Plan plan,// NOSONAR
                                       int planId, int amount, Handler<AsyncResult<JsonObject>> resultHandler) {
         try {
             Token token = Token.retrieve(paymentData.getString("token"));
@@ -293,7 +301,7 @@ public class ShippingServiceImpl implements ShippingService {
 
     @Override
     public void pay(JsonObject u, JsonObject paymentData, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
-        Stripe.apiKey = stripe.getString("api_secret");
+
         try {
             User user = Json.decodeValue(u.encode(), User.class);
             utils.testMandatoryParams(paymentData, PLANID_FIELD);

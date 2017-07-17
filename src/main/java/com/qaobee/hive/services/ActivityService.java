@@ -36,11 +36,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @VertxGen
 public interface ActivityService {
     /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Activity.service";
-
-    /**
      * Create activity service.
      *
      * @param vertx the vertx

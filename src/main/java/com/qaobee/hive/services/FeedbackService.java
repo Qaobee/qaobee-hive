@@ -33,12 +33,8 @@ import io.vertx.serviceproxy.ProxyHelper;
  */
 @ProxyGen
 @VertxGen
+@FunctionalInterface
 public interface FeedbackService {
-
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Feedback.service";
 
     /**
      * Create feedback service.

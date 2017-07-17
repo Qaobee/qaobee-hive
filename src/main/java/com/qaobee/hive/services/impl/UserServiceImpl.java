@@ -54,7 +54,7 @@ import java.util.regex.Pattern;
 /**
  * The type User service.
  */
-@ProxyService(address = UserService.ADDRESS, iface = UserService.class)
+@ProxyService(address = "vertx.User.service", iface = UserService.class)
 public class UserServiceImpl implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
     private static final String ACCOUNT_FIELD = "account";
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
      *
      * @param vertx the vertx
      */
-    public UserServiceImpl(Vertx vertx) {
+    public UserServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 

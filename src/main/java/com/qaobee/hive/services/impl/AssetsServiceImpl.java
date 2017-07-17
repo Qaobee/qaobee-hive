@@ -31,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-@ProxyService(address = AssetsService.ADDRESS, iface = AssetsService.class)
+@ProxyService(address = "vertx.Assets.service", iface = AssetsService.class)
 public class AssetsServiceImpl implements AssetsService {
     private static final Logger LOG = LoggerFactory.getLogger(AssetsService.class);
     private static final String MESS_NOT_FOUND = "Not found";
@@ -71,25 +71,7 @@ public class AssetsServiceImpl implements AssetsService {
                     LOG.error(e.getMessage(), e);
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage())));
                 } else {
-                    if (DBCollections.PERSON.equals(collection) || DBCollections.USER.equals(collection)) {
-                        mongo.getById(userId, collection, res -> {
-                            if(res.succeeded()) {
-                                JsonObject p = res.result();
-                                p.put(field, result.toHexString());
-                                mongo.upsert(p, collection, r -> {
-                                    if (r.succeeded()) {
-                                        resultHandler.handle(Future.succeededFuture(p));
-                                    } else {
-                                        resultHandler.handle(Future.failedFuture(r.cause()));
-                                    }
-                                });
-                            } else {
-                                resultHandler.handle(Future.failedFuture(res.cause()));
-                            }
-                        });
-                    } else {
-                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
-                    }
+                    updateCollection(userId, collection, field, result, resultHandler);
                     if (vertx.fileSystem().existsBlocking(filename)) {
                         vertx.fileSystem().deleteBlocking(filename);
                     }
@@ -98,6 +80,28 @@ public class AssetsServiceImpl implements AssetsService {
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INTERNAL_ERROR, e.getMessage())));
+        }
+    }
+
+    private void updateCollection(String userId, String collection, String field, ObjectId result, Handler<AsyncResult<JsonObject>> resultHandler) {
+        if (DBCollections.PERSON.equals(collection) || DBCollections.USER.equals(collection)) {
+            mongo.getById(userId, collection, res -> {
+                if (res.succeeded()) {
+                    JsonObject p = res.result();
+                    p.put(field, result.toHexString());
+                    mongo.upsert(p, collection, r -> {
+                        if (r.succeeded()) {
+                            resultHandler.handle(Future.succeededFuture(p));
+                        } else {
+                            resultHandler.handle(Future.failedFuture(r.cause()));
+                        }
+                    });
+                } else {
+                    resultHandler.handle(Future.failedFuture(res.cause()));
+                }
+            });
+        } else {
+            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, MESS_NOT_FOUND)));
         }
     }
 

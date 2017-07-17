@@ -34,10 +34,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface UserService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.User.service";
 
     /**
      * Create user service.

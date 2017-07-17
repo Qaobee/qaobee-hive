@@ -34,7 +34,7 @@ import javax.inject.Inject;
 /**
  * The type Indicator.
  */
-@ProxyService(address = IndicatorService.ADDRESS, iface = IndicatorService.class)
+@ProxyService(address = "vertx.Indicator.service", iface = IndicatorService.class)
 public class IndicatorServiceImpl implements IndicatorService {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
@@ -46,7 +46,7 @@ public class IndicatorServiceImpl implements IndicatorService {
      *
      * @param vertx the vertx
      */
-    public IndicatorServiceImpl(Vertx vertx) {
+    public IndicatorServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 

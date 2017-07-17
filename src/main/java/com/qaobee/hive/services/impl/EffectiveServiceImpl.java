@@ -39,7 +39,7 @@ import javax.inject.Inject;
 /**
  * The type Effective service.
  */
-@ProxyService(address = EffectiveService.ADDRESS, iface = EffectiveService.class)
+@ProxyService(address = "vertx.Effective.service", iface = EffectiveService.class)
 public class EffectiveServiceImpl implements EffectiveService {
     private static final String PARAM_SANDBOX_ID = "sandboxId";
     private static final String PARAM_CATEGORY_AGE_CODE = "categoryAge.code";
@@ -51,7 +51,7 @@ public class EffectiveServiceImpl implements EffectiveService {
      *
      * @param vertx the vertx
      */
-    public EffectiveServiceImpl(Vertx vertx) {
+    public EffectiveServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 

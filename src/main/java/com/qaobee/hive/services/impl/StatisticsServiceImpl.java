@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * The type Statistics service.
  */
-@ProxyService(address = StatisticsService.ADDRESS, iface = StatisticsService.class)
+@ProxyService(address = "vertx.Statistics.service", iface = StatisticsService.class)
 public class StatisticsServiceImpl implements StatisticsService {
     private static final String TIMER_FIELD = "timer";
     private static final String OWNER_FIELD = "owner";
@@ -52,7 +52,7 @@ public class StatisticsServiceImpl implements StatisticsService {
      *
      * @param vertx the vertx
      */
-    public StatisticsServiceImpl(Vertx vertx) {
+    public StatisticsServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 
@@ -125,7 +125,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public void addBulk(JsonArray stats, Handler<AsyncResult<JsonObject>> resultHandler) {
-        final long[] count = {0};
+        final int[] count = {0};
         List<Future> promises = new ArrayList<>();
         List<Future> promises2 = new ArrayList<>();
         for (String evtId : collectUniqueIds(stats)) {
@@ -149,7 +149,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     }
                 });
                 CompositeFuture.all(promises2).setHandler(counts -> {
-                    counts.result().list().forEach(c -> count[0] += (int) c);
+                    counts.result().list().forEach(c -> count[0] = count[0] + (int) c);
                     resultHandler.handle(Future.succeededFuture(new JsonObject().put("count", count[0])));
                 });
             } else {
@@ -209,17 +209,17 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public void getStatsGroupedBy(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, String aggregate, JsonArray value, JsonArray shootSeqId, JsonArray groupBy, JsonArray sortedBy, Integer limit, Handler<AsyncResult<JsonArray>> resultHandler) {
-// Aggregate section
+        // Aggregate section
         // $MACTH section
         JsonObject dbObjectParent = new JsonObject()
                 .put(CODE_FIELD, new JsonObject().put("$in", listIndicators))
                 .put(OWNER_FIELD, new JsonObject().put("$in", listOwners));
         // - values
-        if (value != null) {
+        if (value.size() > 0) {
             dbObjectParent.put(VALUE_FIELD, new JsonObject().put("$in", value));
         }
         // - shootSeqId
-        if (shootSeqId != null) {
+        if (shootSeqId.size() > 0) {
             dbObjectParent.put("shootSeqId", new JsonObject().put("$in", shootSeqId));
         }
         // - timer
@@ -230,10 +230,8 @@ public class StatisticsServiceImpl implements StatisticsService {
         dbObjectParent = new JsonObject();
         JsonObject dbObjectChild = new JsonObject();
         // - _id - List of field for id's group step
-        if (groupBy != null) {
-            for (Object field : groupBy) {
-                dbObjectChild.put((String) field, "$" + field);
-            }
+        for (Object field : groupBy) {
+            dbObjectChild.put((String) field, "$" + field);
         }
         dbObjectParent.put("_id", dbObjectChild);
         // - average
@@ -251,7 +249,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         JsonObject group = new JsonObject().put("$group", dbObjectParent);
         // $SORT section
         dbObjectParent = new JsonObject();
-        if (sortedBy != null) {
+        if (sortedBy.size() > 0) {
             for (Object item : sortedBy) {
                 JsonObject field = (JsonObject) item;
                 dbObjectParent.put(field.getString("fieldName"), field.getInteger("sortOrder"));

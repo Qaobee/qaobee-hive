@@ -35,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface TeamService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Team.service";
 
     /**
      * Create team service.

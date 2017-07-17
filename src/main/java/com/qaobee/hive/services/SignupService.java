@@ -34,10 +34,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface SignupService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Signup.service";
 
     /**
      * Create structure.
@@ -72,7 +68,7 @@ public interface SignupService {
      * @param locale         the locale
      * @param resultHandler  the result handler
      */
-    void finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject structure, JsonObject categoryAge, String countryId, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
+    void finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject structure, JsonObject categoryAge, String countryId, String locale, Handler<AsyncResult<JsonObject>> resultHandler); // NOSONAR
 
     /**
      * First connection check.

@@ -12,11 +12,8 @@ import io.vertx.serviceproxy.ProxyHelper;
  */
 @ProxyGen
 @VertxGen
+@FunctionalInterface
 public interface CRMService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.CRM.service";
 
     /**
      * Create crm service.

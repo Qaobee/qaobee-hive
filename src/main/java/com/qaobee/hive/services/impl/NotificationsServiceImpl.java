@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * The type Notifications dao.
  */
-@ProxyService(address = NotificationsService.ADDRESS, iface = NotificationsService.class)
+@ProxyService(address = "vertx.Notifications.service", iface = NotificationsService.class)
 public class NotificationsServiceImpl implements NotificationsService {
     private static final Logger LOG = LoggerFactory.getLogger(NotificationsServiceImpl.class);
     private static final String WS_NOTIFICATION_PREFIX = "qaobee.notification.";

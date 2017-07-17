@@ -35,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface NotificationsService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Notifications.service";
 
     /**
      * Create notifications service.

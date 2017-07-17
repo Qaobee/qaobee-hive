@@ -254,7 +254,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
         });
     }
 
-    private void sendNotification(JsonObject invitation, JsonObject user, String userEmail, String locale) throws QaobeeException {
+    private void sendNotification(JsonObject invitation, JsonObject user, String userEmail, String locale) {
         final JsonObject tplReq = new JsonObject();
         if (StringUtils.isNotBlank(invitation.getString(PARAM_USERID, ""))) {
             notificationsService.sendNotification(invitation.getString(PARAM_USERID), DBCollections.USER, new JsonObject()

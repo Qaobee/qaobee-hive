@@ -36,10 +36,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface StatisticsService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Statistics.service";
 
     /**
      * Create statistics service.

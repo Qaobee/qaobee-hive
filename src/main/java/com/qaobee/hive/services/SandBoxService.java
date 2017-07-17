@@ -37,10 +37,6 @@ import java.util.List;
 @ProxyGen
 @VertxGen
 public interface SandBoxService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.SandBox.service";
 
     /**
      * Create sand box service.

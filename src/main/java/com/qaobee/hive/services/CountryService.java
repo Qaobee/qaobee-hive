@@ -35,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface CountryService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Country.service";
 
     /**
      * Create country service.

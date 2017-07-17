@@ -35,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface ActivityCfgService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.ActivityCfg.service";
 
     /**
      * Create activity cfg service.

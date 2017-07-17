@@ -35,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface ChampionshipService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Championship.service";
 
     /**
      * Create championship service.

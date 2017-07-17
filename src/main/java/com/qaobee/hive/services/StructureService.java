@@ -35,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface StructureService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Structure.service";
 
     /**
      * Create structure.

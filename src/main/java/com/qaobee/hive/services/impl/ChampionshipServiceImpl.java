@@ -37,21 +37,19 @@ import java.util.Collections;
 /**
  * The type Championship dao.
  */
-@ProxyService(address = ChampionshipService.ADDRESS, iface = ChampionshipService.class)
+@ProxyService(address = "vertx.Championship.service", iface = ChampionshipService.class)
 public class ChampionshipServiceImpl implements ChampionshipService {
 
     @Inject
     private MongoDB mongo;
-    private Vertx vertx;
 
     /**
      * Instantiates a new Championship service.
      *
      * @param vertx the vertx
      */
-    public ChampionshipServiceImpl(Vertx vertx) {
+    public ChampionshipServiceImpl(Vertx vertx) { // NOSONAR
         super();
-        this.vertx = vertx;
     }
 
     @Override

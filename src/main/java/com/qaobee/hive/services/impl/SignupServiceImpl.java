@@ -19,6 +19,7 @@
 
 package com.qaobee.hive.services.impl;
 
+import com.qaobee.hive.services.*;
 import com.qaobee.hive.verticles.CRMVerticle;
 import com.qaobee.hive.verticles.MailVerticle;
 import com.qaobee.hive.business.model.commons.referencial.Structure;
@@ -37,18 +38,12 @@ import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
 import com.qaobee.hive.dao.ReCaptcha;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
-import com.qaobee.hive.services.SignupService;
 import com.qaobee.hive.dao.TemplatesDAO;
-import com.qaobee.hive.services.ActivityService;
-import com.qaobee.hive.services.CountryService;
-import com.qaobee.hive.services.StructureService;
-import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.dao.MailUtils;
 import io.vertx.core.*;
@@ -67,13 +62,13 @@ import java.util.*;
 /**
  * The type Signup dao.
  */
-@ProxyService(address = SignupService.ADDRESS, iface = SignupService.class)
+@ProxyService(address = "vertx.Signup.service", iface = SignupService.class)
 public class SignupServiceImpl implements SignupService {
     private static final Logger LOG = LoggerFactory.getLogger(SignupServiceImpl.class);
     private static final String COUNTRY_FIELD = "country";
     private static final String PARAMERTER_FIELD = "parametersSignup";
     private static final String PARAM_PLAN = "plan";
-    private final static Random RANDOM = new Random();
+    private static final Random RANDOM = new Random();
     private Vertx vertx;
 
     @Inject
@@ -142,77 +137,89 @@ public class SignupServiceImpl implements SignupService {
         userService.checkUserInformations(userJson, locale, ar -> {
             if (ar.succeeded()) {
                 // check if email is correct
-                userService.testEmail(user.getContact().getEmail(), locale, ar2 -> {
-                    if (ar2.succeeded()) {
-                        userService.existingLogin(user.getAccount().getLogin(), r -> {
-                            if (r.succeeded() && !r.result()) {
-                                user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
-                                user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                                user.getAccount().setActive(false);
-                                user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
-                                final Plan plan = Json.decodeValue(userJson.getJsonObject(PARAM_PLAN).encode(), Plan.class);
-                                if (user.getAccount().getListPlan() == null) {
-                                    user.getAccount().setListPlan(new ArrayList<>());
-                                }
-                                plan.setStatus("open");
-                                plan.setStartPeriodDate(System.currentTimeMillis());
-                                plan.setAmountPaid(runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price"));
-                                Calendar gc = GregorianCalendar.getInstance();
-                                gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
-                                plan.setEndPeriodDate(gc.getTimeInMillis());
-                                // Si on vient du mobile, on connait le plan, mais pas par le web
-                                Future<Void> d = Future.future();
-                                if (plan.getActivity() != null) {
-                                    mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY, activity -> {
-                                        if (activity.succeeded()) {
-                                            plan.setActivity(Json.decodeValue(activity.result().encode(), Activity.class));
-                                            d.complete();
-                                        } else {
-                                            resultHandler.handle(Future.failedFuture(activity.cause()));
-                                        }
-                                    });
-                                } else {
-                                    d.complete();
-                                }
-                                d.setHandler(res -> {
-                                    if (res.succeeded()) {
-                                        user.getAccount().getListPlan().add(plan);
-                                        this.userService.prepareUpsert(new JsonObject(Json.encode(user)), ar3 -> {
-                                            if (ar3.succeeded()) {
-                                                mongo.upsert(ar3.result(), DBCollections.USER, userId -> {
-                                                    if (userId.succeeded()) {
-                                                        user.set_id(userId.result());
-                                                        vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
-                                                        mongo.getById(userId.result(), DBCollections.USER, u -> {
-                                                                    if (u.succeeded()) {
-                                                                        resultHandler.handle(Future.succeededFuture(new JsonObject()
-                                                                                .put("person", u.result())
-                                                                                .put("planId", plan.getPaymentId())));
-                                                                    } else {
-                                                                        resultHandler.handle(Future.failedFuture(u.cause()));
-                                                                    }
-                                                                }
-                                                        );
-                                                    } else {
-                                                        resultHandler.handle(Future.failedFuture(userId.cause()));
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    } else {
-                                        resultHandler.handle(Future.failedFuture(res.cause()));
-                                    }
-                                });
-                            } else {
-                                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale))));
-                            }
-                        });
+                chaeckMail(user, userJson, locale, resultHandler);
+            } else {
+                resultHandler.handle(Future.failedFuture(ar.cause()));
+            }
+        });
+    }
+
+    private void chaeckMail(User user, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        userService.testEmail(user.getContact().getEmail(), locale, ar2 -> {
+            if (ar2.succeeded()) {
+                userService.existingLogin(user.getAccount().getLogin(), r -> {
+                    if (r.succeeded() && !r.result()) {
+                        createUser(user, userJson, resultHandler);
                     } else {
-                        resultHandler.handle(Future.failedFuture(ar2.cause()));
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale))));
                     }
                 });
             } else {
-                resultHandler.handle(Future.failedFuture(ar.cause()));
+                resultHandler.handle(Future.failedFuture(ar2.cause()));
+            }
+        });
+    }
+
+    private void createUser(User user, JsonObject userJson, Handler<AsyncResult<JsonObject>> resultHandler) {
+        user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
+        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+        user.getAccount().setActive(false);
+        user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
+        final Plan plan = Json.decodeValue(userJson.getJsonObject(PARAM_PLAN).encode(), Plan.class);
+        if (user.getAccount().getListPlan() == null) {
+            user.getAccount().setListPlan(new ArrayList<>());
+        }
+        plan.setStatus("open");
+        plan.setStartPeriodDate(System.currentTimeMillis());
+        plan.setAmountPaid(runtime.getJsonObject("plan").getJsonObject(plan.getLevelPlan().name()).getInteger("price"));
+        Calendar gc = GregorianCalendar.getInstance();
+        gc.add(Calendar.MONTH, runtime.getInteger("trial.duration"));
+        plan.setEndPeriodDate(gc.getTimeInMillis());
+        // Si on vient du mobile, on connait le plan, mais pas par le web
+        Future<Void> d = Future.future();
+        if (plan.getActivity() != null) {
+            mongo.getById(plan.getActivity().get_id(), DBCollections.ACTIVITY, activity -> {
+                if (activity.succeeded()) {
+                    plan.setActivity(Json.decodeValue(activity.result().encode(), Activity.class));
+                    d.complete();
+                } else {
+                    resultHandler.handle(Future.failedFuture(activity.cause()));
+                }
+            });
+        } else {
+            d.complete();
+        }
+        d.setHandler(res -> {
+            if (res.succeeded()) {
+                user.getAccount().getListPlan().add(plan);
+                upsertNewUser(user, plan, resultHandler)
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
+    }
+
+    private void upsertNewUser(User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
+        this.userService.prepareUpsert(new JsonObject(Json.encode(user)), ar3 -> {
+            if (ar3.succeeded()) {
+                mongo.upsert(ar3.result(), DBCollections.USER, userId -> {
+                    if (userId.succeeded()) {
+                        user.set_id(userId.result());
+                        vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
+                        mongo.getById(userId.result(), DBCollections.USER, u -> {
+                                    if (u.succeeded()) {
+                                        resultHandler.handle(Future.succeededFuture(new JsonObject()
+                                                .put("person", u.result())
+                                                .put("planId", plan.getPaymentId())));
+                                    } else {
+                                        resultHandler.handle(Future.failedFuture(u.cause()));
+                                    }
+                                }
+                        );
+                    } else {
+                        resultHandler.handle(Future.failedFuture(userId.cause()));
+                    }
+                });
             }
         });
     }

@@ -34,10 +34,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface SecurityService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Security.service";
 
     /**
      * Create security service.

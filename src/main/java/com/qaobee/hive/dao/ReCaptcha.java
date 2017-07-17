@@ -25,6 +25,7 @@ import io.vertx.core.Handler;
 /**
  * The interface Re captcha.
  */
+@FunctionalInterface
 public interface ReCaptcha {
     /**
      * Verify.

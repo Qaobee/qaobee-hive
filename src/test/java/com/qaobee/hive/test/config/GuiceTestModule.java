@@ -54,7 +54,7 @@ class GuiceTestModule extends AbstractModule {
         bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();
 
         bind(MongoDB.class).toInstance(MongoDB.createProxy(vertx, MongoDB.ADDRESS));
-        bind(ActivityService.class).toInstance(ActivityService.createProxy(vertx, ActivityService.ADDRESS));
-        bind(CountryService.class).toInstance(CountryService.createProxy(vertx, CountryService.ADDRESS));
+        bind(ActivityService.class).toInstance(ActivityService.createProxy(vertx, "vertx.Activity.service"));
+        bind(CountryService.class).toInstance(CountryService.createProxy(vertx, "vertx.Country.service"));
     }
 }

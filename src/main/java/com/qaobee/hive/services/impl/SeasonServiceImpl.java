@@ -38,11 +38,13 @@ import javax.inject.Inject;
 /**
  * The type Season service.
  */
-@ProxyService(address = SeasonService.ADDRESS, iface = SeasonService.class)
+@ProxyService(address = "vertx.Season.service", iface = SeasonService.class)
 public class SeasonServiceImpl implements SeasonService {
     private static final String PARAM_ACTIVITY_ID = "activityId";
     private static final String PARAM_COUNTRY_ID = "countryId";
     private static final String END_DATE_FIELD = "endDate";
+    private static final String NO_SEASON_MESS = "No season defined for (%s / %s)";
+
     @Inject
     private MongoDB mongo;
 
@@ -51,7 +53,7 @@ public class SeasonServiceImpl implements SeasonService {
      *
      * @param vertx the vertx
      */
-    public SeasonServiceImpl(Vertx vertx) {
+    public SeasonServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 
@@ -64,7 +66,7 @@ public class SeasonServiceImpl implements SeasonService {
             if (resultJson.succeeded()) {
                 long currentDate = System.currentTimeMillis();
                 if (resultJson.result().size() == 0) {
-                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NO_SEASON_MESS, activityId, countryId))));
                 } else {
                     JsonObject season = null;
                     for (int i = 0; i < resultJson.result().size(); i++) {
@@ -76,7 +78,7 @@ public class SeasonServiceImpl implements SeasonService {
                     if (season != null) {
                         resultHandler.handle(Future.succeededFuture(season));
                     } else {
-                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NO_SEASON_MESS, activityId, countryId))));
                     }
                 }
             } else {
@@ -93,7 +95,7 @@ public class SeasonServiceImpl implements SeasonService {
         mongo.findByCriterias(criterias, new CriteriaOption().withSort(END_DATE_FIELD).withOrder(-1), DBCollections.SEASON, resultJson -> {
             if (resultJson.succeeded()) {
                 if (resultJson.result().size() == 0) {
-                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No season defined for (" + activityId + " / " + countryId + ")")));
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, String.format(NO_SEASON_MESS, activityId, countryId))));
                 } else {
                     resultHandler.handle(Future.succeededFuture(resultJson.result()));
                 }

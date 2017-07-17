@@ -40,7 +40,7 @@ import java.util.List;
 /**
  * The type Mongo db.
  */
-@ProxyService(address = MongoDB.ADDRESS, iface = MongoDB.class)
+@ProxyService(address = "vertx.MongoDB.service", iface = MongoDB.class)
 public class MongoDBImpl implements MongoDB {
     @Inject
     private MongoClientCustom mongoClient;
@@ -52,7 +52,7 @@ public class MongoDBImpl implements MongoDB {
      *
      * @param vertx the vertx
      */
-    public MongoDBImpl(Vertx vertx) {
+    public MongoDBImpl(Vertx vertx) { // NOSONAR
         super();
     }
 
@@ -113,11 +113,11 @@ public class MongoDBImpl implements MongoDB {
         JsonObject query = new JsonObject();
         if (criteria.size() > 0) {
             final JsonArray and = new JsonArray();
-            criteria.fieldNames().forEach(K -> {
-                if (criteria.getValue(K) instanceof String && ((String) criteria.getValue(K)).startsWith("//")) {
-                    and.add(new JsonObject().put(K, new JsonObject().put("$regex", ((String) criteria.getValue(K)).substring(2)).put("$options", "i")));
+            criteria.fieldNames().forEach(k -> {
+                if (criteria.getValue(k) instanceof String && ((String) criteria.getValue(k)).startsWith("//")) {
+                    and.add(new JsonObject().put(k, new JsonObject().put("$regex", ((String) criteria.getValue(k)).substring(2)).put("$options", "i")));
                 } else {
-                    and.add(new JsonObject().put(K, criteria.getValue(K)));
+                    and.add(new JsonObject().put(k, criteria.getValue(k)));
                 }
             });
             query = new JsonObject().put("$and", and);

@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * The type Sand box service.
  */
-@ProxyService(address = SandBoxService.ADDRESS, iface = SandBoxService.class)
+@ProxyService(address = "vertx.SandBox.service", iface = SandBoxService.class)
 public class SandBoxServiceImpl implements SandBoxService {
     private static final String PARAM_OWNER_ID = "owner";
     private static final String PARAM_ACTIVITY_ID = "activity";
@@ -55,7 +55,7 @@ public class SandBoxServiceImpl implements SandBoxService {
     @Inject
     private MongoDB mongo;
 
-    public SandBoxServiceImpl(Vertx vertx) {
+    public SandBoxServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 

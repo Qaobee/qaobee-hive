@@ -146,7 +146,7 @@ public class NotificationsRoute extends AbstractRoute {
         }
     }
 
-    private void notifyPeople(JsonObject obj, RoutingContext context) throws QaobeeException {
+    private void notifyPeople(JsonObject obj, RoutingContext context) {
         utils.testMandatoryParams(obj, "id", TARGET, NOTIFICATION);
         notificationsService.sendNotification(obj.getString("id"),
                 obj.getString(TARGET), obj.getJsonObject(NOTIFICATION),

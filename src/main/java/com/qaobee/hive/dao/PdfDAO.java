@@ -26,6 +26,7 @@ import io.vertx.core.json.JsonObject;
 /**
  * The interface Pdf dao.
  */
+@FunctionalInterface
 public interface PdfDAO {
     /**
      * Generate pdf.

@@ -23,6 +23,7 @@ import com.qaobee.hive.services.StatisticsService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -36,11 +37,6 @@ import javax.inject.Inject;
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/stats/statistics")
 public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
-/*    public static final String GET_STAT_GROUPBY = Module.VERSION + ".sandbox.stats.statistics.getStatGroupBy";
-    public static final String GET_LISTDETAIL_VALUES = Module.VERSION + ".sandbox.stats.statistics.getListDetailValue";
-    public static final String ADD_STAT = Module.VERSION + ".sandbox.stats.statistics.add";
-    public static final String ADD_STAT_BULK = Module.VERSION + ".sandbox.stats.statistics.addBulk";
-    public static final String GET_STATS = Module.VERSION + ".sandbox.stats.statistics";*/
 
     /**
      * List of Indicator code
@@ -191,15 +187,15 @@ public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
     private void getStatsGroupedBy(RoutingContext context) {
         JsonObject params = context.getBodyAsJson();
         statisticsService.getStatsGroupedBy(params.getJsonArray(PARAM_INDICATOR_CODE),
-                params.getJsonArray(PARAM_LIST_OWNERS),
-                params.getLong(PARAM_START_DATE),
-                params.getLong(PARAM_END_DATE),
-                params.getString(PARAM_AGGREGAT),
-                params.getJsonArray(PARAM_VALUES),
-                params.getJsonArray(PARAM_LIST_SHOOTSEQID),
-                params.getJsonArray(PARAM_LIST_GROUPBY),
-                params.getJsonArray(PARAM_LIST_SORTBY),
-                params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0,
+                params.getJsonArray(PARAM_LIST_OWNERS, new JsonArray()),
+                params.getLong(PARAM_START_DATE, 0L),
+                params.getLong(PARAM_END_DATE, 0L),
+                params.getString(PARAM_AGGREGAT, ""),
+                params.getJsonArray(PARAM_VALUES, new JsonArray()),
+                params.getJsonArray(PARAM_LIST_SHOOTSEQID, new JsonArray()),
+                params.getJsonArray(PARAM_LIST_GROUPBY, new JsonArray()),
+                params.getJsonArray(PARAM_LIST_SORTBY, new JsonArray()),
+                params.getInteger(PARAM_LIMIT_RESULT, 0),
                 handleResponseArray(context)
         );
     }

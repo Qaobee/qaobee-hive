@@ -35,7 +35,7 @@ import javax.inject.Inject;
 /**
  * The type Activity service.
  */
-@ProxyService(address = ActivityService.ADDRESS, iface = ActivityService.class)
+@ProxyService(address = "vertx.Activity.service", iface = ActivityService.class)
 public class ActivityServiceImpl implements ActivityService {
 
     @Inject
@@ -46,7 +46,7 @@ public class ActivityServiceImpl implements ActivityService {
      *
      * @param vertx the vertx
      */
-    public ActivityServiceImpl(Vertx vertx) {
+    public ActivityServiceImpl(Vertx vertx) {// NOSONAR
         super();
     }
 

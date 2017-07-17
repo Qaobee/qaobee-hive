@@ -15,10 +15,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface AssetsService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Assets.service";
 
     /**
      * Create assets service.

@@ -35,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface EffectiveService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Effective.service";
 
     /**
      * Create effective service.

@@ -35,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface IndicatorService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Indicator.service";
 
     /**
      * Create indicator.

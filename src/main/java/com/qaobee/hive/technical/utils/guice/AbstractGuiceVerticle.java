@@ -21,11 +21,10 @@ package com.qaobee.hive.technical.utils.guice;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.dao.Utils;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -52,13 +51,6 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      */
     protected Injector injector;
 
-    // Optional - called when verticle is undeployed
-    public void stop(Future<Void> startFuture) {
-        LOG.info("Stop " + this.getClass().getName());
-        startFuture.complete();
-    }
-
-
     /**
      * Inject abstract guice verticle.
      *
@@ -80,69 +72,18 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
     }
 
     /**
-     * Handle json handler.
-     *
-     * @param message the message
-     *
-     * @return the handler
-     */
-    protected Handler<AsyncResult<JsonObject>> handleJson(Message<String> message) {
-        return res -> {
-            if (res.succeeded()) {
-                message.reply(res.result().encode());
-            } else {
-                utils.sendError(message, (QaobeeException) res.cause());
-            }
-        };
-    }
-
-    /**
      * Handle json j handler.
      *
      * @param message the message
      *
      * @return the handler
      */
-    protected Handler<AsyncResult<JsonObject>> handleJsonJ(Message<JsonObject> message) {
+    protected Handler<AsyncResult<JsonObject>> handleJson(Message<JsonObject> message) {
         return res -> {
             if (res.succeeded()) {
                 message.reply(res.result());
             } else {
                 utils.sendErrorJ(message, (QaobeeException) res.cause());
-            }
-        };
-    }
-
-    /**
-     * Handle json array handler.
-     *
-     * @param message the message
-     *
-     * @return the handler
-     */
-    protected Handler<AsyncResult<JsonArray>> handleJsonArray(Message<String> message) {
-        return res -> {
-            if (res.succeeded()) {
-                message.reply(res.result().encode());
-            } else {
-                utils.sendError(message, (QaobeeException) res.cause());
-            }
-        };
-    }
-
-    /**
-     * Handle boolean handler.
-     *
-     * @param message the message
-     *
-     * @return the handler
-     */
-    protected Handler<AsyncResult<Boolean>> handleBoolean(Message<String> message) {
-        return res -> {
-            if (res.succeeded()) {
-                utils.sendStatus(res.result(), message);
-            } else {
-                utils.sendStatus(false, message);
             }
         };
     }
@@ -180,71 +121,6 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
                 startFuture.complete();
             } else {
                 startFuture.fail(rs.cause());
-            }
-        });
-    }
-
-
-    /**
-     * Reply json object.
-     *
-     * @param message the message
-     * @param promise the promise
-     */
-    protected void replyJsonObject(Message<String> message, Future<JsonObject> promise) {
-        promise.setHandler(res -> {
-            if (res.succeeded()) {
-                message.reply(res.result());
-            } else {
-                utils.sendError(message, (QaobeeException) res.cause());
-            }
-        });
-    }
-
-    /**
-     * Reply json object j.
-     *
-     * @param message the message
-     * @param promise the promise
-     */
-    protected void replyJsonObjectJ(Message<JsonObject> message, Future<JsonObject> promise) {
-        promise.setHandler(res -> {
-            if (res.succeeded()) {
-                message.reply(res.result().encode());
-            } else {
-                utils.sendErrorJ(message, (QaobeeException) res.cause());
-            }
-        });
-    }
-
-    /**
-     * Reply json array.
-     *
-     * @param message the message
-     * @param promise the promise
-     */
-    protected void replyJsonArray(Message<String> message, Future<JsonArray> promise) {
-        promise.setHandler(res -> {
-            if (res.succeeded()) {
-                message.reply(res.result().encode());
-            } else {
-                utils.sendError(message, (QaobeeException) res.cause());
-            }
-        });
-    }
-
-    /**
-     * Reply boolean.
-     *
-     * @param message the message
-     * @param promise the promise
-     */
-    protected void replyBoolean(Message<String> message, Future<Boolean> promise) {
-        promise.setHandler(res -> {
-            if (res.succeeded()) {
-                utils.sendStatus(res.result(), message);
-            } else {
-                utils.sendStatus(false, message);
             }
         });
     }

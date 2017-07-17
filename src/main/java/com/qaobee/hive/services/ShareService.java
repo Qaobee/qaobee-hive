@@ -20,7 +20,6 @@
 package com.qaobee.hive.services;
 
 
-import com.qaobee.hive.services.impl.SecurityServiceImpl;
 import com.qaobee.hive.services.impl.ShareServiceImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
@@ -37,10 +36,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface ShareService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Share.service";
 
     /**
      * Create share service.

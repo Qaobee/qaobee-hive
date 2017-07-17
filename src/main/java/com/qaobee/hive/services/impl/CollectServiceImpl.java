@@ -39,7 +39,7 @@ import javax.inject.Inject;
 /**
  * The type Collect service.
  */
-@ProxyService(address = CollectService.ADDRESS, iface = CollectService.class)
+@ProxyService(address = "vertx.Collect.service", iface = CollectService.class)
 public class CollectServiceImpl implements CollectService {
 
     @Inject
@@ -52,7 +52,7 @@ public class CollectServiceImpl implements CollectService {
      *
      * @param vertx the vertx
      */
-    public CollectServiceImpl(Vertx vertx) {
+    public CollectServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 
@@ -73,6 +73,7 @@ public class CollectServiceImpl implements CollectService {
                         .put("senderId", currentUserId);
                 notificationsService.sendNotification(collect.getJsonObject(SB_CollectRoute.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectRoute.PARAM_SANDBOX_ID),
                         DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar -> {
+                            //empty
                         });
                 resultHandler.handle(Future.succeededFuture(collect));
             } else {
@@ -92,6 +93,7 @@ public class CollectServiceImpl implements CollectService {
                         .put("senderId", currentUserId);
                 notificationsService.sendNotification(collect.getJsonObject(SB_CollectRoute.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectRoute.PARAM_SANDBOX_ID),
                         DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar -> {
+                            // empty
                         });
                 resultHandler.handle(Future.succeededFuture(collect));
             } else {

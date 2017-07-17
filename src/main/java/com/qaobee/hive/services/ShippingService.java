@@ -34,10 +34,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface ShippingService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Shipping.service";
 
     /**
      * Create shipping service.

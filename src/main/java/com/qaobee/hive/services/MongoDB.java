@@ -38,10 +38,6 @@ import java.util.List;
 @ProxyGen
 @VertxGen
 public interface MongoDB {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.MongoDB.service";
 
     /**
      * Create mongo db.

@@ -38,7 +38,7 @@ import javax.inject.Inject;
 /**
  * The type Event service.
  */
-@ProxyService(address = EventService.ADDRESS, iface = EventService.class)
+@ProxyService(address = "vertx.Event.service", iface = EventService.class)
 public class EventServiceImpl implements EventService {
     private static final String FIELD_SANDBOX_ID = "sandboxId";
     @Inject
@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
      *
      * @param vertx the vertx
      */
-    public EventServiceImpl(Vertx vertx) {
+    public EventServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
     @Override
@@ -70,6 +70,7 @@ public class EventServiceImpl implements EventService {
                                 .put("content", Messages.getString("notification.event.update.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
                                 .put("title", Messages.getString("notification.event.update.title", locale))
                                 .put("senderId", currentUserId), new JsonArray().add(currentUserId), ar -> {
+                            // empty
                         });
                     }
                 });
@@ -91,6 +92,7 @@ public class EventServiceImpl implements EventService {
                                 .put("content", Messages.getString("notification.event.add.content", locale, event.getString("label"), "/#/private/updateEvent/" + event.getString("_id")))
                                 .put("title", Messages.getString("notification.event.add.title", locale))
                                 .put("senderId", currentUserId), new JsonArray().add(currentUserId), ar -> {
+                            // empty
                         });
                     }
                 });

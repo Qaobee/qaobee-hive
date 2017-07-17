@@ -67,7 +67,7 @@ public class AssetsRoute extends AbstractRoute {
         final File dir = new File(datadir + "/upload");
         if (!dir.exists()) {
             boolean res = dir.mkdirs();
-            LOG.debug("Creating " + dir.getAbsolutePath() + " result : " + res);
+            LOG.debug(String.format("Creating %s result : %s", dir.getAbsolutePath(), res));
         }
         context.fileUploads().forEach(upload -> handleUpload(upload, dir, context));
     }

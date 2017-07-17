@@ -40,7 +40,7 @@ import javax.inject.Inject;
 /**
  * The type Team service.
  */
-@ProxyService(address = TeamService.ADDRESS, iface = TeamService.class)
+@ProxyService(address = "vertx.Team.service", iface = TeamService.class)
 public class TeamServiceImpl implements TeamService {
     private static final String PARAM_ADVERSARY = "adversary";
     private static final String PARAM_EFFECTIVE_ID = "effectiveId";
@@ -58,7 +58,7 @@ public class TeamServiceImpl implements TeamService {
      *
      * @param vertx the vertx
      */
-    public TeamServiceImpl(Vertx vertx) {
+    public TeamServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 
@@ -94,6 +94,7 @@ public class TeamServiceImpl implements TeamService {
                         .put("title", Messages.getString("notification.team.update.title", locale))
                         .put("senderId", userId);
                 notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar -> {
+                    // empty
                 });
                 resultHandler.handle(Future.succeededFuture(team));
             } else {
@@ -114,6 +115,7 @@ public class TeamServiceImpl implements TeamService {
                         .put("title", Messages.getString("notification.team.add.title", locale))
                         .put("senderId", userId);
                 notificationsService.sendNotification(team.getString(PARAM_SANDBOX_ID), DBCollections.SANDBOX, notification, new JsonArray().add(userId), ar -> {
+                    // empty
                 });
                 resultHandler.handle(Future.succeededFuture(team));
             } else {

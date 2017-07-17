@@ -19,7 +19,6 @@
 
 package com.qaobee.hive.services;
 
-import com.qaobee.hive.services.impl.EffectiveServiceImpl;
 import com.qaobee.hive.services.impl.EventServiceImpl;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
@@ -36,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface EventService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Event.service";
 
     /**
      * Create event service.

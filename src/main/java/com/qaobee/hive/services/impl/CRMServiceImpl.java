@@ -20,7 +20,7 @@ import javax.inject.Named;
 /**
  * The type Crm dao.
  */
-@ProxyService(address = CRMService.ADDRESS, iface = CRMService.class)
+@ProxyService(address = "vertx.CRM.service", iface = CRMService.class)
 public class CRMServiceImpl implements CRMService {
     private static final Logger LOG = LoggerFactory.getLogger(CRMServiceImpl.class);
     @Inject
@@ -34,7 +34,7 @@ public class CRMServiceImpl implements CRMService {
      *
      * @param vertx the vertx
      */
-    public CRMServiceImpl(Vertx vertx) {
+    public CRMServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 

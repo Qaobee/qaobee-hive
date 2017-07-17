@@ -35,10 +35,6 @@ import io.vertx.serviceproxy.ProxyHelper;
 @ProxyGen
 @VertxGen
 public interface SeasonService {
-    /**
-     * The constant ADDRESS.
-     */
-    String ADDRESS = "vertx.Season.service";
 
     /**
      * Create season.

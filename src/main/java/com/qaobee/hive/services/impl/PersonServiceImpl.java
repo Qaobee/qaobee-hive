@@ -40,7 +40,7 @@ import javax.inject.Inject;
 /**
  * The type Person service.
  */
-@ProxyService(address = PersonService.ADDRESS, iface = PersonService.class)
+@ProxyService(address = "vertx.Person.service", iface = PersonService.class)
 public class PersonServiceImpl implements PersonService {
 
     private static final String PARAM_SANDBOX_ID = "sandboxId";
@@ -55,7 +55,7 @@ public class PersonServiceImpl implements PersonService {
      *
      * @param vertx the vertx
      */
-    public PersonServiceImpl(Vertx vertx) {
+    public PersonServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
     

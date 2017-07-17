@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * The type Feedback dao.
  */
-@ProxyService(address = FeedbackService.ADDRESS, iface = FeedbackService.class)
+@ProxyService(address = "vertx.Feedback.service", iface = FeedbackService.class)
 public class FeedbackServiceImpl implements FeedbackService {
     private static final Logger LOG = LoggerFactory.getLogger(FeedbackServiceImpl.class);
     private static final String PROJECT_FIELD = "project";
@@ -52,7 +52,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Named("jira")
     private JsonObject config;
 
-    public FeedbackServiceImpl(Vertx vertx) {
+    public FeedbackServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 

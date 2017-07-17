@@ -40,13 +40,13 @@ import javax.inject.Inject;
 /**
  * The type Country dao.
  */
-@ProxyService(address = CountryService.ADDRESS, iface = CountryService.class)
+@ProxyService(address = "vertx.Country.service", iface = CountryService.class)
 public class CountryServiceImpl implements CountryService {
     private final JsonObject mapCountry = new JsonObject();
     @Inject
     private MongoDB mongo;
 
-    public CountryServiceImpl(Vertx vertx) {
+    public CountryServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 

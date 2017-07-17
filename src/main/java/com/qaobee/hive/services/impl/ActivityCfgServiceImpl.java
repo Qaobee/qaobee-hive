@@ -39,7 +39,7 @@ import io.vertx.core.json.JsonObject;
 import javax.inject.Inject;
 
 
-@ProxyService(address = ActivityCfgService.ADDRESS, iface = ActivityCfgService.class)
+@ProxyService(address = "vertx.ActivityCfg.service", iface = ActivityCfgService.class)
 public class ActivityCfgServiceImpl implements ActivityCfgService {
 
     @Inject
@@ -47,7 +47,7 @@ public class ActivityCfgServiceImpl implements ActivityCfgService {
     @Inject
     private MongoDB mongoDB;
 
-    public ActivityCfgServiceImpl(Vertx vertx) {
+    public ActivityCfgServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 

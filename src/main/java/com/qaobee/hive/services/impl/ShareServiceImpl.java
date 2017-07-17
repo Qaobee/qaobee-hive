@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * The type Share service.
  */
-@ProxyService(address = ShareService.ADDRESS, iface = ShareService.class)
+@ProxyService(address = "vertx.Share.service", iface = ShareService.class)
 public class ShareServiceImpl implements ShareService {
     private static final String FIELD_ID = "_id";
     private static final String FIELD_OWNER = "owner";
@@ -59,7 +59,7 @@ public class ShareServiceImpl implements ShareService {
      *
      * @param vertx the vertx
      */
-    public ShareServiceImpl(Vertx vertx) {
+    public ShareServiceImpl(Vertx vertx) { // NOSONAR
         super();
     }
 

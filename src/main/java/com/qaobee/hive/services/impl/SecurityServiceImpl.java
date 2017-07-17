@@ -53,7 +53,7 @@ import javax.inject.Named;
 /**
  * The type Security service.
  */
-@ProxyService(address = SecurityService.ADDRESS, iface = SecurityService.class)
+@ProxyService(address = "vertx.Security.service", iface = SecurityService.class)
 public class SecurityServiceImpl implements SecurityService {
     private static final Logger LOG = LoggerFactory.getLogger(SecurityServiceImpl.class);
     private static final String ACCOUNT_LOGIN_FIELD = "account.login";
