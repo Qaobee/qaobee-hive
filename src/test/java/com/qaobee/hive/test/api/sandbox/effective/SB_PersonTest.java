@@ -44,6 +44,7 @@ import static org.hamcrest.Matchers.*;
  */
 public class SB_PersonTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/sandbox/effective/person");
+
     /**
      * Gets by id.
      */
@@ -216,14 +217,14 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .multiPart(avatar).
                             pathParam("uid", id).
                             when().
-                            post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                            post(getRootURL() + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(200)
                     .body("avatar", notNullValue())
                     .extract().path("avatar");
 
             byte[] byteArray = given()
                     .pathParam("avatar", avatarId)
-                    .get(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/{avatar}")
+                    .get(getRootURL() + "/file/" + DBCollections.PERSON + "/{avatar}")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
 
@@ -244,7 +245,7 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", "blabla").
                     when().
-                    post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                    post(getRootURL() + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
             async.complete();
         });
@@ -261,7 +262,7 @@ public class SB_PersonTest extends VertxJunitSupport {
             given().multiPart(new File("src/test/resources/avatar.jpg"))
                     .pathParam("uid", u.result().get_id())
                     .when()
-                    .post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                    .post(getRootURL() + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
         });
@@ -279,7 +280,7 @@ public class SB_PersonTest extends VertxJunitSupport {
                     pathParam("uid", u.result().get_id())
                     .header(TOKEN, "11111")
                     .when()
-                    .post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                    .post(getRootURL() + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
         });
@@ -293,7 +294,7 @@ public class SB_PersonTest extends VertxJunitSupport {
     public void getAvatarWithWrongAvatarId() {
         given()
                 .pathParam("avatar", "blabla")
-                .get(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.PERSON + "/{avatar}")
+                .get(getRootURL() + "/file/" + DBCollections.PERSON + "/{avatar}")
                 .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
     }
 

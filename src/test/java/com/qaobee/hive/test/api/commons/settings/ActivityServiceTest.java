@@ -33,6 +33,7 @@ import static org.hamcrest.Matchers.*;
  */
 public class ActivityServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/settings/activity");
+
     /**
      * Gets activity.
      */
@@ -40,7 +41,7 @@ public class ActivityServiceTest extends VertxJunitSupport {
     public void getActivity() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
         given().queryParam(ActivityRoute.PARAM_ID, "ACT-HAND")
-                .when().get(BASE_URL+ "/get")
+                .when().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
                 .body("label", is("commons.settings.activity.handball"));
@@ -51,7 +52,7 @@ public class ActivityServiceTest extends VertxJunitSupport {
      */
     @Test
     public void getActivityWithWrongHttpMethodTest() {
-        given().post(BASE_URL+ "/get")
+        given().post(BASE_URL + "/get")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -61,11 +62,11 @@ public class ActivityServiceTest extends VertxJunitSupport {
      */
     @Test
     public void getActivityWithMissingParameterTest() {
-        given().get(BASE_URL+ "/get")
+        given().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
         given().queryParam(ActivityRoute.PARAM_ID, "")
-                .get(BASE_URL+ "/get")
+                .get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                 .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
     }
@@ -77,7 +78,7 @@ public class ActivityServiceTest extends VertxJunitSupport {
     public void getActivityWithWrongActivityIdTest() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG);
         given().queryParam(ActivityRoute.PARAM_ID, "ACT-BIDON")
-                .get(BASE_URL+ "/get")
+                .get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
@@ -89,7 +90,7 @@ public class ActivityServiceTest extends VertxJunitSupport {
     public void getList() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
         given().queryParam(ActivityRoute.PARAM_ID, "ACT-HAND")
-                .when().get(BASE_URL+ "/list")
+                .when().get(BASE_URL + "/list")
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(26));
     }
@@ -99,7 +100,7 @@ public class ActivityServiceTest extends VertxJunitSupport {
      */
     @Test
     public void getListWithWrongHttpMethodTest() {
-        given().post(getURL(BASE_URL+ "/list"))
+        given().post(BASE_URL + "/list")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -111,7 +112,7 @@ public class ActivityServiceTest extends VertxJunitSupport {
     public void getListEnable() {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY);
         given().queryParam(ActivityRoute.PARAM_ID, "ACT-HAND")
-                .when().get(BASE_URL+ "/listEnable")
+                .when().get(BASE_URL + "/listEnable")
                 .then().assertThat().statusCode(200)
                 .body("", hasSize(2));
     }
@@ -121,7 +122,7 @@ public class ActivityServiceTest extends VertxJunitSupport {
      */
     @Test
     public void getListEnableWithWrongHttpMethodTest() {
-        given().post(BASE_URL+ "/listEnable")
+        given().post(BASE_URL + "/listEnable")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }

@@ -111,13 +111,7 @@ public class CoordinatorVerticle extends AbstractGuiceVerticle {
         router.route().last().handler(CoordinatorVerticle::manage404Error);
 
         // Load Verticles
-        runWebServer(loadVerticles(), router).setHandler(r -> {
-            if (r.succeeded()) {
-                startFuture.complete();
-            } else {
-                startFuture.fail(r.cause());
-            }
-        });
+        runWebServer(loadVerticles(), router, startFuture);
     }
 
     private static void jsonHandler(RoutingContext context) {
@@ -128,12 +122,7 @@ public class CoordinatorVerticle extends AbstractGuiceVerticle {
         context.next();
     }
 
-    /**
-     * @param promises Promises
-     * @param router   Route matcher
-     */
-    private Future<Boolean> runWebServer(List<Future> promises, Router router) {
-        Future<Boolean> deferred = Future.future();
+    private void runWebServer(List<Future> promises, Router router, Future<Void> startFuture) {
         CompositeFuture.all(promises).setHandler(rs -> {
             if (rs.succeeded()) {
                 final HttpServer server = vertx.createHttpServer();
@@ -145,18 +134,14 @@ public class CoordinatorVerticle extends AbstractGuiceVerticle {
                 router.route("/eventbus/*").handler(sockJSHandler);
                 server.listen(port, ip);
                 LOG.info("The http server is started on : {} : {}", ip, port);
-                deferred.complete(true);
+                startFuture.complete();
             } else {
                 LOG.error(rs.cause().getMessage(), rs.cause());
-                deferred.fail(rs.cause());
+                startFuture.fail(rs.cause());
             }
         });
-        return deferred;
     }
 
-    /**
-     * @return start promises
-     */
     private List<Future> loadVerticles() {
         List<Future> promises = new ArrayList<>();
         // Loading Verticles

@@ -976,7 +976,7 @@ public class UserTest extends VertxJunitSupport {
                     .multiPart(new File("src/test/resources/avatar.jpg")).
                             pathParam("uid", user.result().get_id()).
                             when().
-                            post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
+                            post(getRootURL() + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(200)
                     .body("avatar", notNullValue())
                     .extract().path("avatar");
@@ -984,7 +984,7 @@ public class UserTest extends VertxJunitSupport {
 
             byte[] byteArray = given()
                     .pathParam("avatar", avatarId)
-                    .get(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.USER + "/{avatar}")
+                    .get(getRootURL() + "/file/" + DBCollections.USER + "/{avatar}")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
 
@@ -1006,7 +1006,7 @@ public class UserTest extends VertxJunitSupport {
                     .multiPart(new File("src/test/resources/avatar.jpg")).
                     pathParam("uid", "blabla").
                     when().
-                    post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
+                    post(getRootURL() + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode());
             async.complete();
         });
@@ -1023,7 +1023,7 @@ public class UserTest extends VertxJunitSupport {
             given().multiPart(new File("src/test/resources/avatar.jpg"))
                     .pathParam("uid", user.result().get_id())
                     .when()
-                    .post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
+                    .post(getRootURL() + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
         });
@@ -1041,7 +1041,7 @@ public class UserTest extends VertxJunitSupport {
                     pathParam("uid", user.result().get_id())
                     .header(TOKEN, "11111")
                     .when()
-                    .post(VertxJunitSupport.BASE_URL + "/file/" + DBCollections.USER + "/avatar/{uid}")
+                    .post(getRootURL() + "/file/" + DBCollections.USER + "/avatar/{uid}")
                     .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode());
             async.complete();
         });

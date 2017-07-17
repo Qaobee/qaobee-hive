@@ -54,7 +54,7 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
 
     // Optional - called when verticle is undeployed
     public void stop(Future<Void> startFuture) {
-        LOG.info(this.getClass().getName() + " stoped");
+        LOG.info("Stop " + this.getClass().getName());
         startFuture.complete();
     }
 

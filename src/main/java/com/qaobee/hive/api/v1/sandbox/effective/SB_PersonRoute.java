@@ -58,7 +58,7 @@ public class SB_PersonRoute extends AbstractRoute {// NOSONAR
     public Router init() {
         Router router = Router.router(vertx);
 
-        addRoute(router, "/add", HttpMethod.POST,
+        addRoute(router, "/add", HttpMethod.PUT,
                 authHandler,
                 c -> mandatoryHandler.testBodyParams(c, "person"),
                 this::addPerson);

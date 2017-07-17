@@ -61,7 +61,7 @@ public class GuiceModule extends AbstractModule {
      * @param config the config
      * @param vertx  the vertx
      */
-    GuiceModule(JsonObject config, Vertx vertx) {
+    public GuiceModule(JsonObject config, Vertx vertx) {
         this.config = config;
         this.vertx = vertx;
     }

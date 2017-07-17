@@ -26,8 +26,8 @@
         </encoder>
     </appender>
 
-    <logger name="com.qaobee" level="ALL"/>
-    <logger name="io.vertx" level="ALL"/>
+    <logger name="com.qaobee" level="INFO"/>
+    <logger name="io.vertx" level="WARN"/>
     <logger name="org.mockserver" level="WARN"/>
     <logger name="org.reflections.Reflections" level="WARN"/>
     <logger name="io.netty" level="WARN"/>
