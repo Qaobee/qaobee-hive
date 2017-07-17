@@ -2,6 +2,7 @@ package com.qaobee.hive.technical.vertx;
 
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.dao.Utils;
 import io.netty.handler.codec.http.HttpHeaderValues;
@@ -56,7 +57,11 @@ public abstract class AbstractRoute implements VertxRoute.Route {
             if (event.succeeded()) {
                 handleResponse(context, event.result());
             } else {
-                utils.handleError(context, (QaobeeException) event.cause());
+                if(event.cause() instanceof QaobeeException) {
+                    utils.handleError(context, (QaobeeException) event.cause());
+                } else {
+                    utils.handleError(context, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, event.cause().getMessage()));
+                }
             }
         };
     }

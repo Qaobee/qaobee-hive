@@ -69,22 +69,18 @@ public class ProfileTest extends VertxJunitSupport {
         Async async = context.async();
         generateLoggedUser().setHandler(u -> {
             u.result().getAccount().setPasswd("toto");
-            System.out.println("a");
             given().header(TOKEN, u.result().getAccount().getToken())
                     .body(Json.encode(u.result()))
                     .when().post(BASE_URL + "/")
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.result().getName()));
-            System.out.println("b");
             final JsonObject params = new JsonObject()
                     .put(UserRoute.PARAM_LOGIN, u.result().getAccount().getLogin())
                     .put(UserRoute.PARAM_PWD, "toto");
-            System.out.println("c");
             given().body(params.encode())
                     .when().post(USER_BASE_URL + "/login")
                     .then().assertThat().statusCode(200)
                     .body("name", is(u.result().getName()));
-            System.out.println("d");
             async.complete();
         });
         async.await(TIMEOUT);
@@ -176,15 +172,12 @@ public class ProfileTest extends VertxJunitSupport {
     public void generateProfilePDFWithAnotherTempDir(TestContext context) {
         Async async = context.async();
         System.setProperty("OPENSHIFT_DATA_DIR", System.getProperty("java.io.tmpdir") + "/bla");
-        System.out.println("deb");
         generateLoggedUser().setHandler(u -> {
-            System.out.println("fini 1");
             byte[] byteArray = given().header(TOKEN, u.result().getAccount().getToken())
                     .get(BASE_URL + "/pdf")
                     .then().assertThat().statusCode(200)
                     .extract().asByteArray();
             Assert.assertTrue(byteArray.length > 0);
-            System.out.println("fini");
             async.complete();
         });
         async.await(TIMEOUT);

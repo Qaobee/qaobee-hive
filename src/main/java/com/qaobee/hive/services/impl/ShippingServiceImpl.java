@@ -19,11 +19,12 @@
 
 package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.verticles.MailVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
+import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.dao.TemplatesDAO;
+import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.services.NotificationsService;
@@ -34,8 +35,7 @@ import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.dao.MailUtils;
-import com.qaobee.hive.dao.Utils;
+import com.qaobee.hive.verticles.MailVerticle;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
@@ -89,7 +89,6 @@ public class ShippingServiceImpl implements ShippingService {
     public ShippingServiceImpl(Vertx vertx) {
         super();
         this.vertx = vertx;
-        Stripe.apiKey = stripe.getString("api_secret");
     }
 
     private void doPay(User user, JsonObject paymentData, String locale, int planId, Plan plan, int amount, Handler<AsyncResult<JsonObject>> resultHandler) {
@@ -139,7 +138,7 @@ public class ShippingServiceImpl implements ShippingService {
     private void registerSubscription(User user, JsonObject paymentData, String locale, Customer customer, Plan plan,// NOSONAR
                                       int planId, int amount, Handler<AsyncResult<JsonObject>> resultHandler) {
         try {
-            Token token = Token.retrieve(paymentData.getString("token"));
+            Token token = Token.retrieve(paymentData.getString("token", ""));
             if (token != null) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("customer", customer.getId());
@@ -301,7 +300,7 @@ public class ShippingServiceImpl implements ShippingService {
 
     @Override
     public void pay(JsonObject u, JsonObject paymentData, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
-
+        Stripe.apiKey = stripe.getString("api_secret");
         try {
             User user = Json.decodeValue(u.encode(), User.class);
             utils.testMandatoryParams(paymentData, PLANID_FIELD);

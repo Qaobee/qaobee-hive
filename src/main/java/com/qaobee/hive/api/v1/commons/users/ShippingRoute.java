@@ -25,6 +25,7 @@ import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
@@ -66,7 +67,7 @@ public class ShippingRoute extends AbstractRoute {
      * @apiHeader {String} token
      */
     private void pay(RoutingContext context) {
-        shippingService.pay(context.user().principal(), context.getBodyAsJson().getJsonObject("data"), getLocale(context), handleResponse(context));
+        shippingService.pay(context.user().principal(), context.getBodyAsJson().getJsonObject("data", new JsonObject()), getLocale(context), handleResponse(context));
     }
 
     /**

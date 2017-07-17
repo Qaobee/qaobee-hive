@@ -136,6 +136,8 @@ test {
     jacoco {
         destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
         classDumpDir = file("$buildDir/jacoco/classpathdumps")
+        excludes = ["$generateSrcPath/**/*"]
+        append = false
     }
     minHeapSize = "128m"
     maxHeapSize = "1024m"
@@ -146,6 +148,17 @@ test {
         logger.lifecycle("Running test: $descriptor")
     }
 }
+test.finalizedBy(jacocoTestReport)
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination "${buildDir}/reports/jacoco"
+    }
+    sourceSets sourceSets.main
+}
+
 htmlDependencyReport {
     projects = project.allprojects
 }
