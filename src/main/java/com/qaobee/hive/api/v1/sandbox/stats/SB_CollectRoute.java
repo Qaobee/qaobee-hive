@@ -19,16 +19,12 @@
 package com.qaobee.hive.api.v1.sandbox.stats;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.dao.CollectDAO;
-import com.qaobee.hive.technical.annotations.Rule;
+import com.qaobee.hive.services.CollectService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
-import io.vertx.core.Future;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonObject;
+import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 
@@ -38,23 +34,7 @@ import javax.inject.Inject;
  * @author cke
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/stats/collect")
-public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
-    /**
-     * Handler for get a list of collecte document
-     */
-    public static final String GET_LIST = Module.VERSION + ".sandbox.stats.collect.list";
-    /**
-     * Handler for get individual collecte document
-     */
-    public static final String GET = Module.VERSION + ".sandbox.stats.collect.get";
-    /**
-     * Handler for adding a collecte document
-     */
-    public static final String ADD_COLLECT = Module.VERSION + ".sandbox.stats.collect.add";
-    /**
-     * Handler for update a collecte document
-     */
-    public static final String UPDATE = Module.VERSION + ".sandbox.stats.collect.update";
+public class SB_CollectRoute extends AbstractRoute {// NOSONAR
     /**
      * Collecte ID
      */
@@ -93,16 +73,34 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
     public static final String PARAM_END_DATE = "endDate";
 
     @Inject
-    private CollectDAO collectDAO;
+    private CollectService collectService;
 
     @Override
-    public void start(Future<Void> startFuture) {
-        inject(this)
-                .add(GET_LIST, this::getList)
-                .add(ADD_COLLECT, this::addStat)
-                .add(UPDATE, this::update)
-                .add(GET, this::get)
-                .register(startFuture);
+    public Router init() {
+        Router router = Router.router(vertx);
+
+        addRoute(router, "/list", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID),
+                this::getList);
+
+        addRoute(router, "/add", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_EVENT, PARAM_PLAYERS),
+                this::addStat);
+
+        addRoute(router, "/update", HttpMethod.POST,
+                authHandler,
+                c -> mandatoryHandler.testBodyParams(c, PARAM_EVENT, PARAM_PLAYERS),
+                this::update);
+
+
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
+                this::get);
+
+        return router;
     }
 
     /**
@@ -114,10 +112,8 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Object} collect
      */
-    @Rule(address = GET, method = Constants.GET, logged = true, mandatoryParams = PARAM_ID, scope = Rule.Param.REQUEST)
-    private void get(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        collectDAO.get(req.getParams().get(PARAM_ID).get(0), handleJson(message));
+    private void get(RoutingContext context) {
+        collectService.get(context.request().getParam(PARAM_ID), handleResponse(context));
     }
 
     /**
@@ -128,10 +124,8 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Object} collect updated collect
      */
-    @Rule(address = UPDATE, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
-    private void update(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        collectDAO.update(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale(), handleJson(message));
+    private void update(RoutingContext context) {
+        collectService.update(context.getBodyAsJson(), context.user().principal().getString("_id"), getLocale(context), handleResponse(context));
     }
 
     /**
@@ -142,10 +136,8 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Object} collect Created collect
      */
-    @Rule(address = ADD_COLLECT, method = Constants.POST, logged = true, mandatoryParams = {PARAM_EVENT, PARAM_PLAYERS}, scope = Rule.Param.BODY)
-    private void addStat(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        collectDAO.add(new JsonObject(req.getBody()), req.getUser().get_id(), req.getLocale(), handleJson(message));
+    private void addStat(RoutingContext context) {
+        collectService.add(context.getBodyAsJson(), context.user().principal().getString("_id"), getLocale(context), handleResponse(context));
     }
 
     /**
@@ -159,10 +151,7 @@ public class SB_CollectVerticle extends AbstractGuiceVerticle {// NOSONAR
      * @apiHeader {String} token
      * @apiSuccess {Array} list of collects
      */
-    @Rule(address = GET_LIST, method = Constants.POST, logged = true,
-            mandatoryParams = {PARAM_START_DATE, PARAM_END_DATE, PARAM_SANDBOX_ID}, scope = Rule.Param.BODY)
-    private void getList(Message<String> message) {
-        final RequestWrapper req = Json.decodeValue(message.body(), RequestWrapper.class);
-        collectDAO.getList(new JsonObject(req.getBody()), handleJsonArray(message));
+    private void getList(RoutingContext context) {
+        collectService.getList(context.getBodyAsJson(), handleResponseArray(context));
     }
 }

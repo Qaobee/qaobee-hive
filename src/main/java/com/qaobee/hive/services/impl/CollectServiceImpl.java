@@ -17,33 +17,44 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao.impl;
+package com.qaobee.hive.services.impl;
 
 
-import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectVerticle;
-import com.qaobee.hive.dao.CollectDAO;
-import com.qaobee.hive.services.NotificationsService;
-import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.api.v1.sandbox.stats.SB_CollectRoute;
+import com.qaobee.hive.services.CollectService;
 import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.technical.annotations.ProxyService;
+import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.tools.Messages;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 import javax.inject.Inject;
 
-
 /**
- * The type Collect dao.
+ * The type Collect service.
  */
-public class CollectDAOImpl implements CollectDAO {
+@ProxyService(address = CollectService.ADDRESS, iface = CollectService.class)
+public class CollectServiceImpl implements CollectService {
 
     @Inject
     private MongoDB mongo;
     @Inject
     private NotificationsService notificationsService;
+
+    /**
+     * Instantiates a new Collect service.
+     *
+     * @param vertx the vertx
+     */
+    public CollectServiceImpl(Vertx vertx) {
+        super();
+    }
 
     @Override
     public void get(String id, Handler<AsyncResult<JsonObject>> resultHandler) {
@@ -57,10 +68,10 @@ public class CollectDAOImpl implements CollectDAO {
                 collect.put("_id", upsertRes.result());
                 JsonObject notification = new JsonObject()
                         .put("content", Messages.getString("notification.collect.update.content", locale,
-                                collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
+                                collect.getJsonObject(SB_CollectRoute.PARAM_EVENT).getString("label")))
                         .put("title", Messages.getString("notification.collect.update.title", locale))
                         .put("senderId", currentUserId);
-                notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                notificationsService.sendNotification(collect.getJsonObject(SB_CollectRoute.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectRoute.PARAM_SANDBOX_ID),
                         DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar -> {
                         });
                 resultHandler.handle(Future.succeededFuture(collect));
@@ -76,10 +87,10 @@ public class CollectDAOImpl implements CollectDAO {
             if (upsertRes.succeeded()) {
                 collect.put("_id", upsertRes.result());
                 JsonObject notification = new JsonObject()
-                        .put("content", Messages.getString("notification.collect.start.content", locale, collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getString("label")))
+                        .put("content", Messages.getString("notification.collect.start.content", locale, collect.getJsonObject(SB_CollectRoute.PARAM_EVENT).getString("label")))
                         .put("title", Messages.getString("notification.collect.start.title", locale))
                         .put("senderId", currentUserId);
-                notificationsService.sendNotification(collect.getJsonObject(SB_CollectVerticle.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectVerticle.PARAM_SANDBOX_ID),
+                notificationsService.sendNotification(collect.getJsonObject(SB_CollectRoute.PARAM_EVENT).getJsonObject("owner").getString(SB_CollectRoute.PARAM_SANDBOX_ID),
                         DBCollections.SANDBOX, notification, new JsonArray().add(currentUserId), ar -> {
                         });
                 resultHandler.handle(Future.succeededFuture(collect));
@@ -93,19 +104,19 @@ public class CollectDAOImpl implements CollectDAO {
     public void getList(JsonObject params, Handler<AsyncResult<JsonArray>> resultHandler) {
         JsonObject dbObjectParent = new JsonObject();
         // Collecte sandboxId
-        dbObjectParent.put("eventRef.owner.sandboxId", params.getString(SB_CollectVerticle.PARAM_SANDBOX_ID));
-        if (params.getString(SB_CollectVerticle.PARAM_EVENT_ID) != null && !"".equals(params.getString(SB_CollectVerticle.PARAM_EVENT_ID).trim())) {
-            dbObjectParent.put("eventRef._id", params.getString(SB_CollectVerticle.PARAM_EVENT_ID));
+        dbObjectParent.put("eventRef.owner.sandboxId", params.getString(SB_CollectRoute.PARAM_SANDBOX_ID));
+        if (params.getString(SB_CollectRoute.PARAM_EVENT_ID) != null && !"".equals(params.getString(SB_CollectRoute.PARAM_EVENT_ID).trim())) {
+            dbObjectParent.put("eventRef._id", params.getString(SB_CollectRoute.PARAM_EVENT_ID));
         }
-        if (params.getString(SB_CollectVerticle.PARAM_EFFECTIVE_ID) != null && !"".equals(params.getString(SB_CollectVerticle.PARAM_EFFECTIVE_ID).trim())) {
-            dbObjectParent.put("eventRef.owner.effectiveId", params.getString(SB_CollectVerticle.PARAM_EFFECTIVE_ID));
+        if (params.getString(SB_CollectRoute.PARAM_EFFECTIVE_ID) != null && !"".equals(params.getString(SB_CollectRoute.PARAM_EFFECTIVE_ID).trim())) {
+            dbObjectParent.put("eventRef.owner.effectiveId", params.getString(SB_CollectRoute.PARAM_EFFECTIVE_ID));
         }
-        if (params.getString(SB_CollectVerticle.PARAM_TEAM_ID) != null && !"".equals(params.getString(SB_CollectVerticle.PARAM_TEAM_ID).trim())) {
-            dbObjectParent.put("eventRef.owner.teamId", params.getString(SB_CollectVerticle.PARAM_TEAM_ID));
+        if (params.getString(SB_CollectRoute.PARAM_TEAM_ID) != null && !"".equals(params.getString(SB_CollectRoute.PARAM_TEAM_ID).trim())) {
+            dbObjectParent.put("eventRef.owner.teamId", params.getString(SB_CollectRoute.PARAM_TEAM_ID));
         }
         JsonObject o = new JsonObject();
-        o.put("$gte", params.getLong(SB_CollectVerticle.PARAM_START_DATE));
-        o.put("$lt", params.getLong(SB_CollectVerticle.PARAM_END_DATE));
+        o.put("$gte", params.getLong(SB_CollectRoute.PARAM_START_DATE));
+        o.put("$lt", params.getLong(SB_CollectRoute.PARAM_END_DATE));
         dbObjectParent.put("startDate", o);
         JsonObject match = new JsonObject().put("$match", dbObjectParent);
         JsonArray pipelineAggregation = new JsonArray().add(match);

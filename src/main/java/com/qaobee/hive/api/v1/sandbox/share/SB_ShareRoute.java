@@ -53,17 +53,6 @@ import static com.qaobee.hive.technical.constantes.Constants.ADMIN_HABILIT;
 public class SB_ShareRoute extends AbstractRoute { // NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_ShareRoute.class);
 
-/*    public static final String GET_SANDBOX_SHARING_LIST = Module.VERSION + ".sandbox.share.list";
-    public static final String GET_ADMIN_SANDBOX_SHARING_LIST = Module.VERSION + ".sandbox.share.listAdmin";
-    public static final String CONFIRM_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.confirm";
-    public static final String INVITE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.inviteMember";
-    public static final String GET_LIST_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.listInvitation";
-    public static final String DESACTIVATE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.desactivateMember";
-    public static final String ACTIVATE_MEMBER_TO_SANDBOX = Module.VERSION + ".sandbox.share.activateMember";
-    public static final String REVIVE_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.reviveInvitation";
-    public static final String REMOVE_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.removeInvitation";
-    public static final String GET_INVITATION_TO_SANDBOX = Module.VERSION + ".sandbox.share.getInvitation";*/
-
     /**
      * The constant PARAM_SANBOXID.
      */

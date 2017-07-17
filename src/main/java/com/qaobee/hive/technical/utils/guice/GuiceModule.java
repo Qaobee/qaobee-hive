@@ -90,15 +90,18 @@ public class GuiceModule extends AbstractModule {
         }
 
 
+        bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
+        bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
+        bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
+        bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
         bind(MailClient.class).toInstance(MailClient.createShared(vertx, mailConfig, "qaobeeMail"));
         bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
-        bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
         bind(MandatoryHandler.class).toInstance(new MandatoryHandler());
 
-        //
+        // Templates
         Configuration cfgMails = new Configuration(new Version("2.3.23"));
         cfgMails.setClassForTemplateLoading(this.getClass(), "/mailTemplates");
         cfgMails.setIncompatibleImprovements(new Version(2, 3, 20));
@@ -109,12 +112,7 @@ public class GuiceModule extends AbstractModule {
         cfgPDF.setClassForTemplateLoading(this.getClass(), "/pdfTemplates");
         bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
 
-        // DAO
-        bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
-        bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
-        bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
-        bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
-
+        // Services
         ProxyService.Loader.scan("com.qaobee.hive.services").forEach(c -> {
             LOG.debug(String.format("Binding %s with address %s", c.getCanonicalName(), c.getAnnotation(ProxyService.class).address()));
             Class iface = c.getAnnotation(ProxyService.class).iface();

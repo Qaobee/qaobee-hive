@@ -17,17 +17,52 @@
  *  from Qaobee.
  */
 
-package com.qaobee.hive.dao;
+package com.qaobee.hive.services;
 
+import com.qaobee.hive.services.impl.CollectServiceImpl;
+import io.vertx.codegen.annotations.ProxyGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.serviceproxy.ProxyHelper;
 
 /**
- * The interface Collect dao.
+ * The interface Collect service.
  */
-public interface CollectDAO {
+@ProxyGen
+@VertxGen
+public interface CollectService {
+    /**
+     * The constant ADDRESS.
+     */
+    String ADDRESS = "vertx.Collect.service";
+
+    /**
+     * Create collect service.
+     *
+     * @param vertx the vertx
+     *
+     * @return the collect service
+     */
+    static CollectService create(Vertx vertx) {
+        return new CollectServiceImpl(vertx);
+    }
+
+    /**
+     * Create proxy collect service.
+     *
+     * @param vertx   the vertx
+     * @param address the address
+     *
+     * @return the collect service
+     */
+    static CollectService createProxy(Vertx vertx, String address) {
+        return ProxyHelper.createProxy(CollectService.class, vertx, address);
+    }
+
     /**
      * Get.
      *
