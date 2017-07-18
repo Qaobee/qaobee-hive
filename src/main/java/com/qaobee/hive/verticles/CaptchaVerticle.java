@@ -46,15 +46,15 @@ public class CaptchaVerticle extends AbstractGuiceVerticle {
                         if (res.result().statusCode() >= 200 && res.result().statusCode() < 400) {
                             JsonObject response = res.result().bodyAsJsonObject();
                             if (response.getBoolean("success")) {
-                                utils.sendStatusJson(true, message);
+                                utils.sendStatus(true, message);
                             } else {
-                                utils.sendStatusJson(false, "wrong captcha", message);
+                                utils.sendStatus(false, "wrong captcha", message);
                             }
                         } else {
-                            utils.sendStatusJson(false, res.result().statusMessage(), message);
+                            utils.sendStatus(false, res.result().statusMessage(), message);
                         }
                     } else {
-                        utils.sendStatusJson(false, res.cause().getMessage(), message);
+                        utils.sendStatus(false, res.cause().getMessage(), message);
                     }
                 });
     }

@@ -20,8 +20,9 @@
 package com.qaobee.hive.services.impl;
 
 import com.lowagie.text.pdf.codec.Base64;
-import com.qaobee.hive.verticles.MailVerticle;
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Device;
+import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.dao.PasswordEncryptionService;
 import com.qaobee.hive.dao.ReCaptcha;
 import com.qaobee.hive.dao.TemplatesDAO;
@@ -35,7 +36,7 @@ import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaOption;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.dao.MailUtils;
+import com.qaobee.hive.verticles.MailVerticle;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -88,41 +89,30 @@ public class SecurityServiceImpl implements SecurityService {
 
     private void proceedPasswordReset(String id, String code, String passwd, boolean byPassActivationCode, Handler<AsyncResult<Boolean>> resultHandler) {
         userService.getUser(id, ar -> {
-            com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class);
+            User user = Json.decodeValue(ar.result().encode(), User.class);
             if (byPassActivationCode) {
-                user.getAccount().setPasswd(passwd);
-                this.userService.prepareUpsert(new JsonObject(Json.encode(user)), up -> {
-                    if (up.succeeded()) {
-                        mongo.upsert(up.result(), DBCollections.USER, upsertRes -> {
-                            if (upsertRes.succeeded()) {
-                                resultHandler.handle(Future.succeededFuture(true));
-                            } else {
-                                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
-                            }
-                        });
+                updateUser(passwd, user, resultHandler);
+            } else if (code.equals(user.getAccount().getActivationPasswd())) {
+                updateUser(passwd, user, resultHandler);
+            } else {
+                resultHandler.handle(Future.succeededFuture(false));
+            }
+        });
+    }
+
+    private void updateUser(String passwd, User user, Handler<AsyncResult<Boolean>> resultHandler) {
+        user.getAccount().setPasswd(passwd);
+        this.userService.prepareUpsert(new JsonObject(Json.encode(user)), up -> {
+            if (up.succeeded()) {
+                mongo.upsert(up.result(), DBCollections.USER, upsertRes -> {
+                    if (upsertRes.succeeded()) {
+                        resultHandler.handle(Future.succeededFuture(true));
                     } else {
-                        resultHandler.handle(Future.failedFuture(ar.cause()));
+                        resultHandler.handle(Future.failedFuture(upsertRes.cause()));
                     }
                 });
             } else {
-                if (code.equals(user.getAccount().getActivationPasswd())) {
-                    user.getAccount().setPasswd(passwd);
-                    this.userService.prepareUpsert(new JsonObject(Json.encode(user)), up -> {
-                        if (up.succeeded()) {
-                            mongo.upsert(up.result(), DBCollections.USER, upsertRes -> {
-                                if (upsertRes.succeeded()) {
-                                    resultHandler.handle(Future.succeededFuture(true));
-                                } else {
-                                    resultHandler.handle(Future.failedFuture(upsertRes.cause()));
-                                }
-                            });
-                        } else {
-                            resultHandler.handle(Future.failedFuture(ar.cause()));
-                        }
-                    });
-                } else {
-                    resultHandler.handle(Future.succeededFuture(false));
-                }
+                resultHandler.handle(Future.failedFuture(up.cause()));
             }
         });
     }
@@ -131,44 +121,48 @@ public class SecurityServiceImpl implements SecurityService {
         userService.getUserByLogin(login, locale, ar -> {
             if (ar.succeeded()) {
                 try {
-                    com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class);
+                    User user = Json.decodeValue(ar.result().encode(), User.class);
                     byte[] encryptedAttemptedPassword = passwordEncryptionService.getEncryptedPassword(password, user.getAccount().getSalt());
                     if (!Base64.encodeBytes(encryptedAttemptedPassword).equals(Base64.encodeBytes(user.getAccount().getPassword()))) {
-                        throw new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale));
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale))));
                     }
                     if (!user.getAccount().isActive()) {
-                        throw new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", locale));
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", locale))));
                     }
-                    user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
-                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                    user.getAccount().setMobileToken(mobileToken);
-                    if (StringUtils.isNotBlank(pushId) && StringUtils.isNotBlank(deviceOS)) {
-                        Device d = new Device();
-                        d.setId(pushId);
-                        d.setOs(deviceOS);
-                        if (!user.getAccount().getDevices().contains(d)) {
-                            user.getAccount().getDevices().add(d);
-                        }
-                    }
-                    mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, upsertRes -> {
-                        if (upsertRes.succeeded()) {
-                            userService.getUserInfo(user.get_id(), res -> {
-                                if (res.succeeded()) {
-                                    resultHandler.handle(Future.succeededFuture(res.result()));
-                                } else {
-                                    resultHandler.handle(Future.failedFuture(res.cause()));
-                                }
-                            });
-                        } else {
-                            resultHandler.handle(Future.failedFuture(upsertRes.cause()));
-                        }
-                    });
+                    updateLoggedUser(user, mobileToken, pushId, deviceOS, resultHandler);
                 } catch (QaobeeException e) {
                     LOG.error(e.getMessage(), e);
                     resultHandler.handle(Future.failedFuture(e));
                 }
             } else {
                 resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.BAD_LOGIN, Messages.getString(BAD_LOGIN_MESS, locale))));
+            }
+        });
+    }
+
+    private void updateLoggedUser(User user, String mobileToken, String pushId, String deviceOS, Handler<AsyncResult<JsonObject>> resultHandler) {
+        user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
+        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+        user.getAccount().setMobileToken(mobileToken);
+        if (StringUtils.isNotBlank(pushId) && StringUtils.isNotBlank(deviceOS)) {
+            Device d = new Device();
+            d.setId(pushId);
+            d.setOs(deviceOS);
+            if (!user.getAccount().getDevices().contains(d)) {
+                user.getAccount().getDevices().add(d);
+            }
+        }
+        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, upsertRes -> {
+            if (upsertRes.succeeded()) {
+                userService.getUserInfo(user.get_id(), res -> {
+                    if (res.succeeded()) {
+                        resultHandler.handle(Future.succeededFuture(res.result()));
+                    } else {
+                        resultHandler.handle(Future.failedFuture(res.cause()));
+                    }
+                });
+            } else {
+                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
             }
         });
     }
@@ -185,7 +179,7 @@ public class SecurityServiceImpl implements SecurityService {
                 } else {
                     // we take the first one (should be only one)
                     JsonObject jsonPerson = res.result().getJsonObject(0);
-                    com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(jsonPerson.encode(), com.qaobee.hive.business.model.commons.users.User.class);
+                    User user = Json.decodeValue(jsonPerson.encode(), User.class);
                     user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
                     user.getAccount().setTokenRenewDate(System.currentTimeMillis());
                     mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, upsertRes -> {
@@ -221,7 +215,7 @@ public class SecurityServiceImpl implements SecurityService {
     public void passwordRenewCheck(String id, String code, Handler<AsyncResult<JsonObject>> resultHandler) {
         userService.getUser(id, ar -> {
             if (ar.succeeded()) {
-                com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class);
+                User user = Json.decodeValue(ar.result().encode(), User.class);
                 if (code.equals(user.getAccount().getActivationPasswd())) {
                     resultHandler.handle(Future.succeededFuture(new JsonObject()
                             .put("status", true)
@@ -239,7 +233,7 @@ public class SecurityServiceImpl implements SecurityService {
     public void passwordRenew(String login, String locale, Handler<AsyncResult<Boolean>> resultHandler) {
         userService.getUserByLogin(login, locale, ar -> {
             if (ar.succeeded()) {
-                com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(ar.result().encode(), com.qaobee.hive.business.model.commons.users.User.class);
+                User user = Json.decodeValue(ar.result().encode(), User.class);
                 user.getAccount().setActivationPasswd(VertxContextPRNG.current(vertx).nextString(32));
                 mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, upsertRes -> {
                     if (upsertRes.succeeded()) {
@@ -277,7 +271,7 @@ public class SecurityServiceImpl implements SecurityService {
                     resultHandler.handle(Future.succeededFuture(false));
                 } else {
                     JsonObject jsonperson = res.result().getJsonObject(0);
-                    com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(jsonperson.encode(), com.qaobee.hive.business.model.commons.users.User.class);
+                    User user = Json.decodeValue(jsonperson.encode(), User.class);
                     user.getAccount().setToken(null);
                     user.getAccount().setTokenRenewDate(0L);
                     user.getAccount().setMobileToken(null);

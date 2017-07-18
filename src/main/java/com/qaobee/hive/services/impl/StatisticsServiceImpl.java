@@ -186,12 +186,12 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public void getListDetailValue(JsonArray listIndicators, JsonArray listOwners, Long startDate, Long endDate, JsonArray values, int limit, Handler<AsyncResult<JsonArray>> resultHandler) {
-// $MATCH section
+        // $MATCH section
         JsonObject dbObjectParent = new JsonObject()
                 .put(CODE_FIELD, new JsonObject().put("$in", listIndicators))
                 .put(OWNER_FIELD, new JsonObject().put("$in", listOwners));
         // - values
-        if (values != null) {
+        if (!values.isEmpty()) {
             dbObjectParent.put(VALUE_FIELD, new JsonObject().put("$in", values));
         }
         // - timer
@@ -215,11 +215,11 @@ public class StatisticsServiceImpl implements StatisticsService {
                 .put(CODE_FIELD, new JsonObject().put("$in", listIndicators))
                 .put(OWNER_FIELD, new JsonObject().put("$in", listOwners));
         // - values
-        if (value.size() > 0) {
+        if (!value.isEmpty()) {
             dbObjectParent.put(VALUE_FIELD, new JsonObject().put("$in", value));
         }
         // - shootSeqId
-        if (shootSeqId.size() > 0) {
+        if (!shootSeqId.isEmpty()) {
             dbObjectParent.put("shootSeqId", new JsonObject().put("$in", shootSeqId));
         }
         // - timer
@@ -249,7 +249,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         JsonObject group = new JsonObject().put("$group", dbObjectParent);
         // $SORT section
         dbObjectParent = new JsonObject();
-        if (sortedBy.size() > 0) {
+        if (!sortedBy.isEmpty()) {
             for (Object item : sortedBy) {
                 JsonObject field = (JsonObject) item;
                 dbObjectParent.put(field.getString("fieldName"), field.getInteger("sortOrder"));

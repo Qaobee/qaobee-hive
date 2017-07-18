@@ -69,7 +69,11 @@ public class AssetsRoute extends AbstractRoute {
             boolean res = dir.mkdirs();
             LOG.debug(String.format("Creating %s result : %s", dir.getAbsolutePath(), res));
         }
-        context.fileUploads().forEach(upload -> handleUpload(upload, dir, context));
+        if(!context.fileUploads().isEmpty()) {
+            context.fileUploads().forEach(upload -> handleUpload(upload, dir, context));
+        } else {
+            utils.handleError(context, new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "Missing File"));
+        }
     }
 
 

@@ -20,16 +20,15 @@
 package com.qaobee.hive.api.v1.sandbox.share;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.ShareService;
+import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.services.NotificationsService;
+import com.qaobee.hive.services.ShareService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import com.qaobee.hive.verticles.MailVerticle;
 import io.vertx.core.http.HttpMethod;
@@ -117,6 +116,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
 
         addRoute(router, "/listAdmin", HttpMethod.GET,
                 authHandler,
+                c -> roleHandler.hasRole(c, ADMIN_HABILIT),
                 c -> mandatoryHandler.testRequestParams(c, PARAM_USERID),
                 this::getAdminListOfSharedSandboxes);
 
@@ -389,13 +389,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
      * @apiSuccess {Object} sandboxes list of enriched sandboxes owned and as member;
      */
     private void getAdminListOfSharedSandboxes(RoutingContext context) {
-        context.user().isAuthorised(ADMIN_HABILIT, res -> {
-            if (res.succeeded() && res.result()) {
-                shareService.getListOfSharedSandboxes(context.request().getParam(PARAM_USERID), handleResponse(context));
-            } else {
-                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", getLocale(context))));
-            }
-        });
+        shareService.getListOfSharedSandboxes(context.request().getParam(PARAM_USERID), handleResponse(context));
     }
 
     /**

@@ -26,8 +26,9 @@ import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.utils.MongoClientCustom;
-import com.qaobee.hive.technical.utils.QaobeeAuthHandler;
+import com.qaobee.hive.technical.vertx.QaobeeAuthHandler;
 import com.qaobee.hive.technical.vertx.MandatoryHandler;
+import com.qaobee.hive.technical.vertx.RoleHandler;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
@@ -96,7 +97,9 @@ public class GuiceModule extends AbstractModule {
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
+
         bind(MandatoryHandler.class).toInstance(new MandatoryHandler());
+        bind(RoleHandler.class).toInstance(new RoleHandler());
 
         // Templates
         Configuration cfgMails = new Configuration(new Version("2.3.23"));

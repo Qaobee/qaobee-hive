@@ -38,6 +38,8 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      */
     @Inject
     protected AuthHandler authHandler;
+    @Inject
+    protected RoleHandler roleHandler;
     /**
      * The Mandatory handler.
      */

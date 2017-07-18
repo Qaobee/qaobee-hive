@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.*;
  */
 public class CountryServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/settings/country");
-    
+
     /**
      * Gets country.
      */
@@ -45,6 +45,18 @@ public class CountryServiceTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
                 .body("label", is("France"));
+    }
+
+    /**
+     * Gets non existing country.
+     */
+    @Test
+    public void getNonExistingCountry() {
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        given().queryParam(CountryRoute.PARAM_ID, "bla")
+                .when().get(BASE_URL + "/get")
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**
@@ -155,6 +167,18 @@ public class CountryServiceTest extends VertxJunitSupport {
                 .then().assertThat().statusCode(200)
                 .body("label", notNullValue())
                 .body("label", is("France"));
+    }
+
+    /**
+     * Gets non existing country alpha 2.
+     */
+    @Test
+    public void getNonExistingCountryAlpha2() {
+        populate(POPULATE_ONLY, SETTINGS_COUNTRY);
+        given().queryParam(CountryRoute.PARAM_ALPHA2, "kl")
+                .when().get(BASE_URL + "/getAlpha2")
+                .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
     }
 
     /**

@@ -47,6 +47,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Test Login OK.
+     *
+     * @param context the context
      */
     @Test
     public void loginOk(TestContext context) {
@@ -67,6 +69,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Test Login OK with an uppercase login.
+     *
+     * @param context the context
      */
     @Test
     public void loginOkWithUppercaseLogin(TestContext context) {
@@ -97,6 +101,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Login ok with mobile token.
+     *
+     * @param context the context
      */
     @Test
     public void loginOkWithMobileToken(TestContext context) {
@@ -117,6 +123,11 @@ public class UserTest extends VertxJunitSupport {
         async.await(TIMEOUT);
     }
 
+    /**
+     * Login ok with mobile token and push id.
+     *
+     * @param context the context
+     */
     @Test
     public void loginOkWithMobileTokenAndPushId(TestContext context) {
         Async async = context.async();
@@ -139,6 +150,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Test Login with badlogin.
+     *
+     * @param context the context
      */
     @Test
     public void loginKo(TestContext context) {
@@ -181,6 +194,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Test Login with bad password.
+     *
+     * @param context the context
      */
     @Test
     public void loginPasswordKo(TestContext context) {
@@ -201,6 +216,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Test login user inactive.
+     *
+     * @param context the context
      */
     @Test
     public void loginUserInactive(TestContext context) {
@@ -228,6 +245,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Login by mobile token.
+     *
+     * @param context the context
      */
     @Test
     public void loginByMobileToken(TestContext context) {
@@ -260,6 +279,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Login by mobile token trial period.
+     *
+     * @param context the context
      */
     @Test
     public void loginByMobileTokenTrialPeriod(TestContext context) {
@@ -299,6 +320,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Login by mobile token wrong hTTP method.
+     *
+     * @param context the context
      */
     @Test
     public void loginByMobileTokenWrongHTTPMethod(TestContext context) {
@@ -326,6 +349,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Login by mobile token wrong login.
+     *
+     * @param context the context
      */
     @Test
     public void loginByMobileTokenWrongLogin(TestContext context) {
@@ -358,6 +383,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Login by mobile token not paid.
+     *
+     * @param context the context
      */
     @Test
     public void loginByMobileTokenNotPaid(TestContext context) {
@@ -396,6 +423,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Login by mobile token trial period ended.
+     *
+     * @param context the context
      */
     @Test
     public void loginByMobileTokenTrialPeriodEnded(TestContext context) {
@@ -435,6 +464,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Login by mobile token wrong token.
+     *
+     * @param context the context
      */
     @Test
     public void loginByMobileTokenWrongToken(TestContext context) {
@@ -467,6 +498,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Login by mobile token no data.
+     *
+     * @param context the context
      */
     @Test
     public void loginByMobileTokenNoData(TestContext context) {
@@ -494,6 +527,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Fetch meta information such as current season, activity and structure
+     *
+     * @param context the context
      */
     @Test
     public void getMetas(TestContext context) {
@@ -517,6 +552,11 @@ public class UserTest extends VertxJunitSupport {
         async.await(TIMEOUT);
     }
 
+    /**
+     * Gets metas with sandbox id.
+     *
+     * @param context the context
+     */
     @Test
     public void getMetasWithSandboxId(TestContext context) {
         Async async = context.async();
@@ -542,6 +582,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Gets metas with wrong hTTP method.
+     *
+     * @param context the context
      */
     @Test
     public void getMetasWithWrongHTTPMethod(TestContext context) {
@@ -566,6 +608,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Gets metas with wrong user.
+     *
+     * @param context the context
      */
     @Test
     public void getMetasWithWrongUser(TestContext context) {
@@ -610,6 +654,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Fetch a user by id
+     *
+     * @param context the context
      */
     @Test
     public void getUserById(TestContext context) {
@@ -638,6 +684,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Gets user by id wrong hTTP method.
+     *
+     * @param context the context
      */
     @Test
     public void getUserByIdWrongHTTPMethod(TestContext context) {
@@ -654,6 +702,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Fetch the current logged user
+     *
+     * @param context the context
      */
     @Test
     public void getCurrentUser(TestContext context) {
@@ -681,6 +731,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Gets current user wrong hTTP method.
+     *
+     * @param context the context
      */
     @Test
     public void getCurrentUserWrongHTTPMethod(TestContext context) {
@@ -697,6 +749,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Logout void.
+     *
+     * @param context the context
      */
     @Test
     public void logout(TestContext context) {
@@ -733,6 +787,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Password renew.
+     *
+     * @param context the context
      */
     @Test
     public void passwordRenew(TestContext context) {
@@ -783,6 +839,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Password renew activation code check.
+     *
+     * @param context the context
      */
     @Test
     public void passwordRenewActivationCodeCheck(TestContext context) {
@@ -814,6 +872,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Password renew wrong activation code check.
+     *
+     * @param context the context
      */
     @Test
     public void passwordRenewWrongActivationCodeCheck(TestContext context) {
@@ -838,6 +898,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Password renew activation code check bad hTTP method.
+     *
+     * @param context the context
      */
     @Test
     public void passwordRenewActivationCodeCheckBadHTTPMethod(TestContext context) {
@@ -861,6 +923,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Password reset.
+     *
+     * @param context the context
      */
     @Test
     public void passwordReset(TestContext context) {
@@ -912,7 +976,64 @@ public class UserTest extends VertxJunitSupport {
     }
 
     /**
+     * Password reset bypassing activation code.
+     *
+     * @param context the context
+     */
+    @Test
+    public void passwordResetBypassingActivationCode(TestContext context) {
+        Async async = context.async();
+        // First step ask for a new code
+        generateUser().setHandler(user -> {
+            JsonObject query = new JsonObject().put(UserRoute.PARAM_LOGIN, user.result().getAccount().getLogin());
+            given().body(query.encodePrettily())
+                    .when().post(BASE_URL + "/newpasswd")
+                    .then().assertThat().statusCode(200)
+                    .body("status", notNullValue())
+                    .body("status", is(true));
+            // fetch the code
+            mongo.getById(user.result().get_id(), DBCollections.USER, jsonuser -> {
+                if (jsonuser.succeeded()) {
+                    String code = jsonuser.result().getJsonObject("account").getString("activationPasswd");
+                    given().param("id", user.result().get_id()).param("code", code)
+                            .when().get(BASE_URL + "/passwdcheck")
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(true));
+
+                    JsonObject query2 = new JsonObject()
+                            .put("id", user.result().get_id())
+                            .put("code", code)
+                            .put("byPassActivationCode", true)
+                            .put("passwd", "newPassword");
+
+                    given().body(query2.encodePrettily())
+                            .when().post(BASE_URL + "/resetPasswd")
+                            .then().assertThat().statusCode(200)
+                            .body("status", notNullValue())
+                            .body("status", is(true));
+                    // Finaly testBodyParams login
+                    JsonObject params = new JsonObject()
+                            .put(UserRoute.PARAM_LOGIN, user.result().getAccount().getLogin())
+                            .put(UserRoute.PARAM_PWD, "newPassword");
+                    given().body(params.encodePrettily())
+                            .when().post(BASE_URL + "/login")
+                            .then().assertThat().statusCode(200)
+                            .body("name", notNullValue())
+                            .body("name", is(user.result().getName()));
+                    async.complete();
+                } else {
+                    Assert.fail(jsonuser.cause().getMessage());
+                }
+            });
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
      * Password reset wrong code.
+     *
+     * @param context the context
      */
     @Test
     public void passwordResetWrongCode(TestContext context) {
@@ -966,6 +1087,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Upload avatar
+     *
+     * @param context the context
      */
     @Test
     public void uploadAvatar(TestContext context) {
@@ -997,6 +1120,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Upload avatar with wrong user id
+     *
+     * @param context the context
      */
     @Test
     public void uploadAvatarWithWrongUserId(TestContext context) {
@@ -1015,6 +1140,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Upload avatar with not logged user
+     *
+     * @param context the context
      */
     @Test
     public void uploadAvatarWithNotLoggedUser(TestContext context) {
@@ -1032,6 +1159,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Upload avatar with wrong token.
+     *
+     * @param context the context
      */
     @Test
     public void uploadAvatarWithWrongToken(TestContext context) {
@@ -1072,6 +1201,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Gets user by login.
+     *
+     * @param context the context
      */
     @Test
     public void getUserByLogin(TestContext context) {
@@ -1090,6 +1221,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Gets user by login bad http method.
+     *
+     * @param context the context
      */
     @Test
     public void getUserByLoginBadHTTPMethod(TestContext context) {
@@ -1114,6 +1247,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Gets user by login winth not admin user.
+     *
+     * @param context the context
      */
     @Test
     public void getUserByLoginWinthNotAdminUser(TestContext context) {
@@ -1131,6 +1266,8 @@ public class UserTest extends VertxJunitSupport {
 
     /**
      * Gets user by login with wrong data.
+     *
+     * @param context the context
      */
     @Test
     public void getUserByLoginWithWrongData(TestContext context) {

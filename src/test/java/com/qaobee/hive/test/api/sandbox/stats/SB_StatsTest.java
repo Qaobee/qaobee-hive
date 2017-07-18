@@ -24,6 +24,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -38,8 +39,11 @@ import static org.hamcrest.Matchers.*;
  */
 public class SB_StatsTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/sandbox/stats/statistics");
+
     /**
      * Gets list detail values.
+     *
+     * @param context the context
      */
     @Test
     public void getListDetailValues(TestContext context) {
@@ -57,6 +61,35 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .when().post(BASE_URL + "/getListDetailValue")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(10))
+                    .body("code", hasItem("originShootAtt"));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Gets list detail values with some params.
+     *
+     * @param context the context
+     */
+    @Test
+    public void getListDetailValuesWithSomeParams(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);
+        generateLoggedUser().setHandler(user -> {
+            final JsonObject params = new JsonObject()
+                    .put(PARAM_LIMIT_RESULT, 1)
+                    .put(PARAM_VALUES, new JsonArray().add("CENTER9"))
+                    .put(PARAM_START_DATE, 1443650400000L)
+                    .put(PARAM_END_DATE, 1451516400000L)
+                    .put(PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt"))
+                    .put(PARAM_LIST_OWNERS, new JsonArray().add("5f82c510-2c89-46b0-b87d-d3b59e748615"));
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(BASE_URL + "/getListDetailValue")
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
                     .body("code", hasItem("originShootAtt"));
             async.complete();
         });
@@ -85,6 +118,8 @@ public class SB_StatsTest extends VertxJunitSupport {
 
     /**
      * Gets list detail values with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void getListDetailValuesWithMissingParameters(TestContext context) {
@@ -113,6 +148,8 @@ public class SB_StatsTest extends VertxJunitSupport {
 
     /**
      * Gets stat group by.
+     *
+     * @param context the context
      */
     @Test
     public void getStatGroupBy(TestContext context) {
@@ -132,6 +169,122 @@ public class SB_StatsTest extends VertxJunitSupport {
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("value", hasItem(10));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Gets stat group by with some params.
+     *
+     * @param context the context
+     */
+    @Test
+    public void getStatGroupByWithSomeParams(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_STAT_HAND, DATA_USER_QAOBEE);
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(generateStat(user.result(), "originShootAtt", 1, "CENTER9").encode())
+                    .when().put(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("owner", is(user.result().get_id()));
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(generateStat(user.result(), "originShootAtt", 1, "CENTER9").encode())
+                    .when().put(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("owner", is(user.result().get_id()));
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(generateStat(user.result(), "originShootAtt", 1, "CENTER9").encode())
+                    .when().put(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("owner", is(user.result().get_id()));
+
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(generateStat(user.result(), "fake", 1, 5).encode())
+                    .when().put(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("owner", is(user.result().get_id()));
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(generateStat(user.result(), "fake", 1, 3).encode())
+                    .when().put(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("owner", is(user.result().get_id()));
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(generateStat(user.result(), "fake", 1, 10).encode())
+                    .when().put(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("owner", is(user.result().get_id()));
+
+
+            final JsonObject params = new JsonObject()
+                    .put(PARAM_AGGREGAT, "COUNT")
+                    .put(PARAM_LIST_SHOOTSEQID, new JsonArray().add("12345"))
+                    .put(PARAM_START_DATE, System.currentTimeMillis() - 10000)
+                    .put(PARAM_END_DATE, System.currentTimeMillis() + 10000)
+                    .put(PARAM_VALUES, new JsonArray().add("CENTER9"))
+                    .put(PARAM_LIST_GROUPBY, new JsonArray().add("code"))
+                    .put(PARAM_LIMIT_RESULT, 1)
+                    .put(PARAM_INDICATOR_CODE, new JsonArray().add("originShootAtt").add("fake"))
+                    .put(PARAM_LIST_SORTBY, new JsonArray().add(new JsonObject().put("fieldName", "code").put("sortOrder", -1)))
+                    .put(PARAM_LIST_OWNERS, new JsonArray().add(user.result().get_id()));
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(BASE_URL + "/getStatGroupBy")
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("value", hasItem(3));
+
+            params.remove(PARAM_VALUES);
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(BASE_URL + "/getStatGroupBy")
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("value", hasItem(3));
+
+            params.remove(PARAM_LIMIT_RESULT);
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(BASE_URL + "/getStatGroupBy")
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(2))
+                    .body("value", hasItem(3));
+
+            params.remove(PARAM_LIST_GROUPBY);
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(BASE_URL + "/getStatGroupBy")
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("value", hasItem(6));
+
+            params.put(PARAM_AGGREGAT, "SUM");
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(BASE_URL + "/getStatGroupBy")
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("value", hasItem(18));
+
+            params.put(PARAM_AGGREGAT, "AVG");
+            JsonArray json = new JsonArray(given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(BASE_URL + "/getStatGroupBy")
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1)).extract().asString());
+            Assert.assertEquals(6d, json.getJsonObject(0).getDouble("value"), 0d);
             async.complete();
         });
         async.await(TIMEOUT);
@@ -159,6 +312,8 @@ public class SB_StatsTest extends VertxJunitSupport {
 
     /**
      * Gets stat group by with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void getStatGroupByWithMissingParameters(TestContext context) {
@@ -188,12 +343,49 @@ public class SB_StatsTest extends VertxJunitSupport {
 
     /**
      * Add stat.
+     *
+     * @param context the context
      */
     @Test
     public void addStat(TestContext context) {
         Async async = context.async();
         generateLoggedUser().setHandler(user -> {
             JsonObject s = generateStat(user.result(), "fake", 1);
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(s.encode())
+                    .when().put(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("owner", is(user.result().get_id()));
+
+            final JsonObject params = new JsonObject()
+                    .put(PARAM_START_DATE, 1443650400000L)
+                    .put(PARAM_END_DATE, System.currentTimeMillis() + 100)
+                    .put(PARAM_INDICATOR_CODE, new JsonArray().add("fake"))
+                    .put(PARAM_LIST_OWNERS, new JsonArray().add(user.result().get_id()));
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(params.encode())
+                    .when().post(BASE_URL + "/getListDetailValue")
+                    .then().assertThat().statusCode(200)
+                    .body("", hasSize(1))
+                    .body("code", hasItem("fake"));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Add stat without timer.
+     *
+     * @param context the context
+     */
+    @Test
+    public void addStatWithoutTimer(TestContext context) {
+        Async async = context.async();
+        generateLoggedUser().setHandler(user -> {
+            JsonObject s = generateStat(user.result(), "fake", 1);
+            s.remove(TIMER_FIELD);
             given().header(TOKEN, user.result().getAccount().getToken())
                     .body(s.encode())
                     .when().put(BASE_URL + "/add")
@@ -240,13 +432,15 @@ public class SB_StatsTest extends VertxJunitSupport {
 
     /**
      * Add stat with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void addStatWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_EVENT_HAND);
         generateLoggedUser().setHandler(user -> {
-            List<String> mandatoryParams = Arrays.asList(CODE_FIELD, TIMER_FIELD, OWNER_FIELD);
+            List<String> mandatoryParams = Arrays.asList(CODE_FIELD, OWNER_FIELD);
             JsonObject s = generateStat(user.result(), "fake", 1);
             s.fieldNames().stream().filter(mandatoryParams::contains).forEach(k -> {
                 JsonObject params2 = new JsonObject(s.encode());
@@ -264,6 +458,8 @@ public class SB_StatsTest extends VertxJunitSupport {
 
     /**
      * Add stat bulk with duplicates.
+     *
+     * @param context the context
      */
     @Test
     public void addStatBulkWithDuplicates(TestContext context) {
@@ -329,7 +525,7 @@ public class SB_StatsTest extends VertxJunitSupport {
                 .body(STATUS, is(false));
     }
 
-    private JsonObject generateStat(User u, String indicator, int chrono) {
+    private JsonObject generateStat(User u, String indicator, int chrono, String value) {
         try {
             Thread.sleep(10); // NOSONAR
         } catch (InterruptedException e) {
@@ -340,8 +536,32 @@ public class SB_StatsTest extends VertxJunitSupport {
                 .put("attack", false)
                 .put("chrono", chrono)
                 .put("timer", System.currentTimeMillis())
-                .put("value", 1)
+                .put("value", value)
                 .put("eventId", "12345")
+                .put("shootSeqId", "12345")
+                .put("code", indicator)
+                .put("owner", u.get_id())
+                .put("producter", new JsonArray().add(u.get_id()));
+    }
+
+    private JsonObject generateStat(User u, String indicator, int chrono) {
+        return generateStat(u, indicator, chrono, 1);
+    }
+
+    private JsonObject generateStat(User u, String indicator, int chrono, int value) {
+        try {
+            Thread.sleep(10); // NOSONAR
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return new JsonObject()
+                .put("activityId", "ACT-HAND")
+                .put("attack", false)
+                .put("chrono", chrono)
+                .put("timer", System.currentTimeMillis())
+                .put("value", value)
+                .put("eventId", "12345")
+                .put("shootSeqId", "12345")
                 .put("code", indicator)
                 .put("owner", u.get_id())
                 .put("producter", new JsonArray().add(u.get_id()));

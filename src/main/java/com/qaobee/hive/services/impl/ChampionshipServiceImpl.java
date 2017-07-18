@@ -67,7 +67,7 @@ public class ChampionshipServiceImpl implements ChampionshipService {
     public void addChampionship(JsonObject championship, Handler<AsyncResult<JsonObject>> resultHandler) {
         mongo.upsert(championship, DBCollections.CHAMPIONSHIP, res -> {
             if (res.succeeded()) {
-                championship.put("_id", res);
+                championship.put("_id", res.result());
                 resultHandler.handle(Future.succeededFuture(championship));
             } else {
                 resultHandler.handle(Future.failedFuture(res.cause()));

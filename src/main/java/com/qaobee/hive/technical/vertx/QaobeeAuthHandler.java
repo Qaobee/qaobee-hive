@@ -1,14 +1,15 @@
-package com.qaobee.hive.technical.utils;
+package com.qaobee.hive.technical.vertx;
 
+import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.dao.Utils;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.technical.vertx.QaobeeUser;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
 import io.netty.handler.codec.http.HttpHeaderValues;
+import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
@@ -40,24 +41,24 @@ public class QaobeeAuthHandler implements AuthHandler {
      */
     @Override
     public void handle(RoutingContext context) {
-        RequestWrapper request = utils.wrapRequest(context);
-        String token = getToken(request);
+        String token = getToken(context.request());
+        String locale = context.request().getHeader("Accept-Language");
         if (StringUtils.isBlank(token)) {
-            handle401(context, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
+            handle401(context, Messages.getString(NOT_LOGGED_KEY, locale));
         } else {
             mongoClient.findOne(DBCollections.USER, new JsonObject().put("account.token", token), new JsonObject(), result -> {
                 if (result.succeeded() && result.result() != null) {
-                    testSession(result.result(), request, context);
+                    testSession(result.result(), context, locale);
                 } else {
-                    handle401(context, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
+                    handle401(context, Messages.getString(NOT_LOGGED_KEY, locale));
                 }
             });
         }
     }
 
-    private void testSession(JsonObject jsonUser, RequestWrapper request, RoutingContext context) {
+    private void testSession(JsonObject jsonUser, RoutingContext context, String locale) {
         // we take the first one (should be only one)
-        final com.qaobee.hive.business.model.commons.users.User user = Json.decodeValue(jsonUser.encode(), com.qaobee.hive.business.model.commons.users.User.class);
+        final User user = Json.decodeValue(jsonUser.encode(), User.class);
         if (Constants.DEFAULT_SESSION_TIMEOUT < System.currentTimeMillis() - user.getAccount().getTokenRenewDate()) {
             jsonUser.getJsonObject(ACCOUNT_FIELD).put("token", "");
             user.getAccount().setToken(null);
@@ -71,13 +72,13 @@ public class QaobeeAuthHandler implements AuthHandler {
         mongo.upsert(jsonUser, DBCollections.USER, upsertRes -> {
             if(upsertRes.succeeded()) {
                 if (user.getAccount().getTokenRenewDate() == 0) {
-                    handle401(context, Messages.getString(SESSION_EXPIRED, request.getLocale()));
+                    handle401(context, Messages.getString(SESSION_EXPIRED, locale));
                 } else {
                     context.setUser(new QaobeeUser(jsonUser));
                     context.next();
                 }
             } else {
-                handle401(context, Messages.getString(NOT_LOGGED_KEY, request.getLocale()));
+                handle401(context, Messages.getString(NOT_LOGGED_KEY, locale));
             }
         });
     }
@@ -104,12 +105,12 @@ public class QaobeeAuthHandler implements AuthHandler {
         return this;
     }
 
-    private static String getToken(RequestWrapper request) {
-        if (request.getHeaders() != null && request.getHeaders().containsKey(Constants.TOKEN)) {
-            return request.getHeaders().get(Constants.TOKEN).get(0);
+    private static String getToken(HttpServerRequest request) {
+        if (request.headers().contains(Constants.TOKEN)) {
+            return request.getHeader(Constants.TOKEN);
         }
-        if (request.getParams() != null && request.getParams().containsKey(Constants.TOKEN)) {
-            return request.getParams().get(Constants.TOKEN).get(0);
+        if (request.params().contains(Constants.TOKEN)) {
+            return request.getParam(Constants.TOKEN);
         }
         return null;
     }

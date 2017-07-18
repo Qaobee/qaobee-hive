@@ -148,6 +148,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Gets base url.
      *
      * @param s the s
+     *
      * @return the base url
      */
     protected static String getBaseURL(String s) {
@@ -174,9 +175,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
             vertx = Vertx.vertx(new VertxOptions().setEventLoopPoolSize(150));
             FileSystem fs = vertx.fileSystem();
             config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes())).getJsonObject("TEST");
-            JunitMongoSingleton.getInstance().startServer(config);
-            LOG.info("Embeded MongoDB started");
-
+            startMemoryDB();
             Injector injector = Guice.createInjector(new GuiceModule(config, vertx));
             ProxyService.Loader.load("com.qaobee.hive.services.impl", injector, vertx);
             final Router router = Router.router(vertx);
@@ -218,6 +217,69 @@ public class VertxJunitSupport implements JSDataMongoTest {
             e.printStackTrace();
         }
         async.await(TIMEOUT);
+    }
+
+    /**
+     * Unconfigure rest assured.
+     *
+     * @param context the context
+     */
+    @AfterClass
+    public static void unconfigureRestAssured(TestContext context) {
+        RestAssured.reset();
+        stopMemoryDB();
+        LOG.info("Closing VertX");
+        vertx.close(context.asyncAssertSuccess());
+    }
+
+    /**
+     * Prints the info.
+     *
+     * @param context the context
+     */
+    @Before
+    public void printInfo(TestContext context) {
+        Async async = context.async();
+        Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
+        injector.injectMembers(this);
+        if (mongoClientCustom != null && mongoClientCustom.getDB() != null && mongoClientCustom.getDB().getDatabase("hive") != null) {
+            mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
+                if (t != null) {
+                    LOG.error(t.getMessage(), t);
+                    context.fail(t);
+                } else {
+                    LOG.info("About to execute : " + name.getMethodName());
+                    async.complete();
+                }
+            });
+        }
+        async.await(TIMEOUT);
+    }
+
+
+    /**
+     * Start memory db.
+     */
+    protected static void startMemoryDB() {
+        try {
+            JunitMongoSingleton.getInstance().startServer(config);
+            LOG.info("Embeded MongoDB started");
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Stop memory db.
+     */
+    protected static void stopMemoryDB() {
+        if(JunitMongoSingleton.getInstance().getProcess().isProcessRunning()) {
+            JunitMongoSingleton.getInstance().getProcess().stop();
+            LOG.info("Embeded MongoDB stopped");
+        } else {
+            LOG.info("Embeded MongoDB already stopped");
+        }
     }
 
     private static int findFreePort() throws IOException {
@@ -271,43 +333,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
     }
 
     /**
-     * Unconfigure rest assured.
-     *
-     * @param context the context
-     */
-    @AfterClass
-    public static void unconfigureRestAssured(TestContext context) {
-        RestAssured.reset();
-        JunitMongoSingleton.getInstance().getProcess().stop();
-        LOG.info("Closing VertX");
-        vertx.close(context.asyncAssertSuccess());
-    }
-
-    /**
-     * Prints the info.
-     *
-     * @param context the context
-     */
-    @Before
-    public void printInfo(TestContext context) {
-        Async async = context.async();
-        Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
-        injector.injectMembers(this);
-        if (mongoClientCustom != null && mongoClientCustom.getDB() != null && mongoClientCustom.getDB().getDatabase("hive") != null) {
-            mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
-                if (t != null) {
-                    LOG.error(t.getMessage(), t);
-                    context.fail(t);
-                } else {
-                    LOG.info("About to execute : " + name.getMethodName());
-                    async.complete();
-                }
-            });
-        }
-        async.await(TIMEOUT);
-    }
-
-    /**
      * Generate user.
      *
      * @return a user
@@ -355,6 +380,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Future<User> generateLoggedUser(String userId) {
@@ -396,6 +422,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged admin user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
     protected Future<User> generateLoggedAdminUser(String userId) {
@@ -492,6 +519,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
+     *
      * @return the activity
      */
     protected Future<JsonObject> getActivity(String id) {
@@ -510,6 +538,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
+     *
      * @return the country
      */
     protected Future<JsonObject> getCountry(String id) {

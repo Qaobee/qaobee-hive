@@ -78,7 +78,7 @@ public class PDFVerticle extends AbstractGuiceVerticle {
             pdfDAO.generatePDF(message.body().getJsonObject(DATA), message.body().getString(TEMPLATE), message.body().getString(FILE_NAME), handleJson(message));
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
-            utils.sendErrorJ(message,e );
+            utils.sendError(message,e );
         }
     }
 }

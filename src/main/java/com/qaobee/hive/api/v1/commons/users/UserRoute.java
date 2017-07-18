@@ -83,6 +83,7 @@ public class UserRoute extends AbstractRoute {
 
         addRoute(router, "/userByLogin", HttpMethod.GET,
                 authHandler,
+                c -> roleHandler.hasRole(c, ADMIN_HABILIT),
                 c -> mandatoryHandler.testRequestParams(c, PARAM_LOGIN),
                 this::userByLogin);
 
@@ -141,13 +142,7 @@ public class UserRoute extends AbstractRoute {
      * @apiHeader {String} token
      */
     private void userByLogin(RoutingContext context) {
-        context.user().isAuthorised(ADMIN_HABILIT, res -> {
-            if (res.succeeded() && res.result()) {
-                userService.getUserByLogin(context.request().getParam("login"), getLocale(context), handleResponse(context));
-            } else {
-                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", getLocale(context))));
-            }
-        });
+        userService.getUserByLogin(context.request().getParam("login"), getLocale(context), handleResponse(context));
     }
 
     /**
@@ -206,11 +201,11 @@ public class UserRoute extends AbstractRoute {
     private void passwordReset(RoutingContext context) {
         JsonObject body = context.getBodyAsJson();
         securityService.passwordReset(
-                body.getString("captcha"),
-                body.getString("id"),
-                body.getString("code"),
-                body.getString(PASSWD_FIELD),
-                body.getBoolean("byPassActivationCode", false), r-> handleStatus(r.succeeded() && r.result(), context));
+                body.getString("captcha", ""),
+                body.getString("id", ""),
+                body.getString("code", ""),
+                body.getString(PASSWD_FIELD, ""),
+                body.getBoolean("byPassActivationCode", false), r -> handleStatus(r.succeeded() && r.result(), context));
     }
 
 
@@ -267,7 +262,7 @@ public class UserRoute extends AbstractRoute {
      * @apiSuccess {Object} status {"status", true|false}
      */
     private void logout(RoutingContext context) {
-        securityService.logout(context.request().getHeader("token"), r-> handleStatus(r.succeeded() && r.result(), context));
+        securityService.logout(context.request().getHeader("token"), r -> handleStatus(r.succeeded() && r.result(), context));
     }
 
     /**

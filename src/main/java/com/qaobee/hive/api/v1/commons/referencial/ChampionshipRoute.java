@@ -21,12 +21,9 @@ package com.qaobee.hive.api.v1.commons.referencial;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.ChampionshipService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
@@ -102,17 +99,21 @@ public class ChampionshipRoute extends AbstractRoute {
                 c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_STRUCTURE),
                 this::getListChampionships);
 
-        addRoute(router, "/list", HttpMethod.GET,
+        addRoute(router, "/get", HttpMethod.GET,
                 authHandler,
                 c -> mandatoryHandler.testRequestParams(c, PARAM_ID),
                 this::getChampionship);
 
         addRoute(router, "/add", HttpMethod.POST,
                 authHandler,
+                c -> roleHandler.hasRole(c, ADMIN_HABILIT),
+                c -> mandatoryHandler.testBodyParams(c, PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS),
                 this::addChampionship);
 
         addRoute(router, "/update", HttpMethod.POST,
                 authHandler,
+                c -> roleHandler.hasRole(c, ADMIN_HABILIT),
+                c -> mandatoryHandler.testBodyParams(c, "_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS),
                 this::updateChampionship);
 
         return router;
@@ -139,25 +140,11 @@ public class ChampionshipRoute extends AbstractRoute {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      */
     private void updateChampionship(RoutingContext context) {
-        context.user().isAuthorised(ADMIN_HABILIT, res -> {
-            if (res.succeeded() && res.result()) {
-                try {
-                    utils.testMandatoryParams(context, "_id", PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME,
-                            PARAM_POOL, PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
-
-                    championshipService.updateChampionship(context.getBodyAsJson(), ar -> {
-                        if (ar.succeeded()) {
-                            handleResponse(context, new JsonObject().put("_id", ar.result()));
-                        } else {
-                            utils.handleError(context, (QaobeeException) ar.cause());
-                        }
-                    });
-                } catch (QaobeeException e) {
-                    LOG.warn(e.getMessage(), e);
-                    utils.handleError(context, e);
-                }
+        championshipService.updateChampionship(context.getBodyAsJson(), ar -> {
+            if (ar.succeeded()) {
+                handleResponse(context, context.getBodyAsJson());
             } else {
-                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", getLocale(context))));
+                utils.handleError(context, (QaobeeException) ar.cause());
             }
         });
     }
@@ -183,20 +170,7 @@ public class ChampionshipRoute extends AbstractRoute {
      * @apiSuccess {Object} championship com.qaobee.hive.business.model.commons.referencial.Championship
      */
     private void addChampionship(RoutingContext context) {
-        context.user().isAuthorised(ADMIN_HABILIT, ar -> {
-            if (ar.succeeded() && ar.result()) {
-                try {
-                    utils.testMandatoryParams(context, PARAM_LABEL, PARAM_LEVEL_GAME, PARAM_SUB_LEVEL_GAME, PARAM_POOL,
-                            PARAM_ACTIVITY, PARAM_CATEGORY_AGE, PARAM_SEASON_CODE, PARAM_LIST_PARTICIPANTS);
-                    championshipService.addChampionship(context.getBodyAsJson(), handleResponse(context));
-                } catch (QaobeeException e) {
-                    LOG.warn(e.getMessage(), e);
-                    utils.handleError(context, e);
-                }
-            } else {
-                utils.handleError(context, new QaobeeException(ExceptionCodes.NOT_ADMIN, Messages.getString("not.admin", getLocale(context))));
-            }
-        });
+        championshipService.addChampionship(context.getBodyAsJson(), handleResponse(context));
     }
 
     /**

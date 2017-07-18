@@ -72,7 +72,6 @@ public class SB_CollectTest extends VertxJunitSupport {
         async.await(TIMEOUT);
     }
 
-
     /**
      * Add Collect with non logged user.
      */

@@ -91,7 +91,7 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.22'
     compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'ch.qos.logback:logback-core:1.2.3'
-    compile 'com.stripe:stripe-java:5.5.0'
+    compile 'com.stripe:stripe-java:5.7.1'
     compile 'org.imgscalr:imgscalr-lib:4.2'
 
 
@@ -136,7 +136,6 @@ test {
     jacoco {
         destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
         classDumpDir = file("$buildDir/jacoco/classpathdumps")
-        excludes = ["$generateSrcPath/**/*"]
         append = false
     }
     minHeapSize = "128m"
@@ -156,7 +155,12 @@ jacocoTestReport {
         csv.enabled false
         html.destination "${buildDir}/reports/jacoco"
     }
-    sourceSets sourceSets.main
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: ['**/*VertxEBProxy*/**', '**/*VertxProxy*/**'])
+        })
+    }
 }
 
 htmlDependencyReport {

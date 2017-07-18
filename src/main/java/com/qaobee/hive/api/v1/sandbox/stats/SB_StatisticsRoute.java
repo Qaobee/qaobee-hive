@@ -55,11 +55,11 @@ public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
      */
     public static final String PARAM_END_DATE = "endDate";
     public static final String PARAM_AGGREGAT = "aggregat";
-    private static final String PARAM_VALUES = "values";
-    private static final String PARAM_LIST_SHOOTSEQID = "listShootSeqId";
-    private static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
-    private static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
-    private static final String PARAM_LIMIT_RESULT = "limitResult";
+    public static final String PARAM_VALUES = "values";
+    public static final String PARAM_LIST_SHOOTSEQID = "listShootSeqId";
+    public static final String PARAM_LIST_GROUPBY = "listFieldsGroupBy";
+    public static final String PARAM_LIST_SORTBY = "listFieldsSortBy";
+    public static final String PARAM_LIMIT_RESULT = "limitResult";
     public static final String OWNER_FIELD = "owner";
     public static final String CODE_FIELD = "code";
     public static final String TIMER_FIELD = "timer";
@@ -83,7 +83,7 @@ public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
 
         addRoute(router, "/add", HttpMethod.PUT,
                 authHandler,
-                c -> mandatoryHandler.testBodyParams(c, CODE_FIELD, TIMER_FIELD, OWNER_FIELD),
+                c -> mandatoryHandler.testBodyParams(c, CODE_FIELD, OWNER_FIELD),
                 this::addStat);
 
         addRoute(router, "/", HttpMethod.GET,
@@ -158,11 +158,11 @@ public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
     private void getListDetailValue(RoutingContext context) {
         JsonObject params = context.getBodyAsJson();
         statisticsService.getListDetailValue(params.getJsonArray(PARAM_INDICATOR_CODE),
-                params.getJsonArray(PARAM_LIST_OWNERS),
-                params.getLong(PARAM_START_DATE),
-                params.getLong(PARAM_END_DATE),
-                params.getJsonArray(PARAM_VALUES),
-                params.containsKey(PARAM_LIMIT_RESULT) ? params.getInteger(PARAM_LIMIT_RESULT) : 0,
+                params.getJsonArray(PARAM_LIST_OWNERS, new JsonArray()),
+                params.getLong(PARAM_START_DATE, 0L),
+                params.getLong(PARAM_END_DATE, 0L),
+                params.getJsonArray(PARAM_VALUES, new JsonArray()),
+                params.getInteger(PARAM_LIMIT_RESULT, 0),
                 handleResponseArray(context));
     }
 

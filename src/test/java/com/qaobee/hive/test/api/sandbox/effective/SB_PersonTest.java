@@ -34,8 +34,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.qaobee.hive.api.v1.sandbox.effective.SB_PersonRoute.PARAM_LIST_FIELD;
-import static com.qaobee.hive.api.v1.sandbox.effective.SB_PersonRoute.PARAM_LIST_ID;
+import static com.qaobee.hive.api.v1.sandbox.effective.SB_PersonRoute.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -47,9 +46,100 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Gets by id.
+     *
+     * @param context the context
      */
     @Test
     public void getById(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(PARAM_PERSON_ID, "550a05dadb8f8b6e2f51f4db")
+                    .when().get(BASE_URL + "/get")
+                    .then().assertThat().statusCode(200)
+                    .body("name", is("Batinovic"));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Gets by id with non existing id.
+     *
+     * @param context the context
+     */
+    @Test
+    public void getByIdWithNonExistingId(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .queryParam(PARAM_PERSON_ID, "bla")
+                    .when().get(BASE_URL + "/get")
+                    .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
+                    .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Gets by id with missing id.
+     *
+     * @param context the context
+     */
+    @Test
+    public void getByIdWithMissingId(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .when().get(BASE_URL + "/get")
+                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
+                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Gets by id with wrong http method.
+     *
+     * @param context the context
+     */
+    @Test
+    public void getByIdWithWrongHTTPMethod(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(u -> {
+            given().header(TOKEN, u.result().getAccount().getToken())
+                    .when().post(BASE_URL + "/get")
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Gets by id with non logged user.
+     */
+    @Test
+    public void getByIdWithNonLoggedUser() {
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
+        given().when().get(BASE_URL + "/get")
+                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
+                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
+    }
+
+    /**
+     * Gets list by id.
+     *
+     * @param context the context
+     */
+    @Test
+    public void getListById(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_PERSON_HAND);
         final JsonObject params = new JsonObject()
@@ -74,30 +164,32 @@ public class SB_PersonTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets by id with non logged user.
+     * Gets list by id with non logged user.
      */
     @Test
-    public void getByIdWithNonLoggedUser() {
+    public void getListByIdWithNonLoggedUser() {
         given().when().post(BASE_URL + "/list")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
 
     /**
-     * Gets by id with wrong http method.
+     * Gets list by id with wrong http method.
      */
     @Test
-    public void getByIdWithWrongHttpMethod() {
+    public void getListByIdWithWrongHttpMethod() {
         given().when().get(BASE_URL + "/list")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
 
     /**
-     * Gets by id with missing parameters.
+     * Gets list by id with missing parameters.
+     *
+     * @param context the context
      */
     @Test
-    public void getByIdWithMissingParameters(TestContext context) {
+    public void getListByIdWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY_CFG, SETTINGS_ACTIVITY, DATA_SANDBOXES_HAND, SETTINGS_SEASONS);
         final JsonObject params = new JsonObject();
@@ -123,6 +215,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Gets list person sandbox.
+     *
+     * @param context the context
      */
     @Test
     public void getListPersonSandbox(TestContext context) {
@@ -163,6 +257,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Gets list person sandbox with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void getListPersonSandboxWithMissingParameters(TestContext context) {
@@ -179,6 +275,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Gets list person sandbox with wring parameters.
+     *
+     * @param context the context
      */
     @Test
     public void getListPersonSandboxWithWringParameters(TestContext context) {
@@ -197,6 +295,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Upload avatar
+     *
+     * @param context the context
      */
     @Test
     public void uploadAvatar(TestContext context) {
@@ -214,10 +314,10 @@ public class SB_PersonTest extends VertxJunitSupport {
                     .body("name", is("Ranu")).extract().path("_id");
 
             String avatarId = given().header(TOKEN, user.result().getAccount().getToken())
-                    .multiPart(avatar).
-                            pathParam("uid", id).
-                            when().
-                            post(getRootURL() + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                    .multiPart(avatar)
+                    .pathParam("uid", id)
+                    .when()
+                    .post(getRootURL() + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
                     .then().assertThat().statusCode(200)
                     .body("avatar", notNullValue())
                     .extract().path("avatar");
@@ -235,7 +335,37 @@ public class SB_PersonTest extends VertxJunitSupport {
     }
 
     /**
+     * Upload avatar without file.
+     *
+     * @param context the context
+     */
+    @Test
+    public void uploadAvatarWithoutFile(TestContext context) {
+        Async async = context.async();
+        populate(POPULATE_ONLY, DATA_PERSON_HAND);
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
+            JsonObject person = new JsonObject().put("person", generatePerson());
+            String id = given().header(TOKEN, user.result().getAccount().getToken())
+                    .body(person.encode())
+                    .when().put(BASE_URL + "/add")
+                    .then().assertThat().statusCode(200)
+                    .body("_id", notNullValue())
+                    .body("name", is("Ranu")).extract().path("_id");
+
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .pathParam("uid", id)
+                    .when()
+                    .post(getRootURL() + "/file/" + DBCollections.PERSON + "/avatar/{uid}")
+                    .then().assertThat().statusCode(ExceptionCodes.INVALID_PARAMETER.getCode());
+            async.complete();
+        });
+        async.await(TIMEOUT);
+    }
+
+    /**
      * Upload avatar with wrong user id
+     *
+     * @param context the context
      */
     @Test
     public void uploadAvatarWithWrongUserId(TestContext context) {
@@ -254,6 +384,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Upload avatar with not logged user
+     *
+     * @param context the context
      */
     @Test
     public void uploadAvatarWithNotLoggedUser(TestContext context) {
@@ -271,6 +403,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Upload avatar with wrong token.
+     *
+     * @param context the context
      */
     @Test
     public void uploadAvatarWithWrongToken(TestContext context) {
@@ -300,6 +434,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Add person.
+     *
+     * @param context the context
      */
     @Test
     public void addPerson(TestContext context) {
@@ -340,6 +476,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Add person with missing parameter.
+     *
+     * @param context the context
      */
     @Test
     public void addPersonWithMissingParameter(TestContext context) {
@@ -357,6 +495,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Update person.
+     *
+     * @param context the context
      */
     @Test
     public void updatePerson(TestContext context) {
@@ -405,6 +545,8 @@ public class SB_PersonTest extends VertxJunitSupport {
 
     /**
      * Update person with missing parameters.
+     *
+     * @param context the context
      */
     @Test
     public void updatePersonWithMissingParameters(TestContext context) {

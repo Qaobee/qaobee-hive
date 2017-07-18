@@ -24,7 +24,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -39,7 +38,6 @@ import static org.hamcrest.Matchers.*;
  *
  * @author jerome
  */
-@Ignore // missing data_championship_Hand.js
 public class ChampionshipServiceTest extends VertxJunitSupport {
     private static final String BASE_URL = getBaseURL("/commons/referencial/championship");
 
@@ -86,7 +84,7 @@ public class ChampionshipServiceTest extends VertxJunitSupport {
      * Gets list championships with non logged user.
      */
     @Test
-    public void getListChampionshipsWithNonLoggedUser(TestContext context) {
+    public void getListChampionshipsWithNonLoggedUser() {
         given().when().post(BASE_URL  + "/list")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -96,7 +94,7 @@ public class ChampionshipServiceTest extends VertxJunitSupport {
      * Gets list championships with wrong http method.
      */
     @Test
-    public void getListChampionshipsWithWrongHttpMethod(TestContext context) {
+    public void getListChampionshipsWithWrongHttpMethod() {
         given().when().get(BASE_URL  + "/list")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -255,7 +253,7 @@ public class ChampionshipServiceTest extends VertxJunitSupport {
      * Gets championship with non logged user.
      */
     @Test
-    public void getChampionshipWithNonLoggedUser(TestContext context) {
+    public void getChampionshipWithNonLoggedUser() {
         given().when().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -265,7 +263,7 @@ public class ChampionshipServiceTest extends VertxJunitSupport {
      * Gets championship with wrong http method.
      */
     @Test
-    public void getChampionshipWithWrongHttpMethod(TestContext context) {
+    public void getChampionshipWithWrongHttpMethod() {
         given().when().post(BASE_URL + "/get")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -343,7 +341,7 @@ public class ChampionshipServiceTest extends VertxJunitSupport {
      * Add championship with non logged user.
      */
     @Test
-    public void addChampionshipWithNonLoggedUser(TestContext context) {
+    public void addChampionshipWithNonLoggedUser() {
         given().when().post(BASE_URL + "/add")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -370,7 +368,7 @@ public class ChampionshipServiceTest extends VertxJunitSupport {
      * Add championship with wrong http method.
      */
     @Test
-    public void addChampionshipWithWrongHttpMethod(TestContext context) {
+    public void addChampionshipWithWrongHttpMethod() {
         given().when().get(BASE_URL + "/add")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
@@ -436,7 +434,7 @@ public class ChampionshipServiceTest extends VertxJunitSupport {
      * Update championship with non logged user.
      */
     @Test
-    public void updateChampionshipWithNonLoggedUser(TestContext context) {
+    public void updateChampionshipWithNonLoggedUser() {
         given().when().post(BASE_URL + "/update")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
@@ -463,7 +461,7 @@ public class ChampionshipServiceTest extends VertxJunitSupport {
      * Update championship with wrong http method.
      */
     @Test
-    public void updateChampionshipWithWrongHttpMethod(TestContext context) {
+    public void updateChampionshipWithWrongHttpMethod() {
         given().when().get(BASE_URL + "/update")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));

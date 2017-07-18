@@ -83,7 +83,7 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
             if (res.succeeded()) {
                 message.reply(res.result());
             } else {
-                utils.sendErrorJ(message, (QaobeeException) res.cause());
+                utils.sendError(message, (QaobeeException) res.cause());
             }
         };
     }
