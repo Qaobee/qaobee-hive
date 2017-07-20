@@ -22,6 +22,7 @@ package com.qaobee.hive.technical.utils.guice;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.qaobee.hive.dao.Utils;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.Message;
@@ -76,7 +77,11 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
             if (res.succeeded()) {
                 message.reply(res.result());
             } else {
-                utils.sendError(message, (QaobeeException) res.cause());
+                if(res.cause() instanceof QaobeeException) {
+                    utils.sendError(message, (QaobeeException) res.cause());
+                } else {
+                    utils.sendError(message, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, res.cause().getMessage()));
+                }
             }
         };
     }

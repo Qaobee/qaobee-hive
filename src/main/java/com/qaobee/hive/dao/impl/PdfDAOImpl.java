@@ -70,11 +70,11 @@ public class PdfDAOImpl implements PdfDAO {
                     datadir = System.getenv("OPENSHIFT_DATA_DIR");
                 }
                 File dir = new File(datadir + "/tmp");
-                if (!dir.exists()) {
-                    assert dir.mkdirs();
-                }
+                assert dir.exists() || dir.mkdirs();
                 final File temp = new File(datadir + "/tmp/" + filename + ".pdf");
-                vertx.fileSystem().deleteBlocking(temp.getAbsolutePath());
+                if(temp.exists()) {
+                    vertx.fileSystem().deleteBlocking(temp.getAbsolutePath());
+                }
                 os = new FileOutputStream(temp);
                 final ITextRenderer renderer = new ITextRenderer();
                 renderer.getSharedContext().setReplacedElementFactory(new MediaReplacedElementFactory(renderer.getSharedContext().getReplacedElementFactory(), dir));

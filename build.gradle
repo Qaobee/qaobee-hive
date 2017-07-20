@@ -28,7 +28,7 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'project-report'
 apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
 
-def generateSrcPath="$buildDir/generated-src"
+def generateSrcPath = "$buildDir/generated-src"
 def generatedSrcDir = file("$buildDir/generated-src")
 def version = '3.4.2'
 mainClassName = 'com.qaobee.hive.Main'
@@ -137,6 +137,7 @@ test {
         destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
         classDumpDir = file("$buildDir/jacoco/classpathdumps")
         append = false
+        excludes = ['**/*VertxEBProxy*/**', '**/*VertxProxy*/**']
     }
     minHeapSize = "128m"
     maxHeapSize = "1024m"
@@ -208,7 +209,7 @@ task gitChangelogTask(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
 
 task updateRancherImage {
     def dockerVersion = findProperty("dockerVersion")
-    if(dockerVersion != null) {
+    if (dockerVersion != null) {
         def url = "http://vps234741.ovh.net:8080/v2-beta/projects/1a7/services/1s22/"
         def creds = "854D77F36BD20C5D89FE:p8ktQVdpEdGp4rwfJCfFoq5abCL2eYTXSHwee3ot"
         def p = ['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute()
@@ -230,7 +231,7 @@ task updateRancherImage {
                 def state = new JsonSlurper().parseText(['curl', '-u', creds, '-H', "'Accept: application/json'", '-H', "'Content-Type: application/json'", url].execute().text)
                 println state.state
                 upgraded = "upgraded" == state.state
-                if("active" == state.state) return 0
+                if ("active" == state.state) return 0
             }
             ['bash', '-c', "curl -X POST -u ${creds} -H 'Content-Type: application/json' -d '{}' ${url}?action=finishupgrade"].execute()
         }
