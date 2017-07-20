@@ -23,8 +23,8 @@ import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
@@ -54,9 +54,17 @@ public class ActivityCfgRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
-        router.get("/*").handler(authHandler);
-        router.get("/get").handler(this::getActivityCfgHandler);
-        router.get("/params").handler(this::getActivityCfgParamsHandler);
+
+        addRoute(router, "/get", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE),
+                this::getActivityCfgHandler);
+
+        addRoute(router, "/params", HttpMethod.GET,
+                authHandler,
+                c -> mandatoryHandler.testRequestParams(c, PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST),
+                this::getActivityCfgParamsHandler);
+
         return router;
     }
 
@@ -73,24 +81,19 @@ public class ActivityCfgRoute extends AbstractRoute {
      * @apiParam {String} paramFieldList the list of value
      */
     private void getActivityCfgParamsHandler(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE, PARAM_FIELD_LIST);
-            activityCfgService.getActivityCfgParams(
-                    context.request().getParam(PARAM_ACTIVITY_ID),
-                    context.request().getParam(PARAM_COUNTRY_ID),
-                    Long.parseLong(context.request().getParam(PARAM_DATE)),
-                    context.request().getParam(PARAM_FIELD_LIST),
-                    ar -> {
-                        if (ar.succeeded()) {
-                            handleResponse(context, ar.result().getJsonObject(0).getJsonArray(context.request().getParam(PARAM_FIELD_LIST)));
-                        } else {
-                            LOG.error(ar.cause().getMessage(), ar.cause());
-                            handleError(context, (QaobeeSvcException) ar.cause());
-                        }
-                    });
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        activityCfgService.getActivityCfgParams(
+                context.request().getParam(PARAM_ACTIVITY_ID),
+                context.request().getParam(PARAM_COUNTRY_ID),
+                Long.parseLong(context.request().getParam(PARAM_DATE)),
+                context.request().getParam(PARAM_FIELD_LIST),
+                ar -> {
+                    if (ar.succeeded()) {
+                        handleResponse(context, ar.result().getJsonObject(0).getJsonArray(context.request().getParam(PARAM_FIELD_LIST)));
+                    } else {
+                        LOG.error(ar.cause().getMessage(), ar.cause());
+                        utils.handleError(context, (QaobeeException) ar.cause());
+                    }
+                });
     }
 
     /**
@@ -103,14 +106,9 @@ public class ActivityCfgRoute extends AbstractRoute {
      * @apiParam {String} activityId Activity Id
      */
     private void getActivityCfgHandler(RoutingContext context) {
-        try {
-            utils.testMandatoryParams(context.request().params(), PARAM_ACTIVITY_ID, PARAM_COUNTRY_ID, PARAM_DATE);
-            activityCfgService.getActivityCfg(
-                    context.request().getParam(PARAM_ACTIVITY_ID),
-                    context.request().getParam(PARAM_COUNTRY_ID),
-                    Long.parseLong(context.request().getParam(PARAM_DATE)), handleResponse(context));
-        } catch (QaobeeException e) {
-            handleError(context, e);
-        }
+        activityCfgService.getActivityCfg(
+                context.request().getParam(PARAM_ACTIVITY_ID),
+                context.request().getParam(PARAM_COUNTRY_ID),
+                Long.parseLong(context.request().getParam(PARAM_DATE)), handleResponse(context));
     }
 }

@@ -19,16 +19,16 @@
 
 package com.qaobee.hive.dao.impl;
 
-import com.qaobee.hive.api.v1.commons.utils.CaptchaVerticle;
+import com.qaobee.hive.verticles.CaptchaVerticle;
 import com.qaobee.hive.dao.ReCaptcha;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.JsonObject;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
 
 import javax.inject.Inject;
 
@@ -40,20 +40,18 @@ public class RecaptchaImpl implements ReCaptcha {
     private Vertx vertx;
 
     @Override
-    public Promise<Boolean, QaobeeException, Integer> verify(String challenge) {
-        Deferred<Boolean, QaobeeException, Integer> deferred = new DeferredObject<>();
+    public void verify(String challenge, Handler<AsyncResult<Void>> resultHandler) {
         vertx.eventBus().send(CaptchaVerticle.VERIFY, new JsonObject().put("challenge", challenge), new DeliveryOptions().setSendTimeout(5000L), r -> {
             if (r.succeeded()) {
                 JsonObject res = (JsonObject) r.result().body();
                 if (res.getBoolean("status", false)) {
-                    deferred.resolve(true);
+                    resultHandler.handle(Future.succeededFuture());
                 } else {
-                    deferred.reject(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha"));
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha")));
                 }
             } else {
-                deferred.reject(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha"));
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.CAPTCHA_EXCEPTION, "wrong captcha")));
             }
         });
-        return deferred.promise();
     }
 }

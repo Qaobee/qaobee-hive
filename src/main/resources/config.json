@@ -47,9 +47,9 @@
     "mongo.db": {
       "host": "localhost",
       "port": 27017,
-      "pool_size": 2,
-      "db_name": "hive",
-      "read_preference": "nearest"
+      "maxPoolSize": 2,
+      "keepAlive": true,
+      "db_name" : "hive"
     },
     "mailchimp": {
       "env": "DEV",
@@ -57,7 +57,8 @@
       "user": "qaobee",
       "host": "us13.api.mailchimp.com",
       "port": 443,
-      "path": "/3.0/lists/883987d33d"
+      "path": "/3.0/lists/883987d33d",
+      "test" : true
     },
     "mailer.mod": {
       "test": false,
@@ -129,9 +130,9 @@
     },
     "mongo.db": {
       "address": "mongo.db",
-      "pool_size": 10,
       "db_name": "hive",
-      "read_preference": "nearest"
+      "maxPoolSize": 20,
+      "keepAlive": true
     },
     "stripe": {
       "api_secret": "sk_test_ScTT5flMU5dAaDo506TlI5yp",
@@ -143,7 +144,8 @@
       "user": "qaobee",
       "host": "us13.api.mailchimp.com",
       "port": 443,
-      "path": "/3.0/lists/883987d33d"
+      "path": "/3.0/lists/883987d33d",
+      "test" : false
     },
     "mailer.mod": {
       "test": false,
@@ -215,9 +217,9 @@
     },
     "mongo.db": {
       "address": "mongo.db",
-      "pool_size": 10,
       "db_name": "hive",
-      "read_preference": "nearest"
+      "maxPoolSize": 20,
+      "keepAlive": true
     },
     "stripe": {
       "api_secret": "sk_live_231nVDKVdKgHfAHBMyF9b1h9",
@@ -229,7 +231,8 @@
       "user": "qaobee",
       "host": "us13.api.mailchimp.com",
       "port": 443,
-      "path": "/3.0/lists/883987d33d"
+      "path": "/3.0/lists/883987d33d",
+      "test" : false
     },
     "mailer.mod": {
       "test": false,

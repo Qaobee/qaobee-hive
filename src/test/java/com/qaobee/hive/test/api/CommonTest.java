@@ -25,7 +25,7 @@ import org.junit.Test;
 import static io.restassured.RestAssured.*;
 
 /**
- * The type Common test.
+ * The type Common testBodyParams.
  */
 public class CommonTest extends VertxJunitSupport {
     /**
@@ -33,15 +33,15 @@ public class CommonTest extends VertxJunitSupport {
      */
     @Test
     public void testRequestOnNonExistingResource() {
-        given().when().get(BASE_URL + "/nothing/real")
+        given().when().get(getRootURL() + "/nothing/real")
                 .then().assertThat().statusCode(404);
-        given().when().post(BASE_URL + "/nothing/real")
+        given().when().post(getRootURL() + "/nothing/real")
                 .then().assertThat().statusCode(404);
-        given().when().put(BASE_URL + "/nothing/real")
+        given().when().put(getRootURL() + "/nothing/real")
                 .then().assertThat().statusCode(404);
-        given().when().delete(BASE_URL + "/nothing/real")
+        given().when().delete(getRootURL() + "/nothing/real")
                 .then().assertThat().statusCode(404);
-        given().when().head(BASE_URL + "/nothing/real")
+        given().when().head(getRootURL() + "/nothing/real")
                 .then().assertThat().statusCode(404);
     }
 }

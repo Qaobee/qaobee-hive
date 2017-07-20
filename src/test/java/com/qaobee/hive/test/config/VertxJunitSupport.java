@@ -21,33 +21,36 @@ package com.qaobee.hive.test.config;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.api.v1.commons.settings.ActivityVerticle;
-import com.qaobee.hive.api.v1.commons.settings.CountryVerticle;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.transversal.Habilitation;
+import com.qaobee.hive.services.ActivityService;
+import com.qaobee.hive.services.CountryService;
+import com.qaobee.hive.services.MongoDB;
+import com.qaobee.hive.technical.annotations.DeployableVerticle;
+import com.qaobee.hive.technical.annotations.ProxyService;
+import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
-import com.qaobee.hive.technical.vertx.RequestWrapper;
+import com.qaobee.hive.technical.constantes.DBCollections;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
+import com.qaobee.hive.technical.utils.guice.GuiceModule;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.parsing.Parser;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
-import io.vertx.core.eventbus.DeliveryOptions;
-import io.vertx.core.eventbus.ReplyException;
+import io.vertx.core.*;
 import io.vertx.core.file.FileSystem;
-import io.vertx.core.json.EncodeException;
+import io.vertx.core.http.HttpServer;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
+import io.vertx.ext.unit.junit.Timeout;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.jdeferred.Deferred;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.sockjs.BridgeOptions;
+import io.vertx.ext.web.handler.sockjs.SockJSHandler;
+import org.apache.http.HttpHeaders;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
@@ -63,7 +66,6 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.util.*;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.ACCEPT_LANGUAGE;
 
 /**
  * The Class VertxJunitSupport.
@@ -97,16 +99,9 @@ public class VertxJunitSupport implements JSDataMongoTest {
      */
     protected static final String POPULATE_ONLY = "only";
     /**
-     * The constant BASE_URL.
-     */
-    protected static final String BASE_URL = "http://localhost:8888";
-    /**
      * The constant TIMEOUT.
      */
     protected static final long TIMEOUT = 5000L;
-    /**
-     * The constant config.
-     */
     private static JsonObject config;
     private static final String POPULATE_WITHOUT = "without";
     private static final String POPULATE_ALL = "all";
@@ -114,79 +109,127 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * The constant vertx.
      */
     protected static Vertx vertx;
+    private static int port;
     /**
      * The name.
      */
     @Rule
     public TestName name = new TestName();
-
+    /**
+     * The Global timeout.
+     */
+    @Rule
+    public Timeout globalTimeout = Timeout.millis(TIMEOUT);
     /**
      * The Mongo.
      */
     @Inject
     protected MongoDB mongo;
-    /**
-     * The Mongo client custom.
-     */
     @Inject
-    protected MongoClientCustom mongoClientCustom;
+    private MongoClientCustom mongoClientCustom;
     @Inject
     @Named("mongo.db")
     private JsonObject mongoConf;
+    @Inject
+    private ActivityService activityService;
+    @Inject
+    private CountryService countryService;
 
     /**
-     * Start mongo server.
-     */
-    @BeforeClass
-    public static void init() {
-        RestAssured.defaultParser = Parser.JSON;
-        RestAssured.requestSpecification = new RequestSpecBuilder()
-                .addHeader(ACCEPT_LANGUAGE, LOCALE)
-                .addHeader("X-qaobee-stack", "true")
-                .build();
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-
-    }
-
-    /**
-     * Unconfigure rest assured.
-     */
-    @AfterClass
-    public static void unconfigureRestAssured() {
-        RestAssured.reset();
-    }
-
-    /**
-     * Find free port.
+     * Gets root url.
      *
-     * @return the int
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @return the root url
      */
-    public static int findFreePort() throws IOException {
-        final ServerSocket server = new ServerSocket(0);
-        final int port = server.getLocalPort();
-        server.close();
-        return port;
-    }
-
-    /**
-     * Gets url.
-     *
-     * @param busAddress the bus address
-     * @return the url
-     */
-    protected String getURL(String busAddress) {
-        return BASE_URL + "/api/v" + busAddress.replaceAll("\\.", "/");
+    protected static String getRootURL() {
+        return "http://localhost:" + port;
     }
 
     /**
      * Gets base url.
      *
      * @param s the s
+     *
      * @return the base url
      */
     protected static String getBaseURL(String s) {
-        return BASE_URL + "/api/" + Module.VERSION + s;
+        return getRootURL() + "/api/" + Module.VERSION + s;
+    }
+
+    /**
+     * Start mongo server.
+     *
+     * @param context the context
+     */
+    @BeforeClass
+    public static void init(TestContext context) {
+        Async async = context.async();
+        try {
+            port = findFreePort();
+            RestAssured.defaultParser = Parser.JSON;
+            RestAssured.requestSpecification = new RequestSpecBuilder()
+                    .addHeader(HttpHeaders.ACCEPT_LANGUAGE, LOCALE)
+                    .addHeader("X-qaobee-stack", "true")
+                    .build();
+            RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+
+            vertx = Vertx.vertx(new VertxOptions().setEventLoopPoolSize(150));
+            FileSystem fs = vertx.fileSystem();
+            config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes())).getJsonObject("TEST");
+            startMemoryDB();
+            Injector injector = Guice.createInjector(new GuiceModule(config, vertx));
+            ProxyService.Loader.load("com.qaobee.hive.services.impl", injector, vertx);
+            final Router router = Router.router(vertx);
+            router.route().handler(BodyHandler.create());
+            router.route().path("/*").produces("application/json").handler(c -> {
+                c.response().putHeader(io.vertx.core.http.HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8")
+                        .putHeader(io.vertx.core.http.HttpHeaders.CACHE_CONTROL, "no-cache, no-store, max-age=0, must-revalidate")
+                        .putHeader("Pragma", "no-cache")
+                        .putHeader(io.vertx.core.http.HttpHeaders.EXPIRES, "0");
+                c.next();
+            });
+            router.get("/").handler(event -> event.response().end("Welcome to Qaobee Hive"));
+
+            // Load Routes
+            VertxRoute.Loader.getRoutesInPackage(Module.class.getPackage().getName())
+                    .entrySet().stream().sorted(Comparator.comparingInt(e -> e.getKey().order()))
+                    .forEachOrdered(item -> {
+                                injector.injectMembers(item.getValue());
+                                try {
+                                    LOG.debug("Deploy " + item.getKey());
+                                    router.mountSubRouter(item.getKey().rootPath(), item.getValue().init());
+                                } catch (Exception e) {
+                                    LOG.error(e.getMessage(), e);
+                                }
+                            }
+                    );
+            router.route().last().handler(c -> {
+                final JsonObject jsonResp = new JsonObject()
+                        .put(Constants.STATUS, false)
+                        .put("message", "Nothing here")
+                        .put("httpCode", 404);
+                c.response().putHeader(io.vertx.core.http.HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON).setStatusCode(404).end(jsonResp.encode());
+            });
+
+            // Load Verticles
+            runWebServer(loadVerticles(), router, async, context);
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
+            e.printStackTrace();
+        }
+        async.await(TIMEOUT);
+    }
+
+    /**
+     * Unconfigure rest assured.
+     *
+     * @param context the context
+     */
+    @AfterClass
+    public static void unconfigureRestAssured(TestContext context) {
+        RestAssured.reset();
+        stopMemoryDB();
+        LOG.info("Closing VertX");
+        vertx.close(context.asyncAssertSuccess());
     }
 
     /**
@@ -197,72 +240,117 @@ public class VertxJunitSupport implements JSDataMongoTest {
     @Before
     public void printInfo(TestContext context) {
         Async async = context.async();
-        vertx = Vertx.vertx(new VertxOptions().setBlockedThreadCheckInterval(20000).setWorkerPoolSize(50));
-        vertx.exceptionHandler(context.exceptionHandler());
-        FileSystem fs = vertx.fileSystem();
-        config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes())).getJsonObject("TEST");
-        try {
-            JunitMongoSingleton.getInstance().startServer(config);
-            LOG.info("Embeded MongoDB started");
-
-            vertx.deployVerticle(com.qaobee.hive.api.Main.class.getName(), new DeploymentOptions().setConfig(config), ar -> {
-                context.assertTrue(ar.succeeded());
-                vertx.exceptionHandler(context.exceptionHandler());
-                Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
-                injector.injectMembers(this);
-                LOG.info("About to execute : " + name.getMethodName());
-                try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        Injector injector = Guice.createInjector(new GuiceTestModule(config, vertx));
+        injector.injectMembers(this);
+        if (mongoClientCustom != null && mongoClientCustom.getDB() != null && mongoClientCustom.getDB().getDatabase("hive") != null) {
+            mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
+                if (t != null) {
+                    LOG.error(t.getMessage(), t);
+                    context.fail(t);
+                } else {
+                    LOG.info("About to execute : " + name.getMethodName());
+                    async.complete();
                 }
-                async.complete();
             });
-        } catch (IOException e) {
-            Assert.fail(e.getMessage());
-            e.printStackTrace();
         }
         async.await(TIMEOUT);
     }
 
+
     /**
-     * Clean datas.
-     *
-     * @param context the context
+     * Start memory db.
      */
-    @After
-    public void cleanDatas(TestContext context) {
-        Async async = context.async();
-        mongoClientCustom.getDB().getDatabase("hive").drop((res, t) -> {
-            if (t != null) {
-                LOG.error(t.getMessage(), t);
-            }
-            vertx.close();
-            JunitMongoSingleton.getInstance().getProcess().stop();
-            async.complete();
-        });
-        async.await(TIMEOUT * 10);
+    protected static void startMemoryDB() {
+        try {
+            JunitMongoSingleton.getInstance().startServer(config);
+            LOG.info("Embeded MongoDB started");
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Stop memory db.
+     */
+    protected static void stopMemoryDB() {
+        if(JunitMongoSingleton.getInstance().getProcess().isProcessRunning()) {
+            JunitMongoSingleton.getInstance().getProcess().stop();
+            LOG.info("Embeded MongoDB stopped");
+        } else {
+            LOG.info("Embeded MongoDB already stopped");
+        }
+    }
+
+    private static int findFreePort() throws IOException {
+        final ServerSocket server = new ServerSocket(0);
+        final int port = server.getLocalPort();
+        server.close();
+        return port;
+    }
+
+
+    private static void runWebServer(List<Future> futures, Router router, Async async, TestContext context) {
+        CompositeFuture.all(futures).setHandler(rs -> {
+            if (rs.succeeded()) {
+
+                final HttpServer server = vertx.createHttpServer();
+                server.requestHandler(router::accept);
+                String ip = "0.0.0.0";
+                SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
+                sockJSHandler.bridge(new BridgeOptions());
+                router.route("/eventbus/*").handler(sockJSHandler);
+                server.listen(port, ip);
+                LOG.info("The http server is started on : {} : {}", ip, port);
+                async.complete();
+            } else {
+                LOG.error(rs.cause().getMessage(), rs.cause());
+                context.fail(rs.cause());
+            }
+        });
+    }
+
+    private static List<Future> loadVerticles() {
+        List<Future> promises = new ArrayList<>();
+        // Loading Verticles
+        final Set<Class<?>> restModules = DeployableVerticle.VerticleLoader.scanPackage("com.qaobee.hive.verticles");
+        restModules.addAll(DeployableVerticle.VerticleLoader.scanPackage("com.qaobee.hive.verticles"));
+        restModules.forEach(restMod -> {
+            Future<String> deferred = Future.future();
+            promises.add(deferred);
+            vertx.deployVerticle(restMod.getName(), new DeploymentOptions()
+                    .setConfig(config)
+                    .setWorker(true)
+                    .setWorkerPoolSize(restMod.getAnnotation(DeployableVerticle.class).poolSize()), res -> {
+                if (res.succeeded()) {
+                    deferred.complete(res.result());
+                } else {
+                    deferred.fail(res.cause());
+                }
+            });
+        });
+        return promises;
+    }
 
     /**
      * Generate user.
      *
      * @return a user
      */
-    protected Promise<User, QaobeeException, Integer> generateUser() {
-        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+    protected Future<User> generateUser() {
+        Future<User> deferred = Future.future();
         final User user = Json.decodeValue(config.getJsonObject("junit").getJsonObject("user").copy().encode(), User.class);
         user.getAccount().setActive(true);
         user.set_id(UUID.randomUUID().toString());
-        mongo.upsert(user).done(id -> {
-            if (id == null) {
-                Assert.fail("user id is null");
+        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
+            if (id.succeeded()) {
+                user.set_id(id.result());
+                deferred.complete(user);
+            } else {
+                Assert.fail(id.cause().getMessage());
             }
-            user.set_id(id);
-            deferred.resolve(user);
-        }).fail(e -> Assert.fail("user id is null"));
-        return deferred.promise();
+        });
+        return deferred;
     }
 
     /**
@@ -270,39 +358,52 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @return the user
      */
-    protected Promise<User, QaobeeException, Integer> generateLoggedUser() {
-        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
+    protected Future<User> generateLoggedUser() {
+        Future<User> deferred = Future.future();
         User user = Json.decodeValue(config.getJsonObject("junit").getJsonObject("user").copy().encode(), User.class);
         user.set_id(UUID.randomUUID().toString());
         user.getAccount().setToken(UUID.randomUUID().toString());
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
         user.getAccount().setActive(true);
-        mongo.upsert(user).done(i -> {
-            user.set_id(i);
-            deferred.resolve(user);
-        }).fail(deferred::reject);
-        return deferred.promise();
+        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
+            if (id.succeeded()) {
+                user.set_id(id.result());
+                deferred.complete(user);
+            } else {
+                Assert.fail(id.cause().getMessage());
+            }
+        });
+        return deferred;
     }
 
     /**
      * Generate logged user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
-    protected Promise<User, QaobeeException, Integer> generateLoggedUser(String userId) {
-        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
-        mongo.getById(userId, User.class.getSimpleName()).done(u -> {
-            User user = Json.decodeValue(u.encode(), User.class);
-            user.getAccount().setToken(UUID.randomUUID().toString());
-            user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-            user.getAccount().setActive(true);
-            mongo.upsert(user).done(i -> {
-                user.set_id(i);
-                deferred.resolve(user);
-            }).fail(deferred::reject);
-        }).fail(deferred::reject);
-        return deferred.promise();
+    protected Future<User> generateLoggedUser(String userId) {
+        Future<User> deferred = Future.future();
+        mongo.getById(userId, DBCollections.USER, u -> {
+            if (u.succeeded()) {
+                User user = Json.decodeValue(u.result().encode(), User.class);
+                user.getAccount().setToken(UUID.randomUUID().toString());
+                user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                user.getAccount().setActive(true);
+                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, id -> {
+                    if (id.succeeded()) {
+                        user.set_id(userId);
+                        deferred.complete(user);
+                    } else {
+                        Assert.fail(id.cause().getMessage());
+                    }
+                });
+            } else {
+                Assert.fail(u.cause().getMessage());
+            }
+        });
+        return deferred;
     }
 
     /**
@@ -310,106 +411,38 @@ public class VertxJunitSupport implements JSDataMongoTest {
      *
      * @return the user
      */
-    protected Promise<User, QaobeeException, Integer> generateLoggedAdminUser() {
-        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
-        generateLoggedUser().done(user -> generateLoggedAdminUser(user.get_id()).done(deferred::resolve).fail(deferred::reject)).fail(deferred::reject);
-        return deferred.promise();
+    protected Future<User> generateLoggedAdminUser() {
+        Future<User> deferred = Future.future();
+        generateLoggedUser().setHandler(user -> generateLoggedAdminUser(user.result().get_id())
+                .setHandler(r -> deferred.complete(r.result())));
+        return deferred;
     }
 
     /**
      * Generate logged admin user.
      *
      * @param userId the user id
+     *
      * @return the user
      */
-    protected Promise<User, QaobeeException, Integer> generateLoggedAdminUser(String userId) {
-        Deferred<User, QaobeeException, Integer> deferred = new DeferredObject<>();
-        generateLoggedUser(userId).done(user -> {
+    protected Future<User> generateLoggedAdminUser(String userId) {
+        Future<User> deferred = Future.future();
+        generateLoggedUser(userId).setHandler(user -> {
             Habilitation habilitation = new Habilitation();
             habilitation.set_id("123456");
             habilitation.setDescription("admin Qaobee");
             habilitation.setKey(Constants.ADMIN_HABILIT);
-            user.getAccount().setHabilitations(new ArrayList<>());
-            user.getAccount().getHabilitations().add(habilitation);
-            mongo.upsert(user).done(u -> deferred.resolve(user)).fail(deferred::reject);
-        }).fail(deferred::reject);
-        return deferred.promise();
-    }
-
-    /**
-     * Sendon bus.
-     *
-     * @param address bus address
-     * @param req     request
-     * @return result string
-     */
-    protected Promise<String, Throwable, Integer> sendOnBus(final String address, final RequestWrapper req) {
-        Deferred<String, Throwable, Integer> deferred = new DeferredObject<>();
-        vertx.eventBus().send(address, Json.encode(req), new DeliveryOptions().setSendTimeout(150L), ar -> {
-            if (ar.succeeded()) {
-                if (ar.result().body() instanceof ReplyException) {
-                    try {
-                        final JsonObject error = new JsonObject(((ReplyException) ar.result().body()).getMessage());
-                        LOG.error(error.getString("code") + " : " + error.getString("message"), error);
-                    } catch (final EncodeException e) {
-                        LOG.error(((ReplyException) ar.result()).getMessage(), e);
-                        Assert.fail(e.getMessage());
-                    }
-                    deferred.resolve(((ReplyException) ar.result().body()).getMessage());
-                } else if (ar.result().body() instanceof String) {
-                    deferred.resolve((String) ar.result().body());
-                } else if (ar.result().body() instanceof JsonObject) {
-                    deferred.resolve(((JsonObject) ar.result().body()).encode());
+            user.result().getAccount().setHabilitations(new ArrayList<>());
+            user.result().getAccount().getHabilitations().add(habilitation);
+            mongo.upsert(new JsonObject(Json.encode(user.result())), DBCollections.USER, u -> {
+                if (u.succeeded()) {
+                    deferred.complete(user.result());
                 } else {
-                    Assert.fail("unparsable data : " + ar.result().body().toString());
+                    Assert.fail(u.cause().getMessage());
                 }
-            } else {
-                deferred.reject(ar.cause());
-            }
+            });
         });
-        return deferred.promise();
-    }
-
-    /**
-     * Sendon bus.
-     *
-     * @param address the address
-     * @param req     the req
-     * @param token   the token
-     * @return the string
-     */
-    protected Promise<String, Throwable, Integer> sendOnBus(String address, RequestWrapper req, String token) {
-        req.getHeaders().put("token", Collections.singletonList(token));
-        return sendOnBus(address, req);
-    }
-
-
-    /**
-     * Send on bus json object.
-     *
-     * @param address the address
-     * @param query   the query
-     * @return the json object
-     */
-    protected Promise<JsonObject, Throwable, Integer> sendOnBus(String address, JsonObject query) {
-        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        vertx.eventBus().send(address, query, new DeliveryOptions().setSendTimeout(5L), ar -> {
-            if (ar.succeeded()) {
-                if (ar.result().body() instanceof ReplyException) {
-                    if (((ReplyException) ar.result().body()).getMessage().startsWith("{")) {
-                        deferred.resolve(new JsonObject(((ReplyException) ar.result().body()).getMessage()));
-                    }
-                    Assert.fail(((ReplyException) ar.result().body()).getMessage());
-                } else if (ar.result().body() instanceof JsonObject) {
-                    deferred.resolve(((JsonObject) ar.result().body()));
-                } else {
-                    Assert.fail("unparsable data : " + ar.result().body().toString());
-                }
-            } else {
-                deferred.reject(ar.cause());
-            }
-        });
-        return deferred.promise();
+        return deferred;
     }
 
     /**
@@ -485,35 +518,38 @@ public class VertxJunitSupport implements JSDataMongoTest {
     /**
      * Commons function for return a country JsonObject
      *
-     * @param id   the id
-     * @param user the user
-     * @return activity activity
+     * @param id the id
+     *
+     * @return the activity
      */
-    protected Promise<JsonObject, Throwable, Integer> getActivity(String id, User user) {
-        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constants.GET);
-        req.getParams().put(ActivityVerticle.PARAM_ID, Collections.singletonList(id));
-        sendOnBus(ActivityVerticle.GET, req, user.getAccount().getToken()).done(res -> deferred.resolve(new JsonObject(res))).fail(deferred::reject);
-        return deferred.promise();
+    protected Future<JsonObject> getActivity(String id) {
+        Future<JsonObject> d = Future.future();
+        activityService.getActivity(id, ar -> {
+            if (ar.succeeded()) {
+                d.complete(ar.result());
+            } else {
+                Assert.fail(ar.cause().getMessage());
+            }
+        });
+        return d;
     }
 
     /**
      * Commons function for return a country JsonObject
      *
      * @param id the id
-     * @return country country
+     *
+     * @return the country
      */
-    protected Promise<JsonObject, Throwable, Integer> getCountry(String id) {
-        Deferred<JsonObject, Throwable, Integer> deferred = new DeferredObject<>();
-        final RequestWrapper req = new RequestWrapper();
-        req.setLocale(LOCALE);
-        req.setMethod(Constants.GET);
-        req.getParams().put(CountryVerticle.PARAM_ID, Collections.singletonList(id));
-        sendOnBus(CountryVerticle.GET, req).done(res -> deferred.resolve(new JsonObject(res))).fail(deferred::reject);
-        return deferred.promise();
+    protected Future<JsonObject> getCountry(String id) {
+        Future<JsonObject> d = Future.future();
+        countryService.getCountry(id, ar -> {
+            if (ar.succeeded()) {
+                d.complete(ar.result());
+            } else {
+                Assert.fail(ar.cause().getMessage());
+            }
+        });
+        return d;
     }
-
-
 }

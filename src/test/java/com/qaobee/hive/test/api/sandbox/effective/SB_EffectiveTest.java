@@ -17,25 +17,25 @@
  */
 package com.qaobee.hive.test.api.sandbox.effective;
 
-import com.qaobee.hive.api.v1.sandbox.effective.SB_EffectiveVerticle;
+import com.qaobee.hive.api.v1.sandbox.effective.SB_EffectiveRoute;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.test.config.VertxJunitSupport;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 /**
- * The type Effective test.
+ * The type Effective testBodyParams.
  *
  * @author cke
  */
 public class SB_EffectiveTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL("/sandbox/effective/effective");
     /**
      * Gets list members by category.
      */
@@ -43,17 +43,17 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void getListMembersByCategory(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             String id = "558b0efebd2e39cdab651e1f";
-            given().header(TOKEN, user.getAccount().getToken())
-                    .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, id)
-                    .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "sen")
-                    .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_EffectiveRoute.PARAM_SANDBOX_ID, id)
+                    .queryParam(SB_EffectiveRoute.PARAM_CATEGORY_AGE_CODE, "sen")
+                    .when().get(BASE_URL + "/getList")
                     .then().assertThat().statusCode(200)
                     .body("", hasSize(1))
                     .body("[0].members", hasSize(16));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -64,16 +64,16 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void getListMembersByUnknowCategory(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").done(user -> {
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             String id = "558b0efebd2e39cdab651e1f";
-            given().header(TOKEN, user.getAccount().getToken())
-                    .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, id)
-                    .queryParam(SB_EffectiveVerticle.PARAM_CATEGORY_AGE_CODE, "zzz")
-                    .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_EffectiveRoute.PARAM_SANDBOX_ID, id)
+                    .queryParam(SB_EffectiveRoute.PARAM_CATEGORY_AGE_CODE, "zzz")
+                    .when().get(BASE_URL + "/getList")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -82,7 +82,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void getListMembersByCategoryWithNonLoggedUser() {
-        given().when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+        given().when().get(BASE_URL + "/getList")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -92,7 +92,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void getListMembersByCategoryWithWrongHttpMethod() {
-        given().when().post(getURL(SB_EffectiveVerticle.GET_LIST))
+        given().when().post(BASE_URL + "/getList")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -103,13 +103,13 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     @Test
     public void getListMembersByCategoryWithMissingParameters(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().done(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
-                    .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .when().get(BASE_URL + "/getList")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -120,14 +120,14 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void getListMembersByCategoryWithWrongParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser().done(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
-                    .queryParam(SB_EffectiveVerticle.PARAM_SANDBOX_ID, "bla")
-                    .when().get(getURL(SB_EffectiveVerticle.GET_LIST))
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_EffectiveRoute.PARAM_SANDBOX_ID, "bla")
+                    .when().get(BASE_URL + "/getList")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -138,16 +138,16 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void getEffective(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             String id = "550b31f925da07681592db23";
-            given().header(TOKEN, user.getAccount().getToken())
-                    .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
-                    .when().get(getURL(SB_EffectiveVerticle.GET))
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_EffectiveRoute.PARAM_ID, id)
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
                     .body("_id", is(id))
                     .body("members", hasSize(16));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -156,7 +156,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void getEffectiveWithNonLoggedUser() {
-        given().when().get(getURL(SB_EffectiveVerticle.GET))
+        given().when().get(BASE_URL + "/get")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -166,7 +166,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void getEffectiveWithWrongHttpMethod() {
-        given().when().post(getURL(SB_EffectiveVerticle.GET))
+        given().when().post(BASE_URL + "/get")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -177,13 +177,13 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     @Test
     public void getEffectiveWithMissingParameters(TestContext context) {
         Async async = context.async();
-        generateLoggedUser().done(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
-                    .when().get(getURL(SB_EffectiveVerticle.GET))
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -194,14 +194,14 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void getEffectiveWithWrongParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser().done(user -> {
-            given().header(TOKEN, user.getAccount().getToken())
-                    .queryParam(SB_EffectiveVerticle.PARAM_ID, "bla")
-                    .when().get(getURL(SB_EffectiveVerticle.GET))
+        generateLoggedUser().setHandler(user -> {
+            given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_EffectiveRoute.PARAM_ID, "bla")
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(ExceptionCodes.DATA_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.DATA_ERROR.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -212,16 +212,16 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void addEffective(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             JsonObject effective = generateEffective();
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(effective.encode())
-                    .when().post(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
+                    .when().post(BASE_URL + "/add")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("members", hasSize(effective.getJsonArray("members").size()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -230,7 +230,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void addEffectiveWithNonLoggedUser() {
-        given().when().post(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
+        given().when().post(BASE_URL + "/add")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -240,7 +240,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void addEffectiveWithWrongHttpMethod() {
-        given().when().get(getURL(SB_EffectiveVerticle.ADD_EFFECTIVE))
+        given().when().get(BASE_URL + "/add")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -252,11 +252,11 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void updateEffectiveRemoveOneMember(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             String id = "550b31f925da07681592db23";
-            JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
-                    .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
-                    .when().get(getURL(SB_EffectiveVerticle.GET))
+            JsonObject effective = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_EffectiveRoute.PARAM_ID, id)
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
                     .body("_id", is(id))
                     .body("members", hasSize(16)).extract().asString());
@@ -268,14 +268,14 @@ public class SB_EffectiveTest extends VertxJunitSupport {
                 }
             }
             effective.put("members", newMembers);
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(effective.encode())
-                    .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                    .when().put(BASE_URL + "/update")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("members", hasSize(15));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -286,29 +286,29 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void updateEffectiveAddOneMember(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             String id = "550b31f925da07681592db23";
-            JsonObject effective = new JsonObject(given().header(TOKEN, user.getAccount().getToken())
-                    .queryParam(SB_EffectiveVerticle.PARAM_ID, id)
-                    .when().get(getURL(SB_EffectiveVerticle.GET))
+            JsonObject effective = new JsonObject(given().header(TOKEN, user.result().getAccount().getToken())
+                    .queryParam(SB_EffectiveRoute.PARAM_ID, id)
+                    .when().get(BASE_URL + "/get")
                     .then().assertThat().statusCode(200)
                     .body("_id", is(id))
                     .body("members", hasSize(16)).extract().asString());
 
             effective.getJsonArray("members").add(new JsonObject()
-                    .put("_id", "test")
+                    .put("_id", "testBodyParams")
                     .put("role", new JsonObject()
                             .put("code", "player")
                             .put("label", "Joueur"))
             );
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(effective.encode())
-                    .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                    .when().put(BASE_URL + "/update")
                     .then().assertThat().statusCode(200)
                     .body("_id", notNullValue())
                     .body("members", hasSize(17));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -317,7 +317,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void updateEffectiveWithNonLoggedUser() {
-        given().when().put(getURL(SB_EffectiveVerticle.UPDATE))
+        given().when().put(BASE_URL + "/update")
                 .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
                 .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
     }
@@ -327,7 +327,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
      */
     @Test
     public void updateEffectiveWithWrongHttpMethod() {
-        given().when().get(getURL(SB_EffectiveVerticle.UPDATE))
+        given().when().get(BASE_URL + "/update")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -339,15 +339,15 @@ public class SB_EffectiveTest extends VertxJunitSupport {
     public void updateEffectiveWithMissingParameters(TestContext context) {
         Async async = context.async();
         populate(POPULATE_ONLY, DATA_SANDBOXES_HAND);
-        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").then(user -> {
+        generateLoggedUser("5509ef1fdb8f8b6e2f51f4ce").setHandler(user -> {
             JsonObject effective = generateEffective();
-            given().header(TOKEN, user.getAccount().getToken())
+            given().header(TOKEN, user.result().getAccount().getToken())
                     .body(effective.encode())
-                    .when().put(getURL(SB_EffectiveVerticle.UPDATE))
+                    .when().put(BASE_URL + "/update")
                     .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
                     .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
             async.complete();
-        }).fail(e -> Assert.fail(e.getMessage()));
+        });
         async.await(TIMEOUT);
     }
 
@@ -365,7 +365,7 @@ public class SB_EffectiveTest extends VertxJunitSupport {
         JsonArray members = new JsonArray();
         for (int i = 0; i < 10; i++) {
             members.add(new JsonObject()
-                    .put("_id", i + "-test")
+                    .put("_id", i + "-testBodyParams")
                     .put("role", new JsonObject()
                             .put("code", "player")
                             .put("label", "Joueur"))

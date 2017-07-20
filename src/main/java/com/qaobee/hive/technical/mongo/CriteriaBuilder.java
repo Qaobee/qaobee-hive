@@ -67,8 +67,8 @@ public class CriteriaBuilder {
      *
      * @return a criteria map
      */
-    public Map<String, Object> get() {
-        return map;
+    public JsonObject get() {
+        return new JsonObject(map);
     }
 
     /**
@@ -76,7 +76,7 @@ public class CriteriaBuilder {
      *
      * @param floor key of the min
      * @param ceil  key of the max
-     * @param value value to test
+     * @param value value to testBodyParams
      * @return a criteria
      */
     public CriteriaBuilder between(final String floor, final String ceil, long value) {

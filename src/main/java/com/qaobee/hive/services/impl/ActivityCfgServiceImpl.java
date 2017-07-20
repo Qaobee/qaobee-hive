@@ -21,13 +21,14 @@ package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.api.v1.commons.settings.ActivityCfgRoute;
 import com.qaobee.hive.services.ActivityCfgService;
+import com.qaobee.hive.services.MongoDB;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
-import com.qaobee.hive.technical.exceptions.QaobeeSvcException;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.mongo.CriteriaBuilder;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.utils.guice.MongoClientCustom;
+import com.qaobee.hive.technical.mongo.CriteriaOption;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -38,7 +39,7 @@ import io.vertx.core.json.JsonObject;
 import javax.inject.Inject;
 
 
-@ProxyService(address = ActivityCfgService.ADDRESS, iface = ActivityCfgService.class)
+@ProxyService(address = "vertx.ActivityCfg.service", iface = ActivityCfgService.class)
 public class ActivityCfgServiceImpl implements ActivityCfgService {
 
     @Inject
@@ -46,11 +47,8 @@ public class ActivityCfgServiceImpl implements ActivityCfgService {
     @Inject
     private MongoDB mongoDB;
 
-    private Vertx vertx;
-
-    public ActivityCfgServiceImpl(Vertx vertx) {
+    public ActivityCfgServiceImpl(Vertx vertx) { // NOSONAR
         super();
-        this.vertx = vertx;
     }
 
     /**
@@ -83,12 +81,12 @@ public class ActivityCfgServiceImpl implements ActivityCfgService {
             if (res.succeeded()) {
                 JsonArray resultJSon = res.result().getJsonArray("result");
                 if (resultJSon.size() != 1 || !resultJSon.getJsonObject(0).containsKey(paramField)) {
-                    resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")")));
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "Field to retrieve is unknown : '" + paramField + "' (" + activityId + "/" + countryId + "/" + dateRef + ")")));
                 } else {
                     resultHandler.handle(Future.succeededFuture(resultJSon));
                 }
             } else {
-                resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, res.cause())));
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, res.cause())));
             }
         });
     }
@@ -108,14 +106,16 @@ public class ActivityCfgServiceImpl implements ActivityCfgService {
                 .add(ActivityCfgRoute.PARAM_COUNTRY_ID, countryId)
                 .between("startDate", "endDate", dateRef);
         // Call to mongo
-        mongoDB.findByCriterias(criterias.get(), null, null, -1, -1, DBCollections.ACTIVITY_CFG)
-                .done(res -> {
-                    if(res.size()>0) {
-                        resultHandler.handle(Future.succeededFuture(res.getJsonObject(0)));
-                    } else {
-                        resultHandler.handle(Future.failedFuture(new QaobeeSvcException(ExceptionCodes.DATA_ERROR, "no data found")));
-                    }
-                })
-                .fail(e-> resultHandler.handle(Future.failedFuture(e)));
+        mongoDB.findByCriterias(criterias.get(), new CriteriaOption(), DBCollections.ACTIVITY_CFG, res -> {
+            if (res.succeeded()) {
+                if (res.result().size() > 0) {
+                    resultHandler.handle(Future.succeededFuture(res.result().getJsonObject(0)));
+                } else {
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found")));
+                }
+            } else {
+                resultHandler.handle(Future.failedFuture(res.cause()));
+            }
+        });
     }
 }

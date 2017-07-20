@@ -26,10 +26,12 @@
         </encoder>
     </appender>
 
-    <logger name="com.qaobee" level="ALL"/>
+    <logger name="com.qaobee" level="INFO"/>
+    <logger name="io.vertx" level="WARN"/>
     <logger name="org.mockserver" level="WARN"/>
     <logger name="org.reflections.Reflections" level="WARN"/>
     <logger name="io.netty" level="WARN"/>
+    <logger name="ch.qos.logback" level="WARN"/>
     <logger name="org.mongodb.driver" level="WARN"/>
     <root level="ALL">
         <appender-ref ref="STDOUT"/>

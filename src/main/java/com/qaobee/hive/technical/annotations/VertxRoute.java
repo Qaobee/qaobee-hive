@@ -68,7 +68,7 @@ public @interface VertxRoute {
                 try {
                     if (Route.class.isAssignableFrom(rit)) {
                         Route r = (Route) rit.getConstructor().newInstance();
-                        LOG.info("Getting route : " + rit.getCanonicalName());
+                        LOG.debug("Getting route : " + rit.getCanonicalName());
                         routers.put(rit.getAnnotation(VertxRoute.class), r);
                     }
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException

@@ -24,17 +24,11 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.qaobee.hive.dao.*;
 import com.qaobee.hive.dao.impl.*;
-import com.qaobee.hive.services.ActivityCfgService;
-import com.qaobee.hive.services.AssetsService;
-import com.qaobee.hive.technical.mongo.MongoDB;
-import com.qaobee.hive.technical.mongo.impl.MongoDBImpl;
-import com.qaobee.hive.technical.utils.HabilitUtils;
-import com.qaobee.hive.technical.utils.MailUtils;
-import com.qaobee.hive.technical.utils.QaobeeAuthHandler;
-import com.qaobee.hive.technical.utils.Utils;
-import com.qaobee.hive.technical.utils.impl.HabilitUtilsImpl;
-import com.qaobee.hive.technical.utils.impl.MailUtilsImpl;
-import com.qaobee.hive.technical.utils.impl.UtilsImpl;
+import com.qaobee.hive.technical.annotations.ProxyService;
+import com.qaobee.hive.technical.utils.MongoClientCustom;
+import com.qaobee.hive.technical.vertx.QaobeeAuthHandler;
+import com.qaobee.hive.technical.vertx.MandatoryHandler;
+import com.qaobee.hive.technical.vertx.RoleHandler;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
@@ -46,13 +40,18 @@ import io.vertx.ext.mail.MailConfig;
 import io.vertx.ext.mail.StartTLSOptions;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.handler.AuthHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Locale;
 
 /**
  * The type Guice module.
  */
 public class GuiceModule extends AbstractModule {
+    private static final Logger LOG = LoggerFactory.getLogger(GuiceModule.class);
     private static final String MAIL_CONF_KEY = "mailer.mod";
     private final JsonObject config;
     private final Vertx vertx;
@@ -63,7 +62,7 @@ public class GuiceModule extends AbstractModule {
      * @param config the config
      * @param vertx  the vertx
      */
-    GuiceModule(JsonObject config, Vertx vertx) {
+    public GuiceModule(JsonObject config, Vertx vertx) {
         this.config = config;
         this.vertx = vertx;
     }
@@ -76,7 +75,6 @@ public class GuiceModule extends AbstractModule {
         config.getMap().keySet().forEach(k -> bind(JsonObject.class).annotatedWith(Names.named(k)).toInstance(config.getJsonObject(k)));
         bind(Vertx.class).toInstance(vertx);
         // TECHNICAL MODULES
-        bind(MongoDB.class).to(MongoDBImpl.class).in(Singleton.class);
         bind(WebClient.class).toInstance(WebClient.create(vertx));
         bind(AuthHandler.class).toInstance(new QaobeeAuthHandler());
         MailConfig mailConfig = new MailConfig();
@@ -91,14 +89,19 @@ public class GuiceModule extends AbstractModule {
         }
 
 
+        bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
+        bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
+        bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
         bind(MailClient.class).toInstance(MailClient.createShared(vertx, mailConfig, "qaobeeMail"));
         bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
-        bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(HabilitUtils.class).to(HabilitUtilsImpl.class).in(Singleton.class);
         bind(Utils.class).to(UtilsImpl.class).in(Singleton.class);
 
-        //
+        bind(MandatoryHandler.class).toInstance(new MandatoryHandler());
+        bind(RoleHandler.class).toInstance(new RoleHandler());
+
+        // Templates
         Configuration cfgMails = new Configuration(new Version("2.3.23"));
         cfgMails.setClassForTemplateLoading(this.getClass(), "/mailTemplates");
         cfgMails.setIncompatibleImprovements(new Version(2, 3, 20));
@@ -109,35 +112,16 @@ public class GuiceModule extends AbstractModule {
         cfgPDF.setClassForTemplateLoading(this.getClass(), "/pdfTemplates");
         bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
 
-        // DAO
-        bind(ActivityDAO.class).to(ActivityDAOImpl.class).in(Singleton.class);
-        bind(ShareDAO.class).to(ShareDAOImpl.class).in(Singleton.class);
-        bind(NotificationsDAO.class).to(NotificationsDAOImpl.class).in(Singleton.class);
-        bind(ChampionshipDAO.class).to(ChampionshipDAOImpl.class).in(Singleton.class);
-        bind(StructureDAO.class).to(StructureDAOImpl.class).in(Singleton.class);
-        bind(EventDAO.class).to(EventDAOImpl.class).in(Singleton.class);
-        bind(CollectDAO.class).to(CollectDAOImpl.class).in(Singleton.class);
-        bind(CountryDAO.class).to(CountryDAOImpl.class).in(Singleton.class);
-        bind(IndicatorDAO.class).to(IndicatorDAOImpl.class).in(Singleton.class);
-        bind(SeasonDAO.class).to(SeasonDAOImpl.class).in(Singleton.class);
-        bind(UserDAO.class).to(UserDAOImpl.class).in(Singleton.class);
-        bind(ShippingDAO.class).to(ShippingDAOImpl.class).in(Singleton.class);
-        bind(SignupDAO.class).to(SignupDAOImpl.class).in(Singleton.class);
-        bind(SandBoxDAO.class).to(SandBoxDAOImpl.class).in(Singleton.class);
-        bind(SecurityDAO.class).to(SecurityDAOImpl.class).in(Singleton.class);
-        bind(FeedbackDAO.class).to(FeedbackDAOImpl.class).in(Singleton.class);
-        bind(FeedbackDAO.class).to(FeedbackDAOImpl.class).in(Singleton.class);
-        bind(EffectiveDAO.class).to(EffectiveDAOImpl.class).in(Singleton.class);
-        bind(PersonDAO.class).to(PersonDAOImpl.class).in(Singleton.class);
-        bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
-        bind(TeamDAO.class).to(TeamDAOImpl.class).in(Singleton.class);
-        bind(StatisticsDAO.class).to(StatisticsDAOImpl.class).in(Singleton.class);
-        bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
-        bind(CRMDao.class).to(CRMDaoImpl.class).in(Singleton.class);
-
         // Services
-        bind(AssetsService.class).toInstance(AssetsService.createProxy(vertx, AssetsService.ADDRESS));
-        bind(ActivityCfgService.class).toInstance(ActivityCfgService.createProxy(vertx, ActivityCfgService.ADDRESS));
-
+        ProxyService.Loader.scan("com.qaobee.hive.services").forEach(c -> {
+            LOG.debug(String.format("Binding %s with address %s", c.getCanonicalName(), c.getAnnotation(ProxyService.class).address()));
+            Class iface = c.getAnnotation(ProxyService.class).iface();
+            try {
+                Method method = iface.getMethod("createProxy", new Class<?>[]{Vertx.class, String.class});
+                bind(iface).toInstance(method.invoke(null, new Object[]{vertx, c.getAnnotation(ProxyService.class).address()}));
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        });
     }
 }

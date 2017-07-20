@@ -1,5 +1,7 @@
 package com.qaobee.hive.technical.utils.guice;
 
+import com.qaobee.hive.technical.utils.MongoClientCustom;
+import com.qaobee.hive.technical.utils.impl.MongoClientCustomImpl;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 

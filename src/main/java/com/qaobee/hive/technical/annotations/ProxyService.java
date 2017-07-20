@@ -49,19 +49,23 @@ public @interface ProxyService {
          * @param vertx       the vertx
          */
         public static void load(String packageName, Injector injector, Vertx vertx) {
-            Reflections reflections = new Reflections(packageName);
-            Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(ProxyService.class);
-            for (Class<?> rit : annotated) {
+            for (Class<?> rit : scan(packageName)) {
                 try {
                     Object r = rit.getConstructor(Vertx.class).newInstance(vertx);
-                    LOG.info("Getting service : " + rit.getCanonicalName() + " -> " + r.getClass().getAnnotation(ProxyService.class).address());
+                    LOG.debug("Getting service : " + rit.getCanonicalName() + " -> " + r.getClass().getAnnotation(ProxyService.class).address());
                     injector.injectMembers(r);
-                    ProxyHelper.registerService(r.getClass().getAnnotation(ProxyService.class).iface(), vertx, r, r.getClass().getAnnotation(ProxyService.class).address());
+                    ProxyHelper.registerService(r.getClass().getAnnotation(ProxyService.class).iface(),
+                            vertx, r, r.getClass().getAnnotation(ProxyService.class).address(), true, 5);
                 } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
                         | InvocationTargetException e) {
                     LOG.error(e.getMessage(), e);
                 }
             }
+        }
+
+        public static Set<Class<?>> scan(String packageName) {
+            Reflections reflections = new Reflections(packageName);
+            return reflections.getTypesAnnotatedWith(ProxyService.class);
         }
 
     }

@@ -10,6 +10,8 @@ import io.vertx.ext.auth.AuthProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 public class QaobeeUser extends AbstractUser {
     private static final Logger LOG = LoggerFactory.getLogger(QaobeeUser.class);
     private JsonObject principal;
@@ -43,8 +45,17 @@ public class QaobeeUser extends AbstractUser {
 
     private void doHasRole(String role, Handler<AsyncResult<Boolean>> resultHandler) {
         try {
-            JsonArray roles = principal.getJsonObject("account").getJsonArray("habilitations", new JsonArray());
-            resultHandler.handle(Future.succeededFuture(roles.contains(role)));
+            Optional<JsonArray> roles = Optional.ofNullable(principal.getJsonObject("account").getJsonArray("habilitations", new JsonArray()));
+            final boolean[] found = {false};
+            roles.orElseGet(JsonArray::new).forEach(r-> {
+                if(((JsonObject)r).getString("key").equals(role)) {
+                    resultHandler.handle(Future.succeededFuture(true));
+                    found[0] = true;
+                }
+            });
+            if(!found[0]) {
+                resultHandler.handle(Future.succeededFuture(false));
+            }
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             resultHandler.handle(Future.failedFuture(e));
