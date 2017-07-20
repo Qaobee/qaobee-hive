@@ -300,7 +300,7 @@ public class ShippingServiceImpl implements ShippingService {
 
     @Override
     public void pay(JsonObject u, JsonObject paymentData, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
-        Stripe.apiKey = stripe.getString("api_secret");
+        Stripe.apiKey = stripe.getString("api_secret"); // NOSONAR
         try {
             User user = Json.decodeValue(u.encode(), User.class);
             utils.testMandatoryParams(paymentData, PLANID_FIELD);

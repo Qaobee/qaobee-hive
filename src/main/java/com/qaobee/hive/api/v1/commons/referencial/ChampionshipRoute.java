@@ -26,8 +26,6 @@ import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -38,7 +36,6 @@ import static com.qaobee.hive.technical.constantes.Constants.ADMIN_HABILIT;
  */
 @VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/referencial/championship")
 public class ChampionshipRoute extends AbstractRoute {
-    private static final Logger LOG = LoggerFactory.getLogger(ChampionshipRoute.class);
     /**
      * Championship ID
      */
