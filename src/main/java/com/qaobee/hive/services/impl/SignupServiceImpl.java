@@ -137,14 +137,14 @@ public class SignupServiceImpl implements SignupService {
         userService.checkUserInformations(userJson, locale, ar -> {
             if (ar.succeeded()) {
                 // check if email is correct
-                chaeckMail(user, userJson, locale, resultHandler);
+                checkMail(user, userJson, locale, resultHandler);
             } else {
                 resultHandler.handle(Future.failedFuture(ar.cause()));
             }
         });
     }
 
-    private void chaeckMail(User user, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void checkMail(User user, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         userService.testEmail(user.getContact().getEmail(), locale, ar2 -> {
             if (ar2.succeeded()) {
                 userService.existingLogin(user.getAccount().getLogin(), r -> {
@@ -446,7 +446,7 @@ public class SignupServiceImpl implements SignupService {
             Future<Void> d = Future.future();
             activityService.getActivity(plan.getActivity().get_id(), a -> {
                 if (a.succeeded()) {
-                    com.qaobee.hive.business.model.commons.settings.Activity activity = Json.decodeValue(a.result().encode(), com.qaobee.hive.business.model.commons.settings.Activity.class);
+                    Activity activity = Json.decodeValue(a.result().encode(), Activity.class);
                     plan.setActivity(activity);
                     d.complete();
                 } else {

@@ -12,8 +12,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 public class Main {
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+    private static final String MONGO_CONF_KEY = "mongo.db";
 
     private Main() {
         // empty
@@ -42,6 +45,13 @@ public class Main {
         }
         LOG.info("Running with env : {}", env);
         JsonObject config = new JsonObject(new String(fs.readFileBlocking("config.json").getBytes())).getJsonObject(env);
+        if (org.apache.commons.lang.StringUtils.isNotBlank(System.getenv("OPENSHIFT_MONGODB_DB_HOST"))) {
+            config.getJsonObject(MONGO_CONF_KEY).put("host", System.getenv("OPENSHIFT_MONGODB_DB_HOST"));
+            config.getJsonObject(MONGO_CONF_KEY).put("port", Integer.parseInt(Optional.ofNullable(System.getenv("OPENSHIFT_MONGODB_DB_PORT")).orElse("27017")));
+            config.getJsonObject(MONGO_CONF_KEY).put("password", Optional.ofNullable(System.getenv("OPENSHIFT_MONGODB_DB_PASSWORD")).orElse(""));
+            config.getJsonObject(MONGO_CONF_KEY).put("username", Optional.ofNullable(System.getenv("OPENSHIFT_MONGODB_DB_USERNAME")).orElse(""));
+        }
+        LOG.debug(config.encodePrettily());
         vertx.deployVerticle(CoordinatorVerticle.class.getName(), new DeploymentOptions().setConfig(config));
-    }
+  }
 }

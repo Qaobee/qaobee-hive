@@ -268,7 +268,7 @@ public class UserServiceImpl implements UserService {
     public void getUserByLogin(String login, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         // Creation of request
         JsonObject criterias = new JsonObject().put("account.login", login.toLowerCase());
-        mongo.findByCriterias(criterias, new CriteriaOption(), DBCollections.USER, jsonArray -> {
+        mongo.findByCriterias(criterias, new CriteriaOption().withLimit(1), DBCollections.USER, jsonArray -> {
             if (jsonArray.succeeded()) {
                 if (jsonArray.result().size() == 0) {
                     resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, Messages.getString("login.wronglogin", locale))));

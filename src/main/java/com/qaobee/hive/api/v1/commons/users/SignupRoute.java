@@ -159,7 +159,7 @@ public class SignupRoute extends AbstractRoute {
                         signupService.sendRegisterMail(u.result(), getLocale(context), r -> {
                             if (r.succeeded()) {
                                 JsonObject notification = new JsonObject()
-                                        .put("content", Messages.getString("notification.first.connection.content", String.valueOf(runtime.getInteger("trial.duration")), getLocale(context)))
+                                        .put("content", Messages.getString("notification.first.connection.content", getLocale(context), String.valueOf(runtime.getInteger("trial.duration"))))
                                         .put("title", Messages.getString("notification.first.connection.title", getLocale(context)))
                                         .put("senderId", runtime.getString("admin.id")
                                         );

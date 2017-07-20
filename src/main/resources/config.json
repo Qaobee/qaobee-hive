@@ -48,7 +48,8 @@
       "host": "localhost",
       "port": 27017,
       "maxPoolSize": 2,
-      "keepAlive": true
+      "keepAlive": true,
+      "db_name" : "hive"
     },
     "mailchimp": {
       "env": "DEV",

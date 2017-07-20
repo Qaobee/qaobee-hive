@@ -26,7 +26,6 @@ import com.qaobee.hive.technical.exceptions.QaobeeException;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,12 +58,6 @@ public class AbstractGuiceVerticle extends AbstractVerticle {
      * @return the abstract guice verticle
      */
     public AbstractGuiceVerticle inject(AbstractGuiceVerticle clazz) {
-        if (StringUtils.isNotBlank(System.getenv("OPENSHIFT_MONGODB_DB_HOST"))) {
-            config().getJsonObject(MONGO_CONF_KEY).put("host", System.getenv("OPENSHIFT_MONGODB_DB_HOST"));
-            config().getJsonObject(MONGO_CONF_KEY).put("port", Integer.parseInt(System.getenv("OPENSHIFT_MONGODB_DB_PORT")));
-            config().getJsonObject(MONGO_CONF_KEY).put("password", System.getenv("OPENSHIFT_MONGODB_DB_PASSWORD"));
-            config().getJsonObject(MONGO_CONF_KEY).put("username", System.getenv("OPENSHIFT_MONGODB_DB_USERNAME"));
-        }
         injector = Guice.createInjector(new GuiceModule(this.config(), vertx));
         injector.injectMembers(this);
         LOG.debug(clazz.getClass().getName() + " started");
