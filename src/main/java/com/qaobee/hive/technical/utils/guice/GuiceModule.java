@@ -113,7 +113,7 @@ public class GuiceModule extends AbstractModule {
         bind(TemplatesDAO.class).toInstance(new TemplatesDAOImpl(cfgMails, cfgPDF));
 
         // Services
-        ProxyService.Loader.scan("com.qaobee.hive.services").forEach(c -> {
+        ProxyService.Loader.scan("com.qaobee.hive.services.impl").forEach(c -> {
             LOG.debug(String.format("Binding %s with address %s", c.getCanonicalName(), c.getAnnotation(ProxyService.class).address()));
             Class iface = c.getAnnotation(ProxyService.class).iface();
             try {
