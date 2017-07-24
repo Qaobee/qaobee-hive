@@ -50,7 +50,6 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
-import org.apache.http.HttpHeaders;
 import org.junit.*;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
@@ -81,7 +80,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
     /**
      * The constant LOCALE.
      */
-    private static final String LOCALE = "fr_FR";
+    private static final String LOCALE = "fr,en-US;q=0.8,en;q=0.6";
     /**
      * The constant CODE.
      */
@@ -148,11 +147,20 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Gets base url.
      *
      * @param s the s
-     *
      * @return the base url
      */
     protected static String getBaseURL(String s) {
-        return getRootURL() + "/api/" + Module.VERSION + s;
+        return getRootURL() + "/api/" + Module.V1 + s;
+    }
+
+    /**
+     * Gets base url v2.
+     *
+     * @param s the s
+     * @return the base url v 2
+     */
+    protected static String getBaseURL_v2(String s) {
+        return getRootURL() + "/api/" + Module.V2 + s;
     }
 
     /**
@@ -167,7 +175,7 @@ public class VertxJunitSupport implements JSDataMongoTest {
             port = findFreePort();
             RestAssured.defaultParser = Parser.JSON;
             RestAssured.requestSpecification = new RequestSpecBuilder()
-                    .addHeader(HttpHeaders.ACCEPT_LANGUAGE, LOCALE)
+                    .addHeader("Accept-Language", LOCALE)
                     .addHeader("X-qaobee-stack", "true")
                     .build();
             RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
@@ -380,7 +388,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged user.
      *
      * @param userId the user id
-     *
      * @return the user
      */
     protected Future<User> generateLoggedUser(String userId) {
@@ -422,7 +429,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Generate logged admin user.
      *
      * @param userId the user id
-     *
      * @return the user
      */
     protected Future<User> generateLoggedAdminUser(String userId) {
@@ -519,7 +525,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
-     *
      * @return the activity
      */
     protected Future<JsonObject> getActivity(String id) {
@@ -538,7 +543,6 @@ public class VertxJunitSupport implements JSDataMongoTest {
      * Commons function for return a country JsonObject
      *
      * @param id the id
-     *
      * @return the country
      */
     protected Future<JsonObject> getCountry(String id) {

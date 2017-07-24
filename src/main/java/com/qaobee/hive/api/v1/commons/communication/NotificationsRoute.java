@@ -37,7 +37,7 @@ import javax.inject.Inject;
 /**
  * The type Notifications route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/communication/notifications")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/communication/notifications")
 public class NotificationsRoute extends AbstractRoute {
     private static final Logger LOG = LoggerFactory.getLogger(NotificationsRoute.class);
     /**

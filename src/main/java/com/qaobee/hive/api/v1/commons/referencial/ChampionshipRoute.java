@@ -34,7 +34,7 @@ import static com.qaobee.hive.technical.constantes.Constants.ADMIN_HABILIT;
 /**
  * The type Championship route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/referencial/championship")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/referencial/championship")
 public class ChampionshipRoute extends AbstractRoute {
     /**
      * Championship ID

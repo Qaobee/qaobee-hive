@@ -32,7 +32,7 @@ import javax.inject.Inject;
 /**
  * The type Country route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/country")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/settings/country")
 public class CountryRoute extends AbstractRoute {
     /**
      * Id of the structure

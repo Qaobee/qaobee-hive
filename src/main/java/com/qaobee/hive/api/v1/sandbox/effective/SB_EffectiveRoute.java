@@ -33,7 +33,7 @@ import javax.inject.Inject;
 /**
  * The type Effective verticle.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/effective/effective")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/sandbox/effective/effective")
 public class SB_EffectiveRoute extends AbstractRoute {// NOSONAR
     /**
      * The constant PARAM_ID.

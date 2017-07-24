@@ -34,7 +34,7 @@ import javax.inject.Inject;
  *
  * @author Nada Vujanic-Maquin<br>         <br>         <strong>Description de la classe:</strong>         <ul>         <li>resthandler.api.1.commons.referencial.structure.add : Add a structure</li>         <li>resthandler.api.1.commons.referencial.structure.get : fetch a structure</li>         <li>resthandler.api.1.commons.referencial.structure.update : update structure</li>         </ul>
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/referencial/structure")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/referencial/structure")
 public class StructureRoute extends AbstractRoute {
     /**
      * Id of the structure

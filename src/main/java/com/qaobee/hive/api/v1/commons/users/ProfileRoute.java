@@ -45,7 +45,7 @@ import javax.inject.Inject;
 /**
  * The type Profile route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/users/profile")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/users/profile")
 public class ProfileRoute extends AbstractRoute {
     private static final Logger LOG = LoggerFactory.getLogger(ProfileRoute.class);
     @Inject

@@ -39,7 +39,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * The type Feedback route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/feedback")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/feedback")
 public class FeedbackRoute extends AbstractRoute {
 
     private static final Logger LOG = LoggerFactory.getLogger(FeedbackRoute.class);

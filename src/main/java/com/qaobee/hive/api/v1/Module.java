@@ -24,9 +24,10 @@ package com.qaobee.hive.api.v1;
  */
 public class Module {
     /**
-     * The constant VERSION.
+     * The constant V1.
      */
-    public static final String VERSION = "1";
+    public static final String V1 = "1";
+    public static final String V2 = "2";
 
     // $COVERAGE-IGNORE$
     private Module() {

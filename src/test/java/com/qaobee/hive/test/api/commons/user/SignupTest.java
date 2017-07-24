@@ -35,7 +35,7 @@ import static org.hamcrest.Matchers.notNullValue;
  * @author jerome
  */
 public class SignupTest extends VertxJunitSupport {
-    private static final String BASE_URL = getBaseURL("/commons/users/signup");
+    private static final String BASE_URL = getBaseURL_v2("/commons/users/signup");
     private static final String USER_BASE_URL = getBaseURL("/commons/users/user");
 
     /**
@@ -45,9 +45,7 @@ public class SignupTest extends VertxJunitSupport {
     public void existingLogin(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            JsonObject param = new JsonObject().put(SignupRoute.PARAM_LOGIN, u.result().getAccount().getLogin());
-            given().body(param.encode())
-                    .when().post(BASE_URL + "/logintest")
+            given().when().get(BASE_URL + "/" +  u.result().getAccount().getLogin())
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
@@ -63,9 +61,7 @@ public class SignupTest extends VertxJunitSupport {
     public void existingLoginCaseInsensitive(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            JsonObject param = new JsonObject().put(SignupRoute.PARAM_LOGIN, u.result().getAccount().getLogin().toUpperCase());
-            given().body(param.encode())
-                    .when().post(BASE_URL + "/logintest")
+            given().when().get(BASE_URL + "/" + u.result().getAccount().getLogin().toUpperCase())
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
@@ -81,9 +77,7 @@ public class SignupTest extends VertxJunitSupport {
     public void notExistingLogin(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            JsonObject param = new JsonObject().put(SignupRoute.PARAM_LOGIN, "blabla");
-            given().body(param.encode())
-                    .when().post(BASE_URL + "/logintest")
+            given().when().get(BASE_URL + "/blabla")
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(false));
@@ -97,9 +91,8 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void existingLoginWithWrongHttpMethod() {
-        JsonObject param = new JsonObject().put(SignupRoute.PARAM_LOGIN, "blabla");
-        given().body(param.encode())
-                .when().get(BASE_URL + "/logintest")
+        given().body( new JsonObject().encode())
+                .when().post(BASE_URL + "/blabla")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -109,9 +102,9 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void existingLoginWithMissingParam() {
-        given().when().post(BASE_URL + "/logintest")
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        given().when().get(BASE_URL + "/")
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -119,7 +112,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void registerOk() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         params.put("captcha", "fake");
         given().body(params.encode())

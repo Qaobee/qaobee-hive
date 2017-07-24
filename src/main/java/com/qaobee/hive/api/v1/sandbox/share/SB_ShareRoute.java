@@ -48,7 +48,7 @@ import static com.qaobee.hive.technical.constantes.Constants.ADMIN_HABILIT;
 /**
  * The type Sb share Route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/share")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/sandbox/share")
 public class SB_ShareRoute extends AbstractRoute { // NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_ShareRoute.class);
 

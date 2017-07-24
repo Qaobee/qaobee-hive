@@ -40,7 +40,7 @@ import static com.qaobee.hive.technical.constantes.Constants.TOKEN;
 /**
  * The type User verticle.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/users/user")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/users/user")
 public class UserRoute extends AbstractRoute {
     /**
      * The constant PARAM_LOGIN.

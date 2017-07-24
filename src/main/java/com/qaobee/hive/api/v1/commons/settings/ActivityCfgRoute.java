@@ -35,7 +35,7 @@ import javax.inject.Inject;
 /**
  * The type Activity cfg verticle.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/activitycfg")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/settings/activitycfg")
 public class ActivityCfgRoute extends AbstractRoute {
     private static final Logger LOG = LoggerFactory.getLogger(ActivityCfgRoute.class);
     public static final String PARAM_FIELD_LIST = "paramFieldList";

@@ -19,12 +19,8 @@
 
 package com.qaobee.hive.services.impl;
 
-import com.qaobee.hive.services.*;
-import com.qaobee.hive.verticles.CRMVerticle;
-import com.qaobee.hive.verticles.MailVerticle;
-import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
-import com.qaobee.hive.business.model.commons.settings.CategoryAge;
+import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.commons.users.User;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
@@ -36,16 +32,19 @@ import com.qaobee.hive.business.model.transversal.Contact;
 import com.qaobee.hive.business.model.transversal.Member;
 import com.qaobee.hive.business.model.transversal.Role;
 import com.qaobee.hive.business.model.transversal.Status;
+import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.dao.ReCaptcha;
-import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
 import com.qaobee.hive.dao.TemplatesDAO;
+import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
+import com.qaobee.hive.services.*;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
 import com.qaobee.hive.technical.exceptions.ExceptionCodes;
 import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
-import com.qaobee.hive.dao.MailUtils;
+import com.qaobee.hive.verticles.CRMVerticle;
+import com.qaobee.hive.verticles.MailVerticle;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.Json;
@@ -65,22 +64,14 @@ import java.util.*;
 @ProxyService(address = "vertx.Signup.service", iface = SignupService.class)
 public class SignupServiceImpl implements SignupService {
     private static final Logger LOG = LoggerFactory.getLogger(SignupServiceImpl.class);
-    private static final String COUNTRY_FIELD = "country";
     private static final String PARAMERTER_FIELD = "parametersSignup";
     private static final String PARAM_PLAN = "plan";
     private static final Random RANDOM = new Random();
     private Vertx vertx;
-
-    @Inject
-    private ActivityService activityService;
     @Inject
     private MongoDB mongo;
     @Inject
-    private CountryService countryService;
-    @Inject
     private UserService userService;
-    @Inject
-    private StructureService structureService;
     @Inject
     private ReCaptcha reCaptcha;
     @Inject
@@ -90,6 +81,8 @@ public class SignupServiceImpl implements SignupService {
     private MailUtils mailUtils;
     @Inject
     private TemplatesDAO templatesDAO;
+    @Inject
+    private CountryService countryService;
 
     /**
      * Instantiates a new Signup service.
@@ -101,55 +94,25 @@ public class SignupServiceImpl implements SignupService {
         this.vertx = vertx;
     }
 
-    private void updateStructure(JsonObject structure, String activityId, Handler<AsyncResult<JsonObject>> resultHandler) {
-        if (structure.containsKey("_id")) {
-            this.structureService.getStructure(structure.getString("_id"), s -> {
-                if (s.succeeded()) {
-                    structure.mergeIn(s.result());
-                    resultHandler.handle(Future.succeededFuture(structure));
-                } else {
-                    resultHandler.handle(Future.failedFuture(s.cause()));
-                }
-            });
-        } else {
-            countryService.getCountryFromAlpha2(structure.getJsonObject(COUNTRY_FIELD).getString("_id").split("-")[2], country -> {
-                if (country.succeeded()) {
-                    structure.put(COUNTRY_FIELD, country.result());
-                    structure.getJsonObject("address").put(COUNTRY_FIELD, country.result().getString("label"));
-                    activityService.getActivity(activityId, activity -> {
-                        if (activity.succeeded()) {
-                            structure.put("activity", activity.result());
-                            resultHandler.handle(Future.succeededFuture(structure));
-                        } else {
-                            resultHandler.handle(Future.failedFuture(activity.cause()));
-                        }
-                    });
-                } else {
-                    resultHandler.handle(Future.failedFuture(country.cause()));
-                }
-            });
-        }
-    }
-
-    private void proceedRegister(JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void checkUserInformations(JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         final User user = Json.decodeValue(userJson.encode(), User.class);
         // Check user informations
         userService.checkUserInformations(userJson, locale, ar -> {
             if (ar.succeeded()) {
                 // check if email is correct
-                checkMail(user, userJson, locale, resultHandler);
+                checkMailAndCreateUser(user, userJson, locale, resultHandler);
             } else {
                 resultHandler.handle(Future.failedFuture(ar.cause()));
             }
         });
     }
 
-    private void checkMail(User user, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void checkMailAndCreateUser(User user, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         userService.testEmail(user.getContact().getEmail(), locale, ar2 -> {
             if (ar2.succeeded()) {
                 userService.existingLogin(user.getAccount().getLogin(), r -> {
                     if (r.succeeded() && !r.result()) {
-                        createUser(user, userJson, resultHandler);
+                        createUser(user, userJson, locale, resultHandler);
                     } else {
                         resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.NON_UNIQUE_LOGIN, Messages.getString("login.nonunique", locale))));
                     }
@@ -160,10 +123,11 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
-    private void createUser(User user, JsonObject userJson, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void createUser(User user, JsonObject userJson, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
         user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
         user.getAccount().setActive(false);
+        user.getAccount().setFirstConnexion(true);
         user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
         final Plan plan = Json.decodeValue(userJson.getJsonObject(PARAM_PLAN).encode(), Plan.class);
         if (user.getAccount().getListPlan() == null) {
@@ -192,7 +156,25 @@ public class SignupServiceImpl implements SignupService {
         d.setHandler(res -> {
             if (res.succeeded()) {
                 user.getAccount().getListPlan().add(plan);
-                upsertNewUser(user, plan, resultHandler);
+                countryService.getCountryFromAlpha2(locale, c -> {
+                    if (c.succeeded()) {
+                        Country country = Json.decodeValue(c.result().encode(), Country.class);
+                        user.setCountry(country);
+                        // Création Sandbox
+                        SB_SandBox sbSandBox = new SB_SandBox();
+                        sbSandBox.setActivityId(plan.getActivity().get_id());
+                        sbSandBox.setOwner(user.get_id());
+                        createSandBox(plan.getActivity().get_id(), country.get_id(), sbSandBox, user, ar -> {
+                            if (ar.succeeded()) {
+                                upsertNewUser(ar.result(), plan, resultHandler);
+                            } else {
+                                resultHandler.handle(Future.failedFuture(ar.cause()));
+                            }
+                        });
+                    } else {
+                        resultHandler.handle(Future.failedFuture(c.cause()));
+                    }
+                });
             } else {
                 resultHandler.handle(Future.failedFuture(res.cause()));
             }
@@ -205,17 +187,11 @@ public class SignupServiceImpl implements SignupService {
                 mongo.upsert(ar3.result(), DBCollections.USER, userId -> {
                     if (userId.succeeded()) {
                         user.set_id(userId.result());
-                        vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, new JsonObject(Json.encode(user)));
-                        mongo.getById(userId.result(), DBCollections.USER, u -> {
-                                    if (u.succeeded()) {
-                                        resultHandler.handle(Future.succeededFuture(new JsonObject()
-                                                .put("person", u.result())
-                                                .put("planId", plan.getPaymentId())));
-                                    } else {
-                                        resultHandler.handle(Future.failedFuture(u.cause()));
-                                    }
-                                }
-                        );
+                        JsonObject jUser = new JsonObject(Json.encode(user));
+                        vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, jUser);
+                        resultHandler.handle(Future.succeededFuture(new JsonObject()
+                                .put("person", jUser)
+                                .put("planId", plan.getLevelPlan().name())));
                     } else {
                         resultHandler.handle(Future.failedFuture(userId.cause()));
                     }
@@ -235,18 +211,13 @@ public class SignupServiceImpl implements SignupService {
         resultHandler.handle(Future.succeededFuture());
     }
 
-    private Future<Void> addPlayer(JsonObject player, Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, List<String> listPersonsId) {
+    private Future<Void> addPlayer(JsonObject player, SB_SandBox sbSandBox, List<String> listPersonsId) {
         Future<Void> deferred = Future.future();
         List<Future> promises = new ArrayList<>();
         for (int qte = 0; qte < player.getInteger("quantity", 0); qte++) {
             SB_Person sbPerson = new SB_Person();
             sbPerson.setFirstname("Numero " + (listPersonsId.size() + 1));
             sbPerson.setName("Joueur");
-            sbPerson.setBirthcity(structureObj.getAddress().getCity());
-            sbPerson.setBirthcountry(structureObj.getCountry());
-            sbPerson.setBirthdate(randomDate(categoryAgeObj.getAgeMin(), categoryAgeObj.getAgeMax() > 65 ? categoryAgeObj.getAgeMin() : categoryAgeObj.getAgeMax()));
-            sbPerson.setNationality(structureObj.getCountry());
-            sbPerson.setGender(categoryAgeObj.getGenre());
             sbPerson.setSandboxId(sbSandBox.get_id());
             sbPerson.setContact(new Contact());
             Status status = new Status();
@@ -288,47 +259,6 @@ public class SignupServiceImpl implements SignupService {
             }
         });
     }
-
-    private static long randomDate(int yearOldMin, int yearOldMax) {
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(new Date());
-        if (yearOldMin >= yearOldMax) {
-            calendar.add(GregorianCalendar.YEAR, -1 * yearOldMin);
-        } else {
-            calendar.add(GregorianCalendar.YEAR, -1 * RANDOM.nextInt(yearOldMax - yearOldMin) + yearOldMin);
-        }
-        calendar.set(GregorianCalendar.DAY_OF_YEAR, RANDOM.nextInt(365));
-        return calendar.getTimeInMillis();
-    }
-
-    @Override
-    public void finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject struct, JsonObject categoryAge, String countryId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
-        User userUpdate = Json.decodeValue(jsonUser.encode(), User.class);
-        userUpdate.set_id(jsonUser.getString("_id"));
-        updateStructure(struct, activityId, structure -> {
-            if (structure.succeeded()) {
-                Structure structureObj = Json.decodeValue(structure.result().encode(), Structure.class);
-                CategoryAge categoryAgeObj = Json.decodeValue(categoryAge.encode(), CategoryAge.class);
-                getUser(userUpdate.get_id(), locale, userRes -> {
-                    if (userRes.succeeded()) {
-                        User user = userRes.result();
-                        testAccount(user, activationCode, locale, ar -> {
-                            if (ar.succeeded()) {
-                                updateUser(userUpdate, activityId, countryId, structureObj, categoryAgeObj, user, resultHandler);
-                            } else {
-                                resultHandler.handle(Future.failedFuture(ar.cause()));
-                            }
-                        });
-                    } else {
-                        resultHandler.handle(Future.failedFuture(userRes.cause()));
-                    }
-                });
-            } else {
-                resultHandler.handle(Future.failedFuture(structure.cause()));
-            }
-        });
-    }
-
 
     @Override
     public void firstConnectionCheck(String id, String activationCode, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
@@ -388,13 +318,13 @@ public class SignupServiceImpl implements SignupService {
         if (runtime.getBoolean("recaptcha") && !"mobile".equals(userJson.getJsonObject("account").getString("origin", "web"))) {
             reCaptcha.verify(reCaptchaChallenge, res -> {
                 if (res.succeeded()) {
-                    proceedRegister(userJson, locale, resultHandler);
+                    checkUserInformations(userJson, locale, resultHandler);
                 } else {
                     resultHandler.handle(Future.failedFuture(res.cause()));
                 }
             });
         } else {
-            proceedRegister(userJson, locale, resultHandler);
+            checkUserInformations(userJson, locale, resultHandler);
         }
     }
 
@@ -419,7 +349,7 @@ public class SignupServiceImpl implements SignupService {
     public void sendRegisterMail(JsonObject user, String locale, Handler<AsyncResult<Void>> resultHandler) {
         final JsonObject tplReq = new JsonObject()
                 .put(TemplatesDAOImpl.TEMPLATE, "newAccount.html")
-                .put(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(user.encode(), com.qaobee.hive.business.model.commons.users.User.class), locale));
+                .put(TemplatesDAOImpl.DATA, mailUtils.generateActivationBody(Json.decodeValue(user.encode(), User.class), locale));
         final JsonObject emailReq = new JsonObject()
                 .put("from", runtime.getString("mail.from"))
                 .put("to", user.getJsonObject("contact").getString("email"))
@@ -435,56 +365,14 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
-    private void updateUser(User userUpdate, String activityId, String countryId, Structure structureObj, CategoryAge categoryAgeObj, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
-        // MaJ User
-        user.getAccount().setActive(false);
-        user.getAccount().setFirstConnexion(true);
-        user.getAccount().setListPlan(userUpdate.getAccount().getListPlan());
-        // récupération des activities des plans
-        List<Future> promises = new ArrayList<>();
-        user.getAccount().getListPlan().stream().filter(plan -> plan.getActivity() != null).forEachOrdered(plan -> {
-            Future<Void> d = Future.future();
-            activityService.getActivity(plan.getActivity().get_id(), a -> {
-                if (a.succeeded()) {
-                    Activity activity = Json.decodeValue(a.result().encode(), Activity.class);
-                    plan.setActivity(activity);
-                    d.complete();
-                } else {
-                    d.fail(a.cause());
-                }
-            });
-            promises.add(d);
-        });
-        CompositeFuture.all(promises).setHandler(rs -> {
-            if (rs.succeeded()) {
-                user.setBirthdate(userUpdate.getBirthdate());
-                user.setContact(userUpdate.getContact());
-                user.setCountry(structureObj.getCountry());
-                user.setNationality(structureObj.getCountry());
-                user.setFirstname(userUpdate.getFirstname());
-                user.setGender(userUpdate.getGender());
-                user.setName(userUpdate.getName());
-                user.setAddress(userUpdate.getAddress());
-                // Création Sandbox
-                SB_SandBox sbSandBox = new SB_SandBox();
-                sbSandBox.setActivityId(activityId);
-                sbSandBox.setOwner(user.get_id());
-                sbSandBox.setStructure(structureObj);
-                createSandBox(activityId, countryId, sbSandBox, structureObj, categoryAgeObj, user, resultHandler);
-            } else {
-                resultHandler.handle(Future.failedFuture(rs.cause()));
-            }
-        });
-    }
-
-    private void createPlayers(JsonArray tabParametersSignup, Structure structureObj, CategoryAge categoryAgeObj, SB_SandBox sbSandBox, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void createPlayers(JsonArray tabParametersSignup, SB_SandBox sbSandBox, User user, Handler<AsyncResult<User>> resultHandler) {
         List<String> listPersonsId = new ArrayList<>();
         List<Future> promisesPlayers = new ArrayList<>();
         JsonObject parametersSignup = tabParametersSignup.getJsonObject(0);
         if (parametersSignup.containsKey(PARAMERTER_FIELD) && parametersSignup.getJsonObject(PARAMERTER_FIELD).containsKey("players")) {
             JsonArray tabPlayers = parametersSignup.getJsonObject(PARAMERTER_FIELD).getJsonArray("players");
             for (int i = 0; i < tabPlayers.size(); i++) {
-                promisesPlayers.add(addPlayer(tabPlayers.getJsonObject(i), structureObj, categoryAgeObj, sbSandBox, listPersonsId));
+                promisesPlayers.add(addPlayer(tabPlayers.getJsonObject(i), sbSandBox, listPersonsId));
             }
         }
 
@@ -494,7 +382,6 @@ public class SignupServiceImpl implements SignupService {
                 SB_Effective sbEffective = new SB_Effective();
                 sbEffective.setSandboxId(sbSandBox.get_id());
                 sbEffective.setLabel("Défaut");
-                sbEffective.setCategoryAge(categoryAgeObj);
                 // SB_Effective -> members
                 for (String playerId : listPersonsId) {
                     Member member = new Member();
@@ -509,7 +396,7 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
-    private void createEffective(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void createEffective(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Handler<AsyncResult<User>> resultHandler) {
         mongo.upsert(new JsonObject(Json.encode(sbEffective)), DBCollections.EFFECTIVE, sbEffectiveId -> {
             if (sbEffectiveId.succeeded()) {
                 sbEffective.set_id(sbEffectiveId.result());
@@ -529,7 +416,7 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
-    private void updateSandbox(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void updateSandbox(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Handler<AsyncResult<User>> resultHandler) {
         mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbId -> {
             if (sbId.succeeded()) {
                 user.setSandboxDefault(sbId.result());
@@ -554,7 +441,7 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
-    private void createSandBox(String activityId, String countryId, SB_SandBox sbSandBox, Structure structureObj, CategoryAge categoryAgeObj, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void createSandBox(String activityId, String countryId, SB_SandBox sbSandBox, User user, Handler<AsyncResult<User>> resultHandler) {
         mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbSandBoxId -> {
             if (sbSandBoxId.succeeded()) {
                 sbSandBox.set_id(sbSandBoxId.result());
@@ -573,7 +460,7 @@ public class SignupServiceImpl implements SignupService {
                     if (tabParametersSignup.succeeded()) {
                         // Création SB_Person
                         if (tabParametersSignup.result().size() > 0) {
-                            createPlayers(tabParametersSignup.result(), structureObj, categoryAgeObj, sbSandBox, user, resultHandler);
+                            createPlayers(tabParametersSignup.result(), sbSandBox, user, resultHandler);
                         } else {
                             resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "tabParametersSignup is empty")));
                         }
@@ -587,10 +474,10 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
-    private void createNewTeam(SB_Team team, User user, Handler<AsyncResult<JsonObject>> resultHandler) {
+    private void createNewTeam(SB_Team team, User user, Handler<AsyncResult<User>> resultHandler) {
         mongo.upsert(new JsonObject(Json.encode(team)), DBCollections.TEAM, teamId -> {
             if (teamId.succeeded()) {
-                resultHandler.handle(Future.succeededFuture(new JsonObject(Json.encode(user))));
+                resultHandler.handle(Future.succeededFuture(user));
             } else {
                 resultHandler.handle(Future.failedFuture(teamId.cause()));
             }

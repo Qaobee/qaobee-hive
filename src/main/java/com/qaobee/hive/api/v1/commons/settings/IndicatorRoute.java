@@ -32,7 +32,7 @@ import javax.inject.Inject;
 /**
  * The type Indicator route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/indicator")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/settings/indicator")
 public class IndicatorRoute extends AbstractRoute {
     /**
      * Indicator id

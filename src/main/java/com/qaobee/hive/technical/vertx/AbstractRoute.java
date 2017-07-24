@@ -130,7 +130,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
      * @return the locale
      */
     protected String getLocale(RoutingContext context) {
-        return context.request().getHeader("Accept-Language");
+        return context.request().getHeader("Accept-Language").split(",")[0];
     }
 
     /**

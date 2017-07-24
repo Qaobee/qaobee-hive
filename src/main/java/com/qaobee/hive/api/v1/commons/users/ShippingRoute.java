@@ -34,7 +34,7 @@ import javax.inject.Inject;
 /**
  * The type Shipping route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/users/shipping")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/users/shipping")
 public class ShippingRoute extends AbstractRoute {
 
     @Inject

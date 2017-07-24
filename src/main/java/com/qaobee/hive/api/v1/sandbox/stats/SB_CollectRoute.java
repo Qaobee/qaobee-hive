@@ -33,7 +33,7 @@ import javax.inject.Inject;
  *
  * @author cke
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/stats/collect")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/sandbox/stats/collect")
 public class SB_CollectRoute extends AbstractRoute {// NOSONAR
     /**
      * Collecte ID

@@ -57,7 +57,7 @@ public class CountryServiceImpl implements CountryService {
                 if (map.result().containsKey(alpha2.toUpperCase())) {
                     resultHandler.handle(Future.succeededFuture(map.result().getJsonObject(alpha2.toUpperCase())));
                 } else {
-                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found")));
+                    resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "no data found with " + alpha2)));
                 }
             } else {
                 resultHandler.handle(Future.failedFuture(map.cause()));

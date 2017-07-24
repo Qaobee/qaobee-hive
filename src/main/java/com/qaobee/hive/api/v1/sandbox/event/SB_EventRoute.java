@@ -34,7 +34,7 @@ import javax.inject.Inject;
  *
  * @author cke
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/event/event")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/sandbox/event/event")
 public class SB_EventRoute extends AbstractRoute { // NOSONAR
     /**
      * Event ID
