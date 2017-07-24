@@ -194,7 +194,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                 );
                 handleResponse(context, sandbox.result());
             } else {
-                utils.handleError(context, (QaobeeException) sandbox.cause());
+                utils.handleError(context, sandbox.cause());
             }
         });
     }
@@ -221,7 +221,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                 );
                 handleResponse(context, sandbox.result());
             } else {
-                utils.handleError(context, (QaobeeException) sandbox.cause());
+                utils.handleError(context, sandbox.cause());
             }
         });
     }
@@ -249,7 +249,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                     utils.handleError(context, e);
                 }
             } else {
-                utils.handleError(context, (QaobeeException) invitation.cause());
+                utils.handleError(context, invitation.cause());
             }
         });
     }
@@ -300,7 +300,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                     utils.handleError(context, e);
                 }
             } else {
-                utils.handleError(context, (QaobeeException) invitation.cause());
+                utils.handleError(context, invitation.cause());
             }
         });
     }
@@ -362,7 +362,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                 });
                 handleResponse(context, invitation.result());
             } else {
-                utils.handleError(context, (QaobeeException) invitation.cause());
+                utils.handleError(context, invitation.cause());
             }
         });
     }

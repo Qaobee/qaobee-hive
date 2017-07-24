@@ -24,7 +24,6 @@ import com.qaobee.hive.services.SignupService;
 import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.DBCollections;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.tools.Messages;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
@@ -98,7 +97,7 @@ public class UserSignupRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
-                utils.handleError(context, (QaobeeException) ar.cause());
+                utils.handleError(context, ar.cause());
             }
         });
     }
@@ -161,11 +160,11 @@ public class UserSignupRoute extends AbstractRoute {
                         });
                         handleResponse(context, u.result());
                     } else {
-                        utils.handleError(context, (QaobeeException) r.cause());
+                        utils.handleError(context, r.cause());
                     }
                 });
             } else {
-                utils.handleError(context, (QaobeeException) u.cause());
+                utils.handleError(context, u.cause());
             }
         });
     }

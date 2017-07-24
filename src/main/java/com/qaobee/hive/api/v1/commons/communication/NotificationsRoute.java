@@ -174,7 +174,7 @@ public class NotificationsRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
-                utils.handleError(context, (QaobeeException) ar.cause());
+                utils.handleError(context, ar.cause());
             }
         });
     }
@@ -193,7 +193,7 @@ public class NotificationsRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
-                utils.handleError(context, (QaobeeException) ar.cause());
+                utils.handleError(context, ar.cause());
             }
         });
     }

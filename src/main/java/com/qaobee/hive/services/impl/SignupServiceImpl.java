@@ -19,6 +19,7 @@
 
 package com.qaobee.hive.services.impl;
 
+import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.commons.users.User;
@@ -164,11 +165,16 @@ public class SignupServiceImpl implements SignupService {
                         SB_SandBox sbSandBox = new SB_SandBox();
                         sbSandBox.setActivityId(plan.getActivity().get_id());
                         sbSandBox.setOwner(user.get_id());
-                        createSandBox(plan.getActivity().get_id(), country.get_id(), sbSandBox, user, ar -> {
-                            if (ar.succeeded()) {
-                                upsertNewUser(ar.result(), plan, resultHandler);
+                        Structure struc = new Structure();
+                        struc.setActivity(plan.getActivity());
+                        struc.setCountry(country);
+                        sbSandBox.setStructure(struc);
+                        upsertNewUser(user, plan, u->{
+                            if(u.succeeded()) {
+                                createSandBox(plan.getActivity().get_id(), country.get_id(), sbSandBox,
+                                        Json.decodeValue(u.result().encode(), User.class), plan, resultHandler);
                             } else {
-                                resultHandler.handle(Future.failedFuture(ar.cause()));
+                                resultHandler.handle(Future.failedFuture(u.cause()));
                             }
                         });
                     } else {
@@ -186,11 +192,9 @@ public class SignupServiceImpl implements SignupService {
             if (u.succeeded()) {
                 mongo.upsert(u.result(), DBCollections.USER, userId -> {
                     if (userId.succeeded()) {
-                        u.result().put("_id", userId.result());
-                        vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, u.result());
-                        resultHandler.handle(Future.succeededFuture(new JsonObject()
-                                .put("person", u.result())
-                                .put("planId", plan.getLevelPlan().name())));
+                        JsonObject juser = u.result();
+                        juser.put("_id", userId.result());
+                        resultHandler.handle(Future.succeededFuture(juser));
                     } else {
                         resultHandler.handle(Future.failedFuture(userId.cause()));
                     }
@@ -364,7 +368,7 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
-    private void createPlayers(JsonArray tabParametersSignup, SB_SandBox sbSandBox, User user, Handler<AsyncResult<User>> resultHandler) {
+    private void createPlayers(JsonArray tabParametersSignup, SB_SandBox sbSandBox, User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
         List<String> listPersonsId = new ArrayList<>();
         List<Future> promisesPlayers = new ArrayList<>();
         JsonObject parametersSignup = tabParametersSignup.getJsonObject(0);
@@ -388,14 +392,14 @@ public class SignupServiceImpl implements SignupService {
                     member.setPersonId(playerId);
                     sbEffective.addMember(member);
                 }
-                createEffective(sbEffective, sbSandBox, user, resultHandler);
+                createEffective(sbEffective, sbSandBox, user, plan, resultHandler);
             } else {
                 resultHandler.handle(Future.failedFuture(rs2.cause()));
             }
         });
     }
 
-    private void createEffective(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Handler<AsyncResult<User>> resultHandler) {
+    private void createEffective(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
         mongo.upsert(new JsonObject(Json.encode(sbEffective)), DBCollections.EFFECTIVE, sbEffectiveId -> {
             if (sbEffectiveId.succeeded()) {
                 sbEffective.set_id(sbEffectiveId.result());
@@ -408,39 +412,33 @@ public class SignupServiceImpl implements SignupService {
                 List<Member> members = new ArrayList<>();
                 members.add(member);
                 sbSandBox.setMembers(members);
-                updateSandbox(sbEffective, sbSandBox, user, resultHandler);
+                updateSandbox(sbEffective, sbSandBox, user, plan, resultHandler);
             } else {
                 resultHandler.handle(Future.failedFuture(sbEffectiveId.cause()));
             }
         });
     }
 
-    private void updateSandbox(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Handler<AsyncResult<User>> resultHandler) {
+    private void updateSandbox(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
         mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbId -> {
             if (sbId.succeeded()) {
                 user.setSandboxDefault(sbId.result());
-                mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
-                    if (userId.succeeded()) {
-                        // Création SB_Teams
-                        // My team
-                        SB_Team team = new SB_Team();
-                        team.setEffectiveId(sbEffective.get_id());
-                        team.setSandboxId(sbSandBox.get_id());
-                        team.setLabel("Mon équipe");
-                        team.setEnable(true);
-                        team.setAdversary(false);
-                        createNewTeam(team, user, resultHandler);
-                    } else {
-                        resultHandler.handle(Future.failedFuture(userId.cause()));
-                    }
-                });
+                // Création SB_Teams
+                // My team
+                SB_Team team = new SB_Team();
+                team.setEffectiveId(sbEffective.get_id());
+                team.setSandboxId(sbSandBox.get_id());
+                team.setLabel("Mon équipe");
+                team.setEnable(true);
+                team.setAdversary(false);
+                createNewTeam(team, user, plan, resultHandler);
             } else {
                 resultHandler.handle(Future.failedFuture(sbId.cause()));
             }
         });
     }
 
-    private void createSandBox(String activityId, String countryId, SB_SandBox sbSandBox, User user, Handler<AsyncResult<User>> resultHandler) {
+    private void createSandBox(String activityId, String countryId, SB_SandBox sbSandBox, User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
         mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbSandBoxId -> {
             if (sbSandBoxId.succeeded()) {
                 sbSandBox.set_id(sbSandBoxId.result());
@@ -459,7 +457,7 @@ public class SignupServiceImpl implements SignupService {
                     if (tabParametersSignup.succeeded()) {
                         // Création SB_Person
                         if (tabParametersSignup.result().size() > 0) {
-                            createPlayers(tabParametersSignup.result(), sbSandBox, user, resultHandler);
+                            createPlayers(tabParametersSignup.result(), sbSandBox, user, plan, resultHandler);
                         } else {
                             resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "tabParametersSignup is empty")));
                         }
@@ -473,10 +471,20 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
-    private void createNewTeam(SB_Team team, User user, Handler<AsyncResult<User>> resultHandler) {
+    private void createNewTeam(SB_Team team, User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
         mongo.upsert(new JsonObject(Json.encode(team)), DBCollections.TEAM, teamId -> {
             if (teamId.succeeded()) {
-                resultHandler.handle(Future.succeededFuture(user));
+                JsonObject juser = new JsonObject(Json.encode(user));
+                mongo.upsert(juser, DBCollections.USER, res -> {
+                    if(res.succeeded()) {
+                        resultHandler.handle(Future.succeededFuture(new JsonObject()
+                                .put("person", juser)
+                                .put("planId", plan.getLevelPlan().name())));
+                        vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, juser);
+                    }  else {
+                        resultHandler.handle(Future.failedFuture(res.cause()));
+                    }
+                });
             } else {
                 resultHandler.handle(Future.failedFuture(teamId.cause()));
             }

@@ -60,7 +60,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
                 handleResponse(context, event.result());
             } else {
                 if(event.cause() instanceof QaobeeException) {
-                    utils.handleError(context, (QaobeeException) event.cause());
+                    utils.handleError(context, event.cause());
                 } else {
                     utils.handleError(context, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, event.cause().getMessage()));
                 }
@@ -80,7 +80,7 @@ public abstract class AbstractRoute implements VertxRoute.Route {
             if (event.succeeded()) {
                 handleResponse(context, event.result());
             } else {
-                utils.handleError(context, (QaobeeException) event.cause());
+                utils.handleError(context, event.cause());
             }
         };
     }

@@ -19,11 +19,9 @@
 package com.qaobee.hive.api.v1.commons.users;
 
 import com.qaobee.hive.api.v1.Module;
-import com.qaobee.hive.services.NotificationsService;
 import com.qaobee.hive.services.SignupService;
 import com.qaobee.hive.services.UserService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
@@ -31,7 +29,6 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * The Class SignupVerticle.
@@ -68,17 +65,11 @@ public class SignupRoute extends AbstractRoute {
      * Parameter Login
      */
     public static final String PARAM_LOGIN = "login";
-    private static final String COUNTRY_FIELD = "country";
     private static final String PARAM_CAPTCHA = "captcha";
-    @Inject
-    @Named("runtime")
-    private JsonObject runtime;
     @Inject
     private UserService userService;
     @Inject
     private SignupService signupService;
-    @Inject
-    private NotificationsService notificationsService;
 
     @Override
     public Router init() {
@@ -125,7 +116,7 @@ public class SignupRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
-                utils.handleError(context, (QaobeeException) ar.cause());
+                utils.handleError(context, ar.cause());
             }
         });
     }

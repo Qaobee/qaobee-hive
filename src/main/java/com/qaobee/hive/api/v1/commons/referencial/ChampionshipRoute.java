@@ -21,7 +21,6 @@ package com.qaobee.hive.api.v1.commons.referencial;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.ChampionshipService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
@@ -141,7 +140,7 @@ public class ChampionshipRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 handleResponse(context, context.getBodyAsJson());
             } else {
-                utils.handleError(context, (QaobeeException) ar.cause());
+                utils.handleError(context, ar.cause());
             }
         });
     }
