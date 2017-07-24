@@ -23,6 +23,8 @@ import com.qaobee.hive.technical.annotations.DeployableVerticle;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
 import com.qaobee.hive.technical.constantes.Constants;
+import com.qaobee.hive.technical.exceptions.ExceptionCodes;
+import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.utils.guice.AbstractGuiceVerticle;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.CompositeFuture;
@@ -108,12 +110,17 @@ public class CoordinatorVerticle extends AbstractGuiceVerticle {
                             }
                         }
                 );
+
+   //     router.route("/*").failureHandler(this::failureHandler);
         router.route().last().handler(CoordinatorVerticle::manage404Error);
 
         // Load Verticles
         runWebServer(loadVerticles(), router, startFuture);
     }
 
+    private void failureHandler(RoutingContext context) {
+        utils.handleError(context, new QaobeeException(ExceptionCodes.INTERNAL_ERROR, context.failure().getMessage()));
+    }
     private static void jsonHandler(RoutingContext context) {
         context.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8")
                 .putHeader(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, max-age=0, must-revalidate")

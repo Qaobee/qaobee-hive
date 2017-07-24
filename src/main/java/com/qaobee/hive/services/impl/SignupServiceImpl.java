@@ -182,15 +182,14 @@ public class SignupServiceImpl implements SignupService {
     }
 
     private void upsertNewUser(User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
-        this.userService.prepareUpsert(new JsonObject(Json.encode(user)), ar3 -> {
-            if (ar3.succeeded()) {
-                mongo.upsert(ar3.result(), DBCollections.USER, userId -> {
+        this.userService.prepareUpsert(new JsonObject(Json.encode(user)), u -> {
+            if (u.succeeded()) {
+                mongo.upsert(u.result(), DBCollections.USER, userId -> {
                     if (userId.succeeded()) {
-                        user.set_id(userId.result());
-                        JsonObject jUser = new JsonObject(Json.encode(user));
-                        vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, jUser);
+                        u.result().put("_id", userId.result());
+                        vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, u.result());
                         resultHandler.handle(Future.succeededFuture(new JsonObject()
-                                .put("person", jUser)
+                                .put("person", u.result())
                                 .put("planId", plan.getLevelPlan().name())));
                     } else {
                         resultHandler.handle(Future.failedFuture(userId.cause()));

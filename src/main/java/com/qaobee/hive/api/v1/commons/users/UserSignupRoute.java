@@ -69,7 +69,7 @@ public class UserSignupRoute extends AbstractRoute {
     @Override
     public Router init() {
         Router router = Router.router(vertx);
-        addRoute(router, "/:login", HttpMethod.GET, this::loginTest);
+        addRoute(router, "/test/:login", HttpMethod.GET, this::loginTest);
         addRoute(router, "/register", HttpMethod.PUT,
                 c -> mandatoryHandler.testBodyParams(c, PARAM_CAPTCHA),
                 this::registerUser);
@@ -148,14 +148,15 @@ public class UserSignupRoute extends AbstractRoute {
     private void registerUser(RoutingContext context) {
         signupService.register(context.getBodyAsJson().getString(PARAM_CAPTCHA), context.getBodyAsJson(), getLocale(context), u -> {
             if (u.succeeded()) {
-                signupService.sendRegisterMail(u.result(), getLocale(context), r -> {
+                JsonObject user = u.result().getJsonObject("person");
+                signupService.sendRegisterMail(user, getLocale(context), r -> {
                     if (r.succeeded()) {
                         JsonObject notification = new JsonObject()
                                 .put("content", Messages.getString("notification.first.connection.content", getLocale(context), String.valueOf(runtime.getInteger("trial.duration"))))
                                 .put("title", Messages.getString("notification.first.connection.title", getLocale(context)))
                                 .put("senderId", runtime.getString("admin.id")
                                 );
-                        notificationsService.sendNotification(u.result().getString("_id"), DBCollections.USER, notification, new JsonArray(), ar -> {
+                        notificationsService.sendNotification(user.getString("_id"), DBCollections.USER, notification, new JsonArray(), ar -> {
                             //empty
                         });
                         handleResponse(context, u.result());
