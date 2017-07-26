@@ -91,7 +91,7 @@ public class GuiceModule extends AbstractModule {
 
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
-        bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
+        bind(ReCaptcha.class).to(ReCaptchaImpl.class).in(Singleton.class);
         bind(MailClient.class).toInstance(MailClient.createShared(vertx, mailConfig, "qaobeeMail"));
         bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);

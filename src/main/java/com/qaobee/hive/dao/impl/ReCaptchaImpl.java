@@ -35,7 +35,7 @@ import javax.inject.Inject;
 /**
  * The type Recaptcha.
  */
-public class RecaptchaImpl implements ReCaptcha {
+public class ReCaptchaImpl implements ReCaptcha {
     @Inject
     private Vertx vertx;
 
