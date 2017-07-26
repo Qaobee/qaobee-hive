@@ -28,7 +28,7 @@
         "PREMIUM": {
           "price": 7
         },
-        "TEAM_PLUS": {
+        "CLUB_1": {
           "price": 9
         }
       }
@@ -116,7 +116,7 @@
         "PREMIUM": {
           "price": 7
         },
-        "TEAM_PLUS": {
+        "CLUB_1": {
           "price": 9
         }
       }
@@ -203,7 +203,7 @@
         "PREMIUM": {
           "price": 9
         },
-        "TEAM_PLUS": {
+        "CLUB_1": {
           "price": 12
         }
       }

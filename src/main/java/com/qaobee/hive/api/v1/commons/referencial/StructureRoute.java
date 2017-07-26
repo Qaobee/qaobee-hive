@@ -74,7 +74,7 @@ public class StructureRoute extends AbstractRoute {
                 this::getStructure);
 
         addRoute(router, "/getList", HttpMethod.POST,
-                authHandler,
+              //  authHandler,
                 c -> mandatoryHandler.testBodyParams(c, PARAM_ACTIVITY, PARAM_ADDRESS),
                 this::getListOfStructures);
 

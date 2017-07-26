@@ -55,6 +55,7 @@ public interface SignupService {
     static SignupService createProxy(Vertx vertx, String address) {
         return ProxyHelper.createProxy(SignupService.class, vertx, address);
     }
+
     /**
      * First connection check.
      *
@@ -101,4 +102,13 @@ public interface SignupService {
      * @param resultHandler the result handler
      */
     void sendRegisterMail(JsonObject user, String locale, Handler<AsyncResult<Void>> resultHandler);
+
+    /**
+     * Add structure to sandbox.
+     *
+     * @param sandboxId     the sandbox id
+     * @param structure     the structure
+     * @param resultHandler the result handler
+     */
+    void addStructureToSandbox(String sandboxId, JsonObject structure, Handler<AsyncResult<Void>> resultHandler);
 }
