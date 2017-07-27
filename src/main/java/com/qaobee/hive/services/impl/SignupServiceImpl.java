@@ -84,6 +84,12 @@ public class SignupServiceImpl implements SignupService {
     private TemplatesDAO templatesDAO;
     @Inject
     private CountryService countryService;
+    @Inject
+    private StructureService structureService;
+    @Inject
+    private SandBoxService sandBoxService;
+    @Inject
+    private EffectiveService effectiveService;
 
     /**
      * Instantiates a new Signup service.
@@ -164,13 +170,14 @@ public class SignupServiceImpl implements SignupService {
                         // Création Sandbox
                         SB_SandBox sbSandBox = new SB_SandBox();
                         sbSandBox.setActivityId(plan.getActivity().get_id());
-                        sbSandBox.setOwner(user.get_id());
                         Structure struc = new Structure();
                         struc.setActivity(plan.getActivity());
                         struc.setCountry(country);
                         sbSandBox.setStructure(struc);
-                        upsertNewUser(user, plan, u->{
-                            if(u.succeeded()) {
+                        upsertNewUser(user, plan, u -> {
+                            if (u.succeeded()) {
+                                user.set_id(u.result().getString("_id"));
+                                sbSandBox.setOwner(user.get_id());
                                 createSandBox(plan.getActivity().get_id(), country.get_id(), sbSandBox,
                                         Json.decodeValue(u.result().encode(), User.class), plan, resultHandler);
                             } else {
@@ -368,6 +375,44 @@ public class SignupServiceImpl implements SignupService {
         });
     }
 
+    @Override
+    public void addStructureToSandbox(String sandboxId, JsonObject structure, Handler<AsyncResult<Void>> resultHandler) {
+        // if structure is official
+        if (structure.containsKey("_id")) {
+            structureService.getStructure(structure.getString("_id"), struct -> {
+                if (struct.succeeded()) {
+                    updateSandBoxWithStructure(sandboxId, struct.result(), resultHandler);
+                } else {
+                    resultHandler.handle(Future.failedFuture(struct.cause()));
+                }
+            });
+        } else {
+            structureService.addStructure(structure, struct -> {
+                if (struct.succeeded()) {
+                    updateSandBoxWithStructure(sandboxId, struct.result(), resultHandler);
+                } else {
+                    resultHandler.handle(Future.failedFuture(struct.cause()));
+                }
+            });
+        }
+    }
+
+    private void updateSandBoxWithStructure(String sandboxId, JsonObject structure, Handler<AsyncResult<Void>> resultHandler) {
+        sandBoxService.getSandboxById(sandboxId, sb -> {
+            if (sb.succeeded()) {
+                sandBoxService.updateSandbox(sb.result().put("structure", structure), res -> {
+                    if (res.succeeded()) {
+                        resultHandler.handle(Future.succeededFuture());
+                    } else {
+                        resultHandler.handle(Future.failedFuture(res.cause()));
+                    }
+                });
+            } else {
+                resultHandler.handle(Future.failedFuture(sb.cause()));
+            }
+        });
+    }
+
     private void createPlayers(JsonArray tabParametersSignup, SB_SandBox sbSandBox, User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
         List<String> listPersonsId = new ArrayList<>();
         List<Future> promisesPlayers = new ArrayList<>();
@@ -400,9 +445,9 @@ public class SignupServiceImpl implements SignupService {
     }
 
     private void createEffective(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.upsert(new JsonObject(Json.encode(sbEffective)), DBCollections.EFFECTIVE, sbEffectiveId -> {
+        effectiveService.add(new JsonObject(Json.encode(sbEffective)), sbEffectiveId -> {
             if (sbEffectiveId.succeeded()) {
-                sbEffective.set_id(sbEffectiveId.result());
+                sbEffective.set_id(sbEffectiveId.result().getString("_id"));
                 sbSandBox.setEffectiveDefault(sbEffective.get_id());
                 //Add owner in member's list of sandbox
                 Member member = new Member();
@@ -420,9 +465,9 @@ public class SignupServiceImpl implements SignupService {
     }
 
     private void updateSandbox(SB_Effective sbEffective, SB_SandBox sbSandBox, User user, Plan plan, Handler<AsyncResult<JsonObject>> resultHandler) {
-        mongo.upsert(new JsonObject(Json.encode(sbSandBox)), DBCollections.SANDBOX, sbId -> {
+        sandBoxService.updateSandbox(new JsonObject(Json.encode(sbSandBox)), sbId -> {
             if (sbId.succeeded()) {
-                user.setSandboxDefault(sbId.result());
+                user.setSandboxDefault(sbId.result().getString("_id"));
                 // Création SB_Teams
                 // My team
                 SB_Team team = new SB_Team();
@@ -476,12 +521,12 @@ public class SignupServiceImpl implements SignupService {
             if (teamId.succeeded()) {
                 JsonObject juser = new JsonObject(Json.encode(user));
                 mongo.upsert(juser, DBCollections.USER, res -> {
-                    if(res.succeeded()) {
+                    if (res.succeeded()) {
                         resultHandler.handle(Future.succeededFuture(new JsonObject()
                                 .put("person", juser)
                                 .put("planId", plan.getLevelPlan().name())));
                         vertx.eventBus().send(CRMVerticle.CRMVERTICLE_REGISTER, juser);
-                    }  else {
+                    } else {
                         resultHandler.handle(Future.failedFuture(res.cause()));
                     }
                 });
