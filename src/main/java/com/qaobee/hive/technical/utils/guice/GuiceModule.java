@@ -117,8 +117,8 @@ public class GuiceModule extends AbstractModule {
             LOG.debug(String.format("Binding %s with address %s", c.getCanonicalName(), c.getAnnotation(ProxyService.class).address()));
             Class iface = c.getAnnotation(ProxyService.class).iface();
             try {
-                Method method = iface.getMethod("createProxy", new Class<?>[]{Vertx.class, String.class});
-                bind(iface).toInstance(method.invoke(null, new Object[]{vertx, c.getAnnotation(ProxyService.class).address()}));
+                Method method = iface.getMethod("createProxy", Vertx.class, String.class);
+                bind(iface).toInstance(method.invoke(null, vertx, c.getAnnotation(ProxyService.class).address()));
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 LOG.error(e.getMessage(), e);
             }
