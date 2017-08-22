@@ -125,16 +125,6 @@ public class StructureServiceTest extends VertxJunitSupport {
     }
 
     /**
-     * Gets structures list with non logged user testBodyParams.
-     */
-    @Test
-    public void getStructuresListWithNonLoggedUserTest() {
-        given().when().post(BASE_URL + "/getList")
-                .then().assertThat().statusCode(ExceptionCodes.NOT_LOGGED.getCode())
-                .body(CODE, is(ExceptionCodes.NOT_LOGGED.toString()));
-    }
-
-    /**
      * Gets structures list with wrong http method testBodyParams.
      */
     @Test
