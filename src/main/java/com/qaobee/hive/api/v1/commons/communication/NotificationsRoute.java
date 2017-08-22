@@ -37,7 +37,7 @@ import javax.inject.Inject;
 /**
  * The type Notifications route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/communication/notifications")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/communication/notifications")
 public class NotificationsRoute extends AbstractRoute {
     private static final Logger LOG = LoggerFactory.getLogger(NotificationsRoute.class);
     /**
@@ -174,7 +174,7 @@ public class NotificationsRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
-                utils.handleError(context, (QaobeeException) ar.cause());
+                utils.handleError(context, ar.cause());
             }
         });
     }
@@ -193,7 +193,7 @@ public class NotificationsRoute extends AbstractRoute {
             if (ar.succeeded()) {
                 handleStatus(ar.succeeded(), context);
             } else {
-                utils.handleError(context, (QaobeeException) ar.cause());
+                utils.handleError(context, ar.cause());
             }
         });
     }

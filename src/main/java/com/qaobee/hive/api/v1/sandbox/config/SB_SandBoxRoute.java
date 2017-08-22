@@ -32,7 +32,7 @@ import javax.inject.Inject;
 /**
  * The type Sand box cfg verticle.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/config/sandbox")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/sandbox/config/sandbox")
 public class SB_SandBoxRoute extends AbstractRoute {// NOSONAR
     /**
      * The constant PARAM_ID.

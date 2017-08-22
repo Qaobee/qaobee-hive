@@ -22,7 +22,6 @@ package com.qaobee.hive.api.v1.commons.users;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.ShippingService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
@@ -34,7 +33,7 @@ import javax.inject.Inject;
 /**
  * The type Shipping route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/users/shipping")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/users/shipping")
 public class ShippingRoute extends AbstractRoute {
 
     @Inject
@@ -83,7 +82,7 @@ public class ShippingRoute extends AbstractRoute {
             if (r.succeeded()) {
                 handleStatus(r.result(), context);
             } else {
-                utils.handleError(context, (QaobeeException) r.cause());
+                utils.handleError(context, r.cause());
             }
         });
     }

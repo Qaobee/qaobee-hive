@@ -91,7 +91,7 @@ public class GuiceModule extends AbstractModule {
 
         bind(PasswordEncryptionService.class).to(PasswordEncryptionServiceImpl.class).in(Singleton.class);
         bind(PdfDAO.class).to(PdfDAOImpl.class).in(Singleton.class);
-        bind(ReCaptcha.class).to(RecaptchaImpl.class).in(Singleton.class);
+        bind(ReCaptcha.class).to(ReCaptchaImpl.class).in(Singleton.class);
         bind(MailClient.class).toInstance(MailClient.createShared(vertx, mailConfig, "qaobeeMail"));
         bind(MongoClientCustom.class).toProvider(MongoClientProvider.class).asEagerSingleton();
         bind(MailUtils.class).to(MailUtilsImpl.class).in(Singleton.class);
@@ -117,8 +117,8 @@ public class GuiceModule extends AbstractModule {
             LOG.debug(String.format("Binding %s with address %s", c.getCanonicalName(), c.getAnnotation(ProxyService.class).address()));
             Class iface = c.getAnnotation(ProxyService.class).iface();
             try {
-                Method method = iface.getMethod("createProxy", new Class<?>[]{Vertx.class, String.class});
-                bind(iface).toInstance(method.invoke(null, new Object[]{vertx, c.getAnnotation(ProxyService.class).address()}));
+                Method method = iface.getMethod("createProxy", Vertx.class, String.class);
+                bind(iface).toInstance(method.invoke(null, vertx, c.getAnnotation(ProxyService.class).address()));
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 LOG.error(e.getMessage(), e);
             }

@@ -48,7 +48,7 @@ import static com.qaobee.hive.technical.constantes.Constants.ADMIN_HABILIT;
 /**
  * The type Sb share Route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/share")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/sandbox/share")
 public class SB_ShareRoute extends AbstractRoute { // NOSONAR
     private static final Logger LOG = LoggerFactory.getLogger(SB_ShareRoute.class);
 
@@ -194,7 +194,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                 );
                 handleResponse(context, sandbox.result());
             } else {
-                utils.handleError(context, (QaobeeException) sandbox.cause());
+                utils.handleError(context, sandbox.cause());
             }
         });
     }
@@ -221,7 +221,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                 );
                 handleResponse(context, sandbox.result());
             } else {
-                utils.handleError(context, (QaobeeException) sandbox.cause());
+                utils.handleError(context, sandbox.cause());
             }
         });
     }
@@ -249,7 +249,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                     utils.handleError(context, e);
                 }
             } else {
-                utils.handleError(context, (QaobeeException) invitation.cause());
+                utils.handleError(context, invitation.cause());
             }
         });
     }
@@ -300,7 +300,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                     utils.handleError(context, e);
                 }
             } else {
-                utils.handleError(context, (QaobeeException) invitation.cause());
+                utils.handleError(context, invitation.cause());
             }
         });
     }
@@ -362,7 +362,7 @@ public class SB_ShareRoute extends AbstractRoute { // NOSONAR
                 });
                 handleResponse(context, invitation.result());
             } else {
-                utils.handleError(context, (QaobeeException) invitation.cause());
+                utils.handleError(context, invitation.cause());
             }
         });
     }

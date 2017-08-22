@@ -22,7 +22,6 @@ package com.qaobee.hive.api.v1.commons.settings;
 import com.qaobee.hive.api.v1.Module;
 import com.qaobee.hive.services.ActivityCfgService;
 import com.qaobee.hive.technical.annotations.VertxRoute;
-import com.qaobee.hive.technical.exceptions.QaobeeException;
 import com.qaobee.hive.technical.vertx.AbstractRoute;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
@@ -35,7 +34,7 @@ import javax.inject.Inject;
 /**
  * The type Activity cfg verticle.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/activitycfg")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/settings/activitycfg")
 public class ActivityCfgRoute extends AbstractRoute {
     private static final Logger LOG = LoggerFactory.getLogger(ActivityCfgRoute.class);
     public static final String PARAM_FIELD_LIST = "paramFieldList";
@@ -91,7 +90,7 @@ public class ActivityCfgRoute extends AbstractRoute {
                         handleResponse(context, ar.result().getJsonObject(0).getJsonArray(context.request().getParam(PARAM_FIELD_LIST)));
                     } else {
                         LOG.error(ar.cause().getMessage(), ar.cause());
-                        utils.handleError(context, (QaobeeException) ar.cause());
+                        utils.handleError(context, ar.cause());
                     }
                 });
     }

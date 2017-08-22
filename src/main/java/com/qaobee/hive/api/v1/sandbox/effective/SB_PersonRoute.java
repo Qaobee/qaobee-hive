@@ -33,7 +33,7 @@ import javax.inject.Inject;
 /**
  * The type Sb person route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/effective/person")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/sandbox/effective/person")
 public class SB_PersonRoute extends AbstractRoute {// NOSONAR
     /**
      * Group ID

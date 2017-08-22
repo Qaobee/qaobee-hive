@@ -14,7 +14,7 @@ import javax.inject.Named;
 /**
  * The type Params route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/settings")
 public class ParamsRoute extends AbstractRoute {
 
     @Inject

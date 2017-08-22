@@ -171,7 +171,13 @@ public class UtilsImpl implements Utils {
     }
 
     @Override
-    public void handleError(RoutingContext context, QaobeeException e) {
+    public void handleError(RoutingContext context, Throwable t) {
+        QaobeeException e;
+        if (t instanceof QaobeeException) {
+            e = (QaobeeException) t;
+        } else {
+            e = new QaobeeException(ExceptionCodes.INTERNAL_ERROR, t.getMessage());
+        }
         LOG.error(String.format("[ %s : %d ] %s", e.getCode().name(), e.getCode().getCode(), e.getMessage()), e);
         context.response().putHeader(HTTP.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
                 .setStatusCode(e.getCode().getCode())

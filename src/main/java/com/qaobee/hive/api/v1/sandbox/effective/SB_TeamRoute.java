@@ -33,7 +33,7 @@ import javax.inject.Inject;
 /**
  * The type Sb team route.
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/effective/team")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/sandbox/effective/team")
 public class SB_TeamRoute extends AbstractRoute {// NOSONAR
     /**
      * team ID param

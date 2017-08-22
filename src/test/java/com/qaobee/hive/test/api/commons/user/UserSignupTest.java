@@ -29,25 +29,24 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+
 /**
- * The type Signup.
- *
- * @author jerome
+ * The type User signup test.
  */
-public class SignupTest extends VertxJunitSupport {
-    private static final String BASE_URL = getBaseURL("/commons/users/signup");
+public class UserSignupTest extends VertxJunitSupport {
+    private static final String BASE_URL = getBaseURL_v2("/commons/users/signup");
     private static final String USER_BASE_URL = getBaseURL("/commons/users/user");
 
     /**
      * Existing login.
+     *
+     * @param context the context
      */
     @Test
     public void existingLogin(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            JsonObject param = new JsonObject().put(SignupRoute.PARAM_LOGIN, u.result().getAccount().getLogin());
-            given().body(param.encode())
-                    .when().post(BASE_URL + "/logintest")
+            given().when().get(BASE_URL + "/test/" + u.result().getAccount().getLogin())
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
@@ -58,14 +57,14 @@ public class SignupTest extends VertxJunitSupport {
 
     /**
      * Existing login case insensitive.
+     *
+     * @param context the context
      */
     @Test
     public void existingLoginCaseInsensitive(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            JsonObject param = new JsonObject().put(SignupRoute.PARAM_LOGIN, u.result().getAccount().getLogin().toUpperCase());
-            given().body(param.encode())
-                    .when().post(BASE_URL + "/logintest")
+            given().when().get(BASE_URL + "/test/" + u.result().getAccount().getLogin().toUpperCase())
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(true));
@@ -76,14 +75,14 @@ public class SignupTest extends VertxJunitSupport {
 
     /**
      * Not existing login.
+     *
+     * @param context the context
      */
     @Test
     public void notExistingLogin(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            JsonObject param = new JsonObject().put(SignupRoute.PARAM_LOGIN, "blabla");
-            given().body(param.encode())
-                    .when().post(BASE_URL + "/logintest")
+            given().when().get(BASE_URL + "/test/blabla")
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(false));
@@ -97,9 +96,8 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void existingLoginWithWrongHttpMethod() {
-        JsonObject param = new JsonObject().put(SignupRoute.PARAM_LOGIN, "blabla");
-        given().body(param.encode())
-                .when().get(BASE_URL + "/logintest")
+        given().body(new JsonObject().encode())
+                .when().post(BASE_URL + "/test/blabla")
                 .then().assertThat().statusCode(404)
                 .body(STATUS, is(false));
     }
@@ -109,9 +107,9 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void existingLoginWithMissingParam() {
-        given().when().post(BASE_URL + "/logintest")
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+        given().when().get(BASE_URL + "/test/")
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
@@ -119,7 +117,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void registerOk() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         params.put("captcha", "fake");
         given().body(params.encode())
@@ -138,6 +136,8 @@ public class SignupTest extends VertxJunitSupport {
 
     /**
      * Register with existing login.
+     *
+     * @param context the context
      */
     @Test
     public void registerWithExistingLogin(TestContext context) {
@@ -170,7 +170,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void registerWithBadLoginFormat() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         params.getJsonObject("account").put("login", "");
         String l = "";
@@ -258,7 +258,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void registerWithBadNameFormat() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser()
                 .put("captcha", "fake")
                 .put("name", "");
@@ -306,7 +306,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void registerWithBadFirstnameFormat() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         params.put("firstname", "").put("captcha", "fake");
         String l = "";
@@ -392,7 +392,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void accountCheck() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         params.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(params.encode())
@@ -404,9 +404,9 @@ public class SignupTest extends VertxJunitSupport {
                 .body("person.name", is(params.getString("name")))
                 .body("person._id", notNullValue()).extract().asString());
 
-        given().param("id", p.getJsonObject("person").getString("_id"))
-                .param(CODE, p.getJsonObject("person").getJsonObject("account").getString("activationCode"))
-                .when().get(BASE_URL + "/accountcheck")
+        given().pathParam("id", p.getJsonObject("person").getString("_id"))
+                .pathParam("code", p.getJsonObject("person").getJsonObject("account").getString("activationCode"))
+                .when().get(BASE_URL + "/accountcheck/{id}/{code}")
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
                 .body("status", is(true));
@@ -414,22 +414,24 @@ public class SignupTest extends VertxJunitSupport {
 
     /**
      * Account check wrong or missing id.
+     *
+     * @param context the context
      */
     @Test
     public void accountCheckWrongOrMissingId(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            given().param("id", "haha")
-                    .param(CODE, u.result().getAccount().getActivationCode())
-                    .when().get(BASE_URL + "/accountcheck")
+            given().pathParam("id", "haha")
+                    .pathParam("code", u.result().getAccount().getActivationCode())
+                    .when().get(BASE_URL + "/accountcheck/{id}/{code}")
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(false));
 
-            given().param(CODE, u.result().getAccount().getActivationCode())
-                    .when().get(BASE_URL + "/accountcheck")
-                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().pathParam("code", u.result().getAccount().getActivationCode())
+                    .when().get(BASE_URL + "/accountcheck/{code}")
+                    .then().assertThat().statusCode(404)
+                    .body("status", is(false));
             async.complete();
         });
         async.await(TIMEOUT);
@@ -438,22 +440,24 @@ public class SignupTest extends VertxJunitSupport {
 
     /**
      * Account check wrong or missing activation code.
+     *
+     * @param context the context
      */
     @Test
     public void accountCheckWrongOrMissingActivationCode(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            given().param("id", u.result().get_id())
-                    .param(CODE, "haha")
-                    .when().get(BASE_URL + "/accountcheck")
+            given().pathParam("id", u.result().get_id())
+                    .pathParam("code", "haha")
+                    .when().get(BASE_URL + "/accountcheck/{id}/{code}")
                     .then().assertThat().statusCode(200)
                     .body("status", notNullValue())
                     .body("status", is(false));
 
-            given().param("id", u.result().get_id())
-                    .when().get(BASE_URL + "/accountcheck")
-                    .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                    .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+            given().pathParam("id", u.result().get_id())
+                    .when().get(BASE_URL + "/accountcheck/{id}")
+                    .then().assertThat().statusCode(404)
+                    .body(STATUS, is(false));
             async.complete();
         });
         async.await(TIMEOUT);
@@ -475,7 +479,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void firstConnectionCheck() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         params.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(params.encode())
@@ -486,9 +490,10 @@ public class SignupTest extends VertxJunitSupport {
                 .body("person.name", notNullValue())
                 .body("person.name", is(params.getString("name")))
                 .body("person._id", notNullValue()).extract().asString());
-        String token = given().param(SignupRoute.PARAM_ID, p.getJsonObject("person").getString("_id"))
-                .param(SignupRoute.PARAM_CODE, p.getJsonObject("person").getJsonObject("account").getString("activationCode"))
-                .when().get(BASE_URL + "/firstconnectioncheck")
+        String token = given()
+                .pathParam("id", p.getJsonObject("person").getString("_id"))
+                .pathParam("code", p.getJsonObject("person").getJsonObject("account").getString("activationCode"))
+                .when().get(BASE_URL + "/firstconnectioncheck/{id}/{code}")
                 .then().assertThat().statusCode(200)
                 .body("account", notNullValue())
                 .body("account.token", notNullValue()).extract().path("account.token");
@@ -505,7 +510,7 @@ public class SignupTest extends VertxJunitSupport {
      */
     @Test
     public void firstConnectionCheckAlreadyActiveUser() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY);
+        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY);
         JsonObject params = generateNewUser();
         params.put("captcha", "fake");
         JsonObject p = new JsonObject(given().body(params.encode())
@@ -516,15 +521,15 @@ public class SignupTest extends VertxJunitSupport {
                 .body("person.name", notNullValue())
                 .body("person.name", is(params.getString("name")))
                 .body("person._id", notNullValue()).extract().asString()).getJsonObject("person");
-        given().param("id", p.getString("_id"))
-                .param(CODE, p.getJsonObject("account").getString("activationCode"))
-                .when().get(BASE_URL + "/accountcheck")
+        given().pathParam("id", p.getString("_id"))
+                .pathParam("code", p.getJsonObject("account").getString("activationCode"))
+                .when().get(BASE_URL + "/accountcheck/{id}/{code}")
                 .then().assertThat().statusCode(200)
                 .body("status", notNullValue())
                 .body("status", is(true));
-        given().param(SignupRoute.PARAM_ID, p.getString("_id"))
-                .param(SignupRoute.PARAM_CODE, p.getJsonObject("account").getString("activationCode"))
-                .when().get(BASE_URL + "/firstconnectioncheck")
+        given().pathParam("id", p.getString("_id"))
+                .pathParam("code", p.getJsonObject("account").getString("activationCode"))
+                .when().get(BASE_URL + "/firstconnectioncheck/{id}/{code}")
                 .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
                 .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
     }
@@ -535,20 +540,22 @@ public class SignupTest extends VertxJunitSupport {
     @Test
     public void firstConnectionCheckMissingValues() {
         given().when().get(BASE_URL + "/firstconnectioncheck")
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
+                .then().assertThat().statusCode(404)
+                .body(STATUS, is(false));
     }
 
     /**
      * First connection check wrong user id.
+     *
+     * @param context the context
      */
     @Test
     public void firstConnectionCheckWrongUserId(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            given().param(SignupRoute.PARAM_ID, "blabla")
-                    .param(SignupRoute.PARAM_CODE, u.result().getAccount().getActivationCode())
-                    .when().get(BASE_URL + "/firstconnectioncheck")
+            given().pathParam("id", "blabla")
+                    .pathParam("code", u.result().getAccount().getActivationCode())
+                    .when().get(BASE_URL + "/firstconnectioncheck/{id}/{code}")
                     .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
                     .body(CODE, is(ExceptionCodes.BAD_LOGIN.toString()));
             async.complete();
@@ -558,14 +565,16 @@ public class SignupTest extends VertxJunitSupport {
 
     /**
      * First connection check wrong activation code.
+     *
+     * @param context the context
      */
     @Test
     public void firstConnectionCheckWrongActivationCode(TestContext context) {
         Async async = context.async();
         generateUser().setHandler(u -> {
-            given().param(SignupRoute.PARAM_ID, u.result().get_id())
-                    .param(SignupRoute.PARAM_CODE, "blabla")
-                    .when().get(BASE_URL + "/firstconnectioncheck")
+            given().pathParam("id", u.result().get_id())
+                    .pathParam("code", "blabla")
+                    .when().get(BASE_URL + "/firstconnectioncheck/{id}/{code}")
                     .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
                     .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
             async.complete();
@@ -585,171 +594,6 @@ public class SignupTest extends VertxJunitSupport {
     }
 
     /**
-     * Finalize signup.
-     */
-    @Test
-    public void finalizeSignup() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
-        JsonObject u = generateNewUser();
-        u.put("captcha", "fake");
-        JsonObject p = new JsonObject(given().body(u.encode())
-                .when().put(BASE_URL + "/register")
-                .then().assertThat().statusCode(200)
-                .body("person", notNullValue())
-                .body("person.account.active", is(false))
-                .body("person.name", notNullValue())
-                .body("person.name", is(u.getString("name")))
-                .body("person._id", notNullValue()).extract().asString()).getJsonObject("person");
-
-        JsonObject param = new JsonObject()
-                .put(SignupRoute.PARAM_USER, p)
-                .put(SignupRoute.PARAM_CODE, p.getJsonObject("account").getString("activationCode"))
-                .put(SignupRoute.PARAM_ACTIVITY, u.getJsonObject("plan").getJsonObject("activity").getString("_id"))
-                .put(SignupRoute.PARAM_STRUCTURE, getStructure())
-                .put(SignupRoute.PARAM_CATEGORY_AGE, getCategoryAge());
-        given().body(param.encode())
-                .when().post(BASE_URL + "/finalize")
-                .then().assertThat().statusCode(200)
-                .body("name", notNullValue())
-                .body("name", is(p.getString("name")))
-                .body("sandboxDefault", notNullValue())
-                .body("account.active", is(false));
-    }
-
-    /**
-     * Finalize signup with unknown structure.
-     */
-    @Test
-    public void finalizeSignupWithUnknownStructure() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
-        JsonObject u = generateNewUser();
-        u.put("captcha", "fake");
-        JsonObject p = new JsonObject(given().body(u.encode())
-                .when().put(BASE_URL + "/register")
-                .then().assertThat().statusCode(200)
-                .body("person", notNullValue())
-                .body("person.account.active", is(false))
-                .body("person.name", notNullValue())
-                .body("person.name", is(u.getString("name")))
-                .body("person._id", notNullValue()).extract().asString()).getJsonObject("person");
-
-
-        JsonObject structure = getStructure();
-        structure.remove("_id");
-        JsonObject param = new JsonObject()
-                .put(SignupRoute.PARAM_USER, p)
-                .put(SignupRoute.PARAM_CODE, p.getJsonObject("account").getString("activationCode"))
-                .put(SignupRoute.PARAM_ACTIVITY, u.getJsonObject("plan").getJsonObject("activity").getString("_id"))
-                .put(SignupRoute.PARAM_STRUCTURE, structure)
-                .put(SignupRoute.PARAM_CATEGORY_AGE, getCategoryAge());
-        given().body(param.encode())
-                .when().post(BASE_URL + "/finalize")
-                .then().assertThat().statusCode(200)
-                .body("name", notNullValue())
-                .body("name", is(p.getString("name")))
-                .body("sandboxDefault", notNullValue())
-                .body("account.active", is(false));
-    }
-
-    /**
-     * Finalize signup with wrong http method.
-     */
-    @Test
-    public void finalizeSignupWithWrongHttpMethod(TestContext context) {
-        Async async = context.async();
-        generateLoggedUser().setHandler(u -> {
-            given().header(TOKEN, u.result().getAccount().getToken())
-                    .when().get(BASE_URL + "/finalize")
-                    .then().assertThat().statusCode(404)
-                    .body(STATUS, is(false));
-            async.complete();
-        });
-        async.await(TIMEOUT);
-    }
-
-    /**
-     * Finalize signup with blank or null params.
-     */
-    @Test
-    public void finalizeSignupWithBlankOrNullParams() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
-        JsonObject u = generateNewUser();
-        u.put("captcha", "fake");
-        JsonObject p = new JsonObject(given().body(u.encode())
-                .when().put(BASE_URL + "/register")
-                .then().assertThat().statusCode(200)
-                .body("person", notNullValue())
-                .body("person.account.active", is(false))
-                .body("person.name", notNullValue())
-                .body("person.name", is(u.getString("name")))
-                .body("person._id", notNullValue()).extract().asString()).getJsonObject("person");
-        String token = given().param(SignupRoute.PARAM_ID, p.getString("_id"))
-                .param(SignupRoute.PARAM_CODE, p.getJsonObject("account").getString("activationCode"))
-                .when().get(BASE_URL + "/firstconnectioncheck")
-                .then().assertThat().statusCode(200)
-                .body("account", notNullValue())
-                .body("account.token", notNullValue()).extract().path("account.token");
-
-        JsonObject param = new JsonObject();
-        param.put(SignupRoute.PARAM_CODE, p.getJsonObject("account").getString("activationCode"));
-        param.put(SignupRoute.PARAM_ACTIVITY, u.getJsonObject("plan").getJsonObject("activity").getString("_id"));
-        param.put(SignupRoute.PARAM_STRUCTURE, getStructure());
-        param.put(SignupRoute.PARAM_CATEGORY_AGE, getCategoryAge());
-        given().header(TOKEN, token)
-                .body(param.encode())
-                .when().post(BASE_URL + "/finalize")
-                .then().assertThat().statusCode(ExceptionCodes.MANDATORY_FIELD.getCode())
-                .body(CODE, is(ExceptionCodes.MANDATORY_FIELD.toString()));
-    }
-
-    /**
-     * Finalize signup with wrong params.
-     */
-    @Test
-    public void finalizeSignupWithWrongParams() {
-        populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
-        JsonObject u = generateNewUser();
-        u.put("captcha", "dummy");
-        JsonObject p = new JsonObject(given().body(u.encode())
-                .when().put(BASE_URL + "/register")
-                .then().assertThat().statusCode(200)
-                .body("person", notNullValue())
-                .body("person.account.active", is(false))
-                .body("person.name", notNullValue())
-                .body("person.name", is(u.getString("name")))
-                .body("person._id", notNullValue()).extract().asString()).getJsonObject("person");
-        String token = given().param(SignupRoute.PARAM_ID, p.getString("_id"))
-                .param(SignupRoute.PARAM_CODE, p.getJsonObject("account").getString("activationCode"))
-                .when().get(BASE_URL + "/firstconnectioncheck")
-                .then().assertThat().statusCode(200)
-                .body("account", notNullValue())
-                .body("account.token", notNullValue()).extract().path("account.token");
-
-        String id = p.getString("_id");
-        p.put("_id", "blabla");
-        JsonObject param = new JsonObject()
-                .put(SignupRoute.PARAM_USER, p)
-                .put(SignupRoute.PARAM_CODE, p.getJsonObject("account").getString("activationCode"))
-                .put(SignupRoute.PARAM_ACTIVITY, u.getJsonObject("plan").getJsonObject("activity").getString("_id"))
-                .put(SignupRoute.PARAM_STRUCTURE, getStructure())
-                .put(SignupRoute.PARAM_CATEGORY_AGE, getCategoryAge());
-        given().header(TOKEN, token)
-                .body(param.encode())
-                .when().post(BASE_URL + "/finalize")
-                .then().assertThat().statusCode(ExceptionCodes.BAD_LOGIN.getCode())
-                .body(CODE, is(ExceptionCodes.BAD_LOGIN.toString()));
-
-        p.put("_id", id);
-        param.put(SignupRoute.PARAM_USER, p)
-                .put(SignupRoute.PARAM_CODE, "blabla");
-        given().header(TOKEN, token)
-                .body(param.encode())
-                .when().post(BASE_URL + "/finalize")
-                .then().assertThat().statusCode(ExceptionCodes.BUSINESS_ERROR.getCode())
-                .body(CODE, is(ExceptionCodes.BUSINESS_ERROR.toString()));
-    }
-
-    /**
      * Resend register mail.
      */
     @Test
@@ -757,29 +601,14 @@ public class SignupTest extends VertxJunitSupport {
         populate(POPULATE_ONLY, SETTINGS_ACTIVITY, SETTINGS_ACTIVITY_CFG, SETTINGS_COUNTRY, DATA_STRUCTURE, SETTINGS_SEASONS);
         JsonObject u = generateNewUser();
         u.put("captcha", "fake");
-        JsonObject p = new JsonObject(given().body(u.encode())
+        given().body(u.encode())
                 .when().put(BASE_URL + "/register")
                 .then().assertThat().statusCode(200)
                 .body("person", notNullValue())
                 .body("person.account.active", is(false))
                 .body("person.name", notNullValue())
                 .body("person.name", is(u.getString("name")))
-                .body("person._id", notNullValue()).extract().asString()).getJsonObject("person");
-
-        JsonObject param = new JsonObject()
-                .put(SignupRoute.PARAM_USER, p)
-                .put(SignupRoute.PARAM_CODE, p.getJsonObject("account").getString("activationCode"))
-                .put(SignupRoute.PARAM_ACTIVITY, u.getJsonObject("plan").getJsonObject("activity").getString("_id"))
-                .put(SignupRoute.PARAM_STRUCTURE, getStructure())
-                .put(SignupRoute.PARAM_CATEGORY_AGE, getCategoryAge());
-        given().body(param.encode())
-                .when().post(BASE_URL + "/finalize")
-                .then().assertThat().statusCode(200)
-                .body("name", notNullValue())
-                .body("name", is(p.getString("name")))
-                .body("sandboxDefault", notNullValue())
-                .body("account.active", is(false));
-
+                .body("person._id", notNullValue());
 
         given()
                 .body(new JsonObject().put(SignupRoute.PARAM_LOGIN, "loginTest").encode())

@@ -145,7 +145,7 @@ public interface Utils {
      * @param context the context
      * @param e       the e
      */
-    void handleError(RoutingContext context, QaobeeException e);
+    void handleError(RoutingContext context, Throwable e);
 
     /**
      * Gets minimal.

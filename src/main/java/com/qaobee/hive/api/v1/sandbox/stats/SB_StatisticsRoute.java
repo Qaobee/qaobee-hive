@@ -35,7 +35,7 @@ import javax.inject.Inject;
  *
  * @author cke
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/sandbox/stats/statistics")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/sandbox/stats/statistics")
 public class SB_StatisticsRoute extends AbstractRoute {// NOSONAR
 
     /**

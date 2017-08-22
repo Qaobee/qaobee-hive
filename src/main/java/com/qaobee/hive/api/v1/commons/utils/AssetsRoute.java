@@ -94,7 +94,7 @@ public class AssetsRoute extends AbstractRoute {
                         .putHeader(HTTP.CONTENT_TYPE, "application/image")
                         .end(Buffer.buffer(event.result().getBinary("asset")));
             } else {
-                utils.handleError(context, (QaobeeException) event.cause());
+                utils.handleError(context, event.cause());
             }
         });
     }

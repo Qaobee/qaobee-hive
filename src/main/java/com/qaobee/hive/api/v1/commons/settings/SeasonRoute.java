@@ -28,7 +28,7 @@ import io.vertx.ext.web.RoutingContext;
 
 import javax.inject.Inject;
 
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/season")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/settings/season")
 public class SeasonRoute extends AbstractRoute {
     /**
      * Id of the season

@@ -33,7 +33,7 @@ import javax.inject.Inject;
  *
  * @author cke
  */
-@VertxRoute(rootPath = "/api/" + Module.VERSION + "/commons/settings/activity")
+@VertxRoute(rootPath = "/api/" + Module.V1 + "/commons/settings/activity")
 public class ActivityRoute extends AbstractRoute {
     /**
      * Id of the structure

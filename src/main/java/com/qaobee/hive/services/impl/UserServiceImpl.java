@@ -300,7 +300,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void getMeta(String sandboxId, Handler<AsyncResult<JsonObject>> resultHandler) {
-        sandBoxService.getSandboxById(sandboxId, sbRes -> {
+         sandBoxService.getSandboxById(sandboxId, sbRes -> {
             if (sbRes.succeeded()) {
                 JsonObject meta = sbRes.result();
                 seasonService.getCurrentSeason(meta.getString("activityId"), meta.getJsonObject("structure").getJsonObject("country").getString("_id"), season -> {

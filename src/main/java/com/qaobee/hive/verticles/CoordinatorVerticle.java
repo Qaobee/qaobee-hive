@@ -108,6 +108,7 @@ public class CoordinatorVerticle extends AbstractGuiceVerticle {
                             }
                         }
                 );
+
         router.route().last().handler(CoordinatorVerticle::manage404Error);
 
         // Load Verticles

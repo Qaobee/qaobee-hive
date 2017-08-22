@@ -57,20 +57,6 @@ public interface SignupService {
     }
 
     /**
-     * Finalize signup.
-     *
-     * @param jsonUser       the json user
-     * @param activationCode the activation code
-     * @param activityId     the activity id
-     * @param structure      the structure
-     * @param categoryAge    the category age
-     * @param countryId      the country id
-     * @param locale         the locale
-     * @param resultHandler  the result handler
-     */
-    void finalizeSignup(JsonObject jsonUser, String activationCode, String activityId, JsonObject structure, JsonObject categoryAge, String countryId, String locale, Handler<AsyncResult<JsonObject>> resultHandler); // NOSONAR
-
-    /**
      * First connection check.
      *
      * @param id             the id
@@ -116,4 +102,13 @@ public interface SignupService {
      * @param resultHandler the result handler
      */
     void sendRegisterMail(JsonObject user, String locale, Handler<AsyncResult<Void>> resultHandler);
+
+    /**
+     * Add structure to sandbox.
+     *
+     * @param sandboxId     the sandbox id
+     * @param structure     the structure
+     * @param resultHandler the result handler
+     */
+    void addStructureToSandbox(String sandboxId, JsonObject structure, Handler<AsyncResult<Void>> resultHandler);
 }
