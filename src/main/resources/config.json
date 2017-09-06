@@ -22,14 +22,14 @@
         "FREEMIUM": {
           "price": 8
         },
-        "DISCOVERY": {
-          "price": 5
+        "TEAMS": {
+          "price": 30
         },
-        "PREMIUM": {
-          "price": 7
+        "TEAMM": {
+          "price": 36
         },
-        "CLUB_1": {
-          "price": 9
+        "TEAMXL": {
+          "price": 48
         }
       }
     },
@@ -110,14 +110,14 @@
         "FREEMIUM": {
           "price": 8
         },
-        "DISCOVERY": {
-          "price": 5
+        "TEAMS": {
+          "price": 30
         },
-        "PREMIUM": {
-          "price": 7
+        "TEAMM": {
+          "price": 36
         },
-        "CLUB_1": {
-          "price": 9
+        "TEAMXL": {
+          "price": 48
         }
       }
     },
@@ -197,14 +197,14 @@
         "FREEMIUM": {
           "price": 8
         },
-        "DISCOVERY": {
-          "price": 5
+        "TEAMS": {
+          "price": 30
         },
-        "PREMIUM": {
-          "price": 9
+        "TEAMM": {
+          "price": 36
         },
-        "CLUB_1": {
-          "price": 12
+        "TEAMXL": {
+          "price": 48
         }
       }
     },

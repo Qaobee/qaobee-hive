@@ -36,5 +36,7 @@ public enum LevelPlan {
     /**
      * The premium.
      */
-    CLUB_1
+    TEAMS,
+    TEAMM,
+    TEAMXL
 }
