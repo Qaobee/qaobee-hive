@@ -34,7 +34,7 @@ public class ParamsRoute extends AbstractRoute {
     private void getParams(RoutingContext context) {
         handleResponse(context, new JsonObject()
                 .put("pay_api_key", stripe.getString("api_key"))
-                .put("trial.duration", runtime.getString("trial.duration"))
+                .put("trial.duration", runtime.getInteger("trial.duration"))
                 .put("plan", runtime.getJsonObject("plan")));
     }
 }
