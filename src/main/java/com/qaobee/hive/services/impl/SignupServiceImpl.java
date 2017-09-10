@@ -504,7 +504,7 @@ public class SignupServiceImpl implements SignupService {
                         if (tabParametersSignup.result().size() > 0) {
                             createPlayers(tabParametersSignup.result(), sbSandBox, user, plan, resultHandler);
                         } else {
-                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "tabParametersSignup is empty")));
+                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No config for your country " +countryId)));
                         }
                     } else {
                         resultHandler.handle(Future.failedFuture(tabParametersSignup.cause()));
