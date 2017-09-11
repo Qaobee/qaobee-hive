@@ -17,19 +17,23 @@
       "recaptcha.site": "localhost",
       "recaptcha": true,
       "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
-      "trial.duration": 12,
+      "trial.duration": 1,
       "plan": {
         "FREEMIUM": {
-          "price": 8
+          "price": 8,
+          "price_y": 87
         },
         "TEAMS": {
-          "price": 30
+          "price": 30,
+          "price_y": 324
         },
         "TEAMM": {
-          "price": 36
+          "price": 36,
+          "price_y": 389
         },
         "TEAMXL": {
-          "price": 48
+          "price": 48,
+          "price_y": 486
         }
       }
     },
@@ -49,7 +53,7 @@
       "port": 27017,
       "maxPoolSize": 2,
       "keepAlive": true,
-      "db_name" : "hive"
+      "db_name": "hive"
     },
     "mailchimp": {
       "env": "DEV",
@@ -58,7 +62,7 @@
       "host": "us13.api.mailchimp.com",
       "port": 443,
       "path": "/3.0/lists/883987d33d",
-      "test" : true
+      "test": true
     },
     "mailer.mod": {
       "test": false,
@@ -105,19 +109,23 @@
       "recaptcha.site": "https://rec.qaobee.com",
       "recaptcha": true,
       "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
-      "trial.duration": 12,
+      "trial.duration": 1,
       "plan": {
         "FREEMIUM": {
-          "price": 8
+          "price": 8,
+          "price_y": 87
         },
         "TEAMS": {
-          "price": 30
+          "price": 30,
+          "price_y": 324
         },
         "TEAMM": {
-          "price": 36
+          "price": 36,
+          "price_y": 389
         },
         "TEAMXL": {
-          "price": 48
+          "price": 48,
+          "price_y": 486
         }
       }
     },
@@ -145,7 +153,7 @@
       "host": "us13.api.mailchimp.com",
       "port": 443,
       "path": "/3.0/lists/883987d33d",
-      "test" : false
+      "test": false
     },
     "mailer.mod": {
       "test": false,
@@ -192,19 +200,23 @@
       "recaptcha.site": "https://www.qaobee.com",
       "admin.id": "a0ef9c2d-6864-4a20-84ba-b66a666d2bf4",
       "recaptcha": true,
-      "trial.duration": 12,
+      "trial.duration": 1,
       "plan": {
         "FREEMIUM": {
-          "price": 8
+          "price": 8,
+          "price_y": 87
         },
         "TEAMS": {
-          "price": 30
+          "price": 30,
+          "price_y": 324
         },
         "TEAMM": {
-          "price": 36
+          "price": 36,
+          "price_y": 389
         },
         "TEAMXL": {
-          "price": 48
+          "price": 48,
+          "price_y": 486
         }
       }
     },
@@ -232,7 +244,7 @@
       "host": "us13.api.mailchimp.com",
       "port": 443,
       "path": "/3.0/lists/883987d33d",
-      "test" : false
+      "test": false
     },
     "mailer.mod": {
       "test": false,
