@@ -47,12 +47,19 @@ public class ShippingRoute extends AbstractRoute {
                 authHandler,
                 c -> mandatoryHandler.testBodyParams(c, "data"),
                 this::pay);
+        addRoute(router, "/unsubscribe/:id", HttpMethod.POST,
+                authHandler,
+                this::unsubscribe);
 
         addRoute(router, "/webHook", HttpMethod.POST,
                 c -> mandatoryHandler.testBodyParams(c, "id", "created"),
                 this::webHook);
 
         return router;
+    }
+
+    private void unsubscribe(RoutingContext context) {
+        shippingService.unsubscribe(context.user().principal(), Integer.parseInt(context.request().getParam("id")), getLocale(context), handleResponse(context));
     }
 
     /**

@@ -67,6 +67,16 @@ public interface ShippingService {
     void pay(JsonObject user, JsonObject paymentData, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
+     * Unsubscribe.
+     *
+     * @param user          the user
+     * @param planId        the plan id
+     * @param locale        the locale
+     * @param resultHandler the result handler
+     */
+    void unsubscribe(JsonObject user, int planId , String locale, Handler<AsyncResult<JsonObject>> resultHandler);
+
+    /**
      * Web hook.
      *
      * @param body          the body

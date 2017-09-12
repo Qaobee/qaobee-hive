@@ -20,15 +20,14 @@
 package com.qaobee.hive.services.impl;
 
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.business.model.commons.users.account.AccountStatus;
 import com.qaobee.hive.business.model.commons.users.account.Card;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.dao.TemplatesDAO;
 import com.qaobee.hive.dao.Utils;
 import com.qaobee.hive.dao.impl.TemplatesDAOImpl;
-import com.qaobee.hive.services.MongoDB;
-import com.qaobee.hive.services.NotificationsService;
-import com.qaobee.hive.services.ShippingService;
+import com.qaobee.hive.services.*;
 import com.qaobee.hive.technical.annotations.ProxyService;
 import com.qaobee.hive.technical.constantes.Constants;
 import com.qaobee.hive.technical.constantes.DBCollections;
@@ -80,6 +79,8 @@ public class ShippingServiceImpl implements ShippingService {
     private NotificationsService notificationsService;
     @Inject
     private Utils utils;
+    @Inject
+    private UserService userService;
     @Inject
     @Named("stripe")
     private JsonObject stripe;
@@ -315,6 +316,61 @@ public class ShippingServiceImpl implements ShippingService {
                 } else {
                     resultHandler.handle(Future.succeededFuture(new JsonObject().put(Constants.STATUS, true)));
                 }
+            }
+        } catch (QaobeeException e) {
+            LOG.error(e.getMessage(), e);
+            resultHandler.handle(Future.failedFuture(e));
+        }
+    }
+
+    @Override
+    public void unsubscribe(JsonObject u, int planId, String locale, Handler<AsyncResult<JsonObject>> resultHandler) {
+        Stripe.apiKey = stripe.getString("api_secret"); // NOSONAR
+        try {
+            User user = Json.decodeValue(u.encode(), User.class);
+            if (user.getAccount().getListPlan().size() <= planId) {
+                resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "planId is invalid")));
+            } else {
+                Plan plan = user.getAccount().getListPlan().get(planId);
+                String customerId = user.getAccount().getListPlan().get(planId).getCardId();
+                getCustomerInfo(customerId, user, new JsonObject(), locale, customer -> {
+                    if (customer.succeeded()) {
+                        if (plan.getPaymentId() != null) {
+                            getSubscriptionInfo(user.getAccount().getListPlan().get(planId).getPaymentId(), subscription -> {
+                                if (subscription.succeeded()) {
+                                    if (subscription.result() != null) {
+                                        Map<String, Object> params = new HashMap<>();
+                                        params.put("at_period_end", System.currentTimeMillis());
+                                        try {
+                                            subscription.result().cancel(params);
+                                            user.getAccount().setStatus(AccountStatus.NOT_PAID);
+                                            JsonObject jUser = new JsonObject(Json.encode(user));
+                                            userService.updateUser(jUser, res-> {
+                                                if(res.succeeded()) {
+                                                    resultHandler.handle(Future.succeededFuture(res.result()));
+                                                } else {
+                                                    resultHandler.handle(Future.failedFuture(res.cause()));
+                                                }
+                                            });
+                                        } catch (InvalidRequestException e) {
+                                            LOG.error(e.getMessage(), e);
+                                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, e.getMessage())));
+                                        } catch (APIConnectionException | APIException | CardException | AuthenticationException e) {
+                                            LOG.error(e.getMessage(), e);
+                                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.HTTP_ERROR, e.getMessage())));
+                                        }
+                                    }
+                                } else {
+                                    resultHandler.handle(Future.failedFuture(subscription.cause()));
+                                }
+                            });
+                        } else {
+                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.INVALID_PARAMETER, "PaymentId is invalid")));
+                        }
+                    } else {
+                        resultHandler.handle(Future.failedFuture(customer.cause()));
+                    }
+                });
             }
         } catch (QaobeeException e) {
             LOG.error(e.getMessage(), e);
