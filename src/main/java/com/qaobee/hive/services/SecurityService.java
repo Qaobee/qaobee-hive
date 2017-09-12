@@ -39,7 +39,6 @@ public interface SecurityService {
      * Create security service.
      *
      * @param vertx the vertx
-     *
      * @return the security service
      */
     static SecurityService create(Vertx vertx) {
@@ -51,7 +50,6 @@ public interface SecurityService {
      *
      * @param vertx   the vertx
      * @param address the address
-     *
      * @return the security service
      */
     static SecurityService createProxy(Vertx vertx, String address) {
@@ -68,6 +66,12 @@ public interface SecurityService {
      */
     void loginByToken(String login, String mobileToken, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
+    /**
+     * Maj user account validity.
+     *
+     * @param user          the user
+     * @param resultHandler the result handler
+     */
     void majUserAccountValidity(JsonObject user, Handler<AsyncResult<JsonObject>> resultHandler);
 
     /**
