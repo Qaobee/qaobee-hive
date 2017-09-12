@@ -49,6 +49,7 @@ public class Account {
     private List<Habilitation> habilitations;
     private String mobileToken;
     private List<Device> devices;
+    private AccountStatus status;
 
     /**
      * Returns the activation code.
@@ -357,5 +358,23 @@ public class Account {
      */
     public void setDevices(List<Device> devices) {
         this.devices = devices;
+    }
+
+    /**
+     * Gets status.
+     *
+     * @return the status
+     */
+    public AccountStatus getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets status.
+     *
+     * @param status the status
+     */
+    public void setStatus(AccountStatus status) {
+        this.status = status;
     }
 }

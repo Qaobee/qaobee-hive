@@ -21,6 +21,7 @@ package com.qaobee.hive.services.impl;
 
 import com.lowagie.text.pdf.codec.Base64;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.business.model.commons.users.account.AccountStatus;
 import com.qaobee.hive.business.model.commons.users.account.Device;
 import com.qaobee.hive.dao.MailUtils;
 import com.qaobee.hive.dao.PasswordEncryptionService;
@@ -152,19 +153,20 @@ public class SecurityServiceImpl implements SecurityService {
                 user.getAccount().getDevices().add(d);
             }
         }
-        mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, upsertRes -> {
-            if (upsertRes.succeeded()) {
-                userService.getUserInfo(user.get_id(), res -> {
-                    if (res.succeeded()) {
-                        resultHandler.handle(Future.succeededFuture(res.result()));
+        majUserAccountValidity(new JsonObject(Json.encode(user)), r -> {
+            if (r.succeeded()) {
+                mongo.upsert(r.result(), DBCollections.USER, upsertRes -> {
+                    if (upsertRes.succeeded()) {
+                        resultHandler.handle(Future.succeededFuture(r.result()));
                     } else {
-                        resultHandler.handle(Future.failedFuture(res.cause()));
+                        resultHandler.handle(Future.failedFuture(upsertRes.cause()));
                     }
                 });
             } else {
-                resultHandler.handle(Future.failedFuture(upsertRes.cause()));
+                resultHandler.handle(Future.failedFuture(r.cause()));
             }
         });
+
     }
 
     @Override
@@ -180,19 +182,44 @@ public class SecurityServiceImpl implements SecurityService {
                     // we take the first one (should be only one)
                     JsonObject jsonPerson = res.result().getJsonObject(0);
                     User user = Json.decodeValue(jsonPerson.encode(), User.class);
-                    user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
-                    user.getAccount().setTokenRenewDate(System.currentTimeMillis());
-                    mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, upsertRes -> {
-                        if (upsertRes.succeeded()) {
-                            resultHandler.handle(Future.succeededFuture(new JsonObject(Json.encode(user))));
-                        } else {
-                            resultHandler.handle(Future.failedFuture(upsertRes.cause()));
-                        }
-                    });
+                    if (!user.getAccount().isActive()) {
+                        resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.NON_ACTIVE, Messages.getString("popup.warning.unregistreduser", locale))));
+                    } else {
+                        user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
+                        user.getAccount().setTokenRenewDate(System.currentTimeMillis());
+                        majUserAccountValidity(new JsonObject(Json.encode(user)), r -> {
+                            if (r.succeeded()) {
+                                mongo.upsert(r.result(), DBCollections.USER, upsertRes -> {
+                                    if (upsertRes.succeeded()) {
+                                        resultHandler.handle(Future.succeededFuture(r.result()));
+                                    } else {
+                                        resultHandler.handle(Future.failedFuture(upsertRes.cause()));
+                                    }
+                                });
+                            } else {
+                                resultHandler.handle(Future.failedFuture(r.cause()));
+                            }
+                        });
+                    }
                 }
             } else {
                 resultHandler.handle(Future.failedFuture(res.cause()));
             }
+        });
+    }
+
+    @Override
+    public void majUserAccountValidity(JsonObject user, Handler<AsyncResult<JsonObject>> resultHandler) {
+        user.getJsonObject("account").getJsonArray("listPlan").forEach(p -> {
+            JsonObject plan = (JsonObject) p;
+            AccountStatus status = AccountStatus.ACTIVE;
+            if (!"active".equals(plan.getString("status")) && plan.getLong("endPeriodDate", 0L) >= System.currentTimeMillis()) {
+                status = AccountStatus.NOT_PAID;
+            } else if (plan.getLong("endPeriodDate", 0L) < System.currentTimeMillis()) {
+                status = AccountStatus.TRIAL_ENDED;
+            }
+            user.getJsonObject("account").put("status", status.name());
+            resultHandler.handle(Future.succeededFuture(user));
         });
     }
 

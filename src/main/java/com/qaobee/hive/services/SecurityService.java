@@ -68,6 +68,8 @@ public interface SecurityService {
      */
     void loginByToken(String login, String mobileToken, String locale, Handler<AsyncResult<JsonObject>> resultHandler);
 
+    void majUserAccountValidity(JsonObject user, Handler<AsyncResult<JsonObject>> resultHandler);
+
     /**
      * Password reset.
      *

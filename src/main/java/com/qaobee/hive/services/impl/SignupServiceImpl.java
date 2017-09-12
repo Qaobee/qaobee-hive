@@ -23,6 +23,7 @@ import com.qaobee.hive.business.model.commons.referencial.Structure;
 import com.qaobee.hive.business.model.commons.settings.Activity;
 import com.qaobee.hive.business.model.commons.settings.Country;
 import com.qaobee.hive.business.model.commons.users.User;
+import com.qaobee.hive.business.model.commons.users.account.AccountStatus;
 import com.qaobee.hive.business.model.commons.users.account.Plan;
 import com.qaobee.hive.business.model.sandbox.config.SB_SandBox;
 import com.qaobee.hive.business.model.sandbox.effective.Availability;
@@ -90,6 +91,8 @@ public class SignupServiceImpl implements SignupService {
     private SandBoxService sandBoxService;
     @Inject
     private EffectiveService effectiveService;
+    @Inject
+    private SecurityService securityService;
 
     /**
      * Instantiates a new Signup service.
@@ -134,6 +137,7 @@ public class SignupServiceImpl implements SignupService {
         user.getAccount().setToken(VertxContextPRNG.current(vertx).nextString(32));
         user.getAccount().setTokenRenewDate(System.currentTimeMillis());
         user.getAccount().setActive(false);
+        user.getAccount().setStatus(AccountStatus.NOT_VALIDATED);
         user.getAccount().setFirstConnexion(true);
         user.getAccount().setLogin(user.getAccount().getLogin().toLowerCase());
         final Plan plan = Json.decodeValue(userJson.getJsonObject(PARAM_PLAN).encode(), Plan.class);
@@ -307,11 +311,17 @@ public class SignupServiceImpl implements SignupService {
                 final User user = Json.decodeValue(userRes.result().encode(), User.class);
                 if (user.getAccount().getActivationCode().equals(activationCode)) {
                     user.getAccount().setActive(true);
-                    mongo.upsert(new JsonObject(Json.encode(user)), DBCollections.USER, userId -> {
-                        if (userId.succeeded()) {
-                            resultHandler.handle(Future.succeededFuture(true));
+                    securityService.majUserAccountValidity(userRes.result(), r -> {
+                        if (r.succeeded()) {
+                            mongo.upsert(r.result(), DBCollections.USER, userId -> {
+                                if (userId.succeeded()) {
+                                    resultHandler.handle(Future.succeededFuture(true));
+                                } else {
+                                    resultHandler.handle(Future.failedFuture(userId.cause()));
+                                }
+                            });
                         } else {
-                            resultHandler.handle(Future.failedFuture(userId.cause()));
+                            resultHandler.handle(Future.failedFuture(r.cause()));
                         }
                     });
                 } else {
@@ -504,7 +514,7 @@ public class SignupServiceImpl implements SignupService {
                         if (tabParametersSignup.result().size() > 0) {
                             createPlayers(tabParametersSignup.result(), sbSandBox, user, plan, resultHandler);
                         } else {
-                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No config for your country " +countryId)));
+                            resultHandler.handle(Future.failedFuture(new QaobeeException(ExceptionCodes.DATA_ERROR, "No config for your country " + countryId)));
                         }
                     } else {
                         resultHandler.handle(Future.failedFuture(tabParametersSignup.cause()));
