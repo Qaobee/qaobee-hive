@@ -47,7 +47,7 @@ public class ShippingRoute extends AbstractRoute {
                 authHandler,
                 c -> mandatoryHandler.testBodyParams(c, "data"),
                 this::pay);
-        addRoute(router, "/unsubscribe/:id", HttpMethod.POST,
+        addRoute(router, "/unsubscribe/:id", HttpMethod.GET,
                 authHandler,
                 this::unsubscribe);
 
